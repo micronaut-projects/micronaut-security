@@ -81,28 +81,44 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="bearer/package-summary.html">io.micronaut.security.token.bearer</a></div>
+<div class="col-last even-row-color">
+<div class="block">Contains classes specific to JSON Web Token (JWT) Authentication within Micronaut.</div>
+</div>
+<div class="col-first odd-row-color"><a href="claims/package-summary.html">io.micronaut.security.token.claims</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Claims related classes.</div>
+</div>
 <div class="col-first even-row-color"><a href="config/package-summary.html">io.micronaut.security.token.config</a></div>
 <div class="col-last even-row-color">
 <div class="block">Security token configuration.</div>
 </div>
-<div class="col-first odd-row-color"><a href="event/package-summary.html">io.micronaut.security.token.event</a></div>
+<div class="col-first odd-row-color"><a href="cookie/package-summary.html">io.micronaut.security.token.cookie</a></div>
 <div class="col-last odd-row-color">
+<div class="block">JWT cookie configuration and handlers.</div>
+</div>
+<div class="col-first even-row-color"><a href="event/package-summary.html">io.micronaut.security.token.event</a></div>
+<div class="col-last even-row-color">
 <div class="block">Token generated events.</div>
 </div>
-<div class="col-first even-row-color"><a href="generator/package-summary.html">io.micronaut.security.token.generator</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="generator/package-summary.html">io.micronaut.security.token.generator</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Security token generator.</div>
 </div>
-<div class="col-first odd-row-color"><a href="propagation/package-summary.html">io.micronaut.security.token.propagation</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="propagation/package-summary.html">io.micronaut.security.token.propagation</a></div>
+<div class="col-last even-row-color">
 <div class="block">Support classes for JWT propagation.</div>
 </div>
-<div class="col-first even-row-color"><a href="reader/package-summary.html">io.micronaut.security.token.reader</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="reader/package-summary.html">io.micronaut.security.token.reader</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Security token reader.</div>
 </div>
-<div class="col-first odd-row-color"><a href="refresh/package-summary.html">io.micronaut.security.token.refresh</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="refresh/package-summary.html">io.micronaut.security.token.refresh</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="render/package-summary.html">io.micronaut.security.token.render</a></div>
+<div class="col-last odd-row-color">
+<div class="block">JWT token renderer.</div>
+</div>
 <div class="col-first even-row-color"><a href="validator/package-summary.html">io.micronaut.security.token.validator</a></div>
 <div class="col-last even-row-color">
 <div class="block">Security token validator.</div>
@@ -117,28 +133,32 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="Claims.html" title="interface in io.micronaut.security.token">Claims</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractTokenAuthenticationFactory.html" title="class in io.micronaut.security.token">AbstractTokenAuthenticationFactory</a>&lt;T&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Abstract implementation of <a href="TokenAuthenticationFactory.html" title="interface in io.micronaut.security.token"><code>TokenAuthenticationFactory</code></a> which creates an authentication for a set of claims.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="Claims.html" title="interface in io.micronaut.security.token">Claims</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Authentication claims.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DefaultRolesFinder.html" title="class in io.micronaut.security.token">DefaultRolesFinder</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DefaultRolesFinder.html" title="class in io.micronaut.security.token">DefaultRolesFinder</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Default implementation of <a href="RolesFinder.html" title="interface in io.micronaut.security.token"><code>RolesFinder</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MapClaims.html" title="class in io.micronaut.security.token">MapClaims</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MapClaims.html" title="class in io.micronaut.security.token">MapClaims</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="Claims.html" title="interface in io.micronaut.security.token"><code>Claims</code></a> implementation backed by a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="RolesFinder.html" title="interface in io.micronaut.security.token">RolesFinder</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="RolesFinder.html" title="interface in io.micronaut.security.token">RolesFinder</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Retrieves roles from token claims.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="TokenAuthenticationFactory.html" title="interface in io.micronaut.security.token">TokenAuthenticationFactory</a>&lt;T&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="TokenAuthenticationFactory.html" title="interface in io.micronaut.security.token">TokenAuthenticationFactory</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Creates an <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> object from a token.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Attempts to retrieve a token form the <code>HttpRequest</code> and if existing validated.</div>
 </div>
 </div>

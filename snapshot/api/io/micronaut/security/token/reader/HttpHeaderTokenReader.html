@@ -77,16 +77,16 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a></code></dd>
+<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="../jwt/bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.jwt.bearer">BearerTokenReader</a></code></dd>
+<dd><code><a href="../bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.bearer">BearerTokenReader</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">HttpHeaderTokenReader</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a></span></div>
+implements <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</span></div>
 <div class="block">Reads a token from an HTTP request and removes prefix from HTTP Header Value.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -205,7 +205,7 @@ implements <a href="TokenReader.html" title="interface in io.micronaut.security.
 <div class="block">Search for a JWT token in a HTTP request.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="TokenReader.html#findToken(io.micronaut.http.HttpRequest)">findToken</a></code>&nbsp;in interface&nbsp;<code><a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a></code></dd>
+<dd><code><a href="TokenReader.html#findToken(T)">findToken</a></code>&nbsp;in interface&nbsp;<code><a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>request</code> - The request to look for the token in</dd>
 <dt>Returns:</dt>

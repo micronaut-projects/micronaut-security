@@ -77,15 +77,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></code></dd>
+<dd><code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.redirect.prior-to-login",
-          value="true")
+<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.HttpRequest.class) @Requires(property="micronaut.security.redirect.prior-to-login",value="true")
 @Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">CookiePriorToLoginPersistence</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></span></div>
+implements <a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span></div>
 <div class="block">Stores the last unauthorized URL in a cookie to redirect back to after
  logging in.</div>
 <dl class="notes">
@@ -174,7 +173,7 @@ implements <a href="PriorToLoginPersistence.html" title="interface in io.microna
  io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="PriorToLoginPersistence.html#onUnauthorized(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)">onUnauthorized</a></code>&nbsp;in interface&nbsp;<code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></code></dd>
+<dd><code><a href="PriorToLoginPersistence.html#onUnauthorized(I,O)">onUnauthorized</a></code>&nbsp;in interface&nbsp;<code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -185,7 +184,7 @@ implements <a href="PriorToLoginPersistence.html" title="interface in io.microna
  io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="PriorToLoginPersistence.html#getOriginalUri(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)">getOriginalUri</a></code>&nbsp;in interface&nbsp;<code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></code></dd>
+<dd><code><a href="PriorToLoginPersistence.html#getOriginalUri(I,O)">getOriginalUri</a></code>&nbsp;in interface&nbsp;<code><a href="PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 </section>
 </li>

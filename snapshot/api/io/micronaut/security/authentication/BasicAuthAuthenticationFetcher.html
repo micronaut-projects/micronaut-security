@@ -77,15 +77,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a></code></dd>
+<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.basic-auth.enabled",
-          notEquals="false")
+<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.HttpRequest.class) @Requires(property="micronaut.security.basic-auth.enabled",notEquals="false")
 @Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">BasicAuthAuthenticationFetcher</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a></span></div>
+implements <a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</span></div>
 <div class="block">An implementation of <a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><code>AuthenticationFetcher</code></a> that decodes a username
  and password from the Authorization header and authenticates the credentials
  against any <a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a>s available.</div>
@@ -109,7 +108,7 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.authentication.Authenticator)" class="member-name-link">BasicAuthAuthenticationFetcher</a><wbr>(<a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&nbsp;authenticator)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.authentication.Authenticator)" class="member-name-link">BasicAuthAuthenticationFetcher</a><wbr>(<a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;authenticator)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -128,7 +127,7 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchAuthentication(io.micronaut.http.HttpRequest)" class="member-name-link">fetchAuthentication</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Attempts to read an <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from a <code>HttpRequest</code> being executed.</div>
+<div class="block">Attempts to read an <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from an HTTP Request being executed.</div>
 </div>
 </div>
 </div>
@@ -153,7 +152,7 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.authentication.Authenticator)">
 <h3>BasicAuthAuthenticationFetcher</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BasicAuthAuthenticationFetcher</span><wbr><span class="parameters">(<a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&nbsp;authenticator)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BasicAuthAuthenticationFetcher</span><wbr><span class="parameters">(<a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;authenticator)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authenticator</code> - The authenticator to authenticate the credentials</dd>
@@ -172,13 +171,13 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <section class="detail" id="fetchAuthentication(io.micronaut.http.HttpRequest)">
 <h3>fetchAuthentication</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</span>&nbsp;<span class="element-name">fetchAuthentication</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../filters/AuthenticationFetcher.html#fetchAuthentication(io.micronaut.http.HttpRequest)">AuthenticationFetcher</a></code></span></div>
-<div class="block">Attempts to read an <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from a <code>HttpRequest</code> being executed.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../filters/AuthenticationFetcher.html#fetchAuthentication(T)">AuthenticationFetcher</a></code></span></div>
+<div class="block">Attempts to read an <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from an HTTP Request being executed.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../filters/AuthenticationFetcher.html#fetchAuthentication(io.micronaut.http.HttpRequest)">fetchAuthentication</a></code>&nbsp;in interface&nbsp;<code><a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a></code></dd>
+<dd><code><a href="../filters/AuthenticationFetcher.html#fetchAuthentication(T)">fetchAuthentication</a></code>&nbsp;in interface&nbsp;<code><a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>request</code> - <code>HttpRequest</code> being executed.</dd>
+<dd><code>request</code> - an HTTP Request being executed.</dd>
 <dt>Returns:</dt>
 <dd><a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> if found</dd>
 </dl>

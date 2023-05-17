@@ -69,15 +69,19 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.authentication</a></div>
-<h1 title="Interface AuthenticationProvider" class="title">Interface AuthenticationProvider</h1>
+<h1 title="Interface AuthenticationProvider" class="title">Interface AuthenticationProvider&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="../ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.security.ldap">LdapAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OpenIdPasswordAuthenticationProvider</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">AuthenticationProvider</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">AuthenticationProvider&lt;T&gt;</span></div>
 <div class="block">Defines an authentication provider.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -100,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#authenticate(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate</a><wbr>(<a href="AuthenticationProvider.html" title="type parameter in AuthenticationProvider">T</a>&nbsp;httpRequest,
  <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Authenticates a user with the given request.</div>
@@ -120,10 +124,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="authenticate(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.AuthenticationRequest)">
-<h3>authenticate</h3>
+<section class="detail" id="authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">
+<h3 id="authenticate(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</h3>
 <div class="member-signature"><span class="return-type">org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</span>&nbsp;<span class="element-name">authenticate</span><wbr><span class="parameters">(@Nullable
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest,
+ <a href="AuthenticationProvider.html" title="type parameter in AuthenticationProvider">T</a>&nbsp;httpRequest,
  <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</span></div>
 <div class="block">Authenticates a user with the given request. If a successful authentication is
  returned, the object must be an instance of <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.

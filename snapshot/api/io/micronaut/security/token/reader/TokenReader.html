@@ -69,16 +69,20 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.token.reader</a></div>
-<h1 title="Interface TokenReader" class="title">Interface TokenReader</h1>
+<h1 title="Interface TokenReader" class="title">Interface TokenReader&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - request</dd>
+</dl>
 <dl class="notes">
 <dt>All Superinterfaces:</dt>
 <dd><code>io.micronaut.core.order.Ordered</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../jwt/bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.jwt.bearer">BearerTokenReader</a></code>, <code><a href="HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></code>, <code><a href="../jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></code></dd>
+<dd><code><a href="../bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.bearer">BearerTokenReader</a></code>, <code><a href="../cookie/CookieTokenReader.html" title="class in io.micronaut.security.token.cookie">CookieTokenReader</a></code>, <code><a href="HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></code>, <code><a href="../cookie/TokenCookieTokenReader.html" title="class in io.micronaut.security.token.cookie">TokenCookieTokenReader</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Functional Interface:</dt>
@@ -86,7 +90,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
-</span><span class="modifiers">public interface </span><span class="element-name type-name-label">TokenReader</span><span class="extends-implements">
+</span><span class="modifiers">public interface </span><span class="element-name type-name-label">TokenReader&lt;T&gt;</span><span class="extends-implements">
 extends io.micronaut.core.order.Ordered</span></div>
 <div class="block">Responsible for reading the token data from a request.</div>
 <dl class="notes">
@@ -119,7 +123,7 @@ extends io.micronaut.core.order.Ordered</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#findToken(io.micronaut.http.HttpRequest)" class="member-name-link">findToken</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#findToken(T)" class="member-name-link">findToken</a><wbr>(<a href="TokenReader.html" title="type parameter in TokenReader">T</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Attempts to retrieve a token in a request.</div>
 </div>
@@ -141,9 +145,9 @@ extends io.micronaut.core.order.Ordered</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="findToken(io.micronaut.http.HttpRequest)">
-<h3>findToken</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">findToken</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<section class="detail" id="findToken(T)">
+<h3 id="findToken(java.lang.Object)">findToken</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">findToken</span><wbr><span class="parameters">(<a href="TokenReader.html" title="type parameter in TokenReader">T</a>&nbsp;request)</span></div>
 <div class="block">Attempts to retrieve a token in a request.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

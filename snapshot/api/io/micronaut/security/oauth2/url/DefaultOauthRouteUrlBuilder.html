@@ -77,13 +77,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a></code>, <code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
+<dd><code><a href="AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code>, <code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations">@Requires(beans=io.micronaut.http.server.util.HttpHostResolver.class)
+@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultOauthRouteUrlBuilder</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></span></div>
+implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</span></div>
 <div class="block">Default implementation of <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url"><code>OauthRouteUrlBuilder</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -169,11 +170,11 @@ implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">buildLoginUrl</span><wbr><span class="parameters">(@Nullable
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="OauthRouteUrlBuilder.html#buildLoginUrl(io.micronaut.http.HttpRequest,java.lang.String)">OauthRouteUrlBuilder</a></code></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="OauthRouteUrlBuilder.html#buildLoginUrl(T,java.lang.String)">OauthRouteUrlBuilder</a></code></span></div>
 <div class="block">Builds the URL to start the OAuth 2.0 authorization code flow.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="OauthRouteUrlBuilder.html#buildLoginUrl(io.micronaut.http.HttpRequest,java.lang.String)">buildLoginUrl</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
+<dd><code><a href="OauthRouteUrlBuilder.html#buildLoginUrl(T,java.lang.String)">buildLoginUrl</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>originating</code> - The originating request</dd>
 <dd><code>providerName</code> - The oauth provider name</dd>
@@ -188,11 +189,11 @@ implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">buildCallbackUrl</span><wbr><span class="parameters">(@Nullable
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="OauthRouteUrlBuilder.html#buildCallbackUrl(io.micronaut.http.HttpRequest,java.lang.String)">OauthRouteUrlBuilder</a></code></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="OauthRouteUrlBuilder.html#buildCallbackUrl(T,java.lang.String)">OauthRouteUrlBuilder</a></code></span></div>
 <div class="block">Builds the URL to receive the OAuth 2.0 authorization callback request.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="OauthRouteUrlBuilder.html#buildCallbackUrl(io.micronaut.http.HttpRequest,java.lang.String)">buildCallbackUrl</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
+<dd><code><a href="OauthRouteUrlBuilder.html#buildCallbackUrl(T,java.lang.String)">buildCallbackUrl</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>originating</code> - The originating request</dd>
 <dd><code>providerName</code> - The oauth provider name</dd>
@@ -210,7 +211,7 @@ implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.
 <div class="block">Builds the URI to start the OAuth 2.0 authorization code flow.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="OauthRouteUrlBuilder.html#buildLoginUri(java.lang.String)">buildLoginUri</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
+<dd><code><a href="OauthRouteUrlBuilder.html#buildLoginUri(java.lang.String)">buildLoginUri</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>providerName</code> - The oauth provider name</dd>
 <dt>Returns:</dt>
@@ -227,7 +228,7 @@ implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.
 <div class="block">Builds the URI to receive the OAuth 2.0 authorization callback request.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="OauthRouteUrlBuilder.html#buildCallbackUri(java.lang.String)">buildCallbackUri</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
+<dd><code><a href="OauthRouteUrlBuilder.html#buildCallbackUri(java.lang.String)">buildCallbackUri</a></code>&nbsp;in interface&nbsp;<code><a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>providerName</code> - The oauth provider name</dd>
 <dt>Returns:</dt>
@@ -274,11 +275,11 @@ implements <a href="OauthRouteUrlBuilder.html" title="interface in io.micronaut.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">buildUrl</span><wbr><span class="parameters">(@Nullable
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;current,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="AbsoluteUrlBuilder.html#buildUrl(io.micronaut.http.HttpRequest,java.lang.String)">AbsoluteUrlBuilder</a></code></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="AbsoluteUrlBuilder.html#buildUrl(T,java.lang.String)">AbsoluteUrlBuilder</a></code></span></div>
 <div class="block">Builds an absolute URL for the given path.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="AbsoluteUrlBuilder.html#buildUrl(io.micronaut.http.HttpRequest,java.lang.String)">buildUrl</a></code>&nbsp;in interface&nbsp;<code><a href="AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a></code></dd>
+<dd><code><a href="AbsoluteUrlBuilder.html#buildUrl(T,java.lang.String)">buildUrl</a></code>&nbsp;in interface&nbsp;<code><a href="AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>current</code> - The current request</dd>
 <dd><code>path</code> - The path</dd>

@@ -143,6 +143,10 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-secured"><a href="#secured"><strong>9.2</strong><span>Secured Annotation</span></a></div>
         
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jakartaAnnotations"><a href="#jakartaAnnotations"><strong>9.2.1</strong><span>Jakarta Annotations</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-securedExpression"><a href="#securedExpression"><strong>9.2.2</strong><span>Secured with expressions</span></a></div>
+        
         <div class="toc-item" style="margin-left:10px" id="toc-item-interceptUrlMap"><a href="#interceptUrlMap"><strong>9.3</strong><span>Intercept URL Map</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-builtInEndpointsAccess"><a href="#builtInEndpointsAccess"><strong>9.4</strong><span>Built-In Endpoints Security</span></a></div>
@@ -391,6 +395,194 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
 </li>
 </ul>
+</div>
+<div class="sect2">
+<h3 id="_configuration_changes">Configuration Changes</h3>
+<div class="paragraph">
+<p>Some configuration keys have changed.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old</th>
+<th class="tableblock halign-left valign-top">New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.generator.access-token.expiration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-max-age</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-path</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-domain</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-same-site</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-same-site</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.bearer.enabled</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_classes_relocated">Classes relocated</h3>
+<div class="paragraph">
+<p>Some classes have been renamed and moved from <code>io.micronaut.security:micronaut-security-jwt</code> to <code>io.micronaut.security:micronaut.security</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old Pkg</th>
+<th class="tableblock halign-left valign-top">New Pkg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.endpoints.TokenRefreshRequest</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.render.AccessRefreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.render.AccessRefreshToken</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.render.BearerAccessRefreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.render.BearerAccessRefreshToken</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.endpoints.OauthController</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.endpoints.OauthController</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.endpoints.OauthControllerConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.endpoints.OauthControllerConfiguration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.endpoints.OauthControllerConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.generator.DefaultAccessRefreshTokenGenerator</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.AccessTokenCookieConfiguration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.CookieLoginHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.CookieLoginHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.bearer.BearerTokenConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.bearer.BearerTokenConfiguration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.bearer.BearerTokenConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.bearer.BearerTokenReader</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.bearer.BearerTokenReader</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.render.TokenRenderer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.render.TokenRenderer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.render.BearerTokenRenderer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.render.BearerTokenRenderer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.CookieTokenReader</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.RefreshTokenCookieConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.TokenCookieLoginHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.TokenCookieTokenReader</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.generator.AccessRefreshTokenGenerator</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.AccessTokenConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.generator.AccessTokenConfiguration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.generator.AccessTokenConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.claims.ClaimsGenerator</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.claims.ClaimsAudienceProvider</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.cookie.TokenCookieConfigurationProperties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.claims.JtiGenerator</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.jwt.generator.claims.JwtClaims</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.Claims</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_annotation_mappers_removed">Annotation Mappers Removed</h3>
@@ -1236,7 +1428,6 @@ Use the API <a href="../api/io/micronaut/security/config/RedirectService.html">R
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -1244,10 +1435,10 @@ import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 @Singleton
-public class AuthenticationProviderUserPassword implements AuthenticationProvider {
+public class AuthenticationProviderUserPassword&lt;T&gt; implements AuthenticationProvider&lt;T&gt; {
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(T httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
         return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
                 emitter.success(AuthenticationResponse.success("user"));
@@ -1560,6 +1751,16 @@ public class ExampleController {
 </tr>
 </table>
 </div>
+
+<h2 id="jakartaAnnotations"><a class="anchor" href="#jakartaAnnotations"></a>9.2.1 Jakarta Annotations</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured/jakartaAnnotations.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
 <p>Alternatively, you can use <a href="https://jakarta.ee/specifications/annotations/2.1/annotations-spec-2.1.html">Jakarta Annotations</a>:</p>
 </div>
@@ -1632,6 +1833,61 @@ When the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured
 </td>
 </tr>
 </table>
+</div>
+
+<h2 id="securedExpression"><a class="anchor" href="#securedExpression"></a>9.2.2 Secured with expressions</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured/securedExpression.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In combination with <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a>, you can use <a href="https://docs.micronaut.io/4.0.0-M2/guide/#evaluatedExpressions">expressions</a>, introduced in Micronaut Framework 4.0, to access the authenticated user:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller("/authenticated")
+public class ExampleController {
+
+    @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/email")
+    public String authenticationByEmail(Principal principal) {
+        return principal.getName() + " is authenticated";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Controller("/authenticated")
+class ExampleController {
+
+    @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/email")
+    String authenticationByEmail(Principal principal) {
+        "${principal.name} is authenticated"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@Controller("/authenticated")
+class ExampleController {
+    @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/email")
+    fun authenticationByEmail(principal: Principal) = "${principal.name} is authenticated"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>user</code> is of type <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a></p>
 </div>
 
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>9.3 Intercept URL Map</h2>
@@ -2637,9 +2893,9 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <div class="paragraph">
 <p>The following configuration properties are available to customize how the Bearer Token will be read:</p>
 </div>
-<a id="io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.bearer.BearerTokenConfigurationProperties" href="#io.micronaut.security.token.bearer.BearerTokenConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/bearer/BearerTokenConfigurationProperties.html">BearerTokenConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/bearer/BearerTokenConfigurationProperties.html">BearerTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2654,17 +2910,17 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.bearer.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set whether to enable bearer token authentication. Default value .</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.bearer.prefix</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the prefix to use for the auth token. Default value Bearer.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.bearer.header-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the header name to use. Default value Authorization.</p></td>
 </tr>
@@ -2730,9 +2986,9 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <div class="paragraph">
 <p>Reading tokens from Cookies is disabled by default. Note that using JWT tokens from cookies requires JWT Authentication to be enabled.</p>
 </div>
-<a id="io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties" href="#io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.cookie.TokenCookieConfigurationProperties" href="#io.micronaut.security.token.cookie.TokenCookieConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html">JwtCookieConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/cookie/TokenCookieConfigurationProperties.html">TokenCookieConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2747,42 +3003,42 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-http-only</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-max-age</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-same-site</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-same-site</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/http/cookie/SameSite.html">SameSite</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
@@ -3066,9 +3322,9 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<a id="io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.generator.AccessTokenConfigurationProperties" href="#io.micronaut.security.token.generator.AccessTokenConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html">AccessTokenConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/generator/AccessTokenConfigurationProperties.html">AccessTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3083,7 +3339,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.generator.access-token.expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value ().</p></td>
 </tr>
@@ -4392,7 +4648,7 @@ import java.util.Collections;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 @Singleton
-public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
+public class SiteminderAuthenticationFetcher implements AuthenticationFetcher&lt;HttpRequest&lt;?&gt;&gt; {
 
     public static final String SITEMINDER_USER_HEADER = "SM_USER";
 
@@ -5136,9 +5392,9 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <div class="paragraph">
 <p>Moreover, the controller can be configured with:</p>
 </div>
-<a id="io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.endpoints.OauthControllerConfigurationProperties" href="#io.micronaut.security.endpoints.OauthControllerConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">

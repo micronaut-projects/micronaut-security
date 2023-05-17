@@ -69,22 +69,26 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.oauth2.client</a></div>
-<h1 title="Class IdTokenClaimsValidator" class="title">Class IdTokenClaimsValidator</h1>
+<h1 title="Class IdTokenClaimsValidator" class="title">Class IdTokenClaimsValidator&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.oauth2.client.IdTokenClaimsValidator</div>
+<div class="inheritance">io.micronaut.security.oauth2.client.IdTokenClaimsValidator&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - request</dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></code>, <code><a href="../../token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></code></dd>
+<dd><code><a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</code>, <code><a href="../../token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.authentication",value="idtoken") @Requires(property="micronaut.security.token.jwt.claims-validators.openid-idtoken",notEquals="false")
 @Singleton
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">IdTokenClaimsValidator</span>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">IdTokenClaimsValidator&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></span></div>
+implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</span></div>
 <div class="block">For <a href="../../authentication/AuthenticationMode.html#IDTOKEN"><code>AuthenticationMode.IDTOKEN</code></a> authentication mode performs the following verification as described in the OpenID Connect Spec.
 
  - The Issuer Identifier for the OpenID Provider (which is typically obtained during Discovery) MUST exactly match the value of the iss (issuer) Claim.
@@ -147,48 +151,48 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseAudiences(io.micronaut.security.token.jwt.generator.claims.JwtClaims)" class="member-name-link">parseAudiences</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseAudiences(io.micronaut.security.token.Claims)" class="member-name-link">parseAudiences</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseAzpClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims)" class="member-name-link">parseAzpClaim</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseAzpClaim(io.micronaut.security.token.Claims)" class="member-name-link">parseAzpClaim</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)" class="member-name-link">parseClaim</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaim(io.micronaut.security.token.Claims,java.lang.String)" class="member-name-link">parseClaim</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaimList(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)" class="member-name-link">parseClaimList</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaimList(io.micronaut.security.token.Claims,java.lang.String)" class="member-name-link">parseClaimList</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaimString(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)" class="member-name-link">parseClaimString</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseClaimString(io.micronaut.security.token.Claims,java.lang.String)" class="member-name-link">parseClaimString</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseIssuerClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims)" class="member-name-link">parseIssuerClaim</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseIssuerClaim(io.micronaut.security.token.Claims)" class="member-name-link">parseIssuerClaim</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)" class="member-name-link">validate</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.Claims,T)" class="member-name-link">validate</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
+ <a href="IdTokenClaimsValidator.html" title="type parameter in IdTokenClaimsValidator">T</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List)" class="member-name-link">validateAzp</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List)" class="member-name-link">validateAzp</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clientId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;audiences)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;audiences)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;audiences,
  <a href="../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;oauthClientConfiguration)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List,java.lang.String,io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List,java.lang.String,io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)" class="member-name-link">validateIssuerAudienceAndAzp</a><wbr>(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;audiences,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clientId,
@@ -264,15 +268,15 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">
-<h3>validate</h3>
+<section class="detail" id="validate(io.micronaut.security.token.Claims,T)">
+<h3 id="validate(io.micronaut.security.token.Claims,java.lang.Object)">validate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- <a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @Nullable
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ <a href="IdTokenClaimsValidator.html" title="type parameter in IdTokenClaimsValidator">T</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../token/jwt/validator/JwtClaimsValidator.html#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="../../token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></code></dd>
+<dd><code><a href="../../token/jwt/validator/JwtClaimsValidator.html#validate(io.micronaut.security.token.Claims,T)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="../../token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;<a href="IdTokenClaimsValidator.html" title="type parameter in IdTokenClaimsValidator">T</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>claims</code> - JWT Claims</dd>
 <dd><code>request</code> - HTTP request</dd>
@@ -282,9 +286,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseIssuerClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims)">
+<section class="detail" id="parseIssuerClaim(io.micronaut.security.token.Claims)">
 <h3>parseIssuerClaim</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseIssuerClaim</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseIssuerClaim</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claims</code> - JWT Claims</dd>
@@ -294,9 +298,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)">
+<section class="detail" id="parseClaim(io.micronaut.security.token.Claims,java.lang.String)">
 <h3>parseClaim</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">parseClaim</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">parseClaim</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -308,9 +312,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseClaimString(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)">
+<section class="detail" id="parseClaimString(io.micronaut.security.token.Claims,java.lang.String)">
 <h3>parseClaimString</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseClaimString</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseClaimString</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -322,9 +326,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseClaimList(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String)">
+<section class="detail" id="parseClaimList(io.micronaut.security.token.Claims,java.lang.String)">
 <h3>parseClaimList</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">parseClaimList</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">parseClaimList</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;claimName)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -336,9 +340,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseAudiences(io.micronaut.security.token.jwt.generator.claims.JwtClaims)">
+<section class="detail" id="parseAudiences(io.micronaut.security.token.Claims)">
 <h3>parseAudiences</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">parseAudiences</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">parseAudiences</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claims</code> - JWT Claims</dd>
@@ -348,10 +352,10 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List)">
+<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List)">
 <h3>validateIssuerAudienceAndAzp</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validateIssuerAudienceAndAzp</span><wbr><span class="parameters">(@NonNull
- <a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @NonNull
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  @NonNull
@@ -367,10 +371,10 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)">
+<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)">
 <h3>validateIssuerAudienceAndAzp</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validateIssuerAudienceAndAzp</span><wbr><span class="parameters">(@NonNull
- <a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @NonNull
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  @NonNull
@@ -389,10 +393,10 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List,java.lang.String,io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)">
+<section class="detail" id="validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List,java.lang.String,io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)">
 <h3>validateIssuerAudienceAndAzp</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validateIssuerAudienceAndAzp</span><wbr><span class="parameters">(@NonNull
- <a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @NonNull
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iss,
  @NonNull
@@ -414,9 +418,9 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="parseAzpClaim(io.micronaut.security.token.jwt.generator.claims.JwtClaims)">
+<section class="detail" id="parseAzpClaim(io.micronaut.security.token.Claims)">
 <h3>parseAzpClaim</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseAzpClaim</span><wbr><span class="parameters">(<a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">parseAzpClaim</span><wbr><span class="parameters">(<a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claims</code> - JWT Claims</dd>
@@ -426,10 +430,10 @@ implements <a href="../../token/jwt/validator/GenericJwtClaimsValidator.html" ti
 </section>
 </li>
 <li>
-<section class="detail" id="validateAzp(io.micronaut.security.token.jwt.generator.claims.JwtClaims,java.lang.String,java.util.List)">
+<section class="detail" id="validateAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List)">
 <h3>validateAzp</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validateAzp</span><wbr><span class="parameters">(@NonNull
- <a href="../../token/jwt/generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../token/Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @NonNull
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clientId,
  @NonNull

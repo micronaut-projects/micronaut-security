@@ -69,9 +69,13 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.rules</a></div>
-<h1 title="Interface SecurityRule" class="title">Interface SecurityRule</h1>
+<h1 title="Interface SecurityRule" class="title">Interface SecurityRule&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
 <dl class="notes">
 <dt>All Superinterfaces:</dt>
 <dd><code>io.micronaut.core.order.Ordered</code></dd>
@@ -81,7 +85,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="AbstractSecurityRule.html" title="class in io.micronaut.security.rules">AbstractSecurityRule</a></code>, <code><a href="ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></code>, <code><a href="IpPatternsRule.html" title="class in io.micronaut.security.rules">IpPatternsRule</a></code>, <code><a href="SecuredAnnotationRule.html" title="class in io.micronaut.security.rules">SecuredAnnotationRule</a></code>, <code><a href="SensitiveEndpointRule.html" title="class in io.micronaut.security.rules">SensitiveEndpointRule</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SecurityRule</span><span class="extends-implements">
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SecurityRule&lt;T&gt;</span><span class="extends-implements">
 extends io.micronaut.core.order.Ordered</span></div>
 <div class="block">Informs the <a href="../filters/SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a> filter what to do with the given request.</div>
 <dl class="notes">
@@ -135,8 +139,7 @@ extends io.micronaut.core.order.Ordered</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>org.reactivestreams.Publisher&lt;<a href="SecurityRuleResult.html" title="enum class in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#check(io.micronaut.http.HttpRequest,io.micronaut.web.router.RouteMatch,io.micronaut.security.authentication.Authentication)" class="member-name-link">check</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#check(T,io.micronaut.security.authentication.Authentication)" class="member-name-link">check</a><wbr>(<a href="SecurityRule.html" title="type parameter in SecurityRule">T</a>&nbsp;request,
  <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns a publisher that is required to emit a single security result
@@ -213,11 +216,10 @@ extends io.micronaut.core.order.Ordered</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="check(io.micronaut.http.HttpRequest,io.micronaut.web.router.RouteMatch,io.micronaut.security.authentication.Authentication)">
-<h3>check</h3>
-<div class="member-signature"><span class="return-type">org.reactivestreams.Publisher&lt;<a href="SecurityRuleResult.html" title="enum class in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</span>&nbsp;<span class="element-name">check</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- @Nullable
- io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
+<section class="detail" id="check(T,io.micronaut.security.authentication.Authentication)">
+<h3 id="check(java.lang.Object,io.micronaut.security.authentication.Authentication)">check</h3>
+<div class="member-signature"><span class="return-type">org.reactivestreams.Publisher&lt;<a href="SecurityRuleResult.html" title="enum class in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</span>&nbsp;<span class="element-name">check</span><wbr><span class="parameters">(@Nullable
+ <a href="SecurityRule.html" title="type parameter in SecurityRule">T</a>&nbsp;request,
  @Nullable
  <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Returns a publisher that is required to emit a single security result
@@ -225,7 +227,6 @@ extends io.micronaut.core.order.Ordered</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>request</code> - The current request</dd>
-<dd><code>routeMatch</code> - The matched route or empty if no route was matched. e.g. static resource.</dd>
 <dd><code>authentication</code> - The user authentication. Null if not authenticated</dd>
 <dt>Returns:</dt>
 <dd>The result</dd>

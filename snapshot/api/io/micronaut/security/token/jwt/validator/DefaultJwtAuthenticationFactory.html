@@ -72,7 +72,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class DefaultJwtAuthenticationFactory" class="title">Class DefaultJwtAuthenticationFactory</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="../../AbstractTokenAuthenticationFactory.html" title="class in io.micronaut.security.token">io.micronaut.security.token.AbstractTokenAuthenticationFactory</a>&lt;com.nimbusds.jwt.JWT&gt;
 <div class="inheritance">io.micronaut.security.token.jwt.validator.DefaultJwtAuthenticationFactory</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -82,7 +84,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultJwtAuthenticationFactory</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+<span class="extends-implements">extends <a href="../../AbstractTokenAuthenticationFactory.html" title="class in io.micronaut.security.token">AbstractTokenAuthenticationFactory</a>&lt;com.nimbusds.jwt.JWT&gt;
 implements <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a></span></div>
 <div class="block">Extracts the JWT claims and uses the <a href="AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator"><code>AuthenticationJWTClaimsSetAdapter</code></a> to construction an <a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> object.</div>
 <dl class="notes">
@@ -113,7 +115,7 @@ implements <a href="JwtAuthenticationFactory.html" title="interface in io.micron
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -122,12 +124,19 @@ implements <a href="JwtAuthenticationFactory.html" title="interface in io.micron
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createAuthentication(com.nimbusds.jwt.JWT)" class="member-name-link">createAuthentication</a><wbr>(com.nimbusds.jwt.JWT&nbsp;token)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#usernameForClaims(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">usernameForClaims</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimSet)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#usernameForClaims(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">usernameForClaims</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimSet)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../../AbstractTokenAuthenticationFactory.html#usernameForClaims(io.micronaut.security.token.Claims)"><code>AbstractTokenAuthenticationFactory.usernameForClaims(io.micronaut.security.token.Claims)</code></a> instead.</div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.token.AbstractTokenAuthenticationFactory">Methods inherited from class&nbsp;io.micronaut.security.token.<a href="../../AbstractTokenAuthenticationFactory.html" title="class in io.micronaut.security.token">AbstractTokenAuthenticationFactory</a></h3>
+<code><a href="../../AbstractTokenAuthenticationFactory.html#createAuthentication(java.util.Map)">createAuthentication</a>, <a href="../../AbstractTokenAuthenticationFactory.html#usernameForClaims(io.micronaut.security.token.Claims)">usernameForClaims</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -147,6 +156,11 @@ implements <a href="JwtAuthenticationFactory.html" title="interface in io.micron
 <h3>DefaultJwtAuthenticationFactory</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultJwtAuthenticationFactory</span><wbr><span class="parameters">(<a href="../../config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
  <a href="../../RolesFinder.html" title="interface in io.micronaut.security.token">RolesFinder</a>&nbsp;rolesFinder)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>tokenConfiguration</code> - Token Configuration</dd>
+<dd><code>rolesFinder</code> - Utility to retrieve roles from token claims</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -176,8 +190,12 @@ implements <a href="JwtAuthenticationFactory.html" title="interface in io.micron
 <li>
 <section class="detail" id="usernameForClaims(com.nimbusds.jwt.JWTClaimsSet)">
 <h3>usernameForClaims</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">usernameForClaims</span><wbr><span class="parameters">(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimSet)</span>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">usernameForClaims</span><wbr><span class="parameters">(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimSet)</span>
                                       throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/ParseException.html" title="class or interface in java.text" class="external-link">ParseException</a></span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../../AbstractTokenAuthenticationFactory.html#usernameForClaims(io.micronaut.security.token.Claims)"><code>AbstractTokenAuthenticationFactory.usernameForClaims(io.micronaut.security.token.Claims)</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claimSet</code> - JWT Claims</dd>

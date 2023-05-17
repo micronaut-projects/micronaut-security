@@ -77,14 +77,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code>, <code><a href="../handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></code></dd>
+<dd><code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code>, <code><a href="../handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Requires(condition=<a href="SessionAuthenticationModeCondition.html" title="class in io.micronaut.security.session">SessionAuthenticationModeCondition.class</a>)
 @Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SessionLoginHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></span></div>
+implements <a href="../handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span></div>
 <div class="block">A <a href="../handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -129,7 +129,7 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)" class="member-name-link">SessionLoginHandler</a><wbr>(<a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
- <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence,
+ <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor.</div>
@@ -218,7 +218,7 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SessionLoginHandler</span><wbr><span class="parameters">(<a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
  @Nullable
- <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence,
+ <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService)</span></div>
 <div class="block">Constructor.</div>
 <dl class="notes">
@@ -245,10 +245,10 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../handlers/LoginHandler.html#loginSuccess(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)">loginSuccess</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
+<dd><code><a href="../handlers/LoginHandler.html#loginSuccess(io.micronaut.security.authentication.Authentication,I)">loginSuccess</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Authenticated user's representation.</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or an JWT token rendered to the response</dd>
 </dl>
@@ -262,11 +262,11 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../handlers/LoginHandler.html#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,io.micronaut.http.HttpRequest)">loginRefresh</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
+<dd><code><a href="../handlers/LoginHandler.html#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,I)">loginRefresh</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>refreshToken</code> - The refresh token</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or an JWT token rendered to the response</dd>
 </dl>
@@ -279,10 +279,10 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../handlers/LoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,io.micronaut.http.HttpRequest)">loginFailed</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
+<dd><code><a href="../handlers/LoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,I)">loginFailed</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>authenticationFailed</code> - Object encapsulates the Login failure</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or 401 response</dd>
 </dl>

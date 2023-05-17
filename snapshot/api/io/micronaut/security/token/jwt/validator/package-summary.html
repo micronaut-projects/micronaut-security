@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Validates JWT audience claim contains a configured value.</div>
 </div>
@@ -94,15 +94,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Extracts the JWT claims and uses the <a href="AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator"><code>AuthenticationJWTClaimsSetAdapter</code></a> to construction an <a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> object.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Validate JWT is not expired.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Any <a href="JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator"><code>JwtTokenValidator</code></a> which should be verified for any JWT should implement this interface.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Validates JWT issuer claim matches a configured value.</div>
 </div>
@@ -114,7 +114,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Utils class to instantiate a JWClaimsSet give a map of claims.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Provides a contract to create custom JWT claims validations.</div>
 </div>
@@ -126,22 +126,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block"><code>ConfigurationProperties</code> implementation of <a href="JwtClaimsValidatorConfiguration.html" title="interface in io.micronaut.security.token.jwt.validator"><code>JwtClaimsValidatorConfiguration</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A builder style class for validating JWT tokens against any number of provided
  encryption or signature configurations and any claim validators.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtValidator.Builder.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator.Builder</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtValidator.Builder.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator.Builder</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A builder for <a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator"><code>JwtValidator</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Validate current time is not before the not-before claim of a JWT token.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Validate JWT subject claim is not null.</div>
 </div>

@@ -77,14 +77,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a></code></dd>
+<dd><code><a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Requires(condition=<a href="SessionAuthenticationModeCondition.html" title="class in io.micronaut.security.session">SessionAuthenticationModeCondition.class</a>)
 @Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SessionLogoutHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a></span></div>
+implements <a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span></div>
 <div class="block"><a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers"><code>LogoutHandler</code></a> implementation for Session-Based Authentication.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -199,9 +199,9 @@ implements <a href="../handlers/LogoutHandler.html" title="interface in io.micro
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">logout</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../handlers/LogoutHandler.html#logout(io.micronaut.http.HttpRequest)">logout</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a></code></dd>
+<dd><code><a href="../handlers/LogoutHandler.html#logout(I)">logout</a></code>&nbsp;in interface&nbsp;<code><a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HttpResponse built after the user logs out</dd>
 </dl>

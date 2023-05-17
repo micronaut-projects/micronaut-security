@@ -69,21 +69,25 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.token.jwt.validator</a></div>
-<h1 title="Class JwtTokenValidator" class="title">Class JwtTokenValidator</h1>
+<h1 title="Class JwtTokenValidator" class="title">Class JwtTokenValidator&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.token.jwt.validator.JwtTokenValidator</div>
+<div class="inheritance">io.micronaut.security.token.jwt.validator.JwtTokenValidator&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></code></dd>
+<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">JwtTokenValidator</span>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">JwtTokenValidator&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></span></div>
+implements <a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;T&gt;</span></div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.0</dd>
@@ -111,7 +115,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="col-first even-row-color"><code>protected final <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a></code></div>
 <div class="col-second even-row-color"><code><a href="#jwtAuthenticationFactory" class="member-name-link">jwtAuthenticationFactory</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#validator" class="member-name-link">validator</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -128,7 +132,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&nbsp;validator,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
@@ -153,8 +157,8 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateToken(java.lang.String,io.micronaut.http.HttpRequest)" class="member-name-link">validateToken</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateToken(java.lang.String,T)" class="member-name-link">validateToken</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
+ <a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Validates the provided token and returns the authentication state.</div>
 </div>
@@ -187,7 +191,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <li>
 <section class="detail" id="validator">
 <h3>validator</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a></span>&nbsp;<span class="element-name">validator</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</span>&nbsp;<span class="element-name">validator</span></div>
 </section>
 </li>
 </ul>
@@ -219,7 +223,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)">
 <h3>JwtTokenValidator</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&nbsp;validator,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -237,16 +241,16 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="validateToken(java.lang.String,io.micronaut.http.HttpRequest)">
-<h3>validateToken</h3>
+<section class="detail" id="validateToken(java.lang.String,T)">
+<h3 id="validateToken(java.lang.String,java.lang.Object)">validateToken</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</span>&nbsp;<span class="element-name">validateToken</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
  @Nullable
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../validator/TokenValidator.html#validateToken(java.lang.String,io.micronaut.http.HttpRequest)">TokenValidator</a></code></span></div>
+ <a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&nbsp;request)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../validator/TokenValidator.html#validateToken(java.lang.String,T)">TokenValidator</a></code></span></div>
 <div class="block">Validates the provided token and returns the authentication state.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../validator/TokenValidator.html#validateToken(java.lang.String,io.micronaut.http.HttpRequest)">validateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></code></dd>
+<dd><code><a href="../../validator/TokenValidator.html#validateToken(java.lang.String,T)">validateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>token</code> - The token string.</dd>
 <dd><code>request</code> - The current request (or null)</dd>

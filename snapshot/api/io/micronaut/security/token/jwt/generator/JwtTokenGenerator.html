@@ -103,7 +103,7 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a></code></div>
 <div class="col-second even-row-color"><code><a href="#claimsGenerator" class="member-name-link">claimsGenerator</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected final <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a></code></div>
@@ -123,9 +123,9 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator)" class="member-name-link">JwtTokenGenerator</a><wbr>(<a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.claims.ClaimsGenerator)" class="member-name-link">JwtTokenGenerator</a><wbr>(<a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
  <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
- <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</code></div>
+ <a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -188,7 +188,7 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <li>
 <section class="detail" id="claimsGenerator">
 <h3>claimsGenerator</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></span>&nbsp;<span class="element-name">claimsGenerator</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a></span>&nbsp;<span class="element-name">claimsGenerator</span></div>
 </section>
 </li>
 <li>
@@ -212,13 +212,13 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.claims.ClaimsGenerator)">
 <h3>JwtTokenGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenGenerator</span><wbr><span class="parameters">(@Nullable @Named("generator")
  <a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
  @Nullable @Named("generator")
  <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
- <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</span></div>
+ <a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>signatureConfiguration</code> - JWT Generator signature configuration</dd>

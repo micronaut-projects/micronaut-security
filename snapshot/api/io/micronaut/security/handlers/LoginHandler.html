@@ -69,19 +69,24 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.handlers</a></div>
-<h1 title="Interface LoginHandler" class="title">Interface LoginHandler</h1>
+<h1 title="Interface LoginHandler" class="title">Interface LoginHandler&lt;I,<wbr>O&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>I</code> - Request</dd>
+<dd><code>O</code> - Response</dd>
+</dl>
+<dl class="notes">
 <dt>All Known Subinterfaces:</dt>
-<dd><code><a href="RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></code></dd>
+<dd><code><a href="RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a>&lt;I,<wbr>O&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../token/jwt/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.jwt.bearer">AccessRefreshTokenLoginHandler</a></code>, <code><a href="../token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code>, <code><a href="../oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></code>, <code><a href="../token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></code>, <code><a href="../session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></code></dd>
+<dd><code><a href="../token/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.bearer">AccessRefreshTokenLoginHandler</a></code>, <code><a href="../token/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">CookieLoginHandler</a></code>, <code><a href="../oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></code>, <code><a href="../session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></code>, <code><a href="../token/cookie/TokenCookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">TokenCookieLoginHandler</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">LoginHandler</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">LoginHandler&lt;I,<wbr>O&gt;</span></div>
 <div class="block">Defines how to respond to a successful or failed login attempt.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -103,18 +108,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,io.micronaut.http.HttpRequest)" class="member-name-link">loginFailed</a><wbr>(<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,I)" class="member-name-link">loginFailed</a><wbr>(<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,io.micronaut.http.HttpRequest)" class="member-name-link">loginRefresh</a><wbr>(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,I)" class="member-name-link">loginRefresh</a><wbr>(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginSuccess(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)" class="member-name-link">loginSuccess</a><wbr>(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#loginSuccess(io.micronaut.security.authentication.Authentication,I)" class="member-name-link">loginSuccess</a><wbr>(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
@@ -131,44 +136,44 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="loginSuccess(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)">
-<h3>loginSuccess</h3>
-<div class="member-signature"><span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">loginSuccess</span><wbr><span class="parameters">(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<section class="detail" id="loginSuccess(io.micronaut.security.authentication.Authentication,I)">
+<h3 id="loginSuccess(io.micronaut.security.authentication.Authentication,java.lang.Object)">loginSuccess</h3>
+<div class="member-signature"><span class="return-type"><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></span>&nbsp;<span class="element-name">loginSuccess</span><wbr><span class="parameters">(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Authenticated user's representation.</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or an JWT token rendered to the response</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,io.micronaut.http.HttpRequest)">
-<h3>loginRefresh</h3>
-<div class="member-signature"><span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">loginRefresh</span><wbr><span class="parameters">(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+<section class="detail" id="loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,I)">
+<h3 id="loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,java.lang.Object)">loginRefresh</h3>
+<div class="member-signature"><span class="return-type"><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></span>&nbsp;<span class="element-name">loginRefresh</span><wbr><span class="parameters">(<a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>refreshToken</code> - The refresh token</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or an JWT token rendered to the response</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="loginFailed(io.micronaut.security.authentication.AuthenticationResponse,io.micronaut.http.HttpRequest)">
-<h3>loginFailed</h3>
-<div class="member-signature"><span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">loginFailed</span><wbr><span class="parameters">(<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<section class="detail" id="loginFailed(io.micronaut.security.authentication.AuthenticationResponse,I)">
+<h3 id="loginFailed(io.micronaut.security.authentication.AuthenticationResponse,java.lang.Object)">loginFailed</h3>
+<div class="member-signature"><span class="return-type"><a href="LoginHandler.html" title="type parameter in LoginHandler">O</a></span>&nbsp;<span class="element-name">loginFailed</span><wbr><span class="parameters">(<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
+ <a href="LoginHandler.html" title="type parameter in LoginHandler">I</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authenticationResponse</code> - Object encapsulates the Login failure</dd>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HTTP Response. Eg. a redirect or 401 response</dd>
 </dl>

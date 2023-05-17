@@ -82,7 +82,8 @@ loadScripts(document, 'script');</script>
 <dd><code>io.micronaut.core.util.Toggleable</code>, <code>io.micronaut.http.util.OutgoingRequestProcessorMatcher</code>, <code><a href="TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@ConfigurationProperties("micronaut.security.token.propagation")
+<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.util.OutgoingRequestProcessorMatcher.class)
+@ConfigurationProperties("micronaut.security.token.propagation")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">TokenPropagationConfigurationProperties</span>
 <span class="extends-implements">extends <a href="AbstractOutgoingRequestProcessorMatcher.html" title="class in io.micronaut.security.token.propagation">AbstractOutgoingRequestProcessorMatcher</a>
 implements <a href="TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a></span></div>

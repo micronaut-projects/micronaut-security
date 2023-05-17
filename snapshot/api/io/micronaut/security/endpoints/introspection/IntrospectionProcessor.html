@@ -69,15 +69,19 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.endpoints.introspection</a></div>
-<h1 title="Interface IntrospectionProcessor" class="title">Interface IntrospectionProcessor</h1>
+<h1 title="Interface IntrospectionProcessor" class="title">Interface IntrospectionProcessor&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">IntrospectionProcessor</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">IntrospectionProcessor&lt;T&gt;</span></div>
 <div class="block">Given a <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection"><code>IntrospectionRequest</code></a> generates a <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection"><code>IntrospectionResponse</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -106,12 +110,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#introspect(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)" class="member-name-link">introspect</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#introspect(io.micronaut.security.authentication.Authentication,T)" class="member-name-link">introspect</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+ <a href="IntrospectionProcessor.html" title="type parameter in IntrospectionProcessor">T</a>&nbsp;httpRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,io.micronaut.http.HttpRequest)" class="member-name-link">introspect</a><wbr>(<a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)" class="member-name-link">introspect</a><wbr>(<a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
+ <a href="IntrospectionProcessor.html" title="type parameter in IntrospectionProcessor">T</a>&nbsp;httpRequest)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
@@ -128,13 +132,13 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,io.micronaut.http.HttpRequest)">
-<h3>introspect</h3>
+<section class="detail" id="introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)">
+<h3 id="introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,java.lang.Object)">introspect</h3>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
  <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
  @NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</span></div>
+ <a href="IntrospectionProcessor.html" title="type parameter in IntrospectionProcessor">T</a>&nbsp;httpRequest)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>introspectionRequest</code> - A parameter representing the token along with optional parameters representing additional context</dd>
@@ -145,13 +149,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="introspect(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)">
-<h3>introspect</h3>
+<section class="detail" id="introspect(io.micronaut.security.authentication.Authentication,T)">
+<h3 id="introspect(io.micronaut.security.authentication.Authentication,java.lang.Object)">introspect</h3>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
  <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</span></div>
+ <a href="IntrospectionProcessor.html" title="type parameter in IntrospectionProcessor">T</a>&nbsp;httpRequest)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - The authentication</dd>

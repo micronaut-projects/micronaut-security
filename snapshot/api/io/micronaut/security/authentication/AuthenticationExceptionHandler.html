@@ -80,7 +80,8 @@ loadScripts(document, 'script');</script>
 <dd><code>io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a>,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.server.exceptions.ExceptionHandler.class)
+@Singleton
 @Primary
 @Produces
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">AuthenticationExceptionHandler</span>

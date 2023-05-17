@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Filter("${micronaut.security.token.propagation.path:/**}")
-@Requires(beans={<a href="TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator.class</a>,<a href="TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration.class</a>}) @Requires(property="micronaut.security.token.propagation.enabled",value="true")
+@Requires(classes=io.micronaut.http.filter.HttpClientFilter.class) @Requires(beans={<a href="TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator.class</a>,<a href="TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration.class</a>}) @Requires(property="micronaut.security.token.propagation.enabled",value="true")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">TokenPropagationHttpClientFilter</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements io.micronaut.http.filter.HttpClientFilter</span></div>

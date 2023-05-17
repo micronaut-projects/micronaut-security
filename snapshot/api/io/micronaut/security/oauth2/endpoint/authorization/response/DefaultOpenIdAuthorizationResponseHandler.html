@@ -69,20 +69,24 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.response</a></div>
-<h1 title="Class DefaultOpenIdAuthorizationResponseHandler" class="title">Class DefaultOpenIdAuthorizationResponseHandler</h1>
+<h1 title="Class DefaultOpenIdAuthorizationResponseHandler" class="title">Class DefaultOpenIdAuthorizationResponseHandler&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler</div>
+<div class="inheritance">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
-@Requires(configuration="io.micronaut.security.token.jwt")
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultOpenIdAuthorizationResponseHandler</span>
+<div class="type-signature"><span class="annotations">@Requires(beans={<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator.class</a>,<a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper.class</a>,<a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient.class</a>,<a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder.class</a>}) @Requires(configuration="io.micronaut.security.token.jwt")
+@Singleton
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultOpenIdAuthorizationResponseHandler&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a></span></div>
 <div class="block">Default implementation of <a href="OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><code>OpenIdAuthorizationResponseHandler</code></a>.</div>
@@ -103,10 +107,10 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultOpenIdAuthorizationResponseHandler</a><wbr>(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
- <a href="../../token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultOpenIdAuthorizationResponseHandler</a><wbr>(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+ <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
- <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
+ <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
  <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
  <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -152,12 +156,12 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">
 <h3>DefaultOpenIdAuthorizationResponseHandler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdAuthorizationResponseHandler</span><wbr><span class="parameters">(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
- <a href="../../token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
- <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
+ <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
  @Nullable
  <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
  @Nullable

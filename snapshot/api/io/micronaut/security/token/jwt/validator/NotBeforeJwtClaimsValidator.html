@@ -69,23 +69,27 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.token.jwt.validator</a></div>
-<h1 title="Class NotBeforeJwtClaimsValidator" class="title">Class NotBeforeJwtClaimsValidator</h1>
+<h1 title="Class NotBeforeJwtClaimsValidator" class="title">Class NotBeforeJwtClaimsValidator&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.token.jwt.validator.NotBeforeJwtClaimsValidator</div>
+<div class="inheritance">io.micronaut.security.token.jwt.validator.NotBeforeJwtClaimsValidator&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></code>, <code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></code></dd>
+<dd><code><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</code>, <code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
 @Requires(property="micronaut.security.token.jwt.claims-validators.not-before",
           value="true")
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">NotBeforeJwtClaimsValidator</span>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">NotBeforeJwtClaimsValidator&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></span></div>
+implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</span></div>
 <div class="block">Validate current time is not before the not-before claim of a JWT token.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -139,8 +143,8 @@ implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micro
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">validate</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimsSet)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)" class="member-name-link">validate</a><wbr>(<a href="../generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.Claims,T)" class="member-name-link">validate</a><wbr>(<a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
+ <a href="NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&nbsp;request)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -209,15 +213,15 @@ implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micro
 </section>
 </li>
 <li>
-<section class="detail" id="validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">
-<h3>validate</h3>
+<section class="detail" id="validate(io.micronaut.security.token.Claims,T)">
+<h3 id="validate(io.micronaut.security.token.Claims,java.lang.Object)">validate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- <a href="../generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @Nullable
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ <a href="NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="JwtClaimsValidator.html#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></code></dd>
+<dd><code><a href="JwtClaimsValidator.html#validate(io.micronaut.security.token.Claims,T)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;<a href="NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>claims</code> - The JwtClaims</dd>
 <dd><code>request</code> - HTTP Request</dd>

@@ -65,20 +65,25 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.handlers</a></div>
-<h1 title="Interface RedirectingLoginHandler" class="title">Interface RedirectingLoginHandler</h1>
+<h1 title="Interface RedirectingLoginHandler" class="title">Interface RedirectingLoginHandler&lt;I,<wbr>O&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>I</code> - Request</dd>
+<dd><code>O</code> - Response</dd>
+</dl>
+<dl class="notes">
 <dt>All Superinterfaces:</dt>
-<dd><code><a href="LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
+<dd><code><a href="LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;I,<wbr>O&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code>, <code><a href="../oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></code>, <code><a href="../token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></code>, <code><a href="../session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></code></dd>
+<dd><code><a href="../token/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">CookieLoginHandler</a></code>, <code><a href="../oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></code>, <code><a href="../session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></code>, <code><a href="../token/cookie/TokenCookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">TokenCookieLoginHandler</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">RedirectingLoginHandler</span><span class="extends-implements">
-extends <a href="LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">RedirectingLoginHandler&lt;I,<wbr>O&gt;</span><span class="extends-implements">
+extends <a href="LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;I,<wbr>O&gt;</span></div>
 <div class="block">A marker contract to indicate the login handler
  returns redirecting responses.</div>
 <dl class="notes">
@@ -96,7 +101,7 @@ extends <a href="LoginHandler.html" title="interface in io.micronaut.security.ha
 <h2>Method Summary</h2>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.security.handlers.LoginHandler">Methods inherited from interface&nbsp;io.micronaut.security.handlers.<a href="LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></h3>
-<code><a href="LoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,io.micronaut.http.HttpRequest)">loginFailed</a>, <a href="LoginHandler.html#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,io.micronaut.http.HttpRequest)">loginRefresh</a>, <a href="LoginHandler.html#loginSuccess(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)">loginSuccess</a></code></div>
+<code><a href="LoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,I)">loginFailed</a>, <a href="LoginHandler.html#loginRefresh(io.micronaut.security.authentication.Authentication,java.lang.String,I)">loginRefresh</a>, <a href="LoginHandler.html#loginSuccess(io.micronaut.security.authentication.Authentication,I)">loginSuccess</a></code></div>
 </section>
 </li>
 </ul>

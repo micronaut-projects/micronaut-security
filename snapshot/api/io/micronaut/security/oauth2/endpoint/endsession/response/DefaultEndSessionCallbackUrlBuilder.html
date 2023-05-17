@@ -69,21 +69,26 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.oauth2.endpoint.endsession.response</a></div>
-<h1 title="Class DefaultEndSessionCallbackUrlBuilder" class="title">Class DefaultEndSessionCallbackUrlBuilder</h1>
+<h1 title="Class DefaultEndSessionCallbackUrlBuilder" class="title">Class DefaultEndSessionCallbackUrlBuilder&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.oauth2.endpoint.endsession.response.DefaultEndSessionCallbackUrlBuilder</div>
+<div class="inheritance">io.micronaut.security.oauth2.endpoint.endsession.response.DefaultEndSessionCallbackUrlBuilder&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a></code></dd>
+<dd><code><a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultEndSessionCallbackUrlBuilder</span>
+<div class="type-signature"><span class="annotations">@Requires(beans={<a href="../../../url/AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder.class</a>,<a href="../../../configuration/endpoints/EndSessionConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndSessionConfiguration.class</a>})
+@Singleton
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultEndSessionCallbackUrlBuilder&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a></span></div>
+implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&lt;T&gt;</span></div>
 <div class="block">The default implementation of <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response"><code>EndSessionCallbackUrlBuilder</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -102,7 +107,7 @@ implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.mi
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.url.AbsoluteUrlBuilder,io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration)" class="member-name-link">DefaultEndSessionCallbackUrlBuilder</a><wbr>(<a href="../../../url/AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&nbsp;absoluteUrlBuilder,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.url.AbsoluteUrlBuilder,io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration)" class="member-name-link">DefaultEndSessionCallbackUrlBuilder</a><wbr>(<a href="../../../url/AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&lt;<a href="DefaultEndSessionCallbackUrlBuilder.html" title="type parameter in DefaultEndSessionCallbackUrlBuilder">T</a>&gt;&nbsp;absoluteUrlBuilder,
  <a href="../../../configuration/endpoints/EndSessionConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndSessionConfiguration</a>&nbsp;endSessionConfiguration)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -120,7 +125,7 @@ implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.mi
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build(io.micronaut.http.HttpRequest)" class="member-name-link">build</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build(T)" class="member-name-link">build</a><wbr>(<a href="DefaultEndSessionCallbackUrlBuilder.html" title="type parameter in DefaultEndSessionCallbackUrlBuilder">T</a>&nbsp;originating)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Builds the URL to redirect back to.</div>
 </div>
@@ -144,7 +149,7 @@ implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.mi
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.url.AbsoluteUrlBuilder,io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration)">
 <h3>DefaultEndSessionCallbackUrlBuilder</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultEndSessionCallbackUrlBuilder</span><wbr><span class="parameters">(<a href="../../../url/AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&nbsp;absoluteUrlBuilder,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultEndSessionCallbackUrlBuilder</span><wbr><span class="parameters">(<a href="../../../url/AbsoluteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">AbsoluteUrlBuilder</a>&lt;<a href="DefaultEndSessionCallbackUrlBuilder.html" title="type parameter in DefaultEndSessionCallbackUrlBuilder">T</a>&gt;&nbsp;absoluteUrlBuilder,
  <a href="../../../configuration/endpoints/EndSessionConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndSessionConfiguration</a>&nbsp;endSessionConfiguration)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -162,14 +167,14 @@ implements <a href="EndSessionCallbackUrlBuilder.html" title="interface in io.mi
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="build(io.micronaut.http.HttpRequest)">
-<h3>build</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">build</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="EndSessionCallbackUrlBuilder.html#build(io.micronaut.http.HttpRequest)">EndSessionCallbackUrlBuilder</a></code></span></div>
+<section class="detail" id="build(T)">
+<h3 id="build(java.lang.Object)">build</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">build</span><wbr><span class="parameters">(<a href="DefaultEndSessionCallbackUrlBuilder.html" title="type parameter in DefaultEndSessionCallbackUrlBuilder">T</a>&nbsp;originating)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="EndSessionCallbackUrlBuilder.html#build(T)">EndSessionCallbackUrlBuilder</a></code></span></div>
 <div class="block">Builds the URL to redirect back to.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="EndSessionCallbackUrlBuilder.html#build(io.micronaut.http.HttpRequest)">build</a></code>&nbsp;in interface&nbsp;<code><a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a></code></dd>
+<dd><code><a href="EndSessionCallbackUrlBuilder.html#build(T)">build</a></code>&nbsp;in interface&nbsp;<code><a href="EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&lt;<a href="DefaultEndSessionCallbackUrlBuilder.html" title="type parameter in DefaultEndSessionCallbackUrlBuilder">T</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>originating</code> - The originating request</dd>
 <dt>Returns:</dt>

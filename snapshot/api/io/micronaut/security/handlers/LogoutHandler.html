@@ -69,12 +69,17 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.handlers</a></div>
-<h1 title="Interface LogoutHandler" class="title">Interface LogoutHandler</h1>
+<h1 title="Interface LogoutHandler" class="title">Interface LogoutHandler&lt;I,<wbr>O&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>I</code> - Request</dd>
+<dd><code>O</code> - Response</dd>
+</dl>
+<dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></code>, <code><a href="../session/SessionLogoutHandler.html" title="class in io.micronaut.security.session">SessionLogoutHandler</a></code></dd>
+<dd><code><a href="../session/SessionLogoutHandler.html" title="class in io.micronaut.security.session">SessionLogoutHandler</a></code>, <code><a href="../token/cookie/TokenCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.cookie">TokenCookieClearerLogoutHandler</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Functional Interface:</dt>
@@ -82,7 +87,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
-</span><span class="modifiers">public interface </span><span class="element-name type-name-label">LogoutHandler</span></div>
+</span><span class="modifiers">public interface </span><span class="element-name type-name-label">LogoutHandler&lt;I,<wbr>O&gt;</span></div>
 <div class="block">Responsible for logging the user out and returning
  an appropriate response.</div>
 <dl class="notes">
@@ -105,8 +110,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#logout(io.micronaut.http.HttpRequest)" class="member-name-link">logout</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LogoutHandler.html" title="type parameter in LogoutHandler">O</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#logout(I)" class="member-name-link">logout</a><wbr>(<a href="LogoutHandler.html" title="type parameter in LogoutHandler">I</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
@@ -123,12 +128,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="logout(io.micronaut.http.HttpRequest)">
-<h3>logout</h3>
-<div class="member-signature"><span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">logout</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<section class="detail" id="logout(I)">
+<h3 id="logout(java.lang.Object)">logout</h3>
+<div class="member-signature"><span class="return-type"><a href="LogoutHandler.html" title="type parameter in LogoutHandler">O</a></span>&nbsp;<span class="element-name">logout</span><wbr><span class="parameters">(<a href="LogoutHandler.html" title="type parameter in LogoutHandler">I</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
+<dd><code>request</code> - The HTTP Request being executed</dd>
 <dt>Returns:</dt>
 <dd>An HttpResponse built after the user logs out</dd>
 </dl>

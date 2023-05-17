@@ -69,19 +69,23 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.token.jwt.validator</a></div>
-<h1 title="Interface JwtClaimsValidator" class="title">Interface JwtClaimsValidator</h1>
+<h1 title="Interface JwtClaimsValidator" class="title">Interface JwtClaimsValidator&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
+<dl class="notes">
 <dt>All Known Subinterfaces:</dt>
-<dd><code><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a></code></dd>
+<dd><code><a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a></code>, <code><a href="ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></code>, <code><a href="../../../oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></code>, <code><a href="IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a></code>, <code><a href="NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></code>, <code><a href="SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">JwtClaimsValidator</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">JwtClaimsValidator&lt;T&gt;</span></div>
 <div class="block">Provides a contract to create custom JWT claims validations.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -104,8 +108,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)" class="member-name-link">validate</a><wbr>(<a href="../generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#validate(io.micronaut.security.token.Claims,T)" class="member-name-link">validate</a><wbr>(<a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
+ <a href="JwtClaimsValidator.html" title="type parameter in JwtClaimsValidator">T</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
@@ -122,12 +126,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">
-<h3>validate</h3>
+<section class="detail" id="validate(io.micronaut.security.token.Claims,T)">
+<h3 id="validate(io.micronaut.security.token.Claims,java.lang.Object)">validate</h3>
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- <a href="../generator/claims/JwtClaims.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtClaims</a>&nbsp;claims,
+ <a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @Nullable
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ <a href="JwtClaimsValidator.html" title="type parameter in JwtClaimsValidator">T</a>&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claims</code> - JWT Claims</dd>

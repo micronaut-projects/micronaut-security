@@ -80,7 +80,8 @@ loadScripts(document, 'script');</script>
 <dd><code>io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a>,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.server.exceptions.ExceptionHandler.class)
+@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultAuthorizationExceptionHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a>,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span></div>

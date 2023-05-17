@@ -80,7 +80,8 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations">@Requires(beans={io.micronaut.http.context.ServerContextPathProvider.class,<a href="SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration.class</a>})
+@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultRedirectService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></span></div>
@@ -106,9 +107,6 @@ implements <a href="RedirectService.html" title="interface in io.micronaut.secur
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.http.context.ServerContextPathProvider)" class="member-name-link">DefaultRedirectService</a><wbr>(<a href="RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  io.micronaut.http.context.ServerContextPathProvider&nbsp;serverContextPathProvider)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,java.util.List)" class="member-name-link">DefaultRedirectService</a><wbr>(<a href="RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.micronaut.http.context.ServerContextPathProvider&gt;&nbsp;serverContextPathProviders)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -158,19 +156,6 @@ implements <a href="RedirectService.html" title="interface in io.micronaut.secur
 <section class="constructor-details" id="constructor-detail">
 <h2>Constructor Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.security.config.RedirectConfiguration,java.util.List)">
-<h3>DefaultRedirectService</h3>
-<div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultRedirectService</span><wbr><span class="parameters">(<a href="RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.micronaut.http.context.ServerContextPathProvider&gt;&nbsp;serverContextPathProviders)</span></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>serverContextPathProviders</code> - Server Context Path providers</dd>
-<dd><code>redirectConfiguration</code> - Redirect Configuration</dd>
-</dl>
-</section>
-</li>
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.config.RedirectConfiguration,io.micronaut.http.context.ServerContextPathProvider)">
 <h3>DefaultRedirectService</h3>

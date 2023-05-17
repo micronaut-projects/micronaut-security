@@ -65,20 +65,24 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.token.jwt.validator</a></div>
-<h1 title="Interface GenericJwtClaimsValidator" class="title">Interface GenericJwtClaimsValidator</h1>
+<h1 title="Interface GenericJwtClaimsValidator" class="title">Interface GenericJwtClaimsValidator&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
+<dl class="notes">
 <dt>All Superinterfaces:</dt>
-<dd><code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></code></dd>
+<dd><code><a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a></code>, <code><a href="ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></code>, <code><a href="../../../oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></code>, <code><a href="IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a></code>, <code><a href="NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></code>, <code><a href="SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">GenericJwtClaimsValidator</span><span class="extends-implements">
-extends <a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">GenericJwtClaimsValidator&lt;T&gt;</span><span class="extends-implements">
+extends <a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a>&lt;T&gt;</span></div>
 <div class="block">Any <a href="JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator"><code>JwtTokenValidator</code></a> which should be verified for any JWT should implement this interface.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -95,7 +99,7 @@ extends <a href="JwtClaimsValidator.html" title="interface in io.micronaut.secur
 <h2>Method Summary</h2>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.security.token.jwt.validator.JwtClaimsValidator">Methods inherited from interface&nbsp;io.micronaut.security.token.jwt.validator.<a href="JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></h3>
-<code><a href="JwtClaimsValidator.html#validate(io.micronaut.security.token.jwt.generator.claims.JwtClaims,io.micronaut.http.HttpRequest)">validate</a></code></div>
+<code><a href="JwtClaimsValidator.html#validate(io.micronaut.security.token.Claims,T)">validate</a></code></div>
 </section>
 </li>
 </ul>

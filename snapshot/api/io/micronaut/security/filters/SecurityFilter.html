@@ -80,9 +80,7 @@ loadScripts(document, 'script');</script>
 <dd><code>io.micronaut.core.order.Ordered</code>, <code>io.micronaut.http.filter.HttpFilter</code>, <code>io.micronaut.http.filter.HttpServerFilter</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.filter.enabled",
-          notEquals="false",
-          defaultValue="true")
+<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.filter.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.filter.HttpServerFilter.class)
 @Replaces(io.micronaut.management.endpoint.EndpointsFilter.class)
 @Filter("${micronaut.security.filter.pattern:/**}")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SecurityFilter</span>
@@ -112,7 +110,7 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <div class="col-last even-row-color">
 <div class="block">The attribute used to store the authentication object in the request.</div>
 </div>
-<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#authenticationFetchers" class="member-name-link">authenticationFetchers</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
@@ -126,7 +124,7 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <div class="col-first even-row-color"><code>protected final <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></div>
 <div class="col-second even-row-color"><code><a href="#securityConfiguration" class="member-name-link">securityConfiguration</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#securityRules" class="member-name-link">securityRules</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
@@ -148,8 +146,8 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">SecurityFilter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;&nbsp;securityRules,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;&nbsp;authenticationFetchers,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">SecurityFilter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;securityRules,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;authenticationFetchers,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -167,9 +165,8 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkRules(io.micronaut.http.HttpRequest,io.micronaut.http.filter.ServerFilterChain,io.micronaut.web.router.RouteMatch,io.micronaut.security.authentication.Authentication)" class="member-name-link">checkRules</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkRules(io.micronaut.http.HttpRequest,io.micronaut.http.filter.ServerFilterChain,io.micronaut.security.authentication.Authentication)" class="member-name-link">checkRules</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  io.micronaut.http.filter.ServerFilterChain&nbsp;chain,
- io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
  <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Check the security rules against the provided arguments.</div>
@@ -231,13 +228,13 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <li>
 <section class="detail" id="securityRules">
 <h3>securityRules</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;</span>&nbsp;<span class="element-name">securityRules</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;</span>&nbsp;<span class="element-name">securityRules</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="authenticationFetchers">
 <h3>authenticationFetchers</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;</span>&nbsp;<span class="element-name">authenticationFetchers</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;</span>&nbsp;<span class="element-name">authenticationFetchers</span></div>
 </section>
 </li>
 <li>
@@ -257,8 +254,8 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration)">
 <h3>SecurityFilter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SecurityFilter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;&nbsp;securityRules,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;&nbsp;authenticationFetchers,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SecurityFilter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;securityRules,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;authenticationFetchers,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -298,12 +295,10 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="checkRules(io.micronaut.http.HttpRequest,io.micronaut.http.filter.ServerFilterChain,io.micronaut.web.router.RouteMatch,io.micronaut.security.authentication.Authentication)">
+<section class="detail" id="checkRules(io.micronaut.http.HttpRequest,io.micronaut.http.filter.ServerFilterChain,io.micronaut.security.authentication.Authentication)">
 <h3>checkRules</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">checkRules</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  io.micronaut.http.filter.ServerFilterChain&nbsp;chain,
- @Nullable
- io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
  @Nullable
  <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Check the security rules against the provided arguments.</div>
@@ -311,7 +306,6 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <dt>Parameters:</dt>
 <dd><code>request</code> - The request</dd>
 <dd><code>chain</code> - The server chain</dd>
-<dd><code>routeMatch</code> - The route match</dd>
 <dd><code>authentication</code> - The authentication</dd>
 <dt>Returns:</dt>
 <dd>A response publisher</dd>

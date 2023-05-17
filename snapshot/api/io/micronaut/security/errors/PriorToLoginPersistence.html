@@ -69,15 +69,20 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.errors</a></div>
-<h1 title="Interface PriorToLoginPersistence" class="title">Interface PriorToLoginPersistence</h1>
+<h1 title="Interface PriorToLoginPersistence" class="title">Interface PriorToLoginPersistence&lt;I,<wbr>O&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>I</code> - Request</dd>
+<dd><code>O</code> - Response</dd>
+</dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="CookiePriorToLoginPersistence.html" title="class in io.micronaut.security.errors">CookiePriorToLoginPersistence</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">PriorToLoginPersistence</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">PriorToLoginPersistence&lt;I,<wbr>O&gt;</span></div>
 <div class="block">Keep track of state before login.</div>
 </section>
 <section class="summary">
@@ -94,12 +99,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getOriginalUri(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)" class="member-name-link">getOriginalUri</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getOriginalUri(I,O)" class="member-name-link">getOriginalUri</a><wbr>(<a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>&nbsp;request,
+ <a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&nbsp;response)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onUnauthorized(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)" class="member-name-link">onUnauthorized</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onUnauthorized(I,O)" class="member-name-link">onUnauthorized</a><wbr>(<a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>&nbsp;request,
+ <a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&nbsp;response)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
@@ -116,17 +121,17 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="onUnauthorized(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)">
-<h3>onUnauthorized</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onUnauthorized</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</span></div>
+<section class="detail" id="onUnauthorized(I,O)">
+<h3 id="onUnauthorized(java.lang.Object,java.lang.Object)">onUnauthorized</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onUnauthorized</span><wbr><span class="parameters">(<a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>&nbsp;request,
+ <a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&nbsp;response)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getOriginalUri(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)">
-<h3>getOriginalUri</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&gt;</span>&nbsp;<span class="element-name">getOriginalUri</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</span></div>
+<section class="detail" id="getOriginalUri(I,O)">
+<h3 id="getOriginalUri(java.lang.Object,java.lang.Object)">getOriginalUri</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&gt;</span>&nbsp;<span class="element-name">getOriginalUri</span><wbr><span class="parameters">(<a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>&nbsp;request,
+ <a href="PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&nbsp;response)</span></div>
 </section>
 </li>
 </ul>

@@ -69,16 +69,20 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.oauth2.endpoint.endsession.response</a></div>
-<h1 title="Interface EndSessionCallbackUrlBuilder" class="title">Interface EndSessionCallbackUrlBuilder</h1>
+<h1 title="Interface EndSessionCallbackUrlBuilder" class="title">Interface EndSessionCallbackUrlBuilder&lt;T&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Request</dd>
+</dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="DefaultEndSessionCallbackUrlBuilder.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.response">DefaultEndSessionCallbackUrlBuilder</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@DefaultImplementation(<a href="DefaultEndSessionCallbackUrlBuilder.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.response">DefaultEndSessionCallbackUrlBuilder.class</a>)
-</span><span class="modifiers">public interface </span><span class="element-name type-name-label">EndSessionCallbackUrlBuilder</span></div>
+</span><span class="modifiers">public interface </span><span class="element-name type-name-label">EndSessionCallbackUrlBuilder&lt;T&gt;</span></div>
 <div class="block">A contract for generating the URL used by OpenID
  providers to redirect back to after logging the user out.</div>
 <dl class="notes">
@@ -102,7 +106,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#build(io.micronaut.http.HttpRequest)" class="member-name-link">build</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#build(T)" class="member-name-link">build</a><wbr>(<a href="EndSessionCallbackUrlBuilder.html" title="type parameter in EndSessionCallbackUrlBuilder">T</a>&nbsp;originating)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Builds the URL to redirect back to.</div>
 </div>
@@ -121,9 +125,9 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="build(io.micronaut.http.HttpRequest)">
-<h3>build</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">build</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating)</span></div>
+<section class="detail" id="build(T)">
+<h3 id="build(java.lang.Object)">build</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a></span>&nbsp;<span class="element-name">build</span><wbr><span class="parameters">(<a href="EndSessionCallbackUrlBuilder.html" title="type parameter in EndSessionCallbackUrlBuilder">T</a>&nbsp;originating)</span></div>
 <div class="block">Builds the URL to redirect back to.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
