@@ -43,6 +43,7 @@ import reactor.core.publisher.Flux;
  * If it cannot authenticate it returns {active: false}
  * @author Sergio del Amo
  * @since 2.1.0
+ * @param <T> Request
  */
 @Singleton
 public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<T> {

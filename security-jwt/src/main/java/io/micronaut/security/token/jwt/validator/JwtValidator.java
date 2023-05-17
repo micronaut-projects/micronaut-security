@@ -332,6 +332,7 @@ public final class JwtValidator<T> {
 
     /**
      * A builder for {@link JwtValidator}.
+     * @param <T> Request
      */
     public static final class Builder<T> {
 

@@ -47,6 +47,7 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
 /**
  * Authenticates against an LDAP server using the configuration provided through
  * {@link LdapConfiguration}. One provider will be created for each configuration.
+ * @param <T> Request
  *
  * @author James Kleeh
  * @since 1.0
