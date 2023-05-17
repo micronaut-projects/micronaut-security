@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
 
@@ -28,13 +28,12 @@ import java.io.Serializable;
  */
 @Serdeable
 public class UsernamePasswordCredentials implements Serializable, AuthenticationRequest<String, String> {
-
     @NotBlank
-    @NonNull
+    @Nullable
     private String username;
 
     @NotBlank
-    @NonNull
+    @Nullable
     private String password;
 
     /**
@@ -42,7 +41,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * @param username e.g. admin
      * @param password raw password
      */
-    public UsernamePasswordCredentials(String username, String password) {
+    public UsernamePasswordCredentials(@Nullable String username, @Nullable String password) {
         this.username = username;
         this.password = password;
     }
@@ -51,6 +50,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * username getter.
      * @return e.g. admin
      */
+    @Nullable
     public String getUsername() {
         return username;
     }
@@ -59,7 +59,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * username setter.
      * @param username e.g. admin
      */
-    public void setUsername(String username) {
+    public void setUsername(@Nullable String username) {
         this.username = username;
     }
 
@@ -67,6 +67,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * password getter.
      * @return raw password
      */
+    @Nullable
     public String getPassword() {
         return password;
     }
@@ -75,11 +76,12 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * password setter.
      * @param password raw password
      */
-    public void setPassword(String password) {
+    public void setPassword(@Nullable String password) {
         this.password = password;
     }
 
     @Override
+    @Nullable
     public String getIdentity() {
         return getUsername();
     }
@@ -89,6 +91,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * @return secret string.
      */
     @Override
+    @Nullable
     public String getSecret() {
         return getPassword();
     }

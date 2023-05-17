@@ -52,7 +52,7 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         String jsonError = errorOptional.get()
 
         then:
-        jsonError.contains('must not be blank') || jsonError.contains('must not be null') || jsonError.contains("Failed to convert argument")
+        jsonError.contains('must not be blank') || jsonError.contains('must not be null')
 
         where:
         username | password
