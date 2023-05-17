@@ -43,32 +43,32 @@ Some classes have been renamed and moved from `io.micronaut.security:micronaut-s
 |===
 | Old Pkg | New Pkg
 
-| io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest
-| io.micronaut.security.endpoints.TokenRefreshRequest
+| `io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest`
+| `io.micronaut.security.endpoints.TokenRefreshRequest`
 
-| io.micronaut.security.token.jwt.render.AccessRefreshToken
-| io.micronaut.security.token.render.AccessRefreshToken
+| `io.micronaut.security.token.jwt.render.AccessRefreshToken`
+| `io.micronaut.security.token.render.AccessRefreshToken`
 
-| io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-| io.micronaut.security.token.render.BearerAccessRefreshToken
+| `io.micronaut.security.token.jwt.render.BearerAccessRefreshToken`
+| `io.micronaut.security.token.render.BearerAccessRefreshToken`
 
-| io.micronaut.security.token.jwt.endpoints.OauthController
-| io.micronaut.security.endpoints.OauthController
+| `io.micronaut.security.token.jwt.endpoints.OauthController`
+| `io.micronaut.security.endpoints.OauthController`
 
-| io.micronaut.security.token.jwt.endpoints.OauthControllerConfiguration
-| io.micronaut.security.endpoints.OauthControllerConfiguration
+| `io.micronaut.security.token.jwt.endpoints.OauthControllerConfiguration`
+| `io.micronaut.security.endpoints.OauthControllerConfiguration`
 
-| io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties
-| io.micronaut.security.endpoints.OauthControllerConfigurationProperties
+| `io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties`
+| `io.micronaut.security.endpoints.OauthControllerConfigurationProperties`
 
-| io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration
-| io.micronaut.security.token.cookie.AccessTokenCookieConfiguration
+| `io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration`
+| `io.micronaut.security.token.cookie.AccessTokenCookieConfiguration`
 
-| io.micronaut.security.token.jwt.cookie.CookieLoginHandler
-| io.micronaut.security.token.cookie.CookieLoginHandler
+| `io.micronaut.security.token.jwt.cookie.CookieLoginHandler`
+| `io.micronaut.security.token.cookie.CookieLoginHandler`
 
-| io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler
-| io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler
+| `io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler`
+| `io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler`
 
 | `io.micronaut.security.token.jwt.bearer.BearerTokenConfiguration`
 | `io.micronaut.security.token.bearer.BearerTokenConfiguration`
@@ -82,32 +82,44 @@ Some classes have been renamed and moved from `io.micronaut.security:micronaut-s
 | `io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader`
 | `io.micronaut.security.token.cookie.CookieTokenReader`
 
-| JwtCookieClearerLogoutHandler
-| io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler
+| `io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration`
+| `io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration`
 
-| JwtCookieLoginHandler
-| io.micronaut.security.token.cookie.TokenCookieLoginHandler
+| `io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.RefreshTokenCookieConfigurationProperties`
 
-| io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
-| io.micronaut.security.token.generator.AccessRefreshTokenGenerator
+| `io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler`
+| `io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler`
 
-| io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties
-| io.micronaut.security.token.generator.AccessTokenConfigurationProperties
+| `io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler`
+| `io.micronaut.security.token.cookie.TokenCookieLoginHandler`
 
-| io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
-| io.micronaut.security.token.claims.ClaimsGenerator
+|
+| `io.micronaut.security.token.cookie.TokenCookieTokenReader`
 
-| io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
-| io.micronaut.security.token.claims.ClaimsAudienceProvider
+| `io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator`
+| `io.micronaut.security.token.generator.AccessRefreshTokenGenerator`
 
-| io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties
-| io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties
+| `io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties`
+| `io.micronaut.security.token.generator.AccessTokenConfigurationProperties`
 
-| io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
-| io.micronaut.security.token.claims.JtiGenerator
+| `io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator`
+| `io.micronaut.security.token.claims.ClaimsGenerator`
 
-| io.micronaut.security.token.jwt.generator.claims.JwtClaims
-| io.micronaut.security.token.Claims
+| `io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider`
+| `io.micronaut.security.token.claims.ClaimsAudienceProvider`
+
+| `io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.TokenCookieConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator`
+| `io.micronaut.security.token.claims.JtiGenerator`
+
+| `io.micronaut.security.token.jwt.generator.claims.JwtClaims`
+| `io.micronaut.security.token.Claims`
 
 |===
 

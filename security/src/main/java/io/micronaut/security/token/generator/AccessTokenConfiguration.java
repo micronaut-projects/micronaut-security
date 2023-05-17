@@ -20,8 +20,8 @@ import io.micronaut.core.annotation.NonNull;
 /**
  * Configuration for access tokens.
  *
- * @author Sergio del Amo
- * @since 3.2.0
+ * @author James Kleeh
+ * @since 2.0.0
  */
 @FunctionalInterface
 public interface AccessTokenConfiguration {
