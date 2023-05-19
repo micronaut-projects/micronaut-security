@@ -107,7 +107,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
             if (loginFailure == null) {
-                return HttpResponse.ok();
+                return HttpResponse.unauthorized();
             }
             URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);

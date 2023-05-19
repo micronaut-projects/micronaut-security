@@ -2,12 +2,15 @@ package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.testutils.EmbeddedServerSpecification
@@ -47,19 +50,20 @@ class JwtCookieAuthenticationNoRedirectSpec extends EmbeddedServerSpecification 
         HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'foo', password: 'foo'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        HttpResponse<String> loginRsp = client.exchange(loginRequest, String)
+        client.exchange(loginRequest, Argument.of(String), Argument.of(String))
 
         then:
-        loginRsp.status().code == 200
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.UNAUTHORIZED
 
         and: 'login fails, cookie is not set'
-        !loginRsp.getHeaders().get('Set-Cookie')
+        !e.response.getHeaders().get('Set-Cookie')
 
         when:
         loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        loginRsp = client.exchange(loginRequest, String)
+        HttpResponse<String> loginRsp = client.exchange(loginRequest, String)
 
         then:
         loginRsp.status().code == 200

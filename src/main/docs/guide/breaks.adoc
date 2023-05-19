@@ -3,6 +3,8 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 4.0 breaking changes
 
+- For applications with `micronaut.security.authentication` set to `cookie` and `micronaut.security.redirect.enabled` set to `false`, the server responds with 401 HTTP Status code instead of 200 for login failed attempts.
+
 - `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
 
 === Configuration Changes
