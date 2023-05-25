@@ -141,14 +141,16 @@ class TokenPropagationSpec extends Specification {
 
         @Get("/gateway")
         Publisher<Book> findAll() {
-            return Flux.from(booksClient.fetchBooks())
-                    .flatMap({ b ->
-                        Mono.from(inventoryClient.inventory(b.getIsbn()))
-                                .filter({ stock -> stock > 0 })
-                                .map({ stock ->
-                                    b.setStock(stock);
-                                return b;
-                            })
+            Flux.from(booksClient.fetchBooks())
+                    .flatMap(b -> bookByIsbn(b))
+        }
+
+        private Mono<Book> bookByIsbn(Book b) {
+            Mono.from(inventoryClient.inventory(b.isbn))
+                    .filter( stock -> stock > 0 )
+                    .map(stock -> {
+                        b.stock = stock
+                        b
                     })
         }
     }
