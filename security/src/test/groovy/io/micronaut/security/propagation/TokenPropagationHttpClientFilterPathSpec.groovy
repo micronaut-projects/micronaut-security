@@ -5,6 +5,7 @@ import io.micronaut.core.annotation.AnnotationMetadataResolver
 import io.micronaut.core.annotation.AnnotationValue
 import io.micronaut.core.util.PathMatcher
 import io.micronaut.core.util.StringUtils
+import io.micronaut.http.annotation.ClientFilter
 import io.micronaut.http.annotation.Filter
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
 import spock.lang.Specification
@@ -36,9 +37,9 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
 
         when:
         String[] patterns
-        Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
+        Optional<AnnotationValue<ClientFilter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(ClientFilter.class)
         if (filterOpt.isPresent()) {
-            AnnotationValue<Filter> filterAnn = filterOpt.get()
+            AnnotationValue<ClientFilter> filterAnn = filterOpt.get()
             patterns = filterAnn.getValue(String[].class).orElse(StringUtils.EMPTY_STRING_ARRAY)
         }
 
@@ -79,9 +80,9 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
 
         when:
         String[] patterns
-        Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
+        Optional<AnnotationValue<ClientFilter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(ClientFilter.class)
         if (filterOpt.isPresent()) {
-            AnnotationValue<Filter> filterAnn = filterOpt.get()
+            AnnotationValue<ClientFilter> filterAnn = filterOpt.get()
             patterns = filterAnn.getValue(String[].class).orElse(StringUtils.EMPTY_STRING_ARRAY)
         }
 
