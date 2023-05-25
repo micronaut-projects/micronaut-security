@@ -149,8 +149,7 @@ class TokenPropagationSpec extends Specification {
         }
 
         private Mono<Book> bookByIsbn(Book b) {
-            PropagatedContext ctx = PropagatedContext.getOrEmpty();
-            Mono.from(ReactivePropagation.propagate(ctx, inventoryClient.inventory(b.isbn)))
+            Mono.from(inventoryClient.inventory(b.isbn))
                     .filter( stock -> stock > 0 )
                     .map(stock -> {
                         b.stock = stock
