@@ -13,8 +13,6 @@ import io.micronaut.security.token.propagation.TokenPropagator
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.util.regex.Pattern
-
 class TokenPropagationHttpClientFilterSpec extends Specification {
 
     @Shared
