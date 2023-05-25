@@ -101,13 +101,13 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
     /**
      * @param authenticationFailed Object encapsulates the Login failure
      * @param request The {@link HttpRequest} being executed
-     * @return A 303 HTTP Response or 200 HTTP Response if {@link CookieLoginHandler#loginFailure} is null, for example if {@link RedirectConfiguration} is disabled.
+     * @return A 303 HTTP Response or 401 HTTP Response if {@link CookieLoginHandler#loginFailure} is null, for example if {@link RedirectConfiguration} is disabled.
      */
     @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
             if (loginFailure == null) {
-                return HttpResponse.ok();
+                return HttpResponse.unauthorized();
             }
             URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
