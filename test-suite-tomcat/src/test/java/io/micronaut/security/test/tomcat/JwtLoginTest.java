@@ -12,7 +12,6 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -29,7 +28,6 @@ class JwtLoginTest {
     @Client("/")
     HttpClient httpClient;
 
-    @Disabled(value = "fails with java.lang.IllegalStateException: No active propagation context!")
     @Test
     void loginIsPossibleInTomcatRuntime() {
         BlockingHttpClient client = httpClient.toBlocking();
