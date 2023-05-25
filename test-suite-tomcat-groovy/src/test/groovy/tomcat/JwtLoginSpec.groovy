@@ -13,7 +13,6 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
-import spock.lang.PendingFeature
 import spock.lang.Specification
 
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
@@ -26,7 +25,6 @@ class JwtLoginSpec extends Specification {
     @Client("/")
     HttpClient httpClient
 
-    @PendingFeature(reason = "fails with java.lang.IllegalStateException: No active propagation context!")
     void "Login is possible in tomcat and body is present"() {
         given:
         BlockingHttpClient client = httpClient.toBlocking()
