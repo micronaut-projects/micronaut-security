@@ -1,8 +1,9 @@
 package io.micronaut.security.propagation
 
+import io.micronaut.core.propagation.PropagatedContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpRequest
-import io.micronaut.http.filter.ClientFilterChain
+import io.micronaut.http.context.ServerHttpRequestContext
 import io.micronaut.http.util.OutgoingHttpRequestProcessor
 import io.micronaut.http.util.OutgoingHttpRequestProcessorImpl
 import io.micronaut.security.filters.SecurityFilter
@@ -11,6 +12,8 @@ import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
 import io.micronaut.security.token.propagation.TokenPropagator
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.util.regex.Pattern
 
 class TokenPropagationHttpClientFilterSpec extends Specification {
 
@@ -24,19 +27,23 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
             1 * findToken(_) >> Optional.empty()
         }
         TokenPropagationConfigurationProperties config = new TokenPropagationConfigurationProperties()
+        config.setUriRegex("/.*")
         TokenPropagationHttpClientFilter clientFilter = new TokenPropagationHttpClientFilter(config, requestProcessor, tokenPropagator)
-        MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest)
-        ClientFilterChain chain = Mock(ClientFilterChain)
-        HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
-            getAttribute(SecurityFilter.TOKEN) >> Optional.of(sampleJwt)
+        MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest) {
+            getUri() >> URI.create("/")
         }
-
+        HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
+            getAttribute(SecurityFilter.TOKEN, String.class) >> Optional.of(sampleJwt)
+        }
+        ServerHttpRequestContext
         when:
-        clientFilter.doFilter(targetRequest, chain, currentRequest)
-
+        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
+                .plus(new ServerHttpRequestContext(currentRequest))
+                .propagate()) {
+            clientFilter.doFilter(targetRequest)
+        }
         then:
         1 * tokenPropagator.writeToken(targetRequest, sampleJwt)
-        1 * chain.proceed(targetRequest)
     }
 
     void "if current request attribute TOKEN does NOT contains a token, it is not written to target request, but request proceeds"() {
@@ -46,18 +53,22 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
         TokenPropagationConfigurationProperties config = new TokenPropagationConfigurationProperties()
         TokenPropagationHttpClientFilter clientFilter = new TokenPropagationHttpClientFilter(config, requestProcessor, tokenPropagator)
-        MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest)
-        ClientFilterChain chain = Mock(ClientFilterChain)
+        MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest) {
+            getUri() >> URI.create("/")
+        }
         HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
             getAttribute(SecurityFilter.TOKEN) >> Optional.empty()
         }
 
         when:
-        clientFilter.doFilter(targetRequest, chain, currentRequest)
+        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
+                .plus(new ServerHttpRequestContext(currentRequest))
+                .propagate()) {
+            clientFilter.doFilter(targetRequest)
+        }
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, _)
-        1 * chain.proceed(targetRequest)
     }
 
     void "if target request contains a token, it does not overwrite it"() {
@@ -70,16 +81,19 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest) {
             getAttribute(SecurityFilter.TOKEN) >> Optional.of(sampleJwt)
         }
-        ClientFilterChain chain = Mock(ClientFilterChain)
+
         HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
             getAttribute(SecurityFilter.TOKEN) >> Optional.of(sampleJwt)
         }
 
         when:
-        clientFilter.doFilter(targetRequest, chain, currentRequest)
+        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
+                .plus(new ServerHttpRequestContext(currentRequest))
+                .propagate()) {
+            clientFilter.doFilter(targetRequest)
+        }
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, sampleJwt)
-        1 * chain.proceed(targetRequest)
     }
 }

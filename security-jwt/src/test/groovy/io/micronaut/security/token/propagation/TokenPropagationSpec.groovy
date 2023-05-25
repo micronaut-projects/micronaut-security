@@ -143,9 +143,9 @@ class TokenPropagationSpec extends Specification {
 
         @Get("/gateway")
         Publisher<Book> findAll() {
-            PropagatedContext ctx = PropagatedContext.get();
+            PropagatedContext ctx = PropagatedContext.get()
             Flux.from(ReactivePropagation.propagate(ctx, booksClient.fetchBooks()))
-                    .flatMap(b -> bookByIsbn(b))
+                    .flatMap(b -> ReactivePropagation.propagate(ctx, bookByIsbn(b)))
         }
 
         private Mono<Book> bookByIsbn(Book b) {
