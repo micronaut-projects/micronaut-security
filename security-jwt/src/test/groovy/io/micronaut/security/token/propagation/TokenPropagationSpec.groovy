@@ -27,7 +27,6 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import spock.lang.PendingFeature
 import spock.lang.Specification
 
 import java.time.Duration
@@ -36,7 +35,6 @@ class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    @PendingFeature(reason = "TokenPropagationHttpClientFilter:75 fails to retrieve the current request while calling the inventory service after updating to M5")
     void "test token propagation"() {
         Map<String, Object> inventoryConfig = [
                 'micronaut.application.name': 'inventory',
