@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.endpoints.introspection;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
@@ -25,8 +24,9 @@ import org.reactivestreams.Publisher;
  * @see <a href="https://tools.ietf.org/html/rfc7662">RFC7662</a>
  * @author Sergio del Amo
  * @since 2.1.0
+ * @param <T> Request
  */
-public interface IntrospectionProcessor {
+public interface IntrospectionProcessor<T> {
 
     /**
      *
@@ -36,7 +36,7 @@ public interface IntrospectionProcessor {
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                @NonNull HttpRequest<?> httpRequest);
+                                                @NonNull T httpRequest);
 
     /**
      *
@@ -46,5 +46,5 @@ public interface IntrospectionProcessor {
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                @NonNull HttpRequest<?> httpRequest);
+                                                @NonNull T httpRequest);
 }

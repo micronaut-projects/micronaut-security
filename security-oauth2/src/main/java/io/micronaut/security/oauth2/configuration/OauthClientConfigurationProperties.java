@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
@@ -250,6 +252,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     /**
      * Client credentials configuration.
      */
+    @Requires(classes = OutgoingRequestProcessorMatcher.class)
     @ConfigurationProperties("client-credentials")
     public static class ClientCredentialsConfigurationProperties extends AbstractOutgoingRequestProcessorMatcher implements ClientCredentialsConfiguration {
 

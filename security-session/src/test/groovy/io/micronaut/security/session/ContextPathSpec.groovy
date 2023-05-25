@@ -13,7 +13,6 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.ConfigurationFixture
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -72,10 +71,10 @@ class ContextPathSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'ContextPathSpec')
     @Singleton
-    static class MockAuthenticationProvider implements AuthenticationProvider {
+    static class MockAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Mono.<AuthenticationResponse>create(emitter -> {
                 if (authenticationRequest.identity =="user" && authenticationRequest.secret == "password") {
                     emitter.success(AuthenticationResponse.success("user"))

@@ -13,7 +13,7 @@ import io.micronaut.serde.SerdeIntrospections
 import spock.lang.Issue
 import spock.lang.Shared
 
-import javax.validation.Validator
+import jakarta.validation.Validator
 
 class IntrospectionResponseSpec extends EmbeddedServerSpecification {
 

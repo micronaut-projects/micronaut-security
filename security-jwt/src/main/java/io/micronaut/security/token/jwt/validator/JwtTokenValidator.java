@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
@@ -32,12 +31,13 @@ import reactor.core.publisher.Flux;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @param <T> Request
  */
 @Singleton
-public class JwtTokenValidator implements TokenValidator {
+public class JwtTokenValidator<T> implements TokenValidator<T> {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
-    protected final JwtValidator validator;
+    protected final JwtValidator<T> validator;
 
     /**
      * Constructor.
@@ -63,7 +63,7 @@ public class JwtTokenValidator implements TokenValidator {
      * @param validator Validates the JWT
      * @param jwtAuthenticationFactory The authentication factory
      */
-    public JwtTokenValidator(JwtValidator validator,
+    public JwtTokenValidator(JwtValidator<T> validator,
                              JwtAuthenticationFactory jwtAuthenticationFactory) {
         this.validator = validator;
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
@@ -74,7 +74,7 @@ public class JwtTokenValidator implements TokenValidator {
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
     @Override
-    public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+    public Publisher<Authentication> validateToken(String token, @Nullable T request) {
         return validator.validate(token, request)
                 .flatMap(jwtAuthenticationFactory::createAuthentication)
                 .map(Flux::just)

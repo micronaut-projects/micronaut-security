@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.TokenCookieConfiguration;
 import jakarta.inject.Singleton;
+
 import java.net.URI;
 import java.time.Duration;
 import java.util.Optional;
@@ -36,9 +37,10 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 2.0.0
  */
+@Requires(classes = HttpRequest.class)
 @Requires(property = RedirectConfigurationProperties.PREFIX + ".prior-to-login", value = StringUtils.TRUE)
 @Singleton
-public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
+public class CookiePriorToLoginPersistence implements PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> {
 
     private static final String COOKIE_NAME = "ORIGINAL_URI";
 

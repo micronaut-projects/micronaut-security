@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
-import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 /**
  * Validate current time is not before the not-before claim of a JWT token.
@@ -33,10 +33,11 @@ import org.slf4j.LoggerFactory;
  * @author Jason Schindler
  * @author Sergio del Amo
  * @since 2.4.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = NotBeforeJwtClaimsValidator.NOT_BEFORE_PROP, value = StringUtils.TRUE)
-public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class NotBeforeJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     public static final String NOT_BEFORE_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".not-before";
 
@@ -72,7 +73,7 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
      * @return true if the not-before claim denotes a date before now
      */
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 

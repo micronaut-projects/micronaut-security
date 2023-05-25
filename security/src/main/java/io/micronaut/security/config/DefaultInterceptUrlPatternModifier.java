@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.config;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.context.ServerContextPathProvider;
 import jakarta.inject.Singleton;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @author Sergio del Amo
  * @since 3.7.3
  */
+@Requires(beans = { ServerContextPathProvider.class, SecurityConfiguration.class })
 @Singleton
 public class DefaultInterceptUrlPatternModifier implements InterceptUrlPatternModifier {
 
@@ -44,7 +46,7 @@ public class DefaultInterceptUrlPatternModifier implements InterceptUrlPatternMo
             return new InterceptUrlMapPattern(
                 ServerContextPathProviderUtils.prependContextPath(interceptUrlMapPattern.getPattern(), serverContextPathProvider),
                 interceptUrlMapPattern.getAccess(),
-                interceptUrlMapPattern.getHttpMethod().orElse(null));
+                interceptUrlMapPattern.getHttpMethod());
         }
         return interceptUrlMapPattern;
     }

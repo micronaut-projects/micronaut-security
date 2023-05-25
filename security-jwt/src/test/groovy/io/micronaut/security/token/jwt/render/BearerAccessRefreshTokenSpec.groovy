@@ -1,5 +1,6 @@
 package io.micronaut.security.token.jwt.render
 
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import groovy.json.JsonSlurper
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.core.type.Argument

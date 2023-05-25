@@ -2,6 +2,9 @@ package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler
+import io.micronaut.security.token.bearer.BearerTokenConfigurationProperties
+import io.micronaut.security.token.bearer.BearerTokenReader
 import spock.lang.Unroll
 
 class BearerEnabledSpec extends EmbeddedServerSpecification {
@@ -9,7 +12,7 @@ class BearerEnabledSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.token.jwt.bearer.enabled': false,
+                'micronaut.security.token.bearer.enabled': false,
         ]
     }
 

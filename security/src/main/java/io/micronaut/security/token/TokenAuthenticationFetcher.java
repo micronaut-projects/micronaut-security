@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.token;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -38,25 +39,26 @@ import reactor.core.publisher.Flux;
  * @author Graeme Rocher
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class TokenAuthenticationFetcher implements AuthenticationFetcher {
+public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     /**
      * The order of the fetcher.
      */
     public static final Integer ORDER = 0;
 
-    protected final Collection<TokenValidator> tokenValidators;
+    protected final Collection<TokenValidator<HttpRequest<?>>> tokenValidators;
     protected final ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher;
-    private final TokenResolver tokenResolver;
+    private final TokenResolver<HttpRequest<?>> tokenResolver;
 
     /**
      * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
      * @param tokenResolver   The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
      * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
      */
-    public TokenAuthenticationFetcher(Collection<TokenValidator> tokenValidators,
-                                      TokenResolver tokenResolver,
+    public TokenAuthenticationFetcher(Collection<TokenValidator<HttpRequest<?>>> tokenValidators,
+                                      TokenResolver<HttpRequest<?>> tokenResolver,
                                       ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher) {
         this.tokenValidatedEventPublisher = tokenValidatedEventPublisher;
         this.tokenResolver = tokenResolver;

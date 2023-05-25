@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.config.InterceptUrlPatternModifier;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import java.util.List;
+import io.micronaut.http.HttpRequest;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfiguration#getInterceptUrlMap()}.
@@ -28,6 +30,8 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
+@Requires(beans = { RolesFinder.class, SecurityConfiguration.class, InterceptUrlPatternModifier.class })
 @Singleton
 public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
 

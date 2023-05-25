@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import java.util.Optional;
  */
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
-public class SessionLogoutHandler implements LogoutHandler {
+public class SessionLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String logout;

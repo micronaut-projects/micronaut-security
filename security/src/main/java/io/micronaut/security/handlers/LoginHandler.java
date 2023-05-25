@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.handlers;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 
@@ -24,28 +22,30 @@ import io.micronaut.security.authentication.AuthenticationResponse;
  * Defines how to respond to a successful or failed login attempt.
  * @author Sergio del Amo
  * @since 1.0
+ * @param <I> Request
+ * @param <O> Response
  */
-public interface LoginHandler {
+public interface LoginHandler<I, O> {
 
     /**
      * @param authentication Authenticated user's representation.
-     * @param request The {@link HttpRequest} being executed
+     * @param request The HTTP Request being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
      */
-    MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request);
+    O loginSuccess(Authentication authentication, I request);
 
     /**
      * @param authentication Authenticated user's representation.
      * @param refreshToken The refresh token
-     * @param request The {@link HttpRequest} being executed
+     * @param request The HTTP Request being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
      */
-    MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request);
+    O loginRefresh(Authentication authentication, String refreshToken, I request);
 
     /**
      * @param authenticationResponse Object encapsulates the Login failure
-     * @param request The {@link HttpRequest} being executed
+     * @param request The HTTP Request being executed
      * @return An HTTP Response. Eg. a redirect or 401 response
      */
-    MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationResponse, HttpRequest<?> request);
+    O loginFailed(AuthenticationResponse authenticationResponse, I request);
 }

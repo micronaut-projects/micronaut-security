@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,7 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.validation.Validated;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -50,15 +49,14 @@ import reactor.core.publisher.Mono;
  * @since 1.0
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(beans = LoginHandler.class)
-@Requires(beans = Authenticator.class)
+@Requires(classes = Controller.class)
+@Requires(beans = { LoginHandler.class, Authenticator.class })
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Validated
 public class LoginController {
 
-    protected final Authenticator authenticator;
-    protected final LoginHandler loginHandler;
+    protected final Authenticator<HttpRequest<?>> authenticator;
+    protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
 
@@ -68,8 +66,8 @@ public class LoginController {
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
-    public LoginController(Authenticator authenticator,
-                           LoginHandler loginHandler,
+    public LoginController(Authenticator<HttpRequest<?>> authenticator,
+                           LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
                            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
                            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
         this.authenticator = authenticator;

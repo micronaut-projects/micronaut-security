@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,23 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.core.order.Ordered;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
 /**
- * Describes a bean which attempts to read an {@link Authentication} from a {@link HttpRequest} being executed.
+ * Describes a bean which attempts to read an {@link Authentication} from an HTTP Request being executed.
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @param <T> request
  */
-public interface AuthenticationFetcher extends Ordered {
+public interface AuthenticationFetcher<T> extends Ordered {
 
     /**
-     * Attempts to read an {@link Authentication} from a {@link HttpRequest} being executed.
+     * Attempts to read an {@link Authentication} from an HTTP Request being executed.
      *
-     * @param request {@link HttpRequest} being executed.
+     * @param request an HTTP Request being executed.
      * @return {@link Authentication} if found
      */
-    Publisher<Authentication> fetchAuthentication(HttpRequest<?> request);
+    Publisher<Authentication> fetchAuthentication(T request);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  */
 package io.micronaut.security.handlers;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
-
 /**
  * Responsible for logging the user out and returning
  * an appropriate response.
  *
  * @author Sergio del Amo
  * @since 1.0.0
+ * @param <I> Request
+ * @param <O> Response
  */
 @FunctionalInterface
-public interface LogoutHandler {
+public interface LogoutHandler<I, O> {
 
     /**
-     * @param request The {@link HttpRequest} being executed
+     * @param request The HTTP Request being executed
      * @return An HttpResponse built after the user logs out
      */
-    MutableHttpResponse<?> logout(HttpRequest<?> request);
+    O logout(I request);
 }

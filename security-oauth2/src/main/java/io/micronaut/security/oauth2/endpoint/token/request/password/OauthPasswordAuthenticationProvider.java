@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -38,8 +37,9 @@ import reactor.core.publisher.Flux;
  *
  * @author Sergio del Amo
  * @since 1.2.0
+ * @param <T> Request
  */
-public class OauthPasswordAuthenticationProvider implements AuthenticationProvider {
+public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -61,7 +61,7 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

@@ -1,0 +1,5 @@
+In combination with ann:security.annotation.Secured[], you can use https://docs.micronaut.io/4.0.0-M2/guide/#evaluatedExpressions[expressions], introduced in Micronaut Framework 4.0, to access the authenticated user:
+
+snippet::io.micronaut.security.docs.securedexpressions.ExampleController[tags="exampleControllerExpressions"]
+
+`user` is of type api:security.authentication.Authentication[]

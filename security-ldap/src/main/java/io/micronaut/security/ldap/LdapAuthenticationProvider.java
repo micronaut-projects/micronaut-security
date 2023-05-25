@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.ldap;
 
-import io.micronaut.http.HttpRequest;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
@@ -48,11 +47,12 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
 /**
  * Authenticates against an LDAP server using the configuration provided through
  * {@link LdapConfiguration}. One provider will be created for each configuration.
+ * @param <T> Request
  *
  * @author James Kleeh
  * @since 1.0
  */
-public class LdapAuthenticationProvider implements AuthenticationProvider, Closeable {
+public class LdapAuthenticationProvider<T> implements AuthenticationProvider<T>, Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(LdapAuthenticationProvider.class);
 
@@ -86,7 +86,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         Flux<AuthenticationResponse> reactiveSequence = Flux.create(emitter -> {
             String username = authenticationRequest.getIdentity().toString();
             String password = authenticationRequest.getSecret().toString();

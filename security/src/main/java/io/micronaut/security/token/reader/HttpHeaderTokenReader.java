@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Sergio del Amo
  * @since 1.0
  */
-public abstract class HttpHeaderTokenReader implements TokenReader {
+public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenReader.class);
 

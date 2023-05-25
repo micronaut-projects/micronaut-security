@@ -4,21 +4,23 @@ plugins {
 }
 
 dependencies {
-    testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mn.micronaut.inject.java)
 
-    testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(libs.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
-    testRuntimeOnly(libs.logback.classic)
+    testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(mn.micronaut.management)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation(libs.reactor.core)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnReactor.micronaut.reactor)
 }
 
 tasks.named('test') {

@@ -32,3 +32,5 @@ micronaut:
 
 - accessing `/v1/myResource/**` with a GET request does not require authentication
 - accessing `/v1/myResource/**` with a request that isn't GET requires authentication
+
+IMPORTANT: When the ann:security.annotation.Secured[] annotation has a set of roles, the <<secured, SecuredAnnotationRule>> grants access to a user if they have **any** of the roles.

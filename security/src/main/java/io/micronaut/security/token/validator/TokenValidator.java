@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package io.micronaut.security.token.validator;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
@@ -25,9 +24,10 @@ import org.reactivestreams.Publisher;
  * Responsible for token validation and claims retrieval.
  *
  * @author Sergio del Amo
+ * @param <T> Request
  * @since 1.0
  */
-public interface TokenValidator extends Ordered {
+public interface TokenValidator<T> extends Ordered {
 
     /**
      * Validates the provided token and returns the authentication state.
@@ -39,5 +39,5 @@ public interface TokenValidator extends Ordered {
      * attempted. If the publisher emits an authentication, that authentication will be used.
      */
     Publisher<Authentication> validateToken(String token,
-                                            @Nullable HttpRequest<?> request);
+                                            @Nullable T request);
 }

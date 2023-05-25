@@ -37,6 +37,11 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         ]
     }
 
+    @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
     def "failed login publishes LoginFailedEvent"() {
         when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
@@ -130,7 +135,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
@@ -148,7 +153,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

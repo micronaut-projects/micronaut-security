@@ -1,8 +1,7 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
     id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 repositories {
@@ -28,10 +27,24 @@ micronaut {
 }
 
 dependencies {
-    implementation project(':security-jwt')
-    implementation project(':security-oauth2')
-    aotPlugins(project(':security-aot'))
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    implementation(mn.micronaut.jackson.databind)
+    aotPlugins(projects.micronautSecurityAot)
+    runtimeOnly(mn.snakeyaml)
 }
 
 version = '0.1'
 
+configurations.all {
+    resolutionStrategy {
+        preferProjectModules()
+        // TODO: Remove this once aligned
+        eachDependency {
+            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
+                useVersion("4.0.0-M1")
+                because("There's no M2 platform yet")
+            }
+        }
+    }
+}

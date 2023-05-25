@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID connect Discovery Spec</a>
@@ -36,208 +37,46 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
-    @NonNull
-    private final String authorizationEndpoint;
-
-    @NonNull
-    private final List<String> idTokenSigningAlgValuesSupported;
-
-    @NonNull
-    private final String issuer;
-
-    @NonNull
-    private final String jwksUri;
-
-    @Nullable
-    private final List<String> acrValuesSupported;
-
-    @Nullable
-    private final List<String> responseTypesSupported;
-
-    @Nullable
-    private final List<String> responseModesSupported;
-
-    @Nullable
-    private final List<String> scopesSupported;
-
-    @Nullable
-    private final List<String> grantTypesSupported;
-
-    @NonNull
-    private final List<String> subjectTypesSupported;
-
-    @NonNull
-    private final String tokenEndpoint;
-
-    @Nullable
-    private final List<String> tokenEndpointAuthMethodsSupported;
-
-    @Nullable
-    private final String userinfoEndpoint;
-
-    @Nullable
-    private final String registrationEndpoint;
-
-    @Nullable
-    private final List<String> claimsSupported;
-
-    @Nullable
-    private final List<String> codeChallengeMethodsSupported;
-
-    @Nullable
-    private final String introspectionEndpoint;
-
-    @Nullable
-    private final List<String> introspectionEndpointAuthMethodsSupported;
-
-    @Nullable
-    private final String revocationEndpoint;
-
-    @Nullable
-    private final List<String> revocationEndpointAuthMethodsSupported;
-
-    @Nullable
-    private final String endSessionEndpoint;
-
-    @Nullable
-    private final Boolean requestParameterSupported;
-
-    @Nullable
-    private final Boolean requestUriParameterSupported;
-
-    @Nullable
-    private final Boolean requireRequestUriRegistration;
-
-    @Nullable
-    private final List<String> requestObjectSigningAlgValuesSupported;
-
-    @Nullable
-    private final String serviceDocumentation;
-
-    @Nullable
-    private final List<String> idTokenEncryptionEncValuesSupported;
-
-    @Nullable
-    private final List<String> displayValuesSupported;
-
-    @Nullable
-    private final List<String> claimTypesSupported;
-
-    @Nullable
-    private final Boolean claimsParameterSupported;
-
-    @Nullable
-    private final String opTosUri;
-
-    @Nullable
-    private final String opPolicyUri;
-
-    @Nullable
-    private final List<String> uriLocalesSupported;
-
-    @Nullable
-    private final List<String> claimsLocalesSupported;
-
-    @Nullable
-    private final List<String> userinfoEncryptionAlgValuesSupported;
-
-    @Nullable
-    private final List<String> userinfoEncryptionEncValuesSupported;
-
-    @Nullable
-    private final List<String> tokenEndpointAuthSigningAlgValuesSupported;
-
-    @Nullable
-    private final List<String> requestObjectEncryptionAlgValuesSupported;
-
-    @Nullable
-    private final List<String> requestObjectEncryptionEncValuesSupported;
-
-    @Nullable
-    private final String checkSessionIframe;
-
-    @SuppressWarnings("ParameterNumber")
-    public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
-                                         @NonNull List<String> idTokenSigningAlgValuesSupported,
-                                         @NonNull String issuer,
-                                         @NonNull String jwksUri,
-                                         @Nullable List<String> acrValuesSupported,
-                                         @Nullable List<String> responseTypesSupported,
-                                         @Nullable List<String> responseModesSupported,
-                                         @Nullable List<String> scopesSupported,
-                                         @Nullable List<String> grantTypesSupported,
-                                         @NonNull List<String> subjectTypesSupported,
-                                         @NonNull String tokenEndpoint,
-                                         @Nullable List<String> tokenEndpointAuthMethodsSupported,
-                                         @Nullable String userinfoEndpoint,
-                                         @Nullable String registrationEndpoint,
-                                         @Nullable List<String> claimsSupported,
-                                         @Nullable List<String> codeChallengeMethodsSupported,
-                                         @Nullable String introspectionEndpoint,
-                                         @Nullable List<String> introspectionEndpointAuthMethodsSupported,
-                                         @Nullable String revocationEndpoint,
-                                         @Nullable List<String> revocationEndpointAuthMethodsSupported,
-                                         @Nullable String endSessionEndpoint,
-                                         @Nullable Boolean requestParameterSupported,
-                                         @Nullable Boolean requestUriParameterSupported,
-                                         @Nullable Boolean requireRequestUriRegistration,
-                                         @Nullable List<String> requestObjectSigningAlgValuesSupported,
-                                         @Nullable String serviceDocumentation,
-                                         @Nullable List<String> idTokenEncryptionEncValuesSupported,
-                                         @Nullable List<String> displayValuesSupported,
-                                         @Nullable List<String> claimTypesSupported,
-                                         @Nullable Boolean claimsParameterSupported,
-                                         @Nullable String opTosUri,
-                                         @Nullable String opPolicyUri,
-                                         @Nullable List<String> uriLocalesSupported,
-                                         @Nullable List<String> claimsLocalesSupported,
-                                         @Nullable List<String> userinfoEncryptionAlgValuesSupported,
-                                         @Nullable List<String> userinfoEncryptionEncValuesSupported,
-                                         @Nullable List<String> tokenEndpointAuthSigningAlgValuesSupported,
-                                         @Nullable List<String> requestObjectEncryptionAlgValuesSupported,
-                                         @Nullable List<String> requestObjectEncryptionEncValuesSupported,
-                                         @Nullable String checkSessionIframe) {
-        this.authorizationEndpoint = authorizationEndpoint;
-        this.idTokenSigningAlgValuesSupported = idTokenSigningAlgValuesSupported;
-        this.issuer = issuer;
-        this.jwksUri = jwksUri;
-        this.acrValuesSupported = acrValuesSupported;
-        this.responseTypesSupported = responseTypesSupported;
-        this.responseModesSupported = responseModesSupported;
-        this.scopesSupported = scopesSupported;
-        this.grantTypesSupported = grantTypesSupported;
-        this.subjectTypesSupported = subjectTypesSupported;
-        this.tokenEndpoint = tokenEndpoint;
-        this.tokenEndpointAuthMethodsSupported = tokenEndpointAuthMethodsSupported;
-        this.userinfoEndpoint = userinfoEndpoint;
-        this.registrationEndpoint = registrationEndpoint;
-        this.claimsSupported = claimsSupported;
-        this.codeChallengeMethodsSupported = codeChallengeMethodsSupported;
-        this.introspectionEndpoint = introspectionEndpoint;
-        this.introspectionEndpointAuthMethodsSupported = introspectionEndpointAuthMethodsSupported;
-        this.revocationEndpoint = revocationEndpoint;
-        this.revocationEndpointAuthMethodsSupported = revocationEndpointAuthMethodsSupported;
-        this.endSessionEndpoint = endSessionEndpoint;
-        this.requestParameterSupported = requestParameterSupported;
-        this.requestUriParameterSupported = requestUriParameterSupported;
-        this.requireRequestUriRegistration = requireRequestUriRegistration;
-        this.requestObjectSigningAlgValuesSupported = requestObjectSigningAlgValuesSupported;
-        this.serviceDocumentation = serviceDocumentation;
-        this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
-        this.displayValuesSupported = displayValuesSupported;
-        this.claimTypesSupported = claimTypesSupported;
-        this.claimsParameterSupported = claimsParameterSupported  != null ? claimsParameterSupported : Boolean.FALSE;
-        this.opTosUri = opTosUri;
-        this.opPolicyUri = opPolicyUri;
-        this.uriLocalesSupported = uriLocalesSupported;
-        this.claimsLocalesSupported = claimsLocalesSupported;
-        this.userinfoEncryptionAlgValuesSupported = userinfoEncryptionAlgValuesSupported;
-        this.userinfoEncryptionEncValuesSupported = userinfoEncryptionEncValuesSupported;
-        this.tokenEndpointAuthSigningAlgValuesSupported = tokenEndpointAuthSigningAlgValuesSupported;
-        this.requestObjectEncryptionAlgValuesSupported = requestObjectEncryptionAlgValuesSupported;
-        this.requestObjectEncryptionEncValuesSupported = requestObjectEncryptionEncValuesSupported;
-        this.checkSessionIframe = checkSessionIframe;
-    }
+    private String authorizationEndpoint;
+    private List<String> idTokenSigningAlgValuesSupported;
+    private String issuer;
+    private String jwksUri;
+    private List<String> acrValuesSupported;
+    private List<String> responseTypesSupported;
+    private List<String> responseModesSupported;
+    private List<String> scopesSupported;
+    private List<String> grantTypesSupported;
+    private List<String> subjectTypesSupported;
+    private String tokenEndpoint;
+    private List<String> tokenEndpointAuthMethodsSupported;
+    private String userinfoEndpoint;
+    private String registrationEndpoint;
+    private List<String> claimsSupported;
+    private List<String> codeChallengeMethodsSupported;
+    private String introspectionEndpoint;
+    private List<String> introspectionEndpointAuthMethodsSupported;
+    private String revocationEndpoint;
+    private List<String> revocationEndpointAuthMethodsSupported;
+    private String endSessionEndpoint;
+    private Boolean requestParameterSupported;
+    private Boolean requestUriParameterSupported;
+    private Boolean requireRequestUriRegistration;
+    private List<String> requestObjectSigningAlgValuesSupported;
+    private String serviceDocumentation;
+    private List<String> idTokenEncryptionEncValuesSupported;
+    private List<String> displayValuesSupported;
+    private List<String> claimTypesSupported;
+    private Boolean claimsParameterSupported = Boolean.FALSE;
+    private String opTosUri;
+    private String opPolicyUri;
+    private List<String> uriLocalesSupported;
+    private List<String> claimsLocalesSupported;
+    private List<String> userinfoEncryptionAlgValuesSupported;
+    private List<String> userinfoEncryptionEncValuesSupported;
+    private List<String> tokenEndpointAuthSigningAlgValuesSupported;
+    private List<String> requestObjectEncryptionAlgValuesSupported;
+    private List<String> requestObjectEncryptionEncValuesSupported;
+    private String checkSessionIframe;
 
     /**
      *
@@ -257,10 +96,34 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return Boolean.FALSE;
     }
 
-    @Nullable
+    /**
+     *
+     * @param requireRequestUriRegistration Boolean value specifying whether the OP requires any request_uri values used to be pre-registered using the request_uris registration parameter.
+     */
+    public void setRequireRequestUriRegistration(@Nullable Boolean requireRequestUriRegistration) {
+        this.requireRequestUriRegistration = requireRequestUriRegistration;
+    }
+
+    @NonNull
     @Override
     public String getAuthorizationEndpoint() {
         return authorizationEndpoint;
+    }
+
+    /**
+     *
+     * @param authorizationEndpoint URL of the Open ID Provider's OAuth 2.0 Authorization Endpoint.
+     */
+    public void setAuthorizationEndpoint(@NonNull String authorizationEndpoint) {
+        this.authorizationEndpoint = authorizationEndpoint;
+    }
+
+    /**
+     *
+     * @param userinfoEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT.
+     */
+    public void setUserinfoEncryptionEncValuesSupported(@Nullable List<String> userinfoEncryptionEncValuesSupported) {
+        this.userinfoEncryptionEncValuesSupported = userinfoEncryptionEncValuesSupported;
     }
 
     @NonNull
@@ -275,10 +138,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return idTokenEncryptionEncValuesSupported;
     }
 
+    /**
+     *
+     * @param idTokenEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for the ID Token to encode the Claims in a JWT.
+     */
+    public void setIdTokenEncryptionEncValuesSupported(@Nullable List<String> idTokenEncryptionEncValuesSupported) {
+        this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
+    }
+
     @Nullable
     @Override
     public List<String> getUserInfoEncryptionAlgValuesSupported() {
         return userinfoEncryptionAlgValuesSupported;
+    }
+
+    /**
+     *
+     * @param userinfoEncryptionAlgValuesSupported List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT.
+     */
+    public void setUserinfoEncryptionAlgValuesSupported(@Nullable List<String> userinfoEncryptionAlgValuesSupported) {
+        this.userinfoEncryptionAlgValuesSupported = userinfoEncryptionAlgValuesSupported;
     }
 
     @Nullable
@@ -287,16 +166,40 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return userinfoEncryptionEncValuesSupported;
     }
 
+    /**
+     *
+     * @param idTokenSigningAlgValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for the ID Token to encode the Claims in a JWT.
+     */
+    public void setIdTokenSigningAlgValuesSupported(@NonNull List<String> idTokenSigningAlgValuesSupported) {
+        this.idTokenSigningAlgValuesSupported = idTokenSigningAlgValuesSupported;
+    }
+
     @NonNull
     @Override
     public String getIssuer() {
         return issuer;
     }
 
+    /**
+     *
+     * @param issuer URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
+     */
+    public void setIssuer(@NonNull String issuer) {
+        this.issuer = issuer;
+    }
+
     @NonNull
     @Override
     public String getJwksUri() {
         return jwksUri;
+    }
+
+    /**
+     *
+     * @param jwksUri URL of the Open ID Provider's JSON Web Key Set.
+     */
+    public void setJwksUri(@NonNull String jwksUri) {
+        this.jwksUri = jwksUri;
     }
 
     /**
@@ -319,10 +222,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return Arrays.asList("query", "fragment");
     }
 
+    /**
+     *
+     * @param responseTypesSupported List of the OAuth 2.0 response_type values that this Open ID Provider supports.
+     */
+    public void setResponseTypesSupported(@Nullable List<String> responseTypesSupported) {
+        this.responseTypesSupported = responseTypesSupported;
+    }
+
     @Nullable
     @Override
     public List<String> getScopesSupported() {
         return scopesSupported;
+    }
+
+    /**
+     *
+     * @param scopesSupported List of the OAuth 2.0 [RFC6749] scope values that this server supports.
+     */
+    public void setScopesSupported(@Nullable List<String> scopesSupported) {
+        this.scopesSupported = scopesSupported;
     }
 
     @NonNull
@@ -331,10 +250,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return subjectTypesSupported;
     }
 
+    /**
+     *
+     * @param subjectTypesSupported List of the Subject Identifier types that this OP supports.
+     */
+    public void setSubjectTypesSupported(@NonNull List<String> subjectTypesSupported) {
+        this.subjectTypesSupported = subjectTypesSupported;
+    }
+
     @NonNull
     @Override
     public String getTokenEndpoint() {
         return tokenEndpoint;
+    }
+
+    /**
+     *
+     * @param tokenEndpoint URL of the Open ID Provider's OAuth 2.0 Token Endpoint.
+     */
+    public void setTokenEndpoint(@Nullable String tokenEndpoint) {
+        this.tokenEndpoint = tokenEndpoint;
     }
 
     @Nullable
@@ -349,10 +284,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return tokenEndpointAuthSigningAlgValuesSupported;
     }
 
+    /**
+     *
+     * @param tokenEndpointAuthSigningAlgValuesSupported List of the JWS signing algorithms (alg values) supported by the Token Endpoint.
+     */
+    public void setTokenEndpointAuthSigningAlgValuesSupported(@Nullable List<String> tokenEndpointAuthSigningAlgValuesSupported) {
+        this.tokenEndpointAuthSigningAlgValuesSupported = tokenEndpointAuthSigningAlgValuesSupported;
+    }
+
     @Nullable
     @Override
     public List<String> getDisplayValuesSupported() {
         return displayValuesSupported;
+    }
+
+    /**
+     *
+     * @param displayValuesSupported List of the display parameter values that the OpenID Provider supports.
+     */
+    public void setDisplayValuesSupported(@Nullable List<String> displayValuesSupported) {
+        this.displayValuesSupported = displayValuesSupported;
     }
 
     @Nullable
@@ -361,16 +312,48 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return claimTypesSupported;
     }
 
+    /**
+     *
+     * @param claimTypesSupported List of the Claim Types that the OpenID Provider supports.
+     */
+    public void setClaimTypesSupported(@Nullable List<String> claimTypesSupported) {
+        this.claimTypesSupported = claimTypesSupported;
+    }
+
+    /**
+     *
+     * @param tokenEndpointAuthMethodsSupported List of Client Authentication methods supported by this Token Endpoint.
+     */
+    public void setTokenEndpointAuthMethodsSupported(@Nullable List<String> tokenEndpointAuthMethodsSupported) {
+        this.tokenEndpointAuthMethodsSupported = tokenEndpointAuthMethodsSupported;
+    }
+
     @Nullable
     @Override
     public String getUserinfoEndpoint() {
         return userinfoEndpoint;
     }
 
+    /**
+     *
+     * @param userinfoEndpoint URL of the Open ID Provider's UserInfo Endpoint.
+     */
+    public void setUserinfoEndpoint(@Nullable String userinfoEndpoint) {
+        this.userinfoEndpoint = userinfoEndpoint;
+    }
+
     @Nullable
     @Override
     public List<String> getResponseModesSupported() {
         return responseModesSupported;
+    }
+
+    /**
+     *
+     * @param responseModesSupported List of the OAuth 2.0 response_mode values that this Open ID Provider supports.
+     */
+    public void setResponseModesSupported(@Nullable List<String> responseModesSupported) {
+        this.responseModesSupported = responseModesSupported;
     }
 
     @Nullable
@@ -395,10 +378,34 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return acrValuesSupported;
     }
 
+    /**
+     *
+     * @param acrValuesSupported List of the Authentication Context Class References that this OP supports.
+     */
+    public void setAcrValuesSupported(@Nullable List<String> acrValuesSupported) {
+        this.acrValuesSupported = acrValuesSupported;
+    }
+
+    /**
+     *
+     * @param grantTypesSupported List of the OAuth 2.0 Grant Type values that this Open ID Provider supports.
+     */
+    public void setGrantTypesSupported(@Nullable List<String> grantTypesSupported) {
+        this.grantTypesSupported = grantTypesSupported;
+    }
+
     @Nullable
     @Override
     public String getRegistrationEndpoint() {
         return registrationEndpoint;
+    }
+
+    /**
+     *
+     * @param registrationEndpoint URL of the Open ID Provider's Dynamic Client Registration Endpoint.
+     */
+    public void setRegistrationEndpoint(@Nullable String registrationEndpoint) {
+        this.registrationEndpoint = registrationEndpoint;
     }
 
     @Nullable
@@ -413,10 +420,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return serviceDocumentation;
     }
 
+    /**
+     *
+     * @param serviceDocumentation URL of a page containing human-readable information that developers might want or need to know when using the OpenID Provider.
+     */
+    public void setServiceDocumentation(@Nullable String serviceDocumentation) {
+        this.serviceDocumentation = serviceDocumentation;
+    }
+
     @Nullable
     @Override
     public List<String> getClaimsLocalesSupported() {
         return claimsLocalesSupported;
+    }
+
+    /**
+     *
+     * @param claimsLocalesSupported Languages and scripts supported for values in Claims.
+     */
+    public void setClaimsLocalesSupported(@Nullable List<String> claimsLocalesSupported) {
+        this.claimsLocalesSupported = claimsLocalesSupported;
     }
 
     @Nullable
@@ -425,10 +448,34 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return uriLocalesSupported;
     }
 
+    /**
+     *
+     * @param uriLocalesSupported Languages and scripts supported for the user interface.
+     */
+    public void setUriLocalesSupported(@Nullable List<String> uriLocalesSupported) {
+        this.uriLocalesSupported = uriLocalesSupported;
+    }
+
     @Nullable
     @Override
     public Boolean getClaimsParameterSupported() {
         return claimsParameterSupported;
+    }
+
+    /**
+     *
+     * @param claimsParameterSupported Boolean value specifying whether the OP supports use of the claims parameter.
+     */
+    public void setClaimsParameterSupported(@Nullable Boolean claimsParameterSupported) {
+        this.claimsParameterSupported = claimsParameterSupported;
+    }
+
+    /**
+     *
+     * @param claimsSupported List of the Claim Names of the Claims that the OpenID Provider MAY be able to supply values for.
+     */
+    public void setClaimsSupported(@Nullable List<String> claimsSupported) {
+        this.claimsSupported = claimsSupported;
     }
 
     @Nullable
@@ -437,10 +484,26 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return codeChallengeMethodsSupported;
     }
 
+    /**
+     *
+     * @param codeChallengeMethodsSupported List of the supported transformation methods by the authorisation code verifier for Proof Key for Code Exchange (PKCE).
+     */
+    public void setCodeChallengeMethodsSupported(@Nullable List<String> codeChallengeMethodsSupported) {
+        this.codeChallengeMethodsSupported = codeChallengeMethodsSupported;
+    }
+
     @Nullable
     @Override
     public String getIntrospectionEndpoint() {
         return introspectionEndpoint;
+    }
+
+    /**
+     *
+     * @param introspectionEndpoint The fully qualified URL of the server's introspection endpoint defined by OAuth Token Introspection [RFC7662].
+     */
+    public void setIntrospectionEndpoint(@Nullable String introspectionEndpoint) {
+        this.introspectionEndpoint = introspectionEndpoint;
     }
 
     @Nullable
@@ -449,16 +512,48 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return introspectionEndpointAuthMethodsSupported;
     }
 
+    /**
+     *
+     * @param introspectionEndpointAuthMethodsSupported List of Client Authentication methods supported by Introspection Endpoint.
+     */
+    public void setIntrospectionEndpointAuthMethodsSupported(@Nullable List<String> introspectionEndpointAuthMethodsSupported) {
+        this.introspectionEndpointAuthMethodsSupported = introspectionEndpointAuthMethodsSupported;
+    }
+
     @Nullable
     @Override
     public String getRevocationEndpoint() {
         return revocationEndpoint;
     }
 
+    /**
+     *
+     * @param revocationEndpoint The fully qualified URL of the server's revocation endpoint defined by Oauth Token Revocation.
+     */
+    public void setRevocationEndpoint(@Nullable String revocationEndpoint) {
+        this.revocationEndpoint = revocationEndpoint;
+    }
+
     @Nullable
     @Override
     public List<String> getRevocationEndpointAuthMethodsSupported() {
         return revocationEndpointAuthMethodsSupported;
+    }
+
+    /**
+     *
+     * @param revocationEndpointAuthMethodsSupported List of Client Authentication methods supported by Revocation Endpoint.
+     */
+    public void setRevocationEndpointAuthMethodsSupported(@Nullable List<String> revocationEndpointAuthMethodsSupported) {
+        this.revocationEndpointAuthMethodsSupported = revocationEndpointAuthMethodsSupported;
+    }
+
+    /**
+     *
+     * @param checkSessionIframe URL of an OP iframe that supports cross-origin communications for session state information with the RP Client, using the HTML5 postMessage API.
+     */
+    public void setCheckSessionIframe(@Nullable String checkSessionIframe) {
+        this.checkSessionIframe = checkSessionIframe;
     }
 
     @Nullable
@@ -471,6 +566,14 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Override
     public String getEndSessionEndpoint() {
         return endSessionEndpoint;
+    }
+
+    /**
+     *
+     * @param endSessionEndpoint URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP.
+     */
+    public void setEndSessionEndpoint(@Nullable String endSessionEndpoint) {
+        this.endSessionEndpoint = endSessionEndpoint;
     }
 
     @Nullable
@@ -501,16 +604,48 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return Boolean.TRUE;
     }
 
+    /**
+     *
+     * @param requestUriParameterSupported  Boolean value specifying whether the OP requires any request_uri values used to be pre-registered using the request_uris registration parameter.
+     */
+    public void setRequestUriParameterSupported(@Nullable Boolean requestUriParameterSupported) {
+        this.requestUriParameterSupported = requestUriParameterSupported;
+    }
+
     @Nullable
     @Override
     public String getOpPolicyUri() {
         return opPolicyUri;
     }
 
+    /**
+     *
+     * @param opPolicyUri URL that the OpenID Provider provides to the person registering the Client to read about the OP's requirements on how the Relying Party can use the data provided by the OP.
+     */
+    public void setOpPolicyUri(@Nullable String opPolicyUri) {
+        this.opPolicyUri = opPolicyUri;
+    }
+
     @Nullable
     @Override
     public String getOpTosUri() {
         return opTosUri;
+    }
+
+    /**
+     *
+     * @param opTosUri URL that the OpenID Provider provides to the person registering the Client to read about OpenID Provider's terms of service.
+     */
+    public void setOpTosUri(@Nullable String opTosUri) {
+        this.opTosUri = opTosUri;
+    }
+
+    /**
+     *
+     * @param requestParameterSupported Boolean value specifying whether the OP supports use of the request parameter, with true indicating support.
+     */
+    public void setRequestParameterSupported(@Nullable Boolean requestParameterSupported) {
+        this.requestParameterSupported = requestParameterSupported;
     }
 
     @Nullable
@@ -525,11 +660,212 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return requestObjectEncryptionAlgValuesSupported;
     }
 
+    /**
+     *
+     * @param requestObjectEncryptionAlgValuesSupported List of the JWE encryption algorithms (alg values) supported by the OP for Request Objects.
+     */
+    public void setRequestObjectEncryptionAlgValuesSupported(@Nullable List<String> requestObjectEncryptionAlgValuesSupported) {
+        this.requestObjectEncryptionAlgValuesSupported = requestObjectEncryptionAlgValuesSupported;
+    }
+
     @Nullable
     @Override
     public List<String> getRequestObjectEncryptionEncValuesSupported() {
         return requestObjectEncryptionEncValuesSupported;
     }
+
+    /**
+     *
+     * @param requestObjectEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for Request Objects.
+     */
+    public void setRequestObjectEncryptionEncValuesSupported(@Nullable List<String> requestObjectEncryptionEncValuesSupported) {
+        this.requestObjectEncryptionEncValuesSupported = requestObjectEncryptionEncValuesSupported;
+    }
+
+    /**
+     *
+     * @param requestObjectSigningAlgValuesSupported List of the JWS signing algorithms (alg values) supported by the OP for Request Objects.
+     */
+    public void setRequestObjectSigningAlgValuesSupported(@Nullable List<String> requestObjectSigningAlgValuesSupported) {
+        this.requestObjectSigningAlgValuesSupported = requestObjectSigningAlgValuesSupported;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DefaultOpenIdProviderMetadata that = (DefaultOpenIdProviderMetadata) o;
+
+        if (authorizationEndpoint != null ? !authorizationEndpoint.equals(that.authorizationEndpoint) : that.authorizationEndpoint != null) {
+            return false;
+        }
+        if (idTokenSigningAlgValuesSupported != null ? !idTokenSigningAlgValuesSupported.equals(that.idTokenSigningAlgValuesSupported) : that.idTokenSigningAlgValuesSupported != null) {
+            return false;
+        }
+        if (issuer != null ? !issuer.equals(that.issuer) : that.issuer != null) {
+            return false;
+        }
+        if (jwksUri != null ? !jwksUri.equals(that.jwksUri) : that.jwksUri != null) {
+            return false;
+        }
+        if (acrValuesSupported != null ? !acrValuesSupported.equals(that.acrValuesSupported) : that.acrValuesSupported != null) {
+            return false;
+        }
+        if (responseTypesSupported != null ? !responseTypesSupported.equals(that.responseTypesSupported) : that.responseTypesSupported != null) {
+            return false;
+        }
+        if (responseModesSupported != null ? !responseModesSupported.equals(that.responseModesSupported) : that.responseModesSupported != null) {
+            return false;
+        }
+        if (scopesSupported != null ? !scopesSupported.equals(that.scopesSupported) : that.scopesSupported != null) {
+            return false;
+        }
+        if (grantTypesSupported != null ? !grantTypesSupported.equals(that.grantTypesSupported) : that.grantTypesSupported != null) {
+            return false;
+        }
+        if (subjectTypesSupported != null ? !subjectTypesSupported.equals(that.subjectTypesSupported) : that.subjectTypesSupported != null) {
+            return false;
+        }
+        if (tokenEndpoint != null ? !tokenEndpoint.equals(that.tokenEndpoint) : that.tokenEndpoint != null) {
+            return false;
+        }
+        if (tokenEndpointAuthMethodsSupported != null ? !tokenEndpointAuthMethodsSupported.equals(that.tokenEndpointAuthMethodsSupported) : that.tokenEndpointAuthMethodsSupported != null) {
+            return false;
+        }
+        if (userinfoEndpoint != null ? !userinfoEndpoint.equals(that.userinfoEndpoint) : that.userinfoEndpoint != null) {
+            return false;
+        }
+        if (registrationEndpoint != null ? !registrationEndpoint.equals(that.registrationEndpoint) : that.registrationEndpoint != null) {
+            return false;
+        }
+        if (claimsSupported != null ? !claimsSupported.equals(that.claimsSupported) : that.claimsSupported != null) {
+            return false;
+        }
+        if (codeChallengeMethodsSupported != null ? !codeChallengeMethodsSupported.equals(that.codeChallengeMethodsSupported) : that.codeChallengeMethodsSupported != null) {
+            return false;
+        }
+        if (introspectionEndpoint != null ? !introspectionEndpoint.equals(that.introspectionEndpoint) : that.introspectionEndpoint != null) {
+            return false;
+        }
+        if (introspectionEndpointAuthMethodsSupported != null ? !introspectionEndpointAuthMethodsSupported.equals(that.introspectionEndpointAuthMethodsSupported) : that.introspectionEndpointAuthMethodsSupported != null) {
+            return false;
+        }
+        if (revocationEndpoint != null ? !revocationEndpoint.equals(that.revocationEndpoint) : that.revocationEndpoint != null) {
+            return false;
+        }
+        if (revocationEndpointAuthMethodsSupported != null ? !revocationEndpointAuthMethodsSupported.equals(that.revocationEndpointAuthMethodsSupported) : that.revocationEndpointAuthMethodsSupported != null) {
+            return false;
+        }
+        if (endSessionEndpoint != null ? !endSessionEndpoint.equals(that.endSessionEndpoint) : that.endSessionEndpoint != null) {
+            return false;
+        }
+        if (requestParameterSupported != null ? !requestParameterSupported.equals(that.requestParameterSupported) : that.requestParameterSupported != null) {
+            return false;
+        }
+        if (requestUriParameterSupported != null ? !requestUriParameterSupported.equals(that.requestUriParameterSupported) : that.requestUriParameterSupported != null) {
+            return false;
+        }
+        if (requireRequestUriRegistration != null ? !requireRequestUriRegistration.equals(that.requireRequestUriRegistration) : that.requireRequestUriRegistration != null) {
+            return false;
+        }
+        if (requestObjectSigningAlgValuesSupported != null ? !requestObjectSigningAlgValuesSupported.equals(that.requestObjectSigningAlgValuesSupported) : that.requestObjectSigningAlgValuesSupported != null) {
+            return false;
+        }
+        if (serviceDocumentation != null ? !serviceDocumentation.equals(that.serviceDocumentation) : that.serviceDocumentation != null) {
+            return false;
+        }
+        if (idTokenEncryptionEncValuesSupported != null ? !idTokenEncryptionEncValuesSupported.equals(that.idTokenEncryptionEncValuesSupported) : that.idTokenEncryptionEncValuesSupported != null) {
+            return false;
+        }
+        if (displayValuesSupported != null ? !displayValuesSupported.equals(that.displayValuesSupported) : that.displayValuesSupported != null) {
+            return false;
+        }
+        if (claimTypesSupported != null ? !claimTypesSupported.equals(that.claimTypesSupported) : that.claimTypesSupported != null) {
+            return false;
+        }
+        if (claimsParameterSupported != null ? !claimsParameterSupported.equals(that.claimsParameterSupported) : that.claimsParameterSupported != null) {
+            return false;
+        }
+        if (opTosUri != null ? !opTosUri.equals(that.opTosUri) : that.opTosUri != null) {
+            return false;
+        }
+        if (opPolicyUri != null ? !opPolicyUri.equals(that.opPolicyUri) : that.opPolicyUri != null) {
+            return false;
+        }
+        if (uriLocalesSupported != null ? !uriLocalesSupported.equals(that.uriLocalesSupported) : that.uriLocalesSupported != null) {
+            return false;
+        }
+        if (claimsLocalesSupported != null ? !claimsLocalesSupported.equals(that.claimsLocalesSupported) : that.claimsLocalesSupported != null) {
+            return false;
+        }
+        if (userinfoEncryptionAlgValuesSupported != null ? !userinfoEncryptionAlgValuesSupported.equals(that.userinfoEncryptionAlgValuesSupported) : that.userinfoEncryptionAlgValuesSupported != null) {
+            return false;
+        }
+        if (userinfoEncryptionEncValuesSupported != null ? !userinfoEncryptionEncValuesSupported.equals(that.userinfoEncryptionEncValuesSupported) : that.userinfoEncryptionEncValuesSupported != null) {
+            return false;
+        }
+        if (tokenEndpointAuthSigningAlgValuesSupported != null ? !tokenEndpointAuthSigningAlgValuesSupported.equals(that.tokenEndpointAuthSigningAlgValuesSupported) : that.tokenEndpointAuthSigningAlgValuesSupported != null) {
+            return false;
+        }
+        if (requestObjectEncryptionAlgValuesSupported != null ? !requestObjectEncryptionAlgValuesSupported.equals(that.requestObjectEncryptionAlgValuesSupported) : that.requestObjectEncryptionAlgValuesSupported != null) {
+            return false;
+        }
+        if (requestObjectEncryptionEncValuesSupported != null ? !requestObjectEncryptionEncValuesSupported.equals(that.requestObjectEncryptionEncValuesSupported) : that.requestObjectEncryptionEncValuesSupported != null) {
+            return false;
+        }
+        return checkSessionIframe != null ? checkSessionIframe.equals(that.checkSessionIframe) : that.checkSessionIframe == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = authorizationEndpoint != null ? authorizationEndpoint.hashCode() : 0;
+        result = 31 * result + (idTokenSigningAlgValuesSupported != null ? idTokenSigningAlgValuesSupported.hashCode() : 0);
+        result = 31 * result + (issuer != null ? issuer.hashCode() : 0);
+        result = 31 * result + (jwksUri != null ? jwksUri.hashCode() : 0);
+        result = 31 * result + (acrValuesSupported != null ? acrValuesSupported.hashCode() : 0);
+        result = 31 * result + (responseTypesSupported != null ? responseTypesSupported.hashCode() : 0);
+        result = 31 * result + (responseModesSupported != null ? responseModesSupported.hashCode() : 0);
+        result = 31 * result + (scopesSupported != null ? scopesSupported.hashCode() : 0);
+        result = 31 * result + (grantTypesSupported != null ? grantTypesSupported.hashCode() : 0);
+        result = 31 * result + (subjectTypesSupported != null ? subjectTypesSupported.hashCode() : 0);
+        result = 31 * result + (tokenEndpoint != null ? tokenEndpoint.hashCode() : 0);
+        result = 31 * result + (tokenEndpointAuthMethodsSupported != null ? tokenEndpointAuthMethodsSupported.hashCode() : 0);
+        result = 31 * result + (userinfoEndpoint != null ? userinfoEndpoint.hashCode() : 0);
+        result = 31 * result + (registrationEndpoint != null ? registrationEndpoint.hashCode() : 0);
+        result = 31 * result + (claimsSupported != null ? claimsSupported.hashCode() : 0);
+        result = 31 * result + (codeChallengeMethodsSupported != null ? codeChallengeMethodsSupported.hashCode() : 0);
+        result = 31 * result + (introspectionEndpoint != null ? introspectionEndpoint.hashCode() : 0);
+        result = 31 * result + (introspectionEndpointAuthMethodsSupported != null ? introspectionEndpointAuthMethodsSupported.hashCode() : 0);
+        result = 31 * result + (revocationEndpoint != null ? revocationEndpoint.hashCode() : 0);
+        result = 31 * result + (revocationEndpointAuthMethodsSupported != null ? revocationEndpointAuthMethodsSupported.hashCode() : 0);
+        result = 31 * result + (endSessionEndpoint != null ? endSessionEndpoint.hashCode() : 0);
+        result = 31 * result + (requestParameterSupported != null ? requestParameterSupported.hashCode() : 0);
+        result = 31 * result + (requestUriParameterSupported != null ? requestUriParameterSupported.hashCode() : 0);
+        result = 31 * result + (requireRequestUriRegistration != null ? requireRequestUriRegistration.hashCode() : 0);
+        result = 31 * result + (requestObjectSigningAlgValuesSupported != null ? requestObjectSigningAlgValuesSupported.hashCode() : 0);
+        result = 31 * result + (serviceDocumentation != null ? serviceDocumentation.hashCode() : 0);
+        result = 31 * result + (idTokenEncryptionEncValuesSupported != null ? idTokenEncryptionEncValuesSupported.hashCode() : 0);
+        result = 31 * result + (displayValuesSupported != null ? displayValuesSupported.hashCode() : 0);
+        result = 31 * result + (claimTypesSupported != null ? claimTypesSupported.hashCode() : 0);
+        result = 31 * result + (claimsParameterSupported != null ? claimsParameterSupported.hashCode() : 0);
+        result = 31 * result + (opTosUri != null ? opTosUri.hashCode() : 0);
+        result = 31 * result + (opPolicyUri != null ? opPolicyUri.hashCode() : 0);
+        result = 31 * result + (uriLocalesSupported != null ? uriLocalesSupported.hashCode() : 0);
+        result = 31 * result + (claimsLocalesSupported != null ? claimsLocalesSupported.hashCode() : 0);
+        result = 31 * result + (userinfoEncryptionAlgValuesSupported != null ? userinfoEncryptionAlgValuesSupported.hashCode() : 0);
+        result = 31 * result + (userinfoEncryptionEncValuesSupported != null ? userinfoEncryptionEncValuesSupported.hashCode() : 0);
+        result = 31 * result + (tokenEndpointAuthSigningAlgValuesSupported != null ? tokenEndpointAuthSigningAlgValuesSupported.hashCode() : 0);
+        result = 31 * result + (requestObjectEncryptionAlgValuesSupported != null ? requestObjectEncryptionAlgValuesSupported.hashCode() : 0);
+        result = 31 * result + (requestObjectEncryptionEncValuesSupported != null ? requestObjectEncryptionEncValuesSupported.hashCode() : 0);
+        result = 31 * result + (checkSessionIframe != null ? checkSessionIframe.hashCode() : 0);
+        return result;
+    }
+
 
     /**
      *
@@ -1083,46 +1419,48 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
          */
         @NonNull
         public DefaultOpenIdProviderMetadata build() {
-            return new DefaultOpenIdProviderMetadata(authorizationEndpoint,
-                idTokenSigningAlgValuesSupported,
-                issuer,
-                jwksUri,
-                acrValuesSupported,
-                responseTypesSupported,
-                responseModesSupported,
-                scopesSupported,
-                grantTypesSupported,
-                subjectTypesSupported,
-                tokenEndpoint,
-                tokenEndpointAuthMethodsSupported,
-                userinfoEndpoint,
-                registrationEndpoint,
-                claimsSupported,
-                codeChallengeMethodsSupported,
-                introspectionEndpoint,
-                introspectionEndpointAuthMethodsSupported,
-                revocationEndpoint,
-                revocationEndpointAuthMethodsSupported,
-                endSessionEndpoint,
-                requestParameterSupported,
-                requestUriParameterSupported,
-                requireRequestUriRegistration,
-                requestObjectSigningAlgValuesSupported,
-                serviceDocumentation,
-                idTokenEncryptionEncValuesSupported,
-                displayValuesSupported,
-                claimTypesSupported,
-                claimsParameterSupported,
-                opTosUri,
-                opPolicyUri,
-                uriLocalesSupported,
-                claimsLocalesSupported,
-                userinfoEncryptionAlgValuesSupported,
-                userinfoEncryptionEncValuesSupported,
-                tokenEndpointAuthSigningAlgValuesSupported,
-                requestObjectEncryptionAlgValuesSupported,
-                requestObjectEncryptionEncValuesSupported,
-                checkSessionIframe);
+            DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
+            metadata.setAuthorizationEndpoint(Objects.requireNonNull(authorizationEndpoint));
+            metadata.setIdTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported);
+            metadata.setIssuer(issuer);
+            metadata.setJwksUri(jwksUri);
+            metadata.setAcrValuesSupported(acrValuesSupported);
+            metadata.setResponseTypesSupported(responseTypesSupported);
+            metadata.setResponseModesSupported(responseModesSupported);
+            metadata.setScopesSupported(scopesSupported);
+            metadata.setGrantTypesSupported(grantTypesSupported);
+            metadata.setSubjectTypesSupported(subjectTypesSupported);
+            metadata.setTokenEndpoint(tokenEndpoint);
+            metadata.setTokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
+            metadata.setUserinfoEndpoint(userinfoEndpoint);
+            metadata.setRegistrationEndpoint(registrationEndpoint);
+            metadata.setClaimsSupported(claimsSupported);
+            metadata.setCodeChallengeMethodsSupported(codeChallengeMethodsSupported);
+            metadata.setIntrospectionEndpoint(introspectionEndpoint);
+            metadata.setIntrospectionEndpointAuthMethodsSupported(introspectionEndpointAuthMethodsSupported);
+            metadata.setRevocationEndpoint(revocationEndpoint);
+            metadata.setRevocationEndpointAuthMethodsSupported(revocationEndpointAuthMethodsSupported);
+            metadata.setEndSessionEndpoint(endSessionEndpoint);
+            metadata.setRequestParameterSupported(requestParameterSupported);
+            metadata.setRequestUriParameterSupported(requestUriParameterSupported);
+            metadata.setRequireRequestUriRegistration(requireRequestUriRegistration);
+            metadata.setRequestObjectSigningAlgValuesSupported(requestObjectSigningAlgValuesSupported);
+            metadata.setServiceDocumentation(serviceDocumentation);
+            metadata.setIdTokenEncryptionEncValuesSupported(idTokenEncryptionEncValuesSupported);
+            metadata.setDisplayValuesSupported(displayValuesSupported);
+            metadata.setClaimTypesSupported(claimTypesSupported);
+            metadata.setClaimsParameterSupported(claimsParameterSupported);
+            metadata.setOpTosUri(opTosUri);
+            metadata.setOpPolicyUri(opPolicyUri);
+            metadata.setUriLocalesSupported(uriLocalesSupported);
+            metadata.setClaimsLocalesSupported(claimsLocalesSupported);
+            metadata.setUserinfoEncryptionAlgValuesSupported(userinfoEncryptionAlgValuesSupported);
+            metadata.setUserinfoEncryptionEncValuesSupported(userinfoEncryptionEncValuesSupported);
+            metadata.setTokenEndpointAuthSigningAlgValuesSupported(tokenEndpointAuthSigningAlgValuesSupported);
+            metadata.setRequestObjectEncryptionAlgValuesSupported(requestObjectEncryptionAlgValuesSupported);
+            metadata.setRequestObjectEncryptionEncValuesSupported(requestObjectEncryptionEncValuesSupported);
+            metadata.setCheckSessionIframe(checkSessionIframe);
+            return metadata;
         }
     }
 }

@@ -2,6 +2,8 @@ package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.token.bearer.BearerTokenConfiguration
+import io.micronaut.security.token.bearer.BearerTokenReader
 import spock.lang.Shared
 import spock.lang.Specification
 

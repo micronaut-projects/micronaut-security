@@ -115,7 +115,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = 'SecurityFilterSpec')
     @Requires(property = "disable.all.rules", notEquals = StringUtils.TRUE)
-    static class Rule1 implements SecurityRule {
+    static class Rule1<T> implements SecurityRule<T> {
         static SecurityRuleResult result = UNKNOWN
         static int delayMs = 0
         private final ExecutorService executorService
@@ -125,7 +125,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
                     .delayElement(Duration.ofMillis(delayMs))
                     .subscribeOn(Schedulers.fromExecutor(executorService))
@@ -140,11 +140,11 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = 'SecurityFilterSpec')
     @Requires(property = "disable.all.rules", notEquals = StringUtils.TRUE)
-    static class Rule2 implements SecurityRule {
+    static class Rule2<T> implements SecurityRule<T> {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 
@@ -157,11 +157,11 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = 'SecurityFilterSpec')
     @Requires(property = "disable.all.rules", notEquals = StringUtils.TRUE)
-    static class Rule3 implements SecurityRule {
+    static class Rule3<T> implements SecurityRule<T> {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 

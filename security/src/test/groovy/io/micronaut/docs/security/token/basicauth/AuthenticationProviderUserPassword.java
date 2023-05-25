@@ -1,9 +1,7 @@
 package io.micronaut.docs.security.token.basicauth;
 
 //tag::clazz[]
-
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -15,10 +13,10 @@ import reactor.core.publisher.Mono;
 @Requires(property = "spec.name", value = "docsbasicauth")
 //tag::clazz[]
 @Singleton
-public class AuthenticationProviderUserPassword implements AuthenticationProvider {
+public class AuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Mono.<AuthenticationResponse>create(emitter -> {
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.success(AuthenticationResponse.success("user"));

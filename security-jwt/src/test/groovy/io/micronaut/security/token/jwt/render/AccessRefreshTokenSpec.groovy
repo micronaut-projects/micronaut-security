@@ -3,6 +3,7 @@ package io.micronaut.security.token.jwt.render
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.core.type.Argument
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.serde.ObjectMapper
 import io.micronaut.serde.SerdeIntrospections
 
@@ -12,7 +13,7 @@ class AccessRefreshTokenSpec extends ApplicationContextSpecification {
         ObjectMapper mapper = ObjectMapper.getDefault()
 
         and : "a fully populated token"
-            AccessRefreshToken token = new AccessRefreshToken("1234", "abcd", "Bearer", null)
+        AccessRefreshToken token = new AccessRefreshToken("1234", "abcd", "Bearer", null)
 
         when: "we serialize the object to json"
             def rawJsonString = mapper.writeValueAsString(token)

@@ -16,17 +16,17 @@
 package io.micronaut.security.token.propagation;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.util.OutgointRequestProcessorMatcher;
+import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 
 import java.util.regex.Pattern;
 
 /**
- * Base implementation class for {@link OutgointRequestProcessorMatcher}.
+ * Base implementation class for {@link OutgoingRequestProcessorMatcher}.
  *
  * @author Álvaro Sánchez-Mariscal
  * @since 3.4.2
  */
-public abstract class AbstractOutgoingRequestProcessorMatcher implements OutgointRequestProcessorMatcher {
+public abstract class AbstractOutgoingRequestProcessorMatcher implements OutgoingRequestProcessorMatcher {
 
     protected String serviceIdRegex;
 

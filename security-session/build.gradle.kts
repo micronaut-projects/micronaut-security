@@ -4,16 +4,17 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
-    api(mn.micronaut.http)
     api(mnSession.micronaut.session)
-    api(project(":security"))
-    api(mn.micronaut.http.server)
-    implementation(libs.reactor.core)
+    api(projects.micronautSecurity)
+    implementation(mnReactor.micronaut.reactor)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(project(":test-suite-utils"))
-    testImplementation(project(":test-suite-utils-security"))
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
 }

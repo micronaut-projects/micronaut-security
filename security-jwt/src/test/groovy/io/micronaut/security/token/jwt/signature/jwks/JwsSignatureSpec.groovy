@@ -54,7 +54,7 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
         JwksSignature jwksSignature = beans[0]
 
         then:
-        jwksSignature.supportedAlgorithmsMessage() == 'Only the RS256 algorithms are supported'
+        jwksSignature.supportedAlgorithmsMessage() == 'Algorithms supported: RS256'
         jwksSignature.supports(JWSAlgorithm.RS256)
 
         when:

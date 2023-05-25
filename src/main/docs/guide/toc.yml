@@ -18,7 +18,10 @@ authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
   ipPattern: IP Pattern Rule
-  secured: Secured Annotation
+  secured:
+    title: Secured Annotation
+    jakartaAnnotations: Jakarta Annotations
+    securedExpression: Secured with expressions
   interceptUrlMap: Intercept URL Map
   builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
@@ -33,7 +36,9 @@ authenticationStrategies:
       cookieToken: Cookie Token Reader
     jwtValidation:
       title: JWT Signature Validation
-      jwks: Validation with remote JWKS
+      jwks:
+        title: Remote JWKS
+        staticJwks: Local JWKS
     jwtGenerator:
       title: JWT Token Generation
       jwtGeneratorSignature: Signed JWT Generation

@@ -1,6 +1,7 @@
 package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.cookie.TokenCookieLoginHandler
 
 class JwtCookieLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
     @Override
@@ -13,8 +14,8 @@ class JwtCookieLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
 
     void "uses context path"() {
         expect:
-        '/foo/' == applicationContext.getBean(JwtCookieLoginHandler).loginFailure
-        '/foo/' == applicationContext.getBean(JwtCookieLoginHandler).loginSuccess
-        '/foo/' == applicationContext.getBean(JwtCookieLoginHandler).refresh
+        '/foo/' == applicationContext.getBean(TokenCookieLoginHandler).loginFailure
+        '/foo/' == applicationContext.getBean(TokenCookieLoginHandler).loginSuccess
+        '/foo/' == applicationContext.getBean(TokenCookieLoginHandler).refresh
     }
 }

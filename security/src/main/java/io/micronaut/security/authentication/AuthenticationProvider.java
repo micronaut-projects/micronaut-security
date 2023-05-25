@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
 
 /**
@@ -25,8 +24,9 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
+ * @param <T> Request
  */
-public interface AuthenticationProvider {
+public interface AuthenticationProvider<T> {
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
@@ -40,5 +40,5 @@ public interface AuthenticationProvider {
      * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
-    Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
+    Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
 }

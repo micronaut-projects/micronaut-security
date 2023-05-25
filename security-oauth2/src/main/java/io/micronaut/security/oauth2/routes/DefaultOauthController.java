@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class DefaultOauthController implements OauthController {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
     private final OauthClient oauthClient;
-    private final RedirectingLoginHandler loginHandler;
+    private final RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
 
     private final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
 
@@ -61,7 +61,7 @@ public class DefaultOauthController implements OauthController {
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
     DefaultOauthController(@Parameter OauthClient oauthClient,
-                           RedirectingLoginHandler loginHandler,
+                           RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
                            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
                            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
         this.oauthClient = oauthClient;

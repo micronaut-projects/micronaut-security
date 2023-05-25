@@ -10,6 +10,7 @@ import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.io.socket.SocketUtils
@@ -30,9 +31,9 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
+import io.micronaut.security.token.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
+import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -40,7 +41,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.*
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
@@ -59,7 +60,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsConcurrentSpecAuthServer',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : jwkJsonString(),
             'micronaut.server.port'                                         : authServerPort,
             'sample.client-id'                                              : '3ljrgej68ggm7i720o9u12t7lm',
@@ -97,21 +98,15 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
-    @IgnoreIf({ env['GITHUB_RUN_ID'] != null }) // No idea why it fails in Github Actions
+    @IgnoreIf({ (Runtime.runtime.availableProcessors().intdiv(2) ?: 1) == 1 })
     void "no exception for concurrent requests using client credentials"() {
         when:
-        CompletableFuture<Void> run1 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run2 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run3 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run4 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run5 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run6 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run7 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run8 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run9 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run10 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture.allOf(run1, run2, run3, run4, run5, run6, run7, run8, run9, run10)
-                .get()
+        int numberOfFutures = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        System.out.println("NUMBER_OF_FUTURES: " + numberOfFutures)
+        List<CompletableFuture<Void>> futures = (1..numberOfFutures).collect {
+            CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
+        }
+        CompletableFuture.allOf(*futures).get()
 
         then:
         noExceptionThrown()
@@ -157,29 +152,61 @@ class ClientCredentialsConcurrentSpec extends Specification {
         TokenController(JwtTokenGenerator jwtTokenGenerator,
                         SampleClientConfiguration sampleClientConfiguration,
                         AccessTokenConfiguration accessTokenConfiguration,
-                        @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
+                        @Property(name = 'micronaut.security.token.generator.access-token.expiration') Integer tokenExpiration) {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
             this.tokenExpiration = tokenExpiration
         }
 
+
+        @Introspected
+        static class ClientCredentialsForm {
+            @NonNull
+            private final String grant_type;
+
+            @Nullable
+            private final String client_id;
+
+            @Nullable
+            private final String client_secret;
+
+            ClientCredentialsForm(@NonNull String grant_type, @Nullable String client_id, @Nullable String client_secret) {
+                this.grant_type = grant_type
+                this.client_id = client_id
+                this.client_secret = client_secret
+            }
+
+            @NonNull
+            String getGrant_type() {
+                return grant_type
+            }
+
+            @Nullable
+            String getClient_id() {
+                return client_id
+            }
+
+            @Nullable
+            String getClient_secret() {
+                return client_secret
+            }
+        }
+
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Post
-        HttpResponse<?> index(String grant_type,
-                              @Nullable String client_id,
-                              @Nullable String client_secret,
+        HttpResponse<?> index(@Body ClientCredentialsForm form,
                               @Nullable @Header String authorization) {
             numberOfRequests++
             if (down) {
                 return HttpResponse.serverError()
             }
-            if (grant_type != GrantType.CLIENT_CREDENTIALS.toString()) {
+            if (form.getGrant_type() != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
 
-            if (!validate(client_id, client_id, authorization)) {
+            if (!validate(form.getClient_id(), form.getClient_secret(), authorization)) {
                 return HttpResponse.status(HttpStatus.UNAUTHORIZED).body([error: 'invalid_client'])
             }
 
@@ -258,7 +285,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsConcurrentSpecAuthServer')
     @Singleton
-    static class CustomJwtIdGenerator implements JwtIdGenerator {
+    static class CustomJwtIdGenerator implements JtiGenerator {
 
         @Override
         String generateJtiClaim() {

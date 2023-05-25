@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,13 @@ import io.micronaut.security.rules.SecurityRule;
  * @since 1.0
  */
 @Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(classes = Controller.class)
 @Requires(beans = LogoutHandler.class)
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {
 
-    private final LogoutHandler logoutHandler;
+    private final LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler;
     private final ApplicationEventPublisher<LogoutEvent> logoutEventPublisher;
     private final boolean getAllowed;
 
@@ -55,7 +56,7 @@ public class LogoutController {
      * @param logoutEventPublisher The application event publisher
      * @param logoutControllerConfiguration Configuration for the Logout controller
      */
-    public LogoutController(LogoutHandler logoutHandler,
+    public LogoutController(LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
                             ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
                             LogoutControllerConfiguration logoutControllerConfiguration) {
         this.logoutHandler = logoutHandler;

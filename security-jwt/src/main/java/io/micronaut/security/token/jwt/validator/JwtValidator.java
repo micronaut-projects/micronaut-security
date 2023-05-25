@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
+import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
@@ -49,8 +48,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Kleeh
  * @since 1.4.0
+ * @param <T> Request
  */
-public final class JwtValidator {
+public final class JwtValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidator.class);
     private static final String DOT = ".";
@@ -74,7 +74,7 @@ public final class JwtValidator {
      * @param request HTTP Request
      * @return An optional JWT token if validation succeeds
      */
-    public Optional<JWT> validate(String token, @Nullable HttpRequest<?> request) {
+    public Optional<JWT> validate(String token, @Nullable T request) {
             try {
                 if (hasAtLeastTwoDots(token)) {
                     JWT jwt = JWTParser.parse(token);
@@ -109,7 +109,7 @@ public final class JwtValidator {
      * @param request The HTTP Request which contained the JWT token
      * @return An optional JWT token if validation succeeds
      */
-    public Optional<JWT> validate(@NonNull JWT token, @Nullable HttpRequest<?> request) {
+    public Optional<JWT> validate(@NonNull JWT token, @Nullable T request) {
         Optional<JWT> validationResult;
         if (token instanceof PlainJWT) {
             validationResult = validate((PlainJWT) token);
@@ -125,7 +125,7 @@ public final class JwtValidator {
         } else {
             return validationResult.filter(jwt -> {
                 try {
-                    JwtClaims claims = new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
+                    Claims claims = new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
                     return claimsValidators.stream().allMatch(validator -> validator.validate(claims, request));
                 } catch (ParseException e) {
                     if (LOG.isErrorEnabled()) {
@@ -332,8 +332,9 @@ public final class JwtValidator {
 
     /**
      * A builder for {@link JwtValidator}.
+     * @param <T> Request
      */
-    public static final class Builder {
+    public static final class Builder<T> {
 
         private List<SignatureConfiguration> signatures = new ArrayList<>();
         private List<EncryptionConfiguration> encryptions = new ArrayList<>();
@@ -412,7 +413,7 @@ public final class JwtValidator {
          *
          * @return The validator
          */
-        public JwtValidator build() {
+        public JwtValidator<T> build() {
             return new JwtValidator(signatures, encryptions, claimsValidators);
         }
     }

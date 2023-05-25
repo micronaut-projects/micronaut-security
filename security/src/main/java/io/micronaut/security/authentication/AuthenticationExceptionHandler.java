@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -32,6 +33,7 @@ import jakarta.inject.Singleton;
  * @author James Kleeh
  * @since 1.0
  */
+@Requires(classes = ExceptionHandler.class)
 @Singleton
 @Primary
 @Produces

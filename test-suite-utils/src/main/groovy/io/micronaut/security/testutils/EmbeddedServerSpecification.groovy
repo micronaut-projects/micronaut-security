@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.micronaut.security.testutils
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
@@ -37,4 +38,16 @@ abstract class EmbeddedServerSpecification extends Specification implements Conf
 
     @Shared
     BlockingHttpClient client = httpClient.toBlocking()
+
+    boolean containsBean(Class beanType) {
+        applicationContext.containsBean(beanType)
+    }
+
+    public <T> T getBean(@NonNull Class<T> beanType) {
+        applicationContext.getBean(beanType)
+    }
+
+    public <T> Collection<T> getBeansOfType(@NonNull Class<T> beanType) {
+        applicationContext.getBeansOfType(beanType)
+    }
 }

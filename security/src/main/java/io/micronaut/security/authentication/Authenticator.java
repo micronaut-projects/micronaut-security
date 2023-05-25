@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
 import jakarta.inject.Singleton;
@@ -39,20 +38,21 @@ import reactor.core.publisher.Mono;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
+ * @param <T> Request
  */
 @Singleton
-public class Authenticator {
+public class Authenticator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
-    protected final Collection<AuthenticationProvider> authenticationProviders;
+    protected final Collection<AuthenticationProvider<T>> authenticationProviders;
     private final SecurityConfiguration securityConfiguration;
 
     /**
      * @param authenticationProviders A list of available authentication providers
      * @param securityConfiguration The security configuration
      */
-    public Authenticator(Collection<AuthenticationProvider> authenticationProviders,
+    public Authenticator(Collection<AuthenticationProvider<T>> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
         this.authenticationProviders = authenticationProviders;
         this.securityConfiguration = securityConfiguration;
@@ -65,7 +65,7 @@ public class Authenticator {
      * @param authenticationRequest Represents a request to authenticate.
      * @return A publisher that emits {@link AuthenticationResponse} objects
      */
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T request, AuthenticationRequest<?, ?> authenticationRequest) {
         if (this.authenticationProviders == null) {
             return Flux.empty();
         }

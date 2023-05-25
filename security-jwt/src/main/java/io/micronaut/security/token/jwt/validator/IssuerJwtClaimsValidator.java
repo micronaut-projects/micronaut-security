@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@ package io.micronaut.security.token.jwt.validator;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +29,11 @@ import org.slf4j.LoggerFactory;
  * @author Jason Schindler
  * @author Sergio del Amo
  * @since 2.4.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = IssuerJwtClaimsValidator.ISSUER_PROP)
-public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class IssuerJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     public static final String ISSUER_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".issuer";
 
@@ -54,11 +54,11 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         if (expectedIssuer == null) {
             return true;
         }
-        Object issuerObject = claims.get(JwtClaims.ISSUER);
+        Object issuerObject = claims.get(Claims.ISSUER);
         if (issuerObject == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but the token did not include an issuer.", expectedIssuer);

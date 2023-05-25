@@ -10,6 +10,7 @@ import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.io.socket.SocketUtils
@@ -28,6 +29,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.BasicAuthUtils
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
@@ -36,9 +38,9 @@ import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
+import io.micronaut.security.token.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
+import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -47,11 +49,10 @@ import org.slf4j.LoggerFactory
 import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
 import spock.lang.Narrative
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
@@ -88,7 +89,7 @@ class ClientCredentialsSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsSpecAuthServer',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : jwkJsonString(),
             'micronaut.server.port'                                         : authServerPort,
             'sample.client-id'                                              : '3ljrgej68ggm7i720o9u12t7lm',
@@ -99,7 +100,7 @@ class ClientCredentialsSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServerDown = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsSpecAuthServerDown',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : secondaryJwkJsonString,
             'micronaut.server.port'                                         : authServerDownPort,
     ])
@@ -291,9 +292,14 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
     }
 
-    @PendingFeature
     void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets both token manually and an open id issuer which providers information about its token endpoint. The manual set token endpoint takes precedence'() {
+        when:
+        OpenIdProviderMetadata metadata = applicationContext.getBean(OpenIdProviderMetadata, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
+        then:
+        metadata
+        metadata.tokenEndpoint == "http://localhost:$authServerPort/token".toString()
+        
         when:
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
@@ -512,28 +518,59 @@ class ClientCredentialsSpec extends Specification {
         TokenController(JwtTokenGenerator jwtTokenGenerator,
                         SampleClientConfiguration sampleClientConfiguration,
                         AccessTokenConfiguration accessTokenConfiguration,
-                        @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
+                        @Property(name = 'micronaut.security.token.generator.access-token.expiration') Integer tokenExpiration) {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
             this.tokenExpiration = tokenExpiration
         }
 
+        @Introspected
+        static class ClientCredentialsForm {
+            @NonNull
+            private final String grant_type;
+
+            @Nullable
+            private final String client_id;
+
+            @Nullable
+            private final String client_secret;
+
+            ClientCredentialsForm(@NonNull String grant_type, @Nullable String client_id, @Nullable String client_secret) {
+                this.grant_type = grant_type
+                this.client_id = client_id
+                this.client_secret = client_secret
+            }
+
+            @NonNull
+            String getGrant_type() {
+                return grant_type
+            }
+
+            @Nullable
+            String getClient_id() {
+                return client_id
+            }
+
+            @Nullable
+            String getClient_secret() {
+                return client_secret
+            }
+        }
+
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Post
-        HttpResponse<?> index(String grant_type,
-                              @Nullable String client_id,
-                              @Nullable String client_secret,
+        HttpResponse<?> index(@Body ClientCredentialsForm form,
                               @Nullable @Header String authorization) {
             if (down) {
                 return HttpResponse.serverError()
             }
-            if (grant_type != GrantType.CLIENT_CREDENTIALS.toString()) {
+            if (form.getGrant_type() != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
 
-            if (!validate(client_id, client_id, authorization)) {
+            if (!validate(form.getClient_id(), form.getClient_secret(), authorization)) {
                 return HttpResponse.status(HttpStatus.UNAUTHORIZED).body([error: 'invalid_client'])
             }
 
@@ -612,7 +649,7 @@ class ClientCredentialsSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
     @Singleton
-    static class CustomJwtIdGenerator implements JwtIdGenerator {
+    static class CustomJwtIdGenerator implements JtiGenerator {
 
         @Override
         String generateJtiClaim() {

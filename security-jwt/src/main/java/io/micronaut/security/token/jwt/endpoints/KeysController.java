@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import java.util.Collections;
  * @since 1.1.0
  * @author Sergio del Amo
  */
+@Requires(classes = { Controller.class })
 @Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(beans = JwkProvider.class)
 @Controller("${" + KeysControllerConfigurationProperties.PREFIX + ".path:/keys}")

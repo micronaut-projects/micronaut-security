@@ -33,7 +33,7 @@ Micronaut security comes with a controller to allow for the refresh of access to
 
 Moreover, the controller can be configured with:
 
-include::{includedir}configurationProperties/io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.endpoints.OauthControllerConfigurationProperties.adoc[]
 
 The controller exposes an endpoint as defined by https://tools.ietf.org/html/rfc6749#section-6[section 6 of the OAuth 2.0 spec] - Refreshing an Access Token.
 

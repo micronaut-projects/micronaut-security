@@ -5,18 +5,17 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.core.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
-    testImplementation(libs.spock.core) {
-        exclude module:'groovy-all'
-    }
     testImplementation(mnTest.micronaut.test.spock)
-    runtimeOnly(libs.logback.classic)
+    runtimeOnly(mnLogging.logback.classic)
+
+    testCompileOnly(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation(libs.reactor.core)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnReactor.micronaut.reactor)
 }
 
 tasks.named('test') {

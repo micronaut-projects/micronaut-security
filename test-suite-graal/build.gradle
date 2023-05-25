@@ -10,23 +10,13 @@ dependencies {
     testImplementation(mn.micronaut.json.core)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(project(":security"))
-    testImplementation(project(":security-jwt"))
+    testImplementation(projects.micronautSecurity)
+    testImplementation(projects.micronautSecurityJwt)
     testImplementation(mnTest.micronaut.test.junit5)
 }
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-}
-
-tasks.named("check") { task ->
-    def graal = ["jvmci.Compiler", "java.vendor.version", "java.vendor"].any {
-        println "$it ${System.getProperty(it)}"
-        System.getProperty(it)?.toLowerCase(Locale.ENGLISH)?.contains("graal")
-    }
-    if (graal) {
-        task.dependsOn("nativeTest")
-    }
 }
 
 def openGraalModules = [

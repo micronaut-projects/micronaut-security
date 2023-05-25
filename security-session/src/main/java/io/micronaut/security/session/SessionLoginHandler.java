@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ import java.util.Optional;
  */
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
-public class SessionLoginHandler implements RedirectingLoginHandler {
+public class SessionLoginHandler implements RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String loginSuccess;
@@ -58,7 +58,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     protected final SessionStore<Session> sessionStore;
 
-    private final PriorToLoginPersistence priorToLoginPersistence;
+    private final PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence;
 
     /**
      * Constructor.
@@ -69,7 +69,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      */
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence,
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
                                RedirectService redirectService) {
         this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
         this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;

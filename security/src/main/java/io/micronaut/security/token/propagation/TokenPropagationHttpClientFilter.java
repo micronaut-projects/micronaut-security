@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import org.reactivestreams.Publisher;
  * @since 1.0
  */
 @Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
+@Requires(classes = HttpClientFilter.class)
 @Requires(beans = {TokenPropagator.class, TokenPropagationConfiguration.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {
