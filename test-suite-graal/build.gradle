@@ -13,25 +13,16 @@ dependencies {
     testImplementation(projects.micronautSecurity)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(mnTest.micronaut.test.junit5)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
-
-def openGraalModules = [
-        "org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
-        "org.graalvm.nativeimage.builder/com.oracle.svm.core.configure",
-        "org.graalvm.sdk/org.graalvm.nativeimage.impl"
-]
-
 graalvmNative {
-    toolchainDetection = false
-    binaries {
-        all {
-            openGraalModules.each { module ->
-                jvmArgs.add("--add-exports=" + module + "=ALL-UNNAMED")
-            }
-        }
+    metadataRepository {
+        enabled = true
     }
 }
