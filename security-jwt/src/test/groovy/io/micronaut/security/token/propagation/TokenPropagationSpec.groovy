@@ -3,6 +3,8 @@ package io.micronaut.security.token.propagation
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.annotation.SingleResult
+import io.micronaut.core.async.propagation.ReactivePropagation
+import io.micronaut.core.propagation.PropagatedContext
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -141,12 +143,14 @@ class TokenPropagationSpec extends Specification {
 
         @Get("/gateway")
         Publisher<Book> findAll() {
-            Flux.from(booksClient.fetchBooks())
+            PropagatedContext ctx = PropagatedContext.get();
+            Flux.from(ReactivePropagation.propagate(ctx, booksClient.fetchBooks()))
                     .flatMap(b -> bookByIsbn(b))
         }
 
         private Mono<Book> bookByIsbn(Book b) {
-            Mono.from(inventoryClient.inventory(b.isbn))
+            PropagatedContext ctx = PropagatedContext.getOrEmpty();
+            Mono.from(ReactivePropagation.propagate(ctx, inventoryClient.inventory(b.isbn)))
                     .filter( stock -> stock > 0 )
                     .map(stock -> {
                         b.stock = stock
