@@ -18,17 +18,24 @@ package io.micronaut.security.token.propagation;
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.propagation.ReactivePropagation;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.http.annotation.Filter;
+import io.micronaut.http.annotation.ClientFilter;
+import io.micronaut.http.annotation.RequestFilter;
+import io.micronaut.http.context.ServerHttpRequestContext;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
+
+import java.util.Objects;
 import java.util.Optional;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 /**
  * {@link io.micronaut.http.filter.HttpClientFilter} to enable Token propagation.
@@ -36,11 +43,11 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
-@Requires(classes = HttpClientFilter.class)
+@ClientFilter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
+@Requires(classes = ClientFilter.class)
 @Requires(beans = {TokenPropagator.class, TokenPropagationConfiguration.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
-public class TokenPropagationHttpClientFilter implements HttpClientFilter {
+public class TokenPropagationHttpClientFilter {
 
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
@@ -62,46 +69,21 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
 
     /**
      *
-     * @param targetRequest The target request
-     * @param chain The filter chain
-     * @return The publisher of the response
+     * @param targetRequest The HTTP request
      */
-    @Override
-    public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> targetRequest, ClientFilterChain chain) {
-        if (!outgoingHttpRequestProcessor.shouldProcessRequest(tokenPropagationConfiguration, targetRequest)) {
-            return chain.proceed(targetRequest);
-        }
-
-        Optional<HttpRequest<Object>> current = ServerRequestContext.currentRequest();
-        if (current.isPresent()) {
-            HttpRequest<Object> currentRequest = current.get();
-            return doFilter(targetRequest, chain, currentRequest);
-        } else {
-            return chain.proceed(targetRequest);
-        }
-    }
-
-    /**
-     *
-     * @param targetRequest The target request of this HttpClientFilter
-     * @param chain The filter chain
-     * @param currentRequest The original request which triggered during its execution the invocation of this HttpClientFilter
-     * @return The publisher of the response
-     */
-    public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> targetRequest, ClientFilterChain chain, HttpRequest<Object> currentRequest) {
-        Optional<Object> token = currentRequest.getAttribute(TOKEN);
-        if (token.isPresent()) {
-            Object obj = token.get();
-
-            if (obj instanceof String) {
-                String tokenValue = (String) obj;
-                if (!hasExistingToken(targetRequest)) {
-                    tokenPropagator.writeToken(targetRequest, tokenValue);
+    @RequestFilter
+    public void doFilter(MutableHttpRequest<?> targetRequest) {
+        if (!hasExistingToken(targetRequest) && outgoingHttpRequestProcessor.shouldProcessRequest(tokenPropagationConfiguration, targetRequest)) {
+            Optional<HttpRequest<Object>> currentRequestOptional = ServerHttpRequestContext.find();
+            if (currentRequestOptional.isPresent()) {
+                HttpRequest<Object> currentRequest = currentRequestOptional.get();
+                Optional<String> tokenOptional = currentRequest.getAttribute(TOKEN, String.class);
+                if (tokenOptional.isPresent()) {
+                    String token = tokenOptional.get();
+                    tokenPropagator.writeToken(targetRequest, token);
                 }
-                return chain.proceed(targetRequest);
             }
         }
-        return chain.proceed(targetRequest);
     }
 
     private boolean hasExistingToken(MutableHttpRequest<?> targetRequest) {
