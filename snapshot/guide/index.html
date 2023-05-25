@@ -392,6 +392,9 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <div class="ulist">
 <ul>
 <li>
+<p>For applications with <code>micronaut.security.authentication</code> set to <code>cookie</code> and <code>micronaut.security.redirect.enabled</code> set to <code>false</code>, the server responds with 401 HTTP Status code instead of 200 for login failed attempts.</p>
+</li>
+<li>
 <p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
 </li>
 </ul>
