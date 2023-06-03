@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.filters;
 
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
@@ -28,7 +27,6 @@ import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
-import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
@@ -54,7 +52,6 @@ import java.util.stream.Collectors;
  */
 @Requires(property = SecurityFilterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = { HttpServerFilter.class })
-@Replaces(EndpointsFilter.class)
 @Filter("${" + SecurityFilterConfigurationProperties.PREFIX + ".pattern:" + Filter.MATCH_ALL_PATTERN + "}")
 public class SecurityFilter implements HttpServerFilter {
 
