@@ -40,6 +40,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import io.micronaut.management.endpoint.EndpointSensitivityHandler;
 
 /**
  * Finds any sensitive endpoints and processes requests that match their
@@ -50,9 +51,9 @@ import reactor.core.publisher.Mono;
  * @since 1.0
  */
 @Requires(beans = EndpointSensitivityProcessor.class)
-@Requires(classes = { HttpRequest.class })
+@Requires(classes = { HttpRequest.class,  })
 @Singleton
-public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>> {
+public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>>, EndpointSensitivityHandler {
     /**
      * The order of the rule.
      */
