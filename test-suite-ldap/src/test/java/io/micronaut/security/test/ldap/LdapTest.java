@@ -55,6 +55,12 @@ public class LdapTest implements TestPropertyProvider {
         }
         Map<String, String> properties = new HashMap<>();
         properties.put("micronaut.security.ldap.default.context.server", "ldap://localhost:" + directoryServer.getListenPort());
+        properties.put("micronaut.security.ldap.default.enabled", "true");
+        properties.put("micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com");
+        properties.put("micronaut.security.ldap.default.context.managerPassword", "password");
+        properties.put("micronaut.security.ldap.default.search.base", "dc=example,dc=com");
+        properties.put("micronaut.security.ldap.default.groups.enabled", "true");
+        properties.put("micronaut.security.ldap.default.groups.base", "dc=example,dc=com");
         return properties;
     }
 

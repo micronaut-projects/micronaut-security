@@ -7,16 +7,16 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.inject.java)
     annotationProcessor(mnSerde.micronaut.serde.processor)
+
     implementation(mn.micronaut.http)
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.json.core)
     implementation(mnReactor.micronaut.reactor)
     implementation(mnSerde.micronaut.serde.jackson)
+    implementation(mnLogging.logback.classic)
+
     implementation(projects.micronautSecurity)
     implementation(projects.micronautSecurityLdap)
-
-    testRuntimeOnly(mn.snakeyaml)
-    testRuntimeOnly(mnLogging.logback.classic)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.http.client)
