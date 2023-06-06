@@ -34,6 +34,7 @@ include "test-suite-kotlin"
 include "test-suite-aot"
 include "test-suite-aot-authserver"
 include "test-suite-serde"
+include "test-suite-ldap"
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 

@@ -1,0 +1,35 @@
+plugins {
+    id 'java-library'
+    id 'org.graalvm.buildtools.native'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    annotationProcessor(mn.micronaut.inject.java)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    implementation(mn.micronaut.http)
+    implementation(mn.micronaut.http.server.netty)
+    implementation(mn.micronaut.json.core)
+    implementation(mnReactor.micronaut.reactor)
+    implementation(mnSerde.micronaut.serde.jackson)
+    implementation(projects.micronautSecurity)
+    implementation(projects.micronautSecurityLdap)
+
+    testRuntimeOnly(mn.snakeyaml)
+    testRuntimeOnly(mnLogging.logback.classic)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(libs.unboundid.ldapsdk)
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+graalvmNative {
+    metadataRepository {
+        enabled = true
+    }
+}
