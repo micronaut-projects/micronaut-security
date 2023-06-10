@@ -50,8 +50,7 @@ import io.micronaut.management.endpoint.EndpointSensitivityHandler;
  * @author James Kleeh
  * @since 1.0
  */
-@Requires(beans = EndpointSensitivityProcessor.class)
-@Requires(classes = { HttpRequest.class })
+@Requires(classes = { EndpointSensitivityProcessor.class, HttpRequest.class })
 @Singleton
 public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>>, EndpointSensitivityHandler {
     /**
