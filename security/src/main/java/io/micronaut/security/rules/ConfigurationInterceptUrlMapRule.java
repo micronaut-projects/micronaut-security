@@ -38,7 +38,7 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
     /**
      * The order of the rule.
      */
-    public static final Integer ORDER = SensitiveEndpointRule.ORDER - 100;
+    public static final Integer ORDER = -100;
 
     private final List<InterceptUrlMapPattern> patternList;
 
