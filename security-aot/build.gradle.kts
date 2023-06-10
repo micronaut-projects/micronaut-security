@@ -5,7 +5,7 @@ plugins {
 
 micronautBuild {
     aot {
-        version.set("2.0.0-M1")
+        version.set("2.0.0-M3")
     }
 }
 
