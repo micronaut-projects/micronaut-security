@@ -100,29 +100,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#containsBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)" class="member-name-link">containsBean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
- io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;@io.micronaut.core.annotation.NonNull boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#containsBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)" class="member-name-link">containsBean</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @Nullable io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Return whether the bean of the given type is contained within this context.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBean(java.lang.Class,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBean(java.lang.Class,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBean</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Obtains a Bean for the given type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
- io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBean</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @Nullable io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Obtains a Bean for the given type and qualifier.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBeansOfType(java.lang.Class,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBeansOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBeansOfType(java.lang.Class,io.micronaut.aot.core.AOTContext)" class="member-name-link">getBeansOfType</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get all beans of the given type.</div>
 </div>
@@ -147,10 +147,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getBeansOfType(java.lang.Class,io.micronaut.aot.core.AOTContext)">
 <h3>getBeansOfType</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;</span>&nbsp;<span class="element-name">getBeansOfType</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;</span>&nbsp;<span class="element-name">getBeansOfType</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
  @NonNull
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
 <div class="block">Get all beans of the given type.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
@@ -168,9 +168,9 @@ loadScripts(document, 'script');</script>
 <h3>getBean</h3>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">getBean</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
  @NonNull
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
 <div class="block">Obtains a Bean for the given type.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
@@ -191,12 +191,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="containsBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)">
 <h3>containsBean</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsBean</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>
+<span class="return-type">@io.micronaut.core.annotation.NonNull boolean</span>&nbsp;<span class="element-name">containsBean</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
  @Nullable
- io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
+ @Nullable io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
  @NonNull
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
 <div class="block">Return whether the bean of the given type is contained within this context.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
@@ -215,11 +216,11 @@ loadScripts(document, 'script');</script>
 <h3>getBean</h3>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">getBean</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;beanType,
  @Nullable
- io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
+ @Nullable io.micronaut.context.Qualifier&lt;T&gt;&nbsp;qualifier,
  @NonNull
- io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
+ @NonNull io.micronaut.aot.core.AOTContext&nbsp;aotContext)</span></div>
 <div class="block">Obtains a Bean for the given type and qualifier.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>

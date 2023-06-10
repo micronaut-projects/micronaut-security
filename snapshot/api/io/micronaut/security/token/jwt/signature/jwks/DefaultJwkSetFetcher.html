@@ -151,10 +151,10 @@ implements <a href="JwkSetFetcher.html" title="interface in io.micronaut.securit
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearCache(java.lang.String)" class="member-name-link">clearCache</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearCache(java.lang.String)" class="member-name-link">clearCache</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetch(java.lang.String)" class="member-name-link">fetch</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetch(java.lang.String)" class="member-name-link">fetch</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -205,8 +205,8 @@ implements <a href="JwkSetFetcher.html" title="interface in io.micronaut.securit
 <section class="detail" id="fetch(java.lang.String)">
 <h3>fetch</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</span>&nbsp;<span class="element-name">fetch</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</span>&nbsp;<span class="element-name">fetch</span><wbr><span class="parameters">(@Nullable
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwkSetFetcher.html#fetch(java.lang.String)">fetch</a></code>&nbsp;in interface&nbsp;<code><a href="JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</code></dd>
@@ -221,7 +221,7 @@ implements <a href="JwkSetFetcher.html" title="interface in io.micronaut.securit
 <section class="detail" id="clearCache(java.lang.String)">
 <h3>clearCache</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearCache</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwkSetFetcher.html#clearCache(java.lang.String)">clearCache</a></code>&nbsp;in interface&nbsp;<code><a href="JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;</code></dd>

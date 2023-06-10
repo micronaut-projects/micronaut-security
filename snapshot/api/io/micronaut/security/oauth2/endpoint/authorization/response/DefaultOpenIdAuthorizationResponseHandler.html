@@ -111,8 +111,8 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
  <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
  <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
- <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
- <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</code></div>
+ @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+ @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -132,7 +132,7 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handle(io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.SecureEndpoint)" class="member-name-link">handle</a><wbr>(<a href="OpenIdAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponse</a>&nbsp;authorizationResponse,
  <a href="../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
- <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ @Nullable <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Receives the authorization response and ultimately
@@ -163,9 +163,9 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
  <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
  <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
  @Nullable
- <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+ @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
  @Nullable
- <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</span></div>
+ @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tokenResponseValidator</code> - The token response validator</dd>
@@ -192,7 +192,7 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
  <a href="../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @Nullable
- <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ @Nullable <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="OpenIdAuthorizationResponseHandler.html#handle(io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.SecureEndpoint)">OpenIdAuthorizationResponseHandler</a></code></span></div>
 <div class="block">Receives the authorization response and ultimately

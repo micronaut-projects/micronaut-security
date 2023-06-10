@@ -150,10 +150,10 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.nimbusds.jose.JWSAlgorithm</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull com.nimbusds.jose.JWSAlgorithm</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getJwsAlgorithm()" class="member-name-link">getJwsAlgorithm</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSecret()" class="member-name-link">getSecret</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
@@ -173,12 +173,12 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <div class="block">Sets whether <a href="SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a> is enabled.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJwsAlgorithm(com.nimbusds.jose.JWSAlgorithm)" class="member-name-link">setJwsAlgorithm</a><wbr>(com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJwsAlgorithm(com.nimbusds.jose.JWSAlgorithm)" class="member-name-link">setJwsAlgorithm</a><wbr>(@NonNull com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><code>JWSAlgorithm</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSecret(java.lang.String)" class="member-name-link">setSecret</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;secret)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSecret(java.lang.String)" class="member-name-link">setSecret</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;secret)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -285,7 +285,7 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <section class="detail" id="setJwsAlgorithm(com.nimbusds.jose.JWSAlgorithm)">
 <h3>setJwsAlgorithm</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setJwsAlgorithm</span><wbr><span class="parameters">(@NonNull
- com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</span></div>
+ @NonNull com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</span></div>
 <div class="block"><code>JWSAlgorithm</code>. Defaults to HS256</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -297,7 +297,7 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <section class="detail" id="setSecret(java.lang.String)">
 <h3>setSecret</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSecret</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;secret)</span></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;secret)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>secret</code> - shared secret. For HS256 must be at least 256 bits.</dd>
@@ -319,7 +319,7 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <section class="detail" id="getJwsAlgorithm()">
 <h3>getJwsAlgorithm</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.nimbusds.jose.JWSAlgorithm</span>&nbsp;<span class="element-name">getJwsAlgorithm</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull com.nimbusds.jose.JWSAlgorithm</span>&nbsp;<span class="element-name">getJwsAlgorithm</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="RefreshTokenConfiguration.html#getJwsAlgorithm()">getJwsAlgorithm</a></code>&nbsp;in interface&nbsp;<code><a href="RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></dd>
@@ -332,7 +332,7 @@ implements <a href="RefreshTokenConfiguration.html" title="interface in io.micro
 <section class="detail" id="getSecret()">
 <h3>getSecret</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSecret</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSecret</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="RefreshTokenConfiguration.html#getSecret()">getSecret</a></code>&nbsp;in interface&nbsp;<code><a href="RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></dd>

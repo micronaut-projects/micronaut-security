@@ -104,7 +104,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.oauth2.endpoint.token.response.validation.NonceClaimValidator,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)" class="member-name-link">DefaultOpenIdTokenResponseValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="OpenIdClaimsValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdClaimsValidator</a>&gt;&nbsp;idTokenValidators,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
- <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
+ @Nullable <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -123,23 +123,23 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../../../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jwksSignatureForOpenIdProviderMetadata(io.micronaut.security.oauth2.client.OpenIdProviderMetadata)" class="member-name-link">jwksSignatureForOpenIdProviderMetadata</a><wbr>(<a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jwksSignatureForOpenIdProviderMetadata(io.micronaut.security.oauth2.client.OpenIdProviderMetadata)" class="member-name-link">jwksSignatureForOpenIdProviderMetadata</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseJwtWithValidSignature(io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)" class="member-name-link">parseJwtWithValidSignature</a><wbr>(<a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
- <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseJwtWithValidSignature(io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)" class="member-name-link">parseJwtWithValidSignature</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+ @NonNull <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)" class="member-name-link">validate</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateClaims(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,com.nimbusds.jwt.JWT,java.lang.String)" class="member-name-link">validateClaims</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
- <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
- com.nimbusds.jwt.JWT&nbsp;jwt,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateClaims(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,com.nimbusds.jwt.JWT,java.lang.String)" class="member-name-link">validateClaims</a><wbr>(@NonNull <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+ @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+ @NonNull com.nimbusds.jwt.JWT&nbsp;jwt,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -164,7 +164,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdTokenResponseValidator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="OpenIdClaimsValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdClaimsValidator</a>&gt;&nbsp;idTokenValidators,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../../token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
  @Nullable
- <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
+ @Nullable <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</span></div>
 <dl class="notes">
@@ -192,7 +192,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="OpenIdTokenResponseValidator.html#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></code></dd>
@@ -210,14 +210,14 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <section class="detail" id="validateClaims(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,com.nimbusds.jwt.JWT,java.lang.String)">
 <h3>validateClaims</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</span>&nbsp;<span class="element-name">validateClaims</span><wbr><span class="parameters">(@NonNull
- <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</span>&nbsp;<span class="element-name">validateClaims</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  @NonNull
- <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+ @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @NonNull
- com.nimbusds.jwt.JWT&nbsp;jwt,
+ @NonNull com.nimbusds.jwt.JWT&nbsp;jwt,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clientConfiguration</code> - The OAuth 2.0 client configuration</dd>
@@ -233,10 +233,10 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <section class="detail" id="parseJwtWithValidSignature(io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)">
 <h3>parseJwtWithValidSignature</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</span>&nbsp;<span class="element-name">parseJwtWithValidSignature</span><wbr><span class="parameters">(@NonNull
- <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</span>&nbsp;<span class="element-name">parseJwtWithValidSignature</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @NonNull
- <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</span></div>
+ @NonNull <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>openIdProviderMetadata</code> - The OpenID provider metadata</dd>
@@ -251,7 +251,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <section class="detail" id="jwksSignatureForOpenIdProviderMetadata(io.micronaut.security.oauth2.client.OpenIdProviderMetadata)">
 <h3>jwksSignatureForOpenIdProviderMetadata</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../../../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></span>&nbsp;<span class="element-name">jwksSignatureForOpenIdProviderMetadata</span><wbr><span class="parameters">(@NonNull
- <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</span></div>
+ @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>openIdProviderMetadata</code> - The OpenID provider metadata</dd>

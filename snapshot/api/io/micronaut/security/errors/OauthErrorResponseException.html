@@ -122,9 +122,9 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.errors.ErrorCode)" class="member-name-link">OauthErrorResponseException</a><wbr>(<a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.errors.ErrorCode)" class="member-name-link">OauthErrorResponseException</a><wbr>(@NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.errors.ErrorCode,java.lang.String,java.lang.String)" class="member-name-link">OauthErrorResponseException</a><wbr>(<a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.errors.ErrorCode,java.lang.String,java.lang.String)" class="member-name-link">OauthErrorResponseException</a><wbr>(@NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;errorDescription,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;errorUri)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -142,13 +142,13 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getError()" class="member-name-link">getError</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getErrorDescription()" class="member-name-link">getErrorDescription</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getErrorUri()" class="member-name-link">getErrorUri</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -175,7 +175,7 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.errors.ErrorCode)">
 <h3>OauthErrorResponseException</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OauthErrorResponseException</span><wbr><span class="parameters">(@NonNull
- <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode)</span></div>
+ @NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>errorCode</code> - the error code</dd>
@@ -186,7 +186,7 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.errors.ErrorCode,java.lang.String,java.lang.String)">
 <h3>OauthErrorResponseException</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OauthErrorResponseException</span><wbr><span class="parameters">(@NonNull
- <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode,
+ @NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a>&nbsp;errorCode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;errorDescription,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;errorUri)</span></div>
 <dl class="notes">
@@ -209,7 +209,7 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <section class="detail" id="getError()">
 <h3>getError</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a></span>&nbsp;<span class="element-name">getError</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a></span>&nbsp;<span class="element-name">getError</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ErrorResponse.html#getError()">getError</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></code></dd>
@@ -222,7 +222,7 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <section class="detail" id="getErrorDescription()">
 <h3>getErrorDescription</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getErrorDescription</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getErrorDescription</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ErrorResponse.html#getErrorDescription()">getErrorDescription</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></code></dd>
@@ -235,7 +235,7 @@ implements <a href="ErrorResponse.html" title="interface in io.micronaut.securit
 <section class="detail" id="getErrorUri()">
 <h3>getErrorUri</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getErrorUri</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getErrorUri</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ErrorResponse.html#getErrorUri()">getErrorUri</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></code></dd>

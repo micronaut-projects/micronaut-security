@@ -154,15 +154,15 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li class="block-list">
 <h5>attributes</h5>
-<pre>@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt; attributes</pre>
+<pre>@NonNull @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt; attributes</pre>
 </li>
 <li class="block-list">
 <h5>name</h5>
-<pre>@NotBlank <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
+<pre>@NonNull @NotBlank <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
 </li>
 <li class="block-list">
 <h5>roles</h5>
-<pre>@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; roles</pre>
+<pre>@NonNull @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; roles</pre>
 </li>
 </ul>
 </section>
@@ -181,11 +181,11 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li class="block-list">
 <h5>password</h5>
-<pre>@NotBlank <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> password</pre>
+<pre>@NotBlank @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> password</pre>
 </li>
 <li class="block-list">
 <h5>username</h5>
-<pre>@NotBlank <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> username</pre>
+<pre>@NotBlank @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> username</pre>
 </li>
 </ul>
 </section>
@@ -211,15 +211,15 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li class="block-list">
 <h5>errorCode</h5>
-<pre><a href="io/micronaut/security/errors/ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a> errorCode</pre>
+<pre>@NonNull <a href="io/micronaut/security/errors/ErrorCode.html" title="interface in io.micronaut.security.errors">ErrorCode</a> errorCode</pre>
 </li>
 <li class="block-list">
 <h5>errorDescription</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> errorDescription</pre>
+<pre>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> errorDescription</pre>
 </li>
 <li class="block-list">
 <h5>errorUri</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> errorUri</pre>
+<pre>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> errorUri</pre>
 </li>
 </ul>
 </section>
@@ -364,7 +364,7 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li class="block-list">
 <h5>claimSet</h5>
-<pre>com.nimbusds.jwt.JWTClaimsSet claimSet</pre>
+<pre>@Nullable com.nimbusds.jwt.JWTClaimsSet claimSet</pre>
 </li>
 </ul>
 </section>
@@ -390,7 +390,7 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li class="block-list">
 <h5>certificate</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a> certificate</pre>
+<pre>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a> certificate</pre>
 </li>
 </ul>
 </section>

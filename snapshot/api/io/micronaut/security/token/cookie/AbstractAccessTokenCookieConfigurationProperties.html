@@ -174,7 +174,7 @@ implements <a href="../../config/TokenCookieConfiguration.html" title="interface
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCookieSecure()" class="member-name-link">isCookieSecure</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieDomain(java.lang.String)" class="member-name-link">setCookieDomain</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieDomain)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieDomain(java.lang.String)" class="member-name-link">setCookieDomain</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieDomain)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the domain name of this Cookie.</div>
 </div>
@@ -189,7 +189,7 @@ implements <a href="../../config/TokenCookieConfiguration.html" title="interface
 <div class="block">Sets the maximum age of the cookie.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieSameSite(io.micronaut.http.cookie.SameSite)" class="member-name-link">setCookieSameSite</a><wbr>(io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieSameSite(io.micronaut.http.cookie.SameSite)" class="member-name-link">setCookieSameSite</a><wbr>(@Nullable io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the same-site setting of the cookie.</div>
 </div>
@@ -357,7 +357,7 @@ implements <a href="../../config/TokenCookieConfiguration.html" title="interface
 <section class="detail" id="setCookieDomain(java.lang.String)">
 <h3>setCookieDomain</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookieDomain</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieDomain)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieDomain)</span></div>
 <div class="block">Sets the domain name of this Cookie.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -402,7 +402,7 @@ implements <a href="../../config/TokenCookieConfiguration.html" title="interface
 <section class="detail" id="setCookieSameSite(io.micronaut.http.cookie.SameSite)">
 <h3>setCookieSameSite</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookieSameSite</span><wbr><span class="parameters">(@Nullable
- io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</span></div>
+ @Nullable io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</span></div>
 <div class="block">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

@@ -119,8 +119,8 @@ implements <a href="StateValidator.html" title="interface in io.micronaut.securi
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.state.State)" class="member-name-link">validate</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- <a href="../State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a>&nbsp;state)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.state.State)" class="member-name-link">validate</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @Nullable <a href="../State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Validates the provided state.</div>
 </div>
@@ -163,9 +163,9 @@ implements <a href="StateValidator.html" title="interface in io.micronaut.securi
 <section class="detail" id="validate(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.state.State)">
 <h3>validate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @Nullable
- <a href="../State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a>&nbsp;state)</span>
+ @Nullable <a href="../State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a>&nbsp;state)</span>
               throws <span class="exceptions"><a href="../InvalidStateException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">InvalidStateException</a></span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="StateValidator.html#validate(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.state.State)">StateValidator</a></code></span></div>
 <div class="block">Validates the provided state.</div>

@@ -104,10 +104,10 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color"><code>protected final @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#loginFailure" class="member-name-link">loginFailure</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color"><code>protected final @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#loginSuccess" class="member-name-link">loginSuccess</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected final <a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></code></div>
@@ -129,7 +129,7 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)" class="member-name-link">SessionLoginHandler</a><wbr>(<a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
- <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
+ @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor.</div>
@@ -182,14 +182,14 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <section class="detail" id="loginSuccess">
 <h3>loginSuccess</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">loginSuccess</span></div>
+</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">loginSuccess</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="loginFailure">
 <h3>loginFailure</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">loginFailure</span></div>
+</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">loginFailure</span></div>
 </section>
 </li>
 <li>
@@ -218,7 +218,7 @@ implements <a href="../handlers/RedirectingLoginHandler.html" title="interface i
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SessionLoginHandler</span><wbr><span class="parameters">(<a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
  @Nullable
- <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
+ @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;priorToLoginPersistence,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService)</span></div>
 <div class="block">Constructor.</div>
 <dl class="notes">

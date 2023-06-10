@@ -102,9 +102,9 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.config.TokenConfiguration,io.micronaut.security.token.claims.JtiGenerator,io.micronaut.security.token.claims.ClaimsAudienceProvider,io.micronaut.runtime.ApplicationConfiguration)" class="member-name-link">JWTClaimsSetGenerator</a><wbr>(<a href="../../../config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
- <a href="../../../claims/JtiGenerator.html" title="interface in io.micronaut.security.token.claims">JtiGenerator</a>&nbsp;jwtIdGenerator,
- <a href="../../../claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
- io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</code></div>
+ @Nullable <a href="../../../claims/JtiGenerator.html" title="interface in io.micronaut.security.token.claims">JtiGenerator</a>&nbsp;jwtIdGenerator,
+ @Nullable <a href="../../../claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
+ @Nullable io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -122,7 +122,7 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateClaims(io.micronaut.security.authentication.Authentication,java.lang.Integer)" class="member-name-link">generateClaims</a><wbr>(<a href="../../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateClaimsSet(java.util.Map,java.lang.Integer)" class="member-name-link">generateClaimsSet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims,
@@ -137,7 +137,7 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#populateExp(com.nimbusds.jwt.JWTClaimsSet.Builder,java.lang.Integer)" class="member-name-link">populateExp</a><wbr>(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates exp claim.</div>
 </div>
@@ -195,11 +195,11 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 <h3>JWTClaimsSetGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JWTClaimsSetGenerator</span><wbr><span class="parameters">(<a href="../../../config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
  @Nullable
- <a href="../../../claims/JtiGenerator.html" title="interface in io.micronaut.security.token.claims">JtiGenerator</a>&nbsp;jwtIdGenerator,
+ @Nullable <a href="../../../claims/JtiGenerator.html" title="interface in io.micronaut.security.token.claims">JtiGenerator</a>&nbsp;jwtIdGenerator,
  @Nullable
- <a href="../../../claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
+ @Nullable <a href="../../../claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
  @Nullable
- io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</span></div>
+ @Nullable io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tokenConfiguration</code> - Token Configuration</dd>
@@ -222,7 +222,7 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 <h3>generateClaims</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">generateClaims</span><wbr><span class="parameters">(<a href="../../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../claims/ClaimsGenerator.html#generateClaims(io.micronaut.security.authentication.Authentication,java.lang.Integer)">generateClaims</a></code>&nbsp;in interface&nbsp;<code><a href="../../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a></code></dd>
@@ -292,7 +292,7 @@ implements <a href="../../../claims/ClaimsGenerator.html" title="interface in io
 <h3>populateExp</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">populateExp</span><wbr><span class="parameters">(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
 <div class="block">Populates exp claim.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

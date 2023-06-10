@@ -140,10 +140,10 @@ implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micro
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">validate</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claimsSet)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">validate</a><wbr>(@NonNull com.nimbusds.jwt.JWTClaimsSet&nbsp;claimsSet)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.Claims,T)" class="member-name-link">validate</a><wbr>(<a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.token.Claims,T)" class="member-name-link">validate</a><wbr>(@NonNull <a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  <a href="NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&nbsp;request)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -203,7 +203,7 @@ implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micro
 <section class="detail" id="validate(com.nimbusds.jwt.JWTClaimsSet)">
 <h3>validate</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- com.nimbusds.jwt.JWTClaimsSet&nbsp;claimsSet)</span></div>
+ @NonNull com.nimbusds.jwt.JWTClaimsSet&nbsp;claimsSet)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claimsSet</code> - The JWT Claims</dd>
@@ -216,7 +216,7 @@ implements <a href="GenericJwtClaimsValidator.html" title="interface in io.micro
 <section class="detail" id="validate(io.micronaut.security.token.Claims,T)">
 <h3 id="validate(io.micronaut.security.token.Claims,java.lang.Object)">validate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(@NonNull
- <a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
+ @NonNull <a href="../../Claims.html" title="interface in io.micronaut.security.token">Claims</a>&nbsp;claims,
  @Nullable
  <a href="NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&nbsp;request)</span></div>
 <dl class="notes">

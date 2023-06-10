@@ -143,15 +143,15 @@ implements <a href="JwksSignatureConfiguration.html" title="interface in io.micr
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCacheExpiration()" class="member-name-link">getCacheExpiration</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.nimbusds.jose.jwk.KeyType</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.nimbusds.jose.jwk.KeyType</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKeyType()" class="member-name-link">getKeyType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Representation the KeyType for this JWKS signature configuration.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUrl()" class="member-name-link">getUrl</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Json Web Key Set endpoint url.</div>
@@ -250,7 +250,7 @@ implements <a href="JwksSignatureConfiguration.html" title="interface in io.micr
 <section class="detail" id="getCacheExpiration()">
 <h3>getCacheExpiration</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">getCacheExpiration</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">getCacheExpiration</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwksSignatureConfiguration.html#getCacheExpiration()">getCacheExpiration</a></code>&nbsp;in interface&nbsp;<code><a href="JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></code></dd>
@@ -275,7 +275,7 @@ implements <a href="JwksSignatureConfiguration.html" title="interface in io.micr
 <h3>getUrl</h3>
 <div class="member-signature"><span class="annotations">@NotNull
 @NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getUrl</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getUrl</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="JwksSignatureConfiguration.html#getUrl()">JwksSignatureConfiguration</a></code></span></div>
 <div class="block">Json Web Key Set endpoint url.</div>
 <dl class="notes">
@@ -301,7 +301,7 @@ implements <a href="JwksSignatureConfiguration.html" title="interface in io.micr
 <section class="detail" id="getKeyType()">
 <h3>getKeyType</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.nimbusds.jose.jwk.KeyType</span>&nbsp;<span class="element-name">getKeyType</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.nimbusds.jose.jwk.KeyType</span>&nbsp;<span class="element-name">getKeyType</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="JwksSignatureConfiguration.html#getKeyType()">JwksSignatureConfiguration</a></code></span></div>
 <div class="block">Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).</div>
 <dl class="notes">

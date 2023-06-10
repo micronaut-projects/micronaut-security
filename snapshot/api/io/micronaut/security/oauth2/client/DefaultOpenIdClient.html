@@ -103,11 +103,11 @@ implements <a href="OpenIdClient.html" title="interface in io.micronaut.security
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.util.function.Supplier,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler,io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler,io.micronaut.context.BeanContext,io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint)" class="member-name-link">DefaultOpenIdClient</a><wbr>(<a href="../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
- <a href="../endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ @Nullable <a href="../endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectUrlBuilder,
  <a href="../endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
  io.micronaut.context.BeanContext&nbsp;beanContext,
- <a href="../endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</code></div>
+ @Nullable <a href="../endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -176,12 +176,12 @@ implements <a href="OpenIdClient.html" title="interface in io.micronaut.security
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdClient</span><wbr><span class="parameters">(<a href="../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
  @Nullable
- <a href="../endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ @Nullable <a href="../endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectUrlBuilder,
  <a href="../endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
  io.micronaut.context.BeanContext&nbsp;beanContext,
  @Nullable
- <a href="../endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</span></div>
+ @Nullable <a href="../endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clientConfiguration</code> - The client configuration</dd>

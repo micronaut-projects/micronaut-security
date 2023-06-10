@@ -171,7 +171,7 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.config.TokenConfiguration,io.micronaut.security.token.validator.RefreshTokenValidator)" class="member-name-link">DefaultIntrospectionProcessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;<a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&gt;&gt;&nbsp;tokenValidators,
  <a href="../../token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
- <a href="../../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</code></div>
+ @Nullable <a href="../../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -187,86 +187,86 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createIntrospectionResponse(io.micronaut.security.authentication.Authentication,T)" class="member-name-link">createIntrospectionResponse</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createIntrospectionResponse(io.micronaut.security.authentication.Authentication,T)" class="member-name-link">createIntrospectionResponse</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates an <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection"><code>IntrospectionResponse</code></a> for an <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#emptyIntrospectionResponse(java.lang.String)" class="member-name-link">emptyIntrospectionResponse</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#emptyIntrospectionResponse(java.lang.String)" class="member-name-link">emptyIntrospectionResponse</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Empty response for introspection response.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#introspect(io.micronaut.security.authentication.Authentication,T)" class="member-name-link">introspect</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#introspect(io.micronaut.security.authentication.Authentication,T)" class="member-name-link">introspect</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)" class="member-name-link">introspect</a><wbr>(<a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)" class="member-name-link">introspect</a><wbr>(@NonNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveAud(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveAud</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveAud(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveAud</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with aud claim.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveClientId(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveClientId</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveClientId(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveClientId</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response client_id.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveExpiration(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveExpiration</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveExpiration(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveExpiration</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with the exp claim of authentication.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveExtensions(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveExtensions</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveExtensions(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveExtensions</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveIssuedAt(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveIssuedAt</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveIssuedAt(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveIssuedAt</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with the iat claim of authentication.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveIssuer(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveIssuer</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveIssuer(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveIssuer</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with iss claim.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveJwtId(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveJwtId</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveJwtId(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveJwtId</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with jti username.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveNotBefore(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveNotBefore</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveNotBefore(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveNotBefore</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with the nbf claim of authentication.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveScope(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveScope</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveScope(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveScope</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response scope.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveSub(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveSub</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveSub(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveSub</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with sub claim.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveTokenType(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveTokenType</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveTokenType(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveTokenType</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response token type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveUsername(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveUsername</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveUsername(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveUsername</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Populates the introspection response with the username.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#secondsSinceEpochOfAttribute(java.lang.String,io.micronaut.security.authentication.Authentication)" class="member-name-link">secondsSinceEpochOfAttribute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;attributeName,
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#secondsSinceEpochOfAttribute(java.lang.String,io.micronaut.security.authentication.Authentication)" class="member-name-link">secondsSinceEpochOfAttribute</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;attributeName,
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toSecondsSinceEpoch(java.util.Date)" class="member-name-link">toSecondsSinceEpoch</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a>&nbsp;date)</code></div>
@@ -486,7 +486,7 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultIntrospectionProcessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;<a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&gt;&gt;&nbsp;tokenValidators,
  <a href="../../token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
  @Nullable
- <a href="../../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</span></div>
+ @Nullable <a href="../../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</span></div>
 </section>
 </li>
 </ul>
@@ -501,8 +501,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)">
 <h3 id="introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,java.lang.Object)">introspect</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
- <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
  @NonNull
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</span></div>
 <dl class="notes">
@@ -520,8 +520,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="emptyIntrospectionResponse(java.lang.String)">
 <h3>emptyIntrospectionResponse</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></span>&nbsp;<span class="element-name">emptyIntrospectionResponse</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></span>&nbsp;<span class="element-name">emptyIntrospectionResponse</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</span></div>
 <div class="block">Empty response for introspection response.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -535,8 +535,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="introspect(io.micronaut.security.authentication.Authentication,T)">
 <h3 id="introspect(io.micronaut.security.authentication.Authentication,java.lang.Object)">introspect</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">introspect</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @NonNull
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</span></div>
 <dl class="notes">
@@ -554,8 +554,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="createIntrospectionResponse(io.micronaut.security.authentication.Authentication,T)">
 <h3 id="createIntrospectionResponse(io.micronaut.security.authentication.Authentication,java.lang.Object)">createIntrospectionResponse</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></span>&nbsp;<span class="element-name">createIntrospectionResponse</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></span>&nbsp;<span class="element-name">createIntrospectionResponse</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @NonNull
  <a href="DefaultIntrospectionProcessor.html" title="type parameter in DefaultIntrospectionProcessor">T</a>&nbsp;httpRequest)</span></div>
 <div class="block">Creates an <a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection"><code>IntrospectionResponse</code></a> for an <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
@@ -572,8 +572,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveExtensions(io.micronaut.security.authentication.Authentication)">
 <h3>resolveExtensions</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">resolveExtensions</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">resolveExtensions</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Authentication</dd>
@@ -586,7 +586,7 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveScope(io.micronaut.security.authentication.Authentication)">
 <h3>resolveScope</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveScope</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response scope.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -600,8 +600,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveTokenType(io.micronaut.security.authentication.Authentication)">
 <h3>resolveTokenType</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveTokenType</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveTokenType</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response token type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -615,8 +615,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveClientId(io.micronaut.security.authentication.Authentication)">
 <h3>resolveClientId</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveClientId</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveClientId</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response client_id.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -630,8 +630,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveAud(io.micronaut.security.authentication.Authentication)">
 <h3>resolveAud</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveAud</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveAud</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with aud claim.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -645,8 +645,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveSub(io.micronaut.security.authentication.Authentication)">
 <h3>resolveSub</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">resolveSub</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">resolveSub</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with sub claim.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -660,8 +660,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveIssuer(io.micronaut.security.authentication.Authentication)">
 <h3>resolveIssuer</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveIssuer</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveIssuer</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with iss claim.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -675,8 +675,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveJwtId(io.micronaut.security.authentication.Authentication)">
 <h3>resolveJwtId</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveJwtId</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveJwtId</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with jti username.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -690,8 +690,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveUsername(io.micronaut.security.authentication.Authentication)">
 <h3>resolveUsername</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveUsername</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveUsername</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with the username.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -705,7 +705,7 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveExpiration(io.micronaut.security.authentication.Authentication)">
 <h3>resolveExpiration</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">resolveExpiration</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with the exp claim of authentication.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -719,9 +719,9 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="secondsSinceEpochOfAttribute(java.lang.String,io.micronaut.security.authentication.Authentication)">
 <h3>secondsSinceEpochOfAttribute</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">secondsSinceEpochOfAttribute</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;attributeName,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;attributeName,
  @NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>attributeName</code> - The attribute name e.g. exp nbf iat</dd>
@@ -735,8 +735,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveNotBefore(io.micronaut.security.authentication.Authentication)">
 <h3>resolveNotBefore</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">resolveNotBefore</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">resolveNotBefore</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with the nbf claim of authentication.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -750,8 +750,8 @@ implements <a href="IntrospectionProcessor.html" title="interface in io.micronau
 <section class="detail" id="resolveIssuedAt(io.micronaut.security.authentication.Authentication)">
 <h3>resolveIssuedAt</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">resolveIssuedAt</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">resolveIssuedAt</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Populates the introspection response with the iat claim of authentication.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

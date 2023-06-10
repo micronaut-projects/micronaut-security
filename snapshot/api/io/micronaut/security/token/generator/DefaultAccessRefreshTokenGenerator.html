@@ -143,7 +143,7 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
  <a href="../render/TokenRenderer.html" title="interface in io.micronaut.security.token.render">TokenRenderer</a>&nbsp;tokenRenderer,
  <a href="TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a>&nbsp;tokenGenerator,
  io.micronaut.context.BeanContext&nbsp;beanContext,
- <a href="RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
+ @Nullable <a href="RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
  <a href="../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;&nbsp;refreshTokenGeneratedEventPublisher,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;&nbsp;accessTokenGeneratedEventPublisher)</code></div>
@@ -162,33 +162,33 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accessTokenExpiration(io.micronaut.security.authentication.Authentication)" class="member-name-link">accessTokenExpiration</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accessTokenExpiration(io.micronaut.security.authentication.Authentication)" class="member-name-link">accessTokenExpiration</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accessTokenExpiration(java.util.Map)" class="member-name-link">accessTokenExpiration</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accessTokenExpiration(java.util.Map)" class="member-name-link">accessTokenExpiration</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(io.micronaut.security.authentication.Authentication)" class="member-name-link">generate</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(io.micronaut.security.authentication.Authentication)" class="member-name-link">generate</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generate an <a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render"><code>AccessRefreshToken</code></a> response for the given
  user details.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(java.lang.String,io.micronaut.security.authentication.Authentication)" class="member-name-link">generate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(java.lang.String,io.micronaut.security.authentication.Authentication)" class="member-name-link">generate</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generate a new access refresh token.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(java.lang.String,java.util.Map)" class="member-name-link">generate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generate(java.lang.String,java.util.Map)" class="member-name-link">generate</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generate an <a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render"><code>AccessRefreshToken</code></a> response for the given
  refresh token and claims.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateRefreshToken(io.micronaut.security.authentication.Authentication)" class="member-name-link">generateRefreshToken</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateRefreshToken(io.micronaut.security.authentication.Authentication)" class="member-name-link">generateRefreshToken</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generates a refresh token and emits a <a href="../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
 </div>
@@ -273,7 +273,7 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
  <a href="TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a>&nbsp;tokenGenerator,
  io.micronaut.context.BeanContext&nbsp;beanContext,
  @Nullable
- <a href="RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
+ @Nullable <a href="RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
  <a href="../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;&nbsp;refreshTokenGeneratedEventPublisher,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;&nbsp;accessTokenGeneratedEventPublisher)</span></div>
@@ -302,8 +302,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="generate(io.micronaut.security.authentication.Authentication)">
 <h3>generate</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Generate an <a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render"><code>AccessRefreshToken</code></a> response for the given
  user details.</div>
 <dl class="notes">
@@ -320,8 +320,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="generateRefreshToken(io.micronaut.security.authentication.Authentication)">
 <h3>generateRefreshToken</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">generateRefreshToken</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">generateRefreshToken</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Generates a refresh token and emits a <a href="../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -337,10 +337,10 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="generate(java.lang.String,java.util.Map)">
 <h3>generate</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@Nullable
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
  @NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</span></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</span></div>
 <div class="block">Generate an <a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render"><code>AccessRefreshToken</code></a> response for the given
  refresh token and claims.</div>
 <dl class="notes">
@@ -358,10 +358,10 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="generate(java.lang.String,io.micronaut.security.authentication.Authentication)">
 <h3>generate</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../render/AccessRefreshToken.html" title="class in io.micronaut.security.token.render">AccessRefreshToken</a>&gt;</span>&nbsp;<span class="element-name">generate</span><wbr><span class="parameters">(@Nullable
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;refreshToken,
  @NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Generate a new access refresh token.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -378,8 +378,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="accessTokenExpiration(io.micronaut.security.authentication.Authentication)">
 <h3>accessTokenExpiration</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">accessTokenExpiration</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">accessTokenExpiration</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - User details for which the access token is being generated</dd>
@@ -392,8 +392,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <section class="detail" id="accessTokenExpiration(java.util.Map)">
 <h3>accessTokenExpiration</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">accessTokenExpiration</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">accessTokenExpiration</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>?&gt;&nbsp;oldClaims)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>oldClaims</code> - The old claims used to build the new token</dd>

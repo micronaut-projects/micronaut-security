@@ -102,8 +102,8 @@ implements <a href="PkceFactory.html" title="interface in io.micronaut.security.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultPkceFactory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a>&gt;&nbsp;generators,
- <a href="persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;persistence)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultPkceFactory</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a>&gt;&nbsp;generators,
+ @NonNull <a href="persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;persistence)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -119,10 +119,10 @@ implements <a href="PkceFactory.html" title="interface in io.micronaut.security.
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)" class="member-name-link">buildChallenge</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supportedChallengeMethods)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)" class="member-name-link">buildChallenge</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supportedChallengeMethods)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -145,9 +145,9 @@ implements <a href="PkceFactory.html" title="interface in io.micronaut.security.
 <section class="detail" id="&lt;init&gt;(java.util.List,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">
 <h3>DefaultPkceFactory</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultPkceFactory</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a>&gt;&nbsp;generators,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a>&gt;&nbsp;generators,
  @NonNull
- <a href="persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;persistence)</span></div>
+ @NonNull <a href="persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;persistence)</span></div>
 </section>
 </li>
 </ul>
@@ -162,12 +162,12 @@ implements <a href="PkceFactory.html" title="interface in io.micronaut.security.
 <section class="detail" id="buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)">
 <h3>buildChallenge</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a>&gt;</span>&nbsp;<span class="element-name">buildChallenge</span><wbr><span class="parameters">(@NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a>&gt;</span>&nbsp;<span class="element-name">buildChallenge</span><wbr><span class="parameters">(@NonNull
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @NonNull
- io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response,
+ @NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supportedChallengeMethods)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supportedChallengeMethods)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PkceFactory.html#buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)">buildChallenge</a></code>&nbsp;in interface&nbsp;<code><a href="PkceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceFactory</a></code></dd>

@@ -138,7 +138,7 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPattern()" class="member-name-link">getPattern</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
@@ -150,7 +150,7 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <div class="block">Enables <a href="SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Pattern the <a href="SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a> should match.</div>
 </div>
@@ -238,7 +238,7 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <section class="detail" id="getPattern()">
 <h3>getPattern</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPattern</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPattern</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="SecurityFilterConfiguration.html#getPattern()">getPattern</a></code>&nbsp;in interface&nbsp;<code><a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a></code></dd>
@@ -262,7 +262,7 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <section class="detail" id="setPath(java.lang.String)">
 <h3>setPath</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPath</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</span></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</span></div>
 <div class="block">Pattern the <a href="SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a> should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED</div>
 <dl class="notes">
 <dt>Parameters:</dt>

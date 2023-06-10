@@ -119,7 +119,7 @@ implements <a href="OpenIdAuthorizationResponse.html" title="interface in io.mic
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes,io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence)" class="member-name-link">DefaultOpenIdAuthorizationResponse</a><wbr>(io.micronaut.http.HttpRequest&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&gt;&nbsp;request,
  <a href="../state/StateSerDes.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">StateSerDes</a>&nbsp;stateSerDes,
- <a href="../../nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a>&nbsp;noncePersistence)</code></div>
+ @Nullable <a href="../../nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a>&nbsp;noncePersistence)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -135,7 +135,7 @@ implements <a href="OpenIdAuthorizationResponse.html" title="interface in io.mic
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNonce()" class="member-name-link">getNonce</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -171,7 +171,7 @@ implements <a href="OpenIdAuthorizationResponse.html" title="interface in io.mic
  io.micronaut.http.HttpRequest&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&gt;&nbsp;request,
  <a href="../state/StateSerDes.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">StateSerDes</a>&nbsp;stateSerDes,
  @Nullable
- <a href="../../nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a>&nbsp;noncePersistence)</span></div>
+ @Nullable <a href="../../nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a>&nbsp;noncePersistence)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>request</code> - The request</dd>
@@ -192,7 +192,7 @@ implements <a href="OpenIdAuthorizationResponse.html" title="interface in io.mic
 <section class="detail" id="getNonce()">
 <h3>getNonce</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getNonce</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getNonce</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="OpenIdAuthorizationResponse.html#getNonce()">getNonce</a></code>&nbsp;in interface&nbsp;<code><a href="OpenIdAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponse</a></code></dd>

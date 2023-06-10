@@ -136,12 +136,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#echo(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)" class="member-name-link">echo</a><wbr>(<a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#echo(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)" class="member-name-link">echo</a><wbr>(@NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tokenInfo(io.micronaut.security.endpoints.introspection.IntrospectionRequest,io.micronaut.http.HttpRequest)" class="member-name-link">tokenInfo</a><wbr>(@Valid @NotNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tokenInfo(io.micronaut.security.endpoints.introspection.IntrospectionRequest,io.micronaut.http.HttpRequest)" class="member-name-link">tokenInfo</a><wbr>(@NonNull @Valid @NotNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -201,9 +201,9 @@ loadScripts(document, 'script');</script>
 @Consumes("application/x-www-form-urlencoded")
 @SingleResult
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">tokenInfo</span><wbr><span class="parameters">(@NonNull @Body @Valid @NotNull
- @Valid @NotNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
+ @NonNull @Valid @NotNull <a href="IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a>&nbsp;introspectionRequest,
  @NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>introspectionRequest</code> - Introspection Request</dd>
@@ -219,9 +219,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@Get
 @SingleResult
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a>&gt;</span>&nbsp;<span class="element-name">echo</span><wbr><span class="parameters">(@NonNull
- <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - Currently authenticated user</dd>

@@ -120,26 +120,26 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRedirectUri(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">getRedirectUri</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRedirectUri(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">getRedirectUri</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handle(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">handle</a><wbr>(io.micronaut.http.HttpRequest&nbsp;request,
  <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#httpResponseWithStatus(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">httpResponseWithStatus</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#httpResponseWithStatus(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">httpResponseWithStatus</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#httpResponseWithStatus(java.net.URI)" class="member-name-link">httpResponseWithStatus</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;location)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#httpResponseWithStatus(java.net.URI)" class="member-name-link">httpResponseWithStatus</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;location)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Builds a HTTP Response redirection to the supplied location.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">shouldRedirect</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">shouldRedirect</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Decides whether the request should be handled with a redirect.</div>
 </div>
@@ -197,8 +197,8 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <section class="detail" id="httpResponseWithStatus(java.net.URI)">
 <h3>httpResponseWithStatus</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">httpResponseWithStatus</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;location)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">httpResponseWithStatus</span><wbr><span class="parameters">(@NonNull
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;location)</span></div>
 <div class="block">Builds a HTTP Response redirection to the supplied location.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -212,10 +212,10 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <section class="detail" id="httpResponseWithStatus(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)">
 <h3>httpResponseWithStatus</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">httpResponseWithStatus</span><wbr><span class="parameters">(@NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull io.micronaut.http.MutableHttpResponse&lt;?&gt;</span>&nbsp;<span class="element-name">httpResponseWithStatus</span><wbr><span class="parameters">(@NonNull
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @NonNull
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>request</code> - The request</dd>
@@ -229,10 +229,10 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <section class="detail" id="getRedirectUri(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)">
 <h3>getRedirectUri</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getRedirectUri</span><wbr><span class="parameters">(@NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getRedirectUri</span><wbr><span class="parameters">(@NonNull
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @NonNull
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>request</code> - The request</dd>
@@ -246,9 +246,9 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <section class="detail" id="shouldRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)">
 <h3>shouldRedirect</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldRedirect</span><wbr><span class="parameters">(@NonNull
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @NonNull
- <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
+ @NonNull <a href="AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseException</a>&nbsp;exception)</span></div>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

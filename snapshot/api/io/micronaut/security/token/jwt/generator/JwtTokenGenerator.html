@@ -123,8 +123,8 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.claims.ClaimsGenerator)" class="member-name-link">JwtTokenGenerator</a><wbr>(<a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
- <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.claims.ClaimsGenerator)" class="member-name-link">JwtTokenGenerator</a><wbr>(@Nullable <a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
+ @Nullable <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
  <a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -148,7 +148,7 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateToken(io.micronaut.security.authentication.Authentication,java.lang.Integer)" class="member-name-link">generateToken</a><wbr>(<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#generateToken(java.util.Map)" class="member-name-link">generateToken</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;claims)</code></div>
@@ -215,9 +215,9 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.claims.ClaimsGenerator)">
 <h3>JwtTokenGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenGenerator</span><wbr><span class="parameters">(@Nullable @Named("generator")
- <a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
+ @Nullable <a href="../signature/SignatureGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureGeneratorConfiguration</a>&nbsp;signatureConfiguration,
  @Nullable @Named("generator")
- <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
+ @Nullable <a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&nbsp;encryptionConfiguration,
  <a href="../../claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.claims">ClaimsGenerator</a>&nbsp;claimsGenerator)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -298,7 +298,7 @@ implements <a href="../../generator/TokenGenerator.html" title="interface in io.
 <h3>generateToken</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">generateToken</span><wbr><span class="parameters">(<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;expiration)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../generator/TokenGenerator.html#generateToken(io.micronaut.security.authentication.Authentication,java.lang.Integer)">generateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></code></dd>

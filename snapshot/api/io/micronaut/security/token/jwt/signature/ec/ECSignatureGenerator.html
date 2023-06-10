@@ -143,8 +143,8 @@ implements <a href="../SignatureGeneratorConfiguration.html" title="interface in
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.nimbusds.jwt.SignedJWT</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#signWithPrivateKey(com.nimbusds.jwt.JWTClaimsSet,java.security.interfaces.ECPrivateKey,java.lang.String)" class="member-name-link">signWithPrivateKey</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claims,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</code></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -214,9 +214,9 @@ implements <a href="../SignatureGeneratorConfiguration.html" title="interface in
 <h3>signWithPrivateKey</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.nimbusds.jwt.SignedJWT</span>&nbsp;<span class="element-name">signWithPrivateKey</span><wbr><span class="parameters">(com.nimbusds.jwt.JWTClaimsSet&nbsp;claims,
  @NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
  @Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</span>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</span>
                                                  throws <span class="exceptions">com.nimbusds.jose.JOSEException</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>

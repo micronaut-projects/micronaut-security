@@ -127,7 +127,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Clears the JWK Set cache.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKeyIds()" class="member-name-link">getKeyIds</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
@@ -136,14 +136,14 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPresent()" class="member-name-link">isPresent</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.nimbusds.jose.jwk.JWKSet</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @Nullable com.nimbusds.jose.jwk.JWKSet</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadJwkSet(java.lang.String)" class="member-name-link">loadJwkSet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Instantiates a JWKSet for a given url.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.nimbusds.jose.jwk.JWK&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#matches(com.nimbusds.jwt.SignedJWT,com.nimbusds.jose.jwk.JWKSet)" class="member-name-link">matches</a><wbr>(com.nimbusds.jwt.SignedJWT&nbsp;jwt,
- com.nimbusds.jose.jwk.JWKSet&nbsp;jwkSet)</code></div>
+ @Nullable com.nimbusds.jose.jwk.JWKSet&nbsp;jwkSet)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">Use <a href="JwksSignatureUtils.html#matches(com.nimbusds.jwt.SignedJWT,com.nimbusds.jose.jwk.JWKSet,com.nimbusds.jose.jwk.KeyType)"><code>JwksSignatureUtils.matches(SignedJWT, JWKSet, KeyType)</code></a> instead.</div>
@@ -247,7 +247,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="getKeyIds()">
 <h3>getKeyIds</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">getKeyIds</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">getKeyIds</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwksCache.html#getKeyIds()">getKeyIds</a></code>&nbsp;in interface&nbsp;<code><a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a></code></dd>
@@ -303,7 +303,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="loadJwkSet(java.lang.String)">
 <h3>loadJwkSet</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.nimbusds.jose.jwk.JWKSet</span>&nbsp;<span class="element-name">loadJwkSet</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@Nullable com.nimbusds.jose.jwk.JWKSet</span>&nbsp;<span class="element-name">loadJwkSet</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
 <div class="block">Instantiates a JWKSet for a given url.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -319,7 +319,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 </span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.nimbusds.jose.jwk.JWK&gt;</span>&nbsp;<span class="element-name">matches</span><wbr><span class="parameters">(com.nimbusds.jwt.SignedJWT&nbsp;jwt,
  @Nullable
- com.nimbusds.jose.jwk.JWKSet&nbsp;jwkSet)</span></div>
+ @Nullable com.nimbusds.jose.jwk.JWKSet&nbsp;jwkSet)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">Use <a href="JwksSignatureUtils.html#matches(com.nimbusds.jwt.SignedJWT,com.nimbusds.jose.jwk.JWKSet,com.nimbusds.jose.jwk.KeyType)"><code>JwksSignatureUtils.matches(SignedJWT, JWKSet, KeyType)</code></a> instead.</div>
 </div>
