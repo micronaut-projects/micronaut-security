@@ -1,9 +1,9 @@
 [versions]
 managed-nimbus-jose-jwt = "9.31"
 
-micronaut = "4.0.0-M6"
+micronaut = "4.0.0-M7"
 micronaut-docs = "2.0.0"
-groovy = "4.0.11"
+groovy = "4.0.12"
 
 geb = "7.0"
 selenium = "4.9.1"
