@@ -2033,5 +2033,15 @@
     "type": "io.micronaut.security.token.jwt.render.BearerTokenRenderer",
     "member": "Implemented interface io.micronaut.security.token.jwt.render.TokenRenderer",
     "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.SensitiveEndpointRule",
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Provide a human readable reason for the change"
+  },
+  {
+    "type": "io.micronaut.security.rules.SensitiveEndpointRule",
+    "member": "Implemented interface io.micronaut.security.rules.SecurityRule",
+    "reason": "Provide a human readable reason for the change"
   }
 ]
