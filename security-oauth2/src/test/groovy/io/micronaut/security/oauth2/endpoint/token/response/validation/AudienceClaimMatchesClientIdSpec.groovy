@@ -30,8 +30,8 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
-import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
+import io.micronaut.security.token.generator.AccessTokenConfiguration
+import io.micronaut.security.token.claims.ClaimsGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
