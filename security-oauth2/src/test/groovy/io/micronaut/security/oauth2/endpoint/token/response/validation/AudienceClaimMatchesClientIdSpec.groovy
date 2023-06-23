@@ -27,11 +27,11 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.Claims
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -153,8 +153,8 @@ class AudienceClaimMatchesClientIdSpec extends Specification {
         private HttpResponse<Object> generateToken(HttpRequest<?> request, String clientId) {
             String host = httpHostResolver.resolve(request)
             Map<String, Object> claims = new HashMap<>(claimsGenerator.generateClaims(Authentication.build("sherlock"), accessTokenConfiguration.expiration))
-            claims[Claims.ISSUER] = "${host}/oauth2/default".toString()
-            claims[Claims.AUDIENCE] = clientId
+            claims[JwtClaims.ISSUER] = "${host}/oauth2/default".toString()
+            claims[JwtClaims.AUDIENCE] = clientId
             tokenGenerator.generateToken(claims).map(HttpResponse::ok).orElseGet(() -> HttpResponse.serverError())
         }
 
