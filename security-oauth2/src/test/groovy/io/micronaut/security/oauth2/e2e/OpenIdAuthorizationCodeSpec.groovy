@@ -24,7 +24,6 @@ import io.micronaut.security.testutils.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.testcontainers.DockerClientFactory
-import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 import java.security.Principal
@@ -55,7 +54,6 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
-    @Ignore
     void "test a full login"() {
         when:
         browser.go "/oauth/login/keycloak"

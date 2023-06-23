@@ -14,7 +14,6 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
-import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 import java.util.concurrent.ConcurrentHashMap
@@ -38,7 +37,6 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
-    @Ignore
     void "test the oauthcontroller is enabled"() {
         when:
         applicationContext.getBean(OauthController)
@@ -55,7 +53,6 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
-    @Ignore
     void "test refreshing the token"() {
         when:
         to HomePage
