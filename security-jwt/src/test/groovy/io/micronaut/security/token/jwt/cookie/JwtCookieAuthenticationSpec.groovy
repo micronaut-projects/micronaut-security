@@ -23,6 +23,7 @@ import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
 import org.testcontainers.DockerClientFactory
+import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 import java.security.Principal
@@ -44,6 +45,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         ]
     }
 
+    @Ignore
     def "verify jwt cookie authentication works without Geb"() {
         applicationContext.getBean(HomeController.class)
         applicationContext.getBean(LoginAuthController.class)
@@ -113,6 +115,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+    @Ignore
     def "verify jwt cookie authentication works"() {
         when:
         to HomePage

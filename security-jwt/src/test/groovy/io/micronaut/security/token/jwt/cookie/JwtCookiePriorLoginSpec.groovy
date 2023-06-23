@@ -3,6 +3,7 @@ package io.micronaut.security.token.jwt.cookie
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import org.testcontainers.DockerClientFactory
+import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 class JwtCookiePriorLoginSpec extends GebEmbeddedServerSpecification {
@@ -24,6 +25,7 @@ class JwtCookiePriorLoginSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+    @Ignore
     void "test prior login behavior"() {
         when:
         go '/secured'

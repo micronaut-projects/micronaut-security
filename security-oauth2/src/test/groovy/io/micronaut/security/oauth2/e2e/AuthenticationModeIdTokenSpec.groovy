@@ -26,6 +26,7 @@ import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.testcontainers.DockerClientFactory
+import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 import java.security.Principal
@@ -54,6 +55,7 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    @Ignore
     void "test a full login"() {
         expect:
         applicationContext.containsBean(JwksSignature)

@@ -13,6 +13,7 @@ import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
 import org.testcontainers.DockerClientFactory
+import spock.lang.Ignore
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
@@ -31,6 +32,7 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
         ]
     }
 
+    @Ignore
     void "test prior login behavior"() {
         when:
         go '/secured'

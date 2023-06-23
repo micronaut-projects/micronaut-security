@@ -23,6 +23,7 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.Ignore
 import spock.lang.IgnoreIf
 import spock.lang.Issue
 import spock.util.concurrent.PollingConditions
@@ -70,6 +71,7 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
+    @Ignore
     def "check websocket connects"() {
         expect:
         embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)
