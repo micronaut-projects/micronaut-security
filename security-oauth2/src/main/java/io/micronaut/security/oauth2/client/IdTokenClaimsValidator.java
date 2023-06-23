@@ -199,7 +199,7 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
             Optional<URL> issuerOptional = openIdClientConfiguration.getIssuer();
             if (issuerOptional.isPresent()) {
                 String issuer = issuerOptional.get().toString();
-                return issuer.equalsIgnoreCase(iss) ||
+                return issuer.equalsIgnoreCase(iss) &&
                         audiences.contains(clientId) &&
                                 validateAzp(claims, clientId, audiences);
             }
