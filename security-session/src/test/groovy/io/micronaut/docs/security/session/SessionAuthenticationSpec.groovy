@@ -7,7 +7,6 @@ import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
-import spock.lang.Ignore
 import spock.lang.Requires
 import org.testcontainers.DockerClientFactory
 
@@ -41,7 +40,6 @@ micronaut:
         ] + flatten(configMap)
     }
 
-    @Ignore
     def "verify session based authentication works"() {
         when:
         to HomePage
