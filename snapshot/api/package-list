@@ -1,5 +1,4 @@
 io.micronaut.security.annotation
-io.micronaut.security.aot
 io.micronaut.security.authentication
 io.micronaut.security.authentication.jackson
 io.micronaut.security.config
@@ -21,11 +20,6 @@ io.micronaut.security.oauth2.client.condition
 io.micronaut.security.oauth2.configuration
 io.micronaut.security.oauth2.configuration.endpoints
 io.micronaut.security.oauth2.endpoint
-io.micronaut.security.oauth2.endpoint.authorization
-io.micronaut.security.oauth2.endpoint.authorization.pkce
-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence
-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie
-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session
 io.micronaut.security.oauth2.endpoint.authorization.request
 io.micronaut.security.oauth2.endpoint.authorization.response
 io.micronaut.security.oauth2.endpoint.authorization.state
@@ -76,4 +70,3 @@ io.micronaut.security.token.reader
 io.micronaut.security.token.refresh
 io.micronaut.security.token.validator
 io.micronaut.security.utils
-io.micronaut.security.x509
