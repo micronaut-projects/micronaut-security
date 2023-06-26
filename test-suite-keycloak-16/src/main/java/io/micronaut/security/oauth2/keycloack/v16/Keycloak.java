@@ -29,6 +29,8 @@ public class Keycloak {
     private Keycloak() {
 
     }
+    public static final String LOCALHOST = "http://localhost";
+    public static final String HOST_TESTCONTAINERS_INTERNAL= "http://host.testcontainers.internal";
     public static final String SYS_TESTCONTAINERS = "testcontainers";
     public static final String CLIENT_ID = "myclient";
     private static String clientSecret = UUID.randomUUID().toString();
