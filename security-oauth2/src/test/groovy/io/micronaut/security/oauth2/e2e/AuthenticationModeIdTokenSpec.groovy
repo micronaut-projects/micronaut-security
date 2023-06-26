@@ -23,7 +23,6 @@ import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
 import io.micronaut.security.token.validator.TokenValidator
-import spock.lang.Ignore
 import spock.lang.IgnoreIf
 
 import jakarta.inject.Named
@@ -52,7 +51,6 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
         m
     }
 
-    @Ignore
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
         expect:
