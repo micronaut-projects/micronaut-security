@@ -24,6 +24,8 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import java.time.Duration
 
 class Keycloak {
+    static final String LOCALHOST = "http://localhost"
+    static final String HOST_TESTCONTAINERS_INTERNAL= "http://host.testcontainers.internal"
     static final String SYS_TESTCONTAINERS = "testcontainers"
     static final String CLIENT_ID = "myclient"
     private static String clientSecret
