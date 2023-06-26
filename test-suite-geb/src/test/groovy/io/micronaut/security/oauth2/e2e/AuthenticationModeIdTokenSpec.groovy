@@ -5,12 +5,15 @@ import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.server.util.HttpHostResolver
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.oauth2.client.IdTokenClaimsValidator
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.pages.HomePage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.DefaultProviderResolver
@@ -28,6 +31,7 @@ import io.micronaut.security.testutils.ConfigurationFixture
 import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
+import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named
@@ -37,6 +41,7 @@ import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 import java.security.Principal
+import java.util.function.BooleanSupplier
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class AuthenticationModeIdTokenSpec extends GebSpec {
@@ -62,7 +67,10 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
                 "micronaut.security.endpoints.logout.get-allowed": true,
         ] as Map<String, Object>
         if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
-            m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
+            m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
+
+
+
                           "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
                           "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
             ] as Map<String, Object>)
@@ -107,6 +115,26 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
 
         then:
         homePage.message.contains("Hello anonymous")
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
+    @Replaces(IdTokenClaimsValidator.class)
+    @Singleton
+    static class IdTokenClaimsValidatorReplacement extends IdTokenClaimsValidator {
+        IdTokenClaimsValidatorReplacement(Collection<OauthClientConfiguration> oauthClientConfigurations) {
+            super(oauthClientConfigurations)
+        }
+
+        @Override
+        @NonNull
+        protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
+                                                  @NonNull String iss) {
+            return openIdClientConfiguration.getIssuer()
+                    .map(URL::toString)
+                    .map(issuer -> {
+                        return issuer.equalsIgnoreCase(iss) || issuer.replace(Keycloak.LOCALHOST, Keycloak.HOST_TESTCONTAINERS_INTERNAL).equalsIgnoreCase(iss)
+                    })
+        }
     }
 
     @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
