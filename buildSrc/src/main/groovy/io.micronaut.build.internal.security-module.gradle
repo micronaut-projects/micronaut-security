@@ -2,9 +2,3 @@ plugins {
     id "io.micronaut.build.internal.security-base"
     id "io.micronaut.build.internal.module"
 }
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
-}
