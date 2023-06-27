@@ -6,8 +6,3 @@ dependencies {
         api("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
     }
 }
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
-}
