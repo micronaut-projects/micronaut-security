@@ -13,7 +13,7 @@ dependencies {
     }
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
 
-    runtimeOnly("ch.qos.logback:logback-classic")
+    testRuntimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testImplementation "io.micronaut:micronaut-management"
