@@ -1,8 +1,9 @@
 plugins {
-    id "io.micronaut.build.internal.bom"
+    id("io.micronaut.build.internal.bom")
 }
 dependencies {
     constraints {
         api("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
     }
 }
+checkVersionCatalogCompatibility.enabled = false

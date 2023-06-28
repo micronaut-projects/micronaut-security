@@ -2,11 +2,14 @@ package io.micronaut.security.oauth2.e2e
 
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.server.util.HttpHostResolver
+import io.micronaut.security.oauth2.client.IdTokenClaimsValidator
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
@@ -22,15 +25,16 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
+import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator
 import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import spock.lang.IgnoreIf
 
 import java.security.Principal
+import java.util.function.BooleanSupplier
 
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
-
     @Override
     String getSpecName() {
         'AuthenticationModeIdTokenSpec'
@@ -88,6 +92,26 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
         then:
         homePage.message.contains("Hello anonymous")
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
+    @Replaces(IdTokenClaimsValidator.class)
+    @Singleton
+    static class IdTokenClaimsValidatorReplacement extends IdTokenClaimsValidator {
+        IdTokenClaimsValidatorReplacement(Collection<OauthClientConfiguration> oauthClientConfigurations) {
+            super(oauthClientConfigurations)
+        }
+
+        @Override
+        @NonNull
+        protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
+                                                  @NonNull String iss) {
+            return openIdClientConfiguration.getIssuer()
+                    .map(URL::toString)
+                    .map(issuer -> {
+                        return issuer.equalsIgnoreCase(iss) || issuer.replace(Keycloak.LOCALHOST, Keycloak.HOST_TESTCONTAINERS_INTERNAL).equalsIgnoreCase(iss)
+                    })
+        }
     }
 
     @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')

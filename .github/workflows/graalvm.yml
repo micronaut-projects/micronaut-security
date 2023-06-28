@@ -36,7 +36,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Setup GraalVM CE
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@v1.0.12
         with:
           version: '22.0.0.2'
           java-version: ${{ matrix.java }}
