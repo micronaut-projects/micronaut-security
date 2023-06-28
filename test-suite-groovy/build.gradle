@@ -15,7 +15,7 @@ dependencies {
     }
     testImplementation(mn.micronaut.test.spock)
 
-    runtimeOnly(libs.logback.classic)
+    testRuntimeOnly(libs.logback.classic)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
