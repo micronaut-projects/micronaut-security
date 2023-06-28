@@ -6,3 +6,4 @@ dependencies {
         api("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
     }
 }
+checkVersionCatalogCompatibility.enabled = false
