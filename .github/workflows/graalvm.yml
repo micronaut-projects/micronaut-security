@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         java: ['11', '17']
-        graalvm: ['latest', 'dev']
+        graalvm: ['latest']
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Setup GraalVM CE
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@v1.0.12
         with:
           version: ${{ matrix.graalvm }}
           java-version: ${{ matrix.java }}
