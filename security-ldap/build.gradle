@@ -1,5 +1,5 @@
 plugins {
-    id "io.micronaut.build.internal.security-module"
+    id("io.micronaut.build.internal.security-module")
 }
 
 dependencies {

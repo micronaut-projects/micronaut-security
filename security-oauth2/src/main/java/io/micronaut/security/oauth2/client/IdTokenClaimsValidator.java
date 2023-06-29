@@ -195,16 +195,23 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
                                                    @NonNull List<String> audiences,
                                                    @NonNull String clientId,
                                                    @NonNull OpenIdClientConfiguration openIdClientConfiguration) {
-        if (openIdClientConfiguration.getIssuer().isPresent()) {
-            Optional<URL> issuerOptional = openIdClientConfiguration.getIssuer();
-            if (issuerOptional.isPresent()) {
-                String issuer = issuerOptional.get().toString();
-                return issuer.equalsIgnoreCase(iss) &&
-                        audiences.contains(clientId) &&
-                                validateAzp(claims, clientId, audiences);
-            }
-        }
-        return false;
+        return matchesIssuer(openIdClientConfiguration, iss).orElse(false) &&
+            audiences.contains(clientId) &&
+            validateAzp(claims, clientId, audiences);
+    }
+
+    /**
+     *
+     * @param iss Issuer claim
+     * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
+     * @return true wrapped in an Optional if the OAuth 2.0 client OpenID issuer matches the iss claim. Empty Optional of OpenID Client configuration does not define an issuer.
+     */
+    @NonNull
+    protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
+                                              @NonNull String iss) {
+        return openIdClientConfiguration.getIssuer()
+                .map(URL::toString)
+                .map(issuer -> issuer.equalsIgnoreCase(iss));
     }
 
     /**
