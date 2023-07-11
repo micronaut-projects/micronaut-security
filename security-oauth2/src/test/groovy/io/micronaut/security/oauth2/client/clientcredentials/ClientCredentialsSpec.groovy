@@ -153,6 +153,13 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex'                            : 'resourceclient',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : '1s',
 
+            'micronaut.security.oauth2.clients.authservererrorcache.token.auth-method'                                              : "client_secret_basic",
+            'micronaut.security.oauth2.clients.authservererrorcache.token.url'                                                      : "http://localhost:$authServerPort/token".toString(),
+            'micronaut.security.oauth2.clients.authservererrorcache.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-credentials.service-id-regex'                            : 'resourceclient',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-credentials.advanced-expiration'                         : '1s',
+
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer'                         : "http://localhost:$authServerDownPort".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.token.auth-method'                     : "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.token.url'                             : "http://localhost:$authServerPort/token".toString(),
@@ -299,7 +306,7 @@ class ClientCredentialsSpec extends Specification {
         then:
         metadata
         metadata.tokenEndpoint == "http://localhost:$authServerPort/token".toString()
-        
+
         when:
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
@@ -350,6 +357,45 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
+
+    void 'test client credentials token does not cache errors'() {
+        given:
+        ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservererrorcache"))
+
+        when: 'calling client credentials while service is down'
+        authServer.applicationContext.getBean(TokenController).down = true
+        TokenResponse noToken = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        noToken == null
+        RuntimeException e = thrown(RuntimeException)
+        e.message == 'Internal Server Error'
+
+        when: 'calling client credentials returns an access token'
+        authServer.applicationContext.getBean(TokenController).down = false
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        noExceptionThrown()
+
+        when: 'calling client credentials returns the old access token'
+        TokenResponse nextTokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        tokenResponse.accessToken == nextTokenResponse.accessToken
+        noExceptionThrown()
+
+        when: 'calling client credentials while service is down again'
+        authServer.applicationContext.getBean(TokenController).down = true
+        nextTokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then: 'we get the previously cached access token'
+        tokenResponse.accessToken == nextTokenResponse.accessToken
+        noExceptionThrown()
+
+        cleanup:
+        authServer.applicationContext.getBean(TokenController).down = false
     }
 
     void 'test client credentials token caching'() {
