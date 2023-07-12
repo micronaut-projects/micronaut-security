@@ -81,17 +81,14 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
         return Flux.from(scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope)))
-                .materialize()
-                .next()
-                .flatMap((Function<Signal<TokenResponse>, Mono<TokenResponse>>) tokenNotif -> {
-                    if (!force && tokenNotif.isOnNext() && !isExpired(tokenNotif.get())) {
-                        TokenResponse tokenResponse = tokenNotif.get();
-                        return tokenResponse != null ? Mono.just(tokenResponse) : Mono.empty();
-                    } else if (tokenNotif.isOnError()) {
-                        return tokenNotif.getThrowable() != null ? Mono.error(tokenNotif.getThrowable()) : Mono.error(Throwable::new);
-                    }
-                    return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
-                });
+            .flatMap((Function<TokenResponse, Mono<TokenResponse>>) response -> {
+                if (!force && !isExpired(response)) {
+                    return Mono.just(response);
+                }
+                return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
+            }).doOnError(error -> {
+                scopeToPublisherMap.remove(resolvedScope);
+            });
     }
 
     @NonNull
