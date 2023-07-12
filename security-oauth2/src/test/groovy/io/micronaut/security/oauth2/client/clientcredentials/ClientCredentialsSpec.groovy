@@ -306,7 +306,7 @@ class ClientCredentialsSpec extends Specification {
         then:
         metadata
         metadata.tokenEndpoint == "http://localhost:$authServerPort/token".toString()
-
+        
         when:
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
