@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.signature.jwks.redis.RedisJwksClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.Instant;
@@ -51,6 +52,8 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private volatile JWKSet jwkSet;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
+    private final RedisJwksClient redisJwksClient;
+
     /**
      *
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
@@ -59,10 +62,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                          JwkValidator jwkValidator,
-                         JwkSetFetcher<JWKSet> jwkSetFetcher) {
+                         JwkSetFetcher<JWKSet> jwkSetFetcher,
+        RedisJwksClient redisJwksClient) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
+        this.redisJwksClient = redisJwksClient;
     }
 
     private Optional<JWKSet> computeJWKSet() {
@@ -92,9 +97,11 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     @Override
     public void clear() {
-        jwkSetFetcher.clearCache(jwksSignatureConfiguration.getUrl());
+        String url = jwksSignatureConfiguration.getUrl();
+        jwkSetFetcher.clearCache(url);
         jwkSet = null;
         jwkSetCachedAt = null;
+        redisJwksClient.clear(url);
     }
 
     @Override
@@ -146,14 +153,22 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     /**
+     * If Redis cache is enabled, check if available
      * Instantiates a JWKSet for a given url.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
      */
     @Nullable
     protected JWKSet loadJwkSet(String url) {
-        return jwkSetFetcher.fetch(url)
+        if (redisJwksClient.isPresent(url)) {
+            return redisJwksClient.get(url);
+        }
+        JWKSet jwkSet = jwkSetFetcher.fetch(url)
                 .orElse(null);
+        if (jwkSet != null ) {
+            redisJwksClient.setJWKSet(url, jwkSet);
+        }
+        return jwkSet;
     }
 
     /**
