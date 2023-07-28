@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation(mn.jackson.databind)
     kaptTest(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
 
 tasks.named('test') {

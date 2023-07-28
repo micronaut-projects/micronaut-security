@@ -17,4 +17,5 @@ dependencies {
     testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
