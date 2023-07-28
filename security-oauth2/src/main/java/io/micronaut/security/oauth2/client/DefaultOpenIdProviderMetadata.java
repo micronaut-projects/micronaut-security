@@ -146,9 +146,13 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
     }
 
-    @Nullable
     @Override
     public List<String> getUserInfoEncryptionAlgValuesSupported() {
+        return getUserinfoEncryptionAlgValuesSupported();
+    }
+
+    @Override
+    public List<String> getUserinfoEncryptionAlgValuesSupported() {
         return userinfoEncryptionAlgValuesSupported;
     }
 
@@ -865,7 +869,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         result = 31 * result + (checkSessionIframe != null ? checkSessionIframe.hashCode() : 0);
         return result;
     }
-
 
     /**
      *
