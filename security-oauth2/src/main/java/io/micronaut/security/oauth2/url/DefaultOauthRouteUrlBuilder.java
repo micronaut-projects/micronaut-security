@@ -21,8 +21,10 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.http.uri.UriTemplate;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -48,8 +50,22 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpReq
 
     /**
      * @param hostResolver The host resolver
-     * @param oauthConfigurationProperties The oauth configuration
+     * @param oauthConfiguration The oauth configuration
      */
+    @Inject
+    DefaultOauthRouteUrlBuilder(HttpHostResolver hostResolver,
+                                OauthConfiguration oauthConfiguration) {
+        this.hostResolver = hostResolver;
+        this.loginUriTemplate = oauthConfiguration.getLoginUri();
+        this.callbackUriTemplate = oauthConfiguration.getCallbackUri();
+    }
+
+    /**
+     * @param hostResolver The host resolver
+     * @param oauthConfigurationProperties The oauth configuration
+     * @deprecated use {@link DefaultOauthRouteUrlBuilder(HttpHostResolver,OauthConfiguration)} instead.
+     */
+    @Deprecated(forRemoval = true)
     DefaultOauthRouteUrlBuilder(HttpHostResolver hostResolver,
                                 OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;

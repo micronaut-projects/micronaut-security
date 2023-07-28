@@ -1,13 +1,21 @@
 package io.micronaut.security.oauth2.client.condition
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.json.JsonMapper
+import io.micronaut.json.tree.JsonNode
 import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import io.micronaut.security.oauth2.grants.GrantType
+import io.micronaut.security.oauth2.grants.PasswordGrant
+import io.micronaut.security.oauth2.grants.RefreshTokenGrant
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -23,6 +31,31 @@ class PasswordGrantConditionSpec extends Specification {
             'micronaut.security.oauth2.clients.foo.client-id': 'clientId',
             'micronaut.security.oauth2.clients.foo.client-secret': 'clientSecret'
     ]
+
+    void snakeCaseStrategyIsUsed() {
+        given:
+        JsonMapper jsonMapper = JsonMapper.createDefault()
+
+        AuthenticationRequest authenticationRequest = Stub(AuthenticationRequest) {
+            getIdentity() >> "username"
+            getSecret() >> "password"
+        }
+        OauthClientConfiguration oauthClientConfiguration = Stub(OauthClientConfiguration) {
+            getScopes() >> ['scope']
+        }
+        PasswordGrant obj = new PasswordGrant(authenticationRequest, oauthClientConfiguration)
+        obj.scope = "scope"
+
+        when:
+        JsonNode jsonNode = jsonMapper.writeValueToTree(obj)
+        then:
+        jsonNode.isObject()
+        4 == jsonNode.size()
+        "scope" == jsonNode.get("scope").getStringValue()
+        "password" == jsonNode.get("password").getStringValue()
+        "password" == jsonNode.get("grant_type").getStringValue()
+        "username" == jsonNode.get("username").getStringValue()
+    }
 
     @Unroll("#description")
     void "evaluate PasswordGrantCondition"(Map<String, String> properties,

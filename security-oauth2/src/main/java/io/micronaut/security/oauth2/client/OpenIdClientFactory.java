@@ -26,6 +26,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.SupplierUtil;
+import io.micronaut.http.client.HttpClientRegistry;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -51,6 +52,7 @@ import java.util.function.Supplier;
 @Factory
 @Internal
 @Requires(configuration = "io.micronaut.security.token.jwt")
+@Requires(beans = HttpClientRegistry.class)
 class OpenIdClientFactory {
 
     private final BeanContext beanContext;

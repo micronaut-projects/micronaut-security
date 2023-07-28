@@ -146,9 +146,20 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
     }
 
-    @Nullable
+    /**
+     * userinfo_encryption_alg_values_supported.
+     * OPTIONAL.
+     * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
+     * @deprecated Use {@link DefaultOpenIdProviderMetadata#getUserinfoEncryptionAlgValuesSupported()} instead.
+     */
+    @Deprecated
     @Override
     public List<String> getUserInfoEncryptionAlgValuesSupported() {
+        return getUserinfoEncryptionAlgValuesSupported();
+    }
+
+    @Override
+    public List<String> getUserinfoEncryptionAlgValuesSupported() {
         return userinfoEncryptionAlgValuesSupported;
     }
 
@@ -865,7 +876,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         result = 31 * result + (checkSessionIframe != null ? checkSessionIframe.hashCode() : 0);
         return result;
     }
-
 
     /**
      *

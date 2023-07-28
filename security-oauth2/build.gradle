@@ -4,9 +4,7 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
-
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    implementation(mnSerde.micronaut.serde.jackson)
     annotationProcessor(projects.micronautSecurityAnnotations)
     annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnValidation.micronaut.validation)
@@ -14,11 +12,11 @@ dependencies {
     compileOnly(projects.micronautSecurityJwt)
     compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
-    implementation(mn.micronaut.http.client)
+    implementation(mn.micronaut.http.client.core)
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
     implementation(mnReactor.micronaut.reactor)
-
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
