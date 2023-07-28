@@ -15,8 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -30,15 +29,16 @@ import io.micronaut.core.annotation.Nullable;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TokenErrorResponse {
 
     @NonNull
     private TokenError error;
 
+    @JsonProperty("error_description")
     @Nullable
     private String errorDescription;
 
+    @JsonProperty("error_uri")
     @Nullable
     private String errorUri;
 

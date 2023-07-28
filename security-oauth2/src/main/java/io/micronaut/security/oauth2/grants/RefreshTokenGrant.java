@@ -15,8 +15,7 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -29,10 +28,11 @@ import io.micronaut.core.annotation.Nullable;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RefreshTokenGrant {
 
+    @JsonProperty("grant_type")
     private String grantType = GrantType.REFRESH_TOKEN.toString();
+    @JsonProperty("refresh_token")
     private String refreshToken;
     private String scope;
 
