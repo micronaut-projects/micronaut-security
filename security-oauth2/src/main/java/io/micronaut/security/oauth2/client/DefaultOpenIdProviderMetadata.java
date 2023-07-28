@@ -53,8 +53,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
     @JsonProperty("response_modes_supported")
     private List<String> responseModesSupported;
-
-
+    
     @JsonProperty("scopes_supported")
     private List<String> scopesSupported;
 
