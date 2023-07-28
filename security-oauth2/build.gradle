@@ -13,7 +13,7 @@ dependencies {
     compileOnly(projects.micronautSecurityJwt)
     compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
-    implementation(mn.micronaut.http.client)
+    implementation(mn.micronaut.http.client.core)
     compileOnly(mnSession.micronaut.session)
     implementation(mnReactor.micronaut.reactor)
     testImplementation(mnSerde.micronaut.serde.jackson)
