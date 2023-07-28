@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.client.HttpClientRegistry;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -39,6 +41,7 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = { HttpClientRegistry.class, TokenEndpointClient.class })
 @Singleton
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 

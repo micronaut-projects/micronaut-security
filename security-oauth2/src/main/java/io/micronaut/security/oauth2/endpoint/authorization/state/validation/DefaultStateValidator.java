@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = StatePersistence.class)
 @Singleton
 public class DefaultStateValidator implements StateValidator {
 
