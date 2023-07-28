@@ -15,7 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -34,27 +35,23 @@ import java.util.Optional;
  */
 @ReflectiveAccess
 @Introspected
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TokenResponse {
-    @JsonProperty("access_token")
     @NonNull
     private String accessToken;
 
-    @JsonProperty("token_type")
     @NonNull
     private String tokenType;
 
-    @JsonProperty("expires_in")
     @Nullable
     private Integer expiresIn;
 
-    @JsonProperty("refresh_token")
     @Nullable
     private String refreshToken;
 
     @Nullable
     private String scope;
 
-    @JsonProperty("expires_in_date")
     @Nullable
     private Date expiresInDate;
 

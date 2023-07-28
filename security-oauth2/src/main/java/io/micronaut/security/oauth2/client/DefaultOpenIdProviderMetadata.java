@@ -15,7 +15,8 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
@@ -33,124 +34,48 @@ import java.util.Objects;
  */
 @ReflectiveAccess
 @Serdeable
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
-    @JsonProperty("authorization_endpoint")
     private String authorizationEndpoint;
-
-    @JsonProperty("id_token_signing_alg_values_supported")
     private List<String> idTokenSigningAlgValuesSupported;
     private String issuer;
-
-    @JsonProperty("jwks_uri")
     private String jwksUri;
-
-    @JsonProperty("acr_values_supported")
     private List<String> acrValuesSupported;
-
-    @JsonProperty("response_types_supported")
     private List<String> responseTypesSupported;
-
-    @JsonProperty("response_modes_supported")
     private List<String> responseModesSupported;
-    
-    @JsonProperty("scopes_supported")
     private List<String> scopesSupported;
-
-    @JsonProperty("grant_types_supported")
     private List<String> grantTypesSupported;
-
-    @JsonProperty("subject_types_supported")
     private List<String> subjectTypesSupported;
-
-    @JsonProperty("token_endpoint")
     private String tokenEndpoint;
-
-    @JsonProperty("token_endpoint_auth_methods_supported")
     private List<String> tokenEndpointAuthMethodsSupported;
-
-    @JsonProperty("userinfo_endpoint")
     private String userinfoEndpoint;
-
-    @JsonProperty("registration_endpoint")
     private String registrationEndpoint;
-
-    @JsonProperty("claims_supported")
     private List<String> claimsSupported;
-
-    @JsonProperty("code_challenge_methods_supported")
     private List<String> codeChallengeMethodsSupported;
-
-    @JsonProperty("introspection_endpoint")
     private String introspectionEndpoint;
-
-    @JsonProperty("introspection_endpoint_auth_methods_supported")
     private List<String> introspectionEndpointAuthMethodsSupported;
-
-    @JsonProperty("revocation_endpoint")
     private String revocationEndpoint;
-
-    @JsonProperty("revocation_endpoint_auth_methods_supported")
     private List<String> revocationEndpointAuthMethodsSupported;
-
-    @JsonProperty("end_session_endpoint")
     private String endSessionEndpoint;
-
-    @JsonProperty("request_parameter_supported")
     private Boolean requestParameterSupported;
-
-    @JsonProperty("request_uri_parameter_supported")
     private Boolean requestUriParameterSupported;
-
-    @JsonProperty("require_request_uri_registration")
     private Boolean requireRequestUriRegistration;
-
-    @JsonProperty("request_object_signing_alg_values_supported")
     private List<String> requestObjectSigningAlgValuesSupported;
-
-    @JsonProperty("service_documentation")
     private String serviceDocumentation;
-
-    @JsonProperty("id_token_encryption_enc_values_supported")
     private List<String> idTokenEncryptionEncValuesSupported;
-
-    @JsonProperty("display_values_supported")
     private List<String> displayValuesSupported;
-
-    @JsonProperty("claim_types_supported")
     private List<String> claimTypesSupported;
-
-    @JsonProperty("claims_parameter_supported")
     private Boolean claimsParameterSupported = Boolean.FALSE;
-
-    @JsonProperty("op_tos_uri")
     private String opTosUri;
-
-    @JsonProperty("op_policy_uri")
     private String opPolicyUri;
-
-    @JsonProperty("uri_locales_supported")
     private List<String> uriLocalesSupported;
-
-    @JsonProperty("claims_locales_supported")
     private List<String> claimsLocalesSupported;
-
-    @JsonProperty("userinfo_encryption_alg_values_supported")
     private List<String> userinfoEncryptionAlgValuesSupported;
-
-    @JsonProperty("userinfo_encryption_enc_values_supported")
     private List<String> userinfoEncryptionEncValuesSupported;
-
-    @JsonProperty("token_endpoint_auth_signing_alg_values_supported")
     private List<String> tokenEndpointAuthSigningAlgValuesSupported;
-
-    @JsonProperty("request_object_encryption_alg_values_supported")
     private List<String> requestObjectEncryptionAlgValuesSupported;
-
-    @JsonProperty("request_object_encryption_enc_values_supported")
     private List<String> requestObjectEncryptionEncValuesSupported;
-
-    @JsonProperty("check_session_iframe")
     private String checkSessionIframe;
 
     /**
