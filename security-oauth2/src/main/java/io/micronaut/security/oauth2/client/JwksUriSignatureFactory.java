@@ -27,7 +27,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
-import io.micronaut.security.token.jwt.signature.jwks.redis.RedisJwksClient;
+import io.micronaut.security.token.jwt.signature.jwks.cache.ExternalJwksCache;
 
 /**
  * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -50,9 +50,10 @@ public class JwksUriSignatureFactory {
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator,
                                                 JwkSetFetcher<JWKSet> jwkSetFetcher,
-                                                RedisJwksClient redisJwksClient) {
+                                                ExternalJwksCache externalJwksCache) {
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
         jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
-        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher, redisJwksClient);
+        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher,
+            externalJwksCache);
     }
 }

@@ -29,7 +29,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
-import io.micronaut.security.token.jwt.signature.jwks.redis.RedisJwksClient;
+import io.micronaut.security.token.jwt.signature.jwks.cache.ExternalJwksCache;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
 import jakarta.inject.Singleton;
@@ -60,7 +60,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final JwkValidator jwkValidator;
     private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
-    private final RedisJwksClient redisJwksClient;
+    private final ExternalJwksCache externalJwksCache;
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
@@ -74,13 +74,13 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                                                @Nullable NonceClaimValidator nonceClaimValidator,
                                                JwkValidator jwkValidator,
                                                JwkSetFetcher<JWKSet> jwkSetFetcher,
-                                                RedisJwksClient redisJwksClient) {
+                                                ExternalJwksCache externalJwksCache) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
         this.nonceClaimValidator = nonceClaimValidator;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
-        this.redisJwksClient = redisJwksClient;
+        this.externalJwksCache = externalJwksCache;
     }
 
     @Override
@@ -176,7 +176,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         jwksSignatures.computeIfAbsent(jwksuri, k -> {
             JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
             config.setUrl(openIdProviderMetadata.getJwksUri());
-            return new JwksSignature(config, jwkValidator, jwkSetFetcher, redisJwksClient);
+            return new JwksSignature(config, jwkValidator, jwkSetFetcher, externalJwksCache);
         });
         return jwksSignatures.get(jwksuri);
     }

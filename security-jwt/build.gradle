@@ -10,12 +10,15 @@ dependencies {
     api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
-    implementation 'redis.clients:jedis:4.3.1'
+
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 
     compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.json.core)
+    compileOnly platform('software.amazon.awssdk:bom:2.20.56')
+    compileOnly 'software.amazon.awssdk:dynamodb'
+    compileOnly 'io.micronaut.redis:micronaut-redis-lettuce:2.2.0'
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)

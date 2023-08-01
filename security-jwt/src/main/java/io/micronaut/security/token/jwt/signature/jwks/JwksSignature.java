@@ -24,20 +24,21 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
-import io.micronaut.security.token.jwt.signature.jwks.redis.RedisJwksClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.micronaut.security.token.jwt.signature.jwks.cache.ExternalJwksCache;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
- *
- * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
+ * <p>
+ * A bean of this class is created for each
+ * {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.1.0
@@ -48,26 +49,24 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
+    private final ExternalJwksCache externalJwksCache;
     private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
-    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
-
-    private final RedisJwksClient redisJwksClient;
 
     /**
-     *
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
-     * @param jwkValidator JWK Validator to be used.
-     * @param jwkSetFetcher Json Web Key Set fetcher
+     * @param jwkValidator               JWK Validator to be used.
+     * @param jwkSetFetcher              Json Web Key Set fetcher
      */
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
-                         JwkValidator jwkValidator,
-                         JwkSetFetcher<JWKSet> jwkSetFetcher,
-        RedisJwksClient redisJwksClient) {
+        JwkValidator jwkValidator,
+        JwkSetFetcher<JWKSet> jwkSetFetcher,
+        ExternalJwksCache externalJwksCache) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
-        this.redisJwksClient = redisJwksClient;
+        this.externalJwksCache = externalJwksCache;
     }
 
     private Optional<JWKSet> computeJWKSet() {
@@ -101,7 +100,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
         jwkSetFetcher.clearCache(url);
         jwkSet = null;
         jwkSetCachedAt = null;
-        redisJwksClient.clear(url);
+        externalJwksCache.clear(url);
     }
 
     @Override
@@ -121,7 +120,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     /**
-     *
      * @return A message indicating the supported algorithms.
      */
     @Override
@@ -160,13 +158,16 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Nullable
     protected JWKSet loadJwkSet(String url) {
-        if (redisJwksClient.isPresent(url)) {
-            return redisJwksClient.get(url);
+        if (externalJwksCache.isPresent(url)) {
+            JWKSet set = externalJwksCache.get(url);
+            if (set != null && set.getKeys() != null && !set.getKeys().isEmpty()) {
+                return set;
+            }
         }
         JWKSet jwkSet = jwkSetFetcher.fetch(url)
-                .orElse(null);
-        if (jwkSet != null ) {
-            redisJwksClient.setJWKSet(url, jwkSet);
+            .orElse(null);
+        if (jwkSet != null) {
+            externalJwksCache.setJWKSet(url, jwkSet);
         }
         return jwkSet;
     }
