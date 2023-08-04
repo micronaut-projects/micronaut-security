@@ -155,9 +155,9 @@ jobs:
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
           files: artifacts.zip
-
+          
   post-release:
-    needs: [github-release]
+    needs: [github_release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
