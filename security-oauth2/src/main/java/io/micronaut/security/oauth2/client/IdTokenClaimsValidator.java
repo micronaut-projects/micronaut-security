@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.DockerUtils;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.Claims;
@@ -68,12 +69,18 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     public boolean validate(@NonNull Claims claims, @Nullable T request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("issuer claim not present");
+            }
             return false;
         }
         String iss = claimIssuerOptional.get();
 
         Optional<List<String>> audiencesOptional = parseAudiences(claims);
         if (!audiencesOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences claim not present");
+            }
             return false;
         }
         List<String> audiences = audiencesOptional.get();
@@ -195,9 +202,29 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
                                                    @NonNull List<String> audiences,
                                                    @NonNull String clientId,
                                                    @NonNull OpenIdClientConfiguration openIdClientConfiguration) {
-        return matchesIssuer(openIdClientConfiguration, iss).orElse(false) &&
-            audiences.contains(clientId) &&
-            validateAzp(claims, clientId, audiences);
+        boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
+        if (!matchesIssuer) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(""), iss);
+            }
+            return false;
+        }
+
+        boolean audiencesContainsClientId = audiences.contains(clientId);
+        if (!audiencesContainsClientId) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences '{}' does not contain client id '{}'", String.join(" " , audiences), clientId);
+            }
+            return false;
+        }
+        boolean azpValid = validateAzp(claims, clientId, audiences);
+        if (!azpValid) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp not valid");
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -241,12 +268,15 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
         }
        Optional<String> azpOptional = parseAzpClaim(claims);
         if (!azpOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp claim not present");
+            }
             return false;
         }
         String azp = azpOptional.get();
         boolean result = azp.equalsIgnoreCase(clientId);
-        if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
+        if (!result && LOG.isDebugEnabled()) {
+            LOG.debug("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
         return result;
     }
