@@ -13,7 +13,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
