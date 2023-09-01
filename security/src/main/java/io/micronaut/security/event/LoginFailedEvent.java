@@ -28,7 +28,7 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials;
  */
 public class LoginFailedEvent extends ApplicationEvent {
     @Nullable
-    private final AuthenticationRequest<?, ?> authenticationRequest;
+    private final AuthenticationRequest authenticationRequest;
 
     /**
      * Event triggered when an unsuccessful login takes place.
@@ -39,7 +39,7 @@ public class LoginFailedEvent extends ApplicationEvent {
      * @throws IllegalArgumentException if source is null.
      * @since 4.1.0
      */
-    public LoginFailedEvent(Object source, AuthenticationRequest<?, ?> authenticationRequest) {
+    public LoginFailedEvent(Object source, AuthenticationRequest authenticationRequest) {
         super(source);
         this.authenticationRequest = authenticationRequest;
     }
@@ -63,7 +63,7 @@ public class LoginFailedEvent extends ApplicationEvent {
      * @since 4.1.0
      */
     @Nullable
-    public AuthenticationRequest<?, ?> getAuthenticationRequest() {
+    public AuthenticationRequest getAuthenticationRequest() {
         return authenticationRequest;
     }
 }
