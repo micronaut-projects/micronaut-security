@@ -38,6 +38,8 @@ import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -54,6 +56,7 @@ import reactor.core.publisher.Mono;
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LoginController {
+    private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
     protected final Authenticator<HttpRequest<?>> authenticator;
     protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
@@ -92,7 +95,10 @@ public class LoginController {
                         loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
                         return loginHandler.loginSuccess(authentication, request);
                     } else {
-                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("login failed for username: {}", usernamePasswordCredentials.getUsername());
+                        }
+                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse, usernamePasswordCredentials));
                         return loginHandler.loginFailed(authenticationResponse, request);
                     }
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
