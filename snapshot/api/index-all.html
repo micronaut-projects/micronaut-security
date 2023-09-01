@@ -2290,6 +2290,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthenticationProviderStrategy()" class="member-name-link">getAuthenticationProviderStrategy()</a> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/event/LoginFailedEvent.html#getAuthenticationRequest()" class="member-name-link">getAuthenticationRequest()</a> - Method in class io.micronaut.security.event.<a href="io/micronaut/security/event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getAuthenticationTime()" class="member-name-link">getAuthenticationTime()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getAuthenticationTime()" class="member-name-link">getAuthenticationTime()</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
@@ -4868,6 +4870,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Event triggered when an unsuccessful login takes place.</div>
 </dd>
 <dt><a href="io/micronaut/security/event/LoginFailedEvent.html#%3Cinit%3E(java.lang.Object)" class="member-name-link">LoginFailedEvent(Object)</a> - Constructor for class io.micronaut.security.event.<a href="io/micronaut/security/event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">use <a href="io/micronaut/security/event/LoginFailedEvent.html#%3Cinit%3E(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)"><code>LoginFailedEvent(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/event/LoginFailedEvent.html#%3Cinit%3E(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">LoginFailedEvent(Object, AuthenticationRequest)</a> - Constructor for class io.micronaut.security.event.<a href="io/micronaut/security/event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a></dt>
 <dd>
 <div class="block">Event triggered when an unsuccessful login takes place.</div>
 </dd>
