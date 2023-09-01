@@ -52,6 +52,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         e.status == HttpStatus.UNAUTHORIZED
         new PollingConditions().eventually {
             embeddedServer.applicationContext.getBean(LoginFailedEventListener).events.size() == 1
+            "bogus" == embeddedServer.applicationContext.getBean(LoginFailedEventListener).events.get(0).authenticationRequest.identity
         }
     }
 
