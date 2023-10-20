@@ -46,10 +46,13 @@ io.micronaut.security.oauth2.endpoint.token.request.password
 io.micronaut.security.oauth2.endpoint.token.response
 io.micronaut.security.oauth2.endpoint.token.response.validation
 io.micronaut.security.oauth2.grants
+io.micronaut.security.oauth2.keycloack.v16
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
 io.micronaut.security.rules
 io.micronaut.security.session
+io.micronaut.security.testutils
+io.micronaut.security.testutils.authprovider
 io.micronaut.security.token
 io.micronaut.security.token.bearer
 io.micronaut.security.token.claims
