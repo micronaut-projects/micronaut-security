@@ -1,7 +1,8 @@
 plugins {
     id 'java-library'
     id 'groovy'
-    id "io.micronaut.build.internal.security-tests"
+    id("io.micronaut.build.internal.common")
+    id "io.micronaut.build.internal.security-base"
 }
 
 dependencies {
@@ -9,4 +10,17 @@ dependencies {
     implementation(mnTest.micronaut.test.spock)
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.http.client)
+}
+
+spotless {
+    java {
+        targetExclude("**/testutils/**")
+    }
+    groovy {
+        targetExclude("**/testutils/**")
+    }
+}
+
+tasks.withType(Checkstyle) {
+    enabled = false
 }
