@@ -50,9 +50,19 @@ public class TokenRefreshRequest {
      *
      * @param refreshToken Refresh token
      */
-    @Creator
     public TokenRefreshRequest(String refreshToken) {
         this.grantType = GRANT_TYPE_REFRESH_TOKEN;
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     *
+     * @param grantType Grant type
+     * @param refreshToken Refresh token
+     */
+    @Creator
+    public TokenRefreshRequest(String grantType, String refreshToken) {
+        this.grantType = grantType;
         this.refreshToken = refreshToken;
     }
 
