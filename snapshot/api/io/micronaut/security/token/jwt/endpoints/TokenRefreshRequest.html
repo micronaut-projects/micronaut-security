@@ -161,6 +161,10 @@ extends java.lang.Object</pre>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-">TokenRefreshRequest</a></span>(java.lang.String&nbsp;refreshToken)</code>&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-java.lang.String-">TokenRefreshRequest</a></span>(java.lang.String&nbsp;grantType,
+                   java.lang.String&nbsp;refreshToken)</code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -244,12 +248,28 @@ extends java.lang.Object</pre>
 <a name="TokenRefreshRequest-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>TokenRefreshRequest</h4>
 <pre>public&nbsp;TokenRefreshRequest(java.lang.String&nbsp;refreshToken)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>refreshToken</code> - Refresh token</dd>
+</dl>
+</li>
+</ul>
+<a name="TokenRefreshRequest-java.lang.String-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>TokenRefreshRequest</h4>
+<pre>@Creator
+public&nbsp;TokenRefreshRequest(java.lang.String&nbsp;grantType,
+                                    java.lang.String&nbsp;refreshToken)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>grantType</code> - Grant type</dd>
 <dd><code>refreshToken</code> - Refresh token</dd>
 </dl>
 </li>
