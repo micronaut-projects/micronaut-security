@@ -30,7 +30,7 @@ public interface TokenGenerator {
 
     /**
      * @param authentication Authenticated user's representation.
-     * @param expiration The amount of time in milliseconds until the token expires
+     * @param expiration The amount of time in seconds until the token expires
      * @return An optional JWT string
      */
     Optional<String> generateToken(Authentication authentication, @Nullable Integer expiration);
