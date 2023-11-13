@@ -23,6 +23,8 @@ import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.BasicAuthUtils
@@ -125,6 +127,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
             this.client = client
         }
 
+        @ExecuteOn(TaskExecutors.BLOCKING)
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Produces(MediaType.TEXT_PLAIN)
         @Get('/father')
