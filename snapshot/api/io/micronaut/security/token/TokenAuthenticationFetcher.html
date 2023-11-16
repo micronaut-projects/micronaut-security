@@ -133,7 +133,15 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenValidators,
  <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;tokenResolver,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)"><code>TokenAuthenticationFetcher(java.util.List&lt;io.micronaut.security.token.validator.TokenValidator&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;,io.micronaut.security.token.reader.TokenResolver&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;,io.micronaut.context.event.ApplicationEventPublisher&lt;io.micronaut.security.event.TokenValidatedEvent&gt;)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenValidators,
+ <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;tokenResolver,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -203,7 +211,27 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)">
 <h3>TokenAuthenticationFetcher</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TokenAuthenticationFetcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenValidators,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.4.0")
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">TokenAuthenticationFetcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenValidators,
+ <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;tokenResolver,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)"><code>TokenAuthenticationFetcher(java.util.List&lt;io.micronaut.security.token.validator.TokenValidator&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;,io.micronaut.security.token.reader.TokenResolver&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;,io.micronaut.context.event.ApplicationEventPublisher&lt;io.micronaut.security.event.TokenValidatedEvent&gt;)</code></a> instead.</div>
+</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>tokenValidators</code> - The list of <a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>TokenValidator</code></a> which attempt to validate the request</dd>
+<dd><code>tokenResolver</code> - The <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader"><code>TokenResolver</code></a> which returns the first found token in the request.</dd>
+<dd><code>tokenValidatedEventPublisher</code> - Application event publisher for <a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event"><code>TokenValidatedEvent</code></a>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)">
+<h3>TokenAuthenticationFetcher</h3>
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">TokenAuthenticationFetcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenValidators,
  <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;tokenResolver,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</span></div>
 <dl class="notes">

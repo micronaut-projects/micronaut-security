@@ -105,6 +105,12 @@ implements <a href="TokenResolver.html" title="interface in io.micronaut.securit
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection)" class="member-name-link">DefaultTokenResolver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenReaders)</code></div>
 <div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.List)"><code>DefaultTokenResolver(java.util.List&lt;io.micronaut.security.token.reader.TokenReader&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.List)" class="member-name-link">DefaultTokenResolver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenReaders)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Instantiates a <a href="DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader"><code>DefaultTokenResolver</code></a> with a list of available <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a>.</div>
 </div>
 </div>
@@ -126,6 +132,11 @@ implements <a href="TokenResolver.html" title="interface in io.micronaut.securit
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the first token found by the supplied token readers.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveTokens(io.micronaut.http.HttpRequest)" class="member-name-link">resolveTokens</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns tokens found by the supplied token readers.</div>
+</div>
 </div>
 </div>
 </div>
@@ -146,11 +157,30 @@ implements <a href="TokenResolver.html" title="interface in io.micronaut.securit
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.Collection)">
 <h3>DefaultTokenResolver</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultTokenResolver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenReaders)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.4.0")
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultTokenResolver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenReaders)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.List)"><code>DefaultTokenResolver(java.util.List&lt;io.micronaut.security.token.reader.TokenReader&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;)</code></a> instead.</div>
+</div>
 <div class="block">Instantiates a <a href="DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader"><code>DefaultTokenResolver</code></a> with a list of available <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tokenReaders</code> - Collection of available <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a> beans.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.List)">
+<h3>DefaultTokenResolver</h3>
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultTokenResolver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="TokenReader.html" title="interface in io.micronaut.security.token.reader">TokenReader</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;tokenReaders)</span></div>
+<div class="block">Instantiates a <a href="DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader"><code>DefaultTokenResolver</code></a> with a list of available <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>tokenReaders</code> - Collection of available <a href="TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a> beans.</dd>
+<dt>Since:</dt>
+<dd>4.4.0</dd>
 </dl>
 </section>
 </li>
@@ -162,6 +192,24 @@ implements <a href="TokenResolver.html" title="interface in io.micronaut.securit
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="resolveTokens(io.micronaut.http.HttpRequest)">
+<h3>resolveTokens</h3>
+<div class="member-signature"><span class="annotations">@NonNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveTokens</span><wbr><span class="parameters">(@NonNull
+ @NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="TokenResolver.html#resolveTokens(T)">TokenResolver</a></code></span></div>
+<div class="block">Returns tokens found by the supplied token readers.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="TokenResolver.html#resolveTokens(T)">resolveTokens</a></code>&nbsp;in interface&nbsp;<code><a href="TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>request</code> - The current HTTP request.</dd>
+<dt>Returns:</dt>
+<dd>the tokens found in the supplied request.</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="resolveToken(io.micronaut.http.HttpRequest)">
 <h3>resolveToken</h3>

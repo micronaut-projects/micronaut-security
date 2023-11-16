@@ -1760,6 +1760,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/reader/DefaultTokenResolver.html#%3Cinit%3E(java.util.Collection)" class="member-name-link">DefaultTokenResolver(Collection&lt;TokenReader&lt;HttpRequest&lt;?&gt;&gt;&gt;)</a> - Constructor for class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader">DefaultTokenResolver</a></dt>
 <dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/reader/DefaultTokenResolver.html#%3Cinit%3E(java.util.List)"><code>DefaultTokenResolver(java.util.List&lt;io.micronaut.security.token.reader.TokenReader&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/token/reader/DefaultTokenResolver.html#%3Cinit%3E(java.util.List)" class="member-name-link">DefaultTokenResolver(List&lt;TokenReader&lt;HttpRequest&lt;?&gt;&gt;&gt;)</a> - Constructor for class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader">DefaultTokenResolver</a></dt>
+<dd>
 <div class="block">Instantiates a <a href="io/micronaut/security/token/reader/DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader"><code>DefaultTokenResolver</code></a> with a list of available <a href="io/micronaut/security/token/reader/TokenReader.html" title="interface in io.micronaut.security.token.reader"><code>TokenReader</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/rules/SecurityRule.html#DENY_ALL" class="member-name-link">DENY_ALL</a> - Static variable in interface io.micronaut.security.rules.<a href="io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a></dt>
@@ -5383,7 +5389,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Provides specific configuration to logout from Okta.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.util.function.Supplier,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.token.reader.TokenResolver)" class="member-name-link">OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier&lt;OpenIdProviderMetadata&gt;, SecurityConfiguration, TokenResolver)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.util.function.Supplier,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.token.reader.TokenResolver)" class="member-name-link">OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier&lt;OpenIdProviderMetadata&gt;, SecurityConfiguration, TokenResolver&lt;HttpRequest&lt;?&gt;&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html#onCallback(io.micronaut.http.HttpRequest)" class="member-name-link">onCallback(HttpRequest&lt;Map&lt;String, Object&gt;&gt;)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOauthClient</a></dt>
 <dd>&nbsp;</dd>
@@ -6189,7 +6195,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/reader/TokenResolver.html#resolveToken(T)" class="member-name-link">resolveToken(T)</a> - Method in interface io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a></dt>
 <dd>
-<div class="block">Resolves the token from the provided request.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/reader/TokenResolver.html#resolveTokens(T)"><code>TokenResolver.resolveTokens(Object)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/token/reader/DefaultTokenResolver.html#resolveTokens(io.micronaut.http.HttpRequest)" class="member-name-link">resolveTokens(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/DefaultTokenResolver.html" title="class in io.micronaut.security.token.reader">DefaultTokenResolver</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/reader/TokenResolver.html#resolveTokens(T)" class="member-name-link">resolveTokens(T)</a> - Method in interface io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a></dt>
+<dd>
+<div class="block">Returns tokens found by the supplied token readers.</div>
 </dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#resolveTokenType(io.micronaut.security.authentication.Authentication)" class="member-name-link">resolveTokenType(Authentication)</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>
@@ -7740,6 +7754,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Attempts to retrieve a token form the <code>HttpRequest</code> and if existing validated.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher(Collection&lt;TokenValidator&lt;HttpRequest&lt;?&gt;&gt;&gt;, TokenResolver&lt;HttpRequest&lt;?&gt;&gt;, ApplicationEventPublisher&lt;TokenValidatedEvent&gt;)</a> - Constructor for class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#%3Cinit%3E(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)"><code>TokenAuthenticationFetcher(java.util.List&lt;io.micronaut.security.token.validator.TokenValidator&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;,io.micronaut.security.token.reader.TokenResolver&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;,io.micronaut.context.event.ApplicationEventPublisher&lt;io.micronaut.security.event.TokenValidatedEvent&gt;)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#%3Cinit%3E(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher(List&lt;TokenValidator&lt;HttpRequest&lt;?&gt;&gt;&gt;, TokenResolver&lt;HttpRequest&lt;?&gt;&gt;, ApplicationEventPublisher&lt;TokenValidatedEvent&gt;)</a> - Constructor for class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#tokenConfiguration" class="member-name-link">tokenConfiguration</a> - Variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
