@@ -16,9 +16,15 @@
 package io.micronaut.security.token.reader;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpRequest;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +39,50 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenResolver.class);
-    private final Collection<TokenReader<HttpRequest<?>>> tokenReaders;
+    private final List<TokenReader<HttpRequest<?>>> tokenReaders;
 
     /**
      * Instantiates a {@link io.micronaut.security.token.reader.DefaultTokenResolver} with a list of available {@link io.micronaut.security.token.reader.TokenReader}.
      * @param tokenReaders Collection of available {@link io.micronaut.security.token.reader.TokenReader} beans.
+     * @deprecated Use {@link DefaultTokenResolver(List)} instead.
      */
+    @Deprecated(forRemoval = true, since = "4.4.0")
     public DefaultTokenResolver(Collection<TokenReader<HttpRequest<?>>> tokenReaders) {
+        this(new ArrayList<>(tokenReaders));
+    }
+
+    /**
+     * Instantiates a {@link io.micronaut.security.token.reader.DefaultTokenResolver} with a list of available {@link io.micronaut.security.token.reader.TokenReader}.
+     * @param tokenReaders Collection of available {@link io.micronaut.security.token.reader.TokenReader} beans.
+     * @since 4.4.0
+     */
+    @Inject
+    public DefaultTokenResolver(List<TokenReader<HttpRequest<?>>> tokenReaders) {
         this.tokenReaders = tokenReaders;
+    }
+
+    @Override
+    @NonNull
+    public List<String> resolveTokens(@NonNull HttpRequest<?> request) {
+        List<String> tokens = this.tokenReaders
+                .stream()
+                .map(reader -> reader.findToken(request))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(token -> {
+                    if (LOG.isDebugEnabled()) {
+                        String method = request.getMethod().toString();
+                        String path = request.getPath();
+                        LOG.debug("Token {} found in request {} {}", token, method, path);
+                    }
+                })
+                .toList();
+        if (LOG.isDebugEnabled() && CollectionUtils.isEmpty(tokens)) {
+            String method = request.getMethod().toString();
+            String path = request.getPath();
+            LOG.debug("Request {}, {}, no token found.", method, path);
+        }
+        return tokens;
     }
 
     /**
@@ -51,21 +93,6 @@ public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
      */
     @Override
     public Optional<String> resolveToken(HttpRequest<?> request) {
-        Optional<String> token = this.tokenReaders
-            .stream()
-            .map(reader -> reader.findToken(request))
-            .filter(Optional::isPresent)
-            .findFirst()
-            .orElse(Optional.empty());
-        if (LOG.isDebugEnabled()) {
-            String method = request.getMethod().toString();
-            String path = request.getPath();
-            if (token.isPresent()) {
-                LOG.debug("Token {} found in request {} {}", token.get(), method, path);
-            } else {
-                LOG.debug("Request {}, {}, no token found.", method, path);
-            }
-        }
-        return token;
+        return resolveTokens(request).stream().findFirst();
     }
 }
