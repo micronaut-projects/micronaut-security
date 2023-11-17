@@ -18,6 +18,7 @@ package io.micronaut.security.token.reader;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +50,7 @@ public interface TokenResolver<T> {
      * @since 4.4.0
      */
     @NonNull
-    List<String> resolveTokens(@NonNull T request);
+    default List<String> resolveTokens(@NonNull T request) {
+        return resolveToken(request).map(Collections::singletonList).orElseGet(Collections::emptyList);
+    }
 }
