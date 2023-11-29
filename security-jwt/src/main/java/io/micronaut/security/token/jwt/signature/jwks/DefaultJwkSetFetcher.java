@@ -32,9 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -61,6 +64,16 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     @Override
+    public Optional<JWKSet> fetch(@Nullable String url) {
+        if (url == null) {
+            return Optional.empty();
+        }
+        return OPTIMIZATIONS.findJwkSet(url)
+            .map(s -> Optional.of(s.get()))
+            .orElseGet(() -> Optional.ofNullable(load(url)));
+    }
+
+    @Override
     @NonNull
     @Blocking
     public Optional<JWKSet> fetch(@NonNull String providerName, @Nullable String url) {
@@ -78,9 +91,22 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     @Nullable
+    private JWKSet load(@NonNull String url) {
+        try {
+            return JWKSet.load(new URL(url));
+        } catch (IOException | ParseException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Exception loading JWK from " + url, e);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
     private JWKSet load(@NonNull String providerName, @NonNull String url) {
         try {
             String jwkSetContent = Mono.from(getClient(providerName).retrieve(url)).block();
+            Objects.requireNonNull(jwkSetContent, "JWK Set must not be null.");
             return JWKSet.parse(jwkSetContent);
         } catch (HttpClientException | ParseException e) {
             if (LOG.isErrorEnabled()) {

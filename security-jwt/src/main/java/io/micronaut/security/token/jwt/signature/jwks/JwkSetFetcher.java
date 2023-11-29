@@ -29,8 +29,18 @@ import java.util.Optional;
  */
 @DefaultImplementation(DefaultJwkSetFetcher.class)
 public interface JwkSetFetcher<T> {
+
     /**
      *
+     * @param url The Jwks uri
+     * @return The Json Web Key Set representation or an empty optional if it could not be loaded
+     */
+    @NonNull
+    @Blocking
+    Optional<T> fetch(@Nullable String url);
+
+    /**
+     * @param providerName The jwks provider name
      * @param url The Jwks uri
      * @return The Json Web Key Set representation or an empty optional if it could not be loaded
      */
