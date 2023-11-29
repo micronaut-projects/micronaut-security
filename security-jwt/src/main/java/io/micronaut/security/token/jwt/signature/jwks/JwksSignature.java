@@ -148,6 +148,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     /**
      * Instantiates a JWKSet for a given url.
+     * @param providerName The name of the JWKS configuration.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
      */

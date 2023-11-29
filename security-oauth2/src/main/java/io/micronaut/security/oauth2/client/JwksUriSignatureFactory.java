@@ -39,7 +39,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Internal
 public class JwksUriSignatureFactory {
     /**
-     *
+     * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
      * @param jwkSetFetcher Json Web Key Set Fetcher

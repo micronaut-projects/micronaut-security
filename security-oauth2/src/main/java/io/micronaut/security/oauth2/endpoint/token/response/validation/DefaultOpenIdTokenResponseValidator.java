@@ -147,6 +147,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     /**
+     * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
      * Uses the ID token in the OpenID connect response to extract a JSON Web token and validates its signature
@@ -164,7 +165,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     /**
-     *
+     * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
      */
