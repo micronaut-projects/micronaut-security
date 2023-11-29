@@ -87,7 +87,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
-        Optional<JWT> jwt = parseJwtWithValidSignature(openIdProviderMetadata, openIdTokenResponse);
+        Optional<JWT> jwt = parseJwtWithValidSignature(clientConfiguration, openIdProviderMetadata, openIdTokenResponse);
 
         if (jwt.isPresent()) {
             if (LOG.isTraceEnabled()) {
@@ -153,11 +153,12 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @return A JWT if the signature validation is successful
      */
     @NonNull
-    protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
+    protected Optional<JWT> parseJwtWithValidSignature(@NonNull OauthClientConfiguration clientConfiguration,
+                                                       @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
 
         return JwtValidator.builder()
-                .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
+                .withSignatures(jwksSignatureForOpenIdProviderMetadata(clientConfiguration, openIdProviderMetadata))
                 .build()
                 .validate(openIdTokenResponse.getIdToken(), null);
     }
@@ -167,13 +168,14 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @param openIdProviderMetadata The OpenID provider metadata
      * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
      */
-    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
-        final String jwksuri = openIdProviderMetadata.getJwksUri();
-        jwksSignatures.computeIfAbsent(jwksuri, k -> {
-            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
-            config.setUrl(openIdProviderMetadata.getJwksUri());
+    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OauthClientConfiguration clientConfiguration,
+                                                                   @NonNull OpenIdProviderMetadata openIdProviderMetadata) {
+        final String jwksUri = openIdProviderMetadata.getJwksUri();
+        jwksSignatures.computeIfAbsent(jwksUri, k -> {
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(clientConfiguration.getName());
+            config.setUrl(jwksUri);
             return new JwksSignature(config, jwkValidator, jwkSetFetcher);
         });
-        return jwksSignatures.get(jwksuri);
+        return jwksSignatures.get(jwksUri);
     }
 }

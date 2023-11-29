@@ -16,19 +16,27 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.optim.StaticOptimizations;
+import io.micronaut.core.util.SupplierUtil;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.HttpClientConfiguration;
+import io.micronaut.http.client.LoadBalancer;
+import io.micronaut.http.client.exceptions.HttpClientException;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.IOException;
-import java.net.URL;
+import reactor.core.publisher.Mono;
+
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -42,16 +50,26 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwkSetFetcher.class);
 
+    private final BeanContext beanContext;
+    private final Supplier<HttpClient> defaultJwkSetClient;
+    private final ConcurrentHashMap<String, HttpClient> jwkSetClients = new ConcurrentHashMap<>();
+
+    public DefaultJwkSetFetcher(BeanContext beanContext,
+                                HttpClientConfiguration defaultClientConfiguration) {
+        this.beanContext = beanContext;
+        this.defaultJwkSetClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+    }
+
     @Override
     @NonNull
     @Blocking
-    public Optional<JWKSet> fetch(@Nullable String url) {
+    public Optional<JWKSet> fetch(@NonNull String providerName, @Nullable String url) {
         if (url == null) {
             return Optional.empty();
         }
         return OPTIMIZATIONS.findJwkSet(url)
                 .map(s -> Optional.of(s.get()))
-                .orElseGet(() -> Optional.ofNullable(load(url)));
+                .orElseGet(() -> Optional.ofNullable(load(providerName, url)));
     }
 
     @Override
@@ -60,15 +78,29 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     @Nullable
-    private JWKSet load(@NonNull String url) {
+    private JWKSet load(@NonNull String providerName, @NonNull String url) {
         try {
-            return JWKSet.load(new URL(url));
-        } catch (IOException | ParseException e) {
+            String jwkSetContent = Mono.from(getClient(providerName).retrieve(url)).block();
+            return JWKSet.parse(jwkSetContent);
+        } catch (HttpClientException | ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Exception loading JWK from " + url, e);
             }
         }
         return null;
+    }
+
+    /**
+     * Retrieves a client for the given provider.
+     *
+     * @param providerName The provider name
+     * @return An HTTP client to use to send the request
+     */
+    protected HttpClient getClient(String providerName) {
+        return jwkSetClients.computeIfAbsent(providerName, provider -> {
+            Optional<io.micronaut.http.client.HttpClient> client = beanContext.findBean(io.micronaut.http.client.HttpClient.class, Qualifiers.byName(provider));
+            return client.orElseGet(defaultJwkSetClient);
+        });
     }
 
     /**

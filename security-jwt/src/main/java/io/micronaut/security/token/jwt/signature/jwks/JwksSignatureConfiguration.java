@@ -27,6 +27,9 @@ import io.micronaut.core.annotation.Nullable;
  */
 public interface JwksSignatureConfiguration {
 
+    @NonNull
+    String getName();
+
     /**
      * Json Web Key Set endpoint url.
      * @return returns a url where a JWKS is exposed.

@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnValidation.micronaut.validation)
     api(projects.micronautSecurity)
+    implementation(mn.micronaut.http.client.core)
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
     testImplementation(libs.bcpkix.jdk15on)

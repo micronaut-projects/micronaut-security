@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
@@ -46,12 +47,24 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    private final String name;
+
     @NonNull
     private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
 
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
+
+    public JwksSignatureConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
+
+    @Override
+    @NonNull
+    public String getName() {
+        return name;
+    }
 
     @Override
     @NonNull

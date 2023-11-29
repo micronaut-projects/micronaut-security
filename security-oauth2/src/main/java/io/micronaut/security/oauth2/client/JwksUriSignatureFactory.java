@@ -23,6 +23,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
@@ -46,10 +47,11 @@ public class JwksUriSignatureFactory {
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
-    public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+    public JwksSignature createJwksUriSignature(@Parameter OauthClientConfiguration clientConfiguration,
+                                                @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator,
                                                 JwkSetFetcher<JWKSet> jwkSetFetcher) {
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(clientConfiguration.getName());
         jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
         return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }

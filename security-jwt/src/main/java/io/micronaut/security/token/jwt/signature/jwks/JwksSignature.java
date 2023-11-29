@@ -19,6 +19,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
@@ -71,7 +72,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             synchronized (this) { // double check
                 jwkSetVariable = this.jwkSet;
                 if (jwkSetVariable == null) {
-                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
+                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getName(), this.jwksSignatureConfiguration.getUrl());
                     this.jwkSet = jwkSetVariable;
                     this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
                 }
@@ -151,8 +152,8 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @return a JWKSet or null if there was an error.
      */
     @Nullable
-    protected JWKSet loadJwkSet(String url) {
-        return jwkSetFetcher.fetch(url)
+    protected JWKSet loadJwkSet(String providerName, String url) {
+        return jwkSetFetcher.fetch(providerName, url)
                 .orElse(null);
     }
 
