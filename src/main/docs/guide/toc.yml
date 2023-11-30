@@ -51,6 +51,7 @@ authenticationStrategies:
     claimsValidation: Claims Validation
     render:
       title: Token Render
+    jwtGuides: Guides
   ldap:
     title: LDAP Authentication
     configuration: Configuration
@@ -107,6 +108,7 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
+  oauthGuides: Guides
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration
