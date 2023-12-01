@@ -147,6 +147,21 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     /**
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @param openIdTokenResponse ID Token Access Token response
+     * Uses the ID token in the OpenID connect response to extract a JSON Web token and validates its signature
+     * @return A JWT if the signature validation is successful
+     * @deprecated Use {@link #parseJwtWithValidSignature} instead.
+     */
+    @NonNull
+    @Deprecated(since = "4.5.0", forRemoval = true)
+    protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                                       @NonNull OpenIdTokenResponse openIdTokenResponse) {
+
+        return parseJwtWithValidSignature(null, openIdProviderMetadata, openIdTokenResponse);
+    }
+
+    /**
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
@@ -165,15 +180,26 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     /**
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
+     * @deprecated Use {@link #jwksSignatureForOpenIdProviderMetadata(OauthClientConfiguration, OpenIdProviderMetadata)} instead.
+     */
+    @Deprecated(since = "4.5.0", forRemoval = true)
+    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
+        return jwksSignatureForOpenIdProviderMetadata(null, openIdProviderMetadata);
+    }
+
+    /**
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
      */
-    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OauthClientConfiguration clientConfiguration,
+    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@Nullable OauthClientConfiguration clientConfiguration,
                                                                    @NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksUri = openIdProviderMetadata.getJwksUri();
         jwksSignatures.computeIfAbsent(jwksUri, k -> {
-            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(clientConfiguration.getName());
+            String providerName = clientConfiguration != null ? clientConfiguration.getName() : null;
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(providerName);
             config.setUrl(jwksUri);
             return new JwksSignature(config, jwkValidator, jwkSetFetcher);
         });

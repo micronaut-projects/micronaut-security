@@ -15,36 +15,24 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
-import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.naming.Named;
 
 /**
- * JSON Web Key Set Configuration.
+ * Client for loading Json Web Key Set content over http.
  *
- * @author Sergio del Amo
- * @since 1.1.0
+ * @author Jeremy Grelle
+ * @since 4.5.0
  */
-public interface JwksSignatureConfiguration extends Named {
+public interface JwksClient {
 
     /**
-     * Json Web Key Set endpoint url.
-     * @return returns a url where a JWKS is exposed.
-     */
-    @NonNull
-    String getUrl();
-
-    /**
-     * Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
-     * @return The KeyType for the JWKS signature configuration.
+     * Loads remote Json Web Key Set content over http.
+     *
+     * @param providerName The jwks provider name
+     * @param url The URL for loading the remote JWK Set
+     * @return The JWK Set response body content
      */
     @Nullable
-    KeyType getKeyType();
-
-    /**
-     * @return The number of seconds to cache the JWKS.
-     */
-    @NonNull
-    Integer getCacheExpiration();
+    String load(@Nullable String providerName, @NonNull String url);
 }

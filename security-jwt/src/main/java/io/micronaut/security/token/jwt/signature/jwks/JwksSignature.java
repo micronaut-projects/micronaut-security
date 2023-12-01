@@ -148,12 +148,25 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     /**
      * Instantiates a JWKSet for a given url.
+     * @param url JSON Web Key Set Url.
+     * @return a JWKSet or null if there was an error.
+     * @deprecated Use {@link #loadJwkSet(String, String)} instead.
+     */
+    @Nullable
+    @Deprecated(since = "4.5.0", forRemoval = true)
+    protected JWKSet loadJwkSet(String url) {
+        return jwkSetFetcher.fetch(null, url)
+            .orElse(null);
+    }
+
+    /**
+     * Instantiates a JWKSet for a given url.
      * @param providerName The name of the JWKS configuration.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
      */
     @Nullable
-    protected JWKSet loadJwkSet(String providerName, String url) {
+    protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
         return jwkSetFetcher.fetch(providerName, url)
                 .orElse(null);
     }

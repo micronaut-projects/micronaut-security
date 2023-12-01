@@ -34,9 +34,11 @@ public interface JwkSetFetcher<T> {
      *
      * @param url The Jwks uri
      * @return The Json Web Key Set representation or an empty optional if it could not be loaded
+     * @deprecated Use {@link #fetch(String, String)} instead.
      */
     @NonNull
     @Blocking
+    @Deprecated(since = "4.5.0", forRemoval = true)
     Optional<T> fetch(@Nullable String url);
 
     /**

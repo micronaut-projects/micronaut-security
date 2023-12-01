@@ -47,6 +47,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    @Nullable
     private final String name;
 
     @NonNull
