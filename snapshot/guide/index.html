@@ -189,6 +189,8 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-render"><a href="#render"><strong>10.3.7</strong><span>Token Render</span></a></div>
         
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtGuides"><a href="#jwtGuides"><strong>10.3.8</strong><span>Guides</span></a></div>
+        
         <div class="toc-item" style="margin-left:10px" id="toc-item-ldap"><a href="#ldap"><strong>10.4</strong><span>LDAP Authentication</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-configuration"><a href="#configuration"><strong>10.4.1</strong><span>Configuration</span></a></div>
@@ -261,6 +263,8 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>16.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
         
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>16.3.2.2</strong><span>Guides</span></a></div>
+        
         <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>16.3.3</strong><span>Password</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>16.4</strong><span>Endpoints</span></a></div>
@@ -274,6 +278,8 @@
         <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>16.4.4</strong><span>OpenID User Info</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>16.5</strong><span>Custom Clients</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>16.6</strong><span>Guides</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>17</strong><span>Ahead-of-time optimizations</span></a></div>
         
@@ -2637,17 +2643,18 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
 </div>
 </div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.html">Session-Based Authentication Micronaut Guide</a> to learn more.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Read the following guides to learn more abut session based authentication:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-security-session.html">Session-Based Authentication Micronaut Guide</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-security-session-database-authentication.html">Database Authentication</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -4039,6 +4046,35 @@ Pragma: no-cache
 <p>If you wish to customize the previous JSON payload, you may want to provide a bean replacement for <a href="../api/io/micronaut/security/token/jwt/render/BearerTokenRenderer.html">BearerTokenRenderer</a>. If that is not enough, check the <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a> to accommodate it to your needs.</p>
 </div>
 
+<h2 id="jwtGuides"><a class="anchor" href="#jwtGuides"></a>10.3.8 Guides</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGuides.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Read the following guides to learn more about JSON Web Token and JSON Web Keys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-cli-jwkgen.html">JWK generation with a micronaut command line application</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-security-keys-jwks.html">JWK keys endpoint</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-security-jwt.html">Micronaut JWT authentication</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cookie.html">Micronaut JWT authentication via cookies</a></p>
+</li>
+</ul>
+</div>
+
 <h2 id="ldap"><a class="anchor" href="#ldap"></a>10.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
@@ -4377,6 +4413,18 @@ public class MyContextBuilder implements ContextBuilder {
 
 }</code></pre>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Read <a href="https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html">LDAP and database authentication providers</a> to learn more about LDAP Authentication:
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -8252,6 +8300,29 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </tbody>
 </table>
 
+<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>16.3.2.2 Guides</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientCredentialGuides.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Read the following guides to learn more abut Client Credentials Flow:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-client-credentials-auth0.html">Client Credentials Flow with Micronaut and Auth0</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-client-credentials-cognito.html">Client Credentials Flow with Micronaut and Amazon Cognito</a></p>
+</li>
+</ul>
+</div>
+
 <h2 id="password"><a class="anchor" href="#password"></a>16.3.3 Password</h2>
 
 <div class='contribute-btn'>
@@ -8699,6 +8770,44 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </div>
 <div class="paragraph">
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
+</div>
+
+<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>16.6 Guides</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauthGuides.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Read the following guides to learn more abut OAuth:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-auth0.html">Secure a Micronaut application with Auth0</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-cognito.html">Secure a Micronaut application with Cognito</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-github.html">Secure a Micronaut application with Github</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-oidc-google.html">Secure a Micronaut application with Google</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-keycloak.html">Secure a Micronaut application with Keycloak</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-linkedin.html">Secure a Micronaut application with LinkedIn</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/micronaut-oauth2-okta.html">Secure a Micronaut application with Okta</a></p>
+</li>
+</ul>
 </div>
 
 <h1 id="aot"><a class="anchor" href="#aot"></a>17 Ahead-of-time optimizations</h1>
