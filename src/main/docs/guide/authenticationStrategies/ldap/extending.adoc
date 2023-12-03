@@ -75,3 +75,5 @@ public class MyContextBuilder implements ContextBuilder {
 
 }
 ----
+
+TIP: Read https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html[LDAP and database authentication providers] to learn more about LDAP Authentication:
