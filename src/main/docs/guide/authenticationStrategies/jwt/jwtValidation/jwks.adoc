@@ -4,10 +4,21 @@ You can configure a remote JWKS as a signature validator:
 
 [configuration]
 ----
-include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamljwksconfig]
 ----
 
 The previous snippet creates a link:{api}/io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html[JwksSignature] bean with a `awscognito` name qualifier.
+
+If you have the Micronaut Http Client on the classpath, then it will be used to retrieve the remote JWK Set. This allows for the configuration settings of the Http Client to be applied when fetching the resource. If a named service-specific client exists and the name of the service matches the name of the configured JWKS provider name, then that specific client instance will be used, otherwise a default Http Client instance (with any global configuration settings from `micronaut.http.client.*` applied) will be used. If the Micronaut Http Client is not on the classpath, then the implementation will fall back to the internal resource fetching mechanism of the external JWT library dependency.
+
+For example, to use an HTTP proxy for the fetching of the JWK Set from the above example:
+
+[configuration]
+----
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlserviceclientconfig]
+----
+
+Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata.
 
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 
