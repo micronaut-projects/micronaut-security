@@ -87,7 +87,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
-        Optional<JWT> jwt = parseJwtWithValidSignature(clientConfiguration, openIdProviderMetadata, openIdTokenResponse);
+        Optional<JWT> jwt = parseJwtWithValidSignature(openIdProviderMetadata, openIdTokenResponse);
 
         if (jwt.isPresent()) {
             if (LOG.isTraceEnabled()) {
@@ -151,55 +151,25 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @param openIdTokenResponse ID Token Access Token response
      * Uses the ID token in the OpenID connect response to extract a JSON Web token and validates its signature
      * @return A JWT if the signature validation is successful
-     * @deprecated Use {@link #parseJwtWithValidSignature} instead.
      */
     @NonNull
-    @Deprecated(since = "4.5.0", forRemoval = true)
     protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
 
-        return parseJwtWithValidSignature(null, openIdProviderMetadata, openIdTokenResponse);
-    }
-
-    /**
-     * @param clientConfiguration The OAuth 2.0 client configuration
-     * @param openIdProviderMetadata The OpenID provider metadata
-     * @param openIdTokenResponse ID Token Access Token response
-     * Uses the ID token in the OpenID connect response to extract a JSON Web token and validates its signature
-     * @return A JWT if the signature validation is successful
-     */
-    @NonNull
-    protected Optional<JWT> parseJwtWithValidSignature(@NonNull OauthClientConfiguration clientConfiguration,
-                                                       @NonNull OpenIdProviderMetadata openIdProviderMetadata,
-                                                       @NonNull OpenIdTokenResponse openIdTokenResponse) {
-
         return JwtValidator.builder()
-                .withSignatures(jwksSignatureForOpenIdProviderMetadata(clientConfiguration, openIdProviderMetadata))
-                .build()
-                .validate(openIdTokenResponse.getIdToken(), null);
+            .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
+            .build()
+            .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**
      * @param openIdProviderMetadata The OpenID provider metadata
      * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
-     * @deprecated Use {@link #jwksSignatureForOpenIdProviderMetadata(OauthClientConfiguration, OpenIdProviderMetadata)} instead.
      */
-    @Deprecated(since = "4.5.0", forRemoval = true)
     protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
-        return jwksSignatureForOpenIdProviderMetadata(null, openIdProviderMetadata);
-    }
-
-    /**
-     * @param clientConfiguration The OAuth 2.0 client configuration
-     * @param openIdProviderMetadata The OpenID provider metadata
-     * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
-     */
-    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@Nullable OauthClientConfiguration clientConfiguration,
-                                                                   @NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksUri = openIdProviderMetadata.getJwksUri();
         jwksSignatures.computeIfAbsent(jwksUri, k -> {
-            String providerName = clientConfiguration != null ? clientConfiguration.getName() : null;
-            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(providerName);
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(openIdProviderMetadata.getName());
             config.setUrl(jwksUri);
             return new JwksSignature(config, jwkValidator, jwkSetFetcher);
         });

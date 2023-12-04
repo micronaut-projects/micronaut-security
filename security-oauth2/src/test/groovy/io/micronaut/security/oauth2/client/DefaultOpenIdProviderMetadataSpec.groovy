@@ -177,7 +177,7 @@ class DefaultOpenIdProviderMetadataSpec extends ApplicationContextSpecification 
     void snakeCaseStrategyIsUsed() {
         given:
         JsonMapper jsonMapper = JsonMapper.createDefault()
-        DefaultOpenIdProviderMetadata obj = new DefaultOpenIdProviderMetadata()
+        DefaultOpenIdProviderMetadata obj = new DefaultOpenIdProviderMetadata('myTestProvider')
         obj.authorizationEndpoint = 'authorizationEndpoint'
         obj.issuer = 'issuer'
         obj.idTokenSigningAlgValuesSupported = ['idTokenSigningAlgValuesSupported']

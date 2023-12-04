@@ -39,7 +39,9 @@ public interface JwkSetFetcher<T> {
     @NonNull
     @Blocking
     @Deprecated(since = "4.5.0", forRemoval = true)
-    Optional<T> fetch(@Nullable String url);
+    default Optional<T> fetch(@Nullable String url) {
+        return fetch(null, url);
+    }
 
     /**
      * @param providerName The jwks provider name

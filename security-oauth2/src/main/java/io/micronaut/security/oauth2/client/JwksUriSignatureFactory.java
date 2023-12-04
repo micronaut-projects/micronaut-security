@@ -23,7 +23,6 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
@@ -39,7 +38,6 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Internal
 public class JwksUriSignatureFactory {
     /**
-     * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
      * @param jwkSetFetcher Json Web Key Set Fetcher
@@ -47,11 +45,10 @@ public class JwksUriSignatureFactory {
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
-    public JwksSignature createJwksUriSignature(@Parameter OauthClientConfiguration clientConfiguration,
-                                                @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+    public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator,
                                                 JwkSetFetcher<JWKSet> jwkSetFetcher) {
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(clientConfiguration.getName());
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(openIdProviderMetadata.get().getName());
         jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
         return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }

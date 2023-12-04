@@ -50,18 +50,6 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     @Override
     @NonNull
     @Blocking
-    public Optional<JWKSet> fetch(@Nullable String url) {
-        if (url == null) {
-            return Optional.empty();
-        }
-        return OPTIMIZATIONS.findJwkSet(url)
-            .map(s -> Optional.of(s.get()))
-            .orElseGet(() -> Optional.ofNullable(load(null, url)));
-    }
-
-    @Override
-    @NonNull
-    @Blocking
     public Optional<JWKSet> fetch(@Nullable String providerName, @Nullable String url) {
         if (url == null) {
             return Optional.empty();

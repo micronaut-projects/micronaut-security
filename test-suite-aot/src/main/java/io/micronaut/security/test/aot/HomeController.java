@@ -9,6 +9,7 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
@@ -69,7 +70,12 @@ class HomeController {
         if (!DefaultOpenIdProviderMetadataFetcher.OPTIMIZATIONS.findMetadata("autha").isPresent()) {
             return HttpResponse.serverError("Optimizations for autha should be present");
         }
-        if (!openIdProviderMetadataFetcher.fetch().equals(expectedDefaultOpenIdProviderMetadata)) {
+        OpenIdProviderMetadata metadata = openIdProviderMetadataFetcher.fetch();
+        if (!metadata.getName().equals("autha")) {
+            return HttpResponse.serverError("Provider name for OpenID provider metadata fetched at build time should be 'autha' but was "+metadata.getName());
+        }
+        expectedDefaultOpenIdProviderMetadata.setName("autha");
+        if (!metadata.equals(expectedDefaultOpenIdProviderMetadata)) {
             return HttpResponse.serverError("fetched OpenID provider metadata at build time does not match expectations");
         }
         if (DefaultJwkSetFetcher.OPTIMIZATIONS.findJwkSet("foo").isPresent()) {
@@ -78,7 +84,7 @@ class HomeController {
         if (!DefaultJwkSetFetcher.OPTIMIZATIONS.findJwkSet("http://localhost:8081/keys").isPresent()) {
             return HttpResponse.serverError("JWKSet Optimizations for autha should be present");
         }
-        if (!jwkSetJwkSetFetcher.fetch("http://localhost:8081/keys").get().toString().equals(expectedJwkSet.toString())) {
+        if (!jwkSetJwkSetFetcher.fetch(metadata.getName(), "http://localhost:8081/keys").get().toString().equals(expectedJwkSet.toString())) {
             return HttpResponse.serverError("fetched OpenID provider metadata at build time does not match expectations");
         }
         return HttpResponse.ok();

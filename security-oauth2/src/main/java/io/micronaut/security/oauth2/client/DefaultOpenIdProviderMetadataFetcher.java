@@ -76,7 +76,11 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     private Supplier<DefaultOpenIdProviderMetadata> fetch(@NonNull OpenIdClientConfiguration openIdClientConfiguration) {
         return () -> openIdClientConfiguration.getIssuer()
             .map(this::fetch)
-            .orElse(new DefaultOpenIdProviderMetadata());
+            .map(metadata -> {
+                metadata.setName(openIdClientConfiguration.getName());
+                return metadata;
+            })
+            .orElse(new DefaultOpenIdProviderMetadata(openIdClientConfiguration.getName()));
     }
 
     @NonNull
