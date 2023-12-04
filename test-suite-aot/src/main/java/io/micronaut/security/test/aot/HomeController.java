@@ -24,6 +24,8 @@ import java.util.Optional;
 @Controller
 class HomeController {
 
+    private static final String EXPECTED_PROVIDER_NAME = "autha";
+
     private final OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher;
     private final DefaultOpenIdProviderMetadata expectedDefaultOpenIdProviderMetadata;
     private final JWKSet expectedJwkSet;
@@ -67,14 +69,14 @@ class HomeController {
         if (DefaultOpenIdProviderMetadataFetcher.OPTIMIZATIONS.findMetadata("foo").isPresent()) {
             return HttpResponse.serverError("Optimizations for foo should not be present");
         }
-        if (!DefaultOpenIdProviderMetadataFetcher.OPTIMIZATIONS.findMetadata("autha").isPresent()) {
+        if (!DefaultOpenIdProviderMetadataFetcher.OPTIMIZATIONS.findMetadata(EXPECTED_PROVIDER_NAME).isPresent()) {
             return HttpResponse.serverError("Optimizations for autha should be present");
         }
         OpenIdProviderMetadata metadata = openIdProviderMetadataFetcher.fetch();
-        if (!metadata.getName().equals("autha")) {
+        if (!metadata.getName().equals(EXPECTED_PROVIDER_NAME)) {
             return HttpResponse.serverError("Provider name for OpenID provider metadata fetched at build time should be 'autha' but was "+metadata.getName());
         }
-        expectedDefaultOpenIdProviderMetadata.setName("autha");
+        expectedDefaultOpenIdProviderMetadata.setName(EXPECTED_PROVIDER_NAME);
         if (!metadata.equals(expectedDefaultOpenIdProviderMetadata)) {
             return HttpResponse.serverError("fetched OpenID provider metadata at build time does not match expectations");
         }
