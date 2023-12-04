@@ -89,9 +89,8 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
         JwksClient jwksClient = AOTContextUtils.getBean(JwksClient.class, context);
         List<GeneratedFile> result = new ArrayList<>();
         int count = 0;
-        for(String providerName: urls.keySet()) {
-            String url = urls.get(providerName);
-            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, providerName, url, count);
+        for (Map.Entry<String, String> entry: urls.entrySet()) {
+            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, entry.getKey(), entry.getValue(), count);
             if (generatedFile.isPresent()) {
                 result.add(generatedFile.get());
                 count++;
