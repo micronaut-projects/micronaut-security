@@ -22,6 +22,8 @@ micronaut-servlet = "4.3.0"
 micronaut-session = "4.1.0"
 micronaut-views = "5.0.1"
 micronaut-validation = "4.2.0"
+micronaut-data="4.4.0"
+micronaut-sql="5.3.0"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
@@ -35,6 +37,8 @@ micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", ver
 micronaut-session = { module = "io.micronaut.session:micronaut-session-bom", version.ref = "micronaut-session" }
 micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.ref = "micronaut-views" }
 micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-bom", version.ref = "micronaut-validation" }
+micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
+micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
@@ -50,9 +54,9 @@ bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bo
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
-
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
+testcontainers-mysql = { module = "org.testcontainers:mysql" }
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 
 [plugins]
