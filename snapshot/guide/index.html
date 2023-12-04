@@ -5744,6 +5744,42 @@ class UserController {
 <div class="paragraph">
 <p>If you need to access the currently authenticated user outside of a controller, you can inject <a href="../api/io/micronaut/security/utils/SecurityService.html">SecurityService</a> bean, which provides a set of convenient methods related to authentication and authorization.</p>
 </div>
+<div class="sect2">
+<h3 id="_securityservice_with_project_reactor">SecurityService with Project Reactor</h3>
+<div class="paragraph">
+<p>If you use Micronaut Reactor and access <a href="../api/io/micronaut/security/utils/SecurityService.html">SecurityService</a> within a reactive chain,  add the following dependencies to handle the <a href="https://docs.micronaut.io/latest/guide/#reactorContextPropagation">Reactor Context Propagation</a>.</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.reactor:micronaut-security-reactor")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.reactor&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-reactor&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micrometer:context-propagation")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micrometer&lt;/groupId&gt;
+    &lt;artifactId&gt;context-propagation&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+</div>
 
 <h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>15 Security Events</h1>
 
