@@ -50,7 +50,7 @@ public interface JwkSetFetcher<T> {
      */
     @NonNull
     @Blocking
-    Optional<T> fetch(@NonNull String providerName, @Nullable String url);
+    Optional<T> fetch(@Nullable String providerName, @Nullable String url);
 
     /**
      * @param url The Jwks uri
