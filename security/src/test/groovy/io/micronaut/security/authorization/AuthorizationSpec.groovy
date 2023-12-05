@@ -19,15 +19,23 @@ import io.micronaut.security.FailedAuthenticationScenario
 import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.annotation.User
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationArgumentBinder
 import io.micronaut.security.authentication.AuthenticationFailureReason
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.ClientAuthentication
 import io.micronaut.security.authentication.PrincipalArgumentBinder
+import io.micronaut.security.authentication.ServerAuthentication
+import io.micronaut.security.authentication.UserArgumentBinder
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 import java.security.Principal
@@ -95,7 +103,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
     void "Authentication Argument Binders binds Authentication if return type is Single"() {
         expect:
-        embeddedServer.applicationContext.getBean(PrincipalArgumentBinder.class)
+        embeddedServer.applicationContext.getBean(AuthenticationArgumentBinder.class)
 
         when:
         HttpResponse<String> response = client.exchange(HttpRequest.GET("/argumentbinder/singleauthentication")
@@ -103,6 +111,56 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
         then:
         response.body() == 'You are valid'
+    }
+
+    void "Authentication Argument Binders binds annotated subtype of Principal"() {
+        expect:
+        embeddedServer.applicationContext.getBean(UserArgumentBinder.class)
+
+        when:
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/subtypeargumentbinder/single-server-authentication")
+                .basicAuth("valid", "password"), String)
+
+        then:
+        response.body() == 'You are valid'
+    }
+
+    void "Authentication Argument Binders cannot bind annotated subtype of Principal if subtype doesn't match request.getPrincipal"() {
+        expect:
+        embeddedServer.applicationContext.getBean(UserArgumentBinder.class)
+
+        when:
+        client.exchange(HttpRequest.GET("/subtypeargumentbinder/single-client-authentication")
+                .basicAuth("valid", "password"), String)
+
+        then:
+        HttpClientResponseException e = thrown(HttpClientResponseException)
+        e.status == HttpStatus.BAD_REQUEST
+    }
+
+    void "Authentication Argument Binders cannot bind non-annotated subtype of Principal"() {
+        expect:
+        embeddedServer.applicationContext.getBean(UserArgumentBinder.class)
+
+        when:
+        client.exchange(HttpRequest.GET("/subtypeargumentbinder/single-no-user-authentication")
+                .basicAuth("valid", "password"), String)
+
+        then:
+        HttpClientResponseException e = thrown(HttpClientResponseException)
+        e.status == HttpStatus.BAD_REQUEST
+    }
+
+    void "Authentication Argument Binders binds annotated custom subtype of Principal"() {
+        expect:
+        embeddedServer.applicationContext.getBean(UserArgumentBinder.class)
+
+        when:
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/customuserargumentbinder/single-user")
+                .basicAuth("custom", "password"), String)
+
+        then:
+        response.body() == 'You are custom'
     }
 
     void "test accessing the url map controller without authentication"() {
@@ -319,6 +377,42 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
     }
 
     @Requires(property = 'spec.name', value = 'AuthorizationSpec')
+    @Controller('/subtypeargumentbinder')
+    @Secured("isAuthenticated()")
+    static class PrincipalSubtypeArgumentBinderController {
+
+        @Get("/single-server-authentication")
+        @SingleResult
+        Publisher<String> singleServerAuthentication(@User ServerAuthentication authentication) {
+            Mono.just("You are ${authentication.getName()}".toString())
+        }
+
+        @Get("/single-client-authentication")
+        @SingleResult
+        Publisher<String> singleClientAuthentication(@User ClientAuthentication authentication) {
+            Mono.just("You are ${authentication.getName()}".toString())
+        }
+
+        @Get("/single-no-user-authentication")
+        @SingleResult
+        Publisher<String> singleNoUserAuthentication(ServerAuthentication authentication) {
+            Mono.just("You are ${authentication.getName()}".toString())
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthorizationSpec')
+    @Controller('/customuserargumentbinder')
+    @Secured("isAuthenticated()")
+    static class CustomUserArgumentBinderController {
+
+        @Get("/single-user")
+        @SingleResult
+        Publisher<String> singleServerAuthentication(@User TestingAuthenticationProvider.CustomAuthentication authentication) {
+            Mono.just("You are ${authentication.getName()}".toString())
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthorizationSpec')
     @Controller("/urlMap")
     static class UrlMapController {
 
@@ -344,6 +438,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
         TestingAuthenticationProvider() {
             super([
                     new SuccessAuthenticationScenario("valid","password"),
+                    new SuccessAuthenticationScenario("custom", "password"),
                     new SuccessAuthenticationScenario("admin",["ROLE_ADMIN"])
             ], [
                     new FailedAuthenticationScenario("disabled", AuthenticationFailureReason.USER_DISABLED),
@@ -352,6 +447,36 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
                     new FailedAuthenticationScenario("accountLocked", AuthenticationFailureReason.ACCOUNT_LOCKED),
                     new FailedAuthenticationScenario("invalidPassword", AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
             ])
+        }
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(Object httpRequest, AuthenticationRequest authenticationRequest) {
+            return Flux.from(super.authenticate(httpRequest, authenticationRequest)).map(response -> {
+                if (response.authenticated && response.getAuthentication().orElseThrow().name == 'custom') {
+                    return new CustomAuthenticationResponse('custom')
+                }
+                return response
+            })
+        }
+
+        static class CustomAuthenticationResponse implements AuthenticationResponse {
+
+            private final String username
+
+            CustomAuthenticationResponse(String username) {
+                this.username = username
+            }
+
+            @Override
+            Optional<Authentication> getAuthentication() {
+                return Optional.of(new CustomAuthentication(this.username, Collections.emptyList(), Collections.emptyMap()))
+            }
+        }
+
+        static class CustomAuthentication extends ServerAuthentication {
+            CustomAuthentication(String name, Collection<String> roles, Map<String, Object> attributes) {
+                super(name, roles, attributes)
+            }
         }
     }
 
