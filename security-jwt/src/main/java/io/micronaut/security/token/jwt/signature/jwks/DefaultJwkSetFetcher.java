@@ -27,6 +27,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -52,7 +53,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
      */
     @Deprecated(forRemoval = true, since = "4.5.0")
     public DefaultJwkSetFetcher() {
-        this(new ResourceRetrieverJwksClient());
+        this(new ResourceRetrieverJwksClient(Schedulers.boundedElastic()));
     }
 
     @Inject

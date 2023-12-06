@@ -19,14 +19,20 @@ import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.Resource;
 import io.micronaut.context.annotation.Secondary;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.scheduling.TaskExecutors;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Implementation of {@link JwksClient} that uses the Nimbus library's built-in {@code com.nimbusds.jose.util.ResourceRetriever} interface.
@@ -39,20 +45,31 @@ import java.net.URL;
 public class ResourceRetrieverJwksClient implements JwksClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceRetrieverJwksClient.class);
-
+    private final Scheduler scheduler;
     private final DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever(0, 0, 0);
+
+    @Inject
+    public ResourceRetrieverJwksClient(@Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
+        this(Schedulers.fromExecutorService(executorService));
+    }
+
+    public ResourceRetrieverJwksClient(Scheduler scheduler) {
+        this.scheduler = scheduler;
+    }
 
     @Override
     @SingleResult
     public Publisher<String> load(String providerName, String url) {
-        try {
-            Resource resource = resourceRetriever.retrieveResource(new URL(url));
-            return Mono.just(resource.getContent());
-        } catch (IOException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception loading JWK from " + url, e);
+        return Mono.fromCallable(() -> {
+            try {
+                return resourceRetriever.retrieveResource(new URL(url));
+            } catch (IOException e) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Exception loading JWK from " + url, e);
+                }
+                return null;
             }
-            return Mono.empty();
-        }
+        }).map(Resource::getContent)
+            .subscribeOn(scheduler);
     }
 }
