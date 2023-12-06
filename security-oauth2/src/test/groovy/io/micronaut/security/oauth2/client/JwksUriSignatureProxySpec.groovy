@@ -61,7 +61,7 @@ class JwksUriSignatureProxySpec extends Specification {
 
     @Shared
     Map authConfig = [
-            (SPEC_NAME_PROPERTY)                : 'jwks-uri-proxy.auth',
+            (SPEC_NAME_PROPERTY)                : 'JwksUriSignatureProxySpec.auth',
             'micronaut.server.port': SocketUtils.findAvailableTcpPort(),
             'micronaut.security.authentication' : 'bearer'
     ]
@@ -74,7 +74,7 @@ class JwksUriSignatureProxySpec extends Specification {
 
     @Shared
     Map proxyConfig = [
-            (SPEC_NAME_PROPERTY)    : 'jwks-uri-proxy.proxy',
+            (SPEC_NAME_PROPERTY)    : 'JwksUriSignatureProxySpec.proxy',
             'forward-proxy-host'    : authEmbeddedServer.host,
             'forward-proxy-port'    : authEmbeddedServer.port
     ]
@@ -104,7 +104,7 @@ class JwksUriSignatureProxySpec extends Specification {
     def "jwks key set loading"(String description, Map<String, Object> configuration, Function<Integer, SystemProperties> systemProperties) {
         given:
         EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
-        EmbeddedServer clientServer = ApplicationContext.run(EmbeddedServer, [ (SPEC_NAME_PROPERTY) : 'jwks-uri-proxy.client' ])
+        EmbeddedServer clientServer = ApplicationContext.run(EmbeddedServer, [ (SPEC_NAME_PROPERTY) : 'JwksUriSignatureProxySpec.client' ])
         HttpClient booksClient = clientServer.applicationContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
 
         ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
@@ -136,7 +136,7 @@ class JwksUriSignatureProxySpec extends Specification {
                 [
                         "jwks key set loading with Nimbus library resource retriever client uses system properties proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-uri-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksUriSignatureProxySpec.books',
                                 "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
                                 'micronaut.security.authentication': 'idtoken',
                                 'micronaut.security.oauth2.clients.a.client-id': "XXX",
@@ -147,7 +147,7 @@ class JwksUriSignatureProxySpec extends Specification {
                 [
                         "jwks key set loading with Nimbus library resource retriever client can be used without proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-uri-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksUriSignatureProxySpec.books',
                                 "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
                                 'micronaut.security.authentication': 'idtoken',
                                 'micronaut.security.oauth2.clients.a.client-id': "XXX",
@@ -158,7 +158,7 @@ class JwksUriSignatureProxySpec extends Specification {
                 [
                         "jwks key set loading uses service level http client proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-uri-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksUriSignatureProxySpec.books',
                                 'micronaut.http.services.a.url'                       : "http://localhost:${authEmbeddedServer.port}",
                                 'micronaut.http.services.a.proxy-type'                : 'http',
                                 'micronaut.http.services.a.proxy-address'             : "localhost:${proxyEmbeddedServer.port}",
@@ -171,7 +171,7 @@ class JwksUriSignatureProxySpec extends Specification {
                 [
                         "jwks key set loading uses global http client proxy config",
                         [
-                                    (SPEC_NAME_PROPERTY)                                        : 'jwks-uri-proxy.books',
+                                    (SPEC_NAME_PROPERTY)                                        : 'JwksUriSignatureProxySpec.books',
                                     'micronaut.http.client.proxy-type'                          : 'http',
                                     'micronaut.http.client.proxy-address'                       : "localhost:${proxyEmbeddedServer.port}",
                                     'micronaut.security.authentication': 'idtoken',
@@ -184,7 +184,7 @@ class JwksUriSignatureProxySpec extends Specification {
         ]
     }
 
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.books')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.books')
     @Controller
     @Secured(SecurityRule.IS_AUTHENTICATED)
     static class HomeController {
@@ -197,7 +197,7 @@ class JwksUriSignatureProxySpec extends Specification {
     }
 
     @Filter("/**")
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.proxy')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.proxy')
     static class ProxyFilter implements HttpServerFilter {
         private final ProxyHttpClient client
         private final String targetHost
@@ -234,14 +234,14 @@ class JwksUriSignatureProxySpec extends Specification {
     }
 
     @Singleton
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.auth')
     static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
             super([new SuccessAuthenticationScenario( 'user')])
         }
     }
 
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.auth')
     @Replaces(JWTClaimsSetGenerator)
     @Singleton
     static class AuthServerACustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
@@ -266,7 +266,7 @@ class JwksUriSignatureProxySpec extends Specification {
         }
     }
 
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.auth')
     @Controller("/oauth2/default/.well-known/openid-configuration")
     static class AuthServerOpenIdConfigurationController {
         Integer port
@@ -282,7 +282,7 @@ class JwksUriSignatureProxySpec extends Specification {
 
     @Named("generator")
     @Singleton
-    @Requires(property = 'spec.name', value = 'jwks-uri-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksUriSignatureProxySpec.auth')
     static class RSAJwkProvider implements JwkProvider, RSASignatureGeneratorConfiguration {
         private RSAKey jwk
 

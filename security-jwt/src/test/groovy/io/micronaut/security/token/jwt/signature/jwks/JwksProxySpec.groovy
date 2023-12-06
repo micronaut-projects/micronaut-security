@@ -52,7 +52,7 @@ class JwksProxySpec extends Specification {
 
     @Shared
     Map authConfig = [
-            (SPEC_NAME_PROPERTY)                : 'jwks-proxy.auth',
+            (SPEC_NAME_PROPERTY)                : 'JwksProxySpec.auth',
             'micronaut.security.authentication' : 'bearer'
     ]
 
@@ -64,7 +64,7 @@ class JwksProxySpec extends Specification {
 
     @Shared
     Map proxyConfig = [
-            (SPEC_NAME_PROPERTY)    : 'jwks-proxy.proxy',
+            (SPEC_NAME_PROPERTY)    : 'JwksProxySpec.proxy',
             'forward-proxy-host'    : authEmbeddedServer.host,
             'forward-proxy-port'    : authEmbeddedServer.port
     ]
@@ -81,7 +81,7 @@ class JwksProxySpec extends Specification {
     void "jwks key set loading"(String description, Map<String, Object> configuration, Function<Integer, SystemProperties> systemProperties) {
         given:
         EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
-        ApplicationContext clientContext = ApplicationContext.run([ (SPEC_NAME_PROPERTY) : 'jwks-proxy.client' ])
+        ApplicationContext clientContext = ApplicationContext.run([ (SPEC_NAME_PROPERTY) : 'JwksProxySpec.client' ])
         HttpClient booksClient = clientContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
         ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
 
@@ -112,7 +112,7 @@ class JwksProxySpec extends Specification {
                 [
                         "jwks key set loading uses global http client proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksProxySpec.books',
                                 'micronaut.http.client.proxy-type'                          : 'http',
                                 'micronaut.http.client.proxy-address'                       : "localhost:${proxyEmbeddedServer.port}",
                                 'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
@@ -122,7 +122,7 @@ class JwksProxySpec extends Specification {
                 [
                         "jwks key set loading uses service level http client proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksProxySpec.books',
                                 'micronaut.http.services.gateway.url'                       : "http://localhost:${authEmbeddedServer.port}",
                                 'micronaut.http.services.gateway.proxy-type'                : 'http',
                                 'micronaut.http.services.gateway.proxy-address'             : "localhost:${proxyEmbeddedServer.port}",
@@ -133,7 +133,7 @@ class JwksProxySpec extends Specification {
                 [
                         "jwks key set loading with Nimbus library resource retriever client can be used without proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksProxySpec.books',
                                 "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
                                 'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
                         ],
@@ -142,7 +142,7 @@ class JwksProxySpec extends Specification {
                 [
                         "jwks key set loading with Nimbus library resource retriever client uses system properties proxy config",
                         [
-                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                (SPEC_NAME_PROPERTY)                                        : 'JwksProxySpec.books',
                                 "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
                                 'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
                         ],
@@ -165,7 +165,7 @@ class JwksProxySpec extends Specification {
     }
 
     @Singleton
-    @Requires(property = 'spec.name', value = 'jwks-proxy.books')
+    @Requires(property = 'spec.name', value = 'JwksProxySpec.books')
     @Controller
     @Secured(SecurityRule.IS_AUTHENTICATED)
     static class HomeController {
@@ -178,7 +178,7 @@ class JwksProxySpec extends Specification {
     }
 
     @Filter("/**")
-    @Requires(property = 'spec.name', value = 'jwks-proxy.proxy')
+    @Requires(property = 'spec.name', value = 'JwksProxySpec.proxy')
     static class ProxyFilter implements HttpServerFilter {
         private final ProxyHttpClient client
         private final String targetHost
@@ -215,7 +215,7 @@ class JwksProxySpec extends Specification {
     }
 
     @Singleton
-    @Requires(property = 'spec.name', value = 'jwks-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksProxySpec.auth')
     static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
             super([new SuccessAuthenticationScenario( 'user')])
@@ -224,7 +224,7 @@ class JwksProxySpec extends Specification {
 
     @Named("generator")
     @Singleton
-    @Requires(property = 'spec.name', value = 'jwks-proxy.auth')
+    @Requires(property = 'spec.name', value = 'JwksProxySpec.auth')
     static class RSAJwkProvider implements JwkProvider, RSASignatureGeneratorConfiguration {
         private RSAKey jwk
 
