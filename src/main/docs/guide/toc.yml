@@ -69,6 +69,7 @@ endpoints:
   introspectionendpoint: Introspection Endpoint
 retrievingAuthenticatedUser:
   title: Retrieve the authenticated user
+  customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
 securityEvents: Security Events
 oauth:
