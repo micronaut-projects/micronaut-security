@@ -134,7 +134,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
                 .basicAuth("valid", "password"), String)
 
         then:
-        HttpClientResponseException e = thrown(HttpClientResponseException)
+        HttpClientResponseException e = thrown()
         e.status == HttpStatus.BAD_REQUEST
     }
 
