@@ -80,10 +80,18 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private List<String> requestObjectEncryptionEncValuesSupported;
     private String checkSessionIframe;
 
+    /**
+     * @deprecated Use {@link DefaultOpenIdProviderMetadata(String)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
     public DefaultOpenIdProviderMetadata() {
         this.providerName = "";
     }
 
+    /**
+     *
+     * @param providerName Provider Name
+     */
     public DefaultOpenIdProviderMetadata(@NonNull String providerName) {
         this.providerName = providerName;
     }
@@ -103,7 +111,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param name The configured provider name
      */
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.providerName = name;
     }
 
@@ -913,14 +921,16 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     /**
      *
      * @return Creates a Builder.
+     * @deprecated Use {@link DefaultOpenIdProviderMetadata(String)} instead.
      */
+    @Deprecated(forRemoval = true, since = "4.5.0")
     @NonNull
     public static Builder builder() {
         return new Builder("");
     }
 
     /**
-     *
+     * @param providerName Provider Name
      * @return Creates a Builder with a given provider name.
      */
     @NonNull
@@ -1025,6 +1035,14 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         private List<String> requestObjectEncryptionEncValuesSupported;
         @Nullable
         private String checkSessionIframe;
+
+        /**
+         * @deprecated Use {@link Builder(String)} instead.
+         */
+        @Deprecated(forRemoval = true, since = "4.5.0")
+        public Builder() {
+            this("");
+        }
 
         /**
          *

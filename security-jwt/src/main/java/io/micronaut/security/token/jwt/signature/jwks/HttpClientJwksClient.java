@@ -16,10 +16,11 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
@@ -29,11 +30,12 @@ import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.http.client.ServiceHttpClientConfiguration;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -45,12 +47,13 @@ import java.util.function.Supplier;
  * name that matches the name used for security configuration (i.e. "micronaut.security.token.jwt.signatures.jwks.foo.*")
  * then that client will be used for the request. Otherwise, a default client will be used.
  *
+ * </p>
  *  @author Jeremy Grelle
  *  @since 4.5.0
  */
 @Singleton
-@Primary
 @Requires(classes = HttpClient.class)
+@Requires(property = JwtConfigurationProperties.PREFIX + ".signatures.jwks-client.http-client.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class HttpClientJwksClient implements JwksClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpClientJwksClient.class);
@@ -60,6 +63,12 @@ public class HttpClientJwksClient implements JwksClient {
     private final Supplier<HttpClient> defaultJwkSetClient;
     private final ConcurrentHashMap<String, HttpClient> jwkSetClients = new ConcurrentHashMap<>();
 
+    /**
+     *
+     * @param beanContext BeanContext
+     * @param clientRegistry HTTP Client Registry
+     * @param defaultClientConfiguration Default HTTP Client Configuration
+     */
     public HttpClientJwksClient(BeanContext beanContext, HttpClientRegistry<HttpClient> clientRegistry, HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
         this.clientRegistry = clientRegistry;
@@ -67,15 +76,16 @@ public class HttpClientJwksClient implements JwksClient {
     }
 
     @Override
-    public String load(@Nullable String providerName, @NonNull String url) throws HttpClientException {
-        try {
-            return Mono.from(getClient(providerName).retrieve(url)).block();
-        } catch (HttpClientException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception loading JWK from " + url, e);
-            }
-        }
-        return null;
+    @SingleResult
+    public Publisher<String> load(@Nullable String providerName, @NonNull String url) throws HttpClientException {
+        return Mono.from(getClient(providerName)
+                .retrieve(url))
+                .onErrorResume(HttpClientException.class, throwable -> {
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Exception loading JWK from " + url, throwable);
+                    }
+                    return Mono.empty();
+                });
     }
 
     /**

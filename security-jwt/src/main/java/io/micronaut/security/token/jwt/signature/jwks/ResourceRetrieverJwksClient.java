@@ -17,9 +17,13 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.Resource;
+import io.micronaut.context.annotation.Secondary;
+import io.micronaut.core.async.annotation.SingleResult;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +35,7 @@ import java.net.URL;
  *  @since 4.5.0
  */
 @Singleton
+@Secondary
 public class ResourceRetrieverJwksClient implements JwksClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceRetrieverJwksClient.class);
@@ -38,15 +43,16 @@ public class ResourceRetrieverJwksClient implements JwksClient {
     private final DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever(0, 0, 0);
 
     @Override
-    public String load(String providerName, String url) {
+    @SingleResult
+    public Publisher<String> load(String providerName, String url) {
         try {
             Resource resource = resourceRetriever.retrieveResource(new URL(url));
-            return resource.getContent();
+            return Mono.just(resource.getContent());
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Exception loading JWK from " + url, e);
             }
+            return Mono.empty();
         }
-        return null;
     }
 }

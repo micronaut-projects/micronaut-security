@@ -7,18 +7,10 @@ import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Factory
-import io.micronaut.context.annotation.Primary
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
-import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpMethod
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MediaType
-import io.micronaut.http.MutableHttpResponse
+import io.micronaut.core.util.StringUtils
+import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Filter
 import io.micronaut.http.annotation.Get
@@ -45,12 +37,14 @@ import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 import uk.org.webcompere.systemstubs.properties.SystemProperties
 
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.function.Function
 
 class JwksProxySpec extends Specification {
 
@@ -83,14 +77,10 @@ class JwksProxySpec extends Specification {
         proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class).keySetProxied.set(false)
     }
 
-    def "jwks key set loading uses global http client proxy config"() {
+    @Unroll("#description")
+    void "jwks key set loading"(String description, Map<String, Object> configuration, Function<Integer, SystemProperties> systemProperties) {
         given:
-        EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
-                'micronaut.http.client.proxy-type'                          : 'http',
-                'micronaut.http.client.proxy-address'                       : "localhost:${proxyEmbeddedServer.port}",
-                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
-        ])
+        EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
         ApplicationContext clientContext = ApplicationContext.run([ (SPEC_NAME_PROPERTY) : 'jwks-proxy.client' ])
         HttpClient booksClient = clientContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
         ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
@@ -105,134 +95,72 @@ class JwksProxySpec extends Specification {
         !rsp.body().refreshToken
 
         when:
-        String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
+        HttpRequest<?> request = HttpRequest.GET('/').bearerAuth(rsp.body().accessToken)
+        String username = systemProperties != null ? systemProperties.apply(proxyEmbeddedServer.port).execute(() -> booksClient.toBlocking().retrieve(request, String))
+                : booksClient.toBlocking().retrieve(request, String)
 
         then:
         username == 'user'
-        filter.keySetProxied.get()
+        filter.keySetProxied.get() == (systemProperties != null || globalClientEmbeddedServer.applicationContext.getProperty("micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled", Boolean, true))
 
         cleanup:
         globalClientEmbeddedServer.close()
         clientContext.close()
+
+        where:
+        [description, configuration, systemProperties] << [
+                [
+                        "jwks key set loading uses global http client proxy config",
+                        [
+                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                'micronaut.http.client.proxy-type'                          : 'http',
+                                'micronaut.http.client.proxy-address'                       : "localhost:${proxyEmbeddedServer.port}",
+                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
+                        ],
+                        null
+                ],
+                [
+                        "jwks key set loading uses service level http client proxy config",
+                        [
+                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                'micronaut.http.services.gateway.url'                       : "http://localhost:${authEmbeddedServer.port}",
+                                'micronaut.http.services.gateway.proxy-type'                : 'http',
+                                'micronaut.http.services.gateway.proxy-address'             : "localhost:${proxyEmbeddedServer.port}",
+                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "/keys",
+                        ],
+                        null
+                ],
+                [
+                        "jwks key set loading with Nimbus library resource retriever client can be used without proxy config",
+                        [
+                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
+                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
+                        ],
+                        null
+                ],
+                [
+                        "jwks key set loading with Nimbus library resource retriever client uses system properties proxy config",
+                        [
+                                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
+                                "micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled": StringUtils.FALSE,
+                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
+                        ],
+                        proxySystemProperties()
+                ]
+        ]
     }
 
-    def "jwks key set loading uses service level http client proxy config"() {
-        given:
-        EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
-                'micronaut.http.services.gateway.url'                       : "http://localhost:${authEmbeddedServer.port}",
-                'micronaut.http.services.gateway.proxy-type'                : 'http',
-                'micronaut.http.services.gateway.proxy-address'             : "localhost:${proxyEmbeddedServer.port}",
-                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "/keys",
-        ])
-        ApplicationContext clientContext = ApplicationContext.run([ (SPEC_NAME_PROPERTY) : 'jwks-proxy.client' ])
-        HttpClient booksClient = clientContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
-        ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
-
-        when:
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = authClient.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
-
-        then:
-        rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-        !rsp.body().refreshToken
-
-        when:
-        String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
-
-        then:
-        username == 'user'
-        filter.keySetProxied.get()
-
-        cleanup:
-        globalClientEmbeddedServer.close()
-        clientContext.close()
-    }
-
-    def "jwks key set loading with Nimbus library resource retriever client uses system properties proxy config"() {
-        given:
-        SystemProperties proxyProps = new SystemProperties()
-        proxyProps.set("http.proxyHost", "localhost")
-        proxyProps.set("http.proxyPort", "${proxyEmbeddedServer.port}")
-        proxyProps.set("http.nonProxyHosts", "")
-
-        EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
-                'spec.replace-client'                                       : true,
-                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
-        ])
-        EmbeddedServer clientServer = ApplicationContext.run(EmbeddedServer, [ (SPEC_NAME_PROPERTY) : 'jwks-proxy.client' ])
-        HttpClient booksClient = clientServer.applicationContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
-
-        ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
-
-        when:
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = authClient.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
-
-        then:
-        rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-        !rsp.body().refreshToken
-
-        when:
-        String username = proxyProps.execute(() -> {
-            return booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
-        })
-
-        then:
-        username == 'user'
-        filter.keySetProxied.get()
-
-        cleanup:
-        globalClientEmbeddedServer.close()
-        clientServer.close()
-    }
-
-    def "jwks key set loading with Nimbus library resource retriever client can be used without proxy config"() {
-        given:
-        EmbeddedServer globalClientEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-                (SPEC_NAME_PROPERTY)                                        : 'jwks-proxy.books',
-                'spec.replace-client'                                       : true,
-                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
-        ])
-        EmbeddedServer clientServer = ApplicationContext.run(EmbeddedServer, [ (SPEC_NAME_PROPERTY) : 'jwks-proxy.client' ])
-        HttpClient booksClient = clientServer.applicationContext.createBean(HttpClient, globalClientEmbeddedServer.getURL())
-
-        ProxyFilter filter = proxyEmbeddedServer.applicationContext.getBean(ProxyFilter.class)
-
-        when:
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = authClient.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
-
-        then:
-        rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-        !rsp.body().refreshToken
-
-        when:
-        String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
-
-        then:
-        username == 'user'
-        !filter.keySetProxied.get()
-
-        cleanup:
-        globalClientEmbeddedServer.close()
-        clientServer.close()
-    }
-
-    @Factory
-    @Requires(property = 'spec.name', value = 'jwks-proxy.books')
-    static class JwksClientFactory {
-
-        @Replaces(HttpClientJwksClient.class)
-        @Singleton
-        @Primary
-        @Requires(property = 'spec.replace-client', value = 'true')
-        ResourceRetrieverJwksClient jwksClient(@Value('${spec.name}') String specName) {
-            return new ResourceRetrieverJwksClient()
+    private static Function<Integer, SystemProperties> proxySystemProperties() {
+        return new Function<Integer, SystemProperties>() {
+            @Override
+            SystemProperties apply(Integer port) {
+                SystemProperties proxyProps = new SystemProperties()
+                proxyProps.set("http.proxyHost", "localhost")
+                proxyProps.set("http.proxyPort", "" + port)
+                proxyProps.set("http.nonProxyHosts", "")
+                proxyProps
+            }
         }
     }
 
