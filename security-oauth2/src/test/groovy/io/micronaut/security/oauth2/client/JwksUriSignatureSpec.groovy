@@ -54,7 +54,7 @@ import java.security.interfaces.RSAPublicKey
 class JwksUriSignatureSpec extends Specification {
     private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureSpec.class)
 
-    void "registering an open id client, creates a JwskUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
+    void "registering an open id client, creates a JwksUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
         given:
         int authServerAPort = SocketUtils.findAvailableTcpPort()
         int authServerBPort = SocketUtils.findAvailableTcpPort()

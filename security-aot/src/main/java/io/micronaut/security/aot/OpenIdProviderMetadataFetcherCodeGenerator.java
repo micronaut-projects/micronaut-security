@@ -116,7 +116,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("create")
                 .returns(DefaultOpenIdProviderMetadata.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addStatement("$T builder = $T.builder()", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class);
+                .addStatement("$T builder = $T.builder($S)", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class, defaultOpenIdProviderMetadata.getName());
         addStringSetterStatement(methodBuilder, "userinfoEndpoint", defaultOpenIdProviderMetadata.getUserinfoEndpoint());
         addBooleanSetterStatement(methodBuilder, "requireRequestUriRegistration", defaultOpenIdProviderMetadata.getRequireRequestUriRegistration());
         addStringSetterStatement(methodBuilder, "authorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
