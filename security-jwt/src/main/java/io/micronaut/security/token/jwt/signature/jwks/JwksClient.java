@@ -17,6 +17,8 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
+import org.reactivestreams.Publisher;
 
 /**
  * Client for loading Json Web Key Set content over http.
@@ -24,6 +26,7 @@ import io.micronaut.core.annotation.Nullable;
  * @author Jeremy Grelle
  * @since 4.5.0
  */
+@FunctionalInterface
 public interface JwksClient {
 
     /**
@@ -34,5 +37,6 @@ public interface JwksClient {
      * @return The JWK Set response body content
      */
     @Nullable
-    String load(@Nullable String providerName, @NonNull String url);
+    @SingleResult
+    Publisher<String> load(@Nullable String providerName, @NonNull String url);
 }

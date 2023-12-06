@@ -32,6 +32,7 @@ import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwksClient;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
+import reactor.core.publisher.Mono;
 
 import javax.lang.model.element.Modifier;
 import java.text.ParseException;
@@ -104,7 +105,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
                                         String providerName,
                                         String url,
                                         int count) {
-        Optional<String> jwkSetOptional = Optional.ofNullable(jwksClient.load(providerName, url));
+        Optional<String> jwkSetOptional = Mono.from(jwksClient.load(providerName, url)).blockOptional();
         if (jwkSetOptional.isPresent()) {
             String json = jwkSetOptional.get();
             if (StringUtils.isNotEmpty(json)) {

@@ -19,10 +19,15 @@ import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.optim.StaticOptimizations;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -43,6 +48,15 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     private final JwksClient jwksClient;
 
+    /**
+     * @deprecated Use {@link DefaultJwkSetFetcher(JwksClient)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public DefaultJwkSetFetcher() {
+        this(new ResourceRetrieverJwksClient(Schedulers.boundedElastic()));
+    }
+
+    @Inject
     public DefaultJwkSetFetcher(JwksClient jwksClient) {
         this.jwksClient = jwksClient;
     }
@@ -50,13 +64,22 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     @Override
     @NonNull
     @Blocking
-    public Optional<JWKSet> fetch(@Nullable String providerName, @Nullable String url) {
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public Optional<JWKSet> fetch(String url) {
+        return Mono.from(fetch(null, url)).blockOptional();
+    }
+
+    @Override
+    @NonNull
+    @SingleResult
+    public Publisher<JWKSet> fetch(@Nullable String providerName, @Nullable String url) {
         if (url == null) {
-            return Optional.empty();
+            return Mono.empty();
         }
-        return OPTIMIZATIONS.findJwkSet(url)
-                .map(s -> Optional.of(s.get()))
-                .orElseGet(() -> Optional.ofNullable(load(providerName, url)));
+        Optional<Publisher<JWKSet>> optionalJWKSetPublisher = OPTIMIZATIONS.findJwkSet(url)
+                .map(Supplier::get)
+                .map(Mono::just);
+        return optionalJWKSetPublisher.orElseGet(() -> load(providerName, url));
     }
 
     @Override
@@ -65,16 +88,19 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     @Nullable
-    private JWKSet load(@Nullable String providerName, @NonNull String url) {
-        try {
-            String jwkSetContent = jwksClient.load(providerName, url);
-            return jwkSetContent != null ? JWKSet.parse(jwkSetContent) : null;
-        } catch (ParseException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception parsing JWK Set response from " + url, e);
-            }
-        }
-        return null;
+    @SingleResult
+    private Publisher<JWKSet> load(@Nullable String providerName, @NonNull String url) {
+        return Mono.from(jwksClient.load(providerName, url))
+                .mapNotNull(jwkSetContent -> {
+                    try {
+                        return JWKSet.parse(jwkSetContent);
+                    } catch (ParseException e) {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Exception parsing JWK Set response from " + url, e);
+                        }
+                    }
+                    return null;
+                });
     }
 
     /**

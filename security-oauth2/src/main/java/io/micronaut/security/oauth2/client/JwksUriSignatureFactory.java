@@ -48,8 +48,9 @@ public class JwksUriSignatureFactory {
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator,
                                                 JwkSetFetcher<JWKSet> jwkSetFetcher) {
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(openIdProviderMetadata.get().getName());
-        jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
+        DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
+        jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
         return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }
 }
