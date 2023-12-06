@@ -140,7 +140,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
     void "Authentication Argument Binders cannot bind non-annotated subtype of Principal"() {
         expect:
-        embeddedServer.applicationContext.getBean(UserArgumentBinder.class)
+        embeddedServer.applicationContext.containsBean(UserArgumentBinder.class)
 
         when:
         client.exchange(HttpRequest.GET("/subtypeargumentbinder/single-no-user-authentication")
