@@ -15,6 +15,11 @@ dependencies {
     implementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
 
+    testCompileOnly(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+
     compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
