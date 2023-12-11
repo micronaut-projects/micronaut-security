@@ -7,6 +7,14 @@ The following code snippet illustrates a naive implementation:
 include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.java[tag=clazz,indent=0]
 ----
 
+The main api:security.authentication.AuthenticationProvider[] interface is a non-blocking reactive API. If you need to implement custom authentication and prefer to use a blocking imperative style, you can instead implement the api:security.authentication.BlockingAuthenticationProvider[] interface, and the framework will adapt the blocking implementation to the reactive API. Such an adapted implementation will be executed in a managed thread using the `TaskExecutors.BLOCKING` executor in order to avoid blocking the main reactive flow. The above example could be re-implemented as:
+
+[source, java]
+----
+include::{testssecurity}/security/token/basicauth/BlockingAuthenticationProviderUserPassword.java[tag=clazz,indent=0]
+----
+NOTE: If you need to provide multiple implementations of `BlockingAuthenticationProvider`, then each implementation must have a `@Qualifier` such as `@Named`.
+
 The built-in <<login, Login Controller>> uses every available authentication provider. The first provider that returns a successful authentication response will have its value used as the basis for the JWT token or session state.
 
 Basic authentication which is implemented as an api:security.filters.AuthenticationFetcher[] will also trigger the available api:security.authentication.AuthenticationProvider[]s.
