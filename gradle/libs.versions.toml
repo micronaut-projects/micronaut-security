@@ -7,7 +7,7 @@ micronaut-docs = "2.0.0"
 groovy = "4.0.13"
 
 geb = "7.0"
-selenium = "4.15.0"
+selenium = "4.16.1"
 system-stubs-core = "2.1.5"
 testcontainers = "1.19.3"
 unboundid-ldapsdk = "6.0.11"
