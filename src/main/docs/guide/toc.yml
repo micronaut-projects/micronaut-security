@@ -16,6 +16,7 @@ securityConfiguration:
   redirection: Redirection Configuration
 authenticationProviders:
   title: Authentication Providers
+  blockingAuthenticationProviders: Blocking Authentication Providers
   authenticationProvidersUseCases: Authentication Providers Use Cases
   builtInAuthenticationProviders: Built-In Authentication Providers
 securityRule:

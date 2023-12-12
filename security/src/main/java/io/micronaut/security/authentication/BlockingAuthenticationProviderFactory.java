@@ -17,6 +17,7 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.scheduling.TaskExecutors;
 import jakarta.inject.Named;
 import org.reactivestreams.Publisher;
@@ -32,11 +33,12 @@ import java.util.concurrent.ExecutorService;
  * @since 4.5.0
  */
 @Factory
-public class BlockingAuthenticationProviderFactory {
+@Internal
+class BlockingAuthenticationProviderFactory {
 
     private final Scheduler scheduler;
 
-    public BlockingAuthenticationProviderFactory(@Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
+    BlockingAuthenticationProviderFactory(@Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
         this.scheduler = Schedulers.fromExecutorService(executorService);
     }
 
@@ -57,21 +59,14 @@ public class BlockingAuthenticationProviderFactory {
         return new BlockingAuthenticationProviderAdapter<>(blockingAuthenticationProvider, scheduler);
     }
 
-    private static class BlockingAuthenticationProviderAdapter<T> implements AuthenticationProvider<T> {
-
-        private final BlockingAuthenticationProvider<T> blockingAuthenticationProvider;
-
-        private final Scheduler scheduler;
-
-        private BlockingAuthenticationProviderAdapter(BlockingAuthenticationProvider<T> blockingAuthenticationProvider, Scheduler scheduler) {
-            this.blockingAuthenticationProvider = blockingAuthenticationProvider;
-            this.scheduler = scheduler;
-        }
+    private record BlockingAuthenticationProviderAdapter<T>(
+            BlockingAuthenticationProvider<T> blockingAuthenticationProvider,
+            Scheduler scheduler) implements AuthenticationProvider<T> {
 
         @Override
-        public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Mono.fromCallable(() -> blockingAuthenticationProvider.authenticate(httpRequest, authenticationRequest))
-                .subscribeOn(scheduler);
+            public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+                return Mono.fromCallable(() -> blockingAuthenticationProvider.authenticate(httpRequest, authenticationRequest))
+                        .subscribeOn(scheduler);
+            }
         }
-    }
 }

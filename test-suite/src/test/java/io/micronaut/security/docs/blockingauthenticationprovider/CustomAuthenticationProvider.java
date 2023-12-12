@@ -1,35 +1,33 @@
-package io.micronaut.docs.security.token.basicauth;
+package io.micronaut.security.docs.blockingauthenticationprovider;
 
-//tag::imports[]
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.BlockingAuthenticationProvider;
 import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 
-//end::imports[]
-@Requires(property = "spec.name", value = "BlockingBasicAuthSpec")
+@Requires(property = "spec.name", value = "BlockingAuthenticationProviderTest")
 //tag::clazz[]
-@Named(BlockingAuthenticationProviderUserPassword.NAME)
-@Singleton
-public class BlockingAuthenticationProviderUserPassword<T> implements BlockingAuthenticationProvider<T> {
-    public static final String NAME = "foo";
+@Named(CustomAuthenticationProvider.NAME)
+class CustomAuthenticationProvider implements BlockingAuthenticationProvider<HttpRequest<?>> {
+    static final String NAME = "foo";
+
     @Override
-    public AuthenticationResponse authenticate(T httpRequest,
+    public AuthenticationResponse authenticate(HttpRequest<?> httpRequest,
                                                AuthenticationRequest<?, ?> authenticationRequest) {
         return (
                 authenticationRequest.getIdentity().equals("user") &&
-                authenticationRequest.getSecret().equals("password")
+                        authenticationRequest.getSecret().equals("password")
         ) ? AuthenticationResponse.success("user") :
                 AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
     }
 
     @Override
     public @NonNull String getName() {
-        return BlockingAuthenticationProviderUserPassword.NAME;
+        return NAME;
     }
 }
 //end::clazz[]
