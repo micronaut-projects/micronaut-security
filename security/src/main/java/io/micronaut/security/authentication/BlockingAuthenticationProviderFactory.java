@@ -59,7 +59,7 @@ class BlockingAuthenticationProviderFactory {
         return new BlockingAuthenticationProviderAdapter<>(blockingAuthenticationProvider, scheduler);
     }
 
-    private static class BlockingAuthenticationProviderAdapter<T> implements AuthenticationProvider<T> {
+    private static final class BlockingAuthenticationProviderAdapter<T> implements AuthenticationProvider<T> {
 
         private final BlockingAuthenticationProvider<T> blockingAuthenticationProvider;
 
