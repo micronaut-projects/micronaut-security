@@ -14,7 +14,10 @@ securityConfiguration:
   logoutHandler: Logout Handler
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
-authenticationProviders: Authentication Providers
+authenticationProviders:
+  title: Authentication Providers
+  authenticationProvidersUseCases: Authentication Providers Use Cases
+  builtInAuthenticationProviders: Built-In Authentication Providers
 securityRule:
   title: Security Rules
   ipPattern: IP Pattern Rule
