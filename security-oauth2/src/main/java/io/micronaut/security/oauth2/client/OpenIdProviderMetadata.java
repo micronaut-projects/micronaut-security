@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public interface OpenIdProviderMetadata {
+public interface OpenIdProviderMetadata extends Named {
 
     /**
      * issuer.

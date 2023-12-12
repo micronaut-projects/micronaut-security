@@ -17,10 +17,12 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -46,12 +48,34 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    @Nullable
+    private final String name;
+
     @NonNull
     private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
 
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
+
+    /**
+     * @deprecated Use {@link JwksSignatureConfigurationProperties(String)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public JwksSignatureConfigurationProperties() {
+        this("");
+    }
+
+    @Inject
+    public JwksSignatureConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
+
+    @Override
+    @NonNull
+    public String getName() {
+        return name;
+    }
 
     @Override
     @NonNull

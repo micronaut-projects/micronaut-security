@@ -157,23 +157,22 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
 
         return JwtValidator.builder()
-                .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
-                .build()
-                .validate(openIdTokenResponse.getIdToken(), null);
+            .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
+            .build()
+            .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**
-     *
      * @param openIdProviderMetadata The OpenID provider metadata
      * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
      */
     protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
-        final String jwksuri = openIdProviderMetadata.getJwksUri();
-        jwksSignatures.computeIfAbsent(jwksuri, k -> {
-            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
-            config.setUrl(openIdProviderMetadata.getJwksUri());
+        final String jwksUri = openIdProviderMetadata.getJwksUri();
+        jwksSignatures.computeIfAbsent(jwksUri, k -> {
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(openIdProviderMetadata.getName());
+            config.setUrl(jwksUri);
             return new JwksSignature(config, jwkValidator, jwkSetFetcher);
         });
-        return jwksSignatures.get(jwksuri);
+        return jwksSignatures.get(jwksUri);
     }
 }

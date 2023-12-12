@@ -26,21 +26,21 @@ import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
+import io.micronaut.security.token.jwt.signature.jwks.JwksClient;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
+import reactor.core.publisher.Mono;
 
 import javax.lang.model.element.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -75,25 +75,23 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
     }
 
     @NonNull
-    private Set<String> jwksUrls(@NonNull AOTContext context) {
-        Set<String> urls = new HashSet<>();
-        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context).stream()
-            .map(JwksSignatureConfiguration::getUrl)
-            .forEach(urls::add);
+    private Map<String, String> jwksUrls(@NonNull AOTContext context) {
+        Map<String, String> urls = new HashMap<>();
+        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context)
+            .forEach(config -> urls.put(config.getName(), config.getUrl()));
         AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
-            .map(OpenIdProviderMetadata::getJwksUri)
-            .filter(Objects::nonNull)
-            .forEach(urls::add);
+            .filter(metadata -> metadata.getJwksUri() != null)
+            .forEach(metadata -> urls.put(metadata.getName(), metadata.getJwksUri()));
         return urls;
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
-        Set<String> urls = jwksUrls(context);
-        JwkSetFetcher<?> jwkSetFetcher = AOTContextUtils.getBean(JwkSetFetcher.class, context);
-        int count = 0;
+        Map<String, String> urls = jwksUrls(context);
+        JwksClient jwksClient = AOTContextUtils.getBean(JwksClient.class, context);
         List<GeneratedFile> result = new ArrayList<>();
-        for (String url : urls) {
-            Optional<GeneratedFile> generatedFile = generatedFile(context, jwkSetFetcher, url, count);
+        int count = 0;
+        for (Map.Entry<String, String> entry: urls.entrySet()) {
+            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, entry.getKey(), entry.getValue(), count);
             if (generatedFile.isPresent()) {
                 result.add(generatedFile.get());
                 count++;
@@ -103,15 +101,14 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
     }
 
     private Optional<GeneratedFile> generatedFile(AOTContext aotContext,
-                                        JwkSetFetcher<?> jwkSetFetcher,
+                                        JwksClient jwksClient,
+                                        String providerName,
                                         String url,
                                         int count) {
-        Optional<?> jwkSetOptional = jwkSetFetcher.fetch(url);
+        Optional<String> jwkSetOptional = Mono.from(jwksClient.load(providerName, url)).blockOptional();
         if (jwkSetOptional.isPresent()) {
-            Object obj = jwkSetOptional.get();
-            if (obj instanceof JWKSet) {
-                JWKSet jwkSet = (JWKSet) obj;
-                String json = jwkSet.toString(false);
+            String json = jwkSetOptional.get();
+            if (StringUtils.isNotEmpty(json)) {
                 String simpleName = "Aot" + JwkSetFetcher.class.getSimpleName() + count;
                 return Optional.of(new GeneratedFile(url, simpleName, generateJavaFile(aotContext, simpleName, json)));
             }

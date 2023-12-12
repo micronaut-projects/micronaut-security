@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "9.37.2"
+managed-nimbus-jose-jwt = "9.37.3"
 
 micronaut = "4.2.1"
 micronaut-platform = "4.0.4"
@@ -7,7 +7,8 @@ micronaut-docs = "2.0.0"
 groovy = "4.0.13"
 
 geb = "7.0"
-selenium = "4.15.0"
+selenium = "4.16.1"
+system-stubs-core = "2.1.5"
 testcontainers = "1.19.3"
 unboundid-ldapsdk = "6.0.11"
 bouncycastle = "1.70"
@@ -17,13 +18,13 @@ micronaut-test = "4.0.1"
 micronaut-multitenancy = "5.2.0"
 micronaut-reactor = "3.2.0"
 micronaut-logging = "1.1.2"
-micronaut-serde = "2.4.0"
+micronaut-serde = "2.5.0"
 micronaut-servlet = "4.3.0"
 micronaut-session = "4.1.0"
 micronaut-views = "5.0.1"
 micronaut-validation = "4.2.0"
 micronaut-data="4.4.0"
-micronaut-sql="5.3.0"
+micronaut-sql="5.4.0"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
@@ -54,6 +55,8 @@ bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bo
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
+system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 testcontainers-mysql = { module = "org.testcontainers:mysql" }

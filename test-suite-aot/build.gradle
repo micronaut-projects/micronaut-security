@@ -28,6 +28,7 @@ micronaut {
 
 dependencies {
     implementation(mn.micronaut.http.client)
+    implementation(mnReactor.micronaut.reactor)
     implementation(projects.micronautSecurityJwt)
     implementation(projects.micronautSecurityOauth2)
     implementation(mn.micronaut.jackson.databind)

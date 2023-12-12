@@ -38,7 +38,6 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Internal
 public class JwksUriSignatureFactory {
     /**
-     *
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
      * @param jwkSetFetcher Json Web Key Set Fetcher
@@ -49,8 +48,9 @@ public class JwksUriSignatureFactory {
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator,
                                                 JwkSetFetcher<JWKSet> jwkSetFetcher) {
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
-        jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
+        DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
+        jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
         return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }
 }

@@ -19,6 +19,10 @@ import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
+
 import java.util.Optional;
 
 /**
@@ -29,14 +33,29 @@ import java.util.Optional;
  */
 @DefaultImplementation(DefaultJwkSetFetcher.class)
 public interface JwkSetFetcher<T> {
+
     /**
      *
      * @param url The Jwks uri
      * @return The Json Web Key Set representation or an empty optional if it could not be loaded
+     * @deprecated Use {@link #fetch(String, String)} instead.
      */
     @NonNull
     @Blocking
+    @Deprecated(forRemoval = true, since = "4.5.0")
     Optional<T> fetch(@Nullable String url);
+
+    /**
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The Json Web Key Set representation or an empty optional if it could not be loaded
+     * @since 4.5.0
+     */
+    @NonNull
+    @SingleResult
+    default Publisher<T> fetch(@Nullable String providerName, @Nullable String url) {
+        return fetch(url).map(Mono::just).orElseGet(Mono::empty);
+    }
 
     /**
      * @param url The Jwks uri
