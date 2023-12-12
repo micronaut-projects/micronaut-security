@@ -6,9 +6,3 @@ The following code snippet illustrates a naive implementation:
 ----
 include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.java[tag=clazz,indent=0]
 ----
-
-The built-in <<login, Login Controller>> uses every available authentication provider. The first provider that returns a successful authentication response will have its value used as the basis for the JWT token or session state.
-
-Basic authentication which is implemented as an api:security.filters.AuthenticationFetcher[] will also trigger the available api:security.authentication.AuthenticationProvider[]s.
-
-Micronaut comes with authentication providers for LDAP and the OAuth 2.0 password grant authentication flow. For any custom authentication, an authentication provider must be created.
