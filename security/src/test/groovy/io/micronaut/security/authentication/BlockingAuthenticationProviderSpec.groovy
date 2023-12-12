@@ -63,8 +63,9 @@ class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification
 
     @Requires(property = "spec.name", value = "BlockingAuthenticationProviderSpec")
     @Singleton
-    @Named("SimpleBlockingAuthenticationProvider")
+    @Named(SimpleBlockingAuthenticationProvider.NAME)
     static class SimpleBlockingAuthenticationProvider<T> implements BlockingAuthenticationProvider<T> {
+        static final String NAME = "SimpleBlockingAuthenticationProvider"
 
         private String executedThreadName
 
@@ -77,16 +78,27 @@ class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification
                 return AuthenticationResponse.failure("Over the line.")
             }
         }
+
+        @Override
+        String getName() {
+            SimpleBlockingAuthenticationProvider.NAME
+        }
     }
 
     @Requires(property = "spec.name", value = "BlockingAuthenticationProviderSpec")
     @Singleton
-    @Named("NoOpBlockingAuthenticationProvider")
+    @Named(NoOpBlockingAuthenticationProvider.NAME)
     static class NoOpBlockingAuthenticationProvider<T> implements BlockingAuthenticationProvider<T> {
+        static final String NAME = "NoOpBlockingAuthenticationProvider"
 
         @Override
         AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             throw AuthenticationResponse.exception()
+        }
+
+        @Override
+        String getName() {
+            NoOpBlockingAuthenticationProvider.NAME
         }
     }
 }
