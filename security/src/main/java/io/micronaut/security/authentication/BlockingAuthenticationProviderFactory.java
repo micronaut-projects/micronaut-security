@@ -59,14 +59,21 @@ class BlockingAuthenticationProviderFactory {
         return new BlockingAuthenticationProviderAdapter<>(blockingAuthenticationProvider, scheduler);
     }
 
-    private record BlockingAuthenticationProviderAdapter<T>(
-            BlockingAuthenticationProvider<T> blockingAuthenticationProvider,
-            Scheduler scheduler) implements AuthenticationProvider<T> {
+    private static class BlockingAuthenticationProviderAdapter<T> implements AuthenticationProvider<T> {
+
+        private final BlockingAuthenticationProvider<T> blockingAuthenticationProvider;
+
+        private final Scheduler scheduler;
+
+        private BlockingAuthenticationProviderAdapter(BlockingAuthenticationProvider<T> blockingAuthenticationProvider, Scheduler scheduler) {
+            this.blockingAuthenticationProvider = blockingAuthenticationProvider;
+            this.scheduler = scheduler;
+        }
 
         @Override
-            public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-                return Mono.fromCallable(() -> blockingAuthenticationProvider.authenticate(httpRequest, authenticationRequest))
-                        .subscribeOn(scheduler);
-            }
+        public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            return Mono.fromCallable(() -> blockingAuthenticationProvider.authenticate(httpRequest, authenticationRequest))
+                    .subscribeOn(scheduler);
         }
+    }
 }
