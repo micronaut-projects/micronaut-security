@@ -1,7 +1,6 @@
 package io.micronaut.security.docs.blockingauthenticationprovider
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
