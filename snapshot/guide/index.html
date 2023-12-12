@@ -137,6 +137,10 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-authenticationProviders"><a href="#authenticationProviders"><strong>8</strong><span>Authentication Providers</span></a></div>
         
+        <div class="toc-item" style="margin-left:10px" id="toc-item-authenticationProvidersUseCases"><a href="#authenticationProvidersUseCases"><strong>8.1</strong><span>Authentication Providers Use Cases</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-builtInAuthenticationProviders"><a href="#builtInAuthenticationProviders"><strong>8.2</strong><span>Built-In Authentication Providers</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-securityRule"><a href="#securityRule"><strong>9</strong><span>Security Rules</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-ipPattern"><a href="#ipPattern"><strong>9.1</strong><span>IP Pattern Rule</span></a></div>
@@ -1461,14 +1465,34 @@ public class AuthenticationProviderUserPassword&lt;T&gt; implements Authenticati
 }</code></pre>
 </div>
 </div>
+
+<h2 id="authenticationProvidersUseCases"><a class="anchor" href="#authenticationProvidersUseCases"></a>8.1 Authentication Providers Use Cases</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders/authenticationProvidersUseCases.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
 <p>The built-in <a href="#login">Login Controller</a> uses every available authentication provider. The first provider that returns a successful authentication response will have its value used as the basis for the JWT token or session state.</p>
 </div>
 <div class="paragraph">
 <p>Basic authentication which is implemented as an <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> will also trigger the available <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s.</p>
 </div>
+
+<h2 id="builtInAuthenticationProviders"><a class="anchor" href="#builtInAuthenticationProviders"></a>8.2 Built-In Authentication Providers</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders/builtInAuthenticationProviders.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
-<p>Micronaut comes with authentication providers for LDAP and the OAuth 2.0 password grant authentication flow. For any custom authentication, an authentication provider must be created.</p>
+<p>Micronaut comes with authentication providers for LDAP (<a href="../api/io/micronaut/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a>) and the OAuth 2.0 password grant authentication flow (<a href="../api/io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html">OauthPasswordAuthenticationProvider</a> and <a href="../api/io/micronaut/security/oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html">OpenIdPasswordAuthenticationProvider</a>). For any custom authentication, an authentication provider must be created.</p>
 </div>
 
 <h1 id="securityRule"><a class="anchor" href="#securityRule"></a>9 Security Rules</h1>
