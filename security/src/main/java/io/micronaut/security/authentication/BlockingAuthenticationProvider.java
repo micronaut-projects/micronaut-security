@@ -18,13 +18,14 @@ package io.micronaut.security.authentication;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.naming.Named;
 
 /**
  * Defines an authentication provider.
  * @since 4.5.0
  * @param <T> Request
  */
-public interface BlockingAuthenticationProvider<T> {
+public interface BlockingAuthenticationProvider<T> extends Named {
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
