@@ -1,5 +1,0 @@
-The main api:security.authentication.AuthenticationProvider[] interface is a non-blocking reactive API. If you prefer a blocking imperative style, you can instead implement the api:security.authentication.BlockingAuthenticationProvider[] interface, and the framework will adapt the blocking implementation to the reactive API. Such an adapted implementation will be executed in a managed thread using the `TaskExecutors.BLOCKING` executor to avoid blocking the main reactive flow. The above example could be re-implemented as:
-
-snippet::io.micronaut.security.docs.blockingauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]
-
-NOTE: `BlockingAuthenticationProvider` needs a `@Named` qualifier.

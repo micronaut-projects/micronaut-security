@@ -6,16 +6,16 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.BlockingAuthenticationProvider;
+import io.micronaut.security.authentication.ImperativeAuthenticationProvider;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 //end::imports[]
 @Requires(property = "spec.name", value = "BlockingBasicAuthSpec")
 //tag::clazz[]
-@Named(BlockingAuthenticationProviderUserPassword.NAME)
+@Named(ImperativeAuthenticationProviderUserPassword.NAME)
 @Singleton
-public class BlockingAuthenticationProviderUserPassword<T> implements BlockingAuthenticationProvider<T> {
+public class ImperativeAuthenticationProviderUserPassword<T> implements ImperativeAuthenticationProvider<T> {
     public static final String NAME = "foo";
     @Override
     public AuthenticationResponse authenticate(T httpRequest,
@@ -29,7 +29,7 @@ public class BlockingAuthenticationProviderUserPassword<T> implements BlockingAu
 
     @Override
     public @NonNull String getName() {
-        return BlockingAuthenticationProviderUserPassword.NAME;
+        return ImperativeAuthenticationProviderUserPassword.NAME;
     }
 }
 //end::clazz[]

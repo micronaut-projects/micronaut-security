@@ -16,9 +16,9 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
 
-@Property(name = "spec.name", value = "BlockingAuthenticationProviderTest")
+@Property(name = "spec.name", value = "ImperativeAuthenticationProviderTest")
 @MicronautTest
-class BlockingAuthenticationProviderTest extends Specification {
+class ImperativeAuthenticationProviderTest extends Specification {
 
     @Inject
     @Client("/")
@@ -48,7 +48,7 @@ class BlockingAuthenticationProviderTest extends Specification {
         return HttpRequest.GET("/messages").basicAuth(userName, password)
     }
 
-    @Requires(property = "spec.name", value = "BlockingAuthenticationProviderTest")
+    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderTest")
     @Controller("/messages")
     static class HelloWorldController {
 
