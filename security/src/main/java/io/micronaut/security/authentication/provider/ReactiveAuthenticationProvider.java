@@ -43,6 +43,7 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
      * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
+    @NonNull
     @SingleResult
     Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest,
                                                    @NonNull AuthenticationRequest<?, ?> authenticationRequest);

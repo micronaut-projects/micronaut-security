@@ -7,7 +7,7 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.provider.AuthenticationProvider
 import jakarta.inject.Singleton
 
-@Requires(property = "spec.name", value = "BlockingBasicAuthSpec")
+@Requires(property = "spec.name", value = "docsbasicauth")
 @Singleton
 class AuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
     @Override
