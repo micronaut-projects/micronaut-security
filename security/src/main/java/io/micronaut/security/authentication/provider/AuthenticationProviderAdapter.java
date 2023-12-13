@@ -19,15 +19,11 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import jakarta.inject.Named;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Adapts between {@link AuthenticationProvider} to {@link ReactiveAuthenticationProvider}.
@@ -41,12 +37,6 @@ public class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationP
 
     @NonNull
     private final Scheduler scheduler;
-
-    public AuthenticationProviderAdapter(BeanContext beanContext,
-                                         @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
-                                         @NonNull AuthenticationProvider<T> authenticationProvider) {
-        this(beanContext, Schedulers.fromExecutorService(executorService), authenticationProvider);
-    }
 
     public AuthenticationProviderAdapter(BeanContext beanContext,
                                          Scheduler scheduler,
