@@ -1,4 +1,4 @@
-To authenticate users you must provide implementations of api:security.authentication.provider.ReactiveAuthenticationProvider[].
+To authenticate users you must provide implementations of api:security.authentication.provider.ReactiveAuthenticationProvider[] or api:security.authentication.provider.HttpRequestReactiveAuthenticationProvider[].
 
 The following code snippet illustrates a naive implementation:
 

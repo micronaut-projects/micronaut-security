@@ -1,4 +1,4 @@
-The api:security.authentication.provider.ReactiveAuthenticationProvider[] interface is a reactive API. If you prefer an imperative style, you can instead implement the api:security.authentication.provider.AuthenticationProvider[] interface:
+The api:security.authentication.provider.ReactiveAuthenticationProvider[] interface is a reactive API. If you prefer an imperative style, you can instead implement the api:security.authentication.provider.AuthenticationProvider[] or api:security.authentication.provider.HttpRequestAuthenticationProvider[] interface:
 
 snippet::io.micronaut.security.docs.blockingauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]
 
