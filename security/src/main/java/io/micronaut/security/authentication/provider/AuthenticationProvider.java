@@ -20,16 +20,16 @@ import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.naming.Named;
-import io.micronaut.security.authentication.Authentication;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 
 /**
- * Defines an Authentication Provider with an imperative style.
+ * Defines an API to authenticate a user with the given request.
  * @since 4.5.0
  * @param <T> Request
  */
-public interface AuthenticationProvider<T> extends Named {
+public interface AuthenticationProvider<T> extends Ordered, Named {
 
     /**
      * Authenticates a user with the given request.

@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication.provider;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -27,7 +28,7 @@ import org.reactivestreams.Publisher;
  * @since 4.5.0
  * @param <T> Request
  */
-public interface ReactiveAuthenticationProvider<T> {
+public interface ReactiveAuthenticationProvider<T> extends Ordered {
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
