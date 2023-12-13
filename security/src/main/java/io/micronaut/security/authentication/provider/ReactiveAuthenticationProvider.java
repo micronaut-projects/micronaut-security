@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.security.authentication.provider;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.Ordered;
@@ -43,5 +44,6 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
      * @return A publisher that emits 0 or 1 responses
      */
     @SingleResult
-    Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
+    Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest,
+                                                   @NonNull AuthenticationRequest<?, ?> authenticationRequest);
 }
