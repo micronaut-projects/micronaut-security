@@ -21,12 +21,10 @@ import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.security.authentication.AuthenticationRequest;
 
 import java.lang.annotation.Annotation;
-import java.util.Optional;
 
 /**
  * Utility class to check whether {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} is annotated with {@link Blocking}.
@@ -50,13 +48,13 @@ public final class AuthenticationProviderUtils {
                                            @NonNull Object bean,
                                            String methodName,
                                            Class<?>... argumentTypes) {
-        Optional<BeanDefinition<?>> beanDefinitionOptional = beanContext.findBeanRegistration(bean).map(BeanRegistration::getBeanDefinition);
-        if (beanDefinitionOptional.isEmpty()) {
-            return false;
-        }
-        BeanDefinition<?> beanDefinition = beanDefinitionOptional.get();
-        Optional<? extends ExecutableMethod<?, ?>> methodOptional = beanDefinition.findMethod(methodName, argumentTypes);
-        return methodOptional.filter(AuthenticationProviderUtils::isBlockingMethod).isPresent();
+        return beanContext.findBeanRegistration(bean)
+                .map(BeanRegistration::getBeanDefinition)
+                .map(beanDefinition -> beanDefinition
+                .findMethod(methodName, argumentTypes)
+                .filter(AuthenticationProviderUtils::isBlockingMethod)
+                .isPresent())
+                .orElse(false);
     }
 
     private static boolean isBlockingMethod(ExecutableMethod<?, ?> executableMethod) {
