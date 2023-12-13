@@ -15,9 +15,9 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-@Property(name = "spec.name", value = "BlockingAuthenticationProviderTest")
+@Property(name = "spec.name", value = "ImperativeAuthenticationProviderTest")
 @MicronautTest
-internal class BlockingAuthenticationProviderTest {
+internal class ImperativeAuthenticationProviderTest {
     @Test
     fun blockingAuthProvider(@Client("/") httpClient: HttpClient) {
         val client = httpClient.toBlocking()
@@ -36,7 +36,7 @@ internal class BlockingAuthenticationProviderTest {
         return HttpRequest.GET<Any>("/messages").basicAuth(userName, password)
     }
 
-    @Requires(property = "spec.name", value = "BlockingAuthenticationProviderTest")
+    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderTest")
     @Controller("/messages")
     internal class HelloWorldController {
         @Secured(SecurityRule.IS_AUTHENTICATED)

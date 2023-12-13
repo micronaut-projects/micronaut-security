@@ -5,13 +5,14 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.BlockingAuthenticationProvider
+import io.micronaut.security.authentication.ImperativeAuthenticationProvider
 import jakarta.inject.Named
 
-@Requires(property = "spec.name", value = "BlockingAuthenticationProviderTest")
+@Requires(property = "spec.name", value = "ImperativeAuthenticationProviderTest")
 //tag::clazz[]
 @Named(CustomAuthenticationProvider.NAME)
-class CustomAuthenticationProvider : BlockingAuthenticationProvider<HttpRequest<*>> {
+class CustomAuthenticationProvider :
+    ImperativeAuthenticationProvider<HttpRequest<*>> {
     override fun authenticate(
         httpRequest: HttpRequest<*>,
         authenticationRequest: AuthenticationRequest<*, *>

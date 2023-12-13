@@ -1,0 +1,8 @@
+The main api:security.authentication.AuthenticationProvider[] interface is a reactive API. If you prefer an imperative style, you can instead implement the api:security.authentication.ImperativeAuthenticationProvider[] interface:
+
+snippet::io.micronaut.security.docs.blockingauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]
+
+NOTE: `ImperativeAuthenticationProvider` needs a `@Named` qualifier.
+
+IMPORTANT: If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), annotate the `authenticate` method with `@Blocking`. If the `authenticate` method is annotated with `@Blocking`, it will be executed in a managed thread using the `TaskExecutors.BLOCKING` executor to avoid blocking the main reactive flow.
+

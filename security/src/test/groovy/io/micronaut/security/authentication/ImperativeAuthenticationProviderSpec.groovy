@@ -1,6 +1,7 @@
 package io.micronaut.security.authentication
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Blocking
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
@@ -11,24 +12,24 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import reactor.core.publisher.Mono
 
-class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification {
+class ImperativeAuthenticationProviderSpec extends ApplicationContextSpecification {
 
     static final String EXECUTOR_NAME_MATCH = "%s-executor".formatted(LoomSupport.supported ? TaskExecutors.VIRTUAL : TaskExecutors.IO)
 
-    SimpleBlockingAuthenticationProvider provider
+    SimpleImperativeAuthenticationProvider provider
 
     def setup() {
-        provider = getBean(SimpleBlockingAuthenticationProvider.class)
+        provider = getBean(SimpleImperativeAuthenticationProvider.class)
         provider.executedThreadName = ""
     }
 
-    def "multiple BlockingAuthenticationProvider implementations are registered"() {
+    def "multiple ImperativeAuthenticationProvider implementations are registered"() {
         given:
         BasicAuthAuthenticationFetcher authFetcher = getBean(BasicAuthAuthenticationFetcher.class)
 
         expect:
         authFetcher
-        getApplicationContext().getBeanRegistrations(BlockingAuthenticationProvider.class).size() == 2
+        getApplicationContext().getBeanRegistrations(ImperativeAuthenticationProvider.class).size() == 2
     }
 
     def "a blocking authentication provider can authenticate successfully"() {
@@ -58,18 +59,19 @@ class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification
 
     @Override
     String getSpecName() {
-        return "BlockingAuthenticationProviderSpec"
+        return "ImperativeAuthenticationProviderSpec"
     }
 
-    @Requires(property = "spec.name", value = "BlockingAuthenticationProviderSpec")
+    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderSpec")
     @Singleton
-    @Named(SimpleBlockingAuthenticationProvider.NAME)
-    static class SimpleBlockingAuthenticationProvider<T> implements BlockingAuthenticationProvider<T> {
-        static final String NAME = "SimpleBlockingAuthenticationProvider"
+    @Named(SimpleImperativeAuthenticationProvider.NAME)
+    static class SimpleImperativeAuthenticationProvider<T> implements ImperativeAuthenticationProvider<T> {
+        static final String NAME = "SimpleImperativeAuthenticationProvider"
 
         private String executedThreadName
 
         @Override
+        @Blocking
         AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             executedThreadName = Thread.currentThread().getName()
             if (authenticationRequest.getIdentity().toString() == 'lebowski' && authenticationRequest.getSecret().toString() == 'thedudeabides') {
@@ -81,15 +83,15 @@ class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification
 
         @Override
         String getName() {
-            SimpleBlockingAuthenticationProvider.NAME
+            SimpleImperativeAuthenticationProvider.NAME
         }
     }
 
-    @Requires(property = "spec.name", value = "BlockingAuthenticationProviderSpec")
+    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderSpec")
     @Singleton
-    @Named(NoOpBlockingAuthenticationProvider.NAME)
-    static class NoOpBlockingAuthenticationProvider<T> implements BlockingAuthenticationProvider<T> {
-        static final String NAME = "NoOpBlockingAuthenticationProvider"
+    @Named(NoOpImperativeAuthenticationProvider.NAME)
+    static class NoOpImperativeAuthenticationProvider<T> implements ImperativeAuthenticationProvider<T> {
+        static final String NAME = "NoOpImperativeAuthenticationProvider"
 
         @Override
         AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
@@ -98,7 +100,7 @@ class BlockingAuthenticationProviderSpec extends ApplicationContextSpecification
 
         @Override
         String getName() {
-            NoOpBlockingAuthenticationProvider.NAME
+            NoOpImperativeAuthenticationProvider.NAME
         }
     }
 }

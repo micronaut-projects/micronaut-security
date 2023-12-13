@@ -20,9 +20,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Property(name = "spec.name", value = "BlockingAuthenticationProviderTest")
+@Property(name = "spec.name", value = "ImperativeAuthenticationProviderTest")
 @MicronautTest
-class BlockingAuthenticationProviderTest {
+class ImperativeAuthenticationProviderTest {
 
     @Test
     void blockingAuthProvider(@Client("/") HttpClient httpClient) {
@@ -39,7 +39,7 @@ class BlockingAuthenticationProviderTest {
         return HttpRequest.GET("/messages").basicAuth(userName, password);
     }
 
-    @Requires(property = "spec.name", value = "BlockingAuthenticationProviderTest")
+    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderTest")
     @Controller("/messages")
     static class HelloWorldController {
 
