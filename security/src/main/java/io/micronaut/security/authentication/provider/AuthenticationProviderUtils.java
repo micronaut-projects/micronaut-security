@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.authentication.provider;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanRegistration;
@@ -23,22 +23,23 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.security.authentication.AuthenticationRequest;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
 /**
- * Utility class to check whether {@link ImperativeAuthenticationProvider#authenticate(Object, AuthenticationRequest)} is annotated with {@link Blocking}.
+ * Utility class to check whether {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} is annotated with {@link Blocking}.
  */
 @Internal
-public final class ImperativeAuthenticationProviderUtils {
+public final class AuthenticationProviderUtils {
     private static final String METHOD_AUTHENTICATE = "authenticate";
 
-    private ImperativeAuthenticationProviderUtils() {
+    private AuthenticationProviderUtils() {
     }
 
     public static boolean isAuthenticateBlocking(BeanContext beanContext,
-                                                 @NonNull ImperativeAuthenticationProvider<?> authenticationProvider) {
+                                                 @NonNull AuthenticationProvider<?> authenticationProvider) {
         if (isMethodBlocking(beanContext, authenticationProvider, METHOD_AUTHENTICATE, Object.class, AuthenticationRequest.class)) {
             return true;
         }
@@ -55,7 +56,7 @@ public final class ImperativeAuthenticationProviderUtils {
         }
         BeanDefinition<?> beanDefinition = beanDefinitionOptional.get();
         Optional<? extends ExecutableMethod<?, ?>> methodOptional = beanDefinition.findMethod(methodName, argumentTypes);
-        return methodOptional.filter(ImperativeAuthenticationProviderUtils::isBlockingMethod).isPresent();
+        return methodOptional.filter(AuthenticationProviderUtils::isBlockingMethod).isPresent();
     }
 
     private static boolean isBlockingMethod(ExecutableMethod<?, ?> executableMethod) {

@@ -16,10 +16,15 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -32,7 +37,7 @@ import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 
 /**
- * An Authenticator operates on several {@link AuthenticationProvider} instances returning the first
+ * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
  * authenticated {@link AuthenticationResponse}.
  *
  * @author Sergio del Amo
@@ -46,15 +51,32 @@ public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     protected final Collection<AuthenticationProvider<T>> authenticationProviders;
+
+    protected final List<ReactiveAuthenticationProvider<T>> reactiveAuthenticationProviders;
     private final SecurityConfiguration securityConfiguration;
 
     /**
      * @param authenticationProviders A list of available authentication providers
      * @param securityConfiguration The security configuration
      */
+    @Inject
+    public Authenticator(List<ReactiveAuthenticationProvider<T>> authenticationProviders,
+                         SecurityConfiguration securityConfiguration) {
+        this.reactiveAuthenticationProviders = authenticationProviders;
+        this.securityConfiguration = securityConfiguration;
+        this.authenticationProviders = Collections.emptyList();
+    }
+
+    /**
+     * @param authenticationProviders A list of available authentication providers
+     * @param securityConfiguration The security configuration
+     * @deprecated Use {@link Authenticator(List, SecurityConfiguration)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
     public Authenticator(Collection<AuthenticationProvider<T>> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
         this.authenticationProviders = authenticationProviders;
+        this.reactiveAuthenticationProviders = new ArrayList<>(authenticationProviders);
         this.securityConfiguration = securityConfiguration;
     }
 
@@ -66,17 +88,17 @@ public class Authenticator<T> {
      * @return A publisher that emits {@link AuthenticationResponse} objects
      */
     public Publisher<AuthenticationResponse> authenticate(T request, AuthenticationRequest<?, ?> authenticationRequest) {
-        if (this.authenticationProviders == null) {
+        if (this.reactiveAuthenticationProviders == null) {
             return Flux.empty();
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
+            LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
             return Flux.mergeDelayError(1,
-                    authenticationProviders.stream()
+                    reactiveAuthenticationProviders.stream()
                             .map(provider -> Flux.from(provider.authenticate(request, authenticationRequest))
                                     .switchMap(this::handleResponse)
                                     .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected"))))
@@ -87,7 +109,7 @@ public class Authenticator<T> {
                     .flux();
         } else {
             AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  authenticationProviders.stream()
+            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  reactiveAuthenticationProviders.stream()
                     .map(auth -> auth.authenticate(request, authenticationRequest))
                     .map(Flux::from)
                     .map(sequence -> sequence.switchMap(this::handleResponse).onErrorResume(t -> {

@@ -1,4 +1,4 @@
-package io.micronaut.security.docs.blockingauthenticationprovider;
+package io.micronaut.security.docs.reactiveauthenticationprovider;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
@@ -20,9 +20,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Property(name = "spec.name", value = "ImperativeAuthenticationProviderTest")
+@Property(name = "spec.name", value = "ReactiveAuthenticationProviderTest")
 @MicronautTest
-class ImperativeAuthenticationProviderTest {
+class ReactiveAuthenticationProviderTest {
 
     @Test
     void authProvider(@Client("/") HttpClient httpClient) {
@@ -39,7 +39,7 @@ class ImperativeAuthenticationProviderTest {
         return HttpRequest.GET("/messages").basicAuth(userName, password);
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderTest")
+    @Requires(property = "spec.name", value = "ReactiveAuthenticationProviderTest")
     @Controller("/messages")
     static class HelloWorldController {
 

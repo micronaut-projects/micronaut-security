@@ -6,7 +6,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.ImperativeAuthenticationProvider;
+import io.micronaut.security.authentication.provider.AuthenticationProvider;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -15,7 +15,7 @@ import jakarta.inject.Singleton;
 //tag::clazz[]
 @Named(ImperativeAuthenticationProviderUserPassword.NAME)
 @Singleton
-public class ImperativeAuthenticationProviderUserPassword<T> implements ImperativeAuthenticationProvider<T> {
+public class ImperativeAuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
     public static final String NAME = "foo";
     @Override
     public AuthenticationResponse authenticate(T httpRequest,

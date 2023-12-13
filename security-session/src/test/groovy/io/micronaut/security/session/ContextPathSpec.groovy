@@ -9,7 +9,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.rules.SecurityRule
@@ -71,7 +71,7 @@ class ContextPathSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'ContextPathSpec')
     @Singleton
-    static class MockAuthenticationProvider<T> implements AuthenticationProvider<T> {
+    static class MockAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T> {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {

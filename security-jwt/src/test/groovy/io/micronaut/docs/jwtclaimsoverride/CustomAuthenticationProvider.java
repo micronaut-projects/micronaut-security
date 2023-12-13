@@ -2,7 +2,7 @@
 package io.micronaut.docs.jwtclaimsoverride;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import jakarta.inject.Singleton;
@@ -14,7 +14,7 @@ import reactor.core.publisher.FluxSink;
 @Requires(property = "spec.name", value = "jwtclaimsoverride")
 //tag::clazz[]
 @Singleton
-public class CustomAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class CustomAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T> {
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {

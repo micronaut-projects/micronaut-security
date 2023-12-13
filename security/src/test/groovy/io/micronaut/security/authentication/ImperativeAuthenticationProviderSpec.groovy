@@ -7,29 +7,30 @@ import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.scheduling.LoomSupport
 import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.security.authentication.provider.AuthenticationProvider
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import reactor.core.publisher.Mono
 
-class ImperativeAuthenticationProviderSpec extends ApplicationContextSpecification {
+class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
     static final String EXECUTOR_NAME_MATCH = "%s-executor".formatted(LoomSupport.supported ? TaskExecutors.VIRTUAL : TaskExecutors.IO)
 
-    SimpleImperativeAuthenticationProvider provider
+    SimpleAuthenticationProvider provider
 
     def setup() {
-        provider = getBean(SimpleImperativeAuthenticationProvider.class)
+        provider = getBean(SimpleAuthenticationProvider.class)
         provider.executedThreadName = ""
     }
 
-    def "multiple ImperativeAuthenticationProvider implementations are registered"() {
+    def "multiple AuthenticationProvider implementations are registered"() {
         given:
         BasicAuthAuthenticationFetcher authFetcher = getBean(BasicAuthAuthenticationFetcher.class)
 
         expect:
         authFetcher
-        getApplicationContext().getBeanRegistrations(ImperativeAuthenticationProvider.class).size() == 2
+        getApplicationContext().getBeanRegistrations(AuthenticationProvider.class).size() == 2
     }
 
     def "a blocking authentication provider can authenticate successfully"() {
@@ -59,14 +60,14 @@ class ImperativeAuthenticationProviderSpec extends ApplicationContextSpecificati
 
     @Override
     String getSpecName() {
-        return "ImperativeAuthenticationProviderSpec"
+        return "AuthenticationProviderSpec"
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderSpec")
+    @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    @Named(SimpleImperativeAuthenticationProvider.NAME)
-    static class SimpleImperativeAuthenticationProvider<T> implements ImperativeAuthenticationProvider<T> {
-        static final String NAME = "SimpleImperativeAuthenticationProvider"
+    @Named(SimpleAuthenticationProvider.NAME)
+    static class SimpleAuthenticationProvider<T> implements AuthenticationProvider<T> {
+        static final String NAME = "SimpleAuthenticationProvider"
 
         private String executedThreadName
 
@@ -83,15 +84,15 @@ class ImperativeAuthenticationProviderSpec extends ApplicationContextSpecificati
 
         @Override
         String getName() {
-            SimpleImperativeAuthenticationProvider.NAME
+            SimpleAuthenticationProvider.NAME
         }
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderSpec")
+    @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    @Named(NoOpImperativeAuthenticationProvider.NAME)
-    static class NoOpImperativeAuthenticationProvider<T> implements ImperativeAuthenticationProvider<T> {
-        static final String NAME = "NoOpImperativeAuthenticationProvider"
+    @Named(NoOpAuthenticationProvider.NAME)
+    static class NoOpAuthenticationProvider<T> implements AuthenticationProvider<T> {
+        static final String NAME = "NoOpAuthenticationProvider"
 
         @Override
         AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
@@ -100,7 +101,7 @@ class ImperativeAuthenticationProviderSpec extends ApplicationContextSpecificati
 
         @Override
         String getName() {
-            NoOpImperativeAuthenticationProvider.NAME
+            NoOpAuthenticationProvider.NAME
         }
     }
 }

@@ -7,37 +7,39 @@ import io.micronaut.core.annotation.Blocking
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.provider.AuthenticationProvider
+import io.micronaut.security.authentication.provider.AuthenticationProviderUtils
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import spock.lang.Specification
 
-@Property(name = "spec.name", value = "ImperativeAuthenticationProviderUtilsTest")
+@Property(name = "spec.name", value = "AuthenticationProviderUtilsTest")
 @MicronautTest(startApplication = false)
-class ImperativeAuthenticationProviderUtilsTest extends Specification {
+class AuthenticationProviderUtilsTest extends Specification {
 
     @Inject
     BeanContext beanContext
 
     void "#clazz authenticate method is #description"(boolean isBlocking,
-                                                      Class<? extends ImperativeAuthenticationProvider> clazz,
+                                                      Class<? extends AuthenticationProvider> clazz,
                                                       String description) {
         expect:
-        isBlocking == ImperativeAuthenticationProviderUtils.isAuthenticateBlocking(beanContext, beanContext.getBean(clazz))
+        isBlocking == AuthenticationProviderUtils.isAuthenticateBlocking(beanContext, beanContext.getBean(clazz))
 
         where:
         isBlocking | clazz
-        true       | BlockingImperativeAuthenticationProvider.class
-        true       | BlockingWithGenericImperativeAuthenticationProvider
-        false      | NonBlockingImperativeAuthenticationProvider.class
+        true       | BlockingAuthenticationProvider.class
+        true       | BlockingWithGenericAuthenticationProvider
+        false      | NonBlockingAuthenticationProvider.class
         description = isBlocking ? "is annotated with @Blocking" : "is not annotated with @Blocking"
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderUtilsTest")
+    @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
     @Named("foo")
-    static class BlockingImperativeAuthenticationProvider implements ImperativeAuthenticationProvider<HttpRequest> {
+    static class BlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
         @Override
         @Blocking
         AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
@@ -50,10 +52,10 @@ class ImperativeAuthenticationProviderUtilsTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderUtilsTest")
+    @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
     @Named("foo")
-    static class BlockingWithGenericImperativeAuthenticationProvider<T> implements ImperativeAuthenticationProvider<T> {
+    static class BlockingWithGenericAuthenticationProvider<T> implements AuthenticationProvider<T> {
         @Override
         @Blocking
         AuthenticationResponse authenticate(@Nullable T httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
@@ -66,10 +68,10 @@ class ImperativeAuthenticationProviderUtilsTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "ImperativeAuthenticationProviderUtilsTest")
+    @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
     @Named("bar")
-    static class NonBlockingImperativeAuthenticationProvider implements ImperativeAuthenticationProvider<HttpRequest> {
+    static class NonBlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
         @Override
         AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
             return AuthenticationResponse.failure()

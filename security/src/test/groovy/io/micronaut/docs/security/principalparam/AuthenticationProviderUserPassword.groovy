@@ -1,7 +1,7 @@
 package io.micronaut.docs.security.principalparam
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import jakarta.inject.Singleton
@@ -13,7 +13,7 @@ import reactor.core.publisher.FluxSink
 @Requires(property = "spec.name", value = "principalparam")
 //tag::clazz[]
 @Singleton
-class AuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
+class AuthenticationProviderUserPassword<T> implements ReactiveAuthenticationProvider<T> {
 
     @Override
     Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {

@@ -1,8 +1,5 @@
-To authenticate users you must provide implementations of api:security.authentication.AuthenticationProvider[].
+To authenticate users you must provide implementations of api:security.authentication.provider.ReactiveAuthenticationProvider[].
 
 The following code snippet illustrates a naive implementation:
 
-[source, java]
-----
-include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.java[tag=clazz,indent=0]
-----
+snippet::io.micronaut.security.docs.reactiveauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]

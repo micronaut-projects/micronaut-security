@@ -30,7 +30,7 @@ import reactor.core.publisher.Flux;
 /**
  * An implementation of {@link AuthenticationFetcher} that decodes a username
  * and password from the Authorization header and authenticates the credentials
- * against any {@link AuthenticationProvider}s available.
+ * against any {@link io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider}s available.
  */
 @Requires(classes = HttpRequest.class)
 @Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)

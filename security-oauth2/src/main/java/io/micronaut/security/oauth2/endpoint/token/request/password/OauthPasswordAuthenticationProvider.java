@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
-import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -32,7 +32,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
+ * A {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
  * password grant flow.
  *
  * @author Sergio del Amo

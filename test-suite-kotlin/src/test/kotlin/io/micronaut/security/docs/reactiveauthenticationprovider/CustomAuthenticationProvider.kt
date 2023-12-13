@@ -1,33 +1,29 @@
-package io.micronaut.security.docs.blockingauthenticationprovider
+package io.micronaut.security.docs.reactiveauthenticationprovider
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.provider.AuthenticationProvider
-import jakarta.inject.Named
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 
-@Requires(property = "spec.name", value = "AuthenticationProviderTest")
+@Requires(property = "spec.name", value = "ReactiveAuthenticationProviderTest")
 //tag::clazz[]
-@Named(CustomAuthenticationProvider.NAME)
 @Singleton
 class CustomAuthenticationProvider :
-    AuthenticationProvider<HttpRequest<*>> {
+    ReactiveAuthenticationProvider<HttpRequest<*>> {
     override fun authenticate(
-        httpRequest: HttpRequest<*>,
+        httpRequest: HttpRequest<*>?,
         authenticationRequest: AuthenticationRequest<*, *>
-    ): AuthenticationResponse {
-        return if (authenticationRequest.identity == "user" && authenticationRequest.secret == "password")
+    ): Publisher<AuthenticationResponse> {
+        val rsp = if (authenticationRequest.identity == "user" && authenticationRequest.secret == "password")
             AuthenticationResponse.success("user")
         else AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+        return Mono.create { emitter -> emitter.success(rsp) }
     }
 
-    override fun getName(): String = NAME
-
-    companion object {
-        const val NAME = "foo"
-    }
 }
 //end::clazz[]

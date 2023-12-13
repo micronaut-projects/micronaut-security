@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.testutils.authprovider;
 
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 
@@ -29,7 +29,7 @@ import reactor.core.publisher.FluxSink;
 /**
  * Utility class to mock authentication scenarios.
  */
-public class MockAuthenticationProvider<T> implements AuthenticationProvider<T>  {
+public class MockAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T>  {
 
     private final List<SuccessAuthenticationScenario> successAuthenticationScenarioList;
     private final List<FailedAuthenticationScenario> failedAuthenticationScenarios;
