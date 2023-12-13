@@ -32,7 +32,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
- * A {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
+ * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
  * password grant flow.
  *
  * @author Sergio del Amo
