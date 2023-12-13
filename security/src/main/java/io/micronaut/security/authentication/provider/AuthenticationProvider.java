@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.Executable;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.naming.Named;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -29,7 +28,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
  * @since 4.5.0
  * @param <T> Request
  */
-public interface AuthenticationProvider<T> extends Ordered, Named {
+public interface AuthenticationProvider<T> extends Ordered {
 
     /**
      * Authenticates a user with the given request.

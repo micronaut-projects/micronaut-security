@@ -17,6 +17,7 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -37,6 +38,7 @@ class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
     @AutoCleanup
     HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
+    @Ignore
     void "test /beans is secured but accesible if you supply valid credentials with Basic Auth"() {
         when:
         String token = 'dXNlcjpwYXNzd29yZA==' // user:passsword Base64

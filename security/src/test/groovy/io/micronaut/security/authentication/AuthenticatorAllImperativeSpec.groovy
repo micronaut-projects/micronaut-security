@@ -17,6 +17,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Named
+import jakarta.inject.Singleton
 import spock.lang.Specification
 
 @Property(name = "micronaut.security.authentication-provider-strategy", value = "ALL")
@@ -78,38 +79,26 @@ class AuthenticatorAllImperativeSpec extends Specification {
     }
 
     @Requires(property = "spec.name", value = "AuthenticatorAllImperativeSpec")
-    @Named(SherlockAuthenticationProvider.NAME)
+    @Singleton
     static class SherlockAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
-        static final String NAME = "sherlock"
         @Override
         AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
-            if (authRequest.identity == NAME || authRequest.identity == 'watson') {
+            if (authRequest.identity == "sherlock" || authRequest.identity == 'watson') {
                 return AuthenticationResponse.success(authRequest.identity.toString())
             }
             AuthenticationResponse.failure()
-        }
-
-        @Override
-        String getName() {
-            NAME
         }
     }
 
     @Requires(property = "spec.name", value = "AuthenticatorAllImperativeSpec")
-    @Named(MoriartyAuthenticationProvider.NAME)
+    @Singleton
     static class MoriartyAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
-        static final String NAME = "moriarty"
         @Override
         AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
-            if (authRequest.identity == NAME || authRequest.identity == 'watson') {
+            if (authRequest.identity == "moriarty" || authRequest.identity == 'watson') {
                 return AuthenticationResponse.success(authRequest.identity.toString())
             }
             AuthenticationResponse.failure()
-        }
-
-        @Override
-        String getName() {
-            NAME
         }
     }
 }

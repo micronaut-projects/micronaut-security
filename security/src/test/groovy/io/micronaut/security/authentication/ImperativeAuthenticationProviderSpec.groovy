@@ -65,10 +65,7 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    @Named(SimpleAuthenticationProvider.NAME)
     static class SimpleAuthenticationProvider<T> implements AuthenticationProvider<T> {
-        static final String NAME = "SimpleAuthenticationProvider"
-
         private String executedThreadName
 
         @Override
@@ -81,27 +78,14 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
                 return AuthenticationResponse.failure("Over the line.")
             }
         }
-
-        @Override
-        String getName() {
-            SimpleAuthenticationProvider.NAME
-        }
     }
 
     @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    @Named(NoOpAuthenticationProvider.NAME)
     static class NoOpAuthenticationProvider<T> implements AuthenticationProvider<T> {
-        static final String NAME = "NoOpAuthenticationProvider"
-
         @Override
         AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             throw AuthenticationResponse.exception()
-        }
-
-        @Override
-        String getName() {
-            NoOpAuthenticationProvider.NAME
         }
     }
 }

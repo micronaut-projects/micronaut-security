@@ -17,6 +17,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Named
+import jakarta.inject.Singleton
 import spock.lang.Specification
 
 @Property(name = "spec.name", value = "AuthenticatorImperativeSpec")
@@ -70,38 +71,26 @@ class AuthenticatorImperativeSpec extends Specification {
     }
 
     @Requires(property = "spec.name", value = "AuthenticatorImperativeSpec")
-    @Named(SherlockAuthenticationProvider.NAME)
+    @Singleton
     static class SherlockAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
-        static final String NAME = "sherlock"
         @Override
         AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
-            if (authRequest.identity == NAME) {
-                return AuthenticationResponse.success(NAME)
+            if (authRequest.identity == "sherlock") {
+                return AuthenticationResponse.success(authRequest.identity.toString())
             }
             AuthenticationResponse.failure()
-        }
-
-        @Override
-        String getName() {
-            NAME
         }
     }
 
     @Requires(property = "spec.name", value = "AuthenticatorImperativeSpec")
-    @Named(MoriartyAuthenticationProvider.NAME)
+    @Singleton
     static class MoriartyAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
-        static final String NAME = "moriarty"
         @Override
         AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
-            if (authRequest.identity == NAME) {
-                return AuthenticationResponse.success(NAME)
+            if (authRequest.identity == "moriarty") {
+                return AuthenticationResponse.success(authRequest.identity.toString())
             }
             AuthenticationResponse.failure()
-        }
-
-        @Override
-        String getName() {
-            NAME
         }
     }
 }

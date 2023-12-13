@@ -11,7 +11,6 @@ import io.micronaut.security.authentication.provider.AuthenticationProvider
 import io.micronaut.security.authentication.provider.AuthenticationProviderUtils
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
-import jakarta.inject.Named
 import jakarta.inject.Singleton
 import spock.lang.Specification
 
@@ -38,48 +37,30 @@ class AuthenticationProviderUtilsTest extends Specification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    @Named("foo")
     static class BlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
         @Override
         @Blocking
         AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
             return AuthenticationResponse.failure()
         }
-
-        @Override
-        String getName() {
-            "foo"
-        }
     }
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    @Named("foo")
     static class BlockingWithGenericAuthenticationProvider<T> implements AuthenticationProvider<T> {
         @Override
         @Blocking
         AuthenticationResponse authenticate(@Nullable T httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
             return AuthenticationResponse.failure()
         }
-
-        @Override
-        String getName() {
-            "foo"
-        }
     }
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    @Named("bar")
     static class NonBlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
         @Override
         AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
             return AuthenticationResponse.failure()
-        }
-
-        @Override
-        String getName() {
-            "bar"
         }
     }
 
