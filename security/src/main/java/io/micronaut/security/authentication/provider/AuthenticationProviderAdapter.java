@@ -35,7 +35,6 @@ public class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationP
     @NonNull
     private final AuthenticationProvider<T> authenticationProvider;
 
-    @NonNull
     private final Scheduler scheduler;
 
     public AuthenticationProviderAdapter(BeanContext beanContext,
