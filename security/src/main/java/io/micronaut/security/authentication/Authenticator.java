@@ -250,7 +250,7 @@ public class Authenticator<T> {
                                                                      @NonNull AuthenticationRequest<?, ?> authenticationRequest) {
         try {
             return provider.authenticate(requestContext, authenticationRequest);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             return authenticationResponseForThrowable(t);
         }
     }
