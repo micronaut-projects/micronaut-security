@@ -16,7 +16,6 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
-    testImplementation(projects.micronautSecurityAudit)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
 

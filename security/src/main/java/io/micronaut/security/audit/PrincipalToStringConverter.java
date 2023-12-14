@@ -17,6 +17,8 @@ package io.micronaut.security.audit;
 
 import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.TypeConverter;
+import io.micronaut.security.annotation.CreatedBy;
+import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Singleton;
 
@@ -27,9 +29,8 @@ import java.util.Optional;
  * A {@link Principal} to {@code String} converter.
  *
  * This is intended as the default implementation for conversion of the current {@link Authentication} to {@code String}
- * entity fields annotated with either {@link io.micronaut.security.audit.annotation.CreatedBy} or {@link io.micronaut.security.audit.annotation.UpdatedBy},
+ * entity fields annotated with either {@link CreatedBy} or {@link UpdatedBy},
  * and simply converts to {@link Principal#getName()}.
- *
  * This implementation may be replaced for custom mapping of a unique {@link String} identifier, or additional converters
  * may be provided for mapping to more complex types.
  *

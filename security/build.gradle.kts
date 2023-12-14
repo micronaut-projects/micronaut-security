@@ -14,11 +14,14 @@ dependencies {
     api(projects.micronautSecurityAnnotations)
     implementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
-
+    compileOnly(mnData.micronaut.data.runtime)
     compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
-
+    testCompileOnly(mnData.micronaut.data.processor)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(mnData.micronaut.data.jdbc)
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mn.micronaut.management)

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains classes specific to adding security auditing integration with Micronaut Data
+ * Contains classes specific to adding security auditing integration with Micronaut Data.
  *
  * @author Jeremy Grelle
  * @since 4.5.0
