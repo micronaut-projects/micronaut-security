@@ -46,4 +46,20 @@ public interface AuthenticationProvider<T> extends Ordered {
     @NonNull
     @Executable
     AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<?, ?> authRequest);
+
+    /**
+     * Authenticates a user with the given request.
+     * If authenticated successfully return {@link AuthenticationResponse#success(String)}.
+     * If not authenticated return {@link AuthenticationResponse#failure()}.
+     * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
+     * dedicated thread in order to not block the main reactive chain of execution.
+     *
+     * @param authRequest The credentials to authenticate
+     * @return An {@link AuthenticationResponse} indicating either success or failure.
+     */
+    @NonNull
+    @Executable
+    default AuthenticationResponse authenticate(@NonNull AuthenticationRequest<?, ?> authRequest) {
+        return authenticate(null, authRequest);
+    }
 }

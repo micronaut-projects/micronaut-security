@@ -49,4 +49,21 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
     @SingleResult
     Publisher<AuthenticationResponse> authenticate(@Nullable T requestContext,
                                                    @NonNull AuthenticationRequest<?, ?> authenticationRequest);
+
+    /**
+     * Authenticates a user with the given request. If a successful authentication is
+     * returned, the object must be an instance of {@link Authentication}.
+     *
+     * Publishers <b>MUST emit cold observables</b>! This method will be called for
+     * all authenticators for each authentication request and it is assumed no work
+     * will be done until the publisher is subscribed to.
+     *
+     * @param authenticationRequest The credentials to authenticate
+     * @return A publisher that emits 0 or 1 responses
+     */
+    @NonNull
+    @SingleResult
+    default Publisher<AuthenticationResponse> authenticate(@NonNull AuthenticationRequest<?, ?> authenticationRequest) {
+        return authenticate(null, authenticationRequest);
+    }
 }
