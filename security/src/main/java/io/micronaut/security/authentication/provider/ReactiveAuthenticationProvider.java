@@ -24,7 +24,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import org.reactivestreams.Publisher;
 
 /**
- * Defines a Reactive authentication provider.
+ * Defines a reactive authentication provider.
  *
  * @since 4.5.0
  * @param <T> Request
