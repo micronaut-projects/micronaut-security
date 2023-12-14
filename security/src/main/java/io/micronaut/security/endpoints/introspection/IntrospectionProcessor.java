@@ -31,7 +31,7 @@ public interface IntrospectionProcessor<T> {
     /**
      *
      * @param introspectionRequest A parameter representing the token along with optional parameters representing additional context
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
@@ -41,7 +41,7 @@ public interface IntrospectionProcessor<T> {
     /**
      *
      * @param authentication The authentication
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
