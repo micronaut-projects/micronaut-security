@@ -14,58 +14,18 @@ class Book {
     @Id
     @GeneratedValue
     @Nullable
-    private Long id
+    Long id
 
     @NotBlank
-    private String title
+    String title
 
     @NotBlank
-    private String author
+    String author
 
     @CreatedBy //2
-    private String creator
+    String creator
 
     @UpdatedBy //3
-    private String editor
-
-    Long getId() {
-        return id
-    }
-
-    void setId(Long id) {
-        this.id = id
-    }
-
-    String getTitle() {
-        return title
-    }
-
-    void setTitle(String title) {
-        this.title = title
-    }
-
-    String getAuthor() {
-        return author
-    }
-
-    void setAuthor(String author) {
-        this.author = author
-    }
-
-    String getCreator() {
-        return creator
-    }
-
-    void setCreator(String creator) {
-        this.creator = creator
-    }
-
-    String getEditor() {
-        return editor
-    }
-
-    void setEditor(String editor) {
-        this.editor = editor
-    }
+    String editor
 }
 //end::clazz[]
