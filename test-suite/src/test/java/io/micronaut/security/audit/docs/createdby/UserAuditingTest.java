@@ -26,11 +26,8 @@ import java.util.Optional;
 @MicronautTest(transactional = false)
 public class UserAuditingTest {
 
-    @Inject
-    BookRepository bookRepository;
-
     @Test
-    void testCreatedByUpdatedByPopulatedOnSave() {
+    void testCreatedByUpdatedByPopulatedOnSave(BookRepository bookRepository) {
         Book book = new Book();
         book.setTitle("Tropic of Cancer");
         book.setAuthor("Henry Miller");
