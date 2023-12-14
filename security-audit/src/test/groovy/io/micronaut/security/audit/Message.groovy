@@ -1,9 +1,11 @@
-package io.micronaut.security.createdby
+package io.micronaut.security.audit
 
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.security.audit.annotation.CreatedBy
+import io.micronaut.security.audit.annotation.UpdatedBy
 import jakarta.validation.constraints.NotBlank
 
 @MappedEntity
@@ -16,6 +18,11 @@ class Message {
     @NotBlank
     String title
 
+    @CreatedBy
     @Nullable
-    String createdBy
+    String creator
+
+    @UpdatedBy
+    @Nullable
+    String lastModifiedBy
 }
