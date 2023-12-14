@@ -30,7 +30,7 @@ import reactor.core.scheduler.Scheduler;
  * @param <T> Request
  */
 @Internal
-public class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationProvider<T> {
+public final class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationProvider<T> {
 
     @NonNull
     private final AuthenticationProvider<T> authenticationProvider;
