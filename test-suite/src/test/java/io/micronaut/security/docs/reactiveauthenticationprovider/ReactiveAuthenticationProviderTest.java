@@ -14,6 +14,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -31,7 +32,9 @@ class ReactiveAuthenticationProviderTest {
         String expected = """
                 {"message":"Hello World"}""";
         assertEquals(expected, json);
-        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(createRequest("user", "wrong")));
+        HttpRequest<?> request = createRequest("user", "wrong");
+        Executable e = () -> client.retrieve(request);
+        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, e);
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     }
 
