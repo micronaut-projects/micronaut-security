@@ -35,6 +35,7 @@ import jakarta.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * An event listener that handles auto-population of entity fields annotated with {@link CreatedBy} or
@@ -58,13 +59,13 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
 
     @Override
     public boolean prePersist(@NonNull EntityEventContext<Object> context) {
-        autoPopulateUserIdentity(context, false);
+        populate(context, PrePersist.class);
         return true;
     }
 
     @Override
     public boolean preUpdate(@NonNull EntityEventContext<Object> context) {
-        autoPopulateUserIdentity(context, true);
+        populate(context, PreUpdate.class);
         return true;
     }
 
@@ -81,22 +82,30 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
         };
     }
 
-    private void autoPopulateUserIdentity(@NonNull EntityEventContext<Object> context, boolean isUpdate) {
+    private void populate(@NonNull EntityEventContext<Object> context,
+                          @NonNull Class<? extends Annotation> listenerAnnotation) {
         if (securityService.isAuthenticated()) {
             securityService.getAuthentication().ifPresent(authentication -> {
                 Map<Class<?>, Object> valueForType = new HashMap<>();
                 final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
-                for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
-                    if (isUpdate) {
-                        if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
-                            continue;
-                        }
-                    }
-                    final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
-                    context.setProperty(beanProperty, value);
-                }
+                Stream.of(applicableProperties)
+                        .filter(persistentProperty -> shouldSetProperty(persistentProperty, listenerAnnotation))
+                        .forEach(persistentProperty -> {
+                            final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                            Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
+                            context.setProperty(beanProperty, value);
+                        });
             });
         }
+    }
+
+    private boolean shouldSetProperty(@NonNull RuntimePersistentProperty<Object> persistentProperty, Class<? extends Annotation> listenerAnnotation) {
+        if (listenerAnnotation == PrePersist.class) {
+            return true;
+        }
+        if (listenerAnnotation == PreUpdate.class) {
+            return persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true);
+        }
+        return false;
     }
 }
