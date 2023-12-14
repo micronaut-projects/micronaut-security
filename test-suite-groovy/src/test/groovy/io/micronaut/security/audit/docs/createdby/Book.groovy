@@ -4,8 +4,8 @@ import io.micronaut.core.annotation.Nullable
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import io.micronaut.security.audit.annotation.CreatedBy
-import io.micronaut.security.audit.annotation.UpdatedBy
+import io.micronaut.security.annotation.CreatedBy
+import io.micronaut.security.annotation.UpdatedBy
 import jakarta.validation.constraints.NotBlank
 
 @MappedEntity //1

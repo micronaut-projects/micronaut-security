@@ -3,8 +3,8 @@ package io.micronaut.security.audit.docs.createdby
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import io.micronaut.security.audit.annotation.CreatedBy
-import io.micronaut.security.audit.annotation.UpdatedBy
+import io.micronaut.security.annotation.CreatedBy
+import io.micronaut.security.annotation.UpdatedBy
 
 @MappedEntity //1
 class Book {

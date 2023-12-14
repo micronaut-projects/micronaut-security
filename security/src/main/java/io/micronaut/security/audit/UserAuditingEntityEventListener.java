@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.audit.event.listeners;
+package io.micronaut.security.audit;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.beans.BeanProperty;
@@ -25,8 +26,8 @@ import io.micronaut.data.annotation.event.PreUpdate;
 import io.micronaut.data.event.EntityEventContext;
 import io.micronaut.data.model.runtime.RuntimePersistentProperty;
 import io.micronaut.data.runtime.event.listeners.AutoPopulatedEntityEventListener;
-import io.micronaut.security.audit.annotation.CreatedBy;
-import io.micronaut.security.audit.annotation.UpdatedBy;
+import io.micronaut.security.annotation.CreatedBy;
+import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.utils.SecurityService;
 import jakarta.inject.Singleton;
@@ -44,6 +45,7 @@ import java.util.function.Predicate;
  * @author Jeremy Grelle
  * @since 4.5.0
  */
+@Requires(classes = { AutoPopulatedEntityEventListener.class, EntityEventContext.class })
 @Singleton
 public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventListener {
 

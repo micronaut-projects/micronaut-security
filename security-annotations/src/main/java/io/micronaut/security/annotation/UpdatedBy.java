@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.audit.annotation;
+package io.micronaut.security.annotation;
 
 import io.micronaut.data.annotation.AutoPopulated;
 
