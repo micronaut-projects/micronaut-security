@@ -16,7 +16,7 @@ import reactor.core.publisher.FluxSink
 class AuthenticationProviderUserPassword<T> implements ReactiveAuthenticationProvider<T> {
 
     @Override
-    Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.next(AuthenticationResponse.success("user"))

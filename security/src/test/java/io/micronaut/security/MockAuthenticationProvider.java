@@ -52,7 +52,7 @@ public class MockAuthenticationProvider<T> implements ReactiveAuthenticationProv
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create(emitter -> {
             Optional<SuccessAuthenticationScenario> successAuth = successAuthenticationScenarioList.stream()
                     .filter(scenario -> {

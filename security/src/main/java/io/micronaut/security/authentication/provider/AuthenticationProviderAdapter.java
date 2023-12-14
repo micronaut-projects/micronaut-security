@@ -51,8 +51,8 @@ public class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationP
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Mono<AuthenticationResponse> authenticationResponseMono = Mono.fromCallable(() -> authenticationProvider.authenticate(httpRequest, authenticationRequest));
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+        Mono<AuthenticationResponse> authenticationResponseMono = Mono.fromCallable(() -> authenticationProvider.authenticate(requestContext, authenticationRequest));
         return scheduler != null ? authenticationResponseMono.subscribeOn(scheduler) : authenticationResponseMono;
     }
 }

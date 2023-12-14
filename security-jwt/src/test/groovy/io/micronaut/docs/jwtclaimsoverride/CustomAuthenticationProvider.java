@@ -17,7 +17,7 @@ import reactor.core.publisher.FluxSink;
 public class CustomAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T> {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create(emitter -> {
             emitter.next(AuthenticationResponse.success("sherlock", Collections.singletonMap("email", "sherlock@micronaut.example")));
             emitter.complete();

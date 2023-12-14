@@ -18,7 +18,7 @@ class AuthenticationProviderUserPassword<T> implements ReactiveAuthenticationPro
 
 
     @Override
-    Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.next(AuthenticationResponse.success("user", ["ROLE_USER"]))

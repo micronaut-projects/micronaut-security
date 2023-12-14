@@ -37,11 +37,11 @@ public interface AuthenticationProvider<T> extends Ordered {
      * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
      * dedicated thread in order to not block the main reactive chain of execution.
      *
-     * @param httpRequest The http request
+     * @param requestContext The context request (typically an HTTP Request).
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
      */
     @NonNull
     @Executable
-    AuthenticationResponse authenticate(@Nullable T httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest);
+    AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<?, ?> authRequest);
 }

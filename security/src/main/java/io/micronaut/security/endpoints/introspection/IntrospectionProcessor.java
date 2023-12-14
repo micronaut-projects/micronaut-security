@@ -36,7 +36,7 @@ public interface IntrospectionProcessor<T> {
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                @NonNull T httpRequest);
+                                                @NonNull T requestContext);
 
     /**
      *
@@ -46,5 +46,5 @@ public interface IntrospectionProcessor<T> {
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                @NonNull T httpRequest);
+                                                @NonNull T requestContext);
 }

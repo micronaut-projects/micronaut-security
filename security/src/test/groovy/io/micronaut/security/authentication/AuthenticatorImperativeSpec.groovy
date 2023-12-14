@@ -74,7 +74,7 @@ class AuthenticatorImperativeSpec extends Specification {
     @Singleton
     static class SherlockAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
         @Override
-        AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
+        AuthenticationResponse authenticate(@Nullable Object requestContext, @NonNull AuthenticationRequest authRequest) {
             if (authRequest.identity == "sherlock") {
                 return AuthenticationResponse.success(authRequest.identity.toString())
             }
@@ -86,7 +86,7 @@ class AuthenticatorImperativeSpec extends Specification {
     @Singleton
     static class MoriartyAuthenticationProvider implements io.micronaut.security.authentication.provider.AuthenticationProvider {
         @Override
-        AuthenticationResponse authenticate(@Nullable Object httpRequest, @NonNull AuthenticationRequest authRequest) {
+        AuthenticationResponse authenticate(@Nullable Object requestContext, @NonNull AuthenticationRequest authRequest) {
             if (authRequest.identity == "moriarty") {
                 return AuthenticationResponse.success(authRequest.identity.toString())
             }

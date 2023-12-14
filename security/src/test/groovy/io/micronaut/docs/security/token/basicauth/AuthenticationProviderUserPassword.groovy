@@ -11,7 +11,7 @@ import jakarta.inject.Singleton
 @Singleton
 class AuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
     @Override
-    AuthenticationResponse authenticate(T httpRequest,
+    AuthenticationResponse authenticate(T requestContext,
                                                AuthenticationRequest<?, ?> authenticationRequest) {
         (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password"))
                 ? AuthenticationResponse.success("user")

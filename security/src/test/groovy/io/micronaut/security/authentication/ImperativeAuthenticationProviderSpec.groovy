@@ -70,7 +70,7 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
         @Override
         @Blocking
-        AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
             executedThreadName = Thread.currentThread().getName()
             if (authenticationRequest.getIdentity().toString() == 'lebowski' && authenticationRequest.getSecret().toString() == 'thedudeabides') {
                 return AuthenticationResponse.success('lebowski')
@@ -84,7 +84,7 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
     @Singleton
     static class NoOpAuthenticationProvider<T> implements AuthenticationProvider<T> {
         @Override
-        AuthenticationResponse authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
             throw AuthenticationResponse.exception()
         }
     }

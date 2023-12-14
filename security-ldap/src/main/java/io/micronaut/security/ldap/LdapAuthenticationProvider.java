@@ -86,7 +86,7 @@ public class LdapAuthenticationProvider<T> implements AuthenticationProvider<T>,
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         Flux<AuthenticationResponse> reactiveSequence = Flux.create(emitter -> {
             String username = authenticationRequest.getIdentity().toString();
             String password = authenticationRequest.getSecret().toString();

@@ -45,6 +45,6 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
      */
     @NonNull
     @SingleResult
-    Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest,
+    Publisher<AuthenticationResponse> authenticate(@Nullable T requestContext,
                                                    @NonNull AuthenticationRequest<?, ?> authenticationRequest);
 }

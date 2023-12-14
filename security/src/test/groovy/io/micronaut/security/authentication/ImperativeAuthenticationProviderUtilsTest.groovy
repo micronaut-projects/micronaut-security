@@ -50,7 +50,7 @@ class AuthenticationProviderUtilsTest extends Specification {
     static class BlockingWithGenericAuthenticationProvider<T> implements AuthenticationProvider<T> {
         @Override
         @Blocking
-        AuthenticationResponse authenticate(@Nullable T httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<?, ?> authRequest) {
             return AuthenticationResponse.failure()
         }
     }

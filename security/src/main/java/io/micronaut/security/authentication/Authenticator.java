@@ -117,11 +117,11 @@ public class Authenticator<T> {
     /**
      * Authenticates the user with the provided credentials.
      *
-     * @param httpRequest           The HTTP request
+     * @param requestContext           The HTTP request
      * @param authenticationRequest Represents a request to authenticate.
      * @return A publisher that emits {@link AuthenticationResponse} objects
      */
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && CollectionUtils.isEmpty(imperativeAuthenticationProviders)) {
             return Mono.empty();
         }
@@ -132,9 +132,9 @@ public class Authenticator<T> {
             LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
-            return handleResponse(authenticate(httpRequest, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
+            return handleResponse(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
         }
-        return authenticate(httpRequest, authenticationRequest, everyProviderSorted());
+        return authenticate(requestContext, authenticationRequest, everyProviderSorted());
     }
 
     private boolean anyImperativeAuthenticationProviderIsBlocking() {
@@ -142,26 +142,26 @@ public class Authenticator<T> {
     }
 
     @NonNull
-    private static <T> AuthenticationResponse authenticate(@NonNull T httpRequest,
+    private static <T> AuthenticationResponse authenticate(@NonNull T requestContext,
                                                            @NonNull AuthenticationRequest<?, ?> authenticationRequest,
                                                            @NonNull List<AuthenticationProvider<T>> authenticationProviders,
                                                            @Nullable SecurityConfiguration securityConfiguration) {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
-            return authenticateAll(httpRequest, authenticationRequest, authenticationProviders);
+            return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
         return authenticationProviders.stream()
-                .map(provider -> authenticationResponse(provider, httpRequest, authenticationRequest))
+                .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
                 .filter(AuthenticationResponse::isAuthenticated)
                 .findFirst()
                 .orElseGet(AuthenticationResponse::failure);
     }
 
     @NonNull
-    private static <T> AuthenticationResponse authenticateAll(@NonNull T httpRequest,
+    private static <T> AuthenticationResponse authenticateAll(@NonNull T requestContext,
                                                                          @NonNull AuthenticationRequest<?, ?> authenticationRequest,
                                                                          @NonNull List<AuthenticationProvider<T>> authenticationProviders) {
         List<AuthenticationResponse> authenticationResponses = authenticationProviders.stream()
-                        .map(provider -> authenticationResponse(provider, httpRequest, authenticationRequest))
+                        .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
                         .toList();
         if (CollectionUtils.isEmpty(authenticationResponses)) {
             return AuthenticationResponse.failure();
@@ -246,10 +246,10 @@ public class Authenticator<T> {
 
     @NonNull
     private static <T> AuthenticationResponse authenticationResponse(@NonNull AuthenticationProvider<T> provider,
-                                                                     @NonNull T httpRequest,
+                                                                     @NonNull T requestContext,
                                                                      @NonNull AuthenticationRequest<?, ?> authenticationRequest) {
         try {
-            return provider.authenticate(httpRequest, authenticationRequest);
+            return provider.authenticate(requestContext, authenticationRequest);
         } catch (Throwable t) {
             return authenticationResponseForThrowable(t);
         }

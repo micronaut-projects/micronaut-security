@@ -74,7 +74,7 @@ class ContextPathSpec extends EmbeddedServerSpecification {
     static class MockAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T> {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
             return Mono.<AuthenticationResponse>create(emitter -> {
                 if (authenticationRequest.identity =="user" && authenticationRequest.secret == "password") {
                     emitter.success(AuthenticationResponse.success("user"))
