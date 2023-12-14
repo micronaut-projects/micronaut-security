@@ -101,7 +101,7 @@ public class Authenticator<T> {
     /**
      * @param authenticationProviders A list of available authentication providers
      * @param securityConfiguration   The security configuration
-     * @deprecated Use {@link Authenticator(List, SecurityConfiguration)} instead.
+     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, ExecutorService, SecurityConfiguration)} instead.
      */
     @Deprecated(forRemoval = true, since = "4.5.0")
     public Authenticator(Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> authenticationProviders,
