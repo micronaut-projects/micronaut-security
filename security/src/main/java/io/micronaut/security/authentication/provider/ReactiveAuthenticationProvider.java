@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.security.authentication.provider;
+import io.micronaut.core.annotation.Indexed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
@@ -29,6 +30,7 @@ import org.reactivestreams.Publisher;
  * @since 4.5.0
  * @param <T> Request
  */
+@Indexed(ReactiveAuthenticationProvider.class)
 public interface ReactiveAuthenticationProvider<T> extends Ordered {
 
     /**
@@ -39,7 +41,7 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
      * all authenticators for each authentication request and it is assumed no work
      * will be done until the publisher is subscribed to.
      *
-     * @param httpRequest The http request
+     * @param requestContext rquest context (it may be an HTTP request).
      * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */

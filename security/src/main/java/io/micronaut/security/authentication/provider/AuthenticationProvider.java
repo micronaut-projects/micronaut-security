@@ -17,6 +17,7 @@ package io.micronaut.security.authentication.provider;
 
 import io.micronaut.context.annotation.Executable;
 import io.micronaut.core.annotation.Blocking;
+import io.micronaut.core.annotation.Indexed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
@@ -28,6 +29,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
  * @since 4.5.0
  * @param <T> Request
  */
+@Indexed(AuthenticationProvider.class)
 public interface AuthenticationProvider<T> extends Ordered {
 
     /**
