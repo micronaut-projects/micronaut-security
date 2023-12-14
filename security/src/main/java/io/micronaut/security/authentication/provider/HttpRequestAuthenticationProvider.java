@@ -21,7 +21,7 @@ import io.micronaut.http.HttpRequest;
  * {@link AuthenticationProvider} for {@link HttpRequest}.
  * @author Sergio del Amo
  * @since 4.5.0
- * @param <B> The body type
+ * @param <B> The HTTP Request Body type
  */
-public interface HttpRequestAuthenticationProvider<B> extends AuthenticationProvider<HttpRequest<B>>  {
+public interface HttpRequestAuthenticationProvider<B> extends AuthenticationProvider<HttpRequest<B>, String, String>  {
 }

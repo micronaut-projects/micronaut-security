@@ -9,10 +9,10 @@ import jakarta.inject.Singleton
 
 @Requires(property = "spec.name", value = "docsbasicauth")
 @Singleton
-class AuthenticationProviderUserPassword<T> implements AuthenticationProvider<T> {
+class AuthenticationProviderUserPassword<T, I, S> implements AuthenticationProvider<T, I, S> {
     @Override
     AuthenticationResponse authenticate(T requestContext,
-                                               AuthenticationRequest<?, ?> authenticationRequest) {
+                                               AuthenticationRequest<I, S> authenticationRequest) {
         (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password"))
                 ? AuthenticationResponse.success("user")
                 : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)

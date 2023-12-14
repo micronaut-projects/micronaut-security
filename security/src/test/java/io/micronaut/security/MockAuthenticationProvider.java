@@ -28,7 +28,7 @@ import reactor.core.publisher.FluxSink;
 /**
  * Utility class to mock authentication scenarios.
  */
-public class MockAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T>  {
+public class MockAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S>  {
 
     private final List<SuccessAuthenticationScenario> successAuthenticationScenarioList;
     private final List<FailedAuthenticationScenario> failedAuthenticationScenarios;
@@ -52,7 +52,7 @@ public class MockAuthenticationProvider<T> implements ReactiveAuthenticationProv
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         return Flux.create(emitter -> {
             Optional<SuccessAuthenticationScenario> successAuth = successAuthenticationScenarioList.stream()
                     .filter(scenario -> {

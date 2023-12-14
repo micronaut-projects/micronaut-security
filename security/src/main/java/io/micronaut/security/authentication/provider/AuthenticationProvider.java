@@ -27,10 +27,12 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 /**
  * Defines an API to authenticate a user with the given request.
  * @since 4.5.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
 @Indexed(AuthenticationProvider.class)
-public interface AuthenticationProvider<T> extends Ordered {
+public interface AuthenticationProvider<T, I, S> extends Ordered {
 
     /**
      * Authenticates a user with the given request.
@@ -38,14 +40,13 @@ public interface AuthenticationProvider<T> extends Ordered {
      * If not authenticated return {@link AuthenticationResponse#failure()}.
      * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
      * dedicated thread in order to not block the main reactive chain of execution.
-     *
      * @param requestContext The context request (typically an HTTP Request).
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
      */
     @NonNull
     @Executable
-    AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<?, ?> authRequest);
+    AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<I, S> authRequest);
 
     /**
      * Authenticates a user with the given request.
@@ -53,13 +54,12 @@ public interface AuthenticationProvider<T> extends Ordered {
      * If not authenticated return {@link AuthenticationResponse#failure()}.
      * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
      * dedicated thread in order to not block the main reactive chain of execution.
-     *
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
      */
     @NonNull
     @Executable
-    default AuthenticationResponse authenticate(@NonNull AuthenticationRequest<?, ?> authRequest) {
+    default  AuthenticationResponse authenticate(@NonNull AuthenticationRequest<I, S>  authRequest) {
         return authenticate(null, authRequest);
     }
 }

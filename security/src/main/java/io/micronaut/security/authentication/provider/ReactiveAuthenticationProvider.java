@@ -28,10 +28,12 @@ import org.reactivestreams.Publisher;
  * Defines a reactive authentication provider.
  *
  * @since 4.5.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
 @Indexed(ReactiveAuthenticationProvider.class)
-public interface ReactiveAuthenticationProvider<T> extends Ordered {
+public interface ReactiveAuthenticationProvider<T, I, S> extends Ordered {
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
@@ -48,7 +50,7 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
     @NonNull
     @SingleResult
     Publisher<AuthenticationResponse> authenticate(@Nullable T requestContext,
-                                                   @NonNull AuthenticationRequest<?, ?> authenticationRequest);
+                                                   @NonNull AuthenticationRequest<I, S> authenticationRequest);
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
@@ -63,7 +65,7 @@ public interface ReactiveAuthenticationProvider<T> extends Ordered {
      */
     @NonNull
     @SingleResult
-    default Publisher<AuthenticationResponse> authenticate(@NonNull AuthenticationRequest<?, ?> authenticationRequest) {
+    default Publisher<AuthenticationResponse> authenticate(@NonNull AuthenticationRequest<I, S> authenticationRequest) {
         return authenticate(null, authenticationRequest);
     }
 }

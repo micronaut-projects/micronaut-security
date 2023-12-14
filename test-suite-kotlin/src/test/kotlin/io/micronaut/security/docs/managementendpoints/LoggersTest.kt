@@ -69,7 +69,7 @@ internal class LoggersTest {
     @Requires(property = "spec.name", value = "LoggersTest")
     @Singleton
     internal class AuthenticationProviderUserPassword :
-        MockAuthenticationProvider<HttpRequest<Any>>(
+        MockAuthenticationProvider<HttpRequest<Any>, Any, Any>(
             listOf(
                 SuccessAuthenticationScenario("user"),
                 SuccessAuthenticationScenario("system", listOf("ROLE_SYSTEM"))

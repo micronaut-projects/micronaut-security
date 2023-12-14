@@ -36,29 +36,29 @@ class AuthenticationProviderUtilsTest extends Specification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    static class BlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
+    static class BlockingAuthenticationProvider<I, S> implements AuthenticationProvider<HttpRequest, I, S> {
         @Override
         @Blocking
-        AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
+        AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<I, S> authRequest) {
             return AuthenticationResponse.failure()
         }
     }
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    static class BlockingWithGenericAuthenticationProvider<T> implements AuthenticationProvider<T> {
+    static class BlockingWithGenericAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
         @Override
         @Blocking
-        AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<?, ?> authRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<I, S> authRequest) {
             return AuthenticationResponse.failure()
         }
     }
 
     @Requires(property = "spec.name", value = "AuthenticationProviderUtilsTest")
     @Singleton
-    static class NonBlockingAuthenticationProvider implements AuthenticationProvider<HttpRequest> {
+    static class NonBlockingAuthenticationProvider<I, S> implements AuthenticationProvider<HttpRequest, I, S> {
         @Override
-        AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<?, ?> authRequest) {
+        AuthenticationResponse authenticate(@Nullable HttpRequest httpRequest, @NonNull AuthenticationRequest<I, S> authRequest) {
             return AuthenticationResponse.failure()
         }
     }

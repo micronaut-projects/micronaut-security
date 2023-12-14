@@ -27,31 +27,33 @@ import reactor.core.scheduler.Scheduler;
 
 /**
  * Adapts between {@link io.micronaut.security.authentication.provider.AuthenticationProvider} to {@link ReactiveAuthenticationProvider}.
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
 @Internal
-final class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationProvider<T> {
+final class AuthenticationProviderAdapter<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     @NonNull
-    private final io.micronaut.security.authentication.provider.AuthenticationProvider<T> authenticationProvider;
+    private final io.micronaut.security.authentication.provider.AuthenticationProvider<T, I, S> authenticationProvider;
 
     private final Scheduler scheduler;
 
     public AuthenticationProviderAdapter(BeanContext beanContext,
                                          Scheduler scheduler,
-                                         @NonNull io.micronaut.security.authentication.provider.AuthenticationProvider<T> authenticationProvider) {
+                                         @NonNull io.micronaut.security.authentication.provider.AuthenticationProvider<T, I, S> authenticationProvider) {
         this(authenticationProvider,
                 AuthenticationProviderUtils.isAuthenticateBlocking(beanContext, authenticationProvider) ? scheduler : null);
     }
 
-    public AuthenticationProviderAdapter(@NonNull AuthenticationProvider<T> authenticationProvider,
+    public AuthenticationProviderAdapter(@NonNull AuthenticationProvider<T, I, S> authenticationProvider,
                                           @Nullable Scheduler scheduler) {
         this.authenticationProvider = authenticationProvider;
         this.scheduler = scheduler;
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         Mono<AuthenticationResponse> authenticationResponseMono = Mono.fromCallable(() -> authenticationProvider.authenticate(requestContext, authenticationRequest));
         return scheduler != null ? authenticationResponseMono.subscribeOn(scheduler) : authenticationResponseMono;
     }

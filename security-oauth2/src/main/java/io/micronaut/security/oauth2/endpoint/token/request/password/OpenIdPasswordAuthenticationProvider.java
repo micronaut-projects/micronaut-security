@@ -44,9 +44,11 @@ import java.util.stream.Collectors;
  *
  * @author James Kleeh
  * @since 1.2.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
-public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OpenIdPasswordAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -77,7 +79,7 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

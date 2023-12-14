@@ -37,9 +37,11 @@ import reactor.core.publisher.Flux;
  *
  * @author Sergio del Amo
  * @since 1.2.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
-public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OauthPasswordAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -61,7 +63,7 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

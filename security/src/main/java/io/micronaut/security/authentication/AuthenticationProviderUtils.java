@@ -36,8 +36,8 @@ final class AuthenticationProviderUtils {
     private AuthenticationProviderUtils() {
     }
 
-    public static boolean isAuthenticateBlocking(BeanContext beanContext,
-                                                 @NonNull AuthenticationProvider<?> authenticationProvider) {
+    public static <B, I, S> boolean isAuthenticateBlocking(BeanContext beanContext,
+                                                 @NonNull AuthenticationProvider<B, I, S> authenticationProvider) {
         if (isMethodBlocking(beanContext, authenticationProvider, METHOD_AUTHENTICATE, Object.class, AuthenticationRequest.class)) {
             return true;
         }

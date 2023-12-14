@@ -65,12 +65,12 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    static class SimpleAuthenticationProvider<T> implements AuthenticationProvider<T> {
+    static class SimpleAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
         private String executedThreadName
 
         @Override
         @Blocking
-        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
             executedThreadName = Thread.currentThread().getName()
             if (authenticationRequest.getIdentity().toString() == 'lebowski' && authenticationRequest.getSecret().toString() == 'thedudeabides') {
                 return AuthenticationResponse.success('lebowski')
@@ -82,9 +82,9 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    static class NoOpAuthenticationProvider<T> implements AuthenticationProvider<T> {
+    static class NoOpAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
         @Override
-        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
             throw AuthenticationResponse.exception()
         }
     }

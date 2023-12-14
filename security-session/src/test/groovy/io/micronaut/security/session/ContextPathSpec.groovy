@@ -71,10 +71,10 @@ class ContextPathSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'ContextPathSpec')
     @Singleton
-    static class MockAuthenticationProvider<T> implements ReactiveAuthenticationProvider<T> {
+    static class MockAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
             return Mono.<AuthenticationResponse>create(emitter -> {
                 if (authenticationRequest.identity =="user" && authenticationRequest.secret == "password") {
                     emitter.success(AuthenticationResponse.success("user"))

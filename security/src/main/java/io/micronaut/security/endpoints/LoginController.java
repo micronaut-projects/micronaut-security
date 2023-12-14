@@ -55,10 +55,10 @@ import reactor.core.publisher.Mono;
 @Requires(beans = { LoginHandler.class, Authenticator.class })
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-public class LoginController {
+public class LoginController<B> {
     private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
-    protected final Authenticator<HttpRequest<?>> authenticator;
+    protected final Authenticator<HttpRequest<B>, String, String> authenticator;
     protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
@@ -69,7 +69,7 @@ public class LoginController {
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
-    public LoginController(Authenticator<HttpRequest<?>> authenticator,
+    public LoginController(Authenticator<HttpRequest<B>, String, String> authenticator,
                            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
                            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
                            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
@@ -87,7 +87,7 @@ public class LoginController {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
+    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
                 .map(authenticationResponse -> {
                     if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {

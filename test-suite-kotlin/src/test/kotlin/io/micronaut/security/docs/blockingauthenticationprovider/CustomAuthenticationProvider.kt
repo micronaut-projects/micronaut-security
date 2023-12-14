@@ -6,20 +6,22 @@ import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.provider.AuthenticationProvider
+import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider
 import jakarta.inject.Singleton
 
 @Requires(property = "spec.name", value = "AuthenticationProviderTest")
 //tag::clazz[]
 @Singleton
 class CustomAuthenticationProvider :
-    AuthenticationProvider<HttpRequest<*>> {
+    HttpRequestAuthenticationProvider<Any> {
     override fun authenticate(
-        httpRequest: HttpRequest<*>,
-        authenticationRequest: AuthenticationRequest<*, *>
+        requestContext: HttpRequest<Any>?,
+        authRequest: AuthenticationRequest<String, String>
     ): AuthenticationResponse {
-        return if (authenticationRequest.identity == "user" && authenticationRequest.secret == "password")
+        return if (authRequest.identity == "user" && authRequest.secret == "password")
             AuthenticationResponse.success("user")
         else AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
     }
+
 }
 //end::clazz[]

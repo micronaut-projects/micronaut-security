@@ -13,10 +13,10 @@ import reactor.core.publisher.FluxSink
 @Requires(property = "spec.name", value = "principalparam")
 //tag::clazz[]
 @Singleton
-class AuthenticationProviderUserPassword<T> implements ReactiveAuthenticationProvider<T> {
+class AuthenticationProviderUserPassword<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     @Override
-    Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.next(AuthenticationResponse.success("user"))
