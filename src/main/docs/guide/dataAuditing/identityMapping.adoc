@@ -1,0 +1,8 @@
+A api:security.audit.PrincipalToStringConverter[] is provided to map the current api:security.Authentication[] object to the annotated String fields. The default implementation maps the value of `Principal.getName()` to the fields. To customize this mapping, you can provide your own `TypeConverter` implementation that replaces `PrincipalToStringConverter`. For example:
+
+snippet::io.micronaut.security.audit.docs.customconverter.AuthenticationToStringConverter[tags="clazz"]
+<1> The custom converter replaces `PrincipalToStringConverter`
+<2> Conversion between `Authentication` and `String` is implemented
+<3> The implementation maps a custom attribute to the auto-populated identity
+
+The type conversion mechanism could also be used to map `Authentication` to more complex field types other than String, such as a custom domain-specific `User` object.

@@ -18,6 +18,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityAudit)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(libs.kotlin.stdlib.jdk8)
@@ -26,6 +27,11 @@ dependencies {
     testImplementation(mn.jackson.databind)
     kaptTest(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
+
+    kaptTest(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
 }
 
 tasks.named('test') {

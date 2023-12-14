@@ -18,12 +18,20 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityAudit)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
     testCompileOnly(projects.micronautSecurityAnnotations)
     testCompileOnly(mnSerde.micronaut.serde.processor)
-    testImplementation(mnSerde.micronaut.serde.jackson)}
+    testImplementation(mnSerde.micronaut.serde.jackson)
+
+    testCompileOnly(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()
