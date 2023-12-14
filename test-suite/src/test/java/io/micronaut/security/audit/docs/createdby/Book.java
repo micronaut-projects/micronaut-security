@@ -9,63 +9,24 @@ import io.micronaut.security.annotation.UpdatedBy;
 import jakarta.validation.constraints.NotBlank;
 
 @MappedEntity //1
-public class Book {
-
+public record Book(
     @Id
     @GeneratedValue
     @Nullable
-    private Long id;
+    Long id,
 
     @NotBlank
-    private String title;
+    String title,
 
     @NotBlank
-    private String author;
+    String author,
 
+    @Nullable
     @CreatedBy //2
-    private String creator;
+    String creator,
 
+    @Nullable
     @UpdatedBy //3
-    private String editor;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getEditor() {
-        return editor;
-    }
-
-    public void setEditor(String editor) {
-        this.editor = editor;
-    }
+    String editor) {
 }
 //end::clazz[]
