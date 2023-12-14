@@ -8,7 +8,6 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.provider.AuthenticationProvider
-import io.micronaut.security.authentication.provider.AuthenticationProviderUtils
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton

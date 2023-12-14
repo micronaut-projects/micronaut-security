@@ -22,8 +22,6 @@ import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.provider.AuthenticationProvider;
-import io.micronaut.security.authentication.provider.AuthenticationProviderAdapter;
-import io.micronaut.security.authentication.provider.AuthenticationProviderUtils;
 import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;

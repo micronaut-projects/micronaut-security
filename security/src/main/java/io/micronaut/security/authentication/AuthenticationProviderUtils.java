@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication.provider;
+package io.micronaut.security.authentication;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanRegistration;
@@ -22,15 +22,15 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
-import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.provider.AuthenticationProvider;
 
 import java.lang.annotation.Annotation;
 
 /**
- * Utility class to check whether {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} is annotated with {@link Blocking}.
+ * Utility class to check whether {@link io.micronaut.security.authentication.provider.AuthenticationProvider#authenticate(Object, AuthenticationRequest)} is annotated with {@link Blocking}.
  */
 @Internal
-public final class AuthenticationProviderUtils {
+final class AuthenticationProviderUtils {
     private static final String METHOD_AUTHENTICATE = "authenticate";
 
     private AuthenticationProviderUtils() {

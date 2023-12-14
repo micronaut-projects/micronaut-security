@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication.provider;
+package io.micronaut.security.authentication;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.provider.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 /**
- * Adapts between {@link AuthenticationProvider} to {@link ReactiveAuthenticationProvider}.
+ * Adapts between {@link io.micronaut.security.authentication.provider.AuthenticationProvider} to {@link ReactiveAuthenticationProvider}.
  * @param <T> Request
  */
 @Internal
-public final class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationProvider<T> {
+final class AuthenticationProviderAdapter<T> implements ReactiveAuthenticationProvider<T> {
 
     @NonNull
-    private final AuthenticationProvider<T> authenticationProvider;
+    private final io.micronaut.security.authentication.provider.AuthenticationProvider<T> authenticationProvider;
 
     private final Scheduler scheduler;
 
     public AuthenticationProviderAdapter(BeanContext beanContext,
                                          Scheduler scheduler,
-                                         @NonNull AuthenticationProvider<T> authenticationProvider) {
+                                         @NonNull io.micronaut.security.authentication.provider.AuthenticationProvider<T> authenticationProvider) {
         this(authenticationProvider,
                 AuthenticationProviderUtils.isAuthenticateBlocking(beanContext, authenticationProvider) ? scheduler : null);
     }
