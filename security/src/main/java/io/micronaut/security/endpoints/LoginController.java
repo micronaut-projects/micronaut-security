@@ -49,6 +49,7 @@ import reactor.core.publisher.Mono;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
+ * @param <B> The HTTP Request Body type
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
