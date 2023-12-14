@@ -82,16 +82,18 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
     }
 
     private void autoPopulateUserIdentity(@NonNull EntityEventContext<Object> context, boolean isUpdate) {
-        final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
-        for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
-            if (isUpdate) {
-                if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
-                    continue;
+        if (securityService.isAuthenticated()) {
+            final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
+            for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
+                if (isUpdate) {
+                    if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
+                        continue;
+                    }
                 }
-            }
 
-            final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-            getCurrentUserIdentityForProperty(beanProperty).ifPresent(identity -> context.setProperty(beanProperty, identity));
+                final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                getCurrentUserIdentityForProperty(beanProperty).ifPresent(identity -> context.setProperty(beanProperty, identity));
+            }
         }
     }
 
