@@ -24,7 +24,7 @@ import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvi
  * @author Graeme Rocher
  * @since 1.0
  * @param <T> Request
- * @deprecated Use {@link io.micronaut.security.authentication.provider.AuthenticationProvider} for an imperative API or {@link ReactiveAuthenticationProvider} for a Reactive API instead.
+ * @deprecated Use {@link io.micronaut.security.authentication.provider.AuthenticationProvider} for an imperative API or {@link ReactiveAuthenticationProvider} for a reactive API instead.
  */
 @Deprecated(forRemoval = true, since = "4.5.0")
 public interface AuthenticationProvider<T> extends ReactiveAuthenticationProvider<T> {
