@@ -31,10 +31,7 @@ class CustomPrincipalConverterTest {
 
     @Test
     fun testCreatedByUpdatedByPopulatedOnSave() {
-        var book = Book()
-        book.title = "Tropic of Cancer"
-        book.author = "Henry Miller"
-        book = bookRepository!!.save(book)
+        var book = Book(null, "Tropic of Cancer", "Henry Miller", null, null)
         Assertions.assertNotNull(book.id)
         Assertions.assertEquals("my_unique_identifier", book.creator)
         Assertions.assertEquals("my_unique_identifier", book.editor)
