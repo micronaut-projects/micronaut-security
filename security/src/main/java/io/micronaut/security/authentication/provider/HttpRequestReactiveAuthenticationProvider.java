@@ -21,6 +21,7 @@ import io.micronaut.http.HttpRequest;
  * {@link ReactiveAuthenticationProvider} for {@link HttpRequest}.
  * @author Sergio del Amo
  * @since 4.5.0
+ * @param <B> The body type
  */
-public interface HttpRequestReactiveAuthenticationProvider extends ReactiveAuthenticationProvider<HttpRequest>  {
+public interface HttpRequestReactiveAuthenticationProvider<B> extends ReactiveAuthenticationProvider<HttpRequest<B>>  {
 }
