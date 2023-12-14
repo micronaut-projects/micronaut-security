@@ -33,9 +33,7 @@ import io.micronaut.security.utils.SecurityService;
 import jakarta.inject.Singleton;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -86,6 +84,7 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
     private void autoPopulateUserIdentity(@NonNull EntityEventContext<Object> context, boolean isUpdate) {
         if (securityService.isAuthenticated()) {
             securityService.getAuthentication().ifPresent(authentication -> {
+                Map<Class<?>, Object> valueForType = new HashMap<>();
                 final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
                 for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
                     if (isUpdate) {
@@ -93,12 +92,11 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
                             continue;
                         }
                     }
-
                     final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                    conversionService.convert(authentication, beanProperty.getType()).ifPresent(identity -> context.setProperty(beanProperty, identity));
+                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
+                    context.setProperty(beanProperty, value);
                 }
             });
-
         }
     }
 }
