@@ -85,21 +85,20 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
 
     private void autoPopulateUserIdentity(@NonNull EntityEventContext<Object> context, boolean isUpdate) {
         if (securityService.isAuthenticated()) {
-            final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
-            for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
-                if (isUpdate) {
-                    if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
-                        continue;
+            securityService.getAuthentication().ifPresent(authentication -> {
+                final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
+                for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
+                    if (isUpdate) {
+                        if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
+                            continue;
+                        }
                     }
+
+                    final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                    conversionService.convert(authentication, beanProperty.getType()).ifPresent(identity -> context.setProperty(beanProperty, identity));
                 }
+            });
 
-                final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                getCurrentUserIdentityForProperty(beanProperty).ifPresent(identity -> context.setProperty(beanProperty, identity));
-            }
         }
-    }
-
-    private Optional<Object> getCurrentUserIdentityForProperty(BeanProperty<Object, Object> beanProperty) {
-        return securityService.getAuthentication().flatMap(authentication -> conversionService.convert(authentication, beanProperty.getType()));
     }
 }
