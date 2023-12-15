@@ -91,7 +91,9 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
                     .forEach(persistentProperty -> {
                         final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
                         Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
-                        context.setProperty(beanProperty, value);
+                        if (value != null) {
+                            context.setProperty(beanProperty, value);
+                        }
                     });
         });
     }
