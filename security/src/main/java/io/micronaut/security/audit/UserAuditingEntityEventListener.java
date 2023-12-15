@@ -84,19 +84,16 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
 
     private void populate(@NonNull EntityEventContext<Object> context,
                           @NonNull Class<? extends Annotation> listenerAnnotation) {
-        if (securityService.isAuthenticated()) {
-            securityService.getAuthentication().ifPresent(authentication -> {
-                Map<Class<?>, Object> valueForType = new HashMap<>();
-                final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
-                Stream.of(applicableProperties)
-                        .filter(persistentProperty -> shouldSetProperty(persistentProperty, listenerAnnotation))
-                        .forEach(persistentProperty -> {
-                            final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                            Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
-                            context.setProperty(beanProperty, value);
-                        });
-            });
-        }
+        securityService.getAuthentication().ifPresent(authentication -> {
+            Map<Class<?>, Object> valueForType = new HashMap<>();
+            Stream.of(getApplicableProperties(context.getPersistentEntity()))
+                    .filter(persistentProperty -> shouldSetProperty(persistentProperty, listenerAnnotation))
+                    .forEach(persistentProperty -> {
+                        final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                        Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
+                        context.setProperty(beanProperty, value);
+                    });
+        });
     }
 
     private boolean shouldSetProperty(@NonNull RuntimePersistentProperty<Object> persistentProperty, Class<? extends Annotation> listenerAnnotation) {
