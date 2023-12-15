@@ -18,19 +18,24 @@ package io.micronaut.security.audit;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.beans.BeanProperty;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.data.annotation.AutoPopulated;
 import io.micronaut.data.annotation.event.PrePersist;
 import io.micronaut.data.annotation.event.PreUpdate;
 import io.micronaut.data.event.EntityEventContext;
 import io.micronaut.data.model.runtime.RuntimePersistentProperty;
 import io.micronaut.data.runtime.event.listeners.AutoPopulatedEntityEventListener;
+import io.micronaut.logging.LogLevel;
 import io.micronaut.security.annotation.CreatedBy;
 import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.utils.SecurityService;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -46,6 +51,7 @@ import java.util.function.Predicate;
 @Requires(classes = { AutoPopulatedEntityEventListener.class, EntityEventContext.class })
 @Singleton
 public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventListener {
+    private static final Logger LOG = LoggerFactory.getLogger(UserAuditingEntityEventListener.class);
 
     private final SecurityService securityService;
 
@@ -88,13 +94,25 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
             for (RuntimePersistentProperty<Object> persistentProperty : getApplicableProperties(context.getPersistentEntity())) {
                 if (shouldSetProperty(persistentProperty, listenerAnnotation)) {
                     final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
+                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> convert(authentication, beanProperty));
                     if (value != null) {
                         context.setProperty(beanProperty, value);
                     }
                 }
             }
         });
+    }
+
+    @Nullable
+    private Object convert(@NonNull Authentication authentication, @NonNull BeanProperty<Object, Object> beanProperty) {
+        try {
+            return conversionService.convertRequired(authentication, beanProperty.getType());
+        } catch (ConversionErrorException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("cannot convert from {} to {}", authentication.getClass().getSimpleName(), beanProperty.getType(), e);
+            }
+        }
+        return null;
     }
 
     private boolean shouldSetProperty(@NonNull RuntimePersistentProperty<Object> persistentProperty, Class<? extends Annotation> listenerAnnotation) {
