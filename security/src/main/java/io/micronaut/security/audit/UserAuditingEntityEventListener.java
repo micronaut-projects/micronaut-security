@@ -35,7 +35,6 @@ import jakarta.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * An event listener that handles auto-population of entity fields annotated with {@link CreatedBy} or
@@ -86,15 +85,15 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
                           @NonNull Class<? extends Annotation> listenerAnnotation) {
         securityService.getAuthentication().ifPresent(authentication -> {
             Map<Class<?>, Object> valueForType = new HashMap<>();
-            Stream.of(getApplicableProperties(context.getPersistentEntity()))
-                    .filter(persistentProperty -> shouldSetProperty(persistentProperty, listenerAnnotation))
-                    .forEach(persistentProperty -> {
-                        final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                        Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
-                        if (value != null) {
-                            context.setProperty(beanProperty, value);
-                        }
-                    });
+            for (RuntimePersistentProperty<Object> persistentProperty : getApplicableProperties(context.getPersistentEntity())) {
+                if (shouldSetProperty(persistentProperty, listenerAnnotation)) {
+                    final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> conversionService.convert(authentication, beanProperty.getType()).orElse(null));
+                    if (value != null) {
+                        context.setProperty(beanProperty, value);
+                    }
+                }
+            }
         });
     }
 
