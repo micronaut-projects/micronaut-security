@@ -109,7 +109,7 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
             return conversionService.convertRequired(authentication, beanProperty.getType());
         } catch (ConversionErrorException e) {
             if (LOG.isErrorEnabled()) {
-                LOG.error("cannot convert from {} to {}", authentication.getClass().getSimpleName(), beanProperty.getType(), e);
+                LOG.error("Cannot convert from {} to {} for bean property {}", authentication.getClass().getSimpleName(), beanProperty.getType(), beanProperty.getName(), e);
             }
         }
         return null;
