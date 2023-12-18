@@ -34,15 +34,13 @@ public class CustomPrincipalConverterTest {
 
     @Test
     void testCreatedByUpdatedByPopulatedOnSave() {
-        Book book = new Book();
-        book.setTitle("Tropic of Cancer");
-        book.setAuthor("Henry Miller");
+        Book book = new Book(null, "Tropic of Cancer", "Henry Miller", null, null);
 
         book = bookRepository.save(book);
 
-        Assertions.assertNotNull(book.getId());
-        Assertions.assertEquals("my_unique_identifier", book.getCreator());
-        Assertions.assertEquals("my_unique_identifier", book.getEditor());
+        Assertions.assertNotNull(book.id());
+        Assertions.assertEquals("my_unique_identifier", book.creator());
+        Assertions.assertEquals("my_unique_identifier", book.editor());
     }
 
     @Requires(property = "spec.name", value = "CustomPrincipalConverterTest")

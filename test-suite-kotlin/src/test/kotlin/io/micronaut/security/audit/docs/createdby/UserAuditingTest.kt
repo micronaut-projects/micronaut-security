@@ -26,14 +26,12 @@ import java.util.*
 class UserAuditingTest {
 
     @Inject
-    var bookRepository: BookRepository? = null
+    lateinit var bookRepository: BookRepository
 
     @Test
     fun testCreatedByUpdatedByPopulatedOnSave() {
-        var book = Book()
-        book.title = "Tropic of Cancer"
-        book.author = "Henry Miller"
-        book = bookRepository!!.save(book)
+        var book = Book(null, "Tropic of Cancer", "Henry Miller", null, null)
+        book = bookRepository.save(book)
         Assertions.assertNotNull(book.id)
         Assertions.assertEquals("sherlock", book.creator)
         Assertions.assertEquals("sherlock", book.editor)
@@ -43,21 +41,10 @@ class UserAuditingTest {
     @Replaces(DefaultSecurityService::class)
     @Singleton
     internal class MockSecurityService : SecurityService {
-        override fun username(): Optional<String> {
-            return Optional.of("sherlock")
-        }
-
-        override fun getAuthentication(): Optional<Authentication> {
-            return Optional.of(Authentication.build(username().orElseThrow()))
-        }
-
-        override fun isAuthenticated(): Boolean {
-            return true
-        }
-
-        override fun hasRole(role: String): Boolean {
-            return false
-        }
+        override fun username(): Optional<String> = Optional.of("sherlock")
+        override fun getAuthentication(): Optional<Authentication> =Optional.of(Authentication.build(username().orElseThrow()))
+        override fun isAuthenticated(): Boolean = true
+        override fun hasRole(role: String): Boolean  = false
     }
 
     @Requires(property = "spec.name", value = "UserAuditingTest")

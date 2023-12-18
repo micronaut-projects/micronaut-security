@@ -26,20 +26,13 @@ import java.util.Optional;
 @MicronautTest(transactional = false)
 public class UserAuditingTest {
 
-    @Inject
-    BookRepository bookRepository;
-
     @Test
-    void testCreatedByUpdatedByPopulatedOnSave() {
-        Book book = new Book();
-        book.setTitle("Tropic of Cancer");
-        book.setAuthor("Henry Miller");
-
+    void testCreatedByUpdatedByPopulatedOnSave(BookRepository bookRepository) {
+        Book book = new Book(null, "Tropic of Cancer", "Henry Miller", null, null);
         book = bookRepository.save(book);
-
-        Assertions.assertNotNull(book.getId());
-        Assertions.assertEquals("sherlock", book.getCreator());
-        Assertions.assertEquals("sherlock", book.getEditor());
+        Assertions.assertNotNull(book.id());
+        Assertions.assertEquals("sherlock", book.creator());
+        Assertions.assertEquals("sherlock", book.editor());
     }
 
     @Requires(property = "spec.name", value = "UserAuditingTest")

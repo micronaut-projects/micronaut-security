@@ -18,8 +18,10 @@ package io.micronaut.security.audit;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.beans.BeanProperty;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.data.annotation.AutoPopulated;
 import io.micronaut.data.annotation.event.PrePersist;
 import io.micronaut.data.annotation.event.PreUpdate;
@@ -31,11 +33,11 @@ import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.utils.SecurityService;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -48,6 +50,7 @@ import java.util.function.Predicate;
 @Requires(classes = { AutoPopulatedEntityEventListener.class, EntityEventContext.class })
 @Singleton
 public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventListener {
+    private static final Logger LOG = LoggerFactory.getLogger(UserAuditingEntityEventListener.class);
 
     private final SecurityService securityService;
 
@@ -60,14 +63,12 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
 
     @Override
     public boolean prePersist(@NonNull EntityEventContext<Object> context) {
-        autoPopulateUserIdentity(context, false);
-        return true;
+        return populate(context, PrePersist.class);
     }
 
     @Override
     public boolean preUpdate(@NonNull EntityEventContext<Object> context) {
-        autoPopulateUserIdentity(context, true);
-        return true;
+        return populate(context, PreUpdate.class);
     }
 
     @Override
@@ -83,23 +84,46 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
         };
     }
 
-    private void autoPopulateUserIdentity(@NonNull EntityEventContext<Object> context, boolean isUpdate) {
-        if (securityService.isAuthenticated()) {
-            final RuntimePersistentProperty<Object>[] applicableProperties = getApplicableProperties(context.getPersistentEntity());
-            for (RuntimePersistentProperty<Object> persistentProperty : applicableProperties) {
-                if (isUpdate) {
-                    if (!persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true)) {
-                        continue;
+    private boolean populate(@NonNull EntityEventContext<Object> context,
+                          @NonNull Class<? extends Annotation> listenerAnnotation) {
+        try {
+            securityService.getAuthentication().ifPresent(authentication -> {
+                Map<Class<?>, Object> valueForType = new HashMap<>();
+                for (RuntimePersistentProperty<Object> persistentProperty : getApplicableProperties(context.getPersistentEntity())) {
+                    if (shouldSetProperty(persistentProperty, listenerAnnotation)) {
+                        final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                        Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> convert(authentication, beanProperty));
+                        if (value != null) {
+                            context.setProperty(beanProperty, value);
+                        }
                     }
                 }
-
-                final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                getCurrentUserIdentityForProperty(beanProperty).ifPresent(identity -> context.setProperty(beanProperty, identity));
-            }
+            });
+            return true;
+        } catch (ConversionErrorException e) {
+            return false;
         }
     }
 
-    private Optional<Object> getCurrentUserIdentityForProperty(BeanProperty<Object, Object> beanProperty) {
-        return securityService.getAuthentication().flatMap(authentication -> conversionService.convert(authentication, beanProperty.getType()));
+    @Nullable
+    private Object convert(@NonNull Authentication authentication, @NonNull BeanProperty<Object, Object> beanProperty) throws ConversionErrorException {
+        try {
+            return conversionService.convertRequired(authentication, beanProperty.getType());
+        } catch (ConversionErrorException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Cannot convert from {} to {} for bean property {}", authentication.getClass().getSimpleName(), beanProperty.getType(), beanProperty.getName(), e);
+            }
+            throw e;
+        }
+    }
+
+    private boolean shouldSetProperty(@NonNull RuntimePersistentProperty<Object> persistentProperty, Class<? extends Annotation> listenerAnnotation) {
+        if (listenerAnnotation == PrePersist.class) {
+            return true;
+        }
+        if (listenerAnnotation == PreUpdate.class) {
+            return persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true);
+        }
+        return false;
     }
 }

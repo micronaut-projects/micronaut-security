@@ -7,6 +7,7 @@ import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.CrudRepository
 import io.micronaut.security.audit.docs.createdby.Book
+import io.micronaut.security.audit.docs.createdby.UserAuditingTest
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.utils.DefaultSecurityService
 import io.micronaut.security.utils.SecurityService
@@ -27,14 +28,12 @@ import java.util.*
 class CustomPrincipalConverterTest {
 
     @Inject
-    private var bookRepository: BookRepository? = null
+    lateinit var bookRepository: BookRepository
 
     @Test
     fun testCreatedByUpdatedByPopulatedOnSave() {
-        var book = Book()
-        book.title = "Tropic of Cancer"
-        book.author = "Henry Miller"
-        book = bookRepository!!.save(book)
+        var book = Book(null, "Tropic of Cancer", "Henry Miller", null, null)
+        book = bookRepository.save(book)
         Assertions.assertNotNull(book.id)
         Assertions.assertEquals("my_unique_identifier", book.creator)
         Assertions.assertEquals("my_unique_identifier", book.editor)
@@ -46,26 +45,15 @@ class CustomPrincipalConverterTest {
     )
     @Singleton
     class MockSecurityService : SecurityService {
-        override fun username(): Optional<String> {
-            return Optional.of("sherlock")
-        }
+        override fun username(): Optional<String> = Optional.of("sherlock")
 
-        override fun getAuthentication(): Optional<Authentication> {
-            val attrs: MutableMap<String, Any> = HashMap()
-            attrs["CUSTOM_ID_ATTR"] = "my_unique_identifier"
-            return Optional.of(Authentication.build(username().orElseThrow(), attrs))
-        }
-
-        override fun isAuthenticated(): Boolean {
-            return true
-        }
-
-        override fun hasRole(role: String): Boolean {
-            return false
-        }
+        override fun getAuthentication(): Optional<Authentication> =
+            Optional.of(Authentication.build(username().orElseThrow(), mapOf("CUSTOM_ID_ATTR" to "my_unique_identifier")))
+        override fun isAuthenticated(): Boolean = true
+        override fun hasRole(role: String): Boolean = false
     }
 
     @Requires(property = "spec.name", value = "CustomPrincipalConverterTest")
     @JdbcRepository(dialect = Dialect.H2)
-    internal interface BookRepository : CrudRepository<Book?, Long?>
+    interface BookRepository : CrudRepository<Book?, Long?>
 }
