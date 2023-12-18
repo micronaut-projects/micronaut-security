@@ -28,7 +28,6 @@ import io.micronaut.data.annotation.event.PreUpdate;
 import io.micronaut.data.event.EntityEventContext;
 import io.micronaut.data.model.runtime.RuntimePersistentProperty;
 import io.micronaut.data.runtime.event.listeners.AutoPopulatedEntityEventListener;
-import io.micronaut.logging.LogLevel;
 import io.micronaut.security.annotation.CreatedBy;
 import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;

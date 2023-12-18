@@ -1,25 +1,19 @@
 package io.micronaut.security.audit
 
 import io.micronaut.context.annotation.Property
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.core.convert.ConversionContext
-import io.micronaut.core.convert.TypeConverter
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import io.micronaut.data.annotation.Query
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.CrudRepository
-import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Put
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
@@ -35,8 +29,6 @@ import jakarta.inject.Singleton
 import jakarta.validation.constraints.NotBlank
 import org.reactivestreams.Publisher
 import spock.lang.Specification
-
-import java.security.Principal
 
 @Property(name = "datasources.default.dialect", value = "H2")
 @Property(name = "datasources.default.schema-generate", value = "CREATE_DROP")

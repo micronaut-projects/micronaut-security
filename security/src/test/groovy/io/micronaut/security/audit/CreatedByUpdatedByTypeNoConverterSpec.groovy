@@ -17,7 +17,6 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
-import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.CreatedBy
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.annotation.UpdatedBy
