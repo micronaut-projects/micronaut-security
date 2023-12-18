@@ -64,14 +64,12 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
 
     @Override
     public boolean prePersist(@NonNull EntityEventContext<Object> context) {
-        populate(context, PrePersist.class);
-        return true;
+        return populate(context, PrePersist.class);
     }
 
     @Override
     public boolean preUpdate(@NonNull EntityEventContext<Object> context) {
-        populate(context, PreUpdate.class);
-        return true;
+        return populate(context, PreUpdate.class);
     }
 
     @Override
@@ -87,32 +85,37 @@ public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventLis
         };
     }
 
-    private void populate(@NonNull EntityEventContext<Object> context,
+    private boolean populate(@NonNull EntityEventContext<Object> context,
                           @NonNull Class<? extends Annotation> listenerAnnotation) {
-        securityService.getAuthentication().ifPresent(authentication -> {
-            Map<Class<?>, Object> valueForType = new HashMap<>();
-            for (RuntimePersistentProperty<Object> persistentProperty : getApplicableProperties(context.getPersistentEntity())) {
-                if (shouldSetProperty(persistentProperty, listenerAnnotation)) {
-                    final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
-                    Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> convert(authentication, beanProperty));
-                    if (value != null) {
-                        context.setProperty(beanProperty, value);
+        try {
+            securityService.getAuthentication().ifPresent(authentication -> {
+                Map<Class<?>, Object> valueForType = new HashMap<>();
+                for (RuntimePersistentProperty<Object> persistentProperty : getApplicableProperties(context.getPersistentEntity())) {
+                    if (shouldSetProperty(persistentProperty, listenerAnnotation)) {
+                        final BeanProperty<Object, Object> beanProperty = persistentProperty.getProperty();
+                        Object value = valueForType.computeIfAbsent(beanProperty.getType(), type -> convert(authentication, beanProperty));
+                        if (value != null) {
+                            context.setProperty(beanProperty, value);
+                        }
                     }
                 }
-            }
-        });
+            });
+            return true;
+        } catch (ConversionErrorException e) {
+            return false;
+        }
     }
 
     @Nullable
-    private Object convert(@NonNull Authentication authentication, @NonNull BeanProperty<Object, Object> beanProperty) {
+    private Object convert(@NonNull Authentication authentication, @NonNull BeanProperty<Object, Object> beanProperty) throws ConversionErrorException {
         try {
             return conversionService.convertRequired(authentication, beanProperty.getType());
         } catch (ConversionErrorException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Cannot convert from {} to {} for bean property {}", authentication.getClass().getSimpleName(), beanProperty.getType(), beanProperty.getName(), e);
             }
+            throw e;
         }
-        return null;
     }
 
     private boolean shouldSetProperty(@NonNull RuntimePersistentProperty<Object> persistentProperty, Class<? extends Annotation> listenerAnnotation) {
