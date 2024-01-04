@@ -20,6 +20,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.converters.PrincipalToStringConverter
 import io.micronaut.security.filters.AuthenticationFetcher
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -99,7 +100,6 @@ class AuditingCustomIdentitySpec extends Specification {
     }
 
     @Requires(property = "spec.name", value = "AuditingCustomIdentitySpec")
-    @Replaces(PrincipalToStringConverter.class)
     @Singleton
     static class CustomPrincipalToStringConverter implements TypeConverter<Principal, String> {
         @Override

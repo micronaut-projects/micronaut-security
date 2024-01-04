@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.audit;
+package io.micronaut.security.converters;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.security.annotation.CreatedBy;
@@ -37,7 +38,7 @@ import java.util.Optional;
  * @author Jeremy Grelle
  * @since 4.5.0
  */
-@Singleton
+@Internal
 public class PrincipalToStringConverter implements TypeConverter<Principal, String> {
 
     /**
