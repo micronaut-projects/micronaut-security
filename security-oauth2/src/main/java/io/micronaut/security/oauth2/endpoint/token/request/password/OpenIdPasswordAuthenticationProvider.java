@@ -44,9 +44,11 @@ import java.util.stream.Collectors;
  *
  * @author James Kleeh
  * @since 1.2.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
-public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OpenIdPasswordAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -77,12 +79,12 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
-        OpenIdPasswordTokenRequestContext requestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
+        OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flux.from(
-                tokenEndpointClient.sendRequest(requestContext))
+                tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
             .switchMap(response -> {
                 Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
                 if (jwt.isPresent()) {

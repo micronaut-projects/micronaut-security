@@ -31,20 +31,20 @@ public interface IntrospectionProcessor<T> {
     /**
      *
      * @param introspectionRequest A parameter representing the token along with optional parameters representing additional context
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                @NonNull T httpRequest);
+                                                @NonNull T requestContext);
 
     /**
      *
      * @param authentication The authentication
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                @NonNull T httpRequest);
+                                                @NonNull T requestContext);
 }

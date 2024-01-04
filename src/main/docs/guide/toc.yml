@@ -15,7 +15,8 @@ securityConfiguration:
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
 authenticationProviders:
-  title: Authentication Providers
+  title: Reactive Authentication Providers
+  imperativeAuthenticationProviders: Authentication Provider
   authenticationProvidersUseCases: Authentication Providers Use Cases
   builtInAuthenticationProviders: Built-In Authentication Providers
 securityRule:
