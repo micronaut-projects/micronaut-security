@@ -21,6 +21,11 @@ import io.micronaut.core.convert.TypeConverterRegistrar;
 
 import java.security.Principal;
 
+/**
+ * Registers security {@link io.micronaut.core.convert.TypeConverter}s.
+ * @author Sergio del Amo
+ * @since 4.5.0
+ */
 @Internal
 public final class SecurityTypeConvertersRegistrar implements TypeConverterRegistrar {
     @Override

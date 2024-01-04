@@ -21,7 +21,6 @@ import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.security.annotation.CreatedBy;
 import io.micronaut.security.annotation.UpdatedBy;
 import io.micronaut.security.authentication.Authentication;
-import jakarta.inject.Singleton;
 
 import java.security.Principal;
 import java.util.Optional;
