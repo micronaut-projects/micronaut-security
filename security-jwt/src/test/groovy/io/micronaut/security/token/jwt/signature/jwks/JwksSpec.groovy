@@ -18,7 +18,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
@@ -77,7 +77,7 @@ class JwksSpec extends Specification {
                 RSAJwkProvider,
                 JwkProvider,
                 RSASignatureGeneratorConfiguration,
-                AuthenticationProvider,
+                ReactiveAuthenticationProvider,
         ]) {
             gatewayEmbeddedServer.applicationContext.getBean(beanClazz)
         }

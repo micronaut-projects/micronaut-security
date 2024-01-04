@@ -6,7 +6,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.json.JsonMapper
 import io.micronaut.json.tree.JsonNode
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
@@ -64,10 +64,10 @@ class PasswordGrantConditionSpec extends Specification {
         ApplicationContext ctx = ApplicationContext.run(PROPS + properties)
 
         expect:
-        ctx.containsBean(AuthenticationProvider)
+        ctx.containsBean(ReactiveAuthenticationProvider)
 
         when:
-        ctx.getBean(AuthenticationProvider)
+        ctx.getBean(ReactiveAuthenticationProvider)
 
         then:
         noExceptionThrown()

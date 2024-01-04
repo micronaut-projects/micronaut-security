@@ -1,6 +1,7 @@
 package io.micronaut.security.authentication
 
 import groovy.transform.AutoImplement
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
@@ -37,10 +38,10 @@ class AuthenticatorSpec extends Specification {
 
     void "if any authentication provider throws exception, continue with authentication"() {
         given:
-        def authProviderExceptionRaiser = Stub(AuthenticationProvider) {
+        def authProviderExceptionRaiser = Stub(ReactiveAuthenticationProvider) {
             authenticate(_, _) >> { Flux.error( new Exception('Authentication provider raised exception') ) }
         }
-        def authProviderOK = Stub(AuthenticationProvider) {
+        def authProviderOK = Stub(ReactiveAuthenticationProvider) {
             authenticate(_, _) >> Flux.create({emitter ->
                 emitter.next(AuthenticationResponse.success("admin"))
                 emitter.complete()
@@ -59,7 +60,7 @@ class AuthenticatorSpec extends Specification {
 
     void "if no authentication provider can authentication, the last error is sent back"() {
         given:
-        def authProviderFailed = Stub(AuthenticationProvider) {
+        def authProviderFailed = Stub(ReactiveAuthenticationProvider) {
             authenticate(_, _) >> Flux.create({ emitter ->
                 emitter.error(AuthenticationResponse.exception())
             }, FluxSink.OverflowStrategy.ERROR)
@@ -77,15 +78,15 @@ class AuthenticatorSpec extends Specification {
     void "test authentication strategy all with error and empty"() {
         given:
         def providers = [
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.empty()
                 },
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.next(AuthenticationResponse.success("a"))
                         emitter.complete()
@@ -106,12 +107,12 @@ class AuthenticatorSpec extends Specification {
     void "test authentication strategy all with error"() {
         given:
         def providers = [
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >>  Flux.create({ emitter ->
                         emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >>  Flux.create({ emitter ->
                         emitter.next(AuthenticationResponse.success("a"))
                         emitter.complete()
@@ -132,13 +133,13 @@ class AuthenticatorSpec extends Specification {
     void "test authentication strategy success first"() {
         given:
         def providers = [
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.next(AuthenticationResponse.success("a"))
                         emitter.complete()
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
@@ -158,13 +159,13 @@ class AuthenticatorSpec extends Specification {
     void "test authentication strategy multiple successes"() {
         given:
         def providers = [
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.next(AuthenticationResponse.success("a"))
                         emitter.complete()
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
-                Stub(AuthenticationProvider) {
+                Stub(ReactiveAuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
                         emitter.next(AuthenticationResponse.success("b"))
                         emitter.complete()

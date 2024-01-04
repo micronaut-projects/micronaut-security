@@ -87,12 +87,12 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                       @NonNull T httpRequest) {
+                                                       @NonNull T requestContext) {
         String token = introspectionRequest.getToken();
         return Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(token, httpRequest))
+                .flatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
-                .map(authentication -> createIntrospectionResponse(authentication, httpRequest))
+                .map(authentication -> createIntrospectionResponse(authentication, requestContext))
                 .defaultIfEmpty(emptyIntrospectionResponse(token))
                 .flux();
     }
@@ -123,19 +123,19 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                       @NonNull T httpRequest) {
-        return Flux.just(createIntrospectionResponse(authentication, httpRequest));
+                                                       @NonNull T requestContext) {
+        return Flux.just(createIntrospectionResponse(authentication, requestContext));
     }
 
     /**
      * Creates an {@link IntrospectionResponse} for an {@link Authentication}.
      * @param authentication Authentication
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return an {@link IntrospectionResponse}
      */
     @NonNull
     public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication,
-                                                             @NonNull T httpRequest) {
+                                                             @NonNull T requestContext) {
         return new IntrospectionResponse(true,
             resolveTokenType(authentication).orElse(null),
             resolveScope(authentication).orElse(null),
