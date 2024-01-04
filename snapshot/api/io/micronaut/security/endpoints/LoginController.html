@@ -69,17 +69,21 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.endpoints</a></div>
-<h1 title="Class LoginController" class="title">Class LoginController</h1>
+<h1 title="Class LoginController" class="title">Class LoginController&lt;B&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.endpoints.LoginController</div>
+<div class="inheritance">io.micronaut.security.endpoints.LoginController&lt;B&gt;</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>B</code> - The HTTP Request Body type</dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.endpoints.login.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.annotation.Controller.class) @Requires(beans={<a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler.class</a>,<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator.class</a>})
 @Controller("${micronaut.security.endpoints.login.path:/login}")
 <a href="../annotation/Secured.html" title="annotation interface in io.micronaut.security.annotation">@Secured</a>("isAnonymous()")
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">LoginController</span>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">LoginController&lt;B&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Handles login requests.</div>
 <dl class="notes">
@@ -100,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final <a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></div>
+<div class="col-first even-row-color"><code>protected final <a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#authenticator" class="member-name-link">authenticator</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a>&gt;</code></div>
@@ -123,7 +127,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">LoginController</a><wbr>(<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;authenticator,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">LoginController</a><wbr>(<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;authenticator,
  <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LoginSuccessfulEvent.html" title="class in io.micronaut.security.event">LoginSuccessfulEvent</a>&gt;&nbsp;loginSuccessfulEventPublisher,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a>&gt;&nbsp;loginFailedEventPublisher)</code></div>
@@ -144,7 +148,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#login(io.micronaut.security.authentication.UsernamePasswordCredentials,io.micronaut.http.HttpRequest)" class="member-name-link">login</a><wbr>(@Valid <a href="../authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a>&nbsp;usernamePasswordCredentials,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+ io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -166,7 +170,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="authenticator">
 <h3>authenticator</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">authenticator</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">authenticator</span></div>
 </section>
 </li>
 <li>
@@ -198,7 +202,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)">
 <h3>LoginController</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LoginController</span><wbr><span class="parameters">(<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;authenticator,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LoginController</span><wbr><span class="parameters">(<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;authenticator,
  <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LoginSuccessfulEvent.html" title="class in io.micronaut.security.event">LoginSuccessfulEvent</a>&gt;&nbsp;loginSuccessfulEventPublisher,
  io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a>&gt;&nbsp;loginFailedEventPublisher)</span></div>
@@ -227,7 +231,7 @@ loadScripts(document, 'script');</script>
 @SingleResult
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">login</span><wbr><span class="parameters">(@Valid @Body
  @Valid <a href="../authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a>&nbsp;usernamePasswordCredentials,
- io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+ io.micronaut.http.HttpRequest&lt;<a href="LoginController.html" title="type parameter in LoginController">B</a>&gt;&nbsp;request)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>usernamePasswordCredentials</code> - An instance of <a href="../authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication"><code>UsernamePasswordCredentials</code></a> in the body payload</dd>

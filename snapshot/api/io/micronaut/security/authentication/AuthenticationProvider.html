@@ -15,11 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var evenRowColor = "even-row-color";
-var oddRowColor = "odd-row-color";
-var tableTab = "table-tab";
-var activeTableTab = "active-table-tab";
-var pathtoroot = "../../../../";
+<script type="text/javascript">var pathtoroot = "../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -45,7 +41,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -53,7 +49,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li><a href="#method-detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search-input">SEARCH:</label>
@@ -69,19 +65,31 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.authentication</a></div>
-<h1 title="Interface AuthenticationProvider" class="title">Interface AuthenticationProvider&lt;T&gt;</h1>
+<h1 title="Interface AuthenticationProvider" class="title">Interface AuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
-<dd><code>T</code> - Request</dd>
+<dd><code>T</code> - Request Context Type</dd>
+<dd><code>I</code> - Authentication Request Identity Type</dd>
+<dd><code>S</code> - Authentication Request Secret Type</dd>
+</dl>
+<dl class="notes">
+<dt>All Superinterfaces:</dt>
+<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.security.ldap">LdapAuthenticationProvider</a></code>, <code><a href="../testutils/authprovider/MockAuthenticationProvider.html" title="class in io.micronaut.security.testutils.authprovider">MockAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OpenIdPasswordAuthenticationProvider</a></code></dd>
+<dd><code><a href="../ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.security.ldap">LdapAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a></code>, <code><a href="../oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OpenIdPasswordAuthenticationProvider</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">AuthenticationProvider&lt;T&gt;</span></div>
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.5.0")
+</span><span class="modifiers">public interface </span><span class="element-name type-name-label">AuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</span><span class="extends-implements">
+extends <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>AuthenticationProvider</code></a> for an imperative API or <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> for a reactive API instead.</div>
+</div>
 <div class="block">Defines an authentication provider.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -92,59 +100,25 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-io.micronaut.core.order.Ordered">Fields inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
+<code>HIGHEST_PRECEDENCE, LOWEST_PRECEDENCE</code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
-<div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
-<div id="method-summary-table.tabpanel" role="tabpanel">
-<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate</a><wbr>(<a href="AuthenticationProvider.html" title="type parameter in AuthenticationProvider">T</a>&nbsp;httpRequest,
- <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Authenticates a user with the given request.</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-<section class="details">
-<ul class="details-list">
-<!-- ============ METHOD DETAIL ========== -->
-<li>
-<section class="method-details" id="method-detail">
-<h2>Method Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">
-<h3 id="authenticate(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</h3>
-<div class="member-signature"><span class="return-type">org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</span>&nbsp;<span class="element-name">authenticate</span><wbr><span class="parameters">(@Nullable
- <a href="AuthenticationProvider.html" title="type parameter in AuthenticationProvider">T</a>&nbsp;httpRequest,
- <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</span></div>
-<div class="block">Authenticates a user with the given request. If a successful authentication is
- returned, the object must be an instance of <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.
-
- Publishers <b>MUST emit cold observables</b>! This method will be called for
- all authenticators for each authentication request and it is assumed no work
- will be done until the publisher is subscribed to.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>httpRequest</code> - The http request</dd>
-<dd><code>authenticationRequest</code> - The credentials to authenticate</dd>
-<dt>Returns:</dt>
-<dd>A publisher that emits 0 or 1 responses</dd>
-</dl>
-</section>
-</li>
-</ul>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.core.order.Ordered">Methods inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
+<code>getOrder</code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider">Methods inherited from interface&nbsp;io.micronaut.security.authentication.provider.<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a></h3>
+<code><a href="provider/ReactiveAuthenticationProvider.html#authenticate(io.micronaut.security.authentication.AuthenticationRequest)">authenticate</a>, <a href="provider/ReactiveAuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</a></code></div>
 </section>
 </li>
 </ul>

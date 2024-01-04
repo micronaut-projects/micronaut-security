@@ -2,6 +2,7 @@ io.micronaut.security.annotation
 io.micronaut.security.annotation.expressions
 io.micronaut.security.aot
 io.micronaut.security.authentication
+io.micronaut.security.authentication.provider
 io.micronaut.security.config
 io.micronaut.security.endpoints
 io.micronaut.security.endpoints.introspection

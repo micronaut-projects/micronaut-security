@@ -58,7 +58,7 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#securityConfiguration"><strong>7</strong><span>Security Configuration</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#authenticationProviders"><strong>8</strong><span>Authentication Providers</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#authenticationProviders"><strong>8</strong><span>Reactive Authentication Providers</span></a></div>
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#securityRule"><strong>9</strong><span>Security Rules</span></a></div>
                                 
@@ -135,11 +135,13 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-redirection"><a href="#redirection"><strong>7.6</strong><span>Redirection Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-authenticationProviders"><a href="#authenticationProviders"><strong>8</strong><span>Authentication Providers</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authenticationProviders"><a href="#authenticationProviders"><strong>8</strong><span>Reactive Authentication Providers</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-authenticationProvidersUseCases"><a href="#authenticationProvidersUseCases"><strong>8.1</strong><span>Authentication Providers Use Cases</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-imperativeAuthenticationProviders"><a href="#imperativeAuthenticationProviders"><strong>8.1</strong><span>Authentication Provider</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-builtInAuthenticationProviders"><a href="#builtInAuthenticationProviders"><strong>8.2</strong><span>Built-In Authentication Providers</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-authenticationProvidersUseCases"><a href="#authenticationProvidersUseCases"><strong>8.2</strong><span>Authentication Providers Use Cases</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-builtInAuthenticationProviders"><a href="#builtInAuthenticationProviders"><strong>8.3</strong><span>Built-In Authentication Providers</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-securityRule"><a href="#securityRule"><strong>9</strong><span>Security Rules</span></a></div>
         
@@ -1425,7 +1427,7 @@ Use the API <a href="../api/io/micronaut/security/config/RedirectService.html">R
 </table>
 </div>
 
-<h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>8 Authentication Providers</h1>
+<h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>8 Reactive Authentication Providers</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders.adoc"'>
@@ -1435,38 +1437,134 @@ Use the API <a href="../api/io/micronaut/security/config/RedirectService.html">R
 
 
 <div class="paragraph">
-<p>To authenticate users you must provide implementations of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>.</p>
+<p>To authenticate users you must provide implementations of <a href="../api/io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html">ReactiveAuthenticationProvider</a> or <a href="../api/io/micronaut/security/authentication/provider/HttpRequestReactiveAuthenticationProvider.html">HttpRequestReactiveAuthenticationProvider</a>.</p>
 </div>
 <div class="paragraph">
 <p>The following code snippet illustrates a naive implementation:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-@Singleton
-public class AuthenticationProviderUserPassword&lt;T&gt; implements AuthenticationProvider&lt;T&gt; {
-
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+class CustomAuthenticationProvider&lt;B&gt; implements HttpRequestReactiveAuthenticationProvider&lt;B&gt; {
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(T httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
-            if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-                emitter.success(AuthenticationResponse.success("user"));
-            } else {
-                emitter.error(AuthenticationResponse.exception());
-            }
+    @SingleResult
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;B&gt; requestContext, AuthenticationRequest&lt;String, String&gt; authRequest) {
+        AuthenticationResponse rsp = authRequest.getIdentity().equals("user") &amp;&amp; authRequest.getSecret().equals("password")
+                ? AuthenticationResponse.success("user")
+                : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+        return Mono.create(emitter -&gt; {
+            emitter.success(rsp);
         });
     }
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Singleton
+class CustomAuthenticationProvider&lt;B&gt; implements HttpRequestReactiveAuthenticationProvider&lt;B&gt; {
+    @Override
+    @SingleResult
+    Publisher&lt;AuthenticationResponse&gt; authenticate(@Nullable HttpRequest&lt;B&gt; httpRequest,
+                                                   @NonNull AuthenticationRequest&lt;String, String&gt; authRequest) {
+        AuthenticationResponse rsp = (authRequest.identity == "user" &amp;&amp; authRequest.secret == "password")
+                ? AuthenticationResponse.success("user")
+                : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+        return Mono.create(emitter -&gt; {
+            emitter.success(rsp)
+        })
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@Singleton
+class CustomAuthenticationProvider&lt;Any&gt; :
+    HttpRequestReactiveAuthenticationProvider&lt;Any&gt; {
+    override fun authenticate(
+        requestContext: HttpRequest&lt;Any&gt;?,
+        authenticationRequest: AuthenticationRequest&lt;String, String&gt;
+    ): Publisher&lt;AuthenticationResponse&gt; {
+        val rsp = if (authenticationRequest.identity == "user" &amp;&amp; authenticationRequest.secret == "password")
+            AuthenticationResponse.success("user")
+        else AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+        return Mono.create { emitter -&gt; emitter.success(rsp) }
+    }
+}</code></pre>
+</div>
+</div>
 
-<h2 id="authenticationProvidersUseCases"><a class="anchor" href="#authenticationProvidersUseCases"></a>8.1 Authentication Providers Use Cases</h2>
+<h2 id="imperativeAuthenticationProviders"><a class="anchor" href="#imperativeAuthenticationProviders"></a>8.1 Authentication Provider</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders/imperativeAuthenticationProviders.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html">ReactiveAuthenticationProvider</a> interface is a reactive API. If you prefer an imperative style, you can instead implement the <a href="../api/io/micronaut/security/authentication/provider/AuthenticationProvider.html">AuthenticationProvider</a> or <a href="../api/io/micronaut/security/authentication/provider/HttpRequestAuthenticationProvider.html">HttpRequestAuthenticationProvider</a> interface:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+class CustomAuthenticationProvider&lt;B&gt; implements HttpRequestAuthenticationProvider&lt;B&gt; {
+
+    @Override
+    public AuthenticationResponse authenticate(HttpRequest&lt;B&gt; requestContext, AuthenticationRequest&lt;String, String&gt; authRequest) {
+        return (authRequest.getIdentity().equals("user") &amp;&amp; authRequest.getSecret().equals("password"))
+                ? AuthenticationResponse.success("user")
+                : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Singleton
+class CustomAuthenticationProviderCustomAuthenticationProvider&lt;B&gt; implements HttpRequestAuthenticationProvider&lt;B&gt; {
+    @Override
+    AuthenticationResponse authenticate(HttpRequest&lt;B&gt; requestContext, AuthenticationRequest&lt;String, String&gt; authRequest) {
+        authRequest.identity == "user" &amp;&amp; authRequest.secret == "password"
+                ? AuthenticationResponse.success("user")
+                : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@Singleton
+class CustomAuthenticationProvider :
+    HttpRequestAuthenticationProvider&lt;Any&gt; {
+    override fun authenticate(
+        requestContext: HttpRequest&lt;Any&gt;?,
+        authRequest: AuthenticationRequest&lt;String, String&gt;
+    ): AuthenticationResponse {
+        return if (authRequest.identity == "user" &amp;&amp; authRequest.secret == "password")
+            AuthenticationResponse.success("user")
+        else AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), annotate the <code>authenticate</code> method with <code>@Blocking</code>. If the <code>authenticate</code> method is annotated with <code>@Blocking</code>, it will be executed in a managed thread using the <code>TaskExecutors.BLOCKING</code> executor to avoid blocking the main reactive flow.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="authenticationProvidersUseCases"><a class="anchor" href="#authenticationProvidersUseCases"></a>8.2 Authentication Providers Use Cases</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders/authenticationProvidersUseCases.adoc"'>
@@ -1482,7 +1580,7 @@ public class AuthenticationProviderUserPassword&lt;T&gt; implements Authenticati
 <p>Basic authentication which is implemented as an <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> will also trigger the available <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s.</p>
 </div>
 
-<h2 id="builtInAuthenticationProviders"><a class="anchor" href="#builtInAuthenticationProviders"></a>8.2 Built-In Authentication Providers</h2>
+<h2 id="builtInAuthenticationProviders"><a class="anchor" href="#builtInAuthenticationProviders"></a>8.3 Built-In Authentication Providers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders/builtInAuthenticationProviders.adoc"'>

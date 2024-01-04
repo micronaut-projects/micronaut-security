@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Package:&nbsp;</li>
 <li><a href="#package-description">Description</a>&nbsp;|&nbsp;</li>
-<li>Related Packages&nbsp;|&nbsp;</li>
+<li><a href="#related-package-summary">Related Packages</a>&nbsp;|&nbsp;</li>
 <li><a href="#class-summary">Classes and Interfaces</a></li>
 </ul>
 </div>
@@ -75,6 +75,19 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<li>
+<div id="related-package-summary">
+<div class="caption"><span>Related Packages</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Package</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="provider/package-summary.html">io.micronaut.security.authentication.provider</a></div>
+<div class="col-last even-row-color">
+<div class="block">Authentication provider API.</div>
+</div>
+</div>
+</div>
+</li>
 <li>
 <div id="class-summary">
 <div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab3" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab3', 2)" class="table-tab">Enum Classes</button><button id="class-summary-tab5" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab5', 2)" class="table-tab">Exceptions</button></div>
@@ -118,9 +131,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A condition that matches a supplied list of authentication modes.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;T&gt;</div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
-<div class="block">Defines an authentication provider.</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>AuthenticationProvider</code></a> for an imperative API or <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> for a reactive API instead.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;T,<wbr>S&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
@@ -130,9 +143,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">The response of an authentication attempt.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;T&gt;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;T,<wbr>I,<wbr>S&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">An Authenticator operates on several <a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a> instances returning the first
+<div class="block">An Authenticator operates on several <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> instances returning the first
  authenticated <a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab5"><a href="AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a></div>
@@ -143,11 +156,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Configuration for basic authentication.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a>&lt;B&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">An implementation of <a href="../filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><code>AuthenticationFetcher</code></a> that decodes a username
  and password from the Authorization header and authenticates the credentials
- against any <a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a>s available.</div>
+ against any <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a>s available.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="BasicAuthUtils.html" title="class in io.micronaut.security.authentication">BasicAuthUtils</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
