@@ -1,11 +1,9 @@
 package io.micronaut.security.audit.docs.customconverter
 
 //tag::clazz[]
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.convert.ConversionContext
 import io.micronaut.core.convert.TypeConverter
-import io.micronaut.security.converters.PrincipalToStringConverter
 import io.micronaut.security.authentication.Authentication
 import jakarta.inject.Singleton
 

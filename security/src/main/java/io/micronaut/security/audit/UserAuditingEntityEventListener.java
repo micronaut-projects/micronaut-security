@@ -49,7 +49,7 @@ import java.util.function.Predicate;
  */
 @Requires(classes = { AutoPopulatedEntityEventListener.class, EntityEventContext.class })
 @Singleton
-public class UserAuditingEntityEventListener extends AutoPopulatedEntityEventListener {
+class UserAuditingEntityEventListener extends AutoPopulatedEntityEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(UserAuditingEntityEventListener.class);
 
     private final SecurityService securityService;

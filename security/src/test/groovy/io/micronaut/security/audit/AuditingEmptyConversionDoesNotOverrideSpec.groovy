@@ -1,7 +1,6 @@
 package io.micronaut.security.audit
 
 import io.micronaut.context.annotation.Property
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.core.convert.ConversionContext
@@ -20,7 +19,6 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.converters.PrincipalToStringConverter
 import io.micronaut.security.filters.AuthenticationFetcher
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
