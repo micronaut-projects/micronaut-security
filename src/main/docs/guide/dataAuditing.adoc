@@ -1,0 +1,1 @@
+Micronaut Security provides integration with https://micronaut-projects.github.io/micronaut-data/latest/guide/[Micronaut Data] for automatically capturing the identity of the user that created or updated a particular entity.

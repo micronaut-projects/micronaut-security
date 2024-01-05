@@ -23,6 +23,11 @@ dependencies {
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testCompileOnly(mn.jackson.databind)
     testImplementation(mnSerde.micronaut.serde.jackson)
+
+    testAnnotationProcessor(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
 }
 
 tasks.named('test') {
