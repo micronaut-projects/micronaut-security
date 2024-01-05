@@ -72,13 +72,15 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#retrievingAuthenticatedUser"><strong>14</strong><span>Retrieve the authenticated user</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#securityEvents"><strong>15</strong><span>Security Events</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#dataAuditing"><strong>15</strong><span>Data Change Auditing</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>16</strong><span>OAuth 2.0</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#securityEvents"><strong>16</strong><span>Security Events</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>17</strong><span>Ahead-of-time optimizations</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>17</strong><span>OAuth 2.0</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>18</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>18</strong><span>Ahead-of-time optimizations</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>19</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -229,75 +231,81 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>14.2</strong><span>User outside of a controller</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-securityEvents"><a href="#securityEvents"><strong>15</strong><span>Security Events</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-dataAuditing"><a href="#dataAuditing"><strong>15</strong><span>Data Change Auditing</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-oauth"><a href="#oauth"><strong>16</strong><span>OAuth 2.0</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-annotations"><a href="#annotations"><strong>15.1</strong><span>Auditing Annotations</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-installation"><a href="#installation"><strong>16.1</strong><span>Installation</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-identityMapping"><a href="#identityMapping"><strong>15.2</strong><span>Custom Authentication Mapping</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-openid"><a href="#openid"><strong>16.2</strong><span>OpenID Connect</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-securityEvents"><a href="#securityEvents"><strong>16</strong><span>Security Events</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-flows"><a href="#flows"><strong>16.3</strong><span>Flows</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-oauth"><a href="#oauth"><strong>17</strong><span>OAuth 2.0</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-authorization-code"><a href="#authorization-code"><strong>16.3.1</strong><span>Authorization Code</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-installation"><a href="#installation"><strong>17.1</strong><span>Installation</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-oauth2-authorization-code"><a href="#oauth2-authorization-code"><strong>16.3.1.1</strong><span>OAuth 2.0</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-openid"><a href="#openid"><strong>17.2</strong><span>OpenID Connect</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-configuration"><a href="#oauth2-configuration"><strong>16.3.1.1.1</strong><span>Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-flows"><a href="#flows"><strong>17.3</strong><span>Flows</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-user-details"><a href="#oauth2-user-details"><strong>16.3.1.1.2</strong><span>User Details Mapper</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-authorization-code"><a href="#authorization-code"><strong>17.3.1</strong><span>Authorization Code</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-openid-authorization-code"><a href="#openid-authorization-code"><strong>16.3.1.2</strong><span>OpenID Connect</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-oauth2-authorization-code"><a href="#oauth2-authorization-code"><strong>17.3.1.1</strong><span>OAuth 2.0</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-configuration"><a href="#openid-configuration"><strong>16.3.1.2.1</strong><span>Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-configuration"><a href="#oauth2-configuration"><strong>17.3.1.1.1</strong><span>Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-user-details"><a href="#openid-user-details"><strong>16.3.1.2.2</strong><span>OAuth 2.0 Authentication Mapper</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-user-details"><a href="#oauth2-user-details"><strong>17.3.1.1.2</strong><span>User Details Mapper</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-auth-parameters"><a href="#openid-auth-parameters"><strong>16.3.1.2.3</strong><span>Parameters</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-openid-authorization-code"><a href="#openid-authorization-code"><strong>17.3.1.2</strong><span>OpenID Connect</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-nonce"><a href="#nonce"><strong>16.3.1.2.3.1</strong><span>Nonce</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-configuration"><a href="#openid-configuration"><strong>17.3.1.2.1</strong><span>Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-login-hint"><a href="#login-hint"><strong>16.3.1.2.3.2</strong><span>Login Hint</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-user-details"><a href="#openid-user-details"><strong>17.3.1.2.2</strong><span>OAuth 2.0 Authentication Mapper</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-id-token-hint"><a href="#id-token-hint"><strong>16.3.1.2.3.3</strong><span>ID Token Hint</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-auth-parameters"><a href="#openid-auth-parameters"><strong>17.3.1.2.3</strong><span>Parameters</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-token-validation"><a href="#token-validation"><strong>16.3.1.2.4</strong><span>Token Validation</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-nonce"><a href="#nonce"><strong>17.3.1.2.3.1</strong><span>Nonce</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>16.3.1.3</strong><span>State Parameter</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-login-hint"><a href="#login-hint"><strong>17.3.1.2.3.2</strong><span>Login Hint</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-pkce"><a href="#pkce"><strong>16.3.1.4</strong><span>PKCE</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-id-token-hint"><a href="#id-token-hint"><strong>17.3.1.2.3.3</strong><span>ID Token Hint</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>16.3.2</strong><span>Client Credentials</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-token-validation"><a href="#token-validation"><strong>17.3.1.2.4</strong><span>Token Validation</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>16.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>17.3.1.3</strong><span>State Parameter</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>16.3.2.2</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-pkce"><a href="#pkce"><strong>17.3.1.4</strong><span>PKCE</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>16.3.3</strong><span>Password</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>17.3.2</strong><span>Client Credentials</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>16.4</strong><span>Endpoints</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>17.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-endsession"><a href="#endsession"><strong>16.4.1</strong><span>OpenID End Session</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>17.3.2.2</strong><span>Guides</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-introspection"><a href="#introspection"><strong>16.4.2</strong><span>Introspection</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>17.3.3</strong><span>Password</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>16.4.3</strong><span>Revocation</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>17.4</strong><span>Endpoints</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>16.4.4</strong><span>OpenID User Info</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-endsession"><a href="#endsession"><strong>17.4.1</strong><span>OpenID End Session</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>16.5</strong><span>Custom Clients</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-introspection"><a href="#introspection"><strong>17.4.2</strong><span>Introspection</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>16.6</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>17.4.3</strong><span>Revocation</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>17</strong><span>Ahead-of-time optimizations</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>17.4.4</strong><span>OpenID User Info</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>17.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>17.5</strong><span>Custom Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>17.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>17.6</strong><span>Guides</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>17.3</strong><span>JWKS Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>18</strong><span>Ahead-of-time optimizations</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>18</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>18.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>18.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>18.3</strong><span>JWKS Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>19</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -6265,7 +6273,221 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 </div>
 </div>
 
-<h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>15 Security Events</h1>
+<h1 id="dataAuditing"><a class="anchor" href="#dataAuditing"></a>15 Data Change Auditing</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/dataAuditing.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security provides integration with <a href="https://micronaut-projects.github.io/micronaut-data/latest/guide/">Micronaut Data</a> for automatically capturing the identity of the user that created or updated a particular entity.</p>
+</div>
+
+<h2 id="annotations"><a class="anchor" href="#annotations"></a>15.1 Auditing Annotations</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/dataAuditing/annotations.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The annotations <a href="../api/io/micronaut/security/annotation/CreatedBy.html">@CreatedBy</a> and <a href="../api/io/micronaut/security/annotation/UpdatedBy.html">@UpdatedBy</a> annotations are provided for application to your Micronaut Data entities. The annotated fields will be automatically populated with the currently authenticated user&#8217;s identity. For example:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.security.annotation.CreatedBy;
+import io.micronaut.security.annotation.UpdatedBy;
+import jakarta.validation.constraints.NotBlank;
+
+@MappedEntity //1
+public record Book(
+    @Id
+    @GeneratedValue
+    @Nullable
+    Long id,
+
+    @NotBlank
+    String title,
+
+    @NotBlank
+    String author,
+
+    @Nullable
+    @CreatedBy //2
+    String creator,
+
+    @Nullable
+    @UpdatedBy //3
+    String editor) {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.core.annotation.Nullable
+import io.micronaut.data.annotation.GeneratedValue
+import io.micronaut.data.annotation.Id
+import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.security.annotation.CreatedBy
+import io.micronaut.security.annotation.UpdatedBy
+import jakarta.validation.constraints.NotBlank
+
+@MappedEntity //1
+class Book {
+
+    @Id
+    @GeneratedValue
+    @Nullable
+    Long id
+
+    @NotBlank
+    String title
+
+    @NotBlank
+    String author
+
+    @CreatedBy //2
+    String creator
+
+    @UpdatedBy //3
+    String editor
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.data.annotation.GeneratedValue
+import io.micronaut.data.annotation.Id
+import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.security.annotation.CreatedBy
+import io.micronaut.security.annotation.UpdatedBy
+
+@MappedEntity //1
+data class Book(
+    @field:Id
+    @field:GeneratedValue(GeneratedValue.Type.AUTO)
+    var id: Long? = null,
+    var title: String,
+    var author: String,
+    @field:CreatedBy //2
+    var creator: String? = null,
+    @UpdatedBy //3
+    var editor: String? = null
+)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The class is mapped and persisted by Micronaut Data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The creator field will be populated on <code>save()</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The editor field will be populated on both <code>save()</code> and <code>update()</code></td>
+</tr>
+</table>
+</div>
+
+<h2 id="identityMapping"><a class="anchor" href="#identityMapping"></a>15.2 Custom Authentication Mapping</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/dataAuditing/identityMapping.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>A <a href="../api/io/micronaut/security/audit/PrincipalToStringConverter.html">PrincipalToStringConverter</a> is provided to map the current <a href="../api/io/micronaut/security/Authentication.html">Authentication</a> object to the annotated String fields. The default implementation maps the value of <code>Principal.getName()</code> to the fields. To customize this mapping, you can provide your own <code>TypeConverter</code> implementation that replaces <code>PrincipalToStringConverter</code>. For example:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.convert.ConversionContext;
+import io.micronaut.core.convert.TypeConverter;
+import io.micronaut.security.authentication.Authentication;
+import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
+@Singleton
+public class AuthenticationToStringConverter implements TypeConverter&lt;Authentication, String&gt; { // <b class="conum">(1)</b>
+    @Override
+    public Optional&lt;String&gt; convert(Authentication authentication, Class&lt;String&gt; targetType, ConversionContext context) {
+        return Optional.ofNullable(authentication.getAttributes().get("CUSTOM_ID_ATTR")).map(Object::toString); // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.convert.ConversionContext
+import io.micronaut.core.convert.TypeConverter
+import io.micronaut.security.authentication.Authentication
+import jakarta.inject.Singleton
+
+@Singleton
+class AuthenticationToStringConverter implements TypeConverter&lt;Authentication, String&gt; { // <b class="conum">(1)</b>
+    @Override
+    Optional&lt;String&gt; convert(Authentication authentication, Class&lt;String&gt; targetType, ConversionContext context) {
+        Optional.ofNullable(authentication.attributes.get("CUSTOM_ID_ATTR")).map(Object::toString) // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.convert.ConversionContext
+import io.micronaut.core.convert.TypeConverter
+import io.micronaut.security.authentication.Authentication
+import jakarta.inject.Singleton
+import java.util.*
+
+@Singleton
+class AuthenticationToStringConverter : TypeConverter&lt;Authentication, String&gt; { // <b class="conum">(1)</b>
+    override fun convert(
+        authentication: Authentication,
+        targetType: Class&lt;String&gt;,
+        context: ConversionContext
+    ): Optional&lt;String&gt; {
+        return Optional.ofNullable(authentication.getAttributes()["CUSTOM_ID_ATTR"]).map { obj -&gt; obj.toString() } // <b class="conum">(3)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Conversion between <code>Authentication</code> and <code>String</code> is implemented</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The implementation maps a custom attribute to the auto-populated identity</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The type conversion mechanism could also be used to map <code>Authentication</code> to more complex field types other than String, such as a custom domain-specific <code>User</code> object.</p>
+</div>
+
+<h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>16 Security Events</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityEvents.adoc"'>
@@ -6317,7 +6539,7 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 <p>To learn how to listen for events, see the <a href="https://docs.micronaut.io/latest/guide/index.html#contextEvents">Context Events</a> section of the documentation.</p>
 </div>
 
-<h1 id="oauth"><a class="anchor" href="#oauth"></a>16 OAuth 2.0</h1>
+<h1 id="oauth"><a class="anchor" href="#oauth"></a>17 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth.adoc"'>
@@ -6455,7 +6677,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 </table>
 </div>
 
-<h2 id="installation"><a class="anchor" href="#installation"></a>16.1 Installation</h2>
+<h2 id="installation"><a class="anchor" href="#installation"></a>17.1 Installation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/installation.adoc"'>
@@ -6487,7 +6709,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <p>Code can be found at the <a href="https://github.com/micronaut-projects/micronaut-security/tree/master/security-oauth2">micronaut-security</a> repository.</p>
 </div>
 
-<h2 id="openid"><a class="anchor" href="#openid"></a>16.2 OpenID Connect</h2>
+<h2 id="openid"><a class="anchor" href="#openid"></a>17.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/openid.adoc"'>
@@ -6547,7 +6769,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 </table>
 </div>
 
-<h2 id="flows"><a class="anchor" href="#flows"></a>16.3 Flows</h2>
+<h2 id="flows"><a class="anchor" href="#flows"></a>17.3 Flows</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows.adoc"'>
@@ -6558,7 +6780,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 
 
 
-<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>16.3.1 Authorization Code</h2>
+<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>17.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
@@ -6748,7 +6970,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 </div>
 </div>
 
-<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>16.3.1.1 OAuth 2.0</h2>
+<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>17.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
@@ -6769,7 +6991,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 </div>
 </div>
 
-<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>16.3.1.1.1 Configuration</h2>
+<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>17.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
@@ -6968,7 +7190,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </table>
 </div>
 
-<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>16.3.1.1.2 User Details Mapper</h2>
+<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>17.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
@@ -7097,17 +7319,19 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+
+import java.util.Collections;
+import java.util.List;
 
 @Named("github") // <b class="conum">(1)</b>
 @Singleton
@@ -7163,7 +7387,8 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -7219,7 +7444,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 </table>
 </div>
 
-<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>16.3.1.2 OpenID Connect</h2>
+<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>17.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
@@ -7240,7 +7465,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 </div>
 </div>
 
-<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>16.3.1.2.1 Configuration</h2>
+<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>17.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
@@ -7597,7 +7822,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 
-<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>16.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
+<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>17.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
@@ -7864,7 +8089,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </table>
 </div>
 
-<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>16.3.1.2.3 Parameters</h2>
+<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>17.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
@@ -7944,7 +8169,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </tbody>
 </table>
 
-<h2 id="nonce"><a class="anchor" href="#nonce"></a>16.3.1.2.3.1 Nonce</h2>
+<h2 id="nonce"><a class="anchor" href="#nonce"></a>17.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
@@ -8212,7 +8437,7 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 
-<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>16.3.1.2.3.2 Login Hint</h2>
+<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>17.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
@@ -8225,7 +8450,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html">LoginHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>16.3.1.2.3.3 ID Token Hint</h2>
+<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>17.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
@@ -8238,7 +8463,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>16.3.1.2.4 Token Validation</h2>
+<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>17.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
@@ -8257,7 +8482,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
 </div>
 
-<h2 id="state"><a class="anchor" href="#state"></a>16.3.1.3 State Parameter</h2>
+<h2 id="state"><a class="anchor" href="#state"></a>17.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
@@ -8437,7 +8662,7 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 
-<h2 id="pkce"><a class="anchor" href="#pkce"></a>16.3.1.4 PKCE</h2>
+<h2 id="pkce"><a class="anchor" href="#pkce"></a>17.3.1.4 PKCE</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/pkce.adoc"'>
@@ -8457,7 +8682,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>If the built-in implementation does not fulfill your needs, you can  provide a <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of bean <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html">CodeVerifierGenerator</a> or <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html">PkceGenerator</a>.</p>
 </div>
 
-<h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>16.3.2 Client Credentials</h2>
+<h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>17.3.2 Client Credentials</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
@@ -8634,7 +8859,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <p><a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> caches the token response. If the cached access token is expired, they renew it automatically.</p>
 </div>
 
-<h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>16.3.2.1 HTTP Client Filter for Client Credentials</h2>
+<h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>17.3.2.1 HTTP Client Filter for Client Credentials</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
@@ -8820,7 +9045,7 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </tbody>
 </table>
 
-<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>16.3.2.2 Guides</h2>
+<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>17.3.2.2 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientCredentialGuides.adoc"'>
@@ -8843,7 +9068,7 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </ul>
 </div>
 
-<h2 id="password"><a class="anchor" href="#password"></a>16.3.3 Password</h2>
+<h2 id="password"><a class="anchor" href="#password"></a>17.3.3 Password</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>
@@ -8971,7 +9196,7 @@ This example above is not intended to be a complete configuration reference
 <p>When a client is configured for the password grant type, the authorization code endpoints will not be available and instead an <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> will be created that will participate in the <a href="#login">normal login flow</a>.</p>
 </div>
 
-<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>16.4 Endpoints</h2>
+<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>17.4 Endpoints</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
@@ -8982,7 +9207,7 @@ This example above is not intended to be a complete configuration reference
 
 
 
-<h2 id="endsession"><a class="anchor" href="#endsession"></a>16.4.1 OpenID End Session</h2>
+<h2 id="endsession"><a class="anchor" href="#endsession"></a>17.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
@@ -9104,7 +9329,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="introspection"><a class="anchor" href="#introspection"></a>16.4.2 Introspection</h2>
+<h2 id="introspection"><a class="anchor" href="#introspection"></a>17.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
@@ -9148,7 +9373,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="revocation"><a class="anchor" href="#revocation"></a>16.4.3 Revocation</h2>
+<h2 id="revocation"><a class="anchor" href="#revocation"></a>17.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
@@ -9192,7 +9417,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="user-info"><a class="anchor" href="#user-info"></a>16.4.4 OpenID User Info</h2>
+<h2 id="user-info"><a class="anchor" href="#user-info"></a>17.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
@@ -9231,7 +9456,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>16.5 Custom Clients</h2>
+<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>17.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/custom-client.adoc"'>
@@ -9292,7 +9517,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
 </div>
 
-<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>16.6 Guides</h2>
+<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>17.6 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauthGuides.adoc"'>
@@ -9330,7 +9555,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </ul>
 </div>
 
-<h1 id="aot"><a class="anchor" href="#aot"></a>17 Ahead-of-time optimizations</h1>
+<h1 id="aot"><a class="anchor" href="#aot"></a>18 Ahead-of-time optimizations</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot.adoc"'>
@@ -9350,7 +9575,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>Micronaut Security offers several ahead-of-time optimizations.</p>
 </div>
 
-<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>17.1 Micronaut Security AOT Configuration</h2>
+<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>18.1 Micronaut Security AOT Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotConfiguration.adoc"'>
@@ -9398,7 +9623,7 @@ aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
 </div>
 </div>
 
-<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>17.2 OpenID Configuration Optimization</h2>
+<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>18.2 OpenID Configuration Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotOpenidConfiguration.adoc"'>
@@ -9437,7 +9662,7 @@ The application uses the configuration present at the authorization server at bu
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>17.3 JWKS Optimization</h2>
+<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>18.3 JWKS Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotJwks.adoc"'>
@@ -9472,7 +9697,7 @@ The application uses the JWKS exposed by the authorization server at build time.
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>18 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>19 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/repository.adoc"'>

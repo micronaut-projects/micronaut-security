@@ -4,6 +4,7 @@ io.micronaut.security.aot
 io.micronaut.security.authentication
 io.micronaut.security.authentication.provider
 io.micronaut.security.config
+io.micronaut.security.converters
 io.micronaut.security.endpoints
 io.micronaut.security.endpoints.introspection
 io.micronaut.security.errors
