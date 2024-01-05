@@ -38,7 +38,7 @@ import java.util.Optional;
  * @since 4.5.0
  */
 @Internal
-class PrincipalToStringConverter implements TypeConverter<Principal, String> {
+final class PrincipalToStringConverter implements TypeConverter<Principal, String> {
 
     /**
      *
