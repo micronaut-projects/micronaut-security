@@ -1566,7 +1566,7 @@ class CustomAuthenticationProvider :
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), annotate the <code>authenticate</code> method with <code>@Blocking</code>. If the <code>authenticate</code> method is annotated with <code>@Blocking</code>, it will be executed in a managed thread using the <code>TaskExecutors.BLOCKING</code> executor to avoid blocking the main reactive flow.
+If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), implement the <a href="../api/io/micronaut/security/authentication/provider/ExecutorAuthenticationProvider.html">ExecutorAuthenticationProvider</a> or <a href="../api/io/micronaut/security/authentication/provider/HttpRequestExecutorAuthenticationProvider.html">HttpRequestExecutorAuthenticationProvider</a> interface. Those APIs specify the executor name, by default <code>TaskExecutors.BLOCKING</code>, where the code gets executed to avoid blocking the main reactive flow.
 </td>
 </tr>
 </table>
