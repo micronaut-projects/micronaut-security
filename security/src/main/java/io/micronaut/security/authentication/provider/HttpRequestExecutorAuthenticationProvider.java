@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.authentication.provider;
+
+import io.micronaut.http.HttpRequest;
+
 /**
- * Security {@link io.micronaut.core.convert.TypeConverter}s.
+ * {@link ExecutorAuthenticationProvider} for {@link HttpRequest}.
+ * @author Sergio del Amo
+ * @since 4.5.0
+ * @param <B> The HTTP Request Body type
  */
-package io.micronaut.security.converters;
+public interface HttpRequestExecutorAuthenticationProvider<B> extends ExecutorAuthenticationProvider<HttpRequest<B>, String, String>  {
+}
