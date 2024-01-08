@@ -181,13 +181,13 @@ public class Authenticator<T, I, S> {
     private List<ReactiveAuthenticationProvider<T, I, S>> everyProviderSorted() {
         List<ReactiveAuthenticationProvider<T, I, S>> providers = new ArrayList<>(reactiveAuthenticationProviders);
         if (beanContext != null) {
-
             providers.addAll(imperativeAuthenticationProviders.stream()
                     .map(imperativeAuthenticationProvider -> {
-                        if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap && beanContext.containsBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))) {
-                            Scheduler scheduler = executeNameToScheduler.computeIfAbsent(ap.getExecutorName(), s ->
-                                Schedulers.fromExecutorService(beanContext.getBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))));
-                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, scheduler);
+                        if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap) {
+                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, executeNameToScheduler.computeIfAbsent(ap.getExecutorName(), s ->
+                                    beanContext.findBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))
+                                            .map(Schedulers::fromExecutorService)
+                                            .orElse(null)));
                         } else {
                             return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider);
                         }
