@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -35,21 +34,20 @@ import reactor.core.scheduler.Scheduler;
 final class AuthenticationProviderAdapter<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     @NonNull
-    private final io.micronaut.security.authentication.provider.AuthenticationProvider<T, I, S> authenticationProvider;
+    private final AuthenticationProvider<T, I, S> authenticationProvider;
 
+    @Nullable
     private final Scheduler scheduler;
 
-    public AuthenticationProviderAdapter(BeanContext beanContext,
-                                         Scheduler scheduler,
-                                         @NonNull io.micronaut.security.authentication.provider.AuthenticationProvider<T, I, S> authenticationProvider) {
-        this(authenticationProvider,
-                AuthenticationProviderUtils.isAuthenticateBlocking(beanContext, authenticationProvider) ? scheduler : null);
-    }
-
     public AuthenticationProviderAdapter(@NonNull AuthenticationProvider<T, I, S> authenticationProvider,
-                                          @Nullable Scheduler scheduler) {
+                                         @NonNull Scheduler scheduler) {
         this.authenticationProvider = authenticationProvider;
         this.scheduler = scheduler;
+    }
+
+    public AuthenticationProviderAdapter(@NonNull AuthenticationProvider<T, I, S> authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
+        this.scheduler = null;
     }
 
     @Override

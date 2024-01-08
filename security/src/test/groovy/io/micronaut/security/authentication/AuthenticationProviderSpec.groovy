@@ -8,6 +8,8 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.scheduling.LoomSupport
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.authentication.provider.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ExecutorAuthenticationProvider
+import io.micronaut.security.authentication.provider.HttpRequestExecutorAuthenticationProvider
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -65,12 +67,11 @@ class AuthenticationProviderSpec extends ApplicationContextSpecification {
 
     @Requires(property = "spec.name", value = "AuthenticationProviderSpec")
     @Singleton
-    static class SimpleAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S> {
+    static class SimpleAuthenticationProvider<T> implements HttpRequestExecutorAuthenticationProvider<T> {
         private String executedThreadName
 
         @Override
-        @Blocking
-        AuthenticationResponse authenticate(@Nullable T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
+        AuthenticationResponse authenticate(@Nullable HttpRequest<T> requestContext, AuthenticationRequest<String, String> authenticationRequest) {
             executedThreadName = Thread.currentThread().getName()
             if (authenticationRequest.getIdentity().toString() == 'lebowski' && authenticationRequest.getSecret().toString() == 'thedudeabides') {
                 return AuthenticationResponse.success('lebowski')

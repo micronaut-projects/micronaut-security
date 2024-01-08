@@ -2,5 +2,4 @@ The api:security.authentication.provider.ReactiveAuthenticationProvider[] interf
 
 snippet::io.micronaut.security.docs.blockingauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]
 
-IMPORTANT: If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), annotate the `authenticate` method with `@Blocking`. If the `authenticate` method is annotated with `@Blocking`, it will be executed in a managed thread using the `TaskExecutors.BLOCKING` executor to avoid blocking the main reactive flow.
-
+IMPORTANT: If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), implement the api:security.authentication.provider.ExecutorAuthenticationProvider[] or api:security.authentication.provider.HttpRequestExecutorAuthenticationProvider[] interface. Those APIs specify the executor name, by default `TaskExecutors.BLOCKING`, where the code gets executed to avoid blocking the main reactive flow.
