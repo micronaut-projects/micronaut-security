@@ -8,7 +8,7 @@ groovy = "4.0.13"
 
 geb = "7.0"
 selenium = "4.2.2"
-system-stubs-core = "2.1.5"
+system-stubs-core = "2.1.6"
 testcontainers = "1.19.3"
 unboundid-ldapsdk = "6.0.11"
 bouncycastle = "1.70"
