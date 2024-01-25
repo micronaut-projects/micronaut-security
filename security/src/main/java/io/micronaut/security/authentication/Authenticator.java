@@ -25,6 +25,7 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.provider.AuthenticationProvider;
 import io.micronaut.security.authentication.provider.ExecutorAuthenticationProvider;
 import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProviderAdapter;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
 import jakarta.inject.Inject;
@@ -66,7 +67,7 @@ public class Authenticator<T, I, S> {
      * @deprecated Unused. To be removed in the next major version.
      */
     @Deprecated(forRemoval = true, since = "4.5.0")
-    protected final Collection<io.micronaut.security.authentication.AuthenticationProvider<T, I, S>> authenticationProviders;
+    protected final Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> authenticationProviders;
 
     private final List<ReactiveAuthenticationProvider<T, I, S>> reactiveAuthenticationProviders;
     private final BeanContext beanContext;
@@ -76,13 +77,38 @@ public class Authenticator<T, I, S> {
 
     private final Map<String, Scheduler> executeNameToScheduler = new ConcurrentHashMap<>();
 
+
+    /**
+     * @param beanContext Bean Context
+     * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
+     * @param authenticationProviders A list of available imperative authentication providers
+     * @param deprecatedAuthenticationProviders A list of available deprecated authentication providers
+     * @param securityConfiguration The security configuration
+     */
+    @Inject
+    public Authenticator(BeanContext beanContext,
+                         List<ReactiveAuthenticationProvider<T, I, S>> reactiveAuthenticationProviders,
+                         List<AuthenticationProvider<T, I, S>> authenticationProviders,
+                         List<io.micronaut.security.authentication.AuthenticationProvider<T>> deprecatedAuthenticationProviders,
+                         SecurityConfiguration securityConfiguration) {
+        this.beanContext = beanContext;
+        this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
+        this.reactiveAuthenticationProviders.addAll(deprecatedAuthenticationProviders.stream()
+                .map(ap -> (ReactiveAuthenticationProvider<T, I, S>) new ReactiveAuthenticationProviderAdapter<T, I, S>(ap))
+                .toList());
+        this.securityConfiguration = securityConfiguration;
+        this.imperativeAuthenticationProviders = authenticationProviders;
+        this.authenticationProviders = Collections.emptyList();
+    }
+
     /**
      * @param beanContext Bean Context
      * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
      * @param authenticationProviders A list of available imperative authentication providers
      * @param securityConfiguration The security configuration
+     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, List, SecurityConfiguration)} instead.
      */
-    @Inject
+    @Deprecated
     public Authenticator(BeanContext beanContext,
                          List<ReactiveAuthenticationProvider<T, I, S>> reactiveAuthenticationProviders,
                          List<AuthenticationProvider<T, I, S>> authenticationProviders,
@@ -100,11 +126,13 @@ public class Authenticator<T, I, S> {
      * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, SecurityConfiguration)} instead.
      */
     @Deprecated(forRemoval = true, since = "4.5.0")
-    public Authenticator(Collection<io.micronaut.security.authentication.AuthenticationProvider<T, I, S>> authenticationProviders,
+    public Authenticator(Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
         this.beanContext = null;
         this.authenticationProviders = authenticationProviders;
-        this.reactiveAuthenticationProviders = new ArrayList<>(authenticationProviders);
+        this.reactiveAuthenticationProviders = authenticationProviders.stream()
+                .map(ap -> (ReactiveAuthenticationProvider<T, I, S>) new ReactiveAuthenticationProviderAdapter<T, I, S>(ap))
+                .toList();
         this.securityConfiguration = securityConfiguration;
         this.imperativeAuthenticationProviders = Collections.emptyList();
     }
@@ -142,6 +170,7 @@ public class Authenticator<T, I, S> {
 
     /**
      * If {@link ExecutorAuthenticationProvider#getExecutorName()} equals `blocking` or `io` returns `true`.
+     * @param authenticationProvider An authentication provider
      * @return Whether any of the authentication provider is blocking.
      */
     protected boolean isImperativeAuthenticationProviderIsBlocking(AuthenticationProvider<?, ?, ?> authenticationProvider) {
