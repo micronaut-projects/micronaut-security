@@ -69,21 +69,19 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.authentication</a></div>
-<h1 title="Class Authenticator" class="title">Class Authenticator&lt;T,<wbr>I,<wbr>S&gt;</h1>
+<h1 title="Class Authenticator" class="title">Class Authenticator&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.authentication.Authenticator&lt;T,<wbr>I,<wbr>S&gt;</div>
+<div class="inheritance">io.micronaut.security.authentication.Authenticator&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - Request Context Type</dd>
-<dd><code>I</code> - Authentication Request Identity Type</dd>
-<dd><code>S</code> - Authentication Request Secret Type</dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
-</span><span class="modifiers">public class </span><span class="element-name type-name-label">Authenticator&lt;T,<wbr>I,<wbr>S&gt;</span>
+</span><span class="modifiers">public class </span><span class="element-name type-name-label">Authenticator&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">An Authenticator operates on several <a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> instances returning the first
  authenticated <a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a>.</div>
@@ -105,7 +103,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;</code></div>
+<div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#authenticationProviders" class="member-name-link">authenticationProviders</a></code></div>
 <div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -124,13 +122,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">Authenticator</a><wbr>(io.micronaut.context.BeanContext&nbsp;beanContext,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;reactiveAuthenticationProviders,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;authenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;reactiveAuthenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;authenticationProviders,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">Authenticator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;authenticationProviders,
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)"><code>Authenticator(BeanContext, List, List, List, SecurityConfiguration)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">Authenticator</a><wbr>(io.micronaut.context.BeanContext&nbsp;beanContext,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;reactiveAuthenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;authenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;&nbsp;deprecatedAuthenticationProviders,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">Authenticator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;&nbsp;deprecatedAuthenticationProviders,
+ <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</code></div>
+<div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)"><code>Authenticator(BeanContext, List, List, SecurityConfiguration)</code></a> instead.</div>
 </div>
@@ -151,7 +159,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate</a><wbr>(<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&nbsp;requestContext,
- <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&nbsp;authenticationRequest)</code></div>
+ <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Authenticates the user with the provided credentials.</div>
 </div>
@@ -182,7 +190,7 @@ loadScripts(document, 'script');</script>
 <h3>authenticationProviders</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
             <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.5.0")
-</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;</span>&nbsp;<span class="element-name">authenticationProviders</span></div>
+</span><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;</span>&nbsp;<span class="element-name">authenticationProviders</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecation-comment">Unused. To be removed in the next major version.</div>
 </div>
@@ -197,13 +205,34 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.context.BeanContext,java.util.List,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)">
 <h3>Authenticator</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">Authenticator</span><wbr><span class="parameters">(io.micronaut.context.BeanContext&nbsp;beanContext,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;reactiveAuthenticationProviders,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;authenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;reactiveAuthenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;authenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;&nbsp;deprecatedAuthenticationProviders,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>beanContext</code> - Bean Context</dd>
+<dd><code>reactiveAuthenticationProviders</code> - A list of available Reactive authentication providers</dd>
+<dd><code>authenticationProviders</code> - A list of available imperative authentication providers</dd>
+<dd><code>deprecatedAuthenticationProviders</code> - A list of available deprecated authentication providers</dd>
+<dd><code>securityConfiguration</code> - The security configuration</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)">
+<h3>Authenticator</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Authenticator</span><wbr><span class="parameters">(io.micronaut.context.BeanContext&nbsp;beanContext,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;reactiveAuthenticationProviders,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr>?,<wbr>?&gt;&gt;&nbsp;authenticationProviders,
+ <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)"><code>Authenticator(BeanContext, List, List, List, SecurityConfiguration)</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>beanContext</code> - Bean Context</dd>
@@ -218,14 +247,14 @@ loadScripts(document, 'script');</script>
 <h3>Authenticator</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
             <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.5.0")
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">Authenticator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&gt;&nbsp;authenticationProviders,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">Authenticator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&gt;&gt;&nbsp;deprecatedAuthenticationProviders,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)"><code>Authenticator(BeanContext, List, List, SecurityConfiguration)</code></a> instead.</div>
 </div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>authenticationProviders</code> - A list of available authentication providers</dd>
+<dd><code>deprecatedAuthenticationProviders</code> - A list of available authentication providers</dd>
 <dd><code>securityConfiguration</code> - The security configuration</dd>
 </dl>
 </section>
@@ -242,7 +271,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">
 <h3 id="authenticate(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</span>&nbsp;<span class="element-name">authenticate</span><wbr><span class="parameters">(<a href="Authenticator.html" title="type parameter in Authenticator">T</a>&nbsp;requestContext,
- <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;<a href="Authenticator.html" title="type parameter in Authenticator">I</a>,<wbr><a href="Authenticator.html" title="type parameter in Authenticator">S</a>&gt;&nbsp;authenticationRequest)</span></div>
+ <a href="AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</span></div>
 <div class="block">Authenticates the user with the provided credentials.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -259,6 +288,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isImperativeAuthenticationProviderIsBlocking</span><wbr><span class="parameters">(<a href="provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;?,<wbr>?,<wbr>?&gt;&nbsp;authenticationProvider)</span></div>
 <div class="block">If <a href="provider/ExecutorAuthenticationProvider.html#getExecutorName()"><code>ExecutorAuthenticationProvider.getExecutorName()</code></a> equals `blocking` or `io` returns `true`.</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>authenticationProvider</code> - An authentication provider</dd>
 <dt>Returns:</dt>
 <dd>Whether any of the authentication provider is blocking.</dd>
 </dl>
