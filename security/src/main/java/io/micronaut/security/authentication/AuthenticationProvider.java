@@ -17,7 +17,6 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import org.reactivestreams.Publisher;
 
 /**
@@ -27,7 +26,7 @@ import org.reactivestreams.Publisher;
  * @author Graeme Rocher
  * @since 1.0
  * @param <T> Request Context Type
- * @deprecated Use {@link io.micronaut.security.authentication.provider.AuthenticationProvider} for an imperative API or {@link ReactiveAuthenticationProvider} for a reactive API instead.
+ * @deprecated Use {@link io.micronaut.security.authentication.provider.AuthenticationProvider} for an imperative API or {@link io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider} for a reactive API instead.
  */
 @Deprecated(forRemoval = true, since = "4.5.0")
 public interface AuthenticationProvider<T> {
