@@ -31,7 +31,7 @@ public interface ExecutorAuthenticationProvider<T, I, S> extends AuthenticationP
 
     /**
      *
-     * @return The executor name where the code {@link AuthenticationProvider#authenticate(T, AuthenticationRequest)} will be executed.
+     * @return The executor name where the code {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} will be executed.
      */
     default String getExecutorName() {
         return TaskExecutors.BLOCKING;

@@ -48,12 +48,10 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * Authenticates against an LDAP server using the configuration provided through
  * {@link LdapConfiguration}. One provider will be created for each configuration.
  * @param <T> Request Context Type
- * @param <I> Authentication Request Identity Type
- * @param <S> Authentication Request Secret Type
  * @author James Kleeh
  * @since 1.0
  */
-public class LdapAuthenticationProvider<T, I, S> implements AuthenticationProvider<T, I, S>, Closeable {
+public class LdapAuthenticationProvider<T> implements AuthenticationProvider<T>, Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(LdapAuthenticationProvider.class);
 
@@ -87,7 +85,7 @@ public class LdapAuthenticationProvider<T, I, S> implements AuthenticationProvid
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
         Flux<AuthenticationResponse> reactiveSequence = Flux.create(emitter -> {
             String username = authenticationRequest.getIdentity().toString();
             String password = authenticationRequest.getSecret().toString();
