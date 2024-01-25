@@ -59,7 +59,7 @@ import reactor.core.publisher.Mono;
 public class LoginController<B> {
     private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
-    protected final Authenticator<HttpRequest<B>, String, String> authenticator;
+    protected final Authenticator<HttpRequest<B>> authenticator;
     protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
@@ -70,7 +70,7 @@ public class LoginController<B> {
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
-    public LoginController(Authenticator<HttpRequest<B>, String, String> authenticator,
+    public LoginController(Authenticator<HttpRequest<B>> authenticator,
                            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
                            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
                            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {

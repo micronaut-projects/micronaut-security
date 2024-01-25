@@ -39,12 +39,12 @@ import reactor.core.publisher.Flux;
 public class BasicAuthAuthenticationFetcher<B> implements AuthenticationFetcher<HttpRequest<B>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
-    private final Authenticator<HttpRequest<B>, String, String> authenticator;
+    private final Authenticator<HttpRequest<B>> authenticator;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
      */
-    public BasicAuthAuthenticationFetcher(Authenticator<HttpRequest<B>, String, String> authenticator) {
+    public BasicAuthAuthenticationFetcher(Authenticator<HttpRequest<B>> authenticator) {
         this.authenticator = authenticator;
     }
 
