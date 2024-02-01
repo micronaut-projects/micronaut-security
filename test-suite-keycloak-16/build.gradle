@@ -5,8 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.testcontainers.bom))
-    implementation(libs.testcontainers)
+    implementation(mnTestResources.testcontainers.core)
 }
 
 spotless {

@@ -51,5 +51,6 @@ micronautBuild {
     importMicronautCatalog("micronaut-session")
     importMicronautCatalog("micronaut-views")
     importMicronautCatalog("micronaut-validation")
+    importMicronautCatalog("micronaut-test-resources")
 }
 

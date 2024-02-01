@@ -9,7 +9,6 @@ groovy = "4.0.13"
 geb = "7.0"
 selenium = "4.2.2"
 system-stubs-core = "2.1.6"
-testcontainers = "1.19.4"
 unboundid-ldapsdk = "6.0.11"
 bouncycastle = "1.70"
 kotlin = "1.9.22"
@@ -25,11 +24,13 @@ micronaut-views = "5.1.0"
 micronaut-validation = "4.3.0"
 micronaut-data = "4.5.0"
 micronaut-sql="5.4.1"
+micronaut-test-resources="2.3.2"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
 micronaut-test = { module = "io.micronaut.test:micronaut-test-bom", version.ref = "micronaut-test" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
@@ -57,9 +58,6 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
-testcontainers = { module = "org.testcontainers:testcontainers" }
-testcontainers-mysql = { module = "org.testcontainers:mysql" }
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 
 [plugins]
