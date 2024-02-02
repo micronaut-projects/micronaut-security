@@ -27,9 +27,8 @@ dependencies {
     testImplementation(mnSql.vertx.mysql.client)
     testImplementation(mnSql.mysql.connector.java)
 
-    implementation(platform(libs.testcontainers.bom))
-    implementation(libs.testcontainers)
-    implementation(libs.testcontainers.mysql)
+    testImplementation(mnTestResources.testcontainers.core)
+    testImplementation(mnTestResources.testcontainers.mysql)
 
     testImplementation(mnReactor.micronaut.reactor)
     // Test Fails without this dependency
