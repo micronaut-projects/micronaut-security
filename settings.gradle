@@ -36,7 +36,7 @@ include "test-suite-aot"
 include "test-suite-aot-authserver"
 include "test-suite-serde"
 include "test-suite-ldap"
-
+include "test-suite-jackson-databind-bean-introspection-module-false"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
