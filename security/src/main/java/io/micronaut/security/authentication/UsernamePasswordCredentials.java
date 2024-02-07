@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
@@ -41,9 +42,16 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * @param username e.g. admin
      * @param password raw password
      */
+    @Creator
     public UsernamePasswordCredentials(@Nullable String username, @Nullable String password) {
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * Default constructor.
+     */
+    public UsernamePasswordCredentials() {
     }
 
     /**
