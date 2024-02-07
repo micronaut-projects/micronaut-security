@@ -22,6 +22,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Property(name = "jpa.default.reactive", value = StringUtils.TRUE)
 @Property(name = "jpa.default.entity-scan.packages[0]", value = "io.micronaut.security.tests.entity")
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Property(name = "jpa.default.properties.hibernate.hbm2ddl.auto", value = "update")
 @Property(name = "jpa.default.properties.hibernate.connection.db-type", value = "mysql")
 @MicronautTest(transactional = false)
+@Testcontainers(disabledWithoutDocker = true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestSuiteSecurityServiceTest implements TestPropertyProvider {
     static final MySQLContainer MY_SQL_CONTAINER;

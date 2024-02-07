@@ -59,6 +59,7 @@ bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
