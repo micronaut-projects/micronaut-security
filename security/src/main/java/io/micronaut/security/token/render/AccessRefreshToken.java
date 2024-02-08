@@ -113,8 +113,7 @@ public class AccessRefreshToken {
     public Integer getExpiresIn() {
         return expiresIn;
     }
-
-
+    
     /**
      *
      * @param accessToken Access token
