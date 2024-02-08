@@ -3,12 +3,14 @@ package io.micronaut.security.jacksondatabind.beanintrospectionfalse;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider;
+import io.micronaut.security.token.render.AccessRefreshToken;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ class UsernamePasswordCredentialsTest {
         BlockingHttpClient client = httpClient.toBlocking();
         String json = """
                 {"username":"sherlock","password":"password"}""";
-        assertDoesNotThrow(() -> client.exchange(HttpRequest.POST("/login", json)));
+        HttpResponse<AccessRefreshToken> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.POST("/login", json), AccessRefreshToken.class));
     }
 
     @Requires(property = "spec.name", value = "UsernamePasswordCredentialsTest")

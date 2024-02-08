@@ -51,4 +51,28 @@ class AccessRefreshTokenSpec extends ApplicationContextSpecification {
         then:
         noExceptionThrown()
     }
+
+    void "AccessRefreshToken setters populated fields"() {
+        when:
+        AccessRefreshToken accessRefreshToken = new AccessRefreshToken()
+        accessRefreshToken.accessToken = "1234"
+        accessRefreshToken.refreshToken = "abcd"
+        accessRefreshToken.tokenType = "Bearer"
+        accessRefreshToken.expiresIn = 3600
+
+        then:
+        "1234" == accessRefreshToken.accessToken
+        "abcd" == accessRefreshToken.refreshToken
+        "Bearer" == accessRefreshToken.tokenType
+        3600 == accessRefreshToken.expiresIn
+
+        when:
+        accessRefreshToken = new AccessRefreshToken("1234", "abcd", "Bearer", 3600)
+
+        then:
+        "1234" == accessRefreshToken.accessToken
+        "abcd" == accessRefreshToken.refreshToken
+        "Bearer" == accessRefreshToken.tokenType
+        3600 == accessRefreshToken.expiresIn
+    }
 }
