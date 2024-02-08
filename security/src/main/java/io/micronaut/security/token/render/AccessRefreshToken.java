@@ -17,6 +17,7 @@ package io.micronaut.security.token.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
@@ -35,17 +36,17 @@ public class AccessRefreshToken {
     @JsonProperty("access_token")
     @NonNull
     @NotBlank
-    private final String accessToken;
+    private String accessToken;
 
     @JsonProperty("refresh_token")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Nullable
-    private final String refreshToken;
+    private String refreshToken;
 
     @JsonProperty("token_type")
     @NonNull
     @NotBlank
-    private final String tokenType;
+    private String tokenType;
 
     @JsonProperty("expires_in")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -59,6 +60,7 @@ public class AccessRefreshToken {
      * @param tokenType Type of token
      * @param expiresIn Seconds until token expiration
      */
+    @Creator
     public AccessRefreshToken(@NonNull String accessToken,
                               @Nullable String refreshToken,
                               @NonNull String tokenType,
@@ -67,6 +69,13 @@ public class AccessRefreshToken {
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
         this.expiresIn = expiresIn;
+    }
+
+    /**
+     * Empty constructor.
+     * To support Jackson data bind without bean-introspection module.
+     */
+    public AccessRefreshToken() {
     }
 
     /**
@@ -103,6 +112,39 @@ public class AccessRefreshToken {
     @Nullable
     public Integer getExpiresIn() {
         return expiresIn;
+    }
+
+
+    /**
+     *
+     * @param accessToken Access token
+     */
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    /**
+     *
+     * @param refreshToken Refresh token
+     */
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     *
+     * @param tokenType TokenType e.g. Bearer
+     */
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    /**
+     *
+     * @param expiresIn lifetime in seconds of the access token
+     */
+    public void setExpiresIn(Integer expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }
 
