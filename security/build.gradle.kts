@@ -10,9 +10,11 @@ dependencies {
     api(mnSerde.micronaut.serde.api) {
         exclude(group = "io.micronaut", module = "micronaut-json-core")
     }
-    api(mnValidation.validation)
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     api(projects.micronautSecurityAnnotations)
-    implementation(mnValidation.micronaut.validation)
+
+    compileOnly(mnValidation.micronaut.validation)
+    testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
     compileOnly(mnData.micronaut.data.runtime)
     compileOnly(mn.micronaut.http.server)

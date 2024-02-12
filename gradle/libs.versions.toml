@@ -14,6 +14,7 @@ bouncycastle = "1.70"
 kotlin = "1.9.22"
 bcpkix = "1.70"
 micronaut-test = "4.2.0"
+micronaut-hibernate-validator = "4.2.0"
 micronaut-multitenancy = "5.2.1"
 micronaut-reactor = "3.2.1"
 micronaut-logging = "1.2.2"
@@ -30,6 +31,7 @@ micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'mi
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+micronaut-hibernate-validator = { module = "io.micronaut.beanvalidation:micronaut-hibernate-validator-bom", version.ref = "micronaut-hibernate-validator" }
 micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
 micronaut-test = { module = "io.micronaut.test:micronaut-test-bom", version.ref = "micronaut-test" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
@@ -57,6 +59,8 @@ bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bo
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}

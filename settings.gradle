@@ -37,6 +37,7 @@ include "test-suite-aot-authserver"
 include "test-suite-serde"
 include "test-suite-ldap"
 include "test-suite-jackson-databind-bean-introspection-module-false"
+include "test-suite-hibernate-validator"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
@@ -52,5 +53,6 @@ micronautBuild {
     importMicronautCatalog("micronaut-views")
     importMicronautCatalog("micronaut-validation")
     importMicronautCatalog("micronaut-test-resources")
+    importMicronautCatalog("micronaut-hibernate-validator")
 }
 
