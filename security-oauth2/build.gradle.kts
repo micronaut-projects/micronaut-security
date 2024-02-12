@@ -7,7 +7,7 @@ dependencies {
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(projects.micronautSecurityAnnotations)
     annotationProcessor(mnValidation.micronaut.validation.processor)
-    api(mnValidation.validation)
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     testImplementation(mnValidation.micronaut.validation)
     compileOnly(mn.micronaut.inject.java)
     compileOnly(projects.micronautSecurityJwt)
