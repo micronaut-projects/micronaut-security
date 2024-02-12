@@ -12,7 +12,9 @@ dependencies {
     }
     api(mnValidation.validation)
     api(projects.micronautSecurityAnnotations)
-    implementation(mnValidation.micronaut.validation)
+
+    compileOnly(mnValidation.micronaut.validation)
+    testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
     compileOnly(mnData.micronaut.data.runtime)
     compileOnly(mn.micronaut.http.server)
