@@ -52,7 +52,7 @@ import java.util.function.Supplier;
  *  @since 4.5.0
  */
 @Singleton
-@Requires(classes = HttpClient.class)
+@Requires(beans = HttpClientRegistry.class)
 @Requires(property = JwtConfigurationProperties.PREFIX + ".signatures.jwks-client.http-client.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class HttpClientJwksClient implements JwksClient {
 

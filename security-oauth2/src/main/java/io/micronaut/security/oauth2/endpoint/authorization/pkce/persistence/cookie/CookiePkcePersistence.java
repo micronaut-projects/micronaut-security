@@ -22,7 +22,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
-import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 import jakarta.inject.Singleton;
 
 import java.util.Optional;

@@ -47,6 +47,7 @@ import java.util.*;
  */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
+@Requires(classes = OutgoingRequestProcessorMatcher.class)
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
 
     /**
@@ -350,6 +351,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Client credentials http header token propagation configuration.
          */
         @ConfigurationProperties("header-propagation")
+        @Requires(classes = OutgoingRequestProcessorMatcher.class)
         public static class HeaderTokenPropagatorConfigurationProperties implements ClientCredentialsHeaderTokenPropagatorConfiguration {
 
             private String prefix = DEFAULT_PREFIX;
@@ -744,6 +746,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Token endpoint configuration.
          */
         @ConfigurationProperties("token")
+        @Requires(classes = MediaType.class)
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
             private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;

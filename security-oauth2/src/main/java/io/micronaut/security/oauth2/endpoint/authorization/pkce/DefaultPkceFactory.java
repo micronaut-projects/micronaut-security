@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.CollectionUtils;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @since 3.9.0
  */
 @Singleton
+@Requires(beans = PkcePersistence.class)
 public class DefaultPkceFactory implements PkceFactory {
     @NonNull
     private final List<PkceGenerator> generators;
