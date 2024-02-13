@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.docs.github;
 
 //tag::clazz[]
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
@@ -9,12 +10,16 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationM
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
+import java.util.Collections;
+import java.util.List;
+
 @Named("github") // <1>
+//end::clazz[]
+@Requires(property = "docs.classes")
+//tag::clazz[]
 @Singleton
 class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 

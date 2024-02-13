@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
-import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -37,7 +37,7 @@ import reactor.core.publisher.Flux;
  *
  * @author Sergio del Amo
  * @since 1.2.0
- * @param <T> Request
+ * @param <T> Request Context Type
  */
 public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
@@ -61,7 +61,7 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

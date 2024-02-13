@@ -15,14 +15,21 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.order.OrderUtil;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.security.authentication.provider.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ExecutorAuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProviderAdapter;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,70 +37,228 @@ import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
- * An Authenticator operates on several {@link AuthenticationProvider} instances returning the first
+ * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
  * authenticated {@link AuthenticationResponse}.
  *
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
- * @param <T> Request
+ * @param <T> Request Context Type
  */
 @Singleton
 public class Authenticator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
-    protected final Collection<AuthenticationProvider<T>> authenticationProviders;
+    /**
+     *
+     * @deprecated Unused. To be removed in the next major version.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    protected final Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> authenticationProviders;
+
+    private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
+    private final BeanContext beanContext;
+
+    private final List<AuthenticationProvider<T, ?, ?>> imperativeAuthenticationProviders;
     private final SecurityConfiguration securityConfiguration;
 
+    private final Map<String, Scheduler> executeNameToScheduler = new ConcurrentHashMap<>();
+
+
     /**
-     * @param authenticationProviders A list of available authentication providers
+     * @param beanContext Bean Context
+     * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
+     * @param authenticationProviders A list of available imperative authentication providers
+     * @param deprecatedAuthenticationProviders A list of available deprecated authentication providers
      * @param securityConfiguration The security configuration
      */
-    public Authenticator(Collection<AuthenticationProvider<T>> authenticationProviders,
+    @Inject
+    public Authenticator(BeanContext beanContext,
+                         List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
+                         List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
+                         List<io.micronaut.security.authentication.AuthenticationProvider<T>> deprecatedAuthenticationProviders,
                          SecurityConfiguration securityConfiguration) {
-        this.authenticationProviders = authenticationProviders;
+        this.beanContext = beanContext;
+        this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
+        for (io.micronaut.security.authentication.AuthenticationProvider<T> authenticationProvider : deprecatedAuthenticationProviders) {
+            reactiveAuthenticationProviders.add((new ReactiveAuthenticationProviderAdapter<>(authenticationProvider)));
+        }
         this.securityConfiguration = securityConfiguration;
+        this.imperativeAuthenticationProviders = authenticationProviders;
+        this.authenticationProviders = Collections.emptyList();
+    }
+
+    /**
+     * @param beanContext Bean Context
+     * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
+     * @param authenticationProviders A list of available imperative authentication providers
+     * @param securityConfiguration The security configuration
+     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, List, SecurityConfiguration)} instead.
+     */
+    public Authenticator(BeanContext beanContext,
+                         List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
+                         List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
+                         SecurityConfiguration securityConfiguration) {
+        this.beanContext = beanContext;
+        this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
+        this.securityConfiguration = securityConfiguration;
+        this.imperativeAuthenticationProviders = authenticationProviders;
+        this.authenticationProviders = Collections.emptyList();
+    }
+
+    /**
+     * @param deprecatedAuthenticationProviders A list of available authentication providers
+     * @param securityConfiguration   The security configuration
+     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, SecurityConfiguration)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public Authenticator(Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> deprecatedAuthenticationProviders,
+                         SecurityConfiguration securityConfiguration) {
+        this.beanContext = null;
+        this.authenticationProviders = deprecatedAuthenticationProviders;
+        reactiveAuthenticationProviders = new ArrayList<>();
+        for (io.micronaut.security.authentication.AuthenticationProvider<T> authenticationProvider : deprecatedAuthenticationProviders) {
+            reactiveAuthenticationProviders.add((new ReactiveAuthenticationProviderAdapter<>(authenticationProvider)));
+        }
+        this.securityConfiguration = securityConfiguration;
+        this.imperativeAuthenticationProviders = Collections.emptyList();
     }
 
     /**
      * Authenticates the user with the provided credentials.
      *
-     * @param request The HTTP request
+     * @param requestContext           The HTTP request
      * @param authenticationRequest Represents a request to authenticate.
      * @return A publisher that emits {@link AuthenticationResponse} objects
      */
-    public Publisher<AuthenticationResponse> authenticate(T request, AuthenticationRequest<?, ?> authenticationRequest) {
-        if (this.authenticationProviders == null) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+        if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && CollectionUtils.isEmpty(imperativeAuthenticationProviders)) {
+            return Mono.empty();
+        }
+        if (LOG.isDebugEnabled() && imperativeAuthenticationProviders != null) {
+            LOG.debug(imperativeAuthenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
+        }
+        if (LOG.isDebugEnabled() && reactiveAuthenticationProviders != null) {
+            LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
+        }
+        if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
+            return handleResponse(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
+        }
+        return authenticate(requestContext, authenticationRequest, everyProviderSorted());
+    }
+
+    /**
+     *
+     * @return Whether any of the authentication provider is blocking
+     */
+    private boolean anyImperativeAuthenticationProviderIsBlocking() {
+        return imperativeAuthenticationProviders.stream().anyMatch(this::isImperativeAuthenticationProviderIsBlocking);
+    }
+
+    /**
+     * If {@link ExecutorAuthenticationProvider#getExecutorName()} equals `blocking` or `io` returns `true`.
+     * @param authenticationProvider An authentication provider
+     * @return Whether any of the authentication provider is blocking.
+     */
+    protected boolean isImperativeAuthenticationProviderIsBlocking(AuthenticationProvider<?, ?, ?> authenticationProvider) {
+        return authenticationProvider instanceof ExecutorAuthenticationProvider ap && (ap.getExecutorName().equals(TaskExecutors.BLOCKING) || ap.getExecutorName().equals(TaskExecutors.IO));
+    }
+
+    @NonNull
+    private AuthenticationResponse authenticate(@NonNull T requestContext,
+                                                @NonNull AuthenticationRequest<?, ?> authenticationRequest,
+                                                @NonNull List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
+                                                @Nullable SecurityConfiguration securityConfiguration) {
+        if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
+            return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
+        }
+        return authenticationProviders.stream()
+                .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
+                .filter(AuthenticationResponse::isAuthenticated)
+                .findFirst()
+                .orElseGet(AuthenticationResponse::failure);
+    }
+
+    @NonNull
+    private AuthenticationResponse authenticateAll(@NonNull T requestContext,
+                                                   @NonNull AuthenticationRequest<?, ?> authenticationRequest,
+                                                   @NonNull List<AuthenticationProvider<T, ?, ?>> authenticationProviders) {
+        List<AuthenticationResponse> authenticationResponses = authenticationProviders.stream()
+                        .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
+                        .toList();
+        if (CollectionUtils.isEmpty(authenticationResponses)) {
+            return AuthenticationResponse.failure();
+        }
+        return authenticationResponses.stream().allMatch(AuthenticationResponse::isAuthenticated)
+                ? authenticationResponses.get(0)
+                : AuthenticationResponse.failure();
+    }
+
+    private List<ReactiveAuthenticationProvider<T, ?, ?>> everyProviderSorted() {
+        List<ReactiveAuthenticationProvider<T, ?, ?>> providers = new ArrayList<>(reactiveAuthenticationProviders);
+        if (beanContext != null) {
+            providers.addAll(imperativeAuthenticationProviders.stream()
+                    .map(imperativeAuthenticationProvider -> {
+                        if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap) {
+                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, executeNameToScheduler.computeIfAbsent(ap.getExecutorName(), s ->
+                                    beanContext.findBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))
+                                            .map(Schedulers::fromExecutorService)
+                                            .orElse(null)));
+                        } else {
+                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider);
+                        }
+                    }).toList());
+        }
+        OrderUtil.sort(providers);
+        return providers;
+    }
+
+    private Publisher<AuthenticationResponse> authenticate(T request,
+                                                           AuthenticationRequest authenticationRequest,
+                                                           List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
+        if (providers == null) {
             return Flux.empty();
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
+            LOG.debug(providers.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
             return Flux.mergeDelayError(1,
-                    authenticationProviders.stream()
-                            .map(provider -> Flux.from(provider.authenticate(request, authenticationRequest))
-                                    .switchMap(this::handleResponse)
-                                    .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected"))))
-                            .collect(Collectors.toList())
+                            providers.stream()
+                            .map(provider ->
+                                Flux.from(provider.authenticate(request, authenticationRequest))
+                                        .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                                        .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")))
+                            )
+                            .toList()
                     .toArray(emptyArr))
                     .last()
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
         } else {
             AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  authenticationProviders.stream()
-                    .map(auth -> auth.authenticate(request, authenticationRequest))
-                    .map(Flux::from)
-                    .map(sequence -> sequence.switchMap(this::handleResponse).onErrorResume(t -> {
-                        lastError.set(t);
-                        return Flux.empty();
-                    })).collect(Collectors.toList())
+            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  providers.stream()
+                    .map(auth -> Flux.from(auth.authenticate(request, authenticationRequest)))
+                    .map(sequence -> sequence.switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                            .onErrorResume((Function<Throwable, Publisher>) t -> {
+                                lastError.set(t);
+                                return Flux.empty();
+                            })
+                            ).toList()
                     .toArray(emptyArr));
 
             return authentication.take(1)
@@ -118,16 +283,27 @@ public class Authenticator<T> {
         }
     }
 
-    private Flux<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
+    private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
         if (response.isAuthenticated()) {
-            return Flux.just(response);
+            return Mono.just(response);
         } else {
-            return Flux.error(new AuthenticationException(response));
+            return Mono.error(new AuthenticationException(response));
         }
     }
 
     @NonNull
-    private AuthenticationResponse authenticationResponseForThrowable(Throwable t) {
+    private AuthenticationResponse authenticationResponse(@NonNull AuthenticationProvider<T, ?, ?> provider,
+                                                          @NonNull T requestContext,
+                                                          @NonNull AuthenticationRequest authenticationRequest) {
+        try {
+            return provider.authenticate(requestContext, authenticationRequest);
+        } catch (Exception t) {
+            return authenticationResponseForThrowable(t);
+        }
+    }
+
+    @NonNull
+    private static AuthenticationResponse authenticationResponseForThrowable(Throwable t) {
         if (Exceptions.isMultiple(t)) {
             List<Throwable> exceptions = Exceptions.unwrapMultiple(t);
             return new AuthenticationFailed(exceptions.get(exceptions.size() - 1).getMessage());

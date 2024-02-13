@@ -16,6 +16,9 @@
 package io.micronaut.security.event;
 
 import io.micronaut.context.event.ApplicationEvent;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.UsernamePasswordCredentials;
 
 /**
  * Event triggered when an unsuccessful login takes place.
@@ -24,6 +27,22 @@ import io.micronaut.context.event.ApplicationEvent;
  * @since 1.0
  */
 public class LoginFailedEvent extends ApplicationEvent {
+    @Nullable
+    private final AuthenticationRequest authenticationRequest;
+
+    /**
+     * Event triggered when an unsuccessful login takes place.
+     *
+     * @param source The {@link io.micronaut.security.authentication.AuthenticationResponse} object
+     *               signaling the authentication failure and reason.
+     * @param authenticationRequest A request to authenticate.
+     * @throws IllegalArgumentException if source is null.
+     * @since 4.1.0
+     */
+    public LoginFailedEvent(Object source, AuthenticationRequest authenticationRequest) {
+        super(source);
+        this.authenticationRequest = authenticationRequest;
+    }
 
     /**
      * Event triggered when an unsuccessful login takes place.
@@ -31,8 +50,20 @@ public class LoginFailedEvent extends ApplicationEvent {
      * @param source The {@link io.micronaut.security.authentication.AuthenticationResponse} object
      *               signaling the authentication failure and reason.
      * @throws IllegalArgumentException if source is null.
+     * @deprecated use {@link LoginFailedEvent(Object, UsernamePasswordCredentials)}.
      */
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public LoginFailedEvent(Object source) {
-        super(source);
+        this(source, null);
+    }
+
+    /**
+     *
+     * @return A request to authenticate.
+     * @since 4.1.0
+     */
+    @Nullable
+    public AuthenticationRequest getAuthenticationRequest() {
+        return authenticationRequest;
     }
 }

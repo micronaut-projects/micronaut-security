@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import org.reactivestreams.Publisher;
 
@@ -24,10 +25,11 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
- * @param <T> Request
+ * @param <T> Request Context Type
+ * @deprecated Use {@link io.micronaut.security.authentication.provider.AuthenticationProvider} for an imperative API or {@link io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider} for a reactive API instead.
  */
+@Deprecated(forRemoval = true, since = "4.5.0")
 public interface AuthenticationProvider<T> {
-
     /**
      * Authenticates a user with the given request. If a successful authentication is
      * returned, the object must be an instance of {@link Authentication}.
@@ -40,5 +42,6 @@ public interface AuthenticationProvider<T> {
      * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
+    @NonNull
     Publisher<AuthenticationResponse> authenticate(@Nullable T httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
 }

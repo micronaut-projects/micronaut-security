@@ -19,13 +19,17 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -71,7 +75,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             synchronized (this) { // double check
                 jwkSetVariable = this.jwkSet;
                 if (jwkSetVariable == null) {
-                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
+                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getName(), this.jwksSignatureConfiguration.getUrl());
                     this.jwkSet = jwkSetVariable;
                     this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
                 }
@@ -149,11 +153,27 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * Instantiates a JWKSet for a given url.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
+     * @deprecated Use {@link #loadJwkSet(String, String)} instead.
      */
     @Nullable
+    @Blocking
+    @Deprecated(forRemoval = true, since = "4.5.0")
     protected JWKSet loadJwkSet(String url) {
-        return jwkSetFetcher.fetch(url)
+        return Mono.from(jwkSetFetcher.fetch(null, url))
+                .blockOptional()
                 .orElse(null);
+    }
+
+    /**
+     * Instantiates a JWKSet for a given url.
+     * @param providerName The name of the JWKS configuration.
+     * @param url JSON Web Key Set Url.
+     * @return a JWKSet or null if there was an error.
+     */
+    @Nullable
+    @Blocking
+    protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
+        return Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null);
     }
 
     /**

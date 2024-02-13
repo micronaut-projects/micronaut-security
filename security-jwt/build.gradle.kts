@@ -1,18 +1,22 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
-    id "io.micronaut.build.internal.security-module"
+    id("io.micronaut.build.internal.security-module")
 }
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
-    api(mnValidation.micronaut.validation)
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
+    testImplementation(mnValidation.micronaut.validation)
     api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 
+    compileOnly(mn.micronaut.http.client.core)
     compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.json.core)
 
@@ -31,12 +35,12 @@ dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.groovy.json)
+    testImplementation(mnTestResources.testcontainers.core)
 
-    testImplementation(platform(libs.testcontainers.bom))
-    testImplementation(libs.testcontainers)
+    testImplementation(libs.system.stubs.core)
 }
 
-test {
+tasks.test {
     testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = 'full'
+    testLogging.exceptionFormat = TestExceptionFormat.FULL
 }

@@ -21,7 +21,7 @@ dependencies {
     testImplementation(projects.micronautSecuritySession)
     testImplementation(libs.geb.spock)
 
-    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(platform(mnTestResources.boms.testcontainers))
     testImplementation(libs.testcontainers.selenium)
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)

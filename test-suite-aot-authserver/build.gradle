@@ -12,7 +12,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
@@ -22,8 +22,8 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-management")
+    implementation(mn.micronaut.http.client)
+    implementation(mn.micronaut.management)
     implementation(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
 }
@@ -37,12 +37,5 @@ shadowJar {
 configurations.all {
     resolutionStrategy {
         preferProjectModules()
-        // TODO: Remove this once aligned
-        eachDependency {
-            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
-                useVersion("4.0.0-M3")
-                because("There's no M2 platform yet")
-            }
-        }
     }
 }

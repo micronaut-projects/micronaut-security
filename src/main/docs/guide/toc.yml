@@ -14,7 +14,11 @@ securityConfiguration:
   logoutHandler: Logout Handler
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
-authenticationProviders: Authentication Providers
+authenticationProviders:
+  title: Reactive Authentication Providers
+  imperativeAuthenticationProviders: Authentication Provider
+  authenticationProvidersUseCases: Authentication Providers Use Cases
+  builtInAuthenticationProviders: Built-In Authentication Providers
 securityRule:
   title: Security Rules
   ipPattern: IP Pattern Rule
@@ -51,6 +55,7 @@ authenticationStrategies:
     claimsValidation: Claims Validation
     render:
       title: Token Render
+    jwtGuides: Guides
   ldap:
     title: LDAP Authentication
     configuration: Configuration
@@ -68,7 +73,12 @@ endpoints:
   introspectionendpoint: Introspection Endpoint
 retrievingAuthenticatedUser:
   title: Retrieve the authenticated user
+  customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
+dataAuditing:
+  title: Data Change Auditing
+  annotations: Auditing Annotations
+  identityMapping: Custom Authentication Mapping
 securityEvents: Security Events
 oauth:
   title: OAuth 2.0
@@ -99,6 +109,7 @@ oauth:
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
+      clientCredentialGuides: Guides
     password: Password
   oauth-endpoints:
     title: Endpoints
@@ -107,6 +118,7 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
+  oauthGuides: Guides
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration

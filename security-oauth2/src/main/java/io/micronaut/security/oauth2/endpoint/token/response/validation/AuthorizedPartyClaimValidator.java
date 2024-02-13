@@ -46,8 +46,8 @@ public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
             return true;
         }
         boolean condition = authorizedParty.equals(clientConfiguration.getClientId());
-        if (!condition && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Authorized party claim does not match [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+        if (!condition && LOG.isDebugEnabled()) {
+            LOG.debug("JWT validation failed for provider [{}]. Authorized party claim does not match [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
         }
 
         return condition;

@@ -1,33 +1,39 @@
 [versions]
-managed-nimbus-jose-jwt = "9.31"
+managed-nimbus-jose-jwt = "9.37.3"
 
-micronaut = "4.0.1"
+micronaut = "4.3.5"
+micronaut-platform = "4.2.4"
 micronaut-docs = "2.0.0"
-groovy = "4.0.12"
+groovy = "4.0.13"
 
 geb = "7.0"
-selenium = "4.10.0"
-testcontainers = "1.18.3"
-unboundid-ldapsdk = "6.0.9"
+selenium = "4.2.2"
+system-stubs-core = "2.1.6"
+unboundid-ldapsdk = "6.0.11"
 bouncycastle = "1.70"
-kotlin = "1.8.22"
+kotlin = "1.9.22"
 bcpkix = "1.70"
-micronaut-test = "4.0.0"
-micronaut-multitenancy = "5.0.1"
-micronaut-reactor = "3.0.1"
-micronaut-logging = "1.0.0"
-micronaut-serde = "2.0.2"
-micronaut-servlet = "4.0.1"
-micronaut-session = "4.0.0"
-micronaut-views = "4.0.1"
-micronaut-validation = "4.0.1"
+micronaut-test = "4.2.0"
+micronaut-hibernate-validator = "4.2.0"
+micronaut-multitenancy = "5.2.1"
+micronaut-reactor = "3.2.1"
+micronaut-logging = "1.2.2"
+micronaut-serde = "2.8.1"
+micronaut-servlet = "4.5.0"
+micronaut-session = "4.2.0"
+micronaut-views = "5.1.0"
+micronaut-validation = "4.3.0"
+micronaut-data = "4.6.1"
+micronaut-sql="5.5.0"
+micronaut-test-resources="2.3.3"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
-
-micronaut-logging = { module = "io.micronaut.logging:micronaut-logging-bom", version.ref = "micronaut-logging" }
+micronaut-hibernate-validator = { module = "io.micronaut.beanvalidation:micronaut-hibernate-validator-bom", version.ref = "micronaut-hibernate-validator" }
+micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
+micronaut-test = { module = "io.micronaut.test:micronaut-test-bom", version.ref = "micronaut-test" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
@@ -35,6 +41,8 @@ micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", ver
 micronaut-session = { module = "io.micronaut.session:micronaut-session-bom", version.ref = "micronaut-session" }
 micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.ref = "micronaut-views" }
 micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-bom", version.ref = "micronaut-validation" }
+micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
+micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
@@ -50,10 +58,12 @@ bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bo
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
+system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
 
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
-testcontainers = { module = "org.testcontainers:testcontainers" }
+
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

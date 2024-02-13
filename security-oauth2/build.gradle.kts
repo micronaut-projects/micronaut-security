@@ -1,5 +1,5 @@
 plugins {
-    id "io.micronaut.build.internal.security-module"
+    id("io.micronaut.build.internal.security-module")
 }
 
 dependencies {
@@ -7,7 +7,8 @@ dependencies {
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(projects.micronautSecurityAnnotations)
     annotationProcessor(mnValidation.micronaut.validation.processor)
-    api(mnValidation.micronaut.validation)
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
+    testImplementation(mnValidation.micronaut.validation)
     compileOnly(mn.micronaut.inject.java)
     compileOnly(projects.micronautSecurityJwt)
     compileOnly(mn.micronaut.http.server)
@@ -20,12 +21,12 @@ dependencies {
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(platform(libs.testcontainers.bom))
-    testImplementation(libs.testcontainers)
+    testImplementation(mnTestResources.testcontainers.core)
     testImplementation(mn.groovy.json)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.testSuiteKeycloak16)
     testImplementation(mnLogging.logback.classic)
+    testImplementation(libs.system.stubs.core)
 }

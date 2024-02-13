@@ -1,9 +1,20 @@
 plugins {
     id 'java-library'
-    id "io.micronaut.build.internal.security-tests"
+    id("io.micronaut.build.internal.common")
+    id "io.micronaut.build.internal.security-base"
 }
 
 dependencies {
-    implementation(platform(libs.testcontainers.bom))
-    implementation(libs.testcontainers)
+    implementation(mnTestResources.testcontainers.core)
 }
+
+spotless {
+    java {
+        targetExclude("**/keycloack/v16/**")
+    }
+}
+
+tasks.withType(Checkstyle) {
+    enabled = false
+}
+

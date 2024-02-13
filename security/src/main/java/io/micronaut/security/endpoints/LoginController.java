@@ -38,6 +38,8 @@ import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -47,15 +49,17 @@ import reactor.core.publisher.Mono;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
+ * @param <B> The HTTP Request Body type
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
 @Requires(beans = { LoginHandler.class, Authenticator.class })
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-public class LoginController {
+public class LoginController<B> {
+    private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
-    protected final Authenticator<HttpRequest<?>> authenticator;
+    protected final Authenticator<HttpRequest<B>> authenticator;
     protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
@@ -66,7 +70,7 @@ public class LoginController {
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
-    public LoginController(Authenticator<HttpRequest<?>> authenticator,
+    public LoginController(Authenticator<HttpRequest<B>> authenticator,
                            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
                            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
                            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
@@ -84,7 +88,7 @@ public class LoginController {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
+    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
                 .map(authenticationResponse -> {
                     if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
@@ -92,7 +96,10 @@ public class LoginController {
                         loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
                         return loginHandler.loginSuccess(authentication, request);
                     } else {
-                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("login failed for username: {}", usernamePasswordCredentials.getUsername());
+                        }
+                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse, usernamePasswordCredentials));
                         return loginHandler.loginFailed(authenticationResponse, request);
                     }
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));

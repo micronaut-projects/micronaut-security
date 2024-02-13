@@ -30,25 +30,26 @@ import reactor.core.publisher.Flux;
 /**
  * An implementation of {@link AuthenticationFetcher} that decodes a username
  * and password from the Authorization header and authenticates the credentials
- * against any {@link AuthenticationProvider}s available.
+ * against any {@link io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider}s available.
+ * @param <B> The HTTP Request Body type
  */
 @Requires(classes = HttpRequest.class)
 @Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
-public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
+public class BasicAuthAuthenticationFetcher<B> implements AuthenticationFetcher<HttpRequest<B>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
-    private final Authenticator<HttpRequest<?>> authenticator;
+    private final Authenticator<HttpRequest<B>> authenticator;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
      */
-    public BasicAuthAuthenticationFetcher(Authenticator<HttpRequest<?>> authenticator) {
+    public BasicAuthAuthenticationFetcher(Authenticator<HttpRequest<B>> authenticator) {
         this.authenticator = authenticator;
     }
 
     @Override
-    public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
+    public Publisher<Authentication> fetchAuthentication(HttpRequest<B> request) {
         Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization().flatMap(BasicAuthUtils::parseCredentials);
 
         if (credentials.isPresent()) {

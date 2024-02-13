@@ -21,7 +21,8 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProviderAdapter;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
@@ -31,7 +32,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 
 /**
- * Factory creating {@link AuthenticationProvider} beans that delegate
+ * Factory creating {@link ReactiveAuthenticationProvider} beans that delegate
  * to the password grant flow of an OAuth 2.0 or OpenID provider.
  *
  * @author James Kleeh
@@ -61,7 +62,7 @@ class PasswordGrantFactory {
      */
     @EachBean(OauthClientConfiguration.class)
     @Requires(condition = PasswordGrantCondition.class)
-    AuthenticationProvider passwordGrantProvider(
+    ReactiveAuthenticationProvider passwordGrantProvider(
             @Parameter OauthClientConfiguration clientConfiguration,
             @Parameter @Nullable OauthAuthenticationMapper authenticationMapper,
             @Parameter @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
@@ -71,12 +72,12 @@ class PasswordGrantFactory {
             @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
 
         if (clientConfiguration.getToken().isPresent()) {
-            return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper);
+            return new ReactiveAuthenticationProviderAdapter(new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper));
         } else {
             if (openIdAuthenticationMapper == null) {
                 openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
             }
-            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
+            return new ReactiveAuthenticationProviderAdapter(new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator));
         }
     }
 }

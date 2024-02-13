@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.kapt)
@@ -27,15 +26,19 @@ dependencies {
     testImplementation(mn.jackson.databind)
     kaptTest(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
+
+    kaptTest(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-compileTestKotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
-        javaParameters = true
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }

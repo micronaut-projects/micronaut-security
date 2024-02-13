@@ -88,7 +88,7 @@ class DefaultOpenIdProviderMetadataSpec extends ApplicationContextSpecification 
         String checkSessionIframe = "checkSessionIframe"
 
         when:
-        DefaultOpenIdProviderMetadata metadata = DefaultOpenIdProviderMetadata.builder()
+        DefaultOpenIdProviderMetadata metadata = DefaultOpenIdProviderMetadata.builder("foo")
                 .authorizationEndpoint(authorizationEndpoint)
                 .idTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported)
                 .issuer(issuer)
@@ -177,7 +177,7 @@ class DefaultOpenIdProviderMetadataSpec extends ApplicationContextSpecification 
     void snakeCaseStrategyIsUsed() {
         given:
         JsonMapper jsonMapper = JsonMapper.createDefault()
-        DefaultOpenIdProviderMetadata obj = new DefaultOpenIdProviderMetadata()
+        DefaultOpenIdProviderMetadata obj = new DefaultOpenIdProviderMetadata('myTestProvider')
         obj.authorizationEndpoint = 'authorizationEndpoint'
         obj.issuer = 'issuer'
         obj.idTokenSigningAlgValuesSupported = ['idTokenSigningAlgValuesSupported']
@@ -268,4 +268,15 @@ class DefaultOpenIdProviderMetadataSpec extends ApplicationContextSpecification 
         ['userinfoEncryptionAlgValuesSupported'] == jsonNode.get("userinfo_encryption_alg_values_supported").getValue() as List<String>
     }
 
+    void nameIsJsonIgnored() {
+        given:
+        JsonMapper jsonMapper = JsonMapper.createDefault()
+        DefaultOpenIdProviderMetadata obj = new DefaultOpenIdProviderMetadata('myTestProvider')
+
+        when:
+        JsonNode jsonNode = jsonMapper.writeValueToTree(obj)
+
+        then:
+        null == jsonNode.get("name")
+    }
 }

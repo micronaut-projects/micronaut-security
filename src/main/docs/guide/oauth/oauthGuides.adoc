@@ -1,0 +1,9 @@
+Read the following guides to learn more abut OAuth:
+
+- https://guides.micronaut.io/latest/micronaut-oauth2-auth0.html[Secure a Micronaut application with Auth0]
+- https://guides.micronaut.io/latest/micronaut-oauth2-cognito.html[Secure a Micronaut application with Cognito]
+- https://guides.micronaut.io/latest/micronaut-oauth2-github.html[Secure a Micronaut application with Github]
+- https://guides.micronaut.io/latest/micronaut-oauth2-oidc-google.html[Secure a Micronaut application with Google]
+- https://guides.micronaut.io/latest/micronaut-oauth2-keycloak.html[Secure a Micronaut application with Keycloak]
+- https://guides.micronaut.io/latest/micronaut-oauth2-linkedin.html[Secure a Micronaut application with LinkedIn]
+- https://guides.micronaut.io/latest/micronaut-oauth2-okta.html[Secure a Micronaut application with Okta]
