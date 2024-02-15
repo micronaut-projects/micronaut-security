@@ -414,6 +414,10 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <div class="ulist">
 <ul>
 <li>
+<p><a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> <code>check</code> method no longer contains the argument <code>RouteMatch</code>. You can easily retrieve a <code>RouteMatch</code>
+with the <code>HttpRequest</code> method argument with <code>request.getAttribute(HttpAttributes.ROUTE_MATCH).orElse(null)</code>.</p>
+</li>
+<li>
 <p>For applications with <code>micronaut.security.authentication</code> set to <code>cookie</code> and <code>micronaut.security.redirect.enabled</code> set to <code>false</code>, the server responds with 401 HTTP Status code instead of 200 for login failed attempts.</p>
 </li>
 <li>
