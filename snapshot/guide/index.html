@@ -419,6 +419,10 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <li>
 <p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
 </li>
+<li>
+<p>Micronaut Security APIs have been decoupled from HTTP. Many APIs now have generics instead of HTTP-related types such as <code>HttpRequest</code>.
+For example,  instead of <code>AuthenticationProvider</code>, you should use <code>AuthenticationProvider&lt;HttpRequest&lt;?&gt;&gt;</code>.</p>
+</li>
 </ul>
 </div>
 <div class="sect2">
