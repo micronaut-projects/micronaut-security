@@ -3,6 +3,7 @@ package io.micronaut.security.token.jwt.cookie
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.cookie.SameSite
 import io.micronaut.security.authentication.AuthenticationMode
 import io.micronaut.security.config.RedirectConfiguration
 import io.micronaut.security.config.RedirectService
@@ -69,11 +70,13 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
             1 * getCookieDomain() >> Optional.of("domain")
             1 * getCookiePath() >> Optional.of("/")
             1 * getCookieName() >> "JWT"
+            1 * getCookieSameSite() >> Optional.of(SameSite.Strict)
         }
         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration = Mock() {
             1 * getCookieDomain() >> Optional.of("domain")
             1 * getCookiePath() >> Optional.of("/oauth/access_token")
             1 * getCookieName() >> "JWT_REFRESH"
+            1 * getCookieSameSite() >> Optional.of(SameSite.None)
         }
         HttpRequest<?> request = Mock()
 
@@ -87,9 +90,11 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         cookieHeaders.get(0).containsIgnoreCase("JWT=")
         cookieHeaders.get(0).containsIgnoreCase("Path=/")
         cookieHeaders.get(0).containsIgnoreCase("Max-Age=0")
+        cookieHeaders.get(0).containsIgnoreCase("SameSite=Strict")
         cookieHeaders.get(1).containsIgnoreCase("Domain=domain")
         cookieHeaders.get(1).containsIgnoreCase("JWT_REFRESH=")
         cookieHeaders.get(1).containsIgnoreCase("Path=/oauth/access_token")
         cookieHeaders.get(1).containsIgnoreCase("Max-Age=0")
+        cookieHeaders.get(1).containsIgnoreCase("SameSite=None")
     }
 }
