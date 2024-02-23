@@ -21,6 +21,7 @@ dependencies {
 
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(projects.micronautSecuritySession)
+    testImplementation(projects.micronautSecurityProcessor)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnTestResources.testcontainers.core)
