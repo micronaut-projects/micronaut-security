@@ -29,7 +29,6 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import spock.lang.Specification
 
-
 @Property(name = "micronaut.security.authentication", value = "cookie")
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
 @Property(name = "micronaut.security.redirect.login-failure", value = "/login/authFailed")
@@ -81,12 +80,11 @@ class HttpRequestAuthenticationProviderAuthenticationResponseFailureSpec extends
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Controller("/login")
     static class LoginAuthController {
+
         @Produces(MediaType.TEXT_HTML)
         @Get("/authFailed")
         String authFailed() {
             return "<!DOCTYPE html><html><head><title></title></head><body><h1>Authentication Failed</h1></body></html>";
         }
     }
-
-
 }

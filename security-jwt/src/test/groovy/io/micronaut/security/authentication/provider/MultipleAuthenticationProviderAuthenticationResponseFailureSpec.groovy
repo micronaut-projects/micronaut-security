@@ -34,7 +34,6 @@ import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
-
 @Property(name = "micronaut.security.authentication", value = "cookie")
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
 @Property(name = "micronaut.security.redirect.login-failure", value = "/login/authFailed")
@@ -113,6 +112,4 @@ class MultipleAuthenticationProviderAuthenticationResponseFailureSpec extends Sp
             return "<!DOCTYPE html><html><head><title></title></head><body><h1>Authentication Failed</h1></body></html>";
         }
     }
-
-
 }

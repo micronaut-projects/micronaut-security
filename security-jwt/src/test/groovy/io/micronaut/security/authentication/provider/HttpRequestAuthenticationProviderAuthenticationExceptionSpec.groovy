@@ -76,18 +76,16 @@ class HttpRequestAuthenticationProviderAuthenticationExceptionSpec extends Speci
         }
     }
 
-
     @Requires(property = "spec.name", value = "HttpRequestAuthenticationProviderAuthenticationExceptionSpec")
     @CompileStatic
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Controller("/login")
     static class LoginAuthController {
+
         @Produces(MediaType.TEXT_HTML)
         @Get("/authFailed")
         String authFailed() {
             return "<!DOCTYPE html><html><head><title></title></head><body><h1>Authentication Failed</h1></body></html>";
         }
     }
-
-
 }
