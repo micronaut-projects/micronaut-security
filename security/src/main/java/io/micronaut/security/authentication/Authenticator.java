@@ -154,7 +154,7 @@ public class Authenticator<T> {
             LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
-            return handleResponse(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
+            return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
         }
         return authenticate(requestContext, authenticationRequest, everyProviderSorted());
     }
