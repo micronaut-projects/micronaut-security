@@ -13,6 +13,8 @@ import io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler
 import io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration
 import spock.lang.Specification
 
+import java.time.temporal.TemporalAmount
+
 class JwtCookieClearerLogoutHandlerSpec extends Specification {
 
     void "by default no bean of type JwtCookieClearerLogoutHandler exists"() {
@@ -70,13 +72,19 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
             1 * getCookieDomain() >> Optional.of("domain")
             1 * getCookiePath() >> Optional.of("/")
             1 * getCookieName() >> "JWT"
-            1 * getCookieSameSite() >> Optional.of(SameSite.Strict)
+            1 * getCookieSameSite() >> Optional.of(SameSite.None)
+            1 * isCookieSecure() >> Optional.of(true)
+            1 * isCookieHttpOnly() >> Optional.of(true)
+            1 * getCookieMaxAge() >> Optional.empty()
         }
         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration = Mock() {
             1 * getCookieDomain() >> Optional.of("domain")
             1 * getCookiePath() >> Optional.of("/oauth/access_token")
             1 * getCookieName() >> "JWT_REFRESH"
             1 * getCookieSameSite() >> Optional.of(SameSite.None)
+            1 * isCookieSecure() >> Optional.of(true)
+            1 * isCookieHttpOnly() >> Optional.of(true)
+            1 * getCookieMaxAge() >> Optional.empty()
         }
         HttpRequest<?> request = Mock()
 
@@ -90,11 +98,15 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         cookieHeaders.get(0).containsIgnoreCase("JWT=")
         cookieHeaders.get(0).containsIgnoreCase("Path=/")
         cookieHeaders.get(0).containsIgnoreCase("Max-Age=0")
-        cookieHeaders.get(0).containsIgnoreCase("SameSite=Strict")
+        cookieHeaders.get(0).containsIgnoreCase("SameSite=None")
+        cookieHeaders.get(0).containsIgnoreCase("Secure")
+        cookieHeaders.get(0).containsIgnoreCase("HTTPOnly")
         cookieHeaders.get(1).containsIgnoreCase("Domain=domain")
         cookieHeaders.get(1).containsIgnoreCase("JWT_REFRESH=")
         cookieHeaders.get(1).containsIgnoreCase("Path=/oauth/access_token")
         cookieHeaders.get(1).containsIgnoreCase("Max-Age=0")
         cookieHeaders.get(1).containsIgnoreCase("SameSite=None")
+        cookieHeaders.get(1).containsIgnoreCase("Secure")
+        cookieHeaders.get(1).containsIgnoreCase("HTTPOnly")
     }
 }
