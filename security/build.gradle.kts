@@ -25,6 +25,7 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
 
     testCompileOnly(mnData.micronaut.data.processor)
+    testImplementation(projects.micronautSecurityProcessor)
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
     testImplementation(mnData.micronaut.data.jdbc)
