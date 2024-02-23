@@ -19,7 +19,7 @@ dependencies {
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
 
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testCompileOnly(mn.jackson.databind)
     testImplementation(mnSerde.micronaut.serde.jackson)

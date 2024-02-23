@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.annotation;
+package io.micronaut.security.processor;
 
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.annotation.NamedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
+import io.micronaut.security.annotation.Secured;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 @Internal
 public class JakartaPermitAllAnnotationMapper implements NamedAnnotationMapper {
+
     @Override
     public String getName() {
         return "jakarta.annotation.security.PermitAll";
