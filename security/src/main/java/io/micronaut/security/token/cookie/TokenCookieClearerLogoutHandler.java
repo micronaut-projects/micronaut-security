@@ -22,6 +22,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
@@ -64,9 +65,9 @@ public class TokenCookieClearerLogoutHandler implements LogoutHandler<HttpReques
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         try {
             MutableHttpResponse<?> response = logout == null ? HttpResponse.ok() : HttpResponse.seeOther(new URI(logout));
-            clearCookie(accessTokenCookieConfiguration, response);
+            clearCookie(accessTokenCookieConfiguration, response, request.isSecure());
             if (refreshTokenCookieConfiguration != null) {
-                clearCookie(refreshTokenCookieConfiguration, response);
+                clearCookie(refreshTokenCookieConfiguration, response, request.isSecure());
             }
             return response;
         } catch (URISyntaxException var5) {
@@ -74,11 +75,10 @@ public class TokenCookieClearerLogoutHandler implements LogoutHandler<HttpReques
         }
     }
 
-    private void clearCookie(CookieConfiguration cookieConfiguration, MutableHttpResponse<?> response) {
-        String domain = cookieConfiguration.getCookieDomain().orElse(null);
-        String path = cookieConfiguration.getCookiePath().orElse(null);
+    private void clearCookie(CookieConfiguration cookieConfiguration, MutableHttpResponse<?> response, boolean isSecure) {
         Cookie cookie = Cookie.of(cookieConfiguration.getCookieName(), "");
-        cookie.maxAge(0).domain(domain).path(path);
+        cookie.configure(cookieConfiguration, isSecure);
+        cookie.maxAge(0);
         response.cookie(cookie);
     }
 }
