@@ -5,8 +5,9 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    annotationProcessor(projects.micronautSecurityAnnotations)
+    annotationProcessor(projects.micronautSecurityProcessor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
+
     api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     testImplementation(mnValidation.micronaut.validation)
     compileOnly(mn.micronaut.inject.java)
@@ -17,6 +18,9 @@ dependencies {
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
     implementation(mnReactor.micronaut.reactor)
+
+    testCompileOnly(projects.micronautSecurityProcessor)
+
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)

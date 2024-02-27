@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     kaptTest(mn.micronaut.inject.java)
-    kaptTest(projects.micronautSecurityAnnotations)
+    kaptTest(projects.micronautSecurityProcessor)
 
     testImplementation(libs.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)

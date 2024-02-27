@@ -8,11 +8,11 @@ $ mn create-app my-app --features security-jwt
 ====
 To use the Micronaut's security capabilities you must have the `security` dependency on your classpath:
 
-dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
+dependency:io.micronaut.security:micronaut-security-processor[scope='annotationProcessor']
 
 dependency:io.micronaut.security:micronaut-security-jwt[]
 
-NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
+NOTE: The `micronaut-security-processor` dependency is only required to use JSR 250 annotations
 
 By default Micronaut returns HTTP Status Unauthorized (401) for any endpoint invocation. Routes must be explicitly allowed through the provided mechanisms.
 

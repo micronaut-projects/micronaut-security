@@ -21,7 +21,7 @@ dependencies {
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
 
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
     testImplementation(projects.micronautSecurity)
 
     testAnnotationProcessor(mnData.micronaut.data.processor)

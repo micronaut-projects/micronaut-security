@@ -12,11 +12,11 @@ $ mn create-app my-app --features security-session
 
 To use the Micronaut's session based authentication capabilities you must have the `security-session` dependency on your classpath. For example:
 
-dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
+dependency:io.micronaut.security:micronaut-security-processor[scope='annotationProcessor']
 
 dependency:io.micronaut.security:micronaut-security-session[]
 
-NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
+NOTE: The `micronaut-security-processor` dependency is only required to use JSR 250 annotations
 
 The following sequence illustrates the authentication flow:
 
