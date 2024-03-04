@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
 public class Authenticator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
+    private static final AuthenticationResponseComparator AUTHENTICATION_RESPONSE_COMPARATOR = new AuthenticationResponseComparator();
 
     /**
      *
@@ -186,8 +187,7 @@ public class Authenticator<T> {
         }
         return authenticationProviders.stream()
                 .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
-                .filter(AuthenticationResponse::isAuthenticated)
-                .findFirst()
+                .min(AUTHENTICATION_RESPONSE_COMPARATOR)
                 .orElseGet(AuthenticationResponse::failure);
     }
 
