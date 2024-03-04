@@ -32,6 +32,11 @@ public interface TokenValidator<T> extends Ordered {
     /**
      * Validates the provided token and returns the authentication state.
      *
+     * <p> An implementation of this method should never block
+     * (for example, waiting for a result of an IO operation) as it's called from the event loop.
+     * Instead, it should immediately return a Publisher that is filled with an authentication result
+     * when the result is available.
+     *
      * @param token The token string
      * @param request The current request (or null)
      * @return An authentication publisher. If the publisher emits an error, no further validators will
