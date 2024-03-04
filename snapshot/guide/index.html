@@ -315,7 +315,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html'>LATEST</option></select> </p>
+        <p><strong>Version:</strong> 5.0.0-SNAPSHOT </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -5202,12 +5202,12 @@ micronaut.security.token.propagation.service-id-regex=http://localhost:(8083|808
               secret="pleaseChangeThisSecretForANewOne"
               jws-algorithm="HS256"
       [micronaut.security.token.propagation]
+        enabled=true
+        service-id-regex="http://localhost:(8083|8081|8082)"
         [micronaut.security.token.propagation.header]
           enabled=true
           headerName="Authorization"
-          prefix="Bearer "
-        enabled=true
-        service-id-regex="http://localhost:(8083|8081|8082)"</code></pre>
+          prefix="Bearer "</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
