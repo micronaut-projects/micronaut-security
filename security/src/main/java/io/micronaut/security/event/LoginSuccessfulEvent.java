@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.core.annotation.Nullable;
-
 import java.util.Locale;
 
 /**
@@ -36,19 +34,7 @@ public class LoginSuccessfulEvent extends SecurityEvent {
      * @throws IllegalArgumentException if source is null.
      * @since 4.7.0
      */
-    public LoginSuccessfulEvent(Object source, @Nullable String host, Locale locale) {
+    public LoginSuccessfulEvent(Object source, String host, Locale locale) {
         super(source, host, locale);
-    }
-
-    /**
-     * Event triggered when a successful login takes place.
-     *
-     * @param source the {@link io.micronaut.security.authentication.Authentication} of the person logging in.
-     * @throws IllegalArgumentException if source is null.
-     * @deprecated Use {@link #LoginSuccessfulEvent(Object, String, Locale)} instead
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    public LoginSuccessfulEvent(Object source) {
-        this(source, null, Locale.getDefault());
     }
 }

@@ -17,7 +17,6 @@ package io.micronaut.security.event;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.UsernamePasswordCredentials;
 
 import java.util.Locale;
 
@@ -46,39 +45,11 @@ public class LoginFailedEvent extends SecurityEvent {
     public LoginFailedEvent(
         Object source,
         AuthenticationRequest authenticationRequest,
-        @Nullable String host,
+        String host,
         Locale locale
     ) {
         super(source, host, locale);
         this.authenticationRequest = authenticationRequest;
-    }
-
-    /**
-     * Event triggered when an unsuccessful login takes place.
-     *
-     * @param source                The {@link io.micronaut.security.authentication.AuthenticationResponse} object
-     *                              signaling the authentication failure and reason.
-     * @param authenticationRequest A request to authenticate.
-     * @throws IllegalArgumentException if source is null.
-     * @since 4.1.0
-     * @deprecated use {@link LoginFailedEvent(Object, AuthenticationRequest, String, Locale)}.
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    public LoginFailedEvent(Object source, AuthenticationRequest authenticationRequest) {
-        this(source, authenticationRequest, null, Locale.getDefault());
-    }
-
-    /**
-     * Event triggered when an unsuccessful login takes place.
-     *
-     * @param source The {@link io.micronaut.security.authentication.AuthenticationResponse} object
-     *               signaling the authentication failure and reason.
-     * @throws IllegalArgumentException if source is null.
-     * @deprecated use {@link LoginFailedEvent(Object, UsernamePasswordCredentials)}.
-     */
-    @Deprecated(forRemoval = true, since = "4.1.0")
-    public LoginFailedEvent(Object source) {
-        this(source, null, null, Locale.getDefault());
     }
 
     /**

@@ -11,26 +11,24 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.ldap.LdapAuthenticationProvider;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Mono;
 
 @Controller
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LdapController {
 
-    private static final Logger logger = LoggerFactory.getLogger("LdapController");
+    private static final Logger LOG = LoggerFactory.getLogger("LdapController");
 
     @Inject
     LdapAuthenticationProvider authenticationProvider;
 
     @Post("/login")
-    public Mono<MutableHttpResponse<Boolean>> login(@Body UsernamePasswordCredentials usernamePasswordCredentials) {
-        Publisher<AuthenticationResponse> publisher = authenticationProvider.authenticate(null, usernamePasswordCredentials);
-        return Mono.fromDirect(publisher).map(r -> HttpResponse.ok(r.isAuthenticated())).onErrorResume(e -> {
-            logger.error("Login failed", e);
-            return Mono.just(HttpResponse.ok(false));
-        });
+    public MutableHttpResponse<Boolean> login(@Body UsernamePasswordCredentials usernamePasswordCredentials) {
+        AuthenticationResponse authenticationResponse = authenticationProvider.authenticate(null, usernamePasswordCredentials);
+        if (!authenticationResponse.isAuthenticated()) {
+            LOG.error("Login failed");
+        }
+        return HttpResponse.ok(authenticationResponse.isAuthenticated());
     }
 }

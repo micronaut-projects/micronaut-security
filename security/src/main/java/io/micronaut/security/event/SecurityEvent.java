@@ -17,10 +17,8 @@ package io.micronaut.security.event;
 
 import io.micronaut.context.event.ApplicationEvent;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
 
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Base class for security events.
@@ -39,7 +37,7 @@ public abstract class SecurityEvent extends ApplicationEvent {
      * @param host   The hostname from the request if available
      * @param locale The locale of the request
      */
-    protected SecurityEvent(Object source, @Nullable String host, Locale locale) {
+    protected SecurityEvent(Object source, String host, Locale locale) {
         super(source);
         this.host = host;
         this.locale = locale;
@@ -48,8 +46,8 @@ public abstract class SecurityEvent extends ApplicationEvent {
     /**
      * @return The hostname from the request if available
      */
-    public Optional<String> getHost() {
-        return Optional.ofNullable(host);
+    public String getHost() {
+        return host;
     }
 
     /**

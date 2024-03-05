@@ -166,7 +166,6 @@ class DefaultOpenIdProviderMetadataSpec extends ApplicationContextSpecification 
         metadata.opPolicyUri == opPolicyUri
         metadata.uriLocalesSupported == uriLocalesSupported
         metadata.claimsLocalesSupported == claimsLocalesSupported
-        metadata.userInfoEncryptionAlgValuesSupported == userinfoEncryptionAlgValuesSupported
         metadata.userinfoEncryptionEncValuesSupported == userinfoEncryptionEncValuesSupported
         metadata.tokenEndpointAuthSigningAlgValuesSupported == tokenEndpointAuthSigningAlgValuesSupported
         metadata.requestObjectEncryptionAlgValuesSupported == requestObjectEncryptionAlgValuesSupported

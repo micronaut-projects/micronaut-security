@@ -56,7 +56,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         new PollingConditions().eventually {
             loginFailedEventListener.events.size() == 1
             loginFailedEventListener.events.authenticationRequest.identity == ["bogus"]
-            loginFailedEventListener.events.host*.get() == [embeddedServer.getURL().toString()]
+            loginFailedEventListener.events.host == [embeddedServer.getURL().toString()]
             loginFailedEventListener.events.locale == [Locale.default]
         }
     }
@@ -72,7 +72,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         then:
         new PollingConditions().eventually {
             loginSuccessfulEventListener.events.size() == 1
-            loginSuccessfulEventListener.events.host*.get() == [embeddedServer.getURL().toString()]
+            loginSuccessfulEventListener.events.host == [embeddedServer.getURL().toString()]
             loginSuccessfulEventListener.events.locale == [Locale.default]
         }
     }
@@ -90,7 +90,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         new PollingConditions().eventually {
             logoutEventListener.events.size() == 1
             logoutEventListener.events.source.name == ['user']
-            logoutEventListener.events.host*.get() == [embeddedServer.getURL().toString()]
+            logoutEventListener.events.host == [embeddedServer.getURL().toString()]
             logoutEventListener.events.locale == [Locale.default]
         }
     }

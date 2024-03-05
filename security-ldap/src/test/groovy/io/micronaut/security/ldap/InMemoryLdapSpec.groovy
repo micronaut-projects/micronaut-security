@@ -73,11 +73,7 @@ abstract class InMemoryLdapSpec extends Specification {
     }
 
     AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
-        Flux.from(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password)))
-                .onErrorResume(t -> {
-                        return Flux.just(((AuthenticationException) t).getResponse())
-                })
-                .blockFirst()
+        authenticationProvider.authenticate(null, createAuthenticationRequest(username, password))
     }
 
 }

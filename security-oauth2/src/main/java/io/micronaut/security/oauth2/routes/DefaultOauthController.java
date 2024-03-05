@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -33,11 +32,7 @@ import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
 
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-
-import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +68,6 @@ public class DefaultOauthController implements OauthController {
      * @param httpLocaleResolver            The http locale resolver
      * @since 4.7.0
      */
-    @Inject
     DefaultOauthController(
         @Parameter OauthClient oauthClient,
         RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
@@ -88,38 +82,6 @@ public class DefaultOauthController implements OauthController {
         this.loginFailedEventPublisher = loginFailedEventPublisher;
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
-    }
-
-    /**
-     * @param oauthClient                   The oauth client
-     * @param loginHandler                  The login handler
-     * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
-     * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
-     * @deprecated Use {@link #DefaultOauthController(OauthClient, RedirectingLoginHandler, ApplicationEventPublisher, ApplicationEventPublisher, HttpHostResolver, HttpLocaleResolver)} instead
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    DefaultOauthController(@Parameter OauthClient oauthClient,
-                           RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
-                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
-        this(
-            oauthClient,
-            loginHandler,
-            loginSuccessfulEventPublisher,
-            loginFailedEventPublisher,
-            request -> null,
-            new HttpLocaleResolver() {
-                @Override
-                public @NonNull Optional<Locale> resolve(@NonNull HttpRequest<?> context) {
-                    return Optional.of(resolveOrDefault(context));
-                }
-
-                @Override
-                public @NonNull Locale resolveOrDefault(@NonNull HttpRequest<?> context) {
-                    return Locale.getDefault();
-                }
-            }
-        );
     }
 
     @Override

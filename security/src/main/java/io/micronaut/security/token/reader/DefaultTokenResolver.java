@@ -19,15 +19,12 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpRequest;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Default implementation of {@link io.micronaut.security.token.reader.TokenResolver}.
@@ -44,19 +41,8 @@ public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
     /**
      * Instantiates a {@link io.micronaut.security.token.reader.DefaultTokenResolver} with a list of available {@link io.micronaut.security.token.reader.TokenReader}.
      * @param tokenReaders Collection of available {@link io.micronaut.security.token.reader.TokenReader} beans.
-     * @deprecated Use {@link DefaultTokenResolver(List)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "4.4.0")
-    public DefaultTokenResolver(Collection<TokenReader<HttpRequest<?>>> tokenReaders) {
-        this(new ArrayList<>(tokenReaders));
-    }
-
-    /**
-     * Instantiates a {@link io.micronaut.security.token.reader.DefaultTokenResolver} with a list of available {@link io.micronaut.security.token.reader.TokenReader}.
-     * @param tokenReaders Collection of available {@link io.micronaut.security.token.reader.TokenReader} beans.
      * @since 4.4.0
      */
-    @Inject
     public DefaultTokenResolver(List<TokenReader<HttpRequest<?>>> tokenReaders) {
         this.tokenReaders = tokenReaders;
     }
@@ -83,16 +69,5 @@ public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
             LOG.debug("Request {}, {}, no token found.", method, path);
         }
         return tokens;
-    }
-
-    /**
-     * Returns the first token found by the supplied token readers.
-     *
-     * @param request The current HTTP request.
-     * @return the first found token in the supplied request.
-     */
-    @Override
-    public Optional<String> resolveToken(HttpRequest<?> request) {
-        return resolveTokens(request).stream().findFirst();
     }
 }

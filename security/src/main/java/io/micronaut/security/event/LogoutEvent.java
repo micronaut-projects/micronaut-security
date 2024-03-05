@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.core.annotation.Nullable;
-
 import java.util.Locale;
 
 /**
@@ -36,19 +34,7 @@ public class LogoutEvent extends SecurityEvent {
      * @throws IllegalArgumentException if source is null.
      * @since 4.7.0
      */
-    public LogoutEvent(Object source, @Nullable String host, Locale locale) {
+    public LogoutEvent(Object source, String host, Locale locale) {
         super(source, host, locale);
-    }
-
-    /**
-     * Event triggered when the user logs out.
-     *
-     * @param source The {@link io.micronaut.security.authentication.Authentication} of the user logging out.
-     * @throws IllegalArgumentException if source is null.
-     * @deprecated Use {@link #LogoutEvent(Object, String, Locale)} instead
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    public LogoutEvent(Object source) {
-        this(source, null, Locale.getDefault());
     }
 }

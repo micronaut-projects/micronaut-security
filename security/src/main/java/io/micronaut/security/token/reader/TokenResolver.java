@@ -18,9 +18,7 @@ package io.micronaut.security.token.reader;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.NonNull;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Returns the token from the provided request.
@@ -30,18 +28,8 @@ import java.util.Optional;
  * @param <T> request
  */
 @DefaultImplementation(DefaultTokenResolver.class)
+@FunctionalInterface
 public interface TokenResolver<T> {
-
-    /**
-     * Resolves the token from the provided request.
-     *
-     * @param request The HTTP request.
-     * @return The token in the supplied request. Empty if no token was found.
-     * @deprecated Use {@link TokenResolver#resolveTokens(Object)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "4.4.0")
-    Optional<String> resolveToken(T request);
-
     /**
      * Returns tokens found by the supplied token readers.
      *
@@ -50,7 +38,5 @@ public interface TokenResolver<T> {
      * @since 4.4.0
      */
     @NonNull
-    default List<String> resolveTokens(@NonNull T request) {
-        return resolveToken(request).map(Collections::singletonList).orElseGet(Collections::emptyList);
-    }
+    List<String> resolveTokens(@NonNull T request);
 }

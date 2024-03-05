@@ -3,6 +3,8 @@ package io.micronaut.security.ldap
 import com.unboundid.ldap.listener.InMemoryDirectoryServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationResponse
 import reactor.test.StepVerifier
 
@@ -168,10 +170,13 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
 
-        expect:
-        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password")))
-                .expectErrorMessage("User Not Found")
-                .verify()
+        when:
+        AuthenticationResponse authenticationResponse = authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))
+
+        then:
+        !authenticationResponse.isAuthenticated()
+        authenticationResponse instanceof AuthenticationFailed
+        AuthenticationFailureReason.USER_NOT_FOUND == ((AuthenticationFailed) authenticationResponse).reason
 
         cleanup:
         ctx.close()
@@ -193,10 +198,13 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
 
-        expect:
-        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc")))
-                .expectErrorMessage("Credentials Do Not Match")
-                .verify()
+        when:
+        AuthenticationResponse authenticationResponse = authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))
+
+        then:
+        !authenticationResponse.isAuthenticated()
+        authenticationResponse instanceof AuthenticationFailed
+        AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH == ((AuthenticationFailed) authenticationResponse).reason
 
         cleanup:
         ctx.close()

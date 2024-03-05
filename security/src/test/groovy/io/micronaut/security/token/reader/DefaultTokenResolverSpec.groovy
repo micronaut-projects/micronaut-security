@@ -24,15 +24,12 @@ class DefaultTokenResolverSpec extends Specification {
         request.headers.add("X-API-KEY", "validxxx")
 
         expect:
-        defaultTokenResolver.resolveToken(request).isPresent()
-        "validxxx" == defaultTokenResolver.resolveToken(request).get()
         ["validxxx"] == defaultTokenResolver.resolveTokens(request)
 
         when:
         request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
 
         then:
-        defaultTokenResolver.resolveToken(request).isEmpty()
         !defaultTokenResolver.resolveTokens(request)
 
         when:
@@ -41,8 +38,6 @@ class DefaultTokenResolverSpec extends Specification {
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer validyyy")
 
         then:
-        defaultTokenResolver.resolveToken(request).isPresent()
-        "validxxx" == defaultTokenResolver.resolveToken(request).get()
         ["validxxx", "validyyy"] == defaultTokenResolver.resolveTokens(request)
 
     }
