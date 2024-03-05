@@ -22,7 +22,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
-import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
