@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -28,6 +29,8 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.server.util.HttpHostResolver;
+import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.Authenticator;
@@ -36,6 +39,7 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -43,41 +47,91 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Locale;
+import java.util.Optional;
+
 /**
  * Handles login requests.
  *
+ * @param <B> The HTTP Request Body type
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
- * @param <B> The HTTP Request Body type
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
-@Requires(beans = { LoginHandler.class, Authenticator.class })
+@Requires(beans = {LoginHandler.class, Authenticator.class})
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LoginController<B> {
+
     private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
     protected final Authenticator<HttpRequest<B>> authenticator;
-    protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>>  loginHandler;
+    protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
+    protected final HttpHostResolver httpHostResolver;
+    protected final HttpLocaleResolver httpLocaleResolver;
 
     /**
      * @param authenticator                 {@link Authenticator} collaborator
      * @param loginHandler                  A collaborator which helps to build HTTP response depending on success or failure.
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
+     * @since 4.7.0
      */
-    public LoginController(Authenticator<HttpRequest<B>> authenticator,
-                           LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
-                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
+    @Inject
+    public LoginController(
+        Authenticator<HttpRequest<B>> authenticator,
+        LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+        ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+        ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
+        HttpHostResolver httpHostResolver,
+        HttpLocaleResolver httpLocaleResolver
+    ) {
         this.authenticator = authenticator;
         this.loginHandler = loginHandler;
         this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
         this.loginFailedEventPublisher = loginFailedEventPublisher;
+        this.httpHostResolver = httpHostResolver;
+        this.httpLocaleResolver = httpLocaleResolver;
+    }
+
+    /**
+     * @param authenticator                 {@link Authenticator} collaborator
+     * @param loginHandler                  A collaborator which helps to build HTTP response depending on success or failure.
+     * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
+     * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
+     * @deprecated Use {@link #LoginController(Authenticator, LoginHandler, ApplicationEventPublisher, ApplicationEventPublisher)} instead
+     */
+    @Deprecated(forRemoval = true, since = "4.7.0")
+    public LoginController(
+        Authenticator<HttpRequest<B>> authenticator,
+        LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+        ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+        ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher
+    ) {
+        this(
+            authenticator,
+            loginHandler,
+            loginSuccessfulEventPublisher,
+            loginFailedEventPublisher,
+            request -> null,
+            new HttpLocaleResolver() {
+                @Override
+                public @NonNull Optional<Locale> resolve(@NonNull HttpRequest<?> context) {
+                    return Optional.of(Locale.getDefault());
+                }
+
+                @Override
+                public @NonNull Locale resolveOrDefault(@NonNull HttpRequest<?> context) {
+                    return Locale.getDefault();
+                }
+            }
+        );
     }
 
     /**
@@ -90,18 +144,31 @@ public class LoginController<B> {
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
-                .map(authenticationResponse -> {
-                    if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
-                        Authentication authentication = authenticationResponse.getAuthentication().get();
-                        loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
-                        return loginHandler.loginSuccess(authentication, request);
-                    } else {
-                        if (LOG.isTraceEnabled()) {
-                            LOG.trace("login failed for username: {}", usernamePasswordCredentials.getUsername());
-                        }
-                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse, usernamePasswordCredentials));
-                        return loginHandler.loginFailed(authenticationResponse, request);
+            .map(authenticationResponse -> {
+                if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                    Authentication authentication = authenticationResponse.getAuthentication().get();
+                    loginSuccessfulEventPublisher.publishEvent(
+                        new LoginSuccessfulEvent(
+                            authentication,
+                            httpHostResolver.resolve(request),
+                            httpLocaleResolver.resolveOrDefault(request)
+                        )
+                    );
+                    return loginHandler.loginSuccess(authentication, request);
+                } else {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("login failed for username: {}", usernamePasswordCredentials.getUsername());
                     }
-                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
+                    loginFailedEventPublisher.publishEvent(
+                        new LoginFailedEvent(
+                            authenticationResponse,
+                            usernamePasswordCredentials,
+                            httpHostResolver.resolve(request),
+                            httpLocaleResolver.resolveOrDefault(request)
+                        )
+                    );
+                    return loginHandler.loginFailed(authenticationResponse, request);
+                }
+            }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
     }
 }
