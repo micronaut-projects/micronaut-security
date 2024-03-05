@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 import spock.lang.Specification;
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
-@MicronautTest(startApplication = false)
+@MicronautTest
 class TokenAuthenticationFetcherSpec extends Specification {
 
     @Inject

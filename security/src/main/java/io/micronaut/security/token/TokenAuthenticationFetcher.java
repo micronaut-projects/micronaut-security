@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@ package io.micronaut.security.token;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.server.util.HttpHostResolver;
+import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
@@ -31,6 +34,8 @@ import reactor.core.publisher.Flux;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
@@ -52,12 +57,14 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
     public static final Integer ORDER = 0;
 
     protected final Collection<TokenValidator<HttpRequest<?>>> tokenValidators;
+    protected final HttpHostResolver httpHostResolver;
+    protected final HttpLocaleResolver httpLocaleResolver;
     protected final ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher;
     private final TokenResolver<HttpRequest<?>> tokenResolver;
 
     /**
-     * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
-     * @param tokenResolver   The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
+     * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
+     * @param tokenResolver                The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
      * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
      * @deprecated Use {@link TokenAuthenticationFetcher(List, TokenResolver, ApplicationEventPublisher)} instead.
      */
@@ -65,23 +72,59 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
     public TokenAuthenticationFetcher(Collection<TokenValidator<HttpRequest<?>>> tokenValidators,
                                       TokenResolver<HttpRequest<?>> tokenResolver,
                                       ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher) {
-        this.tokenValidatedEventPublisher = tokenValidatedEventPublisher;
-        this.tokenResolver = tokenResolver;
-        this.tokenValidators = tokenValidators;
+        this(CollectionUtils.iterableToList(tokenValidators), tokenResolver, tokenValidatedEventPublisher);
     }
 
     /**
-     * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
-     * @param tokenResolver   The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
+     * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
+     * @param tokenResolver                The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
      * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
+     * @deprecated Use {@link TokenAuthenticationFetcher(List, TokenResolver, ApplicationEventPublisher, HttpHostResolver, HttpLocaleResolver)} instead.
      */
-    @Inject
+    @Deprecated(forRemoval = true, since = "4.7.0")
     public TokenAuthenticationFetcher(List<TokenValidator<HttpRequest<?>>> tokenValidators,
                                       TokenResolver<HttpRequest<?>> tokenResolver,
                                       ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher) {
+        this(
+            tokenValidators,
+            tokenResolver,
+            tokenValidatedEventPublisher,
+            request -> null,
+            new HttpLocaleResolver() {
+                @Override
+                public @NonNull Optional<Locale> resolve(@NonNull HttpRequest<?> context) {
+                    return Optional.of(Locale.getDefault());
+                }
+
+                @Override
+                public @NonNull Locale resolveOrDefault(@NonNull HttpRequest<?> context) {
+                    return Locale.getDefault();
+                }
+            }
+        );
+    }
+
+    /**
+     * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
+     * @param tokenResolver                The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
+     * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
+     * @param httpHostResolver             The http host resolver
+     * @param httpLocaleResolver           The http locale resolver
+     * @since 4.7.0
+     */
+    @Inject
+    public TokenAuthenticationFetcher(
+        List<TokenValidator<HttpRequest<?>>> tokenValidators,
+        TokenResolver<HttpRequest<?>> tokenResolver,
+        ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher,
+        HttpHostResolver httpHostResolver,
+        HttpLocaleResolver httpLocaleResolver
+    ) {
         this.tokenValidatedEventPublisher = tokenValidatedEventPublisher;
         this.tokenResolver = tokenResolver;
         this.tokenValidators = tokenValidators;
+        this.httpHostResolver = httpHostResolver;
+        this.httpLocaleResolver = httpLocaleResolver;
     }
 
     @Override
@@ -92,12 +135,18 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
             return Flux.empty();
         }
         return Flux.fromIterable(tokens)
-                .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
-                        .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+            .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
+                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
-                    tokenValidatedEventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                    tokenValidatedEventPublisher.publishEvent(
+                        new TokenValidatedEvent(
+                            tokenValue,
+                            httpHostResolver.resolve(request),
+                            httpLocaleResolver.resolveOrDefault(request)
+                        )
+                    );
                     return authentication;
                 }));
     }
