@@ -58,7 +58,6 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class Authenticator<T> {
-
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     /**
@@ -184,11 +183,17 @@ public class Authenticator<T> {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        return authenticationProviders.stream()
-                .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
-                .filter(AuthenticationResponse::isAuthenticated)
-                .findFirst()
-                .orElseGet(AuthenticationResponse::failure);
+        List<AuthenticationResponse> responses = new ArrayList<>();
+        for (AuthenticationProvider<T, ?, ?> provider : authenticationProviders) {
+            AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
+            if (response.isAuthenticated()) {
+                return response;
+            }
+            responses.add(response);
+        }
+        return responses.stream()
+                        .findFirst()
+                        .orElseGet(AuthenticationResponse::failure);
     }
 
     @NonNull
