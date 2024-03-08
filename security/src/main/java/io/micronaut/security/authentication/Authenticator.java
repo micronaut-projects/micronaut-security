@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
-    
+
     /**
      *
      * @deprecated Unused. To be removed in the next major version.
@@ -183,20 +183,16 @@ public class Authenticator<T> {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        // Check if any authentication provider responds a successful authentication
-        Optional<AuthenticationResponse> authenticationResponseOptional = authenticationProviders.stream()
+        List<AuthenticationResponse> responses = authenticationProviders.stream()
                 .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
+                .toList();
+
+        return responses.stream()
                 .filter(AuthenticationResponse::isAuthenticated)
-                .findFirst();
-        if (authenticationResponseOptional.isPresent()) {
-            return authenticationResponseOptional.get();
-        }
-        // if no successful authentication order the authentication providers and return the first response or a failed response if none is present
-        return authenticationProviders.stream()
-                .sorted(OrderUtil.COMPARATOR)
-                .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
                 .findFirst()
-                .orElseGet(AuthenticationResponse::failure);
+                .orElseGet(() -> responses.stream()
+                        .findFirst()
+                        .orElseGet(AuthenticationResponse::failure));
     }
 
     @NonNull
