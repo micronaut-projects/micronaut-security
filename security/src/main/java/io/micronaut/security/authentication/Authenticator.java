@@ -183,16 +183,17 @@ public class Authenticator<T> {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        List<AuthenticationResponse> responses = authenticationProviders.stream()
-                .map(provider -> authenticationResponse(provider, requestContext, authenticationRequest))
-                .toList();
-
+        List<AuthenticationResponse> responses = new ArrayList<>();
+        for (AuthenticationProvider provider : authenticationProviders) {
+            AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
+            if (response.isAuthenticated()) {
+                return response;
+            }
+            responses.add(response);
+        }
         return responses.stream()
-                .filter(AuthenticationResponse::isAuthenticated)
-                .findFirst()
-                .orElseGet(() -> responses.stream()
                         .findFirst()
-                        .orElseGet(AuthenticationResponse::failure));
+                        .orElseGet(AuthenticationResponse::failure);
     }
 
     @NonNull
