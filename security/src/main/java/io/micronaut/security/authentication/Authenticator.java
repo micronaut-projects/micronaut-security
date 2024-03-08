@@ -184,7 +184,7 @@ public class Authenticator<T> {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
         List<AuthenticationResponse> responses = new ArrayList<>();
-        for (AuthenticationProvider provider : authenticationProviders) {
+        for (AuthenticationProvider<T, ?, ?> provider : authenticationProviders) {
             AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
             if (response.isAuthenticated()) {
                 return response;
