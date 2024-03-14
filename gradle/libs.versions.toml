@@ -4,7 +4,6 @@ managed-nimbus-jose-jwt = "9.37.3"
 micronaut = "4.3.9"
 micronaut-platform = "4.2.4"
 micronaut-docs = "2.0.0"
-groovy = "4.0.13"
 
 geb = "7.0"
 selenium = "4.2.2"
@@ -60,7 +59,6 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
