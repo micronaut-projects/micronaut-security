@@ -78,9 +78,9 @@ public class Keycloak {
                 .withExposedPorts(8080)
                 .withEnv(Map.of(
                     "KEYCLOAK_DATABASE_VENDOR", "h2",
-                    "KC_HTTP_RELATIVE_PATH", "/auth", // TODO: Keycloak dropped the `/auth` prefix in 17.0.0
-                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_LEGACY_LOGOUT_REDIRECT_URI", "true", // TODO: Keycloak dropped redirect_uri for logging out
-                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_SUPPRESS_LOGOUT_CONFIRMATION_SCREEN", "true",
+                    "KC_HTTP_RELATIVE_PATH", "/auth", // https://github.com/micronaut-projects/micronaut-security/issues/1024
+                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_LEGACY_LOGOUT_REDIRECT_URI", "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
+                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_SUPPRESS_LOGOUT_CONFIRMATION_SCREEN", "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
                     "KC_DB", "dev-file"
                 ))
                 .withLogConsumer(outputFrame -> System.out.print("[--KEYCLOAK--] " + outputFrame.getUtf8String()))
