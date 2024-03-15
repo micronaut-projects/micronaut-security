@@ -24,7 +24,7 @@ import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
 import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.oauth2.keycloak.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named

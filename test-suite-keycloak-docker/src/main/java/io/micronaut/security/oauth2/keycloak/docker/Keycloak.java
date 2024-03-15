@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.keycloak.v16;
+package io.micronaut.security.oauth2.keycloak.docker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +152,7 @@ public class Keycloak {
     }
 
     public static String getRedirectUriHost() {
-        return io.micronaut.security.oauth2.keycloak.v16.TestContainersUtils.getHost();
+        return TestContainersUtils.getHost();
     }
 
     public static void destroy() {

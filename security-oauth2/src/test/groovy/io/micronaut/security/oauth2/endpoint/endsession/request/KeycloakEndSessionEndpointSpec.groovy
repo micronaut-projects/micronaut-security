@@ -8,7 +8,7 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.oauth2.keycloak.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Requires

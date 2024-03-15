@@ -12,7 +12,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.oauth2.keycloak.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.pages.HomePage
 import io.micronaut.security.pages.LoginPage
 import io.micronaut.security.rules.SecurityRule

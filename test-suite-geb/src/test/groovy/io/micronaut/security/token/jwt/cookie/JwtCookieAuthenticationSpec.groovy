@@ -24,7 +24,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.oauth2.keycloak.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario

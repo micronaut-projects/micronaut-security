@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.keycloak.v16;
+package io.micronaut.security.oauth2.keycloak.docker;
 
 public final class TestContainersUtils {
 

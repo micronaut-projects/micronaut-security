@@ -8,7 +8,7 @@ import io.micronaut.http.HttpMethod
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.endpoints.OauthController
-import io.micronaut.security.oauth2.keycloak.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
