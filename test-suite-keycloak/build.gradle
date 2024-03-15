@@ -10,3 +10,9 @@ dependencies {
     implementation(projects.micronautSecurityOauth2)
     implementation(projects.testSuiteUtils)
 }
+
+if (System.getenv("SONAR_TOKEN") != null) {
+    sonar {
+        skipProject = true
+    }
+}
