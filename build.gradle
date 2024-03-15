@@ -6,3 +6,11 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+project(":testSuiteKeycloakDocker") {
+    if (System.getenv("SONAR_TOKEN") != null) {
+        sonar {
+            skipProject = true
+        }
+    }
+}
