@@ -22,9 +22,12 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.Collection;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.Collection;
 
 /**
  * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/validating-jwt-access-tokens">Validating JWT Access Tokens</a>
@@ -38,6 +41,7 @@ public class JwtTokenValidator<T> implements TokenValidator<T> {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
     protected final JwtValidator<T> validator;
+    private final Scheduler scheduler;
 
     /**
      * Constructor.
@@ -67,6 +71,7 @@ public class JwtTokenValidator<T> implements TokenValidator<T> {
                              JwtAuthenticationFactory jwtAuthenticationFactory) {
         this.validator = validator;
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
+        this.scheduler = Schedulers.boundedElastic();
     }
 
     /***
@@ -75,9 +80,8 @@ public class JwtTokenValidator<T> implements TokenValidator<T> {
      */
     @Override
     public Publisher<Authentication> validateToken(String token, @Nullable T request) {
-        return validator.validate(token, request)
-                .flatMap(jwtAuthenticationFactory::createAuthentication)
-                .map(Flux::just)
-                .orElse(Flux.empty());
+        return Mono.fromCallable(() -> validator.validate(token, request))
+            .flatMap(tokenOptional -> tokenOptional.flatMap(jwtAuthenticationFactory::createAuthentication)
+                .map(Mono::just).orElse(Mono.empty())).subscribeOn(scheduler);
     }
 }

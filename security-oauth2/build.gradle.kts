@@ -29,4 +29,5 @@ dependencies {
     testImplementation(projects.testSuiteKeycloak16)
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
+    testImplementation(mn.micronaut.retry)
 }
