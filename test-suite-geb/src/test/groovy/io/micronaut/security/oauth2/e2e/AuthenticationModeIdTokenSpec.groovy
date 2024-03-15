@@ -27,11 +27,9 @@ import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
 import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.ConfigurationFixture
-import io.micronaut.security.oauth2.keycloack.v16.Keycloak
+import io.micronaut.security.oauth2.keycloak.v16.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
-import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named
@@ -41,7 +39,6 @@ import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 import java.security.Principal
-import java.util.function.BooleanSupplier
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class AuthenticationModeIdTokenSpec extends GebSpec {
@@ -92,7 +89,7 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
 
         when:
         LoginPage loginPage = browser.page LoginPage
-        loginPage.login("user", "password")
+        loginPage.login(Keycloak.TEST_USERNAME, Keycloak.TEST_PASSWORD)
 
         then:
         at HomePage

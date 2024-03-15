@@ -110,8 +110,13 @@ public class DefaultOpenIdClient implements OpenIdClient {
         }
         return Optional.ofNullable(endSessionEndpoint)
                 .map(esr -> esr.getUrl(request, authentication))
-                .map(url -> HttpResponse.status(HttpStatus.FOUND)
-                        .header(HttpHeaders.LOCATION, url));
+                .map(url -> {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Redirecting to [{}]", url);
+                    }
+                    return HttpResponse.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, url);
+                });
     }
 
     @Override
