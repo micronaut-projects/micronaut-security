@@ -36,9 +36,11 @@ public class Keycloak {
     public static final String SYS_TESTCONTAINERS = "testcontainers";
     public static final String CLIENT_ID = "myclient";
     public static final String TEST_USERNAME = "test";
+    @SuppressWarnings("java:S2068") // Passwords are for testing an ephemeral container
     public static final String TEST_PASSWORD = "password";
 
     private static final String ADMIN_USERNAME = "user";
+    @SuppressWarnings("java:S2068") // Passwords are for testing an ephemeral container
     private static final String ADMIN_PASSWORD = "bitnami";
     private static final String REALM = "master";
     private static final String ADMIN_SERVER = "http://localhost:8080/auth";
@@ -68,7 +70,8 @@ public class Keycloak {
         return Integer.valueOf(issuer.substring(issuer.indexOf("localhost:") + "localhost:".length(),  issuer.indexOf("/auth/realms")));
     }
 
-    @SuppressWarnings("java:S106")
+    // Tell sonar I know I'm printing out, I don't want to close the container immediately, and adding constants for all the strings makes it less readable.
+    @SuppressWarnings({"java:S106", "java:S2095", "java:S1192"})
     static void init() throws IOException, InterruptedException {
         if (container == null) {
             container = new GenericContainer<>("bitnami/keycloak:23")
