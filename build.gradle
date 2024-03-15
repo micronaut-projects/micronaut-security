@@ -7,7 +7,7 @@ repositories {
     mavenCentral()
 }
 
-project(":testSuiteKeycloakDocker") {
+project(":test-suite-keycloak-docker") {
     if (System.getenv("SONAR_TOKEN") != null) {
         sonar {
             skipProject = true
