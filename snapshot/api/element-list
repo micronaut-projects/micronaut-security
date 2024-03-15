@@ -48,7 +48,7 @@ io.micronaut.security.oauth2.endpoint.token.request.password
 io.micronaut.security.oauth2.endpoint.token.response
 io.micronaut.security.oauth2.endpoint.token.response.validation
 io.micronaut.security.oauth2.grants
-io.micronaut.security.oauth2.keycloack.v16
+io.micronaut.security.oauth2.keycloak.docker
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
 io.micronaut.security.rules
