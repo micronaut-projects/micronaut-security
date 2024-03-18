@@ -134,11 +134,29 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,reactor.core.scheduler.Scheduler)"><code>JwtTokenValidator(JwtValidator, JwtAuthenticationFactory, Scheduler)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,reactor.core.scheduler.Scheduler)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
+ <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
+ reactor.core.scheduler.Scheduler&nbsp;scheduler)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&gt;&nbsp;encryptionConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</code></div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,java.util.concurrent.ExecutorService)"><code>JwtTokenValidator(Collection, Collection, Collection, JwtAuthenticationFactory, ExecutorService)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,java.util.concurrent.ExecutorService)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&gt;&nbsp;encryptionConfigurations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
+ <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructor.</div>
 </div>
@@ -203,13 +221,37 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)">
+<section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,java.util.concurrent.ExecutorService)">
 <h3>JwtTokenValidator</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&gt;&nbsp;encryptionConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
+ <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
+ @Named("blocking")
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService)</span></div>
+<div class="block">Constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>signatureConfigurations</code> - List of Signature configurations which are used to attempt validation.</dd>
+<dd><code>encryptionConfigurations</code> - List of Encryption configurations which are used to attempt validation.</dd>
+<dd><code>genericJwtClaimsValidators</code> - Generic JWT Claims validators which should be used to validate any JWT.</dd>
+<dd><code>jwtAuthenticationFactory</code> - Utility to generate an Authentication given a JWT.</dd>
+<dd><code>executorService</code> - Executor Service</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)">
+<h3>JwtTokenValidator</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&gt;&nbsp;encryptionConfigurations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,java.util.concurrent.ExecutorService)"><code>JwtTokenValidator(Collection, Collection, Collection, JwtAuthenticationFactory, ExecutorService)</code></a> instead.</div>
+</div>
 <div class="block">Constructor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -223,12 +265,30 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)">
 <h3>JwtTokenValidator</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,reactor.core.scheduler.Scheduler)"><code>JwtTokenValidator(JwtValidator, JwtAuthenticationFactory, Scheduler)</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>validator</code> - Validates the JWT</dd>
 <dd><code>jwtAuthenticationFactory</code> - The authentication factory</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,reactor.core.scheduler.Scheduler)">
+<h3>JwtTokenValidator</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
+ <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
+ reactor.core.scheduler.Scheduler&nbsp;scheduler)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>validator</code> - Validates the JWT</dd>
+<dd><code>jwtAuthenticationFactory</code> - The authentication factory</dd>
+<dd><code>scheduler</code> - The scheduler to use</dd>
 </dl>
 </section>
 </li>

@@ -3492,6 +3492,125 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 <p>Note that the same approach will be applied when using a <code>jwks_uri</code> supplied via <a href="#openid-authorization-code">Open ID Connect</a> metadata.</p>
 </div>
 <div class="paragraph">
+<p>The <a href="https://docs.micronaut.io/latest/guide/#httpClient">Micronaut HTTP Client</a> based implementation can be explicitly disabled in favor of the JWT library&#8217;s internal resource fetching implementation by explicitly setting <code>micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false</code>. For example:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false
+micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-known/jwks.json</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks-client:
+            http-client:
+              enabled: false
+          jwks:
+            awscognito:
+              url: '/eu-west-XXXX/.well-known/jwks.json'</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.security]
+    [micronaut.security.token]
+      [micronaut.security.token.jwt]
+        [micronaut.security.token.jwt.signatures]
+          [micronaut.security.token.jwt.signatures.jwks-client]
+            [micronaut.security.token.jwt.signatures.jwks-client.http-client]
+              enabled=false
+          [micronaut.security.token.jwt.signatures.jwks]
+            [micronaut.security.token.jwt.signatures.jwks.awscognito]
+              url="/eu-west-XXXX/.well-known/jwks.json"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        signatures {
+          jwksClient {
+            httpClient {
+              enabled = false
+            }
+          }
+          jwks {
+            awscognito {
+              url = "/eu-west-XXXX/.well-known/jwks.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          signatures {
+            jwks-client {
+              http-client {
+                enabled = false
+              }
+            }
+            jwks {
+              awscognito {
+                url = "/eu-west-XXXX/.well-known/jwks.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "jwks-client": {
+              "http-client": {
+                "enabled": false
+              }
+            },
+            "jwks": {
+              "awscognito": {
+                "url": "/eu-west-XXXX/.well-known/jwks.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
 <p>If you want to expose your own JWK Set, read the <a href="#keys">Keys Controller</a> section.</p>
 </div>
 
