@@ -10,7 +10,7 @@ dependencies {
 
 spotless {
     java {
-        targetExclude("**/keycloack/v16/**")
+        targetExclude("**/keycloak/v16/**")
     }
 }
 

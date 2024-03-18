@@ -30,7 +30,8 @@ dependencies {
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(projects.testSuiteKeycloak16)
+    testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
+    testImplementation(mn.micronaut.retry)
 }

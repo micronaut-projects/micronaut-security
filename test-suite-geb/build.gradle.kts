@@ -13,7 +13,7 @@ dependencies {
     testImplementation(mn.reactor)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteKeycloak)
-    testImplementation(projects.testSuiteKeycloak16)
+    testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.micronautSecurityOauth2)
