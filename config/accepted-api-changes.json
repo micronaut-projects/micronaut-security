@@ -86,7 +86,62 @@
   },
   {
     "type": "io.micronaut.security.ldap.LdapAuthenticationProvider",
-    "member": "Implemented interface io.micronaut.security.authentication.AuthenticationProvider",
-    "reason": "Remove @Deprecated code"
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Revert breaking changes"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration",
+    "member": "Implemented interface io.micronaut.http.util.OutgoingRequestProcessorMatcher",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration",
+    "member": "Implemented interface io.micronaut.core.util.Toggleable",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.http.filter.HttpClientFilter",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.http.filter.HttpFilter",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties",
+    "member": "Implemented interface io.micronaut.http.util.OutgoingRequestProcessorMatcher",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties",
+    "member": "Implemented interface io.micronaut.core.util.Toggleable",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Configuration classes apparently changed by #1396"
   }
 ]

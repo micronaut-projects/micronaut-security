@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.io.ResourceLoader;
+import io.micronaut.core.io.ResourceResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,20 +30,20 @@ import java.util.Optional;
 /**
  * Creates a {@link io.micronaut.security.token.jwt.signature.SignatureConfiguration} per bean of type {@link StaticJwksSignatureConfiguration}.
  */
-@Requires(bean = ResourceLoader.class)
+@Requires(bean = ResourceResolver.class)
 @EachBean(StaticJwksSignatureConfiguration.class)
 public class StaticJwksSignature extends JWKSetJwksSignature {
 
     public StaticJwksSignature(StaticJwksSignatureConfiguration staticJwksSignatureConfiguration,
-                               ResourceLoader resourceLoader,
+                               ResourceResolver resourceResolver,
                                JwkValidator jwkValidator) {
-        super(jwkValidator, jwkSet(staticJwksSignatureConfiguration, resourceLoader));
+        super(jwkValidator, jwkSet(staticJwksSignatureConfiguration, resourceResolver));
     }
 
     @NonNull
     private static JWKSet jwkSet(StaticJwksSignatureConfiguration staticJwksSignatureConfiguration,
-                                 ResourceLoader resourceLoader) throws ConfigurationException {
-        Optional<InputStream> inputStreamOptional = resourceLoader.getResourceAsStream(staticJwksSignatureConfiguration.getPath());
+                                 ResourceResolver resourceResolver) throws ConfigurationException {
+        Optional<InputStream> inputStreamOptional = resourceResolver.getResourceAsStream(staticJwksSignatureConfiguration.getPath());
         if (!inputStreamOptional.isPresent()) {
             throw new ConfigurationException("could not load resource for path " + staticJwksSignatureConfiguration.getPath());
         }

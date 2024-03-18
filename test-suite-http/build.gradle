@@ -14,7 +14,7 @@ dependencies {
 
     testImplementation(projects.micronautSecurity)
     testImplementation(projects.micronautSecurityJwt)
-    //testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.micronautSecurityLdap)
 }
 

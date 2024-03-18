@@ -13,8 +13,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.pages.LoginPage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.oauth2.keycloack.v16.Keycloak
-import io.micronaut.security.testutils.ConfigurationFixture
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario

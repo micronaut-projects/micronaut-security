@@ -14,7 +14,7 @@ dependencies {
     compileOnly(projects.micronautSecurityJwt)
     compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
-    implementation(mn.micronaut.http.client.core)
+    compileOnly(mn.micronaut.http.client.core)
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
     implementation(mnReactor.micronaut.reactor)
@@ -30,7 +30,8 @@ dependencies {
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(projects.testSuiteKeycloak16)
+    testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
+    testImplementation(mn.micronaut.retry)
 }

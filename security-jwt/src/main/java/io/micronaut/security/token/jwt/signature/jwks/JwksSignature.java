@@ -157,6 +157,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Nullable
     @Blocking
     protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
+        LOG.debug("Fetching JWK Set from {}", url);
         return Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null);
     }
 

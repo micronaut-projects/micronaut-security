@@ -35,7 +35,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
-@Requires(beans = StatePersistence.class)
+@Requires(beans = {StateSerDes.class, StatePersistence.class})
 public class DefaultStateFactory implements StateFactory {
 
     private final StateSerDes stateSerDes;

@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.type.Argument;
 import io.micronaut.json.JsonMapper;
 import jakarta.inject.Singleton;
@@ -30,6 +31,7 @@ import java.util.Base64;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = { JsonMapper.class })
 @Singleton
 public class JacksonStateSerDes implements StateSerDes {
 

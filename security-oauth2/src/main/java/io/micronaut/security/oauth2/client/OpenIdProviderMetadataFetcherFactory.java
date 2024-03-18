@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.client;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.client.HttpClient;
@@ -31,6 +32,7 @@ import jakarta.inject.Singleton;
  */
 @Factory
 @Internal
+@Requires(classes = HttpClient.class)
 public class OpenIdProviderMetadataFetcherFactory {
     /**
      * Retrieves OpenID configuration from the provided issuer.

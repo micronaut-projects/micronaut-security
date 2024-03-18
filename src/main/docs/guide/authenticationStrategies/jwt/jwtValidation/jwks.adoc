@@ -20,5 +20,12 @@ include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlserviceclient
 
 Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata.
 
+The https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] based implementation can be explicitly disabled in favor of the JWT library's internal resource fetching implementation by explicitly setting `micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false`. For example:
+
+[configuration]
+----
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlservicefallbackclientconfig]
+----
+
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 

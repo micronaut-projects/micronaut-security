@@ -1,31 +1,30 @@
 [versions]
 managed-nimbus-jose-jwt = "9.37.3"
 
-micronaut = "4.3.9"
+micronaut = "4.3.11"
 micronaut-platform = "4.2.4"
 micronaut-docs = "2.0.0"
-groovy = "4.0.13"
 
 geb = "7.0"
 selenium = "4.2.2"
 system-stubs-core = "2.1.6"
 unboundid-ldapsdk = "6.0.11"
 bouncycastle = "1.70"
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 bcpkix = "1.70"
 micronaut-test = "4.2.1"
 micronaut-hibernate-validator = "4.2.1"
 micronaut-multitenancy = "5.2.1"
 micronaut-reactor = "3.2.1"
 micronaut-logging = "1.2.2"
-micronaut-serde = "2.8.1"
-micronaut-servlet = "4.5.0"
+micronaut-serde = "2.8.2"
+micronaut-servlet = "4.6.0"
 micronaut-session = "4.2.0"
 micronaut-views = "5.1.0"
-micronaut-validation = "4.4.3"
+micronaut-validation = "4.4.4"
 micronaut-data = "4.6.2"
 micronaut-sql="5.5.1"
-micronaut-test-resources="2.3.3"
+micronaut-test-resources="2.4.0"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
@@ -60,7 +59,6 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
