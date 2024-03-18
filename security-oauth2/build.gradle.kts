@@ -33,4 +33,5 @@ dependencies {
     testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
+    testImplementation(mn.micronaut.retry)
 }
