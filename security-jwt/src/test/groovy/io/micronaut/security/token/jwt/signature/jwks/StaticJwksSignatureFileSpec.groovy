@@ -25,5 +25,8 @@ class StaticJwksSignatureFileSpec extends Specification {
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        applicationContext.close()
     }
 }
