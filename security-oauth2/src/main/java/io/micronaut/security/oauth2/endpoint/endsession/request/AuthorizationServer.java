@@ -32,7 +32,7 @@ public enum AuthorizationServer {
     private static final String ISSUER_PART_OKTA = "okta";
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
-    private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
+    private static final String ISSUER_PART_KEYCLOAK = "/realms/";
 
     /**
      * @param issuer Issuer url
