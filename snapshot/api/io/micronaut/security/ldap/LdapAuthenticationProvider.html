@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -69,24 +69,26 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">io.micronaut.security.ldap</a></div>
-<h1 title="Class LdapAuthenticationProvider" class="title">Class LdapAuthenticationProvider&lt;T&gt;</h1>
+<h1 title="Class LdapAuthenticationProvider" class="title">Class LdapAuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">io.micronaut.security.ldap.LdapAuthenticationProvider&lt;T&gt;</div>
+<div class="inheritance">io.micronaut.security.ldap.LdapAuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - Request Context Type</dd>
+<dd><code>I</code> - Authentication Request Identity Type</dd>
+<dd><code>S</code> - Authentication Request Secret Type</dd>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;T&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Closeable.html" title="class or interface in java.io" class="external-link">Closeable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></dd>
+<dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../authentication/provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;</code>, <code><a href="../authentication/provider/ExecutorAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ExecutorAuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Closeable.html" title="class or interface in java.io" class="external-link">Closeable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LdapAuthenticationProvider&lt;T&gt;</span>
+<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LdapAuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;T&gt;, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Closeable.html" title="class or interface in java.io" class="external-link">Closeable</a></span></div>
+implements <a href="../authentication/provider/ExecutorAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ExecutorAuthenticationProvider</a>&lt;T,<wbr>I,<wbr>S&gt;, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Closeable.html" title="class or interface in java.io" class="external-link">Closeable</a></span></div>
 <div class="block">Authenticates against an LDAP server using the configuration provided through
  <a href="configuration/LdapConfiguration.html" title="class in io.micronaut.security.ldap.configuration"><code>LdapConfiguration</code></a>. One provider will be created for each configuration.</div>
 <dl class="notes">
@@ -98,6 +100,15 @@ implements <a href="../authentication/AuthenticationProvider.html" title="interf
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-io.micronaut.core.order.Ordered">Fields inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
+<code>HIGHEST_PRECEDENCE, LOWEST_PRECEDENCE</code></div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -127,9 +138,9 @@ implements <a href="../authentication/AuthenticationProvider.html" title="interf
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate</a><wbr>(<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">T</a>&nbsp;requestContext,
- <a href="../authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</code></div>
+ <a href="../authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">I</a>,<wbr><a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">S</a>&gt;&nbsp;authenticationRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Authenticates a user with the given request.</div>
 </div>
@@ -142,6 +153,15 @@ implements <a href="../authentication/AuthenticationProvider.html" title="interf
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.authentication.provider.AuthenticationProvider">Methods inherited from interface&nbsp;io.micronaut.security.authentication.provider.<a href="../authentication/provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a></h3>
+<code><a href="../authentication/provider/AuthenticationProvider.html#authenticate(io.micronaut.security.authentication.AuthenticationRequest)">authenticate</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.authentication.provider.ExecutorAuthenticationProvider">Methods inherited from interface&nbsp;io.micronaut.security.authentication.provider.<a href="../authentication/provider/ExecutorAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ExecutorAuthenticationProvider</a></h3>
+<code><a href="../authentication/provider/ExecutorAuthenticationProvider.html#getExecutorName()">getExecutorName</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.core.order.Ordered">Methods inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
+<code>getOrder</code></div>
 </section>
 </li>
 </ul>
@@ -185,23 +205,22 @@ implements <a href="../authentication/AuthenticationProvider.html" title="interf
 <li>
 <section class="detail" id="authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">
 <h3 id="authenticate(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&gt;</span>&nbsp;<span class="element-name">authenticate</span><wbr><span class="parameters">(<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">T</a>&nbsp;requestContext,
- <a href="../authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;?,<wbr>?&gt;&nbsp;authenticationRequest)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../authentication/AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">AuthenticationProvider</a></code></span></div>
-<div class="block">Authenticates a user with the given request. If a successful authentication is
- returned, the object must be an instance of <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.
-
- Publishers <b>MUST emit cold observables</b>! This method will be called for
- all authenticators for each authentication request and it is assumed no work
- will be done until the publisher is subscribed to.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></span>&nbsp;<span class="element-name">authenticate</span><wbr><span class="parameters">(<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">T</a>&nbsp;requestContext,
+ <a href="../authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">I</a>,<wbr><a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">S</a>&gt;&nbsp;authenticationRequest)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../authentication/provider/AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">AuthenticationProvider</a></code></span></div>
+<div class="block">Authenticates a user with the given request.
+ If authenticated successfully return <a href="../authentication/AuthenticationResponse.html#success(java.lang.String)"><code>AuthenticationResponse.success(String)</code></a>.
+ If not authenticated return <a href="../authentication/AuthenticationResponse.html#failure()"><code>AuthenticationResponse.failure()</code></a>.
+ If your implementation is blocking, annotate the overriden method with <code>Blocking</code> and it will be safely executed on a
+ dedicated thread in order to not block the main reactive chain of execution.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../authentication/AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</a></code>&nbsp;in interface&nbsp;<code><a href="../authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a>&lt;<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">T</a>&gt;</code></dd>
+<dd><code><a href="../authentication/provider/AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)">authenticate</a></code>&nbsp;in interface&nbsp;<code><a href="../authentication/provider/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">AuthenticationProvider</a>&lt;<a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">T</a>,<wbr><a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">I</a>,<wbr><a href="LdapAuthenticationProvider.html" title="type parameter in LdapAuthenticationProvider">S</a>&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>requestContext</code> - The http request</dd>
+<dd><code>requestContext</code> - The context request (typically an HTTP Request).</dd>
 <dd><code>authenticationRequest</code> - The credentials to authenticate</dd>
 <dt>Returns:</dt>
-<dd>A publisher that emits 0 or 1 responses</dd>
+<dd>An <a href="../authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> indicating either success or failure.</dd>
 </dl>
 </section>
 </li>
