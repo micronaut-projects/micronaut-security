@@ -122,7 +122,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         addStringSetterStatement(methodBuilder, "authorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
         addListStringSetterStatement(methodBuilder, "userinfoEncryptionEncValuesSupported", "userinfoEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
         addListStringSetterStatement(methodBuilder, "idTokenEncryptionEncValuesSupported", "idTokenEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getIdTokenEncryptionEncValuesSupported());
-        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "userinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserInfoEncryptionAlgValuesSupported());
+        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "userinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
         addListStringSetterStatement(methodBuilder, "idTokenSigningAlgValuesSupported", "idTokenSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getIdTokenSigningAlgValuesSupported());
         addStringSetterStatement(methodBuilder, "issuer", defaultOpenIdProviderMetadata.getIssuer());
         addStringSetterStatement(methodBuilder, "jwksUri", defaultOpenIdProviderMetadata.getJwksUri());

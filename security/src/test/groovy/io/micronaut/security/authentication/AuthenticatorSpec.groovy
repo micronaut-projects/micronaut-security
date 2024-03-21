@@ -27,7 +27,8 @@ class AuthenticatorSpec extends Specification {
 
     void "if no authentication providers return empty optional"() {
         given:
-        Authenticator authenticator = new Authenticator([], new SecurityConfigurationProperties())
+        ApplicationContext context = ApplicationContext.run()
+        Authenticator authenticator = new Authenticator(context, [], [], new SecurityConfigurationProperties())
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
@@ -35,6 +36,9 @@ class AuthenticatorSpec extends Specification {
 
         then:
         !rsp.isPresent()
+
+        cleanup:
+        context.close()
     }
 
     void "if any authentication provider throws exception, continue with authentication"() {

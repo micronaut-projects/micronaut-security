@@ -16,18 +16,15 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.optim.StaticOptimizations;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -48,25 +45,8 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     private final JwksClient jwksClient;
 
-    /**
-     * @deprecated Use {@link DefaultJwkSetFetcher(JwksClient)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    public DefaultJwkSetFetcher() {
-        this(new ResourceRetrieverJwksClient(Schedulers.boundedElastic()));
-    }
-
-    @Inject
     public DefaultJwkSetFetcher(JwksClient jwksClient) {
         this.jwksClient = jwksClient;
-    }
-
-    @Override
-    @NonNull
-    @Blocking
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    public Optional<JWKSet> fetch(String url) {
-        return Mono.from(fetch(null, url)).blockOptional();
     }
 
     @Override

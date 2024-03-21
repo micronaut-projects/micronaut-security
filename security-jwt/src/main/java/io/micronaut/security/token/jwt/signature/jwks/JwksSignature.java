@@ -19,7 +19,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Blocking;
@@ -151,22 +150,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     /**
      * Instantiates a JWKSet for a given url.
-     * @param url JSON Web Key Set Url.
-     * @return a JWKSet or null if there was an error.
-     * @deprecated Use {@link #loadJwkSet(String, String)} instead.
-     */
-    @Nullable
-    @Blocking
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    protected JWKSet loadJwkSet(String url) {
-        LOG.debug("Fetching JWK Set from {}", url);
-        return Mono.from(jwkSetFetcher.fetch(null, url))
-                .blockOptional()
-                .orElse(null);
-    }
-
-    /**
-     * Instantiates a JWKSet for a given url.
      * @param providerName The name of the JWKS configuration.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
@@ -176,19 +159,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
         LOG.debug("Fetching JWK Set from {}", url);
         return Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null);
-    }
-
-    /**
-     * Calculates a list of JWK matches for a JWT.
-     *
-     * @param jwt A Signed JWT
-     * @param jwkSet A JSON Web Key Set
-     * @return a List of JSON Web Keys
-     * @deprecated Use {@link JwksSignatureUtils#matches(SignedJWT, JWKSet, KeyType)} instead.
-     */
-    @Deprecated
-    protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet) {
-        return JwksSignatureUtils.matches(jwt, jwkSet, jwksSignatureConfiguration.getKeyType());
     }
 
     /**

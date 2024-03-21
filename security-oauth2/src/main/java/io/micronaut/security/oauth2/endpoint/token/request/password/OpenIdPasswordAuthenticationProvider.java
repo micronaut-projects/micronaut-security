@@ -16,9 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -39,14 +39,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OpenID provider using the
+ * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
  *
  * @author James Kleeh
  * @since 1.2.0
  * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
-public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -77,7 +79,7 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

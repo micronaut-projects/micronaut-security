@@ -25,10 +25,8 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.provider.AuthenticationProvider;
 import io.micronaut.security.authentication.provider.ExecutorAuthenticationProvider;
 import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
-import io.micronaut.security.authentication.provider.ReactiveAuthenticationProviderAdapter;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -60,13 +58,6 @@ import java.util.stream.Collectors;
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
-    /**
-     *
-     * @deprecated Unused. To be removed in the next major version.
-     */
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    protected final Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> authenticationProviders;
-
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
     private final BeanContext beanContext;
 
@@ -75,36 +66,11 @@ public class Authenticator<T> {
 
     private final Map<String, Scheduler> executeNameToScheduler = new ConcurrentHashMap<>();
 
-
-    /**
-     * @param beanContext Bean Context
-     * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
-     * @param authenticationProviders A list of available imperative authentication providers
-     * @param deprecatedAuthenticationProviders A list of available deprecated authentication providers
-     * @param securityConfiguration The security configuration
-     */
-    @Inject
-    public Authenticator(BeanContext beanContext,
-                         List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
-                         List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
-                         List<io.micronaut.security.authentication.AuthenticationProvider<T>> deprecatedAuthenticationProviders,
-                         SecurityConfiguration securityConfiguration) {
-        this.beanContext = beanContext;
-        this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
-        for (io.micronaut.security.authentication.AuthenticationProvider<T> authenticationProvider : deprecatedAuthenticationProviders) {
-            reactiveAuthenticationProviders.add((new ReactiveAuthenticationProviderAdapter<>(authenticationProvider)));
-        }
-        this.securityConfiguration = securityConfiguration;
-        this.imperativeAuthenticationProviders = authenticationProviders;
-        this.authenticationProviders = Collections.emptyList();
-    }
-
     /**
      * @param beanContext Bean Context
      * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
      * @param authenticationProviders A list of available imperative authentication providers
      * @param securityConfiguration The security configuration
-     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, List, SecurityConfiguration)} instead.
      */
     public Authenticator(BeanContext beanContext,
                          List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
@@ -114,25 +80,6 @@ public class Authenticator<T> {
         this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
         this.securityConfiguration = securityConfiguration;
         this.imperativeAuthenticationProviders = authenticationProviders;
-        this.authenticationProviders = Collections.emptyList();
-    }
-
-    /**
-     * @param deprecatedAuthenticationProviders A list of available authentication providers
-     * @param securityConfiguration   The security configuration
-     * @deprecated Use {@link Authenticator#Authenticator(BeanContext, List, List, SecurityConfiguration)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    public Authenticator(Collection<io.micronaut.security.authentication.AuthenticationProvider<T>> deprecatedAuthenticationProviders,
-                         SecurityConfiguration securityConfiguration) {
-        this.beanContext = null;
-        this.authenticationProviders = deprecatedAuthenticationProviders;
-        reactiveAuthenticationProviders = new ArrayList<>();
-        for (io.micronaut.security.authentication.AuthenticationProvider<T> authenticationProvider : deprecatedAuthenticationProviders) {
-            reactiveAuthenticationProviders.add((new ReactiveAuthenticationProviderAdapter<>(authenticationProvider)));
-        }
-        this.securityConfiguration = securityConfiguration;
-        this.imperativeAuthenticationProviders = Collections.emptyList();
     }
 
     /**

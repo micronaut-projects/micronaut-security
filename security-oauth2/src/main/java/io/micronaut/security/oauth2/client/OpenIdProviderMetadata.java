@@ -150,16 +150,6 @@ public interface OpenIdProviderMetadata extends Named {
      * userinfo_encryption_alg_values_supported.
      * OPTIONAL.
      * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
-     * @deprecated Use {@link OpenIdProviderMetadata#getUserinfoEncryptionAlgValuesSupported()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @Nullable
-    List<String> getUserInfoEncryptionAlgValuesSupported();
-
-    /**
-     * userinfo_encryption_alg_values_supported.
-     * OPTIONAL.
-     * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
      * @since 4.0.2
      */
     @Nullable
