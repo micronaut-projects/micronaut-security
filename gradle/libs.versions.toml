@@ -6,7 +6,7 @@ micronaut-platform = "4.2.4"
 micronaut-docs = "2.0.0"
 
 geb = "7.0"
-selenium = "4.2.2"
+selenium = "4.19.1"
 system-stubs-core = "2.1.6"
 unboundid-ldapsdk = "7.0.0"
 bouncycastle = "1.70"
