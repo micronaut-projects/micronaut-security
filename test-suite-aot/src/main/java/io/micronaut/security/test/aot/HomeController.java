@@ -7,6 +7,8 @@ import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -64,6 +66,7 @@ class HomeController {
         }
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @PermitAll
     @Get
     HttpResponse index() {
