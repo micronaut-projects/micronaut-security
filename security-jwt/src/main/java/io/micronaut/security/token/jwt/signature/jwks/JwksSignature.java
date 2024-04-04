@@ -24,7 +24,9 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -34,6 +36,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +54,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
+    private final ExecutorService executorService;
     private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
@@ -62,10 +67,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                          JwkValidator jwkValidator,
-                         JwkSetFetcher<JWKSet> jwkSetFetcher) {
+                         JwkSetFetcher<JWKSet> jwkSetFetcher,
+                         @Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
+        this.executorService = executorService;
     }
 
     private Optional<JWKSet> computeJWKSet() {
@@ -158,7 +165,14 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Blocking
     protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
         LOG.debug("Fetching JWK Set from {}", url);
-        return Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null);
+        try {
+            return executorService.submit(() -> Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null)).get();
+        } catch (ExecutionException e) {
+            LOG.warn("ExecutionException fetching JWK Set from {}", url);
+        } catch (InterruptedException e) {
+            LOG.warn("InterruptedException fetching JWK Set from {}", url);
+        }
+        return null;
     }
 
     /**

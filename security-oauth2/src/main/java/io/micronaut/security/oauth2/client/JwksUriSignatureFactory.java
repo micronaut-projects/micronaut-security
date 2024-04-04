@@ -22,11 +22,17 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -37,6 +43,22 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Factory
 @Internal
 public class JwksUriSignatureFactory {
+
+    private final ExecutorService executorService;
+
+    @Inject
+    public JwksUriSignatureFactory(@Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
+    /**
+     * @deprecated Use {@link #JwksUriSignatureFactory(ExecutorService)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.7.0")
+    public JwksUriSignatureFactory() {
+        this(Executors.newFixedThreadPool(10));
+    }
+
     /**
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
@@ -51,6 +73,6 @@ public class JwksUriSignatureFactory {
         DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
         jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
-        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
+        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher, executorService);
     }
 }
