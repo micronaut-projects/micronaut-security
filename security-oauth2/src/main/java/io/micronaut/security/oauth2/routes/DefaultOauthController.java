@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -102,38 +103,41 @@ public class DefaultOauthController implements OauthController {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }
-        Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
-        return Flux.from(authenticationResponse).map(response -> {
+        return Flux.from(oauthClient.onCallback(request))
+                .map(response -> response.isAuthenticated() && response.getAuthentication().isPresent()
+                        ? success(response.getAuthentication().get(), request)
+                        : failure(response, request))
+                .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+    }
 
-            if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
-                Authentication authentication = response.getAuthentication().get();
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
-                }
-                loginSuccessfulEventPublisher.publishEvent(
-                    new LoginSuccessfulEvent(
-                        authentication,
-                        httpHostResolver.resolve(request),
-                        httpLocaleResolver.resolveOrDefault(request)
-                    )
-                );
-                return loginHandler.loginSuccess(authentication, request);
-            } else {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
-                }
-                loginFailedEventPublisher.publishEvent(
-                    new LoginFailedEvent(
+    private MutableHttpResponse<?> failure(@NonNull AuthenticationResponse response,
+                                           @NonNull HttpRequest<Map<String, Object>> request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
+        }
+        loginFailedEventPublisher.publishEvent(
+                new LoginFailedEvent(
                         response,
                         null,
                         httpHostResolver.resolve(request),
                         httpLocaleResolver.resolveOrDefault(request)
-                    )
-                );
-                return loginHandler.loginFailed(response, request);
-            }
-        }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
-
+                )
+        );
+        return loginHandler.loginFailed(response, request);
     }
 
+    private MutableHttpResponse<?> success(@NonNull Authentication authentication,
+                                           @NonNull HttpRequest<Map<String, Object>> request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
+        }
+        loginSuccessfulEventPublisher.publishEvent(
+                new LoginSuccessfulEvent(
+                        authentication,
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                )
+        );
+        return loginHandler.loginSuccess(authentication, request);
+    }
 }
