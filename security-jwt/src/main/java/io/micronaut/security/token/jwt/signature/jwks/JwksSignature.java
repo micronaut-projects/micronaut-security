@@ -34,6 +34,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +47,14 @@ import java.util.stream.Collectors;
  */
 @EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
-
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
+    private static final long DELAY_MILLIS = 300;
+    private static final int ATTEMPTS = 10;
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
+    private volatile boolean fetching;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
@@ -69,18 +72,24 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     private Optional<JWKSet> computeJWKSet() {
-        JWKSet jwkSetVariable = this.jwkSet;
-        if (jwkSetVariable == null) {
-            synchronized (this) { // double check
-                jwkSetVariable = this.jwkSet;
-                if (jwkSetVariable == null) {
-                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getName(), this.jwksSignatureConfiguration.getUrl());
-                    this.jwkSet = jwkSetVariable;
-                    this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
-                }
-            }
+        if (jwkSet != null) {
+            return Optional.ofNullable(jwkSet);
         }
-        return Optional.ofNullable(jwkSetVariable);
+        synchronized (this) {
+            if (!fetching) {
+                fetching = true;
+                LOG.debug("Fetching JWK Set from {}", jwksSignatureConfiguration.getUrl());
+                Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
+                        .doOnNext(jwkSetResponse -> {
+                            LOG.debug("Received JWK Set from {}", jwksSignatureConfiguration.getUrl());
+                            jwkSet = jwkSetResponse;
+                            jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
+                        }).doFinally(signalType -> fetching = false)
+                        .subscribe();
+            }
+            retry(() -> jwkSet == null  && fetching, ATTEMPTS, DELAY_MILLIS);
+            return Optional.ofNullable(jwkSet);
+        }
     }
 
     private List<JWK> getJsonWebKeys() {
@@ -153,9 +162,11 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @param providerName The name of the JWKS configuration.
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
+     * @deprecated Not used.
      */
     @Nullable
     @Blocking
+    @Deprecated(forRemoval = true, since = "4.7.0")
     protected JWKSet loadJwkSet(@Nullable String providerName, String url) {
         LOG.debug("Fetching JWK Set from {}", url);
         return Mono.from(jwkSetFetcher.fetch(providerName, url)).blockOptional().orElse(null);
@@ -170,5 +181,21 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     protected boolean verify(List<JWK> matches, SignedJWT jwt) {
         return matches.stream().anyMatch(jwk -> jwkValidator.validate(jwt, jwk));
+    }
+
+    private static void retry(BooleanSupplier supplier,
+                              int maxAttempts,
+                              long delayMillis) {
+        int attempts = 0;
+        while (supplier.getAsBoolean() && attempts < maxAttempts) try {
+            attempts++;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Attempt #{} to fetch JWKSet after delay of {} ms", attempts, delayMillis);
+            }
+            Thread.sleep(delayMillis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            break;
+        }
     }
 }
