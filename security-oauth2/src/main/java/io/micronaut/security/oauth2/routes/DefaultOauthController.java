@@ -25,6 +25,8 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.server.util.locale.HttpLocaleResolver;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
@@ -97,6 +99,7 @@ public class DefaultOauthController implements OauthController {
         return oauthClient.authorizationRedirect(request);
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Override
     public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {

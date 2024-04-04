@@ -19,6 +19,8 @@ import io.micronaut.context.annotation.Executable;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.rules.SecurityRule;
@@ -58,6 +60,7 @@ public interface OauthController {
      * @param request The current request
      * @return A response
      */
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Executable
     @SingleResult
     Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request);
