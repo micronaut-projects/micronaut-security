@@ -25,6 +25,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.server.util.locale.HttpLocaleResolver;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
@@ -33,10 +34,15 @@ import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+
+import jakarta.inject.Named;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * Default implementation of {@link OauthController}.
@@ -58,6 +64,7 @@ public class DefaultOauthController implements OauthController {
     private final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
     private final HttpHostResolver httpHostResolver;
     private final HttpLocaleResolver httpLocaleResolver;
+    private final Scheduler scheduler;
 
     /**
      * @param oauthClient                   The oauth client
@@ -74,7 +81,8 @@ public class DefaultOauthController implements OauthController {
         ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
         ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
         HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver
+        HttpLocaleResolver httpLocaleResolver,
+        @Named(TaskExecutors.IO) ExecutorService executorService
     ) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;
@@ -82,6 +90,7 @@ public class DefaultOauthController implements OauthController {
         this.loginFailedEventPublisher = loginFailedEventPublisher;
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
+        this.scheduler = Schedulers.fromExecutorService(executorService);
     }
 
     @Override
@@ -102,8 +111,9 @@ public class DefaultOauthController implements OauthController {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }
-        Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
-        return Flux.from(authenticationResponse).map(response -> {
+        return Flux.from(oauthClient.onCallback(request))
+                .subscribeOn(scheduler)
+                .map(response -> {
 
             if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
                 Authentication authentication = response.getAuthentication().get();
