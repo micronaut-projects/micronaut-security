@@ -107,7 +107,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param pkcePersistence        The PKCE persistence
      * @deprecated Use {@link #DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "2.7.0")
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
