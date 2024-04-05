@@ -143,5 +143,175 @@
     "type": "io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration",
     "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
     "reason": "Configuration classes apparently changed by #1396"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration",
+    "member": "Implemented interface io.micronaut.http.util.OutgoingRequestProcessorMatcher",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration",
+    "member": "Implemented interface io.micronaut.core.util.Toggleable",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.http.filter.HttpClientFilter",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHttpClientFilter",
+    "member": "Implemented interface io.micronaut.http.filter.HttpFilter",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata",
+    "member": "Constructor io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata$Builder",
+    "member": "Constructor io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata$Builder()",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties",
+    "member": "Implemented interface io.micronaut.http.util.OutgoingRequestProcessorMatcher",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties",
+    "member": "Implemented interface io.micronaut.core.util.Toggleable",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration",
+    "member": "Implemented interface io.micronaut.http.cookie.CookieConfiguration",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.password.OauthPasswordAuthenticationProvider",
+    "member": "Implemented interface io.micronaut.security.authentication.AuthenticationProvider",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.password.OpenIdPasswordAuthenticationProvider",
+    "member": "Implemented interface io.micronaut.security.authentication.AuthenticationProvider",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.authentication.Authenticator",
+    "member": "Field authenticationProviders",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.authentication.Authenticator",
+    "member": "Constructor io.micronaut.security.authentication.Authenticator(java.util.Collection,io.micronaut.security.config.SecurityConfiguration)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.authentication.Authenticator",
+    "member": "Constructor io.micronaut.security.authentication.Authenticator(io.micronaut.context.BeanContext,java.util.List,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.LoginController",
+    "member": "Constructor io.micronaut.security.endpoints.LoginController(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.LogoutController",
+    "member": "Constructor io.micronaut.security.endpoints.LogoutController(io.micronaut.security.handlers.LogoutHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.security.endpoints.LogoutControllerConfiguration)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.event.LoginFailedEvent",
+    "member": "Constructor io.micronaut.security.event.LoginFailedEvent(java.lang.Object)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.event.LoginFailedEvent",
+    "member": "Constructor io.micronaut.security.event.LoginFailedEvent(java.lang.Object,io.micronaut.security.authentication.AuthenticationRequest)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.event.LoginSuccessfulEvent",
+    "member": "Constructor io.micronaut.security.event.LoginSuccessfulEvent(java.lang.Object)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.event.LogoutEvent",
+    "member": "Constructor io.micronaut.security.event.LogoutEvent(java.lang.Object)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.event.TokenValidatedEvent",
+    "member": "Constructor io.micronaut.security.event.TokenValidatedEvent(java.lang.Object)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.reader.DefaultTokenResolver",
+    "member": "Constructor io.micronaut.security.token.reader.DefaultTokenResolver(java.util.Collection)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.TokenAuthenticationFetcher",
+    "member": "Constructor io.micronaut.security.token.TokenAuthenticationFetcher(java.util.List,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.TokenAuthenticationFetcher",
+    "member": "Constructor io.micronaut.security.token.TokenAuthenticationFetcher(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher()",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties()",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.validator.JwtTokenValidator",
+    "member": "Constructor io.micronaut.security.token.jwt.validator.JwtTokenValidator(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.validator.JwtTokenValidator",
+    "member": "Constructor io.micronaut.security.token.jwt.validator.JwtTokenValidator(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.ldap.LdapAuthenticationProvider",
+    "member": "Implemented interface io.micronaut.security.authentication.AuthenticationProvider",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
   }
 ]
