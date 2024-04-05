@@ -1,7 +1,8 @@
 [versions]
 managed-nimbus-jose-jwt = "9.37.3"
 
-micronaut = "4.3.12"
+
+micronaut = "4.4.0"
 micronaut-platform = "4.3.7"
 micronaut-docs = "2.0.0"
 
@@ -15,7 +16,7 @@ bcpkix = "1.70"
 micronaut-test = "4.2.1"
 micronaut-hibernate-validator = "4.2.1"
 micronaut-multitenancy = "5.3.0"
-micronaut-reactor = "3.2.1"
+micronaut-reactor = "3.3.0"
 micronaut-logging = "1.2.2"
 micronaut-serde = "2.8.2"
 micronaut-servlet = "4.6.0"
