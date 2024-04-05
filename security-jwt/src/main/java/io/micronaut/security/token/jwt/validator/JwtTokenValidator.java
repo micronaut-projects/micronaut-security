@@ -65,39 +65,9 @@ public class JwtTokenValidator<T> implements TokenValidator<T> {
                 .withSignatures(signatureConfigurations)
                 .withEncryptions(encryptionConfigurations)
                 .withClaimValidators(genericJwtClaimsValidators)
-                .build(), jwtAuthenticationFactory, Schedulers.fromExecutorService(executorService));
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param signatureConfigurations List of Signature configurations which are used to attempt validation.
-     * @param encryptionConfigurations List of Encryption configurations which are used to attempt validation.
-     * @param genericJwtClaimsValidators Generic JWT Claims validators which should be used to validate any JWT.
-     * @param jwtAuthenticationFactory Utility to generate an Authentication given a JWT.
-     * @deprecated Use {@link #JwtTokenValidator(Collection, Collection, Collection, JwtAuthenticationFactory, ExecutorService)} instead.
-     */
-    @Deprecated
-    public JwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
-                             Collection<EncryptionConfiguration> encryptionConfigurations,
-                             Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                             JwtAuthenticationFactory jwtAuthenticationFactory) {
-        this(JwtValidator.builder()
-                .withSignatures(signatureConfigurations)
-                .withEncryptions(encryptionConfigurations)
-                .withClaimValidators(genericJwtClaimsValidators)
-                .build(), jwtAuthenticationFactory);
-    }
-
-    /**
-     * @param validator Validates the JWT
-     * @param jwtAuthenticationFactory The authentication factory
-     * @deprecated Use {@link #JwtTokenValidator(JwtValidator, JwtAuthenticationFactory, Scheduler)} instead.
-     */
-    @Deprecated
-    public JwtTokenValidator(JwtValidator<T> validator,
-                             JwtAuthenticationFactory jwtAuthenticationFactory) {
-        this(validator, jwtAuthenticationFactory, Schedulers.boundedElastic());
+                .build(),
+            jwtAuthenticationFactory,
+            Schedulers.fromExecutorService(executorService));
     }
 
     /**
