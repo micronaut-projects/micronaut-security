@@ -7,7 +7,22 @@ This section will document breaking changes that may happen during milestone or 
 +
 If you are using the `@RolesAllowed`, `@PermitAll` or `@DenyAll` annotations, you will need to replace the `micronaut-security-annotations` dependency with `micronaut-security-processor` in your project.
 
-- Removed `@Deprecated` code.
+=== Deprecations
+
+- The Singleton constructor `io.micronaut.security.token.jwt.validator.JwtTokenValidator(Collection<SignatureConfiguration>, Collection<EncryptionConfiguration>,
+Collection<GenericJwtClaimsValidator>, JwtAuthenticationFactory)` deprecated previously has been removed.
+`JwtTokenValidator(Collection<SignatureConfiguration>, Collection<EncryptionConfiguration>, Collection<GenericJwtClaimsValidator>, JwtAuthenticationFactory, ExecutorService)` is used instead.
+
+- The following methods in `io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata` deprecated previously have been removed. Note that the Open ID provider name is now required in all cases:
+** Constructor `DefaultOpenIdProviderMetadata()`.
+Use `DefaultOpenIdProviderMetadata(String)` instead.
+** Static method `Builder builder()`.
+Use `DefaultOpenIdProviderMetadata(String)` instead
+** Nested constructor `DefaultOpenIdProviderMetadata.Builder()`.
+Use `DefaultOpenIdProviderMetadata.Builder(String)` instead
+
+- The Singleton constructor `io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder<T>, StateValidator, PkcePersistence)` deprecated previously has been removed.
+`DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder<T>, StateValidator, PkcePersistence), ExecutorService)` is used instead.
 
 == Micronaut Security 4.0 breaking changes
 
