@@ -113,7 +113,19 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
  <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
  @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
  @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)"><code>DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)</code></a> instead</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)" class="member-name-link">DefaultOpenIdAuthorizationResponseHandler</a><wbr>(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+ <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
+ <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
+ @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+ @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;blockingExecutor)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -156,9 +168,37 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)">
+<h3>DefaultOpenIdAuthorizationResponseHandler</h3>
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdAuthorizationResponseHandler</span><wbr><span class="parameters">(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+ <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+ <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
+ <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
+ @Nullable
+ @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+ @Nullable
+ @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence,
+ @Named("blocking")
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;blockingExecutor)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>tokenResponseValidator</code> - The token response validator</dd>
+<dd><code>authenticationMapper</code> - Authentication Mapper</dd>
+<dd><code>tokenEndpointClient</code> - The token endpoint client</dd>
+<dd><code>oauthRouteUrlBuilder</code> - The oauth route url builder</dd>
+<dd><code>stateValidator</code> - The state validator</dd>
+<dd><code>pkcePersistence</code> - The PKCE persistence</dd>
+<dd><code>blockingExecutor</code> - An executor for blocking operations</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">
 <h3>DefaultOpenIdAuthorizationResponseHandler</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdAuthorizationResponseHandler</span><wbr><span class="parameters">(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="2.7.0")
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultOpenIdAuthorizationResponseHandler</span><wbr><span class="parameters">(<a href="../../token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
  <a href="../../token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
  <a href="../../token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
  <a href="../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="DefaultOpenIdAuthorizationResponseHandler.html" title="type parameter in DefaultOpenIdAuthorizationResponseHandler">T</a>&gt;&nbsp;oauthRouteUrlBuilder,
@@ -166,6 +206,9 @@ implements <a href="OpenIdAuthorizationResponseHandler.html" title="interface in
  @Nullable <a href="../state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
  @Nullable
  @Nullable <a href="../pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)"><code>DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)</code></a> instead</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tokenResponseValidator</code> - The token response validator</dd>
