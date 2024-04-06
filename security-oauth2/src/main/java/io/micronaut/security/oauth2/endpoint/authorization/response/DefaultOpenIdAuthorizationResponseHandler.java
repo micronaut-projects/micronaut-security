@@ -36,7 +36,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
@@ -48,7 +47,6 @@ import reactor.core.scheduler.Schedulers;
 import java.text.ParseException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Default implementation of {@link OpenIdAuthorizationResponseHandler}.
@@ -81,7 +79,6 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param pkcePersistence        The PKCE persistence
      * @param blockingExecutor       An executor for blocking operations
      */
-    @Inject
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
@@ -96,25 +93,6 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
         this.blockingExecutor = blockingExecutor;
-    }
-
-    /**
-     * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper   Authentication Mapper
-     * @param tokenEndpointClient    The token endpoint client
-     * @param oauthRouteUrlBuilder   The oauth route url builder
-     * @param stateValidator         The state validator
-     * @param pkcePersistence        The PKCE persistence
-     * @deprecated Use {@link #DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)} instead
-     */
-    @Deprecated(forRemoval = true, since = "2.7.0")
-    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     OpenIdAuthenticationMapper authenticationMapper,
-                                                     TokenEndpointClient tokenEndpointClient,
-                                                     OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
-                                                     @Nullable StateValidator stateValidator,
-                                                     @Nullable PkcePersistence pkcePersistence) {
-        this(tokenResponseValidator, authenticationMapper, tokenEndpointClient, oauthRouteUrlBuilder, stateValidator, pkcePersistence, Executors.newCachedThreadPool());
     }
 
     @Override

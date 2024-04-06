@@ -8,6 +8,7 @@ import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
@@ -19,11 +20,13 @@ import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
+import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 import java.security.Principal
+import java.util.concurrent.ExecutorService
 
 class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     @Override
@@ -67,8 +70,9 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
         CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
                                 Collection<EncryptionConfiguration> encryptionConfigurations,
                                 Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                JwtAuthenticationFactory jwtAuthenticationFactory) {
-            super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory)
+                                JwtAuthenticationFactory jwtAuthenticationFactory,
+                                @Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
+            super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory, executorService)
         }
 
         @Override
