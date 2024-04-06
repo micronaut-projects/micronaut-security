@@ -51,6 +51,7 @@ io.micronaut.security.oauth2.grants
 io.micronaut.security.oauth2.keycloak.docker
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
+io.micronaut.security.processor
 io.micronaut.security.rules
 io.micronaut.security.session
 io.micronaut.security.testutils
