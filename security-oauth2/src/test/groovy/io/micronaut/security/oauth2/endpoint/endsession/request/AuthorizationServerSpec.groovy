@@ -13,6 +13,7 @@ class AuthorizationServerSpec extends Specification {
         where:
         issuer                                                || authorizationServer
         "http://localhost:8180/auth/realms/master"            || AuthorizationServer.KEYCLOAK
+        "http://localhost:8180/realms/master"                 || AuthorizationServer.KEYCLOAK
         "https://dev-XXXXX.oktapreview.com/oauth2/default"    || AuthorizationServer.OKTA
         "https://cognito-idp.us-east-1.amazonaws.com/12345}/" || AuthorizationServer.COGNITO
         "https://micronautguides.eu.auth0.com"                || AuthorizationServer.AUTH0
