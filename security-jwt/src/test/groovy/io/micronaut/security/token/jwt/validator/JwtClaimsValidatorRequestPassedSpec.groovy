@@ -68,12 +68,11 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
                                 Collection<EncryptionConfiguration> encryptionConfigurations,
                                 Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                                 JwtAuthenticationFactory jwtAuthenticationFactory) {
-            super(,)
             super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory)
         }
 
         @Override
-        Publisher<Authentication> validateToken(String token, T request) {
+        Optional<Authentication> validateToken(String token, T request) {
             return validator.validate(token, request)
                     .flatMap(jwtAuthenticationFactory::createAuthentication)
                     .map(Flux::just)

@@ -27,7 +27,7 @@ public class DefaultJsonWebTokenValidator<R> implements JsonWebTokenValidator<JW
     private final JsonWebTokenEncryption<EncryptedJWT, SignedJWT> jsonWebTokenEncryption;
     private final JsonWebTokenParser<JWT> jsonWebTokenParser;
     private final SignedJwtJsonWebTokenSignatureValidator signatureValidator;
-    private final boolean existSignatureConfigurations;
+    private final boolean noSignatures;
     private final List<JwtClaimsValidator<R>> claimsValidators;
 
     public DefaultJsonWebTokenValidator(JsonWebTokenEncryption<EncryptedJWT, SignedJWT> jsonWebTokenEncryption,
@@ -38,7 +38,7 @@ public class DefaultJsonWebTokenValidator<R> implements JsonWebTokenValidator<JW
         this.jsonWebTokenEncryption = jsonWebTokenEncryption;
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
-        this.existSignatureConfigurations = !signatures.isEmpty();
+        this.noSignatures = signatures.isEmpty();
         this.claimsValidators = claimsValidators;
     }
 
@@ -95,7 +95,7 @@ public class DefaultJsonWebTokenValidator<R> implements JsonWebTokenValidator<JW
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating plain JWT");
         }
-        if (existSignatureConfigurations) {
+        if (noSignatures) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JWT is not signed and no signature configurations -> verified");
             }

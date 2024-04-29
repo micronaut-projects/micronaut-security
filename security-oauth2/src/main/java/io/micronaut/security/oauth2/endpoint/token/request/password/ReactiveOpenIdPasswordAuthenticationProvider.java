@@ -31,12 +31,10 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +45,7 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  * @param <T> Request Context Type
  */
-public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
+public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -63,11 +61,11 @@ public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAu
      * @param openIdAuthenticationMapper The user details mapper
      * @param tokenResponseValidator     The token response validator
      */
-    public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
-                                                OpenIdProviderMetadata openIdProviderMetadata,
-                                                TokenEndpointClient tokenEndpointClient,
-                                                OpenIdAuthenticationMapper openIdAuthenticationMapper,
-                                                ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator) {
+    public ReactiveOpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
+                                                        OpenIdProviderMetadata openIdProviderMetadata,
+                                                        TokenEndpointClient tokenEndpointClient,
+                                                        OpenIdAuthenticationMapper openIdAuthenticationMapper,
+                                                        ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;

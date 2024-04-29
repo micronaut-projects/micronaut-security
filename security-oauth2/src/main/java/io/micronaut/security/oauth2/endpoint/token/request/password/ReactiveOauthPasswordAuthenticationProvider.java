@@ -39,7 +39,7 @@ import reactor.core.publisher.Flux;
  * @since 1.2.0
  * @param <T> Request Context Type
  */
-public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
+public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -51,9 +51,9 @@ public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAut
      * @param clientConfiguration The client configuration
      * @param authenticationMapper  The user details mapper
      */
-    public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
-                                               OauthClientConfiguration clientConfiguration,
-                                               OauthAuthenticationMapper authenticationMapper) {
+    public ReactiveOauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
+                                                       OauthClientConfiguration clientConfiguration,
+                                                       OauthAuthenticationMapper authenticationMapper) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.authenticationMapper = authenticationMapper;
