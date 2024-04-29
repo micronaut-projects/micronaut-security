@@ -30,6 +30,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
+import io.micronaut.security.token.jwt.parser.JsonWebTokenParser;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
@@ -57,16 +58,18 @@ import org.slf4j.LoggerFactory;
 public final class JwtValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidator.class);
-    private static final String DOT = ".";
 
+    private JsonWebTokenParser<JWT> jsonWebTokenParser;
     private final List<SignatureConfiguration> signatures;
     private final List<EncryptionConfiguration> encryptions;
     private final List<JwtClaimsValidator> claimsValidators;
     private final SignedJwtJsonWebTokenSignatureValidator signatureValidator;
 
-    private JwtValidator(List<SignatureConfiguration> signatures,
+    private JwtValidator(JsonWebTokenParser<JWT> jsonWebTokenParser,
+                         List<SignatureConfiguration> signatures,
                          List<EncryptionConfiguration> encryptions,
                          List<JwtClaimsValidator> claimsValidators) {
+        this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatures = signatures;
         this.encryptions = encryptions;
         this.claimsValidators = claimsValidators;
@@ -81,31 +84,8 @@ public final class JwtValidator<T> {
      * @return An optional JWT token if validation succeeds
      */
     public Optional<JWT> validate(String token, @Nullable T request) {
-            try {
-                if (hasAtLeastTwoDots(token)) {
-                    JWT jwt = JWTParser.parse(token);
-                    return validate(jwt, request);
-                } else {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("token {} does not contain two dots", token);
-                    }
-                }
-            } catch (final ParseException e) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Failed to parse JWT: {}", e.getMessage());
-                }
-            }
-            return Optional.empty();
-    }
-
-    /**
-     *
-     * @param token The JWT string
-     * @return {@literal true} if the string has at least two dots. We must have 2 (JWS) or 4 dots (JWE).
-     */
-    private boolean hasAtLeastTwoDots(String token) {
-        return (token.contains(DOT)) &&
-                (token.indexOf(DOT, token.indexOf(DOT) + 1) != -1);
+        return jsonWebTokenParser.parse(token)
+                .flatMap(jwt -> validate(jwt, request));
     }
 
     /**
@@ -161,42 +141,7 @@ public final class JwtValidator<T> {
     }
 
     private Optional<JWT> validate(EncryptedJWT jwt) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating encrypted JWT");
-        }
 
-        final JWEHeader header = jwt.getHeader();
-
-        List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptions);
-        sortedConfigs.sort(comparator(header));
-
-        for (EncryptionConfiguration config: sortedConfigs) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using encryption configuration: {}", config);
-            }
-            try {
-                config.decrypt(jwt);
-                SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
-                if (signedJWT == null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
-                    }
-                    return Optional.empty();
-                }
-                return validate(signedJWT);
-            } catch (final JOSEException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
-                }
-                return Optional.empty();
-            }
-        }
-
-        if (LOG.isDebugEnabled() && encryptions.isEmpty()) {
-            LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
-        }
-
-        return Optional.empty();
     }
 
     private Optional<JWT> validate(SignedJWT jwt) {
@@ -217,21 +162,7 @@ public final class JwtValidator<T> {
         return Optional.empty();
     }
 
-    private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
-        final JWEAlgorithm algorithm = header.getAlgorithm();
-        final EncryptionMethod method = header.getEncryptionMethod();
-        return (sig, otherSig) -> {
-            boolean supports = sig.supports(algorithm, method);
-            boolean otherSupports = otherSig.supports(algorithm, method);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
-        };
-    }
+
 
     /**
      * @return A new JWT validator builder
