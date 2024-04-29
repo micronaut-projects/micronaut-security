@@ -25,11 +25,11 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
+import io.micronaut.security.token.jwt.signature.jwks.ReactiveJwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 
 /**
- * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
+ * Factory to create {@link ReactiveJwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
  *
  * @author Sergio del Amo
  * @since 1.3.0
@@ -41,16 +41,16 @@ public class JwksUriSignatureFactory {
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
      * @param jwkSetFetcher Json Web Key Set Fetcher
-     * @return a {@link JwksSignature} pointed to the jwks_uri exposed via OpenID configuration
+     * @return a {@link ReactiveJwksSignature} pointed to the jwks_uri exposed via OpenID configuration
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
-    public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                                JwkValidator jwkValidator,
-                                                JwkSetFetcher<JWKSet> jwkSetFetcher) {
+    public ReactiveJwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+                                                        JwkValidator jwkValidator,
+                                                        JwkSetFetcher<JWKSet> jwkSetFetcher) {
         DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
         jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
-        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
+        return new ReactiveJwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }
 }

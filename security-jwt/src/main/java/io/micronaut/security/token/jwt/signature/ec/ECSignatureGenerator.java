@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.ec;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
@@ -23,8 +24,12 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.MapClaims;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
+import java.text.ParseException;
 
 /**
  * Elliptic curve signature generator. Extends {@link io.micronaut.security.token.jwt.signature.ec.ECSignature} adding the ability to sign JWT.
@@ -34,7 +39,7 @@ import java.security.interfaces.ECPrivateKey;
  * @author Sergio del Amo
  * @since 1.0
  */
-public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration {
+public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration<SignedJWT, JWSAlgorithm> {
 
     private final ECPrivateKey privateKey;
 
@@ -52,7 +57,7 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     }
 
     @Override
-    public SignedJWT sign(JWTClaimsSet claims) throws JOSEException {
+    public SignedJWT sign(Claims claims) throws JOSEException, ParseException {
         return signWithPrivateKey(claims, this.privateKey, this.kidId);
     }
 
@@ -64,11 +69,11 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      * @return A signed JWT
      * @throws JOSEException thrown in the JWT signing
      */
-    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims,
+    protected SignedJWT signWithPrivateKey(Claims claims,
                                            @NonNull ECPrivateKey privateKey,
-                                           @Nullable String kid) throws JOSEException {
+                                           @Nullable String kid) throws JOSEException, ParseException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        final SignedJWT signedJWT = new SignedJWT(header(kid), claims);
+        final SignedJWT signedJWT = new SignedJWT(header(kid), JWTClaimsSet.parse(claims.toMap()));
         signedJWT.sign(signer);
         return signedJWT;
     }

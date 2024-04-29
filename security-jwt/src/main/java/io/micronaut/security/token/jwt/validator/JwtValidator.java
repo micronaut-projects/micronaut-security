@@ -30,6 +30,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
 import java.text.ParseException;
@@ -39,6 +40,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import io.micronaut.security.token.jwt.signature.jwks.ReactiveJwksSignature;
+import io.micronaut.security.token.jwt.validator.signature.SignedJwtJsonWebTokenSignatureValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +62,7 @@ public final class JwtValidator<T> {
     private final List<SignatureConfiguration> signatures;
     private final List<EncryptionConfiguration> encryptions;
     private final List<JwtClaimsValidator> claimsValidators;
+    private final SignedJwtJsonWebTokenSignatureValidator signatureValidator;
 
     private JwtValidator(List<SignatureConfiguration> signatures,
                          List<EncryptionConfiguration> encryptions,
@@ -65,6 +70,7 @@ public final class JwtValidator<T> {
         this.signatures = signatures;
         this.encryptions = encryptions;
         this.claimsValidators = claimsValidators;
+        this.signatureValidator = new SignedJwtJsonWebTokenSignatureValidator(signatures);
     }
 
     /**
@@ -197,114 +203,18 @@ public final class JwtValidator<T> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating signed JWT");
         }
-
-        final JWSAlgorithm algorithm = jwt.getHeader().getAlgorithm();
-        List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatures);
-        sortedConfigs.sort(comparator(algorithm, jwt.getHeader().getKeyID()));
-
-        Optional<JWT> optionalJWT = validate(jwt, sortedConfigs);
-        if (optionalJWT.isPresent()) {
-            return optionalJWT;
-        }
-
-        // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
-        for (SignatureConfiguration c : sortedConfigs) {
-            if (c instanceof JwksCache && ((JwksCache) c).isExpired()) {
-                ((JwksCache) c).clear();
-                optionalJWT = validate(jwt, c);
-                if (optionalJWT.isPresent()) {
-                    return optionalJWT;
-                }
-            }
-        }
-
         if (LOG.isDebugEnabled() && signatures.isEmpty()) {
             LOG.debug("JWT is signed and no signature configurations -> not verified");
-        }
-        return Optional.empty();
-    }
-
-    private Optional<JWT> validate(SignedJWT jwt, SignatureConfiguration signatureConfiguration) {
-        try {
-            boolean verified = signatureConfiguration.verify(jwt);
-            if (!verified) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("JWT Signature verification failed: {}", jwt.getParsedString());
-                }
-            } else {
-                return Optional.of(jwt);
-            }
-        } catch (final JOSEException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Verification failed with signature configuration: {}, passing to the next one", signatureConfiguration);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<JWT> validate(SignedJWT jwt, List<SignatureConfiguration> signatureConfigurations) {
-        for (SignatureConfiguration config: signatureConfigurations) {
-            Optional<JWT> optionalJWT = validate(jwt, config);
-            if (optionalJWT.isPresent()) {
-                return optionalJWT;
-            }
-        }
-        return Optional.empty();
-    }
-
-    private static int compareKeyIds(SignatureConfiguration sig,
-                                     SignatureConfiguration otherSig,
-                                     @Nullable String keyId) {
-        if (keyId == null) {
-            return 0;
-        }
-        Optional<Boolean> matchesKeyId = signatureConfigurationMatchesKeyId(sig, keyId);
-        Optional<Boolean> otherMatchesKeyId = signatureConfigurationMatchesKeyId(otherSig, keyId);
-        if (matchesKeyId.isPresent() && otherMatchesKeyId.isPresent()) {
-            return otherMatchesKeyId.get().compareTo(matchesKeyId.get());
-        } else if (matchesKeyId.isPresent()) {
-            return Boolean.TRUE.equals(matchesKeyId.get()) ? 1 : -1;
-        } else if (otherMatchesKeyId.isPresent()) {
-            return Boolean.TRUE.equals(otherMatchesKeyId.get()) ? 1 : -1;
-        }
-        return 0;
-    }
-
-    private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm, @Nullable String kid) {
-        return (sig, otherSig) -> {
-            int compareKids = compareKeyIds(sig, otherSig, kid);
-            if (compareKids != 0) {
-                return compareKids;
-            }
-            boolean supports = signatureConfigurationSupportsAlgorithm(sig, algorithm);
-            boolean otherSupports = signatureConfigurationSupportsAlgorithm(otherSig, algorithm);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
-        };
-    }
-
-    private static Optional<Boolean> signatureConfigurationMatchesKeyId(@NonNull SignatureConfiguration sig,
-                                                                        @NonNull String keyId) {
-        if (sig instanceof JwksCache) {
-            final Optional<List<String>> keyIds = ((JwksCache) sig).getKeyIds();
-            return keyIds.map(ids -> ids.contains(keyId));
-        } else {
             return Optional.empty();
         }
-    }
-
-    private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
-        // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
-        // Thus, don't call it unless the keys have been already been fetched.
-        if (!(sig instanceof JwksCache) || ((JwksCache) sig).isPresent()) {
-            return sig.supports(algorithm);
+        if (signatureValidator.validateSignature(jwt)) {
+            return Optional.of(jwt);
         }
-        return false;
+        if (LOG.isDebugEnabled() && signatures.isEmpty()) {
+            LOG.debug("Could not verify the JWT signature");
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
@@ -335,6 +245,8 @@ public final class JwtValidator<T> {
      * @param <T> Request
      */
     public static final class Builder<T> {
+
+        private List<ReactiveSignatureConfiguration<?>> reactiveSignatures = new ArrayList<>();
 
         private List<SignatureConfiguration> signatures = new ArrayList<>();
         private List<EncryptionConfiguration> encryptions = new ArrayList<>();
@@ -408,6 +320,11 @@ public final class JwtValidator<T> {
             return this;
         }
 
+        public Builder withReactiveSignatures(List<ReactiveSignatureConfiguration<?>> reactiveSignatures) {
+            this.reactiveSignatures = reactiveSignatures;
+            return this;
+        }
+
         /**
          * Builds the validator.
          *
@@ -416,5 +333,6 @@ public final class JwtValidator<T> {
         public JwtValidator<T> build() {
             return new JwtValidator(signatures, encryptions, claimsValidators);
         }
+
     }
 }

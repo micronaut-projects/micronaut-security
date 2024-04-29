@@ -16,13 +16,16 @@
 package io.micronaut.security.token.jwt.signature;
 
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jwt.SignedJWT;
+import io.micronaut.core.annotation.Internal;
 
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public abstract class AbstractSignatureConfiguration implements SignatureConfiguration {
+@Internal
+public abstract class AbstractSignatureConfiguration implements SignatureConfiguration<SignedJWT, JWSAlgorithm> {
 
     protected JWSAlgorithm algorithm = JWSAlgorithm.HS256;
 

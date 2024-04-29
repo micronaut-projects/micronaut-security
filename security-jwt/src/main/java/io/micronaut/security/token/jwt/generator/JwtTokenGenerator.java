@@ -16,14 +16,17 @@
 package io.micronaut.security.token.jwt.generator;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -45,7 +48,7 @@ public class JwtTokenGenerator implements TokenGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(JwtTokenGenerator.class);
 
     protected final ClaimsGenerator claimsGenerator;
-    protected final SignatureGeneratorConfiguration signatureConfiguration;
+    protected final SignatureGeneratorConfiguration<SignedJWT, JWSAlgorithm> signatureConfiguration;
     protected final EncryptionConfiguration encryptionConfiguration;
 
     /**
@@ -53,7 +56,7 @@ public class JwtTokenGenerator implements TokenGenerator {
      * @param encryptionConfiguration JWT Generator encryption configuration
      * @param claimsGenerator Claims generator
      */
-    public JwtTokenGenerator(@Nullable @Named("generator") SignatureGeneratorConfiguration signatureConfiguration,
+    public JwtTokenGenerator(@Nullable @Named("generator") SignatureGeneratorConfiguration<SignedJWT, JWSAlgorithm> signatureConfiguration,
                              @Nullable @Named("generator") EncryptionConfiguration encryptionConfiguration,
                              ClaimsGenerator claimsGenerator) {
 
@@ -85,13 +88,13 @@ public class JwtTokenGenerator implements TokenGenerator {
      * @param claimsSet the claims set
      * @return the JWT
      */
-    protected String internalGenerate(final JWTClaimsSet claimsSet) throws JOSEException, ParseException {
+    protected String internalGenerate(final JWTClaimsSet claimsSet) throws Exception {
         JWT jwt;
         // signature?
         if (signatureConfiguration == null) {
             jwt = new PlainJWT(claimsSet);
         } else {
-            jwt = signatureConfiguration.sign(claimsSet);
+            jwt = signatureConfiguration.sign(new JwtClaimsSetAdapter(claimsSet));
         }
 
         // encryption?
@@ -109,7 +112,7 @@ public class JwtTokenGenerator implements TokenGenerator {
      * @param claims the map of claims
      * @return the created JWT
      */
-    protected String generate(final Map<String, Object> claims) throws JOSEException, ParseException {
+    protected String generate(final Map<String, Object> claims) throws Exception {
         // claims builder
         final JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
 
@@ -142,12 +145,11 @@ public class JwtTokenGenerator implements TokenGenerator {
     public Optional<String> generateToken(Map<String, Object> claims) {
         try {
             return Optional.of(generate(claims));
-        } catch (ParseException e) {
-            if (LOG.isWarnEnabled()) {
+        } catch (Exception e) {
+            if (LOG.isWarnEnabled() && e instanceof ParseException) {
                 LOG.warn("Parse exception while generating token {}", e.getMessage());
             }
-        } catch (JOSEException e) {
-            if (LOG.isWarnEnabled()) {
+            if (LOG.isWarnEnabled() && e instanceof JOSEException) {
                 LOG.warn("JOSEException while generating token {}", e.getMessage());
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,22 @@
  */
 package io.micronaut.security.token.jwt.signature;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.security.token.Claims;
+import io.micronaut.core.async.annotation.SingleResult;
+import org.reactivestreams.Publisher;
 
 /**
- * Signature Generator configuration.
- *
+ * Reactive Signature Configuration.
  * @author Sergio del Amo
- * @since 1.0
+ * @since 4.8.0
  * @param <T> Signed JWT
- * @param <A> signature Algorithm
  */
-public interface SignatureGeneratorConfiguration<T, A> extends SignatureConfiguration<T, A> {
-
+public interface ReactiveSignatureConfiguration<T> {
     /**
-     * Generate a signed JWT based on claims.
-     * @throws Exception could be thrown while signing the JWT token
-     * @param claims the provided claims
-     * @return the signed JWT
+     * Verify a signed JWT.
+     *
+     * @param jwt the signed JWT
+     * @return whether the signed JWT is verified
      */
-    SignedJWT sign(Claims claims) throws Exception;
+    @SingleResult
+    Publisher<Boolean> verify(T jwt);
 }
-

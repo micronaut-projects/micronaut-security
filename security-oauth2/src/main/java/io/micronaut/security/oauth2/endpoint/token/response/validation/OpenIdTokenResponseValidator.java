@@ -18,9 +18,12 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import org.reactivestreams.Publisher;
+
 import java.util.Optional;
 
 /**
@@ -28,19 +31,21 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.2.0
+ * @param <T> token
  */
 @DefaultImplementation(DefaultOpenIdTokenResponseValidator.class)
-public interface OpenIdTokenResponseValidator {
+public interface OpenIdTokenResponseValidator<T> {
 
     /**
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
      * @param nonce The persisted nonce value
-     * @return true if the ID Token access response is considered valid
+     * @return A non-empty publisher if the ID Token access response is considered valid
      */
-    Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
-                           OpenIdProviderMetadata openIdProviderMetadata,
-                           OpenIdTokenResponse openIdTokenResponse,
-                           @Nullable String nonce);
+    @SingleResult
+    Publisher<T> validate(OauthClientConfiguration clientConfiguration,
+                          OpenIdProviderMetadata openIdProviderMetadata,
+                          OpenIdTokenResponse openIdTokenResponse,
+                          @Nullable String nonce);
 }

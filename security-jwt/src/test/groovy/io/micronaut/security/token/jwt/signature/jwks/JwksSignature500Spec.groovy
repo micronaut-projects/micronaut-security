@@ -32,13 +32,13 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
         ])
 
         when:
-        Collection<JwksSignature> beans = context.getBeansOfType(JwksSignature)
+        Collection<ReactiveJwksSignature> beans = context.getBeansOfType(ReactiveJwksSignature)
 
         then:
         beans
 
         when:
-        JwksSignature jwksSignature = beans[0]
+        ReactiveJwksSignature jwksSignature = beans[0]
 
         then:
         jwksSignature.supportedAlgorithmsMessage() == 'No algorithms are supported'

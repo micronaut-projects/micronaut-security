@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * {@link SignatureConfiguration} backed by a {@link JWKSet}.
  */
 @Internal
-public class JWKSetJwksSignature implements SignatureConfiguration {
+public class JWKSetJwksSignature implements SignatureConfiguration<SignedJWT, JWSAlgorithm> {
     private static final Logger LOG = LoggerFactory.getLogger(JWKSetJwksSignature.class);
 
     private final JWKSet jwkSet;
@@ -43,7 +43,6 @@ public class JWKSetJwksSignature implements SignatureConfiguration {
      *
      * @return A message indicating the supported algorithms.
      */
-    @Override
     public String supportedAlgorithmsMessage() {
         return JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet);
     }

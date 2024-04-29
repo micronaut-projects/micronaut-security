@@ -23,6 +23,9 @@ import com.nimbusds.jose.crypto.impl.RSASSAProvider;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.interfaces.RSAPublicKey;
 
 /**
@@ -33,6 +36,7 @@ import java.security.interfaces.RSAPublicKey;
  * @since 1.0
  */
 public class RSASignature extends AbstractSignatureConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(RSASignature.class);
 
     private RSAPublicKey publicKey;
 
@@ -48,12 +52,10 @@ public class RSASignature extends AbstractSignatureConfiguration {
      *
      * @return message explaining the supported algorithms
      */
-    @Override
     public String supportedAlgorithmsMessage() {
         return "Only the RS256, RS384, RS512, PS256, PS384 and PS512 algorithms are supported for RSA signature";
     }
 
-    @Override
     public boolean supports(final JWSAlgorithm algorithm) {
         return algorithm != null && RSASSAProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
@@ -65,6 +67,18 @@ public class RSASignature extends AbstractSignatureConfiguration {
 
     private boolean verifyWithPublicKey(final SignedJWT jwt, @NonNull RSAPublicKey publicKey) throws JOSEException {
         final JWSVerifier verifier = new RSASSAVerifier(publicKey);
-        return jwt.verify(verifier);
+        boolean result = jwt.verify(verifier);
+
+        if (LOG.isDebugEnabled()) {
+            if (result) {
+                LOG.debug("RSA Signature verification passed: {}", jwt.getParsedString());
+            } else {
+                LOG.debug("RSA Signature verification failed: {}", jwt.getParsedString());
+                if (!supports(jwt.getHeader().getAlgorithm())) {
+                    LOG.debug("JWT Signature algorithm {} not supported. {} ", jwt.getHeader().getAlgorithm(), supportedAlgorithmsMessage());
+                }
+            }
+        }
+        return result;
     }
 }

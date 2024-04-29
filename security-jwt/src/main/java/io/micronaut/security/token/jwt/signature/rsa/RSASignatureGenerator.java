@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.rsa;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
@@ -24,9 +25,11 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.endpoints.JwkProvider;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.RSAPrivateKey;
+import java.text.ParseException;
 import java.util.Objects;
 
 /**
@@ -36,9 +39,8 @@ import java.util.Objects;
  * @author Sergio del Amo
  * @since 1.0
  */
-public class RSASignatureGenerator extends RSASignature implements SignatureGeneratorConfiguration {
+public class RSASignatureGenerator extends RSASignature implements SignatureGeneratorConfiguration<SignedJWT, JWSAlgorithm> {
     private RSAPrivateKey privateKey;
-    private String keyId;
 
     /**
      * @param config Instance of {@link RSASignatureConfiguration}
@@ -50,17 +52,10 @@ public class RSASignatureGenerator extends RSASignature implements SignatureGene
         }
         this.algorithm = config.getJwsAlgorithm();
         this.privateKey = config.getPrivateKey();
-        if (config instanceof JwkProvider) {
-            ((JwkProvider) config).retrieveJsonWebKeys().stream()
-                    .map(JWK::getKeyID)
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .ifPresent(keyIdentifier -> this.keyId = keyIdentifier);
-        }
     }
 
     @Override
-    public SignedJWT sign(JWTClaimsSet claims) throws JOSEException {
+    public SignedJWT sign(Claims claims) throws JOSEException, ParseException {
         return signWithPrivateKey(claims, privateKey);
     }
 
@@ -71,10 +66,10 @@ public class RSASignatureGenerator extends RSASignature implements SignatureGene
      * @return A signed JWT
      * @throws JOSEException thrown in the JWT signing
      */
-    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull RSAPrivateKey privateKey) throws JOSEException {
+    protected SignedJWT signWithPrivateKey(Claims claims, @NonNull RSAPrivateKey privateKey) throws JOSEException, ParseException {
         final JWSSigner signer = new RSASSASigner(privateKey);
-        JWSHeader jwsHeader = new JWSHeader.Builder(algorithm).keyID(keyId).build();
-        final SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
+        JWSHeader jwsHeader = new JWSHeader.Builder(algorithm).build();
+        final SignedJWT signedJWT = new SignedJWT(jwsHeader, JWTClaimsSet.parse(claims.toMap()));
         signedJWT.sign(signer);
         return signedJWT;
     }

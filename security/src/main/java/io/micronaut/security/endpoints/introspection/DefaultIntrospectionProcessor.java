@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.validator.ReactiveTokenValidator;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Singleton;
@@ -72,11 +73,11 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
             JWT_ID);
 
     protected static final Logger LOG = LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
-    protected final Collection<TokenValidator<T>> tokenValidators;
+    protected final Collection<ReactiveTokenValidator<T>> tokenValidators;
     protected final TokenConfiguration tokenConfiguration;
     protected final RefreshTokenValidator refreshTokenValidator;
 
-    public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
+    public DefaultIntrospectionProcessor(Collection<ReactiveTokenValidator<T>> tokenValidators,
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
         this.tokenValidators = tokenValidators;

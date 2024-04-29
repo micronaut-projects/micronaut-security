@@ -23,6 +23,10 @@ import com.nimbusds.jose.crypto.impl.ECDSAProvider;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.interfaces.ECPublicKey;
 
 /**
@@ -33,6 +37,7 @@ import java.security.interfaces.ECPublicKey;
  * @since 1.0
  */
 public class ECSignature extends AbstractSignatureConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(ECSignature.class);
 
     private final ECPublicKey publicKey;
 
@@ -52,12 +57,10 @@ public class ECSignature extends AbstractSignatureConfiguration {
      *
      * @return message explaining the supported algorithms
      */
-    @Override
     public String supportedAlgorithmsMessage() {
         return "Only the ES256, ES384 and ES512 algorithms are supported for elliptic curve signature";
     }
 
-    @Override
     public boolean supports(final JWSAlgorithm algorithm) {
         return algorithm != null && ECDSAProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
@@ -65,6 +68,17 @@ public class ECSignature extends AbstractSignatureConfiguration {
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
         final JWSVerifier verifier = new ECDSAVerifier(this.publicKey);
-        return jwt.verify(verifier);
+        boolean result = jwt.verify(verifier);
+        if (LOG.isDebugEnabled()) {
+            if (result) {
+                LOG.debug("EC Signature verification passed: {}", jwt.getParsedString());
+            } else {
+                LOG.debug("EC Signature verification failed: {}", jwt.getParsedString());
+                if (!supports(jwt.getHeader().getAlgorithm())) {
+                    LOG.debug("JWT Signature algorithm {} not supported. {} ", jwt.getHeader().getAlgorithm(), supportedAlgorithmsMessage());
+                }
+            }
+        }
+        return result;
     }
 }

@@ -5,7 +5,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.security.token.jwt.signature.jwks.HttpClientJwksClient
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
+import io.micronaut.security.token.jwt.signature.jwks.ReactiveJwksSignature
 import io.micronaut.security.token.jwt.signature.jwks.ResourceRetrieverJwksClient
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
@@ -156,7 +156,7 @@ micronaut:
         new Yaml().load(cleanYamlAsciidocTag(yamlSecurityConfig)) == configMap
 
         and:
-        embeddedServer.applicationContext.containsBean(JwksSignature)
+        embeddedServer.applicationContext.containsBean(ReactiveJwksSignature)
     }
 
     void "HttpClientJwksClient bean exists in context"() {

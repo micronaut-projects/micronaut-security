@@ -18,9 +18,7 @@ package io.micronaut.security.token;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Authentication claims.
@@ -62,6 +60,15 @@ public interface Claims {
      */
     @NonNull
     Set<String> names();
+
+    @NonNull
+    default Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        for (String name : names()) {
+            result.put(name, get(name));
+        }
+        return result;
+    }
 
     /**
      *

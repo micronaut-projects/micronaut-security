@@ -15,14 +15,11 @@
  */
 package io.micronaut.security.token.validator;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.Authentication;
-import jakarta.validation.constraints.NotNull;
 import org.reactivestreams.Publisher;
-
-import java.util.Optional;
 
 /**
  * Responsible for token validation and claims retrieval.
@@ -31,15 +28,18 @@ import java.util.Optional;
  * @param <T> Request
  * @since 1.0
  */
-@FunctionalInterface
-public interface TokenValidator<T> extends Ordered {
-
+public interface ReactiveTokenValidator<T> extends Ordered {
     /**
      * Validates the provided token and returns the authentication state.
      *
      * @param token The token string
      * @param request The current request (or null)
-     * @return A non-empty Optional if token was validated successfully.
+     * @return An authentication publisher. If the publisher emits an error, no further validators will
+     * be attempted and the validation will fail. If the publisher is empty, further validators will be
+     * attempted. If the publisher emits an authentication, that authentication will be used.
      */
-    Optional<Authentication> validateToken(@NonNull @NotNull String token, @Nullable T request);
+    @SingleResult
+    Publisher<Authentication> validateToken(String token,
+                                            @Nullable T request);
 }
+

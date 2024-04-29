@@ -20,6 +20,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
@@ -27,11 +28,12 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
+import io.micronaut.security.token.jwt.signature.jwks.ReactiveJwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,15 +51,15 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  */
 @Singleton
-public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseValidator {
+public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenResponseValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);
 
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
-    private final Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators;
+    private final Collection<GenericJwtClaimsValidator<R>> genericJwtClaimsValidators;
     private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
-    private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
+    private final Map<String, ReactiveJwksSignature> jwksSignatures = new ConcurrentHashMap<>();
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
@@ -68,7 +70,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @param jwkSetFetcher Json Web Key Set Fetcher
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
-                                               Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
+                                               Collection<GenericJwtClaimsValidator<R>> genericJwtClaimsValidators,
                                                @Nullable NonceClaimValidator nonceClaimValidator,
                                                JwkValidator jwkValidator,
                                                JwkSetFetcher<JWKSet> jwkSetFetcher) {
@@ -80,10 +82,12 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     @Override
-    public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
-                                  OpenIdProviderMetadata openIdProviderMetadata,
-                                  OpenIdTokenResponse openIdTokenResponse,
-                                  @Nullable String nonce) {
+    @NonNull
+    @SingleResult
+    public Publisher<T> validate(OauthClientConfiguration clientConfiguration,
+                                 OpenIdProviderMetadata openIdProviderMetadata,
+                                 OpenIdTokenResponse openIdTokenResponse,
+                                 @Nullable String nonce) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
@@ -153,25 +157,25 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @return A JWT if the signature validation is successful
      */
     @NonNull
-    protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
+    protected Publisher<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
 
         return JwtValidator.builder()
-            .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
+            .withReactiveSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
             .build()
             .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**
      * @param openIdProviderMetadata The OpenID provider metadata
-     * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
+     * @return A {@link ReactiveJwksSignature} for the OpenID provider JWKS uri.
      */
-    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
+    protected ReactiveJwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksUri = openIdProviderMetadata.getJwksUri();
         jwksSignatures.computeIfAbsent(jwksUri, k -> {
             JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(openIdProviderMetadata.getName());
             config.setUrl(jwksUri);
-            return new JwksSignature(config, jwkValidator, jwkSetFetcher);
+            return new ReactiveJwksSignature(config, jwkValidator, jwkSetFetcher);
         });
         return jwksSignatures.get(jwksUri);
     }

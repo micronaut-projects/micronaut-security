@@ -24,14 +24,11 @@ import com.nimbusds.jwt.SignedJWT;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @param <T> signed JWT
+ * @param <A> signature Algorithm
  */
-public interface SignatureConfiguration {
+public interface SignatureConfiguration<T, A> {
 
-    /**
-     *
-     * @return A message indicating the supported algorithms.
-     */
-    String supportedAlgorithmsMessage();
 
     /**
      * Whether this signature configuration supports this algorithm.
@@ -39,7 +36,7 @@ public interface SignatureConfiguration {
      * @param algorithm the signature algorithm
      * @return whether this signature configuration supports this algorithm
      */
-    boolean supports(JWSAlgorithm algorithm);
+    boolean supports(A algorithm);
 
     /**
      * Verify a signed JWT.
@@ -48,6 +45,6 @@ public interface SignatureConfiguration {
      * @return whether the signed JWT is verified
      * @throws JOSEException exception when verifying the JWT
      */
-    boolean verify(SignedJWT jwt) throws JOSEException;
+    boolean verify(T jwt) throws JOSEException;
 }
 

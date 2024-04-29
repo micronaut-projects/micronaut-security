@@ -28,8 +28,13 @@ import com.nimbusds.jose.crypto.impl.MACProvider;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
+import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -39,7 +44,8 @@ import java.util.Objects;
  * @since 1.0
  */
 @EachBean(SecretSignatureConfiguration.class)
-public class SecretSignature extends AbstractSignatureConfiguration implements SignatureGeneratorConfiguration {
+public class SecretSignature extends AbstractSignatureConfiguration implements SignatureGeneratorConfiguration<SignedJWT, JWSAlgorithm> {
+    private static final Logger LOG = LoggerFactory.getLogger(SecretSignature.class);
 
     private byte[] secret;
 
@@ -57,20 +63,17 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
      *
      * @return message explaining the supported algorithms
      */
-    @Override
     public String supportedAlgorithmsMessage() {
         return "Only the HS256, HS384 and HS512 algorithms are supported for HMac signature";
     }
 
-    @Override
     public boolean supports(final JWSAlgorithm algorithm) {
         return algorithm != null && MACProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
 
-    @Override
-    public SignedJWT sign(final JWTClaimsSet claims) throws JOSEException {
+    public SignedJWT sign(final Claims claims) throws JOSEException, ParseException {
         final JWSSigner signer = new MACSigner(this.secret);
-        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
+        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), JWTClaimsSet.parse(claims.toMap()));
         signedJWT.sign(signer);
         return signedJWT;
     }
@@ -78,7 +81,18 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
         final JWSVerifier verifier = new MACVerifier(this.secret);
-        return jwt.verify(verifier);
+        boolean result = jwt.verify(verifier);
+        if (LOG.isDebugEnabled()) {
+            if (result) {
+                LOG.debug("Secret Signature verification passed: {}", jwt.getParsedString());
+            } else {
+                LOG.debug("Secret Signature verification failed: {}", jwt.getParsedString());
+                if (!supports(jwt.getHeader().getAlgorithm())) {
+                    LOG.debug("JWT Signature algorithm {} not supported. {} ", jwt.getHeader().getAlgorithm(), supportedAlgorithmsMessage());
+                }
+            }
+        }
+        return result;
     }
 
     /**
