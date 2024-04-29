@@ -15,95 +15,74 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
-import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
-import io.micronaut.security.token.jwt.signature.jwks.ReactiveJwksSignature;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
-import io.micronaut.security.token.jwt.validator.JwtValidator;
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Default implementation of {@link OpenIdTokenResponseValidator}.
+ * Default implementation of {@link ReactiveOpenIdTokenResponseValidator}.
  *
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenResponseValidator<T> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);
-
+public class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdTokenResponseValidator<JWT> {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultReactiveOpenIdTokenResponseValidator.class);
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
-    private final Collection<GenericJwtClaimsValidator<R>> genericJwtClaimsValidators;
+    private final Collection<GenericJwtClaimsValidator<HttpRequest<?>>> genericJwtClaimsValidators;
     private final NonceClaimValidator nonceClaimValidator;
-    private final JwkValidator jwkValidator;
-    private final Map<String, ReactiveJwksSignature> jwksSignatures = new ConcurrentHashMap<>();
-    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
+    private final ReactiveJsonWebTokenValidator<JWT, HttpRequest<?>> jwtTokenValidator;
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
      * @param genericJwtClaimsValidators Generic JWT claim validators
      * @param nonceClaimValidator The nonce claim validator
-     * @param jwkValidator The JWK validator
-     * @param jwkSetFetcher Json Web Key Set Fetcher
+     * @param jwtTokenValidator Reactive JSON Web Token (JWT) validator
      */
-    public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
-                                               Collection<GenericJwtClaimsValidator<R>> genericJwtClaimsValidators,
-                                               @Nullable NonceClaimValidator nonceClaimValidator,
-                                               JwkValidator jwkValidator,
-                                               JwkSetFetcher<JWKSet> jwkSetFetcher) {
+    public DefaultReactiveOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
+                                                       Collection<GenericJwtClaimsValidator<HttpRequest<?>>> genericJwtClaimsValidators,
+                                                       @Nullable NonceClaimValidator nonceClaimValidator,
+                                                       ReactiveJsonWebTokenValidator<JWT, HttpRequest<?>> jwtTokenValidator) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
         this.nonceClaimValidator = nonceClaimValidator;
-        this.jwkValidator = jwkValidator;
-        this.jwkSetFetcher = jwkSetFetcher;
+        this.jwtTokenValidator = jwtTokenValidator;
     }
 
     @Override
     @NonNull
     @SingleResult
-    public Publisher<T> validate(OauthClientConfiguration clientConfiguration,
+    public Publisher<JWT> validate(OauthClientConfiguration clientConfiguration,
                                  OpenIdProviderMetadata openIdProviderMetadata,
                                  OpenIdTokenResponse openIdTokenResponse,
                                  @Nullable String nonce) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
-        Optional<JWT> jwt = parseJwtWithValidSignature(openIdProviderMetadata, openIdTokenResponse);
-
-        if (jwt.isPresent()) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("JWT signature validation succeeded. Validating claims...");
-            }
-            return validateClaims(clientConfiguration, openIdProviderMetadata, jwt.get(), nonce);
-        } else {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("JWT signature validation failed for provider [{}]", clientConfiguration.getName());
-            }
-        }
-        return Optional.empty();
+        return Mono.from(jwtTokenValidator.validate(openIdTokenResponse.getIdToken(), ServerRequestContext.currentRequest().orElse(null)))
+                .filter(jwt -> validateClaims(clientConfiguration, openIdProviderMetadata, jwt, nonce));
     }
 
     /**
@@ -115,7 +94,7 @@ public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenRes
      * @return the same JWT supplied as a parameter if the claims validation were succesful or empty if not.
      */
     @NonNull
-    protected Optional<JWT> validateClaims(@NonNull OauthClientConfiguration clientConfiguration,
+    private boolean validateClaims(@NonNull OauthClientConfiguration clientConfiguration,
                                            @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                            @NonNull JWT jwt,
                                            @Nullable String nonce) {
@@ -129,10 +108,10 @@ public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenRes
                         if (LOG.isTraceEnabled()) {
                             LOG.trace("Skipping nonce validation because no bean of type {} present. ", NonceClaimValidator.class.getSimpleName());
                         }
-                        return Optional.of(jwt);
+                        return true;
                     }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
-                        return Optional.of(jwt);
+                        return true;
                     } else if (LOG.isErrorEnabled()) {
                         LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
                     }
@@ -147,7 +126,7 @@ public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenRes
                 LOG.error("Failed to parse the JWT returned from provider [{}]", clientConfiguration.getName(), e);
             }
         }
-        return Optional.empty();
+        return false;
     }
 
     /**
@@ -159,24 +138,6 @@ public class DefaultOpenIdTokenResponseValidator<T, R> implements OpenIdTokenRes
     @NonNull
     protected Publisher<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
-
-        return JwtValidator.builder()
-            .withReactiveSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
-            .build()
-            .validate(openIdTokenResponse.getIdToken(), null);
-    }
-
-    /**
-     * @param openIdProviderMetadata The OpenID provider metadata
-     * @return A {@link ReactiveJwksSignature} for the OpenID provider JWKS uri.
-     */
-    protected ReactiveJwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
-        final String jwksUri = openIdProviderMetadata.getJwksUri();
-        jwksSignatures.computeIfAbsent(jwksUri, k -> {
-            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties(openIdProviderMetadata.getName());
-            config.setUrl(jwksUri);
-            return new ReactiveJwksSignature(config, jwkValidator, jwkSetFetcher);
-        });
-        return jwksSignatures.get(jwksUri);
+        return jwtTokenValidator.validate(openIdTokenResponse.getIdToken(), ServerRequestContext.currentRequest().orElse(null));
     }
 }

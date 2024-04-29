@@ -29,7 +29,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 
 /**
  * Factory creating {@link ReactiveAuthenticationProvider} beans that delegate
@@ -69,15 +69,15 @@ class PasswordGrantFactory {
             @Parameter @Nullable OpenIdProviderMetadata openIdProviderMetadata,
             TokenEndpointClient tokenEndpointClient,
             @Nullable DefaultOpenIdAuthenticationMapper defaultOpenIdAuthenticationMapper,
-            @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
+            @Nullable ReactiveOpenIdTokenResponseValidator tokenResponseValidator) {
 
         if (clientConfiguration.getToken().isPresent()) {
-            return new ReactiveAuthenticationProviderAdapter(new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper));
+            return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper);
         } else {
             if (openIdAuthenticationMapper == null) {
                 openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
             }
-            return new ReactiveAuthenticationProviderAdapter(new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator));
+            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
         }
     }
 }

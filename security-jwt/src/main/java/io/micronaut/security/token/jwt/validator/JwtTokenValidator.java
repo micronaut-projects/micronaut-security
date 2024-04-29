@@ -15,13 +15,11 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import io.micronaut.core.annotation.Nullable;
+import com.nimbusds.jwt.JWT;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Singleton;
-import java.util.Collection;
+
 import java.util.Optional;
 
 /**
@@ -33,44 +31,19 @@ import java.util.Optional;
  */
 @Singleton
 public class JwtTokenValidator<T> implements TokenValidator<T> {
-    protected final JwtAuthenticationFactory jwtAuthenticationFactory;
-    protected final JwtValidator<T> validator;
+    private final JwtAuthenticationFactory jwtAuthenticationFactory;
+    private final JsonWebTokenValidator<JWT, T> validator;
 
-    /**
-     * Constructor.
-     *
-     * @param signatureConfigurations List of Signature configurations which are used to attempt validation.
-     * @param encryptionConfigurations List of Encryption configurations which are used to attempt validation.
-     * @param genericJwtClaimsValidators Generic JWT Claims validators which should be used to validate any JWT.
-     * @param jwtAuthenticationFactory Utility to generate an Authentication given a JWT.
-     */
-    public JwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
-                             Collection<EncryptionConfiguration> encryptionConfigurations,
-                             Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                             JwtAuthenticationFactory jwtAuthenticationFactory) {
-        this(JwtValidator.builder()
-                .withSignatures(signatureConfigurations)
-                .withEncryptions(encryptionConfigurations)
-                .withClaimValidators(genericJwtClaimsValidators)
-                .build(), jwtAuthenticationFactory);
-    }
 
-    /**
-     * @param validator Validates the JWT
-     * @param jwtAuthenticationFactory The authentication factory
-     */
-    public JwtTokenValidator(JwtValidator<T> validator,
-                             JwtAuthenticationFactory jwtAuthenticationFactory) {
-        this.validator = validator;
+
+    public JwtTokenValidator(JwtAuthenticationFactory jwtAuthenticationFactory, JsonWebTokenValidator<JWT, T> validator) {
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
+        this.validator = validator;
     }
 
-    /***
-     * @param token The token string.
-     * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
-     */
     @Override
-    public Optional<Authentication> validateToken(String token, @Nullable T request) {
-        return validator.validate(token, request).flatMap(jwtAuthenticationFactory::createAuthentication);
+    public Optional<Authentication> validateToken(String token, T request) {
+        return validator.validate(token, request)
+                .flatMap(jwtAuthenticationFactory::createAuthentication);
     }
 }

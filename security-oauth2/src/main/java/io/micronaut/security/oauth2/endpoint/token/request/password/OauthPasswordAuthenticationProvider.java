@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -32,14 +32,14 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
+ * An {@link ReactiveAuthenticationProvider} that delegates to an OAuth 2.0 provider using the
  * password grant flow.
  *
  * @author Sergio del Amo
  * @since 1.2.0
  * @param <T> Request Context Type
  */
-public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -61,7 +61,7 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
@@ -89,4 +89,5 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
 
         return new DefaultSecureEndpoint(url, authMethodsSupported);
     }
+
 }

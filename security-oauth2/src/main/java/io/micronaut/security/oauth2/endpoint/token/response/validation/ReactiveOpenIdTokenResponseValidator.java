@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
@@ -24,8 +23,6 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import org.reactivestreams.Publisher;
 
-import java.util.Optional;
-
 /**
  * Validates an OpenID token response.
  *
@@ -33,8 +30,8 @@ import java.util.Optional;
  * @since 1.2.0
  * @param <T> token
  */
-@DefaultImplementation(DefaultOpenIdTokenResponseValidator.class)
-public interface OpenIdTokenResponseValidator<T> {
+@DefaultImplementation(DefaultReactiveOpenIdTokenResponseValidator.class)
+public interface ReactiveOpenIdTokenResponseValidator<T> {
 
     /**
      * @param clientConfiguration The OAuth 2.0 client configuration

@@ -68,6 +68,7 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
                                 Collection<EncryptionConfiguration> encryptionConfigurations,
                                 Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                                 JwtAuthenticationFactory jwtAuthenticationFactory) {
+            super(,)
             super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory)
         }
 

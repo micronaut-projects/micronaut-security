@@ -16,9 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -29,9 +29,10 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswor
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.util.List;
@@ -39,21 +40,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OpenID provider using the
+ * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
  *
  * @author James Kleeh
  * @since 1.2.0
  * @param <T> Request Context Type
  */
-public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
     private final OauthClientConfiguration clientConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
     private final OpenIdAuthenticationMapper openIdAuthenticationMapper;
-    private final OpenIdTokenResponseValidator tokenResponseValidator;
+    private final ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator;
 
     /**
      * @param clientConfiguration        The client configuration
@@ -66,7 +67,7 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
                                                 OpenIdProviderMetadata openIdProviderMetadata,
                                                 TokenEndpointClient tokenEndpointClient,
                                                 OpenIdAuthenticationMapper openIdAuthenticationMapper,
-                                                OpenIdTokenResponseValidator tokenResponseValidator) {
+                                                ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
@@ -77,27 +78,21 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
-
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
-
-        return Flux.from(
-                tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
-            .switchMap(response -> {
-                Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                if (jwt.isPresent()) {
-                    try {
-                        OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                        return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
-                    } catch (ParseException e) {
-                        // Should never happen as validation succeeded
-                        return Flux.error(e);
-                    }
-                } else {
-                    return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
-                }
-            });
-
+        return Mono.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
+                .flatMap(openIdTokenResponse ->
+                        Mono.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null))
+                        .flatMap(jwt -> {
+                            try {
+                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
+                                return Mono.from(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, null));
+                            } catch (ParseException e) {
+                                // Should never happen as validation succeeded
+                                return Mono.error(e);
+                            }
+                        })
+                );
     }
 
     /**
