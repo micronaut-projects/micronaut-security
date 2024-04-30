@@ -21,6 +21,7 @@ dependency:io.micronaut.security:micronaut-security-annotations[scope='annotatio
 dependency:io.micronaut.security:micronaut-security-jwt[]
 
 NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
+For Kotlin, add the dependency in https://docs.micronaut.io/4.4.3/guide/#kaptOrKsp[kapt or ksp scope], and for Groovy add it in compileOnly scope.
 
 The following configuration properties are available to customize JWT based authentication behaviour:
 
