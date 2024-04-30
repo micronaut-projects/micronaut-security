@@ -15,34 +15,36 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import java.util.Optional;
+import org.reactivestreams.Publisher;
 
 /**
  * Validates an OpenID token response.
  *
  * @author Sergio del Amo
  * @since 1.2.0
- * @deprecated Use {@link ReactiveOpenIdTokenResponseValidator} instead.
+ * @param <T> token
  */
-@DefaultImplementation(DefaultOpenIdTokenResponseValidator.class)
-@Deprecated
-public interface OpenIdTokenResponseValidator {
+@DefaultImplementation(DefaultReactiveOpenIdTokenResponseValidator.class)
+public interface ReactiveOpenIdTokenResponseValidator<T> {
 
     /**
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
      * @param nonce The persisted nonce value
-     * @return true if the ID Token access response is considered valid
+     * @return A non-empty publisher if the ID Token access response is considered valid
      */
-    Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
-                           OpenIdProviderMetadata openIdProviderMetadata,
-                           OpenIdTokenResponse openIdTokenResponse,
-                           @Nullable String nonce);
+    @SingleResult
+    @NonNull
+    Publisher<T> validate(@NonNull OauthClientConfiguration clientConfiguration,
+                          @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                          @NonNull OpenIdTokenResponse openIdTokenResponse,
+                          @Nullable String nonce);
 }

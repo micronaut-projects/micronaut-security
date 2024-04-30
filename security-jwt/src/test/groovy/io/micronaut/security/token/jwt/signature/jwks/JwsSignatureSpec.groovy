@@ -12,11 +12,13 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.JwtFixture
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -45,24 +47,17 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
         ])
 
         when:
-        Collection<JwksSignature> beans = context.getBeansOfType(JwksSignature)
+        Collection<ReactiveSignatureConfiguration> beans = context.getBeansOfType(ReactiveSignatureConfiguration)
 
         then:
         beans
 
         when:
-        JwksSignature jwksSignature = beans[0]
-
-        then:
-        jwksSignature.supportedAlgorithmsMessage() == 'Algorithms supported: RS256'
-        jwksSignature.supports(JWSAlgorithm.RS256)
-
-        when:
+        ReactiveSignatureConfiguration jwksSignature = beans[0]
         SignedJWT signedJWT = generateSignedJWT()
 
         then:
-        jwksSignature.supports(signedJWT.getHeader().getAlgorithm())
-        !jwksSignature.verify(signedJWT)
+        !Mono.from(jwksSignature.verify(signedJWT)).block()
 
         cleanup:
         context.close()

@@ -44,8 +44,10 @@ import java.util.stream.Collectors;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @deprecated Not used. {@link io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature} used instead.
  */
-@EachBean(JwksSignatureConfiguration.class)
+@Deprecated
+//@EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);

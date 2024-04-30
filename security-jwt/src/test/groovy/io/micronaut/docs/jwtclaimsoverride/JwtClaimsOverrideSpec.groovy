@@ -8,6 +8,7 @@ import io.micronaut.http.MediaType
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
@@ -55,6 +56,6 @@ class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
     }
 
     TokenValidator getTokenValidator() {
-        embeddedServer.applicationContext.getBean(JwtTokenValidator.class)
+        embeddedServer.applicationContext.getBean(ReactiveJsonWebTokenValidator.class)
     }
 }

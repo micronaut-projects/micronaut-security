@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -32,16 +32,14 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
+ * An {@link ReactiveAuthenticationProvider} that delegates to an OAuth 2.0 provider using the
  * password grant flow.
  *
  * @author Sergio del Amo
  * @since 1.2.0
  * @param <T> Request Context Type
- * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOauthPasswordAuthenticationProvider} instead.
  */
-@Deprecated
-public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -53,9 +51,9 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
      * @param clientConfiguration The client configuration
      * @param authenticationMapper  The user details mapper
      */
-    public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
-                                               OauthClientConfiguration clientConfiguration,
-                                               OauthAuthenticationMapper authenticationMapper) {
+    public ReactiveOauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
+                                                       OauthClientConfiguration clientConfiguration,
+                                                       OauthAuthenticationMapper authenticationMapper) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.authenticationMapper = authenticationMapper;
@@ -63,12 +61,12 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flux.from(
-                tokenEndpointClient.sendRequest(context))
+                        tokenEndpointClient.sendRequest(context))
                 .switchMap(response -> Flux.from(authenticationMapper.createAuthenticationResponse(response, null))
                         .map(AuthenticationResponse.class::cast));
     }
@@ -87,8 +85,9 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
                 .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
 
         String url = endpointConfiguration.getUrl().orElseThrow(() ->
-            new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
+                new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
 
         return new DefaultSecureEndpoint(url, authMethodsSupported);
     }
+
 }

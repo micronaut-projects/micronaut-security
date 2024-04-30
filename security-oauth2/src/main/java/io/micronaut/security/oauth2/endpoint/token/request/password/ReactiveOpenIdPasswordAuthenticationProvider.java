@@ -16,9 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -29,26 +29,23 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswor
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * An {@link AuthenticationProvider} that delegates to an OpenID provider using the
+ * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
  *
  * @author James Kleeh
  * @since 1.2.0
  * @param <T> Request Context Type
  */
-@Deprecated
-public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
+public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -64,11 +61,11 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
      * @param openIdAuthenticationMapper The user details mapper
      * @param tokenResponseValidator     The token response validator
      */
-    public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
-                                                OpenIdProviderMetadata openIdProviderMetadata,
-                                                TokenEndpointClient tokenEndpointClient,
-                                                OpenIdAuthenticationMapper openIdAuthenticationMapper,
-                                                ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator) {
+    public ReactiveOpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
+                                                        OpenIdProviderMetadata openIdProviderMetadata,
+                                                        TokenEndpointClient tokenEndpointClient,
+                                                        OpenIdAuthenticationMapper openIdAuthenticationMapper,
+                                                        ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
@@ -77,33 +74,8 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
         this.secureEndpoint = getTokenEndpoint(openIdProviderMetadata);
     }
 
-    /**
-     * @param clientConfiguration        The client configuration
-     * @param openIdProviderMetadata     The provider metadata
-     * @param tokenEndpointClient        The token endpoint client
-     * @param openIdAuthenticationMapper The user details mapper
-     * @param tokenResponseValidator     The token response validator
-     * @deprecated Use {@link #OpenIdPasswordAuthenticationProvider(OauthClientConfiguration, OpenIdProviderMetadata, TokenEndpointClient, OpenIdAuthenticationMapper, ReactiveOpenIdTokenResponseValidator)} instead.
-     */
-    @Deprecated
-    public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
-                                                OpenIdProviderMetadata openIdProviderMetadata,
-                                                TokenEndpointClient tokenEndpointClient,
-                                                OpenIdAuthenticationMapper openIdAuthenticationMapper,
-                                                OpenIdTokenResponseValidator tokenResponseValidator) {
-        this.tokenEndpointClient = tokenEndpointClient;
-        this.clientConfiguration = clientConfiguration;
-        this.openIdProviderMetadata = openIdProviderMetadata;
-        this.openIdAuthenticationMapper = openIdAuthenticationMapper;
-        this.tokenResponseValidator = (clientConfiguration1, openIdProviderMetadata1, openIdTokenResponse, nonce) -> {
-            Optional<JWT> jwtOptional = tokenResponseValidator.validate(clientConfiguration1, openIdProviderMetadata1, openIdTokenResponse, nonce);
-            return jwtOptional.map(Mono::just).orElseGet(Mono::empty);
-        };
-        this.secureEndpoint = getTokenEndpoint(openIdProviderMetadata);
-    }
-
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
         return Mono.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
                 .flatMap(openIdTokenResponse ->
@@ -126,14 +98,14 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
      * @param openIdProviderMetadata The provider metadata
      * @return The token endpoint
      */
-    protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
+    private static SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
         List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
         List<AuthenticationMethod> authenticationMethods = null;
         if (authMethodsSupported != null) {
             authenticationMethods = authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList());
+                    .map(String::toUpperCase)
+                    .map(AuthenticationMethod::valueOf)
+                    .collect(Collectors.toList());
         }
         return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
     }

@@ -38,8 +38,9 @@ import java.util.concurrent.ExecutorService;
  * @author Sergio del Amo
  * @since 1.0
  * @param <T> Request
+ * @deprecated Use {@link ReactiveJsonWebTokenValidator} instead.
  */
-@Singleton
+@Deprecated
 public class JwtTokenValidator<T> implements TokenValidator<T> {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
