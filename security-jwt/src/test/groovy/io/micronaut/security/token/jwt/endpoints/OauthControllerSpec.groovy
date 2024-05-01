@@ -31,7 +31,7 @@ import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator
+
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.serde.annotation.Serdeable
