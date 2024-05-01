@@ -22,7 +22,7 @@ class JsonWebTokenParserTest {
         String token = Jwts.builder().subject("sergio").compact();
         Optional<Claims> claimsOptional = parser.parseClaims(token);
         assertTrue(claimsOptional.isPresent());
-        Claims claims = claimsOptional.get();
-        assertEquals("sergio", claims.get(Claims.SUBJECT));
+        Object subject = claimsOptional.map(c -> c.get(Claims.SUBJECT)).orElse(null);
+        assertEquals("sergio", subject);
     }
 }
