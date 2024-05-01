@@ -105,7 +105,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param blockingExecutor       An executor for blocking operations
      * @deprecated Use {@link DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)} instead.
      */
-    @Deprecated
+    @Deprecated(since = "4.8.0", forRemoval = true)
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,

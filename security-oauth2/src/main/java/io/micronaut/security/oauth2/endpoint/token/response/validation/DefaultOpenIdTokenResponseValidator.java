@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultReactiveOpenIdTokenResponseValidator} instead
  */
-@Deprecated
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);

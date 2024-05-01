@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @param <T> Request Context Type
  * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOpenIdPasswordAuthenticationProvider} instead.
  */
-@Deprecated
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;

@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> Request
  * @deprecated Use {@link JsonWebTokenValidator} or {@link ReactiveJsonWebTokenValidator} instead.
  */
-@Deprecated
+@Deprecated(since = "4.8.0", forRemoval = true)
 public final class JwtValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidator.class);

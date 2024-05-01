@@ -38,14 +38,13 @@ import java.util.stream.Collectors;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
- *
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.1.0
  * @deprecated Not used. {@link io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature} used instead.
  */
-@Deprecated
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);

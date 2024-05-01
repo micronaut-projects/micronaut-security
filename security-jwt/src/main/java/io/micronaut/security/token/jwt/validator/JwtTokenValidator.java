@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutorService;
  * @param <T> Request
  * @deprecated Use {@link ReactiveJsonWebTokenValidator} instead.
  */
-@Deprecated
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class JwtTokenValidator<T> implements TokenValidator<T> {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
