@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.token.jwt.nimbus;
 
-import com.nimbusds.jwt.*;
+import com.nimbusds.jwt.EncryptedJWT;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
@@ -24,6 +27,7 @@ import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.util.Optional;
 

@@ -22,8 +22,10 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
-import io.micronaut.security.token.jwt.validator.*;
+import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
+import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenSignatureValidator;
+import io.micronaut.security.token.jwt.validator.JsonWebTokenValidator;
 import jakarta.inject.Singleton;
 
 import java.util.List;
