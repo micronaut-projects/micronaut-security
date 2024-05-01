@@ -33,6 +33,7 @@ import java.util.Optional;
  * {@link JsonWebTokenValidator} implementation using Nimbus JOSE + JWT.
  * @author Sergio del Amo
  * @since 4.8.0
+ * @param <R> Request
  */
 @Singleton
 class NimbusJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements JsonWebTokenValidator<JWT, R> {

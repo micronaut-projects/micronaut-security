@@ -54,8 +54,8 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
         then:
         noExceptionThrown()
 
-        and: // calls the JWKS endpoint several times (first attempt and the configured number of attempts)
-        //fooController.called == 3 /* JwksSignature::supportedAlgorithmsMessage JwksSignature:::supports JwksSignature::::verify */
+        and:
+        fooController.called == 1
 
         cleanup:
         context.close()
