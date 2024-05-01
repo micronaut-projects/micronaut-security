@@ -27,12 +27,12 @@ import org.reactivestreams.Publisher;
  */
 public interface ReactiveSignatureConfiguration<T> {
     /**
-     * Verify a signed JWT.
+     * Verify a signed token.
      *
-     * @param jwt the signed JWT
-     * @return whether the signed JWT is verified
+     * @param token the signed token
+     * @return whether the signed token is verified
      */
     @SingleResult
     @NonNull
-    Publisher<Boolean> verify(@NonNull T jwt);
+    Publisher<Boolean> verify(@NonNull T token);
 }
