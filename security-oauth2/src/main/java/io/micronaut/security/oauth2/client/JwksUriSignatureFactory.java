@@ -26,6 +26,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 
 /**
