@@ -4,17 +4,10 @@ plugins {
 }
 
 dependencies {
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testRuntimeOnly(mnLogging.logback.classic)
-
-    testImplementation(projects.micronautSecurityJwt)
-    testImplementation(projects.micronautSecurityJwt)
-    testImplementation(libs.managed.jjwt.api)
-    testRuntimeOnly(libs.managed.jjwt.impl)
-    testRuntimeOnly(libs.managed.jjwt.jackson)
+    testImplementation(platform(mnTest.micronaut.test.bom))
+    testImplementation(libs.junit.platform.engine)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(projects.testSuiteJwtTck)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

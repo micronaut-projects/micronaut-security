@@ -16,6 +16,8 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.Claims;
+
 import java.util.Optional;
 
 /**
@@ -30,5 +32,5 @@ public interface JsonWebTokenParser<T> {
     Optional<T> parse(@NonNull String token);
 
     @NonNull
-    Optional<T> parseClaims(@NonNull String token);
+    Optional<Claims> parseClaims(@NonNull String token);
 }

@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.token.jwt.nimbus;
 
-import com.nimbusds.jwt.EncryptedJWT;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
-import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.*;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenEncryption;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
@@ -67,6 +66,23 @@ class NimbusJsonWebTokenParser implements JsonWebTokenParser<JWT> {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    @NonNull
+    public Optional<Claims> parseClaims(@NonNull String token) {
+        Optional<JWT> jwtOptional = parse(token);
+        if (jwtOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(new JwtClaimsSetAdapter(jwtOptional.get().getJWTClaimsSet()));
+        } catch (ParseException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Failed to parse JWT Claims", e);
+            }
+            return Optional.empty();
+        }
     }
 
     /**

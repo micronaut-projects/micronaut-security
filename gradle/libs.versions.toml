@@ -64,6 +64,7 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
