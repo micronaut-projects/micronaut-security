@@ -16,6 +16,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings({
+    "java:S5960", // this is a TCK test class, so assertions are expected
+    "java:S5659", // This is a TCK test class, we don't need a strong cypher algorithm for the signed token
+})
 class JsonWebTokenSignatureValidatorTest {
 
     @Test

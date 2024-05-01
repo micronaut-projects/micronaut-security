@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest(startApplication = false)
+@SuppressWarnings({
+    "java:S5960", // this is a TCK test class, so assertions are expected
+    "java:S5659", // This is a TCK test class, we don't need a strong cypher algorithm for the signed token
+})
 class JsonWebTokenParserTest {
 
     @Test

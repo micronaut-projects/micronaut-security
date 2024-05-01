@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * Default implementation of {@link ReactiveOpenIdTokenResponseValidator}.
  *
  * @author Sergio del Amo
- * @since 1.2.0
+ * @since 4.8.0
  */
 @Requires(classes = HttpRequest.class)
 @Singleton

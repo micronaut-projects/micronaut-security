@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.util.List;
 
-
 /**
  * Abstract class for common methods for JWT validation.
  * @param <R> Request
