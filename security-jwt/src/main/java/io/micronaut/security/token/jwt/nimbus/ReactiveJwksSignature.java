@@ -32,7 +32,6 @@ import reactor.core.publisher.Mono;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
- *
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
  * @author Sergio del Amo

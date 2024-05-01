@@ -1,0 +1,2 @@
+You can inject a bean of type The api:security.token.jwt.validator.JsonWebTokenParser[] to parse a JWT token.
+The parser decrypts the token if encrypted.

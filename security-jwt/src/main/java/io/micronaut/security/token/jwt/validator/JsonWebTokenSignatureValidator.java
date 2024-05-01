@@ -18,7 +18,7 @@ package io.micronaut.security.token.jwt.validator;
 import io.micronaut.core.annotation.NonNull;
 
 /**
- * API to validates the signature of a JSON Web Token.
+ * API to validate the signature of a JSON Web Token with beans of type {@link io.micronaut.security.token.jwt.signature.SignatureConfiguration}.
  * @author Sergio del Amo
  * @since 4.8.0
  * @param <T> Signed Token

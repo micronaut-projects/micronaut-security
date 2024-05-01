@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.NonNull;
 import java.util.Optional;
 
 /**
+ * Decrypts an encrypted token.
  * @author Sergio del Amo
  * @since 4.8.0
  * @param <E> encrypted token

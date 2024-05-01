@@ -20,7 +20,7 @@ import io.micronaut.core.async.annotation.SingleResult;
 import org.reactivestreams.Publisher;
 
 /**
- * Reactive API to validates the signature of a JSON Web Token.
+ * Reactive API to validate the signature of a JSON Web Token with beans of type {@link io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration} and {@link io.micronaut.security.token.jwt.signature.SignatureConfiguration}.
  * @author Sergio del Amo
  * @since 4.8.0
  * @param <T> The Signed Token

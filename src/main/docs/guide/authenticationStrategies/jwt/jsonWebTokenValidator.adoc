@@ -1,0 +1,11 @@
+The APIs api:io.micronaut.security.token.jwt.validator.JsonWebTokenValidator[], and api:io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator[] allows you to validate a JWT token.
+
+The validation performs the following steps:
+
+* - Parses the Token (if encrypted, it decrypts).
+* - Validates the Signature
+* - Validates the Claims with beans of type api:security.token.jwt.validator.GenericJwtClaimsValidator[].
+
+`JsonWebTokenValidator`  will not use remote signature configuration. E.g. it will not validate the signature with remote JWKs.
+Only, api:io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator[] implements
+api:io.micronaut.security.token.validator.TokenValidator[].
