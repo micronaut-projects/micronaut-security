@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Classes related to JWT implementation using Nimbus JOSE + JWT.
+ * @author Sergio del Amo
+ * @since 4.8.0
+ */
 @Requires(classes = JWT.class)
 @Configuration
 package io.micronaut.security.token.jwt.nimbus;

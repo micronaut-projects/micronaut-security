@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.validator.signature;
+package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.validator.JsonWebTokenSignatureValidator;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +29,21 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Requires(classes = SignedJWT.class)
+/**
+ * Validates the signature of a JSON Web Token using Nimbus JOSE + JWT.
+ * @author Sergio del Amo
+ * @since 4.8.0
+ */
 @Internal
 @Singleton
-class SignedJwtJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValidator<SignedJWT> {
+class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValidator<SignedJWT> {
+    private static final Logger LOG = LoggerFactory.getLogger(NimbusJsonWebTokenSignatureValidator.class);
     private final List<SignatureConfiguration> signatures;
     private final ConcurrentHashMap<JWSAlgorithm, List<SignatureConfiguration>> sortedSignaturesMap = new ConcurrentHashMap<>();
-    private static final Logger LOG = LoggerFactory.getLogger(SignedJwtJsonWebTokenSignatureValidator.class);
 
-    public SignedJwtJsonWebTokenSignatureValidator(List<SignatureConfiguration> signatures) {
+    public NimbusJsonWebTokenSignatureValidator(List<SignatureConfiguration> signatures) {
         this.signatures = signatures;
     }
 

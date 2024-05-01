@@ -26,14 +26,11 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.validator.JsonWebTokenValidator
 import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher

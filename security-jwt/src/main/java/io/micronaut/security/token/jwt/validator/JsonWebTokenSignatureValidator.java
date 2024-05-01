@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.validator.signature;
+package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.async.annotation.SingleResult;
-import org.reactivestreams.Publisher;
 
 /**
- * Reactive API to validates the signature of a JSON Web Token.
+ * API to validates the signature of a JSON Web Token.
  * @author Sergio del Amo
  * @since 4.8.0
- * @param <T> The Signed Token
+ * @param <T> Signed Token
  */
 @FunctionalInterface
-public interface ReactiveJsonWebTokenSignatureValidator<T> {
+public interface JsonWebTokenSignatureValidator<T> {
 
     /**
      *
      * @param signedToken signed token
-     * @return A publisher with a single result with a true boolean if the token signature can be verified.
+     * @return true if the token signature can be verified.
      */
-    @SingleResult
-    @NonNull
-    Publisher<Boolean> validateSignature(@NonNull T signedToken);
+    boolean validateSignature(@NonNull T signedToken);
 }

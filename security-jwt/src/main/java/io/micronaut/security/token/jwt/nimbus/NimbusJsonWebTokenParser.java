@@ -25,8 +25,6 @@ import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Mono;
-
 import java.text.ParseException;
 import java.util.Optional;
 
@@ -44,7 +42,6 @@ class NimbusJsonWebTokenParser implements JsonWebTokenParser<JWT> {
     NimbusJsonWebTokenParser(JsonWebTokenEncryption<EncryptedJWT, SignedJWT> jsonWebTokenEncryption) {
         this.jsonWebTokenEncryption = jsonWebTokenEncryption;
     }
-
 
     @Override
     @NonNull

@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.token.jwt.nimbus;
 
-import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
@@ -24,7 +23,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.*;
-import io.micronaut.security.token.jwt.validator.signature.JsonWebTokenSignatureValidator;
+import io.micronaut.security.token.jwt.validator.JsonWebTokenSignatureValidator;
 import jakarta.inject.Singleton;
 
 import java.util.List;

@@ -36,8 +36,10 @@ import reactor.core.publisher.Flux;
  * password grant flow.
  *
  * @author Sergio del Amo
- * @since 1.2.0
+ * @since 4.8.0
  * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
 public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 

@@ -21,7 +21,6 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
  * @deprecated Not used. {@link io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature} used instead.
  */
 @Deprecated
-//@EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);

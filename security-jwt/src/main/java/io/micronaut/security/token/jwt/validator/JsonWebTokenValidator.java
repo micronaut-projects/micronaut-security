@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
@@ -33,8 +31,8 @@ import java.util.Optional;
 public interface JsonWebTokenValidator<T, R> {
 
     /**
-     * Validates a Token:
-     * - Parses the Token
+     * Validates a Token. It should perform the following steps.
+     * - Parses the Token (if encrypted it should decrypt it).
      * - Validates the Signature
      * - Validates the Claims
      * @param token The JWT Token

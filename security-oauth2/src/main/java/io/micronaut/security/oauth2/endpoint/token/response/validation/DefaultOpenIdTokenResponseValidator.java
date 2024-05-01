@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  *
  * @author Sergio del Amo
  * @since 1.2.0
- * @Deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultReactiveOpenIdTokenResponseValidator} instead
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultReactiveOpenIdTokenResponseValidator} instead
  */
 @Singleton
 @Deprecated

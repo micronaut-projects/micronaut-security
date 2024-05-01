@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.token.jwt.nimbus;
 
-import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
@@ -26,7 +25,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.*;
-import io.micronaut.security.token.jwt.validator.signature.ReactiveJsonWebTokenSignatureValidator;
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenSignatureValidator;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
@@ -38,6 +37,7 @@ import java.util.Optional;
  * {@link ReactiveJsonWebTokenValidator} implementation using Nimbus JOSE + JWT.
  * @author Sergio del Amo
  * @since 4.8.0
+ * @param <R> The request type
  */
 @Singleton
 class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements ReactiveJsonWebTokenValidator<JWT, R> {

@@ -41,9 +41,11 @@ import java.util.stream.Collectors;
  * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
  *
- * @author James Kleeh
- * @since 1.2.0
+ * @author Sergio del Amo
+ * @since 4.8.0
  * @param <T> Request Context Type
+ * @param <I> Authentication Request Identity Type
+ * @param <S> Authentication Request Secret Type
  */
 public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
 

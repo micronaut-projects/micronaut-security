@@ -30,8 +30,8 @@ import org.reactivestreams.Publisher;
 public interface ReactiveJsonWebTokenValidator<T, R> extends TokenValidator<R> {
 
     /**
-     * Validates a Token:
-     * - Parses the Token
+     * Validates a Token. It should perform the following steps.
+     * - Parses the Token (if encrypted it should decrypt it).
      * - Validates the Signature
      * - Validates the Claims
      * @param token The JWT Token

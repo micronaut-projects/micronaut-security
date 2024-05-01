@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.validator.signature;
+package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
@@ -21,8 +21,8 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
-import io.micronaut.security.token.jwt.nimbus.NimbusReactiveSignatureConfigurationAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenSignatureValidator;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
@@ -32,11 +32,11 @@ import java.util.List;
 
 @Internal
 @Singleton
-class SignedJwtReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTokenSignatureValidator<SignedJWT> {
+class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTokenSignatureValidator<SignedJWT> {
     private final List<ReactiveSignatureConfiguration<SignedJWT>> signatures;
 
-    public SignedJwtReactiveJsonWebTokenSignatureValidator(List<SignatureConfiguration> signatureConfigurations,
-                                                           List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations) {
+    public NimbusReactiveJsonWebTokenSignatureValidator(List<SignatureConfiguration> signatureConfigurations,
+                                                        List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations) {
         this.signatures = signatures(signatureConfigurations, reactiveSignatureConfigurations);
     }
 
