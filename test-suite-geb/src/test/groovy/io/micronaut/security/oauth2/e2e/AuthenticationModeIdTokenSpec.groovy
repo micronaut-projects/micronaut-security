@@ -29,7 +29,7 @@ import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
+import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named
@@ -78,7 +78,7 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
         expect:
-        applicationContext.containsBean(JwksSignature)
+        applicationContext.containsBean(ReactiveJwksSignature)
         applicationContext.containsBean(TokenValidator)
 
         when:

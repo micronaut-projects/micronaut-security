@@ -22,6 +22,8 @@ import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 /**
@@ -30,6 +32,7 @@ import reactor.core.publisher.Mono;
  * @since 4.8.0
  */
 public class NimbusReactiveSignatureConfigurationAdapter implements ReactiveSignatureConfiguration<SignedJWT> {
+    private static final Logger LOG = LoggerFactory.getLogger(NimbusReactiveSignatureConfigurationAdapter.class);
 
     private final SignatureConfiguration signatureConfiguration;
 
@@ -42,9 +45,20 @@ public class NimbusReactiveSignatureConfigurationAdapter implements ReactiveSign
     @NonNull
     public Publisher<Boolean> verify(@NonNull SignedJWT jwt) {
         try {
-            return Mono.just(signatureConfiguration.verify(jwt));
+            boolean result = signatureConfiguration.verify(jwt);
+            if (LOG.isDebugEnabled()) {
+                if (result) {
+                    LOG.debug("JWT signature verified");
+                } else {
+                    LOG.debug("JWT signature not verified");
+                }
+            }
+            return Mono.just(result);
         } catch (JOSEException e) {
-            return Mono.error(e);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Error verifying JWT signature", e);
+            }
+            return Mono.just(false);
         }
     }
 }
