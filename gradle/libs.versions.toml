@@ -1,6 +1,6 @@
 [versions]
 managed-nimbus-jose-jwt = "9.37.3"
-
+managed-jjwt = "0.12.5"
 
 micronaut = "4.4.7"
 micronaut-platform = "4.4.1"
@@ -45,6 +45,10 @@ micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref 
 micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
+managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed-jjwt" }
+managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
+managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
+
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }

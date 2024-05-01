@@ -28,4 +28,7 @@ public interface JsonWebTokenParser<T> {
 
     @NonNull
     Optional<T> parse(@NonNull String token);
+
+    @NonNull
+    Optional<T> parseClaims(@NonNull String token);
 }
