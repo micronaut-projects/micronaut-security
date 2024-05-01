@@ -23,7 +23,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.8.0
  * @param <E> encrypted token
- * @param <T> decrypted signed token
+ * @param <T> decrypted token
  */
 public interface JsonWebTokenEncryption<E, T> {
 
