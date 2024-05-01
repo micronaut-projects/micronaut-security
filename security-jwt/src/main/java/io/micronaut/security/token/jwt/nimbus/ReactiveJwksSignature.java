@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ import reactor.core.publisher.Mono;
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
- */
+ * @since 4.8.0
+*/
 @EachBean(JwksSignatureConfiguration.class)
 public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<SignedJWT> {
     private static final Logger LOG = LoggerFactory.getLogger(ReactiveJwksSignature.class);

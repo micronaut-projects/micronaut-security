@@ -34,6 +34,7 @@ import java.util.List;
 /**
  * Abstract class for common methods for JWT validation.
  * @param <R> Request
+ * @since 4.8.0
  */
 abstract class AbstractJsonWebTokenValidator<R> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJsonWebTokenValidator.class);
