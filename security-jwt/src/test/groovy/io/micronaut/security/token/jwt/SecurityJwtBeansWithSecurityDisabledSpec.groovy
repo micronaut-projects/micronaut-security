@@ -25,7 +25,8 @@ import io.micronaut.security.token.jwt.signature.ec.ECSignatureFactory
 import io.micronaut.security.token.jwt.signature.ec.ECSignatureGeneratorFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorFactory
-
+import io.micronaut.security.token.jwt.validator.JsonWebTokenValidator
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.security.token.render.BearerTokenRenderer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -47,7 +48,7 @@ class SecurityJwtBeansWithSecurityDisabledSpec extends Specification {
         embeddedServer.applicationContext.getBean(clazz)
 
         then:
-        def e = thrown(NoSuchBeanException)
+        NoSuchBeanException e = thrown()
         e.message.contains('No bean of type ['+clazz.name+'] exists.')
 
         where:
@@ -75,7 +76,8 @@ class SecurityJwtBeansWithSecurityDisabledSpec extends Specification {
                 ECSignatureGeneratorFactory,
                 RSASignatureFactory,
                 RSASignatureGeneratorFactory,
-                JwtTokenValidator,
+                JsonWebTokenValidator,
+                ReactiveJsonWebTokenValidator,
         ]
 
         description = clazz.name
