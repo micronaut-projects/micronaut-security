@@ -67,10 +67,8 @@ public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements Rea
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
-        return Flux.from(
-                        tokenEndpointClient.sendRequest(context))
-                .switchMap(response -> Flux.from(authenticationMapper.createAuthenticationResponse(response, null))
-                        .map(AuthenticationResponse.class::cast));
+        return Flux.from(tokenEndpointClient.sendRequest(context))
+                   .flatMap(response -> Flux.from(authenticationMapper.createAuthenticationResponse(response, null)));
     }
 
     /**
