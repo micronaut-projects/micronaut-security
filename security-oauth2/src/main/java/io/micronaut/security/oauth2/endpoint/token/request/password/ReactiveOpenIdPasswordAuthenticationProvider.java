@@ -31,6 +31,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
@@ -79,19 +80,19 @@ public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements Re
     @Override
     public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
-        return Mono.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
-                .flatMap(openIdTokenResponse ->
-                        Mono.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null))
-                                .flatMap(jwt -> {
-                                    try {
-                                        OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
-                                        return Mono.from(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, null));
-                                    } catch (ParseException e) {
-                                        // Should never happen as validation succeeded
-                                        return Mono.error(e);
-                                    }
-                                })
-                );
+        return Flux.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
+                   .flatMap(openIdTokenResponse ->
+                                Flux.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null))
+                                    .flatMap(jwt -> {
+                                        try {
+                                            OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
+                                            return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, null);
+                                        } catch (ParseException e) {
+                                            // Should never happen as validation succeeded
+                                            return Flux.error(e);
+                                        }
+                                    })
+                   );
     }
 
     /**
