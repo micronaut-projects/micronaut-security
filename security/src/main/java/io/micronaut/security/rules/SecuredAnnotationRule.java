@@ -70,8 +70,8 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
-            if (methodRoute.hasAnnotation(Secured.class)) {
-                AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
+            AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
+            if (securedAnnotation != null) {
                 if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
                     boolean[] arr = securedAnnotation.booleanValues();
                     if (arr.length > 0) {
