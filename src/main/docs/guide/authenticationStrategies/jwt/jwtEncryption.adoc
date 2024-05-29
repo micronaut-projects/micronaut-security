@@ -13,3 +13,6 @@ link:{api}/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionFactory.htm
 https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
 
 Use `generator` as the `@Named` qualifier if you want to use encryption configuration in the tokens your app generates.
+
+The API link:{api}/io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html[JsonWebTokenEncryption] allows you to decrypt an encrypted token.
+

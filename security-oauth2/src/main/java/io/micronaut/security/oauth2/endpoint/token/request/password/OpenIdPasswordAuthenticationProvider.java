@@ -45,7 +45,9 @@ import java.util.stream.Collectors;
  * @author James Kleeh
  * @since 1.2.0
  * @param <T> Request Context Type
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOpenIdPasswordAuthenticationProvider} instead.
  */
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;
@@ -82,21 +84,21 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flux.from(
-                tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
-            .switchMap(response -> {
-                Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                if (jwt.isPresent()) {
-                    try {
-                        OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                        return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
-                    } catch (ParseException e) {
-                        // Should never happen as validation succeeded
-                        return Flux.error(e);
+                        tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
+                .switchMap(response -> {
+                    Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
+                    if (jwt.isPresent()) {
+                        try {
+                            OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+                            return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
+                        } catch (ParseException e) {
+                            // Should never happen as validation succeeded
+                            return Flux.error(e);
+                        }
+                    } else {
+                        return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
                     }
-                } else {
-                    return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
-                }
-            });
+                });
 
     }
 
@@ -111,9 +113,9 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
         List<AuthenticationMethod> authenticationMethods = null;
         if (authMethodsSupported != null) {
             authenticationMethods = authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList());
+                    .map(String::toUpperCase)
+                    .map(AuthenticationMethod::valueOf)
+                    .collect(Collectors.toList());
         }
         return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
     }

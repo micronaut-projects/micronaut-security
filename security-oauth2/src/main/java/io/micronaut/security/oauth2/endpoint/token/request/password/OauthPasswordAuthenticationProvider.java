@@ -38,7 +38,9 @@ import reactor.core.publisher.Flux;
  * @author Sergio del Amo
  * @since 1.2.0
  * @param <T> Request Context Type
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOauthPasswordAuthenticationProvider} instead.
  */
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;

@@ -26,12 +26,11 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -121,7 +120,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         accessRefreshToken.accessToken != originalAccessToken
 
         when:
-        TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
+        ReactiveJsonWebTokenValidator tokenValidator = applicationContext.getBean(ReactiveJsonWebTokenValidator.class)
         Map<String, Object> newAccessTokenClaims = Flux.from(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockFirst().getAttributes()
         Map<String, Object> originalAccessTokenClaims = Flux.from(tokenValidator.validateToken(originalAccessToken, null)).blockFirst().getAttributes()
         List<String> expectedClaims = [Claims.SUBJECT,

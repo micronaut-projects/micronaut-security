@@ -38,11 +38,13 @@ authenticationStrategies:
       title: Reading JWT Token
       bearerToken: Bearer Token Reader
       cookieToken: Cookie Token Reader
+    jwtParser: JWT Parser
     jwtValidation:
       title: JWT Signature Validation
       jwks:
         title: Remote JWKS
         staticJwks: Local JWKS
+    jsonWebTokenValidator: JWT Validation
     jwtGenerator:
       title: JWT Token Generation
       jwtGeneratorSignature: Signed JWT Generation
