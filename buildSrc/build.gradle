@@ -7,5 +7,5 @@ repositories {
 }
 
 dependencies {
-    implementation "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.10.1"
+    implementation "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.10.2"
 }
