@@ -2,7 +2,7 @@
 managed-nimbus-jose-jwt = "9.37.3"
 managed-jjwt = "0.12.5"
 
-micronaut = "4.4.8"
+micronaut = "4.4.10"
 micronaut-platform = "4.4.2"
 micronaut-docs = "2.0.0"
 
