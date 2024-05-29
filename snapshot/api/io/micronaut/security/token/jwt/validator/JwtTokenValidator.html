@@ -84,10 +84,14 @@ loadScripts(document, 'script');</script>
 <dd><code>io.micronaut.core.order.Ordered</code>, <code><a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.8.0",
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">JwtTokenValidator&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../../validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&lt;T&gt;</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>ReactiveJsonWebTokenValidator</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.0</dd>
@@ -114,10 +118,14 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected final <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a></code></div>
 <div class="col-second even-row-color"><code><a href="#jwtAuthenticationFactory" class="member-name-link">jwtAuthenticationFactory</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected final <a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#validator" class="member-name-link">validator</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-io.micronaut.core.order.Ordered">Fields inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
@@ -142,7 +150,9 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.validator.JwtValidator,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory,reactor.core.scheduler.Scheduler)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
  reactor.core.scheduler.Scheduler&nbsp;scheduler)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,java.util.Collection,io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory)" class="member-name-link">JwtTokenValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a>&gt;&nbsp;signatureConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a>&gt;&nbsp;encryptionConfigurations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">GenericJwtClaimsValidator</a>&gt;&nbsp;genericJwtClaimsValidators,
@@ -158,6 +168,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService)</code></div>
 <div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Constructor.</div>
 </div>
 </div>
@@ -168,16 +179,17 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateToken(java.lang.String,T)" class="member-name-link">validateToken</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>org.reactivestreams.Publisher&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#validateToken(java.lang.String,T)" class="member-name-link">validateToken</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
  <a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&nbsp;request)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Validates the provided token and returns the authentication state.</div>
 </div>
 </div>
@@ -204,12 +216,14 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <section class="detail" id="jwtAuthenticationFactory">
 <h3>jwtAuthenticationFactory</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a></span>&nbsp;<span class="element-name">jwtAuthenticationFactory</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="validator">
 <h3>validator</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</span>&nbsp;<span class="element-name">validator</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </section>
 </li>
 </ul>
@@ -230,6 +244,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
  @Named("blocking")
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Constructor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -284,6 +299,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwtTokenValidator</span><wbr><span class="parameters">(<a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;&nbsp;validator,
  <a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a>&nbsp;jwtAuthenticationFactory,
  reactor.core.scheduler.Scheduler&nbsp;scheduler)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>validator</code> - Validates the JWT</dd>
@@ -306,6 +322,7 @@ implements <a href="../../validator/TokenValidator.html" title="interface in io.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;<a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</span>&nbsp;<span class="element-name">validateToken</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token,
  @Nullable
  <a href="JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&nbsp;request)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../validator/TokenValidator.html#validateToken(java.lang.String,T)">TokenValidator</a></code></span></div>
 <div class="block">Validates the provided token and returns the authentication state.</div>
 <dl class="notes">

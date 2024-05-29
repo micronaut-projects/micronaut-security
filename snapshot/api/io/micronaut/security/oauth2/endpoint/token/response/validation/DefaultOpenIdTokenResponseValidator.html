@@ -80,10 +80,14 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Singleton
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.8.0",
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultOpenIdTokenResponseValidator</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <code>DefaultReactiveOpenIdTokenResponseValidator</code> instead</div>
+</div>
 <div class="block">Default implementation of <a href="OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><code>OpenIdTokenResponseValidator</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -107,7 +111,9 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  @Nullable <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 </div>
 </section>
 </li>
@@ -116,31 +122,39 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../../../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jwksSignatureForOpenIdProviderMetadata(io.micronaut.security.oauth2.client.OpenIdProviderMetadata)" class="member-name-link">jwksSignatureForOpenIdProviderMetadata</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parseJwtWithValidSignature(io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)" class="member-name-link">parseJwtWithValidSignature</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected <a href="../../../../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#jwksSignatureForOpenIdProviderMetadata(io.micronaut.security.oauth2.client.OpenIdProviderMetadata)" class="member-name-link">jwksSignatureForOpenIdProviderMetadata</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#parseJwtWithValidSignature(io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)" class="member-name-link">parseJwtWithValidSignature</a><wbr>(@NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @NonNull <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)" class="member-name-link">validate</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)" class="member-name-link">validate</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validateClaims(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,com.nimbusds.jwt.JWT,java.lang.String)" class="member-name-link">validateClaims</a><wbr>(@NonNull <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#validateClaims(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,com.nimbusds.jwt.JWT,java.lang.String)" class="member-name-link">validateClaims</a><wbr>(@NonNull <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @NonNull com.nimbusds.jwt.JWT&nbsp;jwt,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 </div>
 </div>
 </div>
@@ -167,6 +181,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  @Nullable <a href="NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a>&nbsp;nonceClaimValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../../../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>idTokenValidators</code> - OpenID JWT claim validators</dd>
@@ -193,6 +208,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
  @Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="OpenIdTokenResponseValidator.html#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)">validate</a></code>&nbsp;in interface&nbsp;<code><a href="OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></code></dd>
@@ -218,6 +234,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  @NonNull com.nimbusds.jwt.JWT&nbsp;jwt,
  @Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clientConfiguration</code> - The OAuth 2.0 client configuration</dd>
@@ -237,6 +254,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
  @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  @NonNull
  @NonNull <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>openIdProviderMetadata</code> - The OpenID provider metadata</dd>
@@ -252,6 +270,7 @@ implements <a href="OpenIdTokenResponseValidator.html" title="interface in io.mi
 <h3>jwksSignatureForOpenIdProviderMetadata</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../../../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></span>&nbsp;<span class="element-name">jwksSignatureForOpenIdProviderMetadata</span><wbr><span class="parameters">(@NonNull
  @NonNull <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>openIdProviderMetadata</code> - The OpenID provider metadata</dd>

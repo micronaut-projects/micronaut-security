@@ -78,7 +78,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@DefaultImplementation(<a href="DefaultOpenIdTokenResponseValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">DefaultOpenIdTokenResponseValidator.class</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.8.0",
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
 </span><span class="modifiers">public interface </span><span class="element-name type-name-label">OpenIdTokenResponseValidator</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="ReactiveOpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><code>ReactiveOpenIdTokenResponseValidator</code></a> instead.</div>
+</div>
 <div class="block">Validates an OpenID token response.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -94,18 +99,20 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)" class="member-name-link">validate</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.nimbusds.jwt.JWT&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#validate(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,java.lang.String)" class="member-name-link">validate</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
  <a href="../../../../client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 </div>
 </div>
 </div>
@@ -128,6 +135,7 @@ loadScripts(document, 'script');</script>
  <a href="../OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;openIdTokenResponse,
  @Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nonce)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clientConfiguration</code> - The OAuth 2.0 client configuration</dd>

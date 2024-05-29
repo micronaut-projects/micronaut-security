@@ -80,12 +80,15 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a></code>, <code><a href="../SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@EachBean(<a href="JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration.class</a>)
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.8.0",
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">JwksSignature</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a>, <a href="../SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a></span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Not used. <a href="../../nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus"><code>ReactiveJwksSignature</code></a> used instead.</div>
+</div>
 <div class="block">Signature configuration which enables verification of remote JSON Web Key Set.
-
  A bean of this class is created for each <a href="JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -107,7 +110,9 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)" class="member-name-link">JwksSignature</a><wbr>(<a href="JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a>&nbsp;jwksSignatureConfiguration,
  <a href="JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
 </div>
 </section>
 </li>
@@ -122,24 +127,32 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Clears the JWK Set cache.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKeyIds()" class="member-name-link">getKeyIds</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isExpired()" class="member-name-link">isExpired</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPresent()" class="member-name-link">isPresent</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @Nullable com.nimbusds.jose.jwk.JWKSet</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadJwkSet(java.lang.String,java.lang.String)" class="member-name-link">loadJwkSet</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getKeyIds()" class="member-name-link">getKeyIds</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#isExpired()" class="member-name-link">isExpired</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#isPresent()" class="member-name-link">isPresent</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected @Nullable com.nimbusds.jose.jwk.JWKSet</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#loadJwkSet(java.lang.String,java.lang.String)" class="member-name-link">loadJwkSet</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Instantiates a JWKSet for a given url.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected @Nullable com.nimbusds.jose.jwk.JWKSet</code></div>
@@ -157,23 +170,28 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="deprecation-comment">Use <a href="JwksSignatureUtils.html#matches(com.nimbusds.jwt.SignedJWT,com.nimbusds.jose.jwk.JWKSet,com.nimbusds.jose.jwk.KeyType)"><code>JwksSignatureUtils.matches(SignedJWT, JWKSet, KeyType)</code></a> instead.</div>
 </div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#supportedAlgorithmsMessage()" class="member-name-link">supportedAlgorithmsMessage</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#supports(com.nimbusds.jose.JWSAlgorithm)" class="member-name-link">supports</a><wbr>(com.nimbusds.jose.JWSAlgorithm&nbsp;algorithm)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#supportedAlgorithmsMessage()" class="member-name-link">supportedAlgorithmsMessage</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#supports(com.nimbusds.jose.JWSAlgorithm)" class="member-name-link">supports</a><wbr>(com.nimbusds.jose.JWSAlgorithm&nbsp;algorithm)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Whether this signature configuration supports this algorithm.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#verify(com.nimbusds.jwt.SignedJWT)" class="member-name-link">verify</a><wbr>(com.nimbusds.jwt.SignedJWT&nbsp;jwt)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#verify(com.nimbusds.jwt.SignedJWT)" class="member-name-link">verify</a><wbr>(com.nimbusds.jwt.SignedJWT&nbsp;jwt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Verify a signed JWT.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#verify(java.util.List,com.nimbusds.jwt.SignedJWT)" class="member-name-link">verify</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.nimbusds.jose.jwk.JWK&gt;&nbsp;matches,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#verify(java.util.List,com.nimbusds.jwt.SignedJWT)" class="member-name-link">verify</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.nimbusds.jose.jwk.JWK&gt;&nbsp;matches,
  com.nimbusds.jwt.SignedJWT&nbsp;jwt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">returns true if any JWK match is able to verify the JWT signature.</div>
 </div>
 </div>
@@ -199,6 +217,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwksSignature</span><wbr><span class="parameters">(<a href="JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a>&nbsp;jwksSignatureConfiguration,
  <a href="JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>jwksSignatureConfiguration</code> - JSON Web Key Set configuration.</dd>
@@ -219,6 +238,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="isExpired()">
 <h3>isExpired</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isExpired</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwksCache.html#isExpired()">isExpired</a></code>&nbsp;in interface&nbsp;<code><a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a></code></dd>
@@ -231,6 +251,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="clear()">
 <h3>clear</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="JwksCache.html#clear()">JwksCache</a></code></span></div>
 <div class="block">Clears the JWK Set cache.</div>
 <dl class="notes">
@@ -243,6 +264,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="isPresent()">
 <h3>isPresent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPresent</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwksCache.html#isPresent()">isPresent</a></code>&nbsp;in interface&nbsp;<code><a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a></code></dd>
@@ -256,6 +278,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <h3>getKeyIds</h3>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">getKeyIds</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="JwksCache.html#getKeyIds()">getKeyIds</a></code>&nbsp;in interface&nbsp;<code><a href="JwksCache.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksCache</a></code></dd>
@@ -266,6 +289,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="supportedAlgorithmsMessage()">
 <h3>supportedAlgorithmsMessage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">supportedAlgorithmsMessage</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../SignatureConfiguration.html#supportedAlgorithmsMessage()">supportedAlgorithmsMessage</a></code>&nbsp;in interface&nbsp;<code><a href="../SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">SignatureConfiguration</a></code></dd>
@@ -278,6 +302,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <section class="detail" id="supports(com.nimbusds.jose.JWSAlgorithm)">
 <h3>supports</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supports</span><wbr><span class="parameters">(com.nimbusds.jose.JWSAlgorithm&nbsp;algorithm)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Whether this signature configuration supports this algorithm.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -294,6 +319,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <h3>verify</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">verify</span><wbr><span class="parameters">(com.nimbusds.jwt.SignedJWT&nbsp;jwt)</span>
                throws <span class="exceptions">com.nimbusds.jose.JOSEException</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Verify a signed JWT.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -333,6 +359,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 </span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@Nullable com.nimbusds.jose.jwk.JWKSet</span>&nbsp;<span class="element-name">loadJwkSet</span><wbr><span class="parameters">(@Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Instantiates a JWKSet for a given url.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -368,6 +395,7 @@ implements <a href="JwksCache.html" title="interface in io.micronaut.security.to
 <h3>verify</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">verify</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.nimbusds.jose.jwk.JWK&gt;&nbsp;matches,
  com.nimbusds.jwt.SignedJWT&nbsp;jwt)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">returns true if any JWK match is able to verify the JWT signature.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

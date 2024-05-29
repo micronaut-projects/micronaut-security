@@ -71,6 +71,7 @@ io.micronaut.security.token.jwt.encryption.secret
 io.micronaut.security.token.jwt.endpoints
 io.micronaut.security.token.jwt.generator
 io.micronaut.security.token.jwt.generator.claims
+io.micronaut.security.token.jwt.nimbus
 io.micronaut.security.token.jwt.signature
 io.micronaut.security.token.jwt.signature.ec
 io.micronaut.security.token.jwt.signature.jwks

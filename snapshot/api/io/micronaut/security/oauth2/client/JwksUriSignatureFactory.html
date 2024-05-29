@@ -80,7 +80,7 @@ loadScripts(document, 'script');</script>
 @Internal
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">JwksUriSignatureFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Factory to create <a href="../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignature</code></a> beans for the <a href="OpenIdProviderMetadata.html#getJwksUri()"><code>OpenIdProviderMetadata.getJwksUri()</code></a> of OpenID clients.</div>
+<div class="block">Factory to create <a href="../../token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus"><code>ReactiveJwksSignature</code></a> beans for the <a href="OpenIdProviderMetadata.html#getJwksUri()"><code>OpenIdProviderMetadata.getJwksUri()</code></a> of OpenID clients.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.3.0</dd>
@@ -114,11 +114,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createJwksUriSignature(io.micronaut.context.BeanProvider,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)" class="member-name-link">createJwksUriSignature</a><wbr>(io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createJwksSignatureConfiguration(io.micronaut.context.BeanProvider)" class="member-name-link">createJwksSignatureConfiguration</a><wbr>(io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus">ReactiveJwksSignature</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createJwksUriSignature(io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)" class="member-name-link">createJwksUriSignature</a><wbr>(<a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a>&nbsp;jwksSignatureConfiguration,
  <a href="../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -151,22 +154,34 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createJwksUriSignature(io.micronaut.context.BeanProvider,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)">
+<section class="detail" id="createJwksUriSignature(io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration,io.micronaut.security.token.jwt.signature.jwks.JwkValidator,io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher)">
 <h3>createJwksUriSignature</h3>
-<div class="member-signature"><span class="annotations">@Requires(property="micronaut.security.authentication",
-          value="idtoken")
-@EachBean(<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.class</a>)
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></span>&nbsp;<span class="element-name">createJwksUriSignature</span><wbr><span class="parameters">(@Parameter
- io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+<div class="member-signature"><span class="annotations">@EachBean(<a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration.class</a>)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus">ReactiveJwksSignature</a></span>&nbsp;<span class="element-name">createJwksUriSignature</span><wbr><span class="parameters">(@Parameter
+ <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a>&nbsp;jwksSignatureConfiguration,
  <a href="../../token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;jwkValidator,
  <a href="../../token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a>&lt;com.nimbusds.jose.jwk.JWKSet&gt;&nbsp;jwkSetFetcher)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>openIdProviderMetadata</code> - The open id provider metadata</dd>
+<dd><code>jwksSignatureConfiguration</code> - JWKS Configuration</dd>
 <dd><code>jwkValidator</code> - JWK Validator</dd>
 <dd><code>jwkSetFetcher</code> - Json Web Key Set Fetcher</dd>
 <dt>Returns:</dt>
-<dd>a <a href="../../token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignature</code></a> pointed to the jwks_uri exposed via OpenID configuration</dd>
+<dd>a <a href="../../token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus"><code>ReactiveJwksSignature</code></a> for the <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createJwksSignatureConfiguration(io.micronaut.context.BeanProvider)">
+<h3>createJwksSignatureConfiguration</h3>
+<div class="member-signature"><span class="annotations">@EachBean(<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.class</a>)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></span>&nbsp;<span class="element-name">createJwksSignatureConfiguration</span><wbr><span class="parameters">(@Parameter
+ io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>openIdProviderMetadata</code> - The open id provider metadata</dd>
+<dt>Returns:</dt>
+<dd>a <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a> pointed to the jwks_uri exposed via OpenID configuration</dd>
 </dl>
 </section>
 </li>

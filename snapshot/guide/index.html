@@ -173,31 +173,35 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-cookieToken"><a href="#cookieToken"><strong>10.3.1.2</strong><span>Cookie Token Reader</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtValidation"><a href="#jwtValidation"><strong>10.3.2</strong><span>JWT Signature Validation</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtParser"><a href="#jwtParser"><strong>10.3.2</strong><span>JWT Parser</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwks"><a href="#jwks"><strong>10.3.2.1</strong><span>Remote JWKS</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtValidation"><a href="#jwtValidation"><strong>10.3.3</strong><span>JWT Signature Validation</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-staticJwks"><a href="#staticJwks"><strong>10.3.2.1.1</strong><span>Local JWKS</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwks"><a href="#jwks"><strong>10.3.3.1</strong><span>Remote JWKS</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtGenerator"><a href="#jwtGenerator"><strong>10.3.3</strong><span>JWT Token Generation</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-staticJwks"><a href="#staticJwks"><strong>10.3.3.1.1</strong><span>Local JWKS</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorSignature"><a href="#jwtGeneratorSignature"><strong>10.3.3.1</strong><span>Signed JWT Generation</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jsonWebTokenValidator"><a href="#jsonWebTokenValidator"><strong>10.3.4</strong><span>JWT Validation</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorSecret"><a href="#jwtGeneratorSecret"><strong>10.3.3.2</strong><span>Example of JWT Signed with Secret</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtGenerator"><a href="#jwtGenerator"><strong>10.3.5</strong><span>JWT Token Generation</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorRSA"><a href="#jwtGeneratorRSA"><strong>10.3.3.3</strong><span>Example of JWT Signed with RSA</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorSignature"><a href="#jwtGeneratorSignature"><strong>10.3.5.1</strong><span>Signed JWT Generation</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtEncryption"><a href="#jwtEncryption"><strong>10.3.4</strong><span>JWT Encryption</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorSecret"><a href="#jwtGeneratorSecret"><strong>10.3.5.2</strong><span>Example of JWT Signed with Secret</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorEncryption"><a href="#jwtGeneratorEncryption"><strong>10.3.4.1</strong><span>Example of JWT Signed with Secret and Encrypted with RSA</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorRSA"><a href="#jwtGeneratorRSA"><strong>10.3.5.3</strong><span>Example of JWT Signed with RSA</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-claimsGeneration"><a href="#claimsGeneration"><strong>10.3.5</strong><span>Claims Generation</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtEncryption"><a href="#jwtEncryption"><strong>10.3.6</strong><span>JWT Encryption</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-claimsValidation"><a href="#claimsValidation"><strong>10.3.6</strong><span>Claims Validation</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorEncryption"><a href="#jwtGeneratorEncryption"><strong>10.3.6.1</strong><span>Example of JWT Signed with Secret and Encrypted with RSA</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-render"><a href="#render"><strong>10.3.7</strong><span>Token Render</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-claimsGeneration"><a href="#claimsGeneration"><strong>10.3.7</strong><span>Claims Generation</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtGuides"><a href="#jwtGuides"><strong>10.3.8</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-claimsValidation"><a href="#claimsValidation"><strong>10.3.8</strong><span>Claims Validation</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-render"><a href="#render"><strong>10.3.9</strong><span>Token Render</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-jwtGuides"><a href="#jwtGuides"><strong>10.3.10</strong><span>Guides</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-ldap"><a href="#ldap"><strong>10.4</strong><span>LDAP Authentication</span></a></div>
         
@@ -3207,7 +3211,21 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 </table>
 </div>
 
-<h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>10.3.2 JWT Signature Validation</h2>
+<h2 id="jwtParser"><a class="anchor" href="#jwtParser"></a>10.3.2 JWT Parser</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtParser.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can inject a bean of type The <a href="../api/io/micronaut/security/token/jwt/validator/JsonWebTokenParser.html">JsonWebTokenParser</a> to parse a JWT token.
+The parser decrypts the token if encrypted.</p>
+</div>
+
+<h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>10.3.3 JWT Signature Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
@@ -3224,17 +3242,30 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <p>Micronaut&#8217;s JWT validation supports multiple signature configurations. Thus, you can validate JSON Web tokens signed by different issuers in the same application.</p>
 </div>
 <div class="paragraph">
-<p>To verify the signature of JWT tokens, you need beans of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a>.</p>
+<p>To verify the signature of JWT tokens, you need beans of type
+<a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a> or <a href="../api/io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html">ReactiveSignatureConfiguration</a></p>
 </div>
 <div class="paragraph">
 <p>The easiest way is to create a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a> is to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html">RSASignatureConfiguration</a>,
 <a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>, or
-<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> which must be <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">qualified</a> with <code>@Named</code> since the configuration beans are used by factories (<a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html">RSASignatureFactory</a>,
-<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureFactory</a>) or other beans (<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html">SecretSignature</a>)  which use
+<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> which must be <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">qualified</a> with <code>@Named</code> since the configuration beans are used by factories (<a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html/.html">html</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>) or other beans (<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html">SecretSignature</a>)  which use
 <a href="https://docs.micronaut.io/latest/guide/index.html#eachBean">@EachBean</a> to drive configuration.</p>
 </div>
+<div class="paragraph">
+<p>The APIs
+<a href="../api/io/micronaut/security/token/jwt/validator/JsonWebTokenSignatureValidator.html">JsonWebTokenSignatureValidator</a>,
+and <a href="../api/io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenSignatureValidator.html">ReactiveJsonWebTokenSignatureValidator</a>
+allows you to validate the signature of a JWT token.</p>
+</div>
+<div class="paragraph">
+<p><code>ReactiveJsonWebTokenSignatureValidator</code> validates the signature using both <a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a> or <a href="../api/io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html">ReactiveSignatureConfiguration</a>.</p>
+</div>
+<div class="paragraph">
+<p><code>JsonWebTokenSignatureValidator</code> validates the signature using beans of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a>.</p>
+</div>
 
-<h2 id="jwks"><a class="anchor" href="#jwks"></a>10.3.2.1 Remote JWKS</h2>
+<h2 id="jwks"><a class="anchor" href="#jwks"></a>10.3.3.1 Remote JWKS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
@@ -3344,7 +3375,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 </div>
 </div>
 <div class="paragraph">
-<p>The previous snippet creates a <a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html">JwksSignature</a> bean with a <code>awscognito</code> name qualifier.</p>
+<p>The previous snippet creates a <a href="../api/io/micronaut/security/token/jwt/signature/jwks/ReactiveJwksSignature.html">ReactiveJwksSignature</a> bean with a <code>awscognito</code> name qualifier.</p>
 </div>
 <div class="paragraph">
 <p>If you have the <a href="https://docs.micronaut.io/latest/guide/#httpClient">Micronaut HTTP Client</a> on the classpath, then it will be used to retrieve the remote JWK Set. This allows for the configuration settings of the HTTP Client to be applied when fetching the resource. If a named service-specific client exists and the name of the service matches the name of the configured JWKS provider name, then that specific client instance will be used, otherwise a default Http Client instance (with any global configuration settings from <code>micronaut.http.client.*</code> applied) will be used. If the Micronaut HTTP Client is not on the classpath, then the implementation will fall back to the internal resource fetching mechanism of the external JWT library dependency.</p>
@@ -3614,7 +3645,7 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 <p>If you want to expose your own JWK Set, read the <a href="#keys">Keys Controller</a> section.</p>
 </div>
 
-<h2 id="staticJwks"><a class="anchor" href="#staticJwks"></a>10.3.2.1.1 Local JWKS</h2>
+<h2 id="staticJwks"><a class="anchor" href="#staticJwks"></a>10.3.3.1.1 Local JWKS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks/staticJwks.adoc"'>
@@ -3721,7 +3752,41 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 </div>
 </div>
 
-<h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>10.3.3 JWT Token Generation</h2>
+<h2 id="jsonWebTokenValidator"><a class="anchor" href="#jsonWebTokenValidator"></a>10.3.4 JWT Validation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jsonWebTokenValidator.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The APIs <a href="../api/io/micronaut/security/token/jwt/validator/JsonWebTokenValidator.html">JsonWebTokenValidator</a>, and <a href="../api/io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html">ReactiveJsonWebTokenValidator</a> allows you to validate a JWT token.</p>
+</div>
+<div class="paragraph">
+<p>The validation performs the following steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>- Parses the Token (if encrypted, it decrypts).</p>
+</li>
+<li>
+<p>- Validates the Signature</p>
+</li>
+<li>
+<p>- Validates the Claims with beans of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>JsonWebTokenValidator</code>  will not use remote signature configuration. E.g. it will not validate the signature with remote JWKs.
+Only, <a href="../api/io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html">ReactiveJsonWebTokenValidator</a> implements
+<a href="../api/io/micronaut/security/token/validator/TokenValidator.html">TokenValidator</a>.</p>
+</div>
+
+<h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>10.3.5 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
@@ -3760,7 +3825,7 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 </tbody>
 </table>
 
-<h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>10.3.3.1 Signed JWT Generation</h2>
+<h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>10.3.5.1 Signed JWT Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
@@ -3792,7 +3857,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 </table>
 </div>
 
-<h2 id="jwtGeneratorSecret"><a class="anchor" href="#jwtGeneratorSecret"></a>10.3.3.2 Example of JWT Signed with Secret</h2>
+<h2 id="jwtGeneratorSecret"><a class="anchor" href="#jwtGeneratorSecret"></a>10.3.5.2 Example of JWT Signed with Secret</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
@@ -4034,7 +4099,7 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 </ul>
 </div>
 
-<h2 id="jwtGeneratorRSA"><a class="anchor" href="#jwtGeneratorRSA"></a>10.3.3.3 Example of JWT Signed with RSA</h2>
+<h2 id="jwtGeneratorRSA"><a class="anchor" href="#jwtGeneratorRSA"></a>10.3.5.3 Example of JWT Signed with RSA</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
@@ -4071,7 +4136,7 @@ class MySignatureGeneratorConfigurationFactory {
 </table>
 </div>
 
-<h2 id="jwtEncryption"><a class="anchor" href="#jwtEncryption"></a>10.3.4 JWT Encryption</h2>
+<h2 id="jwtEncryption"><a class="anchor" href="#jwtEncryption"></a>10.3.6 JWT Encryption</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
@@ -4102,8 +4167,11 @@ class MySignatureGeneratorConfigurationFactory {
 <div class="paragraph">
 <p>Use <code>generator</code> as the <code>@Named</code> qualifier if you want to use encryption configuration in the tokens your app generates.</p>
 </div>
+<div class="paragraph">
+<p>The API <a href="../api/io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html">JsonWebTokenEncryption</a> allows you to decrypt an encrypted token.</p>
+</div>
 
-<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>10.3.4.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
+<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>10.3.6.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
@@ -4339,7 +4407,7 @@ class KeyPairProvider {
 </div>
 </div>
 
-<h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>10.3.5 Claims Generation</h2>
+<h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>10.3.7 Claims Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
@@ -4354,7 +4422,7 @@ class KeyPairProvider {
 fulfil your needs you can provide your own <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
 </div>
 
-<h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>10.3.6 Claims Validation</h2>
+<h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>10.3.8 Claims Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
@@ -4412,7 +4480,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <p>If you are using <code>micronaut.security.authentication: idtoken</code>, <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>, a bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>, is registered in the bean context as well. <code>IdTokenClaimsValidator</code> validates points 2-5 of the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section of the OpenID Connect Spec. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.openid-idtoken</code> to false.</p>
 </div>
 
-<h2 id="render"><a class="anchor" href="#render"></a>10.3.7 Token Render</h2>
+<h2 id="render"><a class="anchor" href="#render"></a>10.3.9 Token Render</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
@@ -4450,7 +4518,7 @@ Pragma: no-cache
 <p>If you wish to customize the previous JSON payload, you may want to provide a bean replacement for <a href="../api/io/micronaut/security/token/jwt/render/BearerTokenRenderer.html">BearerTokenRenderer</a>. If that is not enough, check the <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a> to accommodate it to your needs.</p>
 </div>
 
-<h2 id="jwtGuides"><a class="anchor" href="#jwtGuides"></a>10.3.8 Guides</h2>
+<h2 id="jwtGuides"><a class="anchor" href="#jwtGuides"></a>10.3.10 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.8.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGuides.adoc"'>

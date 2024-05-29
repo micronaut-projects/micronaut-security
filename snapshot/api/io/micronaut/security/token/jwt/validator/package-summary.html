@@ -106,6 +106,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Validates JWT issuer claim matches a configured value.</div>
 </div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="JsonWebTokenEncryption.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenEncryption</a>&lt;E,<wbr>T&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Decrypts an encrypted token.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="JsonWebTokenParser.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenParser</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">JSON Web Token (JWT) parser.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="JsonWebTokenSignatureValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenSignatureValidator</a>&lt;T&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">API to validate the signature of a JSON Web Token with beans of type <a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>SignatureConfiguration</code></a>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="JsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenValidator</a>&lt;T,<wbr>R&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">JSON Web Token (JWT) validator.</div>
+</div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="JwtAuthenticationFactory.html" title="interface in io.micronaut.security.token.jwt.validator">JwtAuthenticationFactory</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Creates an <a href="../../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> object from a JWT token.</div>
@@ -127,11 +143,12 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>ConfigurationProperties</code> implementation of <a href="JwtClaimsValidatorConfiguration.html" title="interface in io.micronaut.security.token.jwt.validator"><code>JwtClaimsValidatorConfiguration</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a>&lt;T&gt;</div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>ReactiveJsonWebTokenValidator</code></a> instead.</div>
+</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;T&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A builder style class for validating JWT tokens against any number of provided
- encryption or signature configurations and any claim validators.</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="JsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>JsonWebTokenValidator</code></a> or <a href="ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>ReactiveJsonWebTokenValidator</code></a> instead.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JwtValidator.Builder.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator.Builder</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -140,6 +157,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Validate current time is not before the not-before claim of a JWT token.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ReactiveJsonWebTokenSignatureValidator.html" title="interface in io.micronaut.security.token.jwt.validator">ReactiveJsonWebTokenSignatureValidator</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">Reactive API to validate the signature of a JSON Web Token with beans of type <a href="../signature/ReactiveSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>ReactiveSignatureConfiguration</code></a> and <a href="../signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>SignatureConfiguration</code></a>.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator">ReactiveJsonWebTokenValidator</a>&lt;T,<wbr>R&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Reactive JSON Web Token (JWT) validator.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">

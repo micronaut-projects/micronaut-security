@@ -609,8 +609,8 @@ loadScripts(document, 'script');</script>
 <div class="block">AOT Optimizations.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/DefaultOpenIdTokenResponseValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">DefaultOpenIdTokenResponseValidator</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Default implementation of <a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><code>OpenIdTokenResponseValidator</code></a>.</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <code>DefaultReactiveOpenIdTokenResponseValidator</code> instead</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultPkceFactory</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -896,6 +896,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Allows using the <code>RolesAllowed</code> annotation in Micronaut.</div>
 </div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenEncryption</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html" title="type parameter in JsonWebTokenEncryption">E</a>,<wbr><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html" title="type parameter in JsonWebTokenEncryption">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Decrypts an encrypted token.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenParser.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenParser</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JsonWebTokenParser.html" title="type parameter in JsonWebTokenParser">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="block">JSON Web Token (JWT) parser.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenSignatureValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenSignatureValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JsonWebTokenSignatureValidator.html" title="type parameter in JsonWebTokenSignatureValidator">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">API to validate the signature of a JSON Web Token with beans of type <a href="io/micronaut/security/token/jwt/signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>SignatureConfiguration</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JsonWebTokenValidator.html" title="type parameter in JsonWebTokenValidator">T</a>,<wbr><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenValidator.html" title="type parameter in JsonWebTokenValidator">R</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="block">JSON Web Token (JWT) validator.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/claims/JtiGenerator.html" title="interface in io.micronaut.security.token.claims">JtiGenerator</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Generates the "jti" (Token ID) claim, which provides a unique identifier for the token.</div>
@@ -929,8 +945,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Optimization to fetch Json Web Key Set at build time.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Signature configuration which enables verification of remote JSON Web Key Set.</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Not used.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
@@ -946,7 +962,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/JwksUriSignatureFactory.html" title="class in io.micronaut.security.oauth2.client">JwksUriSignatureFactory</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Factory to create <a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignature</code></a> beans for the <a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html#getJwksUri()"><code>OpenIdProviderMetadata.getJwksUri()</code></a> of OpenID clients.</div>
+<div class="block">Factory to create <a href="io/micronaut/security/token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus"><code>ReactiveJwksSignature</code></a> beans for the <a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html#getJwksUri()"><code>OpenIdProviderMetadata.getJwksUri()</code></a> of OpenID clients.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
@@ -1003,11 +1019,12 @@ loadScripts(document, 'script');</script>
 <div class="block">JWT Token Generation.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html" title="type parameter in JwtTokenValidator">T</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>ReactiveJsonWebTokenValidator</code></a> instead.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JwtValidator.html" title="type parameter in JwtValidator">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">A builder style class for validating JWT tokens against any number of provided
- encryption or signature configurations and any claim validators.</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/jwt/validator/JsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>JsonWebTokenValidator</code></a> or <a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><code>ReactiveJsonWebTokenValidator</code></a> instead.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.Builder.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator.Builder</a>&lt;<a href="io/micronaut/security/token/jwt/validator/JwtValidator.Builder.html" title="type parameter in JwtValidator.Builder">T</a>&gt;</div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -1138,349 +1155,381 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Represents a mutable state object.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/nimbus/NimbusReactiveSignatureConfigurationAdapter.html" title="class in io.micronaut.security.token.jwt.nimbus">NimbusReactiveSignatureConfigurationAdapter</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Adapts from <a href="io/micronaut/security/token/jwt/signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>SignatureConfiguration</code></a> to <a href="io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>ReactiveSignatureConfiguration</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Responsible for validating the nonce claim.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce">NonceConfiguration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce">NonceConfiguration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration options for nonce validation.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce">NonceFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce">NonceFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Generates a nonce.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence">NoncePersistence</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Persists the nonce for later retrieval necessary for validation.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="type parameter in NotBeforeJwtClaimsValidator">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Validate current time is not before the not-before claim of a JWT token.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A contract for mapping an OAuth 2.0 token endpoint response to a <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> object.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration for Authorization Endpoint Configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OauthAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OauthAuthorizationRequest</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OauthAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OauthAuthorizationRequest</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A marker contract to denote a given authorization request is
  not part of the OpenID standard.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OauthAuthorizationResponse</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OauthAuthorizationResponse</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A marker interface for normal OAuth 2.0 authorization responses.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OauthAuthorizationResponseHandler</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OauthAuthorizationResponseHandler</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for handling the authorization callback response
  from an OAuth 2.0 provider.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OauthClient.html" title="interface in io.micronaut.security.oauth2.client">OauthClient</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OauthClient.html" title="interface in io.micronaut.security.oauth2.client">OauthClient</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A contract for an OAuth 2.0 client.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientCondition</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientCondition</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Condition to create an <a href="io/micronaut/security/oauth2/client/OauthClient.html" title="interface in io.micronaut.security.oauth2.client"><code>OauthClient</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">OAuth 2.0 client configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stores configuration of each configured OAuth 2.0 client.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">OAuth 2.0 authorization endpoint configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Client credentials configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Client credentials http header token propagation configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Introspection endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">OpenID client configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Authorization endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">End session endpoint configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Registration endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Token endpoint configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">User info endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Revocation endpoint configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.TokenEndpointConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.TokenEndpointConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">OAuth 2.0 token endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthCodeTokenRequestContext</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthCodeTokenRequestContext</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A token request context for sending an authorization
  code grant request to an OAuth 2.0 provider.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OauthConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthConfiguration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OauthConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthConfiguration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">OAuth 2.0 Configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block"><code>ConfigurationProperties</code> implementation of <a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration"><code>OauthClientConfiguration</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">OpenID configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Claims configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Claims Validator configuration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">End session configuration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/endpoints/OauthController.html" title="class in io.micronaut.security.endpoints">OauthController</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/endpoints/OauthController.html" title="class in io.micronaut.security.endpoints">OauthController</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A controller that handles token refresh.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/routes/OauthController.html" title="interface in io.micronaut.security.oauth2.routes">OauthController</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/routes/OauthController.html" title="interface in io.micronaut.security.oauth2.routes">OauthController</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for OAuth 2.0 authorization redirect, authorization
  callback, and end session redirects.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/endpoints/OauthControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">OauthControllerConfiguration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/endpoints/OauthControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">OauthControllerConfiguration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Encapsulates the configuration of <a href="io/micronaut/security/endpoints/OauthController.html" title="class in io.micronaut.security.endpoints"><code>OauthController</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">OauthControllerConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">OauthControllerConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configures the provided <a href="io/micronaut/security/endpoints/OauthController.html" title="class in io.micronaut.security.endpoints"><code>OauthController</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors">OauthErrorResponseException</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab5">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors">OauthErrorResponseException</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab5">
 <div class="block">An Runtime exception which implements <a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors"><code>ErrorResponse</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/errors/OauthErrorResponseExceptionHandler.html" title="class in io.micronaut.security.errors">OauthErrorResponseExceptionHandler</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/errors/OauthErrorResponseExceptionHandler.html" title="class in io.micronaut.security.errors">OauthErrorResponseExceptionHandler</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Returns an application/json response for a <a href="io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors"><code>OauthErrorResponseException</code></a> with status 400.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="type parameter in OauthPasswordAuthenticationProvider">T</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">An <a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a> that delegates to an OAuth 2.0 provider using the
- password grant flow.</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="type parameter in OauthPasswordAuthenticationProvider">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password"><code>ReactiveOauthPasswordAuthenticationProvider</code></a> instead.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthPasswordTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthPasswordTokenRequestContext</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthPasswordTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthPasswordTokenRequestContext</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A token request context for sending a password grant
  request to an OAuth 2.0 provider.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="type parameter in OauthRouteUrlBuilder">T</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&lt;<a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="type parameter in OauthRouteUrlBuilder">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for building URLs to routes the client will receive.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum class in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum class in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
 <div class="block">A single ASCII error code as described in Obtaining Authorization - Error Response seciton of OAuth 2.0 spec.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Provides specific configuration to logout from Okta.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration for additional claims to be added to the
  resulting JWT created from an OpenID authentication.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for converting an OpenID token response to
  a <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> representing the authenticated user.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">The OpenID extensions to the standard OAuth 2.0 authorization request.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponse</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponse</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">An extension of <a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><code>AuthorizationResponse</code></a> that allows for
  retrieval of the persisted nonce value.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for handling the authorization callback response
  from an OpenID provider.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">ID Token.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClaimsValidationConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClaimsValidationConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration to determine if a claim validation is enabled.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdClaimsValidator</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdClaimsValidator</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">JWT Claims Validator for ID Token.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdClient.html" title="interface in io.micronaut.security.oauth2.client">OpenIdClient</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdClient.html" title="interface in io.micronaut.security.oauth2.client">OpenIdClient</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Extends the <a href="io/micronaut/security/oauth2/client/OauthClient.html" title="interface in io.micronaut.security.oauth2.client"><code>OauthClient</code></a> with OpenID specific functionality.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OpenIdClientCondition</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OpenIdClientCondition</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Condition to create an <a href="io/micronaut/security/oauth2/client/OpenIdClient.html" title="interface in io.micronaut.security.oauth2.client"><code>OpenIdClient</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration for an OpenID client.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdCodeTokenRequestContext</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdCodeTokenRequestContext</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A token request context for sending an authorization
  code grant request to an OpenID provider.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/configuration/OpenIdConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration for OpenID not specific to a client.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OpenIdPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="type parameter in OpenIdPasswordAuthenticationProvider">T</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">An <a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a> that delegates to an OpenID provider using the
- password grant flow.</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OpenIdPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/OpenIdPasswordAuthenticationProvider.html" title="type parameter in OpenIdPasswordAuthenticationProvider">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password"><code>ReactiveOpenIdPasswordAuthenticationProvider</code></a> instead.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdPasswordTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdPasswordTokenRequestContext</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdPasswordTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdPasswordTokenRequestContext</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A token request context for sending a password grant
  request to an OpenID provider.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Metadata describing the configuration of OpenID Providers.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadataFetcher.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadataFetcher</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadataFetcher.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadataFetcher</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Fetches OpenIdProviderMetadata for a <a href="io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration"><code>OpenIdClientConfiguration</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/aot/OpenIdProviderMetadataFetcherCodeGenerator.html" title="class in io.micronaut.security.aot">OpenIdProviderMetadataFetcherCodeGenerator</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/aot/OpenIdProviderMetadataFetcherCodeGenerator.html" title="class in io.micronaut.security.aot">OpenIdProviderMetadataFetcherCodeGenerator</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Optimization to fetch OpenID Configuration at build time.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadataFetcherFactory.html" title="class in io.micronaut.security.oauth2.client">OpenIdProviderMetadataFetcherFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdScope</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadataFetcherFactory.html" title="class in io.micronaut.security.oauth2.client">OpenIdProviderMetadataFetcherFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdScope</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">OpenID Connect scope values.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Id Token Access Token Response.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
-<div class="block">Validates an OpenID token response.</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/validation/ReactiveOpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><code>ReactiveOpenIdTokenResponseValidator</code></a> instead.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Resource Owner Password Credentials Grant.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">PasswordGrantCondition</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">PasswordGrantCondition</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Condition to enable the password grant authentication flow for an OAuth provider.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/PersistableConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint">PersistableConfiguration</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/PersistableConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint">PersistableConfiguration</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Base configuration for persistable endpoints.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Proof Key for Code Exchange.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Proof Key for Code Exchange Challenge.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfiguration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfiguration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Configuration for PKCE.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration properties implementation of PKCE.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceFactory</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceFactory</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">API to Build/Persist a PKCE (Proof Key for Code Exchange).</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Persists the Proof of Key Exchange (PKCE) for later retrieval.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Pkce generator for plain challenge method.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/authentication/PrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication">PrincipalArgumentBinder</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/authentication/PrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication">PrincipalArgumentBinder</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Responsible for binding a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/Principal.html" title="class or interface in java.security" class="external-link"><code>Principal</code></a> to a route argument.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;<a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>,<wbr><a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&lt;<a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">I</a>,<wbr><a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="type parameter in PriorToLoginPersistence">O</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Keep track of state before login.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/Prompt.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">Prompt</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/Prompt.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">Prompt</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">OpenID connect prompt parameter.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/ProviderResolver.html" title="interface in io.micronaut.security.oauth2">ProviderResolver</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/ProviderResolver.html" title="interface in io.micronaut.security.oauth2">ProviderResolver</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Resolves the OAuth 2.0 provider that authenticated the logged in user.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/utils/QualifierUtils.html" title="class in io.micronaut.security.utils">QualifierUtils</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/utils/QualifierUtils.html" title="class in io.micronaut.security.utils">QualifierUtils</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Utility class to get the name qualifier value.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">T</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">I</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">S</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider">ReactiveAuthenticationProvider</a>&lt;<a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">T</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">I</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="type parameter in ReactiveAuthenticationProvider">S</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Defines a reactive authentication provider.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="class in io.micronaut.security.authentication.provider">ReactiveAuthenticationProviderAdapter</a>&lt;<a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">T</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">I</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">S</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="class in io.micronaut.security.authentication.provider">ReactiveAuthenticationProviderAdapter</a>&lt;<a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">T</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">I</a>,<wbr><a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProviderAdapter.html" title="type parameter in ReactiveAuthenticationProviderAdapter">S</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">Deprecated, for removal: This API element is subject to removal in a future version.</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenSignatureValidator.html" title="interface in io.micronaut.security.token.jwt.validator">ReactiveJsonWebTokenSignatureValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenSignatureValidator.html" title="type parameter in ReactiveJsonWebTokenSignatureValidator">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Reactive API to validate the signature of a JSON Web Token with beans of type <a href="io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>ReactiveSignatureConfiguration</code></a> and <a href="io/micronaut/security/token/jwt/signature/SignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature"><code>SignatureConfiguration</code></a>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html" title="interface in io.micronaut.security.token.jwt.validator">ReactiveJsonWebTokenValidator</a>&lt;<a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html" title="type parameter in ReactiveJsonWebTokenValidator">T</a>,<wbr><a href="io/micronaut/security/token/jwt/validator/ReactiveJsonWebTokenValidator.html" title="type parameter in ReactiveJsonWebTokenValidator">R</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Reactive JSON Web Token (JWT) validator.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/token/jwt/nimbus/ReactiveJwksSignature.html" title="class in io.micronaut.security.token.jwt.nimbus">ReactiveJwksSignature</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Signature configuration which enables verification of remote JSON Web Key Set.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">ReactiveOauthPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOauthPasswordAuthenticationProvider.html" title="type parameter in ReactiveOauthPasswordAuthenticationProvider">T</a>,<wbr><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOauthPasswordAuthenticationProvider.html" title="type parameter in ReactiveOauthPasswordAuthenticationProvider">I</a>,<wbr><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOauthPasswordAuthenticationProvider.html" title="type parameter in ReactiveOauthPasswordAuthenticationProvider">S</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">An <a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> that delegates to an OAuth 2.0 provider using the
+ password grant flow.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOpenIdPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">ReactiveOpenIdPasswordAuthenticationProvider</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOpenIdPasswordAuthenticationProvider.html" title="type parameter in ReactiveOpenIdPasswordAuthenticationProvider">T</a>,<wbr><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOpenIdPasswordAuthenticationProvider.html" title="type parameter in ReactiveOpenIdPasswordAuthenticationProvider">I</a>,<wbr><a href="io/micronaut/security/oauth2/endpoint/token/request/password/ReactiveOpenIdPasswordAuthenticationProvider.html" title="type parameter in ReactiveOpenIdPasswordAuthenticationProvider">S</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">An <a href="io/micronaut/security/authentication/provider/ReactiveAuthenticationProvider.html" title="interface in io.micronaut.security.authentication.provider"><code>ReactiveAuthenticationProvider</code></a> that delegates to an OpenID provider using the
+ password grant flow.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/ReactiveOpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">ReactiveOpenIdTokenResponseValidator</a>&lt;<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/ReactiveOpenIdTokenResponseValidator.html" title="type parameter in ReactiveOpenIdTokenResponseValidator">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Validates an OpenID token response.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature">ReactiveSignatureConfiguration</a>&lt;<a href="io/micronaut/security/token/jwt/signature/ReactiveSignatureConfiguration.html" title="type parameter in ReactiveSignatureConfiguration">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Reactive Signature Configuration.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></div>
