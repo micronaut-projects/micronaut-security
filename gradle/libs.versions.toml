@@ -23,7 +23,7 @@ micronaut-servlet = "4.7.0"
 micronaut-session = "4.3.0"
 micronaut-views = "5.1.0"
 micronaut-validation = "4.4.4"
-micronaut-data = "4.7.0"
+micronaut-data = "4.7.1"
 micronaut-sql="5.6.0"
 micronaut-test-resources="2.3.3"
 
