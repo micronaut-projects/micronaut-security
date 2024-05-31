@@ -25,6 +25,7 @@ import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -58,6 +59,10 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
 
     @Override
     public void generate(@NonNull AOTContext context) {
+        ApplicationContext applicationContext = context.getAnalyzer().getApplicationContext();
+        if (!applicationContext.isRunning()) {
+            applicationContext.start();
+        }
         List<GeneratedFile> files = generateJavaFiles(context);
         if (!files.isEmpty()) {
             context.registerStaticOptimization("AotJwksFetcher", DefaultJwkSetFetcher.Optimizations.class, body -> {
