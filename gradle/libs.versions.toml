@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "9.39.3"
+managed-nimbus-jose-jwt = "9.40"
 managed-jjwt = "0.12.6"
 
 micronaut = "4.5.4"
