@@ -5,7 +5,6 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +17,6 @@ class BeansOfTypeReactiveSignatureConfigurationTest {
     @Inject
     List<ReactiveSignatureConfiguration<SignedJWT>> signatures;
 
-    @Disabled("https://github.com/micronaut-projects/micronaut-security/issues/1775")
     @Test
     void testThereIsOnlyOneBeanOfTypeReactiveSignatureConfiguration() {
         assertEquals(1, signatures.size());
