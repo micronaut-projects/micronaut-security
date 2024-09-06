@@ -40,7 +40,10 @@ import java.util.Optional;
  */
 public interface OauthClientConfiguration extends Toggleable {
 
+    @Deprecated(forRemoval = true)
     AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
+
+    String DEFAULT_AUTH_METHOD = "client_secret_post";
 
     /**
      * The default advanced expiration value for client credentials grant.
@@ -122,7 +125,7 @@ public interface OauthClientConfiguration extends Toggleable {
         Optional<SecureEndpointConfiguration> tokenOptional = getToken();
         return new DefaultSecureEndpoint(tokenOptional.flatMap(EndpointConfiguration::getUrl)
                 .orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration")),
-                Collections.singletonList(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthMethod)
-                        .orElse(DEFAULT_AUTHENTICATION_METHOD)));
+                Collections.singletonList(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthenticationMethod)
+                        .orElse(DEFAULT_AUTH_METHOD)));
     }
 }

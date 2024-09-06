@@ -11,11 +11,12 @@ import io.micronaut.security.rules.SecurityRule;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CustomAuthMethodTest {
 
-    @Disabled("https://github.com/micronaut-projects/micronaut-security/issues/1774")
     @Test
     void verifyCustomAuthMethodsAreSupported() {
         EmbeddedServer authserver = ApplicationContext.run(EmbeddedServer.class,
@@ -29,7 +30,7 @@ class CustomAuthMethodTest {
                 ));
         OpenIdProviderMetadata openIdProviderMetadata = server.getApplicationContext().getBean(OpenIdProviderMetadata.class);
         assertNotNull(openIdProviderMetadata);
-        openIdProviderMetadata.getTokenEndpointAuthMethods();
+        assertDoesNotThrow(openIdProviderMetadata::getTokenEndpointAuthMethodsSupported);
         authserver.close();
         server.close();
     }

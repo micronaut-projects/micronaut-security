@@ -30,5 +30,12 @@ public interface SecureEndpointConfiguration extends EndpointConfiguration {
      *
      * @return An optional Authentication Method.
      */
+    @Deprecated(forRemoval = true)
     Optional<AuthenticationMethod> getAuthMethod();
+
+    /**
+     *
+     * @return An optional Authentication Method.
+     */
+    Optional<String> getAuthenticationMethod();
 }

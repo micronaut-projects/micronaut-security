@@ -20,7 +20,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
@@ -83,8 +83,8 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
 
-        List<AuthenticationMethod> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthMethod()
-                .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
+        List<String> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthenticationMethod()
+                .orElse(AuthenticationMethods.CLIENT_SECRET_BASIC));
 
         String url = endpointConfiguration.getUrl().orElseThrow(() ->
             new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));

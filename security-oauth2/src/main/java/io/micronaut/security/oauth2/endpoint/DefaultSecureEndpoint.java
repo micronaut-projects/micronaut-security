@@ -17,6 +17,8 @@ package io.micronaut.security.oauth2.endpoint;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,14 +31,14 @@ import java.util.Optional;
 public class DefaultSecureEndpoint implements SecureEndpoint {
 
     private final String url;
-    private final List<AuthenticationMethod> supportedAuthenticationMethods;
+    private final List<String> supportedAuthenticationMethods;
 
     /**
      * @param url The endpoint URL
      * @param supportedAuthenticationMethods The endpoint authentication methods
      */
     public DefaultSecureEndpoint(@NonNull String url,
-                                 @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
+                                 @Nullable List<String> supportedAuthenticationMethods) {
         this.url = url;
         this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
@@ -48,7 +50,24 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     }
 
     @Override
-    public Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods() {
+    public Optional<List<String>> getAuthenticationMethodsSupported() {
         return Optional.ofNullable(supportedAuthenticationMethods);
+    }
+
+    @Deprecated(forRemoval = true)
+    @Override
+    public Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods() {
+        if (supportedAuthenticationMethods == null) {
+            return Optional.empty();
+        }
+        List<AuthenticationMethod> result  = new ArrayList<>();
+        for (String authMethod : supportedAuthenticationMethods) {
+            try {
+                result.add(AuthenticationMethod.valueOf(authMethod.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                // don't crash for non-existing enum options
+            }
+        }
+        return Optional.of(result);
     }
 }

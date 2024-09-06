@@ -29,5 +29,11 @@ public interface SecureEndpoint extends Endpoint {
     /**
      * @return An optional list of supported authentication methods
      */
+    Optional<List<String>> getAuthenticationMethodsSupported();
+
+    /**
+     * @return An optional list of supported authentication methods
+     */
+    @Deprecated(forRemoval = true)
     Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods();
 }

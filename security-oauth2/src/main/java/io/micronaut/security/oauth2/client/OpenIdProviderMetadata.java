@@ -367,6 +367,7 @@ public interface OpenIdProviderMetadata extends Named {
     String getEndSessionEndpoint();
 
     @NonNull
+    @Deprecated(forRemoval = true)
     default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
         List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
         if (authMethodsSupported == null) {
