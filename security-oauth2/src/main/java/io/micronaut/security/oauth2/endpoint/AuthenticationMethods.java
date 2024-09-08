@@ -23,11 +23,14 @@ package io.micronaut.security.oauth2.endpoint;
  * @author Sergio del Amo
  * @since 4.10.1
  */
-public class AuthenticationMethods {
+public final class AuthenticationMethods {
     public static final String CLIENT_SECRET_POST = "client_secret_post";
     public static final String CLIENT_SECRET_BASIC = "client_secret_basic";
     public static final String CLIENT_SECRET_JWT = "client_secret_jwt";
     public static final String PRIVATE_KEY_JWT = "private_key_jwt";
     public static final String TLS_CLIENT_AUTH = "tls_client_auth";
     public static final String NONE = "none";
+
+    private AuthenticationMethods() {
+    }
 }
