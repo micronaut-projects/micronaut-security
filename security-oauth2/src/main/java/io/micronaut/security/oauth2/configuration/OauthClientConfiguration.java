@@ -24,6 +24,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguratio
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -46,7 +47,7 @@ public interface OauthClientConfiguration extends Toggleable {
     @Deprecated(forRemoval = true)
     AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
 
-    String DEFAULT_AUTH_METHOD = "client_secret_post";
+    String DEFAULT_AUTH_METHOD = AuthenticationMethods.CLIENT_SECRET_POST;
 
     /**
      * The default advanced expiration value for client credentials grant.
