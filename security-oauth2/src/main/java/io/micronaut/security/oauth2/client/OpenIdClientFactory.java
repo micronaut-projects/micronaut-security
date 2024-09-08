@@ -128,11 +128,11 @@ class OpenIdClientFactory {
 
         oauthClientConfiguration.getIntrospection().ifPresent(introspection -> {
             introspection.getUrl().ifPresent(configuration::setIntrospectionEndpoint);
-            introspection.getAuthMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+            introspection.getAuthenticationMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod)));
         });
         oauthClientConfiguration.getRevocation().ifPresent(revocation -> {
             revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
-            revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+            revocation.getAuthenticationMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod)));
         });
         openIdClientConfiguration.getRegistration()
             .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
@@ -145,7 +145,7 @@ class OpenIdClientFactory {
         });
         openIdClientConfiguration.getToken().ifPresent(token -> {
             token.getUrl().ifPresent(configuration::setTokenEndpoint);
-            token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+            token.getAuthenticationMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod)));
         });
 
         EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
