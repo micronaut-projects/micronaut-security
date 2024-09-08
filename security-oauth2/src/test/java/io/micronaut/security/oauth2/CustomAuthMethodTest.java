@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CustomAuthMethodTest {
 
+    // "https://github.com/micronaut-projects/micronaut-security/issues/1774
     @Test
     void verifyCustomAuthMethodsAreSupported() {
         EmbeddedServer authserver = ApplicationContext.run(EmbeddedServer.class,
