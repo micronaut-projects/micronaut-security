@@ -22,6 +22,7 @@ package io.micronaut.security.oauth2.endpoint;
  * @see <a href="https://datatracker.ietf.org/doc/html/draft-campbell-oauth-mtls">Mutual TLS Profiles for OAuth Clients</a>
  * @author Sergio del Amo
  * @since 1.2.0
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.AuthenticationMethods} constants instead.
  */
 @Deprecated(forRemoval = true)
 public enum AuthenticationMethod {

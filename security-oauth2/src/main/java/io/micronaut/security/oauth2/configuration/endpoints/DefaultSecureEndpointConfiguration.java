@@ -31,9 +31,15 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
 
     private String authenticationMethod = AuthenticationMethods.CLIENT_SECRET_BASIC;
 
+    /**
+     * @deprecated Use {@link DefaultSecureEndpointConfiguration#authenticationMethod} instead.
+     */
     @Deprecated(forRemoval = true)
     private AuthenticationMethod authMethod = AuthenticationMethod.CLIENT_SECRET_BASIC;
 
+    /**
+     * @deprecated Use {@link DefaultSecureEndpointConfiguration#getAuthenticationMethod()} instead.
+     */
     @Deprecated(forRemoval = true)
     @Override
     public Optional<AuthenticationMethod> getAuthMethod() {
@@ -41,7 +47,7 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
     }
 
     /**
-     *
+     * @deprecated Use {@link DefaultSecureEndpointConfiguration#setAuthenticationMethod(String)} instead.
      * @param authMethod Authentication Method
      */
     @Deprecated(forRemoval = true)

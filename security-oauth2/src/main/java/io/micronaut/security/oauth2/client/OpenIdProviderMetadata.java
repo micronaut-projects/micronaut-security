@@ -366,6 +366,11 @@ public interface OpenIdProviderMetadata extends Named {
     @Nullable
     String getEndSessionEndpoint();
 
+    /**
+     *
+     * @deprecated Use {@link OpenIdProviderMetadata#getTokenEndpointAuthMethodsSupported()} instead.
+     * @return the token endpoint authentication methods.
+     */
     @NonNull
     @Deprecated(forRemoval = true)
     default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {

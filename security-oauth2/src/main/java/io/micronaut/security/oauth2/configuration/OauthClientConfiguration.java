@@ -40,6 +40,9 @@ import java.util.Optional;
  */
 public interface OauthClientConfiguration extends Toggleable {
 
+    /**
+     * @deprecated Use {@link OauthClientConfiguration#DEFAULT_AUTH_METHOD} instead.
+     */
     @Deprecated(forRemoval = true)
     AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
 

@@ -54,6 +54,10 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
         return Optional.ofNullable(supportedAuthenticationMethods);
     }
 
+    /**
+     * @deprecated Use {@link DefaultSecureEndpoint#getAuthenticationMethodsSupported()} instead.
+     * @return return the supported authentication methods
+     */
     @Deprecated(forRemoval = true)
     @Override
     public Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods() {
