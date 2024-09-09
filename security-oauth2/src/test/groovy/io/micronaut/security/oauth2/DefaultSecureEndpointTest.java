@@ -71,10 +71,37 @@ class DefaultSecureEndpointTest {
     @Deprecated(forRemoval = true)
     @Test
     void testSupportedAuthenticationMethods() {
-        DefaultSecureEndpoint endpoint = new DefaultSecureEndpoint("http://localhost", METHODS);
+        String url = "http://localhost";
+        List<AuthenticationMethod> methods = null;
+        DefaultSecureEndpoint endpoint = new DefaultSecureEndpoint(url, methods);
+        assertEquals(url, endpoint.getUrl());
+
+        endpoint = new DefaultSecureEndpoint("http://localhost", List.of(AuthenticationMethod.CLIENT_SECRET_BASIC,
+                AuthenticationMethod.CLIENT_SECRET_POST,
+                AuthenticationMethod.CLIENT_SECRET_JWT,
+                AuthenticationMethod.PRIVATE_KEY_JWT,
+                AuthenticationMethod.TLS_CLIENT_AUTH));
+        assertTrue(endpoint.getAuthenticationMethodsSupported().contains(AuthenticationMethod.CLIENT_SECRET_BASIC.toString()));
+        assertTrue(endpoint.getAuthenticationMethodsSupported().contains(AuthenticationMethod.CLIENT_SECRET_POST.toString()));
+        assertTrue(endpoint.getAuthenticationMethodsSupported().contains(AuthenticationMethod.CLIENT_SECRET_JWT.toString()));
+        assertTrue(endpoint.getAuthenticationMethodsSupported().contains(AuthenticationMethod.PRIVATE_KEY_JWT.toString()));
+        assertTrue(endpoint.getAuthenticationMethodsSupported().contains(AuthenticationMethod.TLS_CLIENT_AUTH.toString()));
+
         Optional<List<AuthenticationMethod>> authenticationMethodsSupportedOptional = endpoint.getSupportedAuthenticationMethods();
         assertTrue(authenticationMethodsSupportedOptional.isPresent());
         List<AuthenticationMethod> authMethods = authenticationMethodsSupportedOptional.get();
+        assertEquals(METHODS.size() - 1, authMethods.size()); // self_signed_tls_client_auth is not a valid AuthenticationMethod
+        assertTrue(authMethods.contains(AuthenticationMethod.CLIENT_SECRET_BASIC));
+        assertTrue(authMethods.contains(AuthenticationMethod.CLIENT_SECRET_POST));
+        assertTrue(authMethods.contains(AuthenticationMethod.CLIENT_SECRET_JWT));
+        assertTrue(authMethods.contains(AuthenticationMethod.PRIVATE_KEY_JWT));
+        assertTrue(authMethods.contains(AuthenticationMethod.TLS_CLIENT_AUTH));
+
+
+        endpoint = new DefaultSecureEndpoint("http://localhost", METHODS);
+        authenticationMethodsSupportedOptional = endpoint.getSupportedAuthenticationMethods();
+        assertTrue(authenticationMethodsSupportedOptional.isPresent());
+        authMethods = authenticationMethodsSupportedOptional.get();
         assertEquals(METHODS.size() - 1, authMethods.size()); // self_signed_tls_client_auth is not a valid AuthenticationMethod
         assertTrue(authMethods.contains(AuthenticationMethod.CLIENT_SECRET_BASIC));
         assertTrue(authMethods.contains(AuthenticationMethod.CLIENT_SECRET_POST));
