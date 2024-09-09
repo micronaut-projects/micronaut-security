@@ -27,7 +27,6 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.reactivestreams.Publisher;

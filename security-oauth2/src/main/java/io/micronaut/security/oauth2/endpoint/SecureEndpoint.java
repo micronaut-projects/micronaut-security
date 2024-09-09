@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
 import java.util.List;
