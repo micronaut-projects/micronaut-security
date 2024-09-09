@@ -32,7 +32,10 @@ import java.util.stream.Collectors;
  */
 public class DefaultSecureEndpoint implements SecureEndpoint {
 
+    @NonNull
     private final String url;
+
+    @Nullable
     private final Set<String> supportedAuthenticationMethods;
 
     /**
@@ -64,8 +67,9 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     }
 
     @Override
-    public Optional<Set<String>> getAuthenticationMethodsSupported() {
-        return Optional.ofNullable(supportedAuthenticationMethods);
+    @Nullable
+    public Set<String> getAuthenticationMethodsSupported() {
+        return supportedAuthenticationMethods;
     }
 
     /**

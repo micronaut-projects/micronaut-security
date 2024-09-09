@@ -96,8 +96,10 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     protected <G, R extends TokenResponse> void secureRequest(@NonNull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
-        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported().orElseGet(() ->
-                Collections.singleton(AuthenticationMethods.CLIENT_SECRET_BASIC));
+        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported();
+        if (authMethodsSupported == null) {
+            authMethodsSupported = Collections.singleton(AuthenticationMethods.CLIENT_SECRET_BASIC);
+        }
 
         OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
         if (LOG.isTraceEnabled()) {

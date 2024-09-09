@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +33,8 @@ public interface SecureEndpoint extends Endpoint {
     /**
      * @return An optional list of supported authentication methods
      */
-    @NonNull
-    Optional<Set<String>> getAuthenticationMethodsSupported();
+    @Nullable
+    Set<String> getAuthenticationMethodsSupported();
 
     /**
      * @deprecated Use {@link SecureEndpoint#getAuthenticationMethodsSupported()} instead.

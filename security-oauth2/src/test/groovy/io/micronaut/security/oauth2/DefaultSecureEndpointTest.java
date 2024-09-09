@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultSecureEndpointTest {
     private static final Set<String> METHODS = Set.of("client_secret_basic",
@@ -22,9 +21,9 @@ class DefaultSecureEndpointTest {
     @Test
     void testGetAuthenticationMethodsSupported() {
         DefaultSecureEndpoint endpoint = new DefaultSecureEndpoint("http://localhost",  METHODS);
-        Optional<Set<String>> authenticationMethodsSupportedOptional = endpoint.getAuthenticationMethodsSupported();
-        assertTrue(authenticationMethodsSupportedOptional.isPresent());
-        assertEquals( METHODS, authenticationMethodsSupportedOptional.get());
+        Set<String> authenticationMethodsSupported = endpoint.getAuthenticationMethodsSupported();
+        assertNotNull(authenticationMethodsSupported);
+        assertEquals( METHODS, authenticationMethodsSupported);
     }
 
     @Deprecated(forRemoval = true)
