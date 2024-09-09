@@ -20,7 +20,6 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -29,7 +28,6 @@ import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.grants.GrantType;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,10 +124,7 @@ public interface OauthClientConfiguration extends Toggleable {
      * @throws ConfigurationException if token endpoint url is not set in configuration
      */
     default SecureEndpoint getTokenEndpoint() throws ConfigurationException {
-        Optional<SecureEndpointConfiguration> tokenOptional = getToken();
-        return new DefaultSecureEndpoint(tokenOptional.flatMap(EndpointConfiguration::getUrl)
-                .orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration")),
-                Collections.singleton(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthenticationMethod)
-                        .orElse(DEFAULT_AUTH_METHOD)));
+        return getToken().map(secureEndpointConfiguration -> new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD))
+                .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
     }
 }

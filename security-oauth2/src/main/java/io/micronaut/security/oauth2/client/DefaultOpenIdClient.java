@@ -23,7 +23,6 @@ import io.micronaut.http.*;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
@@ -39,8 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -89,7 +86,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
+        this.tokenEndpoint = SupplierUtil.memoized(() -> openIdProviderMetadata.get().tokenEndpoint());
     }
 
     @Override
@@ -164,9 +161,10 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     /**
      * @return The token endpoint
+     * @deprecated Not used.
      */
+    @Deprecated(forRemoval = true)
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), new HashSet<>(authMethodsSupported));
+        return openIdProviderMetadata.get().tokenEndpoint();
     }
 }

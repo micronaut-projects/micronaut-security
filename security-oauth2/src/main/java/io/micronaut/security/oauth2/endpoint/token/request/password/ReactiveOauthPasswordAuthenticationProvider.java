@@ -26,9 +26,6 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import java.util.Collections;
-import java.util.Set;
-
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
@@ -81,14 +78,8 @@ public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements Rea
     protected SecureEndpoint getTokenEndpoint(OauthClientConfiguration clientConfiguration) {
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
+        return new DefaultSecureEndpoint(endpointConfiguration, AuthenticationMethods.CLIENT_SECRET_BASIC);
 
-        Set<String> authMethodsSupported = Collections.singleton(endpointConfiguration.getAuthenticationMethod()
-                .orElse(AuthenticationMethods.CLIENT_SECRET_BASIC));
-
-        String url = endpointConfiguration.getUrl().orElseThrow(() ->
-                new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
-
-        return new DefaultSecureEndpoint(url, authMethodsSupported);
     }
 
 }

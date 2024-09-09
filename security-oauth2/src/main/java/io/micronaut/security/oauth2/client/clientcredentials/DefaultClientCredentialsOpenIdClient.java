@@ -19,13 +19,10 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -62,7 +59,6 @@ public class DefaultClientCredentialsOpenIdClient extends AbstractClientCredenti
      * @return The Token endpoint using the information in the open id provider metadata
      */
     protected SecureEndpoint getTokenEndpoint() {
-        List<String>  authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), new HashSet<>(authMethodsSupported));
+        return openIdProviderMetadata.get().tokenEndpoint();
     }
 }

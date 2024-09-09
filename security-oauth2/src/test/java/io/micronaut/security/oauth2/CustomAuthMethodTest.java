@@ -2,14 +2,17 @@ package io.micronaut.security.oauth2;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +36,17 @@ class CustomAuthMethodTest {
         assertNotNull(openIdProviderMetadata);
         assertDoesNotThrow(openIdProviderMetadata::getTokenEndpointAuthMethodsSupported);
 
-        assertEquals(List.of("client_secret_basic",
+        List<String> expected = List.of("client_secret_basic",
                 "client_secret_post",
                 "client_secret_jwt",
                 "private_key_jwt",
                 "tls_client_auth",
-                "self_signed_tls_client_auth"), openIdProviderMetadata.getTokenEndpointAuthMethodsSupported());
+                "self_signed_tls_client_auth");
+        assertEquals(expected, openIdProviderMetadata.getTokenEndpointAuthMethodsSupported());
+        assertEquals(new HashSet<>(expected), openIdProviderMetadata.tokenEndpoint().getAuthenticationMethodsSupported());
+
+        OauthClientConfiguration oauthClientConfiguration = assertDoesNotThrow(() -> server.getApplicationContext().getBean(OauthClientConfiguration.class));
+        assertThrows(ConfigurationException.class, oauthClientConfiguration::getTokenEndpoint);
         authserver.close();
         server.close();
     }

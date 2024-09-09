@@ -21,7 +21,6 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
@@ -33,8 +32,6 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -108,7 +105,6 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
-        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), new HashSet<>(authMethodsSupported));
+        return openIdProviderMetadata.tokenEndpoint();
     }
 }

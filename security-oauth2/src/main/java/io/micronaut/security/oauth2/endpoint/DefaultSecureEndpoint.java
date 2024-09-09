@@ -17,11 +17,9 @@ package io.micronaut.security.oauth2.endpoint;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +37,26 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     private final Set<String> supportedAuthenticationMethods;
 
     /**
+     * @param secureEndpointConfiguration Secure endpoint configuration
+     * @param defaultAuthMethod The default authentication method if {@link SecureEndpointConfiguration#getAuthenticationMethod()} is null
+     */
+    public DefaultSecureEndpoint(@NonNull SecureEndpointConfiguration secureEndpointConfiguration,
+                                 @NonNull String defaultAuthMethod) {
+        this(secureEndpointConfiguration.getUrl().orElseThrow(() -> new IllegalArgumentException("URL is required")),
+                Collections.singleton(secureEndpointConfiguration.getAuthenticationMethod().orElse(defaultAuthMethod)));
+    }
+
+    /**
+     * @param url The endpoint URL
+     * @param supportedAuthenticationMethods The endpoint authentication methods
+     */
+    public DefaultSecureEndpoint(@NonNull String url,
+                                 @Nullable Set<String> supportedAuthenticationMethods) {
+        this.url = url;
+        this.supportedAuthenticationMethods = supportedAuthenticationMethods;
+    }
+
+    /**
      * @param url The endpoint URL
      * @param supportedAuthenticationMethods The endpoint authentication methods
      * @deprecated Use {@link DefaultSecureEndpoint#DefaultSecureEndpoint(String, Set)} instead.
@@ -50,16 +68,6 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
         this.supportedAuthenticationMethods = supportedAuthenticationMethods == null
                 ? null
                 : supportedAuthenticationMethods.stream().map(AuthenticationMethod::toString).collect(Collectors.toSet());
-    }
-
-    /**
-     * @param url The endpoint URL
-     * @param supportedAuthenticationMethods The endpoint authentication methods
-     */
-    public DefaultSecureEndpoint(@NonNull String url,
-                                 @Nullable Set<String> supportedAuthenticationMethods) {
-        this.url = url;
-        this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
 
     @Override
