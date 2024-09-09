@@ -47,7 +47,9 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     public DefaultSecureEndpoint(@NonNull String url,
                                  @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
         this.url = url;
-        this.supportedAuthenticationMethods = supportedAuthenticationMethods.stream().map(AuthenticationMethod::toString).collect(Collectors.toSet());
+        this.supportedAuthenticationMethods = supportedAuthenticationMethods == null
+                ? null
+                : supportedAuthenticationMethods.stream().map(AuthenticationMethod::toString).collect(Collectors.toSet());
     }
 
     /**
