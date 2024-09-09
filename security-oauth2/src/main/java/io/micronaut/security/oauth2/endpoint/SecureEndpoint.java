@@ -15,8 +15,11 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
+import io.micronaut.core.annotation.Nullable;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A contract for an endpoint that requires authentication.
@@ -29,5 +32,13 @@ public interface SecureEndpoint extends Endpoint {
     /**
      * @return An optional list of supported authentication methods
      */
+    @Nullable
+    Set<String> getAuthenticationMethodsSupported();
+
+    /**
+     * @deprecated Use {@link SecureEndpoint#getAuthenticationMethodsSupported()} instead.
+     * @return An optional list of supported authentication methods
+     */
+    @Deprecated(forRemoval = true)
     Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods();
 }

@@ -20,14 +20,12 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import java.util.Collections;
-import java.util.List;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
@@ -82,13 +80,6 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
     protected SecureEndpoint getTokenEndpoint(OauthClientConfiguration clientConfiguration) {
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
-
-        List<AuthenticationMethod> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthMethod()
-                .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
-
-        String url = endpointConfiguration.getUrl().orElseThrow(() ->
-            new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
-
-        return new DefaultSecureEndpoint(url, authMethodsSupported);
+        return new DefaultSecureEndpoint(endpointConfiguration, AuthenticationMethods.CLIENT_SECRET_BASIC);
     }
 }

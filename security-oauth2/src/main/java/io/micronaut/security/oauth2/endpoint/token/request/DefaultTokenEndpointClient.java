@@ -26,14 +26,14 @@ import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
 import jakarta.inject.Singleton;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import org.reactivestreams.Publisher;
@@ -95,20 +95,22 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     protected <G, R extends TokenResponse> void secureRequest(@NonNull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
-        List<AuthenticationMethod> authMethodsSupported = requestContext.getEndpoint().getSupportedAuthenticationMethods().orElseGet(() ->
-                Collections.singletonList(AuthenticationMethod.CLIENT_SECRET_BASIC));
+        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported();
+        if (authMethodsSupported == null) {
+            authMethodsSupported = Collections.singleton(AuthenticationMethods.CLIENT_SECRET_BASIC);
+        }
 
         OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
         if (LOG.isTraceEnabled()) {
             LOG.trace("The token endpoint supports [{}] authentication methods", authMethodsSupported);
         }
 
-        if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_BASIC)) {
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
             }
             request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
-        } else if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_POST)) {
+        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
             }
