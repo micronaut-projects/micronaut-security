@@ -9,10 +9,11 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.rules.SecurityRule;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CustomAuthMethodTest {
 
@@ -31,6 +32,13 @@ class CustomAuthMethodTest {
         OpenIdProviderMetadata openIdProviderMetadata = server.getApplicationContext().getBean(OpenIdProviderMetadata.class);
         assertNotNull(openIdProviderMetadata);
         assertDoesNotThrow(openIdProviderMetadata::getTokenEndpointAuthMethodsSupported);
+
+        assertEquals(List.of("client_secret_basic",
+                "client_secret_post",
+                "client_secret_jwt",
+                "private_key_jwt",
+                "tls_client_auth",
+                "self_signed_tls_client_auth"), openIdProviderMetadata.getTokenEndpointAuthMethodsSupported());
         authserver.close();
         server.close();
     }
