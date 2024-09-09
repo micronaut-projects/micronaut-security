@@ -28,6 +28,8 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPassword
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
@@ -83,7 +85,7 @@ public class OauthPasswordAuthenticationProvider<T> implements AuthenticationPro
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
 
-        List<String> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthenticationMethod()
+        Set<String> authMethodsSupported = Collections.singleton(endpointConfiguration.getAuthenticationMethod()
                 .orElse(AuthenticationMethods.CLIENT_SECRET_BASIC));
 
         String url = endpointConfiguration.getUrl().orElseThrow(() ->

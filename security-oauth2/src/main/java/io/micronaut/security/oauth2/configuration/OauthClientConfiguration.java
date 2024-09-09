@@ -32,6 +32,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * OAuth 2.0 client configuration.
@@ -129,7 +130,7 @@ public interface OauthClientConfiguration extends Toggleable {
         Optional<SecureEndpointConfiguration> tokenOptional = getToken();
         return new DefaultSecureEndpoint(tokenOptional.flatMap(EndpointConfiguration::getUrl)
                 .orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration")),
-                Collections.singletonList(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthenticationMethod)
+                Collections.singleton(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthenticationMethod)
                         .orElse(DEFAULT_AUTH_METHOD)));
     }
 }

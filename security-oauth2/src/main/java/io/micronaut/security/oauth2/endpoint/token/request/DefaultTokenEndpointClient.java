@@ -34,6 +34,7 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import org.reactivestreams.Publisher;
@@ -95,8 +96,8 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     protected <G, R extends TokenResponse> void secureRequest(@NonNull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
-        List<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported().orElseGet(() ->
-                Collections.singletonList(AuthenticationMethods.CLIENT_SECRET_BASIC));
+        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported().orElseGet(() ->
+                Collections.singleton(AuthenticationMethods.CLIENT_SECRET_BASIC));
 
         OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
         if (LOG.isTraceEnabled()) {

@@ -23,6 +23,8 @@ import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -61,6 +63,6 @@ public class DefaultClientCredentialsOpenIdClient extends AbstractClientCredenti
      */
     protected SecureEndpoint getTokenEndpoint() {
         List<String>  authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authMethodsSupported);
+        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), new HashSet<>(authMethodsSupported));
     }
 }

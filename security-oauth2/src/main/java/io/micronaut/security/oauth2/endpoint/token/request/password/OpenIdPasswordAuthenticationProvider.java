@@ -33,6 +33,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,6 +109,6 @@ public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationPr
      */
     protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
         List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authMethodsSupported);
+        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), new HashSet<>(authMethodsSupported));
     }
 }

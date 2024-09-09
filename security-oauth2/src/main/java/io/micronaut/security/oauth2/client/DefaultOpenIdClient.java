@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -166,6 +167,6 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     protected SecureEndpoint getTokenEndpoint() {
         List<String> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authMethodsSupported);
+        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), new HashSet<>(authMethodsSupported));
     }
 }

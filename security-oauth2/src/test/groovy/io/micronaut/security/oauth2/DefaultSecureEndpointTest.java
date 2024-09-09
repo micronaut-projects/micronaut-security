@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultSecureEndpointTest {
-    private static final List<String> METHODS = List.of("client_secret_basic",
+    private static final Set<String> METHODS = Set.of("client_secret_basic",
             "client_secret_post",
             "client_secret_jwt",
             "private_key_jwt",
@@ -21,7 +22,7 @@ class DefaultSecureEndpointTest {
     @Test
     void testGetAuthenticationMethodsSupported() {
         DefaultSecureEndpoint endpoint = new DefaultSecureEndpoint("http://localhost",  METHODS);
-        Optional<List<String>> authenticationMethodsSupportedOptional = endpoint.getAuthenticationMethodsSupported();
+        Optional<Set<String>> authenticationMethodsSupportedOptional = endpoint.getAuthenticationMethodsSupported();
         assertTrue(authenticationMethodsSupportedOptional.isPresent());
         assertEquals( METHODS, authenticationMethodsSupportedOptional.get());
     }

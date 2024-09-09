@@ -21,6 +21,8 @@ import io.micronaut.core.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The default implementation of {@link SecureEndpoint}.
@@ -31,14 +33,26 @@ import java.util.Optional;
 public class DefaultSecureEndpoint implements SecureEndpoint {
 
     private final String url;
-    private final List<String> supportedAuthenticationMethods;
+    private final Set<String> supportedAuthenticationMethods;
+
+    /**
+     * @param url The endpoint URL
+     * @param supportedAuthenticationMethods The endpoint authentication methods
+     * @deprecated Use {@link DefaultSecureEndpoint#DefaultSecureEndpoint(String, Set)} instead.
+     */
+    @Deprecated
+    public DefaultSecureEndpoint(@NonNull String url,
+                                 @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
+        this.url = url;
+        this.supportedAuthenticationMethods = supportedAuthenticationMethods.stream().map(AuthenticationMethod::toString).collect(Collectors.toSet());
+    }
 
     /**
      * @param url The endpoint URL
      * @param supportedAuthenticationMethods The endpoint authentication methods
      */
     public DefaultSecureEndpoint(@NonNull String url,
-                                 @Nullable List<String> supportedAuthenticationMethods) {
+                                 @Nullable Set<String> supportedAuthenticationMethods) {
         this.url = url;
         this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
@@ -50,7 +64,7 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     }
 
     @Override
-    public Optional<List<String>> getAuthenticationMethodsSupported() {
+    public Optional<Set<String>> getAuthenticationMethodsSupported() {
         return Optional.ofNullable(supportedAuthenticationMethods);
     }
 
