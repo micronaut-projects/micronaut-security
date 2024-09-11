@@ -16,13 +16,11 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
@@ -34,21 +32,19 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
- * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
+ * An {@link AuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
  *
  * @author James Kleeh
  * @since 1.2.0
  * @param <T> Request Context Type
- * @param <I> Authentication Request Identity Type
- * @param <S> Authentication Request Secret Type
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOpenIdPasswordAuthenticationProvider} instead.
  */
-public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
+@Deprecated(since = "4.8.0", forRemoval = true)
+public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -79,26 +75,26 @@ public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAu
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flux.from(
-                tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
-            .switchMap(response -> {
-                Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                if (jwt.isPresent()) {
-                    try {
-                        OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                        return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
-                    } catch (ParseException e) {
-                        // Should never happen as validation succeeded
-                        return Flux.error(e);
+                        tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
+                .switchMap(response -> {
+                    Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
+                    if (jwt.isPresent()) {
+                        try {
+                            OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+                            return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
+                        } catch (ParseException e) {
+                            // Should never happen as validation succeeded
+                            return Flux.error(e);
+                        }
+                    } else {
+                        return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
                     }
-                } else {
-                    return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
-                }
-            });
+                });
 
     }
 
@@ -109,14 +105,6 @@ public class OpenIdPasswordAuthenticationProvider<T, I, S> implements ReactiveAu
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
-        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
-        List<AuthenticationMethod> authenticationMethods = null;
-        if (authMethodsSupported != null) {
-            authenticationMethods = authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList());
-        }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
+        return openIdProviderMetadata.tokenEndpoint();
     }
 }

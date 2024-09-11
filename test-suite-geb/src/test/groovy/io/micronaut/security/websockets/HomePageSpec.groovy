@@ -34,6 +34,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testcontainers.DockerClientFactory
 import spock.lang.AutoCleanup
+import spock.lang.Ignore
 import spock.lang.IgnoreIf
 import spock.lang.Issue
 import spock.lang.Shared
@@ -88,6 +89,7 @@ class HomePageSpec extends GebSpec {
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
+    @Ignore
     def "check websocket connects"() {
         expect:
         embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)

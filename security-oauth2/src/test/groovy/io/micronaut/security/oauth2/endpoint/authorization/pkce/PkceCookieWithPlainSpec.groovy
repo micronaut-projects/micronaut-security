@@ -43,6 +43,9 @@ import io.micronaut.security.testutils.BrowserHttpRequest
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
+import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import io.micronaut.security.token.render.AccessRefreshToken
@@ -87,6 +90,9 @@ class PkceCookieWithPlainSpec extends Specification {
         server.applicationContext.containsBean(HomeController)
         server.applicationContext.containsBean(RedirectingLoginHandler)
         server.applicationContext.containsBean(OauthClient)
+        !server.applicationContext.containsBean(SignatureConfiguration)
+        server.applicationContext.containsBean(ReactiveJwksSignature)
+        server.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         and: 'auth server is exposing the AuthServerController routes'
         oauthServer

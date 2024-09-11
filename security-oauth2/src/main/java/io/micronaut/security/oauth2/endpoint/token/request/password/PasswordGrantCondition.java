@@ -26,7 +26,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
 
 /**
@@ -59,7 +59,7 @@ public class PasswordGrantCondition extends AbstractCondition {
             } else if (clientConfiguration.getOpenid().isPresent()) {
                 String clientConfigurationName = clientConfiguration.getName();
                 boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(clientConfigurationName));
-                boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
+                boolean hasTokenResponseValidator = beanContext.containsBean(ReactiveOpenIdTokenResponseValidator.class);
                 if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
                     boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(clientConfigurationName));

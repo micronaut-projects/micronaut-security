@@ -28,8 +28,10 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.2.0
+ * @deprecated Use {@link ReactiveOpenIdTokenResponseValidator} instead.
  */
 @DefaultImplementation(DefaultOpenIdTokenResponseValidator.class)
+@Deprecated(since = "4.8.0", forRemoval = true)
 public interface OpenIdTokenResponseValidator {
 
     /**

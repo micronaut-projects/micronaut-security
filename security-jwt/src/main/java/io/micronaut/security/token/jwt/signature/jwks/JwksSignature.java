@@ -20,7 +20,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -38,13 +37,13 @@ import java.util.stream.Collectors;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
- *
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @deprecated Not used. {@link io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature} used instead.
  */
-@EachBean(JwksSignatureConfiguration.class)
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);

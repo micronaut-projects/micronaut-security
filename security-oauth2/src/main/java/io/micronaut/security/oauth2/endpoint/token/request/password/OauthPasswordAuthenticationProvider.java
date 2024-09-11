@@ -17,17 +17,15 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import java.util.Collections;
-import java.util.List;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
@@ -38,10 +36,10 @@ import reactor.core.publisher.Flux;
  * @author Sergio del Amo
  * @since 1.2.0
  * @param <T> Request Context Type
- * @param <I> Authentication Request Identity Type
- * @param <S> Authentication Request Secret Type
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.request.password.ReactiveOauthPasswordAuthenticationProvider} instead.
  */
-public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAuthenticationProvider<T, I, S> {
+@Deprecated(since = "4.8.0", forRemoval = true)
+public class OauthPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -63,7 +61,7 @@ public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAut
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
@@ -82,13 +80,6 @@ public class OauthPasswordAuthenticationProvider<T, I, S> implements ReactiveAut
     protected SecureEndpoint getTokenEndpoint(OauthClientConfiguration clientConfiguration) {
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
-
-        List<AuthenticationMethod> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthMethod()
-                .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
-
-        String url = endpointConfiguration.getUrl().orElseThrow(() ->
-            new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
-
-        return new DefaultSecureEndpoint(url, authMethodsSupported);
+        return new DefaultSecureEndpoint(endpointConfiguration, AuthenticationMethods.CLIENT_SECRET_BASIC);
     }
 }

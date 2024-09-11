@@ -22,15 +22,17 @@ package io.micronaut.security.oauth2.endpoint;
  * @see <a href="https://datatracker.ietf.org/doc/html/draft-campbell-oauth-mtls">Mutual TLS Profiles for OAuth Clients</a>
  * @author Sergio del Amo
  * @since 1.2.0
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.AuthenticationMethods} constants instead.
  */
+@Deprecated(forRemoval = true)
 public enum AuthenticationMethod {
 
-    CLIENT_SECRET_POST("client_secret_post"),
-    CLIENT_SECRET_BASIC("client_secret_basic"),
-    CLIENT_SECRET_JWT("client_secret_jwt"),
-    PRIVATE_KEY_JWT("private_key_jwt"),
-    TLS_CLIENT_AUTH("tls_client_auth"),
-    NONE("none");
+    CLIENT_SECRET_POST(AuthenticationMethods.CLIENT_SECRET_POST),
+    CLIENT_SECRET_BASIC(AuthenticationMethods.CLIENT_SECRET_BASIC),
+    CLIENT_SECRET_JWT(AuthenticationMethods.CLIENT_SECRET_JWT),
+    PRIVATE_KEY_JWT(AuthenticationMethods.PRIVATE_KEY_JWT),
+    TLS_CLIENT_AUTH(AuthenticationMethods.TLS_CLIENT_AUTH),
+    NONE(AuthenticationMethods.NONE);
 
     private String authMethod;
 

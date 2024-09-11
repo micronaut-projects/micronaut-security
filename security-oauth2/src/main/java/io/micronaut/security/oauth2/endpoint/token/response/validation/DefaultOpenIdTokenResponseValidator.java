@@ -31,7 +31,6 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +46,9 @@ import java.util.stream.Collectors;
  *
  * @author Sergio del Amo
  * @since 1.2.0
+ * @deprecated Use {@link io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultReactiveOpenIdTokenResponseValidator} instead
  */
-@Singleton
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);
@@ -155,11 +155,10 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     @NonNull
     protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
-
         return JwtValidator.builder()
-            .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
-            .build()
-            .validate(openIdTokenResponse.getIdToken(), null);
+                .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
+                .build()
+                .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**

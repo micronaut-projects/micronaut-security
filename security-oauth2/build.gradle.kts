@@ -34,4 +34,11 @@ dependencies {
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
     testImplementation(mn.micronaut.retry)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+}
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

@@ -27,8 +27,15 @@ import java.util.Optional;
 public interface SecureEndpointConfiguration extends EndpointConfiguration {
 
     /**
+     * @deprecated Use {@link SecureEndpointConfiguration#getAuthenticationMethod()} instead.
+     * @return An optional Authentication Method.
+     */
+    @Deprecated(forRemoval = true)
+    Optional<AuthenticationMethod> getAuthMethod();
+
+    /**
      *
      * @return An optional Authentication Method.
      */
-    Optional<AuthenticationMethod> getAuthMethod();
+    Optional<String> getAuthenticationMethod();
 }

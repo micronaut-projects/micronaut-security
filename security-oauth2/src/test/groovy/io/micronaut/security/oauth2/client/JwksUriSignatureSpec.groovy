@@ -36,6 +36,7 @@ import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.claims.JtiGenerator
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -97,7 +98,7 @@ class JwksUriSignatureSpec extends Specification {
         new PollingConditions().eventually {
             assert embeddedServer.isRunning()
         }
-        embeddedServer.applicationContext.containsBean(SignatureConfiguration)
+        embeddedServer.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         when: 'it is possible to get a JWT from the auth server A'
         BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()

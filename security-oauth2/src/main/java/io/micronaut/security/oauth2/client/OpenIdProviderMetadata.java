@@ -15,10 +15,15 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -356,7 +361,13 @@ public interface OpenIdProviderMetadata extends Named {
     @Nullable
     String getEndSessionEndpoint();
 
+    /**
+     *
+     * @deprecated Use {@link OpenIdProviderMetadata#getTokenEndpointAuthMethodsSupported()} instead.
+     * @return the token endpoint authentication methods.
+     */
     @NonNull
+    @Deprecated(forRemoval = true)
     default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
         List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
         if (authMethodsSupported == null) {
@@ -366,5 +377,18 @@ public interface OpenIdProviderMetadata extends Named {
                 .map(String::toUpperCase)
                 .map(AuthenticationMethod::valueOf)
                 .collect(Collectors.toList()));
+    }
+
+    /**
+     *
+     * @since 4.10.1
+     * @return The Token endpoint
+     * @throws ConfigurationException if token endpoint url is not set in configuration
+     */
+    default SecureEndpoint tokenEndpoint() throws ConfigurationException {
+        if (getTokenEndpoint() == null) {
+            throw new ConfigurationException("token endpoint requires a token endpoint url");
+        }
+        return new DefaultSecureEndpoint(getTokenEndpoint(), getTokenEndpointAuthMethodsSupported() == null ? null : new HashSet<>(getTokenEndpointAuthMethodsSupported()));
     }
 }

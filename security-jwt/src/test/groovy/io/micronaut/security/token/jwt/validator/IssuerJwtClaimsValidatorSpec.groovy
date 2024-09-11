@@ -92,8 +92,11 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
 
     @Nullable
     private static Authentication authenticate(@NonNull ApplicationContext context, @NonNull String jwt) {
-        JwtTokenValidator jwtValidator = context.getBean(JwtTokenValidator.class)
-        Flux.from(jwtValidator.validateToken(jwt, null)).blockFirst()
+        JsonWebTokenValidator jwtValidator = context.getBean(JsonWebTokenValidator.class)
+        JwtAuthenticationFactory jwtAuthenticationFactory = context.getBean(JwtAuthenticationFactory.class)
+        jwtValidator.validate(jwt, null)
+                .flatMap(i -> jwtAuthenticationFactory.createAuthentication(i))
+                .orElse(null)
     }
 
     @NonNull

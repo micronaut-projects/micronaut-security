@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.token.validator;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
@@ -43,6 +45,8 @@ public interface TokenValidator<T> extends Ordered {
      * be attempted and the validation will fail. If the publisher is empty, further validators will be
      * attempted. If the publisher emits an authentication, that authentication will be used.
      */
-    Publisher<Authentication> validateToken(String token,
+    @NonNull
+    @SingleResult
+    Publisher<Authentication> validateToken(@NonNull String token,
                                             @Nullable T request);
 }

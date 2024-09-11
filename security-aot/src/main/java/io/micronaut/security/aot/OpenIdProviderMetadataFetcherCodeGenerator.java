@@ -24,6 +24,7 @@ import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.Qualifier;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -61,6 +62,10 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
 
     @Override
     public void generate(@NonNull AOTContext context) {
+        ApplicationContext applicationContext = context.getAnalyzer().getApplicationContext();
+        if (!applicationContext.isRunning()) {
+            applicationContext.start();
+        }
         List<GeneratedFile> files = generateJavaFiles(context);
         if (!files.isEmpty()) {
             context.registerStaticOptimization("AotOpenIdProviderMetadataFetcherCode", DefaultOpenIdProviderMetadataFetcher.Optimizations.class, body -> {

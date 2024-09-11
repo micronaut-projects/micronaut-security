@@ -23,7 +23,6 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -38,8 +37,9 @@ import java.util.concurrent.ExecutorService;
  * @author Sergio del Amo
  * @since 1.0
  * @param <T> Request
+ * @deprecated Use {@link ReactiveJsonWebTokenValidator} instead.
  */
-@Singleton
+@Deprecated(since = "4.8.0", forRemoval = true)
 public class JwtTokenValidator<T> implements TokenValidator<T> {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;

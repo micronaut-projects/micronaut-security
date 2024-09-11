@@ -1,30 +1,31 @@
 [versions]
-managed-nimbus-jose-jwt = "9.37.3"
+managed-nimbus-jose-jwt = "9.40"
+managed-jjwt = "0.12.6"
 
-micronaut = "4.4.0"
-micronaut-platform = "4.2.4"
+micronaut = "4.6.4"
+micronaut-platform = "4.5.1"
 micronaut-docs = "2.0.0"
 
 geb = "7.0"
-selenium = "4.2.2"
+selenium = "4.24.0"
 system-stubs-core = "2.1.6"
-unboundid-ldapsdk = "7.0.0"
+unboundid-ldapsdk = "7.0.1"
 bouncycastle = "1.70"
-kotlin = "1.9.23"
+kotlin = "2.0.20"
 bcpkix = "1.70"
-micronaut-test = "4.2.1"
-micronaut-hibernate-validator = "4.2.1"
-micronaut-multitenancy = "5.3.0"
-micronaut-reactor = "3.3.0"
-micronaut-logging = "1.2.2"
-micronaut-serde = "2.8.2"
-micronaut-servlet = "4.6.0"
-micronaut-session = "4.2.0"
-micronaut-views = "5.1.0"
-micronaut-validation = "4.4.4"
-micronaut-data = "4.6.2"
-micronaut-sql="5.5.2"
-micronaut-test-resources="2.4.0"
+micronaut-test = "4.5.0"
+micronaut-hibernate-validator = "4.5.0"
+micronaut-multitenancy = "5.4.0"
+micronaut-reactor = "3.5.0"
+micronaut-logging = "1.4.0"
+micronaut-serde = "2.11.0"
+micronaut-servlet = "4.11.1"
+micronaut-session = "4.4.0"
+micronaut-views = "5.5.1"
+micronaut-validation = "4.7.0"
+micronaut-data = "4.9.3"
+micronaut-sql="5.8.1"
+micronaut-test-resources="2.6.0"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
@@ -44,6 +45,10 @@ micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref 
 micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
+managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed-jjwt" }
+managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
+managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
+
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
@@ -59,6 +64,7 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}

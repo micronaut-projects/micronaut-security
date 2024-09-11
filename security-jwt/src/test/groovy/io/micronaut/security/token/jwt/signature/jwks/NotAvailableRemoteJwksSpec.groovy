@@ -24,6 +24,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -89,7 +90,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
         then:
-        embeddedServer.applicationContext.containsBean(SignatureConfiguration)
+        embeddedServer.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         when: 'authentication fails since JWKS endpoint is down'
         BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL).toBlocking()
