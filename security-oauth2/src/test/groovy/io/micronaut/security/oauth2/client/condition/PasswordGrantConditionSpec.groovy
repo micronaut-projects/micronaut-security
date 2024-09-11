@@ -1,27 +1,24 @@
 package io.micronaut.security.oauth2.client.condition
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.json.JsonMapper
 import io.micronaut.json.tree.JsonNode
-import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.oauth2.grants.PasswordGrant
-import io.micronaut.security.oauth2.grants.RefreshTokenGrant
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 import spock.lang.Specification
-import reactor.core.publisher.Flux
 import spock.lang.Unroll
 
 class PasswordGrantConditionSpec extends Specification {
@@ -77,10 +74,8 @@ class PasswordGrantConditionSpec extends Specification {
 
         where:
         properties | description
-        ['micronaut.security.oauth2.clients.foo.openid.token': 'https:/foo.com/auth/token']                                                          |
-                "PasswordGrantCondition evaluates to true for openId grant-type=password configuration"
-        ['micronaut.security.oauth2.clients.foo.token.url': 'https://foo.com/auth/token', 'spec.name': 'FooNamedPasswordAuthenticationProviderSpec'] |
-                "PasswordGrantCondition to true for oauth2 grant-type=password configuration"
+        ['micronaut.security.oauth2.clients.foo.openid.token.url': 'https:/foo.com/auth/token'] | "PasswordGrantCondition evaluates to true for openId grant-type=password configuration"
+        ['micronaut.security.oauth2.clients.foo.token.url': 'https://foo.com/auth/token', 'spec.name': 'FooNamedPasswordAuthenticationProviderSpec'] | "PasswordGrantCondition to true for oauth2 grant-type=password configuration"
     }
 
     @Singleton

@@ -33,6 +33,7 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
@@ -483,13 +484,13 @@ class ClientCredentialsSpec extends Specification {
     @Controller("/.well-known")
     static class OpenIdConfigurationAuthServerDownController {
         private final String url
-        private final List<AuthenticationMethod> authenticationMethods
+        private final List<String> authenticationMethods
 
         OpenIdConfigurationAuthServerDownController(@Property(name = "micronaut.server.port") Integer port) {
             this.url = "http://localhost:$port"
             this.authenticationMethods = [
-                    AuthenticationMethod.CLIENT_SECRET_POST,
-                    AuthenticationMethod.CLIENT_SECRET_BASIC
+                    AuthenticationMethods.CLIENT_SECRET_POST,
+                    AuthenticationMethods.CLIENT_SECRET_BASIC
             ]
         }
 
@@ -525,13 +526,13 @@ class ClientCredentialsSpec extends Specification {
     @Controller("/.well-known")
     static class OpenIdConfigurationController {
         private final String url
-        private final List<AuthenticationMethod> authenticationMethods
+        private final List<String> authenticationMethods
 
         OpenIdConfigurationController(@Property(name = "micronaut.server.port") Integer port) {
             this.url = "http://localhost:$port"
             this.authenticationMethods = [
-                    AuthenticationMethod.CLIENT_SECRET_POST,
-                    AuthenticationMethod.CLIENT_SECRET_BASIC
+                    AuthenticationMethods.CLIENT_SECRET_POST,
+                    AuthenticationMethods.CLIENT_SECRET_BASIC
             ]
         }
 
