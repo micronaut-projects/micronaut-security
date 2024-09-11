@@ -34,21 +34,18 @@ import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import java.text.ParseException;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import reactor.core.publisher.Mono;
 
 /**
  * Default implementation of {@link OpenIdAuthorizationResponseHandler}.
@@ -71,29 +68,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
     private final OauthRouteUrlBuilder<T> oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
     private final @Nullable PkcePersistence pkcePersistence;
-
-    /**
-     * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper   Authentication Mapper
-     * @param tokenEndpointClient    The token endpoint client
-     * @param oauthRouteUrlBuilder   The oauth route url builder
-     * @param stateValidator         The state validator
-     * @param pkcePersistence        The PKCE persistence
-     */
-    @Inject
-    public DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator,
-                                                     OpenIdAuthenticationMapper authenticationMapper,
-                                                     TokenEndpointClient tokenEndpointClient,
-                                                     OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
-                                                     @Nullable StateValidator stateValidator,
-                                                     @Nullable PkcePersistence pkcePersistence) {
-        this.tokenResponseValidator = tokenResponseValidator;
-        this.defaultAuthenticationMapper = authenticationMapper;
-        this.tokenEndpointClient = tokenEndpointClient;
-        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
-        this.stateValidator = stateValidator;
-        this.pkcePersistence = pkcePersistence;
-    }
+    private final ExecutorService blockingExecutor;
 
     /**
      * @param tokenResponseValidator The token response validator
@@ -103,44 +78,21 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param stateValidator         The state validator
      * @param pkcePersistence        The PKCE persistence
      * @param blockingExecutor       An executor for blocking operations
-     * @deprecated Use {@link DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)} instead.
      */
-    @Deprecated(since = "4.8.0", forRemoval = true)
-    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
+    public DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator,
                                                      OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
                                                      @Nullable StateValidator stateValidator,
                                                      @Nullable PkcePersistence pkcePersistence,
                                                      @Named(TaskExecutors.BLOCKING) ExecutorService blockingExecutor) {
-        this.tokenResponseValidator = (clientConfiguration1, openIdProviderMetadata1, openIdTokenResponse, nonce) -> {
-            Optional<JWT> jwtOptional = tokenResponseValidator.validate(clientConfiguration1, openIdProviderMetadata1, openIdTokenResponse, nonce);
-            return jwtOptional.map(Mono::just).orElseGet(Mono::empty);
-        };
+        this.tokenResponseValidator = tokenResponseValidator;
         this.defaultAuthenticationMapper = authenticationMapper;
         this.tokenEndpointClient = tokenEndpointClient;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
-    }
-
-    /**
-     * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper   Authentication Mapper
-     * @param tokenEndpointClient    The token endpoint client
-     * @param oauthRouteUrlBuilder   The oauth route url builder
-     * @param stateValidator         The state validator
-     * @param pkcePersistence        The PKCE persistence
-     * @deprecated Use {@link #DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)} instead
-     */
-    @Deprecated(forRemoval = true, since = "2.7.0")
-    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     OpenIdAuthenticationMapper authenticationMapper,
-                                                     TokenEndpointClient tokenEndpointClient,
-                                                     OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
-                                                     @Nullable StateValidator stateValidator,
-                                                     @Nullable PkcePersistence pkcePersistence) {
-        this(tokenResponseValidator, authenticationMapper, tokenEndpointClient, oauthRouteUrlBuilder, stateValidator, pkcePersistence, Executors.newCachedThreadPool());
+        this.blockingExecutor = blockingExecutor;
     }
 
     @Override
@@ -200,7 +152,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
             clientConfiguration,
             pkcePersistence == null ? null :
                 pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null));
-        return tokenEndpointClient.sendRequest(requestContext);
+        return Flux.from(tokenEndpointClient.sendRequest(requestContext)).publishOn(Schedulers.fromExecutorService(blockingExecutor));
     }
 
     /**

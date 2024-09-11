@@ -56,20 +56,6 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
         this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
 
-    /**
-     * @param url The endpoint URL
-     * @param supportedAuthenticationMethods The endpoint authentication methods
-     * @deprecated Use {@link DefaultSecureEndpoint#DefaultSecureEndpoint(String, Set)} instead.
-     */
-    @Deprecated
-    public DefaultSecureEndpoint(@NonNull String url,
-                                 @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
-        this.url = url;
-        this.supportedAuthenticationMethods = supportedAuthenticationMethods == null
-                ? null
-                : supportedAuthenticationMethods.stream().map(AuthenticationMethod::toString).collect(Collectors.toSet());
-    }
-
     @Override
     @NonNull
     public String getUrl() {
@@ -80,26 +66,5 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     @Nullable
     public Set<String> getAuthenticationMethodsSupported() {
         return supportedAuthenticationMethods;
-    }
-
-    /**
-     * @deprecated Use {@link DefaultSecureEndpoint#getAuthenticationMethodsSupported()} instead.
-     * @return return the supported authentication methods
-     */
-    @Deprecated(forRemoval = true)
-    @Override
-    public Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods() {
-        if (supportedAuthenticationMethods == null) {
-            return Optional.empty();
-        }
-        List<AuthenticationMethod> result  = new ArrayList<>();
-        for (String authMethod : supportedAuthenticationMethods) {
-            try {
-                result.add(AuthenticationMethod.valueOf(authMethod.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                // don't crash for non-existing enum options
-            }
-        }
-        return Optional.of(result);
     }
 }

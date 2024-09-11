@@ -19,7 +19,6 @@ import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.naming.Named;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 
@@ -360,24 +359,6 @@ public interface OpenIdProviderMetadata extends Named {
      */
     @Nullable
     String getEndSessionEndpoint();
-
-    /**
-     *
-     * @deprecated Use {@link OpenIdProviderMetadata#getTokenEndpointAuthMethodsSupported()} instead.
-     * @return the token endpoint authentication methods.
-     */
-    @NonNull
-    @Deprecated(forRemoval = true)
-    default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
-        List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
-        if (authMethodsSupported == null) {
-            return Optional.empty();
-        }
-        return Optional.of(authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList()));
-    }
 
     /**
      *

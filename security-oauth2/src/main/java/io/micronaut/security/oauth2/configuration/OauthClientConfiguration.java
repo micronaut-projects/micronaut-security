@@ -22,7 +22,6 @@ import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
@@ -38,13 +37,6 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface OauthClientConfiguration extends Toggleable {
-
-    /**
-     * @deprecated Use {@link OauthClientConfiguration#DEFAULT_AUTH_METHOD} instead.
-     */
-    @Deprecated(forRemoval = true)
-    AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
-
     String DEFAULT_AUTH_METHOD = AuthenticationMethods.CLIENT_SECRET_POST;
 
     /**

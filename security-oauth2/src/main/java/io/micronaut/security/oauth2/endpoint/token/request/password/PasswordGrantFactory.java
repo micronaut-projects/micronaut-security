@@ -73,8 +73,8 @@ class PasswordGrantFactory {
             return new ReactiveOauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper);
         }
         if (openIdAuthenticationMapper == null) {
-                openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
+            openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
         }
-         return new ReactiveOpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
+        return new ReactiveOpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
     }
 }

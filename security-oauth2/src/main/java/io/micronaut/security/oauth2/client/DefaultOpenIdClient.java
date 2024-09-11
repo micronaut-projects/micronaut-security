@@ -158,13 +158,4 @@ public class DefaultOpenIdClient implements OpenIdClient {
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
     }
-
-    /**
-     * @return The token endpoint
-     * @deprecated Not used.
-     */
-    @Deprecated(forRemoval = true)
-    protected SecureEndpoint getTokenEndpoint() {
-        return openIdProviderMetadata.get().tokenEndpoint();
-    }
 }

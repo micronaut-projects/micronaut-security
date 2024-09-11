@@ -34,11 +34,4 @@ public interface SecureEndpoint extends Endpoint {
      */
     @Nullable
     Set<String> getAuthenticationMethodsSupported();
-
-    /**
-     * @deprecated Use {@link SecureEndpoint#getAuthenticationMethodsSupported()} instead.
-     * @return An optional list of supported authentication methods
-     */
-    @Deprecated(forRemoval = true)
-    Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods();
 }
