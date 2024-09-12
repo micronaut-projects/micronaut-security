@@ -24,8 +24,6 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Metadata describing the configuration of OpenID Providers.

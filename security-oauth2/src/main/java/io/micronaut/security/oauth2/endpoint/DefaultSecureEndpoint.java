@@ -20,7 +20,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * The default implementation of {@link SecureEndpoint}.
