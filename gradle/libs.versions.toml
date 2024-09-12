@@ -24,7 +24,7 @@ micronaut-session = "4.4.0"
 micronaut-views = "5.5.1"
 micronaut-validation = "4.7.0"
 micronaut-data = "4.9.3"
-micronaut-sql="5.8.1"
+micronaut-sql="5.8.2"
 micronaut-test-resources="2.6.0"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
