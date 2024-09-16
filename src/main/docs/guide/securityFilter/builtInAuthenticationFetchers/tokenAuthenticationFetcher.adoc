@@ -1,0 +1,4 @@
+api:io.micronaut.security.token.TokenAuthenticationFetcher[] attempts to retrieve a token from the HTTP Request via the api:io.micronaut.security.token.reader.TokenResolver[] API,
+and then it tries to validate the token via the api:io.micronaut.security.token.validator.TokenValidator[] API.
+
+image::tokenAuthenticationFetcher.png[]

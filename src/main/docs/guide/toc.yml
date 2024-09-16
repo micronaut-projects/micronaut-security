@@ -3,8 +3,27 @@ introduction:
 releaseHistory: Release History
 whatsNew: What's New
 breaks: Breaking Changes
-gettingStarted:
-  title: Getting Started
+security-installation: Installation
+securityFilter:
+  title: How It Works - Security Filter
+  builtInAuthenticationFetchers:
+    title: Built-In Authentication Fetchers
+    basicAuthAuthenticationFetcher: Basic-Auth Authentication Fetcher
+    tokenAuthenticationFetcher:
+      title: Token Authentication Fetcher
+      tokenReaders:
+        title: Token Readers
+        bearerTokenReader: Bearer Token Reader
+        cookieTokenReader: Cookie Token Reader
+  securityRule:
+    title: Security Rules
+    ipPattern: IP Pattern Rule
+    secured:
+      title: Secured Annotation
+      jakartaAnnotations: Jakarta Annotations
+      securedExpression: Secured with expressions
+    interceptUrlMap: Intercept URL Map
+    builtInEndpointsAccess: Built-In Endpoints Security
 exceptionHandlers: 'Exception Handlers'
 securityConfiguration:
   title: Security Configuration
@@ -19,15 +38,6 @@ authenticationProviders:
   imperativeAuthenticationProviders: Authentication Provider
   authenticationProvidersUseCases: Authentication Providers Use Cases
   builtInAuthenticationProviders: Built-In Authentication Providers
-securityRule:
-  title: Security Rules
-  ipPattern: IP Pattern Rule
-  secured:
-    title: Secured Annotation
-    jakartaAnnotations: Jakarta Annotations
-    securedExpression: Secured with expressions
-  interceptUrlMap: Intercept URL Map
-  builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
   title: Authorization Strategies
   basicAuth: Basic Authentication
