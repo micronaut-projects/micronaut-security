@@ -25,12 +25,17 @@ securityFilter:
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
 exceptionHandlers: 'Exception Handlers'
+endpoints:
+  login:
+    title: Login Controller
+    loginHandler: Login Handler
+  logout:
+    title: Logout Controller
+    logoutHandler: Logout Handler
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
   authenticationStrategy: Authentication Strategy
-  loginHandler: Login Handler
-  logoutHandler: Logout Handler
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
 authenticationProviders:
@@ -76,10 +81,8 @@ authenticationStrategies:
   custom: Custom Authorization Strategies
 rejection: Rejection Handling
 tokenPropagation: Token Propagation
-endpoints:
-  title: Built-In Security Controllers
-  login: Login Controller
-  logout: Logout Controller
+tokenendpoints:
+  title: Built-In Security Token Controllers
   refresh: Refresh Controller
   keys: Keys Controller
   introspectionendpoint: Introspection Endpoint
