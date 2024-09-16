@@ -47,6 +47,7 @@ public class LoginControllerConfigurationProperties implements LoginControllerCo
     private String path = DEFAULT_PATH;
 
     /**
+     * Enables {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_ENABLED}.
      * @return true if you want to enable the {@link LoginController}
      */
     @Override
