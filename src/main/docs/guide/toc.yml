@@ -26,12 +26,14 @@ securityFilter:
     builtInEndpointsAccess: Built-In Endpoints Security
 exceptionHandlers: 'Exception Handlers'
 endpoints:
+  title: Endpoints
   login:
     title: Login Controller
     loginHandler: Login Handler
   logout:
     title: Logout Controller
     logoutHandler: Logout Handler
+  builtInHandlers: Built-in Login and Logout Handlers
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
