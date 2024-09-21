@@ -3,15 +3,41 @@ introduction:
 releaseHistory: Release History
 whatsNew: What's New
 breaks: Breaking Changes
-gettingStarted:
-  title: Getting Started
+security-installation: Installation
+securityFilter:
+  title: How It Works - Security Filter
+  builtInAuthenticationFetchers:
+    title: Built-In Authentication Fetchers
+    basicAuthAuthenticationFetcher: Basic-Auth Authentication Fetcher
+    tokenAuthenticationFetcher:
+      title: Token Authentication Fetcher
+      tokenReaders:
+        title: Token Readers
+        bearerTokenReader: Bearer Token Reader
+        cookieTokenReader: Cookie Token Reader
+  securityRule:
+    title: Security Rules
+    ipPattern: IP Pattern Rule
+    secured:
+      title: Secured Annotation
+      jakartaAnnotations: Jakarta Annotations
+      securedExpression: Secured with expressions
+    interceptUrlMap: Intercept URL Map
+    builtInEndpointsAccess: Built-In Endpoints Security
 exceptionHandlers: 'Exception Handlers'
+endpoints:
+  title: Endpoints
+  login:
+    title: Login Controller
+    loginHandler: Login Handler
+  logout:
+    title: Logout Controller
+    logoutHandler: Logout Handler
+  builtInHandlers: Built-in Login and Logout Handlers
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
   authenticationStrategy: Authentication Strategy
-  loginHandler: Login Handler
-  logoutHandler: Logout Handler
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
 authenticationProviders:
@@ -19,15 +45,6 @@ authenticationProviders:
   imperativeAuthenticationProviders: Authentication Provider
   authenticationProvidersUseCases: Authentication Providers Use Cases
   builtInAuthenticationProviders: Built-In Authentication Providers
-securityRule:
-  title: Security Rules
-  ipPattern: IP Pattern Rule
-  secured:
-    title: Secured Annotation
-    jakartaAnnotations: Jakarta Annotations
-    securedExpression: Secured with expressions
-  interceptUrlMap: Intercept URL Map
-  builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
   title: Authorization Strategies
   basicAuth: Basic Authentication
@@ -66,10 +83,8 @@ authenticationStrategies:
   custom: Custom Authorization Strategies
 rejection: Rejection Handling
 tokenPropagation: Token Propagation
-endpoints:
-  title: Built-In Security Controllers
-  login: Login Controller
-  logout: Logout Controller
+tokenendpoints:
+  title: Built-In Security Token Controllers
   refresh: Refresh Controller
   keys: Keys Controller
   introspectionendpoint: Introspection Endpoint
