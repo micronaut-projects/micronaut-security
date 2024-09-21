@@ -61,7 +61,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     private String cookieName = DEFAULT_COOKIENAME;
 
     /**
-     *
+     * Whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @return a boolean flag indicating whether the JwtCookieTokenReader should be enabled or not
      */
     @Override
@@ -86,7 +86,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     }
 
     /**
-     *
+     * Cookie Name. Default value ({@value #DEFAULT_COOKIENAME}).
      * @return a name for the cookie
      */
     @NonNull
@@ -96,7 +96,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     }
 
     /**
-     *
+     * The path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @return The path of the cookie.
      */
     @Nullable
