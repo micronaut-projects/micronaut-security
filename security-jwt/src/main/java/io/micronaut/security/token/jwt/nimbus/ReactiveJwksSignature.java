@@ -40,11 +40,6 @@ import reactor.core.publisher.Mono;
 */
 @EachBean(JwksSignatureConfiguration.class)
 public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<SignedJWT> {
-    private record JwksCacheEntry(JWKSet jwkSet, Instant cacheExpiryAt) {
-        private boolean isExpired() {
-            return cacheExpiryAt != null && Instant.now().isAfter(cacheExpiryAt);
-        }
-    }
 
     private static final Logger LOG = LoggerFactory.getLogger(ReactiveJwksSignature.class);
     private final JwkValidator jwkValidator;
@@ -110,5 +105,11 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
 
     private Mono<JWKSet> fetchJwkSet() {
         return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()));
+    }
+
+    private record JwksCacheEntry(JWKSet jwkSet, Instant cacheExpiryAt) {
+        private boolean isExpired() {
+            return cacheExpiryAt != null && Instant.now().isAfter(cacheExpiryAt);
+        }
     }
 }
