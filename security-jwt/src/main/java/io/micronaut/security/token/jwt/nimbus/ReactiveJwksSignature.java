@@ -25,6 +25,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureUtils;
+import java.time.Instant;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +40,17 @@ import reactor.core.publisher.Mono;
 */
 @EachBean(JwksSignatureConfiguration.class)
 public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<SignedJWT> {
+    private record JwksCacheEntry(JWKSet jwkSet, Instant cacheExpiryAt) {
+        private boolean isExpired() {
+            return cacheExpiryAt != null && Instant.now().isAfter(cacheExpiryAt);
+        }
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(ReactiveJwksSignature.class);
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
+    private final Mono<JwksCacheEntry> cache;
 
     /**
      *
@@ -52,10 +60,18 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      */
     public ReactiveJwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                                  JwkValidator jwkValidator,
-                                 JwkSetFetcher<JWKSet> jwkSetFetcher) {
+                                 JwkSetFetcher<JWKSet> jwkSetFetcher
+    ) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
+        this.cache = Mono.defer(this::fetchJwkSet)
+            .map(set ->
+                new JwksCacheEntry(
+                    set, Instant.now().plusSeconds(jwksSignatureConfiguration.getCacheExpiration())
+                )
+            )
+            .cacheInvalidateIf(JwksCacheEntry::isExpired);
     }
 
     /**
@@ -67,27 +83,32 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     @Override
     @SingleResult
     public Publisher<Boolean> verify(SignedJWT jwt) {
-        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
-                .map(jwkSet -> {
-                    try {
-                        boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator);
-                        if (LOG.isDebugEnabled()) {
-                            if (result) {
-                                LOG.debug("JWT Signature verified: {}", jwt.getParsedString());
-                            } else {
-                                LOG.debug("JWT Signature not verified: {}", jwt.getParsedString());
-                                if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
-                                    LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
-                                }
+        return cache
+            .map(JwksCacheEntry::jwkSet)
+            .map(jwkSet -> {
+                try {
+                    boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator);
+                    if (LOG.isDebugEnabled()) {
+                        if (result) {
+                            LOG.debug("JWT Signature verified: {}", jwt.getParsedString());
+                        } else {
+                            LOG.debug("JWT Signature not verified: {}", jwt.getParsedString());
+                            if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
+                                LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
                             }
                         }
-                        return result;
-                    } catch (JOSEException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Error verifying JWT signature", e);
-                        }
-                        return false;
                     }
-                });
+                    return result;
+                } catch (JOSEException e) {
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Error verifying JWT signature", e);
+                    }
+                    return false;
+                }
+            });
+    }
+
+    private Mono<JWKSet> fetchJwkSet() {
+        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()));
     }
 }

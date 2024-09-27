@@ -48,7 +48,6 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import spock.lang.AutoCleanup
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -113,7 +112,6 @@ class JwksCacheSpec extends Specification {
         }
     }
 
-    @PendingFeature
     void "JWK are cached"() {
         given:
         HttpClient googleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, googleEmbeddedServer.URL)
@@ -133,26 +131,26 @@ class JwksCacheSpec extends Specification {
 
         when:
         BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)
-
-        then:
-        noExceptionThrown()
-        googleBearerAccessRefreshToken.accessToken
-
-        when:
         String googleAccessToken = googleBearerAccessRefreshToken.accessToken
         JWT googleJWT = JWTParser.parse(googleAccessToken)
+
         BearerAccessRefreshToken appleBearerAccessRefreshToken = login(appleClient)
         String appleAccessToken = appleBearerAccessRefreshToken.accessToken
         JWT appleJWT = JWTParser.parse(appleAccessToken)
+
         BearerAccessRefreshToken cognitoBearerAccessRefreshToken = login(cognitoClient)
         String cognitoAccessToken = cognitoBearerAccessRefreshToken.accessToken
         JWT cognitoJWT = JWTParser.parse(cognitoAccessToken)
 
         then:
         noExceptionThrown()
+
         assertKeyId(googleJWT, 'google')
+        googleBearerAccessRefreshToken.accessToken
+
         assertKeyId(appleJWT, 'apple')
         appleBearerAccessRefreshToken.accessToken
+
         assertKeyId(cognitoJWT, 'cognito')
         cognitoBearerAccessRefreshToken.accessToken
 
@@ -170,7 +168,9 @@ class JwksCacheSpec extends Specification {
 
         when: 'when you invoke it again all the keys are cached'
         oldInvocations = totalInvocations()
+        hello(client, googleAccessToken)
         hello(client, appleAccessToken)
+        hello(client, cognitoAccessToken)
 
         then:
         totalInvocations() == oldInvocations
