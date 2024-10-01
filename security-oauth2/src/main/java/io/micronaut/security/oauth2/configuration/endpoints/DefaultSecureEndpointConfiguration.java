@@ -69,6 +69,7 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
         try {
             this.authMethod = AuthenticationMethod.valueOf(authenticationMethod.toUpperCase());
         } catch (IllegalArgumentException e) {
+            // don't crash for non-existing enum options
         }
         this.authenticationMethod = authenticationMethod;
     }
