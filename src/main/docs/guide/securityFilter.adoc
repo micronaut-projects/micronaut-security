@@ -1,0 +1,8 @@
+When you add the `micronaut-security` dependency, it contributes a https://docs.micronaut.io/latest/guide/#filters[Micronaut HTTP Server Filter] - the api:security.filters.SecurityFilter[].
+
+image::securityfilter.png[]
+
+For each request, the filter evaluates the request against every bean of type api:security.filters.AuthenticationFetcher[]. That evaluation may result in an instance of type api:security.authentication.Authentication[] being resolved.
+
+Then, the optional authentication is evaluated against every bean of type api:security.rules.SecurityRule[] to determine if the request is authorized. If not authorized, an api:security.authentication.AuthorizationException[] is thrown.
+

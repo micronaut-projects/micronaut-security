@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "9.40"
+managed-nimbus-jose-jwt = "9.41.1"
 managed-jjwt = "0.12.6"
 
 micronaut = "4.6.5"
@@ -7,8 +7,8 @@ micronaut-platform = "4.6.2"
 micronaut-docs = "2.0.0"
 
 geb = "7.0"
-selenium = "4.23.1"
-system-stubs-core = "2.1.6"
+selenium = "4.25.0"
+system-stubs-core = "2.1.7"
 unboundid-ldapsdk = "7.0.1"
 bouncycastle = "1.70"
 kotlin = "2.0.20"
@@ -19,13 +19,13 @@ micronaut-multitenancy = "5.4.0"
 micronaut-reactor = "3.5.0"
 micronaut-logging = "1.4.0"
 micronaut-serde = "2.11.0"
-micronaut-servlet = "4.10.0"
+micronaut-servlet = "4.11.1"
 micronaut-session = "4.4.0"
-micronaut-views = "5.4.4"
+micronaut-views = "5.5.1"
 micronaut-validation = "4.7.0"
-micronaut-data = "4.9.3"
-micronaut-sql="5.7.0"
-micronaut-test-resources="2.5.4"
+micronaut-data = "4.9.4"
+micronaut-sql="5.8.2"
+micronaut-test-resources="2.6.2"
 
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]

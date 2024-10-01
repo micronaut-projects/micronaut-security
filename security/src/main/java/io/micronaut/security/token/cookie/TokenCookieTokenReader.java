@@ -15,13 +15,10 @@
  */
 package io.micronaut.security.token.cookie;
 
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.reader.TokenReader;
-import jakarta.inject.Singleton;
+
 import java.util.Optional;
 
 /**
@@ -29,11 +26,9 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link CookieTokenReader} instead.
  */
-@Requires(classes = { HttpRequest.class })
-@Requires(condition = CookieBasedAuthenticationModeCondition.class)
-@Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Singleton
+@Deprecated(forRemoval = true)
 public class TokenCookieTokenReader implements TokenReader<HttpRequest<?>> {
 
     /*

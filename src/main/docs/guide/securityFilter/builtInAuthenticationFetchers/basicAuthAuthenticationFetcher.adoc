@@ -1,0 +1,5 @@
+api:io.micronaut.security.authentication.BasicAuthAuthenticationFetcher[] parses the credentials
+from an HTTP Request using https://en.wikipedia.org/wiki/Basic_access_authentication[Basic Authentication]. Then,
+it invokes every <<authenticationProviders, Authentication Provider>> using the parsed credentials.
+
+image::basicAuthAuthenticationFetcher.png[]
