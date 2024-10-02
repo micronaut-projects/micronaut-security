@@ -53,6 +53,7 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
     @Deprecated(forRemoval = true)
     public void setAuthMethod(@NonNull AuthenticationMethod authMethod) {
         this.authMethod = authMethod;
+        this.authenticationMethod = authMethod.toString();
     }
 
     @Override
@@ -65,6 +66,11 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
      * @param authenticationMethod Authentication Method
      */
     public void setAuthenticationMethod(String authenticationMethod) {
+        try {
+            this.authMethod = AuthenticationMethod.valueOf(authenticationMethod.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // don't crash for non-existing enum options
+        }
         this.authenticationMethod = authenticationMethod;
     }
 }
