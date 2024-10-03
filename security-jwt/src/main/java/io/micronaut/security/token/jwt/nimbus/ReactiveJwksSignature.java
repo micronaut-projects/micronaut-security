@@ -104,12 +104,13 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     }
 
     private Mono<JWKSet> fetchJwkSet() {
-        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()));
+        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
+            .switchIfEmpty(Mono.just(new JWKSet()));
     }
 
     private record JwksCacheEntry(JWKSet jwkSet, Instant cacheExpiryAt) {
         private boolean isExpired() {
-            return cacheExpiryAt != null && Instant.now().isAfter(cacheExpiryAt);
+            return jwkSet.isEmpty() || (cacheExpiryAt != null && Instant.now().isAfter(cacheExpiryAt));
         }
     }
 }
