@@ -24,7 +24,7 @@ import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 
-@Requires(condition = CacheExistsCondition.class)
+@Requires(condition = JwksCacheExistsCondition.class)
 @Internal
 @Primary
 @Singleton
