@@ -43,7 +43,6 @@ import java.util.function.Supplier;
  * @since 3.9.0
  */
 @Singleton
-@CacheConfig("jwks")
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     public static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
 
@@ -75,7 +74,6 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     @Override
     @NonNull
     @SingleResult
-    @Cacheable
     public Publisher<JWKSet> fetch(@Nullable String providerName, @Nullable String url) {
         if (url == null) {
             return Mono.empty();
