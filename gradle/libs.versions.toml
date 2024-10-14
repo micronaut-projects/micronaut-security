@@ -16,6 +16,7 @@ bcpkix = "1.70"
 micronaut-test = "4.5.0"
 micronaut-hibernate-validator = "4.5.0"
 micronaut-multitenancy = "5.4.0"
+micronaut-cache="5.0.1"
 micronaut-reactor = "3.5.0"
 micronaut-logging = "1.4.0"
 micronaut-serde = "2.11.0"
@@ -31,6 +32,7 @@ micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'mi
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+micronaut-cache = { module = "io.micronaut.cache:micronaut-cache-bom", version.ref = "micronaut-cache" }
 micronaut-hibernate-validator = { module = "io.micronaut.beanvalidation:micronaut-hibernate-validator-bom", version.ref = "micronaut-hibernate-validator" }
 micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
 micronaut-test = { module = "io.micronaut.test:micronaut-test-bom", version.ref = "micronaut-test" }

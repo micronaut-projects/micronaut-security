@@ -48,6 +48,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-cache")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-sql")
     importMicronautCatalog("micronaut-servlet")
