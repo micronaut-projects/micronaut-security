@@ -43,7 +43,7 @@ public interface JwksSignatureConfiguration extends Named {
     KeyType getKeyType();
 
     /**
-     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache  and the cache configuration micronaut.caches.jwks.expire-after-write
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      * @return The number of seconds to cache the JWKS.
      */
     @NonNull
