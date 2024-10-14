@@ -28,6 +28,7 @@ import static io.micronaut.security.token.jwt.signature.jwks.CacheableJwkSetFetc
 @Internal
 class JwksCacheExistsCondition implements Condition {
     private static final Logger LOG = LoggerFactory.getLogger(JwksCacheExistsCondition.class);
+
     @Override
     public boolean matches(ConditionContext context) {
         try {
