@@ -27,5 +27,7 @@ The https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] ba
 include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlservicefallbackclientconfig]
 ----
 
+### Exposing your Application's Json Web Key Set (JKWS)
+
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 
