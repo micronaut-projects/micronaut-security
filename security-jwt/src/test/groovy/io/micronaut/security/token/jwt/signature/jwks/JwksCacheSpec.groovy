@@ -48,7 +48,6 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import spock.lang.AutoCleanup
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -113,7 +112,6 @@ class JwksCacheSpec extends Specification {
         }
     }
 
-    @PendingFeature
     void "JWK are cached"() {
         given:
         HttpClient googleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, googleEmbeddedServer.URL)
