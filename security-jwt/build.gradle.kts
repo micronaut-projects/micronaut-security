@@ -14,7 +14,6 @@ dependencies {
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
     testImplementation(libs.bcpkix.jdk15on)
-    testImplementation(libs.bcprov.jdk15on)
 
     compileOnly(mn.micronaut.http.client.core)
     compileOnly(mn.micronaut.http.server)
