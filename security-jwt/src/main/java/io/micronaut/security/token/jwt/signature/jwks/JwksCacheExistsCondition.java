@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import static io.micronaut.security.token.jwt.signature.jwks.CacheableJwkSetFetcher.CACHE_JWKS;
 
 @Internal
-public class JwksCacheExistsCondition implements Condition {
+class JwksCacheExistsCondition implements Condition {
     private static final Logger LOG = LoggerFactory.getLogger(JwksCacheExistsCondition.class);
     @Override
     public boolean matches(ConditionContext context) {
