@@ -1,0 +1,24 @@
+You can cache the Json Web Key Set (JWKS) fetched from a remote web server.
+
+To do that, you will need to add an implementation of Micronaut Cache (E.g.
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine[Caffeine],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#redis[Redis],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#ehcache[Ehcache],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#hazelcast[Hazelcast],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#infinispan[Infinispan],
+https://micronaut-projects.github.io/micronaut-eclipsestore/latest/guide/#cache[Cache],
+or https://micronaut-projects.github.io/micronaut-cache/latest/guide/#microstream[MicroStream]) and configure the expiration.
+
+For example, you could add Caffeine implementation:
+
+dependency:micronaut-cache-caffeine[groupId=io.micronaut.cache]
+
+The cache name is `jwks`. You can configure the cache expiration with:
+
+[configuration]
+----
+micronaut:
+  caches:
+    jwks:
+      expire-after-write: 24h
+----

@@ -16,6 +16,8 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import io.micronaut.cache.annotation.CacheConfig;
+import io.micronaut.cache.annotation.Cacheable;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -41,6 +43,7 @@ import java.util.function.Supplier;
  * @since 3.9.0
  */
 @Singleton
+@CacheConfig("jwks")
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     public static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
 
@@ -72,6 +75,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     @Override
     @NonNull
     @SingleResult
+    @Cacheable
     public Publisher<JWKSet> fetch(@Nullable String providerName, @Nullable String url) {
         if (url == null) {
             return Mono.empty();

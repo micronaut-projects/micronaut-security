@@ -89,12 +89,10 @@ class JwksCacheSpec extends Specification {
     @Shared
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'micronaut.http.client.read-timeout': '30s',
+            'micronaut.caches.jwks.expire-after-write': '5s',
             'micronaut.security.token.jwt.signatures.jwks.apple.url': "http://localhost:${appleEmbeddedServer.port}/keys",
-            'micronaut.security.token.jwt.signatures.jwks.apple.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.google.url': "http://localhost:${googleEmbeddedServer.port}/keys",
-            'micronaut.security.token.jwt.signatures.jwks.google.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.cognito.url': "http://localhost:${cognitoEmbeddedServer.port}/keys",
-            'micronaut.security.token.jwt.signatures.jwks.cognito.cache-expiration': 5,
             'spec.name': 'JwksCacheSpec'
     ])
 
