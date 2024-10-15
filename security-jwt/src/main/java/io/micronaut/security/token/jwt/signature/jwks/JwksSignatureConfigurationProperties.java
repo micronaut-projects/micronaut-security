@@ -79,7 +79,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     @Override
     @NonNull
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public Integer getCacheExpiration() {
         return cacheExpiration;
     }
