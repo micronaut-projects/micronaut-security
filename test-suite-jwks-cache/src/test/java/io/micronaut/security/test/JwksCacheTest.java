@@ -153,7 +153,7 @@ class JwksCacheTest  {
         hello(client, cognitoAccessToken, true);
 
         // then:
-        assertTrue(totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer) == (oldInvocations + 3));
+        assertEquals((oldInvocations + 3), totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer));
 
         //when: 'when you invoke it again all the keys are cached'
         oldInvocations = totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer);
@@ -190,7 +190,7 @@ class JwksCacheTest  {
     }
 
     private void assertKeyId(JWT jwt, String keyId) {
-        assertTrue(jwt instanceof SignedJWT);
+        assertInstanceOf(SignedJWT.class, jwt);
         assertEquals(((SignedJWT) jwt).getHeader().getKeyID(), keyId);
     }
 
