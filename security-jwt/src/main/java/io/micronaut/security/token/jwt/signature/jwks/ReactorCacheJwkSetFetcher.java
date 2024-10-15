@@ -16,8 +16,6 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import io.micronaut.cache.annotation.CacheConfig;
-import io.micronaut.cache.annotation.Cacheable;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
@@ -31,11 +29,10 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * A {@link JwkSetFetcher} that caches the JWKSet using Reactor {@link Mono#cacheInvalidateIf(Predicate)}
+ * A {@link JwkSetFetcher} that caches the JWKSet using Reactor {@link Mono#cacheInvalidateIf(Predicate)}.
  *
  * @since 4.11.0
  * @author Sergio del Amo
@@ -64,7 +61,7 @@ public class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
                 .map(JwksCacheEntry::jwkSet);
     }
 
-    public Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
+    private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
         Mono<JWKSet> jwkSet = Mono.from(super.fetch(cacheKey.providerName, cacheKey.url()))
                 .switchIfEmpty(Mono.just(new JWKSet()));
         return Mono.from(jwkSet.map(set ->
