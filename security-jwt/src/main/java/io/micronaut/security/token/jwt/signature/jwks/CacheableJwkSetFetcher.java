@@ -30,7 +30,7 @@ import org.reactivestreams.Publisher;
  * @since 4.11.0
  * @author Sergio del Amo
  */
-@Requires(condition = JwksCacheExistsCondition.class)
+@Requires(condition = JwksCacheConfigurationExistsCondition.class)
 @Internal
 @Primary
 @Singleton

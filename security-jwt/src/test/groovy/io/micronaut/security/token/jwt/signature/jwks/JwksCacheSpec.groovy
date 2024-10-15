@@ -17,6 +17,7 @@ import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
@@ -89,10 +90,12 @@ class JwksCacheSpec extends Specification {
     @Shared
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'micronaut.http.client.read-timeout': '30s',
-            'micronaut.caches.jwks.expire-after-write': '5s',
             'micronaut.security.token.jwt.signatures.jwks.apple.url': "http://localhost:${appleEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.apple.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.google.url': "http://localhost:${googleEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.google.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.cognito.url': "http://localhost:${cognitoEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.cognito.cache-expiration': 5,
             'spec.name': 'JwksCacheSpec'
     ])
 
@@ -112,6 +115,7 @@ class JwksCacheSpec extends Specification {
 
     void "JWK are cached"() {
         given:
+
         HttpClient googleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, googleEmbeddedServer.URL)
         BlockingHttpClient googleClient = googleHttpClient.toBlocking()
 
@@ -126,6 +130,17 @@ class JwksCacheSpec extends Specification {
 
         expect:
         0 == totalInvocations()
+        when:
+        !embeddedServer.getApplicationContext().getBean(CacheableJwkSetFetcher.class)
+
+        then:
+        thrown(NoSuchBeanException)
+
+        when:
+        embeddedServer.getApplicationContext().getBean(ReactorCacheJwkSetFetcher.class);
+
+        then:
+        noExceptionThrown()
 
         when:
         BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)

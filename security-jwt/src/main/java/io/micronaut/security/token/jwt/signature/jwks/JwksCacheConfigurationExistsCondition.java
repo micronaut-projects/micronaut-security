@@ -15,25 +15,25 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
-import io.micronaut.cache.CacheManager;
+import io.micronaut.cache.CacheConfiguration;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.micronaut.security.token.jwt.signature.jwks.CacheableJwkSetFetcher.CACHE_JWKS;
 
 @Internal
-class JwksCacheExistsCondition implements Condition {
-    private static final Logger LOG = LoggerFactory.getLogger(JwksCacheExistsCondition.class);
+class JwksCacheConfigurationExistsCondition implements Condition {
+    private static final Logger LOG = LoggerFactory.getLogger(JwksCacheConfigurationExistsCondition.class);
 
     @Override
     public boolean matches(ConditionContext context) {
         try {
-            context.getBean(CacheManager.class).getCache(CACHE_JWKS);
-            return true;
+            return context.findBean(CacheConfiguration.class, Qualifiers.byName(CACHE_JWKS)).isPresent();
         } catch (ConfigurationException e) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Json Web Key Set Cache not loaded. No jwks cache configuration found");
