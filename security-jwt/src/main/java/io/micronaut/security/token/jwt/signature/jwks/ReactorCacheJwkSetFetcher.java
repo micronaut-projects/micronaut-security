@@ -64,11 +64,11 @@ public class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
         Mono<JWKSet> jwkSet = Mono.from(super.fetch(cacheKey.providerName, cacheKey.url()))
                 .switchIfEmpty(Mono.just(new JWKSet()));
-        return Mono.from(jwkSet.map(set ->
+        return jwkSet.map(set ->
                 new JwksCacheEntry(set, Instant.now().plusSeconds(jwksSignatureConfigurations.get(cacheKey.providerName) != null
                         ? jwksSignatureConfigurations.get(cacheKey.providerName).getCacheExpiration()
                         : JwksSignatureConfigurationProperties.DEFAULT_CACHE_EXPIRATION))
-        ).cacheInvalidateIf(JwksCacheEntry::isExpired));
+        ).cacheInvalidateIf(JwksCacheEntry::isExpired);
     }
     
     private record CacheKey(String providerName, String url) {
