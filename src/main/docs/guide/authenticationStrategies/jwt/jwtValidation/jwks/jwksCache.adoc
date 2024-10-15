@@ -10,7 +10,9 @@ https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine[Caff
 https://micronaut-projects.github.io/micronaut-cache/latest/guide/#redis[Redis],
 https://micronaut-projects.github.io/micronaut-cache/latest/guide/#ehcache[Ehcache],
 https://micronaut-projects.github.io/micronaut-cache/latest/guide/#hazelcast[Hazelcast],
-https://micronaut-projects.github.io/micronaut-cache/latest/guide/#infinispan[Infinispan], https://micronaut-projects.github.io/micronaut-eclipsestore/latest/guide/#cache[Cache],
+https://micronaut-projects.github.io/micronaut-coherence/latest/guide/#cache[Coherence],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#infinispan[Infinispan],
+https://micronaut-projects.github.io/micronaut-eclipsestore/latest/guide/#cache[EclipseStore],
 or https://micronaut-projects.github.io/micronaut-cache/latest/guide/#microstream[MicroStream]) and configure the expiration.
 
 For example, you could add https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine[Caffeine] implementation:
