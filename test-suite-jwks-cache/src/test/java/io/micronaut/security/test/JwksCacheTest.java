@@ -134,7 +134,6 @@ class JwksCacheTest  {
         BearerAccessRefreshToken appleBearerAccessRefreshToken = login(appleClient);
         assertNotNull(appleBearerAccessRefreshToken.getAccessToken());
         String appleAccessToken = appleBearerAccessRefreshToken.getAccessToken();
-        JWT appleJWT = JWTParser.parse(appleAccessToken);
 
         // Get an access Token for the Cognito Server
         BearerAccessRefreshToken cognitoBearerAccessRefreshToken = login(cognitoClient);
@@ -213,6 +212,8 @@ class JwksCacheTest  {
         GoogleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
+
+        @Override
         @Get
         @SingleResult
         public Publisher<String> keys() {
@@ -230,6 +231,8 @@ class JwksCacheTest  {
         AppleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
+
+        @Override
         @Get
         @SingleResult
         public Publisher<String> keys() {
@@ -247,6 +250,8 @@ class JwksCacheTest  {
         CognitoKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
+
+        @Override
         @Get
         @SingleResult
         public Publisher<String> keys() {
@@ -285,9 +290,9 @@ class JwksCacheTest  {
     @Singleton
     static class AppleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
         private List<JWK> jwks;
-        private final static String KID = "apple";
+        private static final String KID = "apple";
         private RSAKey rsaKey;
-        private final static JWSAlgorithm ALG = JWSAlgorithm.RS256;
+        private static final JWSAlgorithm ALG = JWSAlgorithm.RS256;
         AppleSignatureConfiguration() {
             refreshKey();
         }
@@ -349,7 +354,7 @@ class JwksCacheTest  {
     @Refreshable
     @Singleton
     static class CognitoSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final static JWSAlgorithm ALG = JWSAlgorithm.RS256;
+        private static final JWSAlgorithm ALG = JWSAlgorithm.RS256;
         private List<JWK> jwks;
         private RSAKey rsaKey;
         String kid = "cognito";
@@ -358,6 +363,35 @@ class JwksCacheTest  {
             this.rsaKey = null;
             this.jwks = null;
         }
+
+        @Override
+        public RSAPublicKey getPublicKey() {
+            try {
+                return getRsaKey().toRSAPublicKey();
+            } catch (JOSEException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public RSAPrivateKey getPrivateKey() {
+            try {
+                return getRsaKey().toRSAPrivateKey();
+            } catch (JOSEException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public JWSAlgorithm getJwsAlgorithm() {
+            return ALG;
+        }
+
+        @Override
+        public List<JWK> retrieveJsonWebKeys() {
+            return getJwks();
+        }
+
 
         void rotateKid() {
             this.kid = "cognito-" + UUID.randomUUID().toString().substring(0, 5);
@@ -390,6 +424,33 @@ class JwksCacheTest  {
             }
             return rsaKey;
         }
+    }
+
+    @Requires(property = "spec.name", value = "GoogleJwksCacheSpec")
+    @Refreshable
+    @Singleton
+    @Replaces(TokenGenerator.class)
+    static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
+        GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
+                                           ClaimsGenerator claimsGenerator) {
+            super(new RSASignatureGenerator(googleSignatureConfiguration), null, claimsGenerator);
+        }
+    }
+
+    @Requires(property = "spec.name", value = "GoogleJwksCacheSpec")
+    @Named("generator")
+    @Refreshable
+    @Singleton
+    static class GoogleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
+        private static final JWSAlgorithm ALG = JWSAlgorithm.RS256;
+        private List<JWK> jwks;
+        private RSAKey rsaKey;
+        String kid = "google";
+
+        GoogleSignatureConfiguration() {
+            this.rsaKey = null;
+            this.jwks = null;
+        }
 
         @Override
         public RSAPublicKey getPublicKey() {
@@ -417,33 +478,6 @@ class JwksCacheTest  {
         @Override
         public List<JWK> retrieveJsonWebKeys() {
             return getJwks();
-        }
-    }
-
-    @Requires(property = "spec.name", value = "GoogleJwksCacheSpec")
-    @Refreshable
-    @Singleton
-    @Replaces(TokenGenerator.class)
-    static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
-        GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
-                                           ClaimsGenerator claimsGenerator) {
-            super(new RSASignatureGenerator(googleSignatureConfiguration), null, claimsGenerator);
-        }
-    }
-
-    @Requires(property = "spec.name", value = "GoogleJwksCacheSpec")
-    @Named("generator")
-    @Refreshable
-    @Singleton
-    static class GoogleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final static JWSAlgorithm ALG = JWSAlgorithm.RS256;
-        private List<JWK> jwks;
-        private RSAKey rsaKey;
-        String kid = "google";
-
-        GoogleSignatureConfiguration() {
-            this.rsaKey = null;
-            this.jwks = null;
         }
 
         void rotateKid() {
@@ -477,36 +511,7 @@ class JwksCacheTest  {
             }
             return rsaKey;
         }
-
-        @Override
-        public RSAPublicKey getPublicKey() {
-            try {
-                return getRsaKey().toRSAPublicKey();
-            } catch (JOSEException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public RSAPrivateKey getPrivateKey() {
-            try {
-                return getRsaKey().toRSAPrivateKey();
-            } catch (JOSEException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public JWSAlgorithm getJwsAlgorithm() {
-            return ALG;
-        }
-
-        @Override
-        public List<JWK> retrieveJsonWebKeys() {
-            return getJwks();
-        }
     }
-
 
     private int googleInvocations(EmbeddedServer server) {
         return server.getApplicationContext().getBean(GoogleKeysController.class).invocations;
@@ -543,6 +548,6 @@ class JwksCacheTest  {
 
     private static void refresh(BlockingHttpClient client) {
         HttpResponse<?> response = client.exchange(HttpRequest.POST("/refresh", "{\"force\": true}"));
-        assertEquals(response.status(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.status());
     }
 }
