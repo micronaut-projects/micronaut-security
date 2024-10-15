@@ -36,10 +36,10 @@ import org.reactivestreams.Publisher;
 @Primary
 @Singleton
 @CacheConfig(CacheableJwkSetFetcher.CACHE_JWKS)
-public class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
+class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     public static final String CACHE_JWKS = "jwks";
 
-    public CacheableJwkSetFetcher(JwksClient jwksClient) {
+    CacheableJwkSetFetcher(JwksClient jwksClient) {
         super(jwksClient);
     }
 
