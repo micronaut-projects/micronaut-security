@@ -47,7 +47,7 @@ import java.util.Optional;
  */
 @Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
-@Requires(beans = LogoutHandler.class)
+@Requires(beans = { LogoutHandler.class, HttpHostResolver.class, HttpLocaleResolver.class })
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {

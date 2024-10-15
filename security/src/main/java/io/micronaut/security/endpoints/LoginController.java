@@ -60,7 +60,7 @@ import java.util.Optional;
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
-@Requires(beans = {LoginHandler.class, Authenticator.class})
+@Requires(beans = {LoginHandler.class, Authenticator.class, HttpHostResolver.class, HttpHostResolver.class})
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LoginController<B> {
