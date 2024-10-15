@@ -203,7 +203,9 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-jwks"><a href="#jwks"><strong>11.3.3.1</strong><span>Remote JWKS</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-staticJwks"><a href="#staticJwks"><strong>11.3.3.1.1</strong><span>Local JWKS</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-jwksCache"><a href="#jwksCache"><strong>11.3.3.1.1</strong><span>JWKS Caching</span></a></div>
+        
+        <div class="toc-item" style="margin-left:40px" id="toc-item-staticJwks"><a href="#staticJwks"><strong>11.3.3.1.2</strong><span>Local JWKS</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-jsonWebTokenValidator"><a href="#jsonWebTokenValidator"><strong>11.3.4</strong><span>JWT Validation</span></a></div>
         
@@ -4056,11 +4058,138 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_exposing_your_applications_json_web_key_set_jkws">Exposing your Application&#8217;s Json Web Key Set (JKWS)</h3>
 <div class="paragraph">
 <p>If you want to expose your own JWK Set, read the <a href="#keys">Keys Controller</a> section.</p>
 </div>
+</div>
 
-<h2 id="staticJwks"><a class="anchor" href="#staticJwks"></a>11.3.3.1.1 Local JWKS</h2>
+<h2 id="jwksCache"><a class="anchor" href="#jwksCache"></a>11.3.3.1.1 JWKS Caching</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks/jwksCache.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Json Web Key Set (JWKS) fetched from a remote web server are cached. By default, they are cached via the internal bean <a href="../api/io/micronaut/security/token/jwt/signature/jwks/ReactorCacheJwkSetFetcher.html">ReactorCacheJwkSetFetcher</a> using
+Project Reactor&#8217;s <code>Mono::cacheInvalidateIf</code>. You can configure the cache expiration with <code>micronaut.security.token.jwt.signatures.jwks.*.cache-expiration</code>. It defaults to 60 seconds.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+However, we recommend you enable caching via <a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/">Micronaut Cache</a>. This will be the only option in the future.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Caching via Micronaut Cache</strong></p>
+</div>
+<div class="paragraph">
+<p>To cache JWKS with Micronaut Cache, you need to add an implementation of Micronaut Cache (E.g.
+<a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine">Caffeine</a>,
+<a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#redis">Redis</a>,
+<a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#ehcache">Ehcache</a>,
+<a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#hazelcast">Hazelcast</a>,
+<a href="https://micronaut-projects.github.io/micronaut-coherence/latest/guide/#cache">Coherence</a>,
+<a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#infinispan">Infinispan</a>,
+<a href="https://micronaut-projects.github.io/micronaut-eclipsestore/latest/guide/#cache">EclipseStore</a>,
+or <a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#microstream">MicroStream</a>) and configure the expiration.</p>
+</div>
+<div class="paragraph">
+<p>For example, you could add <a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine">Caffeine</a> implementation:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.cache:micronaut-cache-caffeine")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.cache&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-cache-caffeine&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="paragraph">
+<p>The cache name is <code>jwks</code>. You can configure the cache expiration with:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.caches.jwks.expire-after-write=24h</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  caches:
+    jwks:
+      expire-after-write: 24h</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.caches]
+    [micronaut.caches.jwks]
+      expire-after-write="24h"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  caches {
+    jwks {
+      expireAfterWrite = "24h"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    caches {
+      jwks {
+        expire-after-write = "24h"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "caches": {
+      "jwks": {
+        "expire-after-write": "24h"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="staticJwks"><a class="anchor" href="#staticJwks"></a>11.3.3.1.2 Local JWKS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks/staticJwks.adoc"'>

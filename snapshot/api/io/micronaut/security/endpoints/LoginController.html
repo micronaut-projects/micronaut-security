@@ -80,7 +80,7 @@ loadScripts(document, 'script');</script>
 <dd><code>B</code> - The HTTP Request Body type</dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.endpoints.login.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.annotation.Controller.class) @Requires(beans={<a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler.class</a>,<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator.class</a>})
+<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.endpoints.login.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.annotation.Controller.class) @Requires(beans={<a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler.class</a>,<a href="../authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator.class</a>,io.micronaut.http.server.util.HttpHostResolver.class,io.micronaut.http.server.util.HttpHostResolver.class})
 @Controller("${micronaut.security.endpoints.login.path:/login}")
 <a href="../annotation/Secured.html" title="annotation interface in io.micronaut.security.annotation">@Secured</a>("isAnonymous()")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">LoginController&lt;B&gt;</span>

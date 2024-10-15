@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <hr>
-<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.endpoints.logout.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.annotation.Controller.class) @Requires(beans=<a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler.class</a>)
+<div class="type-signature"><span class="annotations">@Requires(property="micronaut.security.endpoints.logout.enabled",notEquals="false",defaultValue="true") @Requires(classes=io.micronaut.http.annotation.Controller.class) @Requires(beans={<a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler.class</a>,io.micronaut.http.server.util.HttpHostResolver.class,io.micronaut.http.server.util.locale.HttpLocaleResolver.class})
 @Controller("${micronaut.security.endpoints.logout.path:/logout}")
 <a href="../annotation/Secured.html" title="annotation interface in io.micronaut.security.annotation">@Secured</a>("isAnonymous()")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">LogoutController</span>
