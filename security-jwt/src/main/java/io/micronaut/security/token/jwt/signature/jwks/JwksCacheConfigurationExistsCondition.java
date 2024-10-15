@@ -26,7 +26,7 @@ import java.util.Optional;
 import static io.micronaut.security.token.jwt.signature.jwks.CacheableJwkSetFetcher.CACHE_JWKS;
 
 @Internal
-class JwksCacheConfigurationExistsCondition implements Condition {
+final class JwksCacheConfigurationExistsCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context) {
