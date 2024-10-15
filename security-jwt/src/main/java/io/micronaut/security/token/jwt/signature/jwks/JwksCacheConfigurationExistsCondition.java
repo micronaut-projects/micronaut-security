@@ -21,23 +21,23 @@ import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.qualifiers.Qualifiers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 
 import static io.micronaut.security.token.jwt.signature.jwks.CacheableJwkSetFetcher.CACHE_JWKS;
 
 @Internal
 class JwksCacheConfigurationExistsCondition implements Condition {
-    private static final Logger LOG = LoggerFactory.getLogger(JwksCacheConfigurationExistsCondition.class);
 
     @Override
     public boolean matches(ConditionContext context) {
         try {
-            return context.findBean(CacheConfiguration.class, Qualifiers.byName(CACHE_JWKS)).isPresent();
-        } catch (ConfigurationException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Json Web Key Set Cache not loaded. No jwks cache configuration found");
+            Optional<CacheConfiguration> beanOptional = context.findBean(CacheConfiguration.class, Qualifiers.byName(CACHE_JWKS));
+            if (beanOptional.isEmpty()) {
+                context.fail("No bean of type io.micronaut.cache.CacheConfiguration and name qualifier " + CACHE_JWKS + " found");
             }
+            return beanOptional.isPresent();
+        } catch (ConfigurationException e) {
+            context.fail("No bean of type io.micronaut.cache.CacheConfiguration and name qualifier " + CACHE_JWKS + " found");
             return false;
         }
     }

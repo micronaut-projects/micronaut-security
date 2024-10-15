@@ -247,6 +247,7 @@ class JwksCacheTest  {
     @Replaces(KeysController.class)
     static class CognitoKeysController extends KeysController {
         int invocations = 0;
+
         CognitoKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
