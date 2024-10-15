@@ -63,7 +63,7 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
 
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
         return Mono.from(super.fetch(cacheKey.providerName, cacheKey.url()))
-                .switchIfEmpty(Mono.just(new JWKSet()))
+                .defaultIfEmpty(new JWKSet())
                 .map(jwksSet -> instantiateCacheEntry(cacheKey, jwksSet))
                 .cacheInvalidateIf(JwksCacheEntry::isExpired);
     }
