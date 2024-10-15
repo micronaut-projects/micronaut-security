@@ -48,6 +48,7 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
  * @since 1.0
  */
 @Requires(classes = HttpRequest.class)
+@Requires(beans = HttpHostResolver.class)
 @Singleton
 public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 

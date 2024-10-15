@@ -60,6 +60,7 @@ authenticationStrategies:
       title: JWT Signature Validation
       jwks:
         title: Remote JWKS
+        jwksCache: JWKS Caching
         staticJwks: Local JWKS
     jsonWebTokenValidator: JWT Validation
     jwtGenerator:

@@ -77,8 +77,13 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
         return name;
     }
 
+    /**
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
+     * @return The number of seconds to cache the JWKS.
+     */
     @Override
     @NonNull
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public Integer getCacheExpiration() {
         return cacheExpiration;
     }
@@ -86,7 +91,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     /**
      * JWKS cache expiration. Default value {@value #DEFAULT_CACHE_EXPIRATION} seconds.
      * @param cacheExpiration The expiration
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public void setCacheExpiration(Integer cacheExpiration) {
         ArgumentUtils.requireNonNull("cacheExpiration", cacheExpiration);
         this.cacheExpiration = cacheExpiration;

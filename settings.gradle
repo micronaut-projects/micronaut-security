@@ -20,6 +20,7 @@ include "security-session"
 include "security-ldap"
 include "security-oauth2"
 include "test-suite-graal"
+include "test-suite-jwks-cache"
 include "test-suite-groovy"
 include "test-suite"
 include "test-suite-jwt-tck"
@@ -48,6 +49,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-cache")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-sql")
     importMicronautCatalog("micronaut-servlet")
