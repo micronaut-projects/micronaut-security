@@ -43,11 +43,11 @@ import java.util.function.Predicate;
 @Primary
 @Singleton
 @Deprecated(forRemoval = true, since = "4.11.0")
-public class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
-    private Map<CacheKey, Mono<JwksCacheEntry>> cache = new ConcurrentHashMap<>();
+final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
+    private final Map<CacheKey, Mono<JwksCacheEntry>> cache = new ConcurrentHashMap<>();
     private final Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations;
 
-    public ReactorCacheJwkSetFetcher(JwksClient jwksClient, Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations) {
+    ReactorCacheJwkSetFetcher(JwksClient jwksClient, Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations) {
         super(jwksClient);
         this.jwksSignatureConfigurations = jwksSignatureConfigurations;
     }
