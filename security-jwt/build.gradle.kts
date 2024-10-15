@@ -13,7 +13,7 @@ dependencies {
     api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
-    implementation(mnCache.micronaut.cache.core)
+    compileOnly(mnCache.micronaut.cache.core)
     testImplementation(libs.bcpkix.jdk15on)
 
     compileOnly(mn.micronaut.http.client.core)
