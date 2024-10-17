@@ -43,17 +43,17 @@ import java.util.Optional;
 @Requires(classes = { ExceptionHandler.class, HttpRequest.class })
 @Requires(beans = { CsrfTokenValidator.class })
 @ServerFilter(patternStyle = FilterPatternStyle.REGEX, value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:^.*$}")
-final class CsrfTokenFilter {
-    private static final Logger LOG = LoggerFactory.getLogger(CsrfTokenFilter.class);
+final class CsrfFilter {
+    private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
     private final ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler;
     private final CsrfFilterConfiguration csrfFilterConfiguration;
 
-    CsrfTokenFilter(CsrfFilterConfiguration csrfFilterConfiguration,
-                    List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers,
-                    CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator,
-                    ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler) {
+    CsrfFilter(CsrfFilterConfiguration csrfFilterConfiguration,
+               List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers,
+               CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator,
+               ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler) {
         this.csrfTokenResolvers = csrfTokenResolvers;
         this.csrfTokenValidator = csrfTokenValidator;
         this.exceptionHandler = exceptionHandler;
