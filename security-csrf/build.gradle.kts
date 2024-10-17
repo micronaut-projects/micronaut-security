@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api(projects.micronautSecurity)
+    compileOnly(mn.micronaut.http)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)

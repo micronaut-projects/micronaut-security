@@ -85,6 +85,7 @@ authenticationStrategies:
 rejection: Rejection Handling
 csrf:
   title: Cross-Site Request Forgery (CSRF)
+  csrfFilter: CSRF Filter
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers

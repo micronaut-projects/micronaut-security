@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 /**
- * Classes related to Cross Site Request Forgery (CSRF).
- * @see <a href="https://owasp.org/www-community/attacks/csrf">Cross Site Request Forgery (CSRF)</a>
+ * Classes related to the CSRF Filter.
  * @author Sergio del Amo
  * @since 4.11.0
  */
-@Requires(property = CsrfConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@Configuration
-package io.micronaut.security.csrf;
-
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+package io.micronaut.security.csrf.filter;
