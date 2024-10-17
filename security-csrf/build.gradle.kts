@@ -3,6 +3,16 @@ plugins {
 }
 
 dependencies {
+    api(projects.micronautSecurity)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnLogging.logback.classic)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 micronautBuild {

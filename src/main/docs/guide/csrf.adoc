@@ -1,0 +1,4 @@
+The following configuration options are available for CSRF:
+
+include::{includedir}configurationProperties/io.micronaut.security.csrf.CsrfConfigurationProperties.adoc[]
+

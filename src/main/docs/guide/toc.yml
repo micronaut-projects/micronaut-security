@@ -83,6 +83,8 @@ authenticationStrategies:
   x509: X.509 Certificate Authentication
   custom: Custom Authorization Strategies
 rejection: Rejection Handling
+csrf:
+  title: Cross-Site Request Forgery (CSRF)
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers
