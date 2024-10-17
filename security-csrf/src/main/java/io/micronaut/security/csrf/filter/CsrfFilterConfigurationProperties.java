@@ -24,7 +24,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import java.util.Set;
 
-@Requires(classes = { HttpMethod.class, MediaType.class})
+@Requires(classes = { HttpMethod.class, MediaType.class })
 @Internal
 @ConfigurationProperties(CsrfFilterConfigurationProperties.PREFIX)
 final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration {
