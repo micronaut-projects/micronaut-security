@@ -27,6 +27,12 @@ public interface CsrfConfiguration extends Toggleable {
 
     /**
      *
+     * @return Random CSRF Token size in bytes.
+     */
+    int getTokenSize();
+
+    /**
+     *
      * @return HTTP Header name to look for the CSRF token.
      */
     @NonNull

@@ -52,12 +52,12 @@ public class FieldCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>>
         return Optional.empty();
     }
 
-    public Optional<String> resolveToken(ServerHttpRequest<?> request) {
+    private Optional<String> resolveToken(ServerHttpRequest<?> request) {
         try (CloseableByteBody ourCopy =
                      request.byteBody()
                              .split(ByteBody.SplitBackpressureMode.SLOWEST)
                              .allowDiscard()) {
-            try(InputStream inputStream = ourCopy.toInputStream()) {
+            try (InputStream inputStream = ourCopy.toInputStream()) {
                 String str = ofInputStream(inputStream);
                 return extractCsrfTokenFromAFormUrlEncodedString(str);
             } catch (IOException e) {

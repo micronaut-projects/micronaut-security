@@ -1,3 +1,5 @@
+https://owasp.org/www-community/attacks/csrf[Cross-Site Request Forgery (CSRF)].
+
 The following configuration options are available for CSRF:
 
 include::{includedir}configurationProperties/io.micronaut.security.csrf.CsrfConfigurationProperties.adoc[]

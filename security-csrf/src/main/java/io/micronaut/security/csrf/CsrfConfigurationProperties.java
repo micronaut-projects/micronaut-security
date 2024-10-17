@@ -29,6 +29,8 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
 
     public static final String DEFAULT_FIELD_NAME = "csrfToken";
 
+    public static final int DEFAULT_TOKEN_SIZE = 16;
+
     public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
@@ -36,6 +38,21 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     private String headerName = DEFAULT_HTTP_HEADER_NAME;
 
     private String fieldName = DEFAULT_FIELD_NAME;
+
+    private int tokenSize = DEFAULT_TOKEN_SIZE;
+
+    @Override
+    public int getTokenSize() {
+        return tokenSize;
+    }
+
+    /**
+     * Random CSRF Token size in bytes. Default Value: {@value #DEFAULT_TOKEN_SIZE}.
+     * @param tokenSize Random CSRF Token size in bytes.
+     */
+    public void setTokenSize(int tokenSize) {
+        this.tokenSize = tokenSize;
+    }
 
     @Override
     @NonNull

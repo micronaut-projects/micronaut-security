@@ -19,7 +19,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
 /**
- * CsrfToken Validator
+ * CSRF Token Validation.
  * @author Sergio del Amo
  * @since 4.11.0
  * @param <T> request

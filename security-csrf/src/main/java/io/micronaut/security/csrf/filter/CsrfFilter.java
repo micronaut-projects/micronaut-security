@@ -38,8 +38,14 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@link RequestFilter} which validates CSRF tokens and returns a 401 Unauthorized if the token is invalid.
+ * Which requests are intercepted can be controlled via {@link io.micronaut.security.csrf.CsrfConfiguration}.
+ * @author Sergio del Amo
+ * @since 4.11.0
+ */
 @Internal
-@Requires(property = CsrfFilterConfigurationProperties.PREFIX +".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfFilterConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = { ExceptionHandler.class, HttpRequest.class })
 @Requires(beans = { CsrfTokenValidator.class })
 @ServerFilter(patternStyle = FilterPatternStyle.REGEX, value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:^.*$}")
@@ -65,10 +71,10 @@ final class CsrfFilter {
     @Nullable
     public HttpResponse<?> csrfFilter(@NonNull HttpRequest<?> request) {
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
-            return null;
+            return null; // continue normally
         }
         if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
-            return null;
+            return null; // continue normally
         }
         if (!validateCsrfToken(request)) {
             if (LOG.isDebugEnabled()) {
@@ -76,7 +82,7 @@ final class CsrfFilter {
             }
             return unauthorized(request);
         }
-        return null;
+        return null; // continue normally
     }
 
     private boolean shouldTheFilterProcessTheRequestAccordingToTheContentType(@NonNull HttpRequest<?> request) {

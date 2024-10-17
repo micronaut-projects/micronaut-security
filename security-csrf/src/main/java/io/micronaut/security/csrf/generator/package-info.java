@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 /**
- * Classes related to CSRF token validation.
+ * Classes related to CSRF Token Generation.
  * @author Sergio del Amo
  * @since 4.11.0
  */
-package io.micronaut.security.csrf.validator;
+package io.micronaut.security.csrf.generator;
