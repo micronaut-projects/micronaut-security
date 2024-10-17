@@ -1,0 +1,6 @@
+|===
+|Resolver | Enabled by Default | Disable with
+|api:security.csrf.resolver:HttpHeaderCsrfTokenResolver[]
+| Yes
+| micronaut.security.csrf.token-resolvers.http-header.enabled=false
+|===
