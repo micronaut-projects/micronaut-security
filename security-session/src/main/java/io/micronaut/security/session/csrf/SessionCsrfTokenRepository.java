@@ -20,6 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import io.micronaut.session.http.SessionForRequest;
+import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ import java.util.Optional;
  */
 @Requires(classes = HttpRequest.class)
 @Requires(beans = CsrfConfiguration.class)
+@Singleton
 public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
 

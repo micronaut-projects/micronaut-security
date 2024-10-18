@@ -48,7 +48,8 @@ import java.util.Optional;
 @Requires(property = CsrfFilterConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = { ExceptionHandler.class, HttpRequest.class })
 @Requires(beans = { CsrfTokenValidator.class })
-@ServerFilter(patternStyle = FilterPatternStyle.REGEX, value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:^.*$}")
+@ServerFilter(patternStyle = FilterPatternStyle.REGEX,
+        value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
 final class CsrfFilter {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;

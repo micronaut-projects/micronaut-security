@@ -10,12 +10,14 @@ import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.csrf.validator.CsrfTokenValidator;
+import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,11 +38,11 @@ class FieldCsrfTokenResolverTest {
 
     @Requires(property = "spec.name", value = "FieldCsrfTokenResolverTest")
     @Singleton
-    @Replaces(CsrfTokenValidator.class)
-    static class CsrfTokenValidatorReplacement implements CsrfTokenValidator<HttpRequest<?>> {
+    @Replaces(CsrfTokenRepository.class)
+    static class CsrfTokenRepositoryReplacement implements CsrfTokenRepository<HttpRequest<?>> {
         @Override
-        public boolean validateCsrfToken(HttpRequest<?> request, String token) {
-            return token.equals("abcde");
+        public Optional<String> findCsrfToken(HttpRequest<?> request) {
+            return Optional.of("abcde");
         }
     }
 

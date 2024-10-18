@@ -22,6 +22,8 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.endpoints.LoginControllerConfigurationProperties;
+
 import java.util.Set;
 
 @Requires(classes = { HttpMethod.class, MediaType.class })
@@ -40,7 +42,8 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      * The default regex pattern.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String  DEFAULT_REGEX_PATTERN = "^.*$";
+    public static final String  DEFAULT_REGEX_PATTERN = "^(?!\\/(login|logout)).*$";
+
 
     private static final Set<HttpMethod> DEFAULT_METHODS = Set.of(
             HttpMethod.POST,

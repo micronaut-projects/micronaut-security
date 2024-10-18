@@ -17,6 +17,7 @@ package io.micronaut.security.session.csrf;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
@@ -55,12 +56,14 @@ public class CsrfSessionLogingHandler extends SessionLoginHandler {
      * @param csrfConfiguration CSRF Configuration
      * @param csrfTokenGenerator CSRF Token Generator
      */
-    public CsrfSessionLogingHandler(RedirectConfiguration redirectConfiguration,
-                                    SessionStore<Session> sessionStore,
-                                    PriorToLoginPersistence<HttpRequest<?>,
-                                    MutableHttpResponse<?>> priorToLoginPersistence,
-                                    RedirectService redirectService,
-                                    CsrfConfiguration csrfConfiguration, CsrfTokenGenerator csrfTokenGenerator) {
+    public CsrfSessionLogingHandler(
+            RedirectConfiguration redirectConfiguration,
+            SessionStore<Session> sessionStore,
+            @Nullable PriorToLoginPersistence<HttpRequest<?>,
+                    MutableHttpResponse<?>> priorToLoginPersistence,
+            RedirectService redirectService,
+            CsrfConfiguration csrfConfiguration,
+            CsrfTokenGenerator csrfTokenGenerator) {
         super(redirectConfiguration, sessionStore, priorToLoginPersistence, redirectService);
         this.csrfConfiguration = csrfConfiguration;
         this.csrfTokenGenerator = csrfTokenGenerator;
