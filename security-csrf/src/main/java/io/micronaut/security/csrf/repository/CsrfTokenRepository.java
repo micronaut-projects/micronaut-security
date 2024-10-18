@@ -23,6 +23,10 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface CsrfTokenRepository<T> {
-
+    /**
+     *
+     * @param request Request
+     * @return A CSRF token or an empty optional.
+     */
     Optional<String> findCsrfToken(T request);
 }

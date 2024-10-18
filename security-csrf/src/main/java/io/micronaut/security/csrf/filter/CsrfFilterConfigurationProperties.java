@@ -22,8 +22,6 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.endpoints.LoginControllerConfigurationProperties;
-
 import java.util.Set;
 
 @Requires(classes = { HttpMethod.class, MediaType.class })
@@ -43,7 +41,6 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      */
     @SuppressWarnings("WeakerAccess")
     public static final String  DEFAULT_REGEX_PATTERN = "^(?!\\/(login|logout)).*$";
-
 
     private static final Set<HttpMethod> DEFAULT_METHODS = Set.of(
             HttpMethod.POST,
@@ -108,7 +105,7 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
     }
 
     /**
-     * Filter will only process requests whose path matches this pattern. Default Value {@value #DEFAULT_REGEX_PATTERN}.
+     * CSRF filter processes only request paths matching this regular expression. Default Value {@value #DEFAULT_REGEX_PATTERN}.
      * @param regexPattern Regular expression pattern for the filter.
      */
     public void setRegexPattern(String regexPattern) {

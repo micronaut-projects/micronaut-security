@@ -22,6 +22,7 @@ import java.util.Optional;
 
 /**
  * Attempts to resolve a CSRF token from the provided request.
+ * {@link CsrfTokenResolver} is an {@link Ordered} api. Override the {@link #getOrder()} method to provide a custom order.
  *
  * @author Sergio del Amo
  * @since 1.1.0

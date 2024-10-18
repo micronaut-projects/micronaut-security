@@ -34,6 +34,7 @@ import java.util.Optional;
 @Internal
 final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
+    private final  int ORDER = -100;
 
     HttpHeaderCsrfTokenResolver(CsrfConfiguration csrfConfiguration) {
         this.csrfConfiguration = csrfConfiguration;
@@ -50,5 +51,10 @@ final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest
             return Optional.of(csrfToken);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }

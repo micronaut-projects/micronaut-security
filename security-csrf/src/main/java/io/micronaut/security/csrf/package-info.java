@@ -16,6 +16,7 @@
 /**
  * Classes related to Cross Site Request Forgery (CSRF).
  * @see <a href="https://owasp.org/www-community/attacks/csrf">Cross Site Request Forgery (CSRF)</a>
+ * @see <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">CSRF Prevention Cheat Sheet</a>
  * @author Sergio del Amo
  * @since 4.11.0
  */

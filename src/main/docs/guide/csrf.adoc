@@ -1,6 +1,7 @@
 https://owasp.org/www-community/attacks/csrf[Cross-Site Request Forgery (CSRF)].
 
-The following configuration options are available for CSRF:
+____
+Cross-Site Request Forgery (CSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated
+____
 
-include::{includedir}configurationProperties/io.micronaut.security.csrf.CsrfConfigurationProperties.adoc[]
 

@@ -85,6 +85,12 @@ authenticationStrategies:
 rejection: Rejection Handling
 csrf:
   title: Cross-Site Request Forgery (CSRF)
+  csrfDependency: CSRF Dependency
+  csrfMitigations:
+    title: CSRF Mitigations
+    syncronizerTokenPattern: Syncronizer Token Pattern
+    doubleSubmitCookiePattern: Double Submit Cookie Pattern
+  csrfConfiguration: CSRF Configuration
   csrfFilter: CSRF Filter
   csrfTokenResolvers: CSRF Token Resolvers
 tokenPropagation: Token Propagation

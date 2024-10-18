@@ -1,11 +1,11 @@
 |===
 |Resolver | Enabled by Default | Disable with
 
-|api:security.csrf.resolver:HttpHeaderCsrfTokenResolver[]
+|`io.micronaut.security.csrf.resolver.HttpHeaderCsrfTokenResolver`
 | Yes
 | `micronaut.security.csrf.token-resolvers.http-header.enabled=false`
 
-|api:security.csrf.resolver:FieldCsrfTokenResolver[]
+| `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver`
 | Yes
 | `micronaut.security.csrf.token-resolvers.field.enabled=false`
 
