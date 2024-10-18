@@ -2,6 +2,7 @@ package io.micronaut.docs.security.session
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -13,6 +14,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.netty.util.internal.StringUtil
 import jakarta.inject.Singleton
 
 import java.security.Principal
@@ -22,6 +24,7 @@ class SessionAuthenticationNoRedirectSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'session',
                 'micronaut.security.redirect.enabled': false,
                 'spec.name': 'SessionAuthenticationNoRedirectSpec',

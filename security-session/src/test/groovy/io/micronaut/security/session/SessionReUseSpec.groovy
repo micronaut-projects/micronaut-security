@@ -1,6 +1,7 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -22,6 +23,7 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'session',
         ]
     }

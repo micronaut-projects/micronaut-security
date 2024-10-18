@@ -1,6 +1,7 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -17,6 +18,7 @@ class UnauthorizedTargetUrlSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.redirect.unauthorized.url': '/login/auth',
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/login/auth', httpMethod: 'GET', access: ['isAnonymous()']]

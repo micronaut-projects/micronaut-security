@@ -1,6 +1,7 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -27,6 +28,7 @@ class ContextPathSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.server.context-path': 'foo',
                 'micronaut.security.authentication': 'session'
         ]
