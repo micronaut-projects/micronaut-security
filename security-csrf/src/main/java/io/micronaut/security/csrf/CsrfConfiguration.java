@@ -40,6 +40,13 @@ public interface CsrfConfiguration extends Toggleable {
 
     /**
      *
+     * @return Key to look for the CSRF token in an HTTP Session.
+     */
+    @NonNull
+    String getHttpSessionName();
+
+    /**
+     *
      * @return Field name in a form url encoded submission  to look for the CSRF token.
      */
     @NonNull

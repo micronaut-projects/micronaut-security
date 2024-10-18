@@ -25,9 +25,23 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 class CsrfConfigurationProperties implements CsrfConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf";
 
+    /**
+     * The default HTTP Header name.
+     */
+    @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_HTTP_HEADER_NAME = "X-CSRF-TOKEN";
 
+    /**
+     * The default fieldName.
+     */
+    @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_FIELD_NAME = "csrfToken";
+
+    /**
+     * The default HTTP Session name.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_HTTP_SESSION_NAME = "csrfToken";
 
     public static final int DEFAULT_TOKEN_SIZE = 16;
 
@@ -40,6 +54,21 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     private String fieldName = DEFAULT_FIELD_NAME;
 
     private int tokenSize = DEFAULT_TOKEN_SIZE;
+
+    private String httpSessionName = DEFAULT_HTTP_SESSION_NAME;
+
+    @Override
+    public String getHttpSessionName() {
+        return httpSessionName;
+    }
+
+    /**
+     * Key to look for the CSRF token in an HTTP Session. Default Value: {@value #DEFAULT_HTTP_SESSION_NAME}.
+     * @param httpSessionName Key to look for the CSRF token in an HTTP Session.
+     */
+    public void setHttpSessionName(String httpSessionName) {
+        this.httpSessionName = httpSessionName;
+    }
 
     @Override
     public int getTokenSize() {

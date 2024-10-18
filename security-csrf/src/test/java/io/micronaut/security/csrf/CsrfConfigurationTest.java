@@ -26,4 +26,14 @@ class CsrfConfigurationTest {
     void defaultEnabled() {
         assertTrue(csrfConfiguration.isEnabled());
     }
+
+    @Test
+    void defaultHttpSessionName() {
+        assertEquals("csrfToken", csrfConfiguration.getHttpSessionName());
+    }
+
+    @Test
+    void defaultTokenSize() {
+        assertEquals(16, csrfConfiguration.getTokenSize());
+    }
 }
