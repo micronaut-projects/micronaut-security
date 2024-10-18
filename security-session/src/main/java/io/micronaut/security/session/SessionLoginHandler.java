@@ -130,8 +130,15 @@ public class SessionLoginHandler implements RedirectingLoginHandler<HttpRequest<
         return uriSupplier;
     }
 
-    private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
+    /**
+     * Saves the authentication in the session.
+     * @param authentication Authentication
+     * @param request HTTP Request
+     * @return The session found or created where the authentication was saved.
+     */
+    protected Session saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, authentication);
+        return session;
     }
 }

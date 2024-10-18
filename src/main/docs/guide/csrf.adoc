@@ -1,0 +1,7 @@
+https://owasp.org/www-community/attacks/csrf[Cross-Site Request Forgery (CSRF)].
+
+____
+Cross-Site Request Forgery (CSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated
+____
+
+

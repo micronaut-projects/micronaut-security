@@ -35,6 +35,7 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
+@Property(name = "micronaut.security.csrf.enabled", value=StringUtils.FALSE)
 @Property(name = "micronaut.security.authentication", value="session")
 @Property(name = "micronaut.http.client.follow-redirects", value = StringUtils.FALSE)
 @Property(name = "micronaut.security.redirect.login-failure", value="/security/login")

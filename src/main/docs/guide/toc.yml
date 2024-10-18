@@ -83,6 +83,16 @@ authenticationStrategies:
   x509: X.509 Certificate Authentication
   custom: Custom Authorization Strategies
 rejection: Rejection Handling
+csrf:
+  title: Cross-Site Request Forgery (CSRF)
+  csrfDependency: CSRF Dependency
+  csrfMitigations:
+    title: CSRF Mitigations
+    syncronizerTokenPattern: Syncronizer Token Pattern
+    doubleSubmitCookiePattern: Double Submit Cookie Pattern
+  csrfConfiguration: CSRF Configuration
+  csrfFilter: CSRF Filter
+  csrfTokenResolvers: CSRF Token Resolvers
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers

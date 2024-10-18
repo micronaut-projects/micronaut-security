@@ -1,6 +1,7 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
@@ -9,6 +10,7 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends ApplicationCon
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.session.enabled': false,
         ]
     }

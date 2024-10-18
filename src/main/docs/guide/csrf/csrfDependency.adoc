@@ -1,0 +1,3 @@
+Add the Micronaut Security CSRF dependency to protect against CSRF:
+
+dependency:micronaut-security-csrf[groupId=io.micronaut.security]
