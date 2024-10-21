@@ -51,7 +51,7 @@ import java.util.List;
 @Singleton
 public class CrsrfTokenCookieLoginHandler extends TokenCookieLoginHandler {
     private final CsrfConfiguration csrfConfiguration;
-    private final CsrfTokenGenerator csrfTokenGenerator;
+    private final CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator;
 
     /**
      * @param redirectService                 Redirection Service
@@ -72,7 +72,7 @@ public class CrsrfTokenCookieLoginHandler extends TokenCookieLoginHandler {
                                         AccessRefreshTokenGenerator accessRefreshTokenGenerator,
                                         @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
                                         CsrfConfiguration csrfConfiguration,
-                                        CsrfTokenGenerator csrfTokenGenerator) {
+                                        CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator) {
         super(redirectService, redirectConfiguration, accessTokenCookieConfiguration, refreshTokenCookieConfiguration, accessTokenConfiguration, accessRefreshTokenGenerator, priorToLoginPersistence);
         this.csrfConfiguration = csrfConfiguration;
         this.csrfTokenGenerator = csrfTokenGenerator;
