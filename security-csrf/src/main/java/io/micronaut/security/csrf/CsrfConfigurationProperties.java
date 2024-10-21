@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.generator.AccessTokenConfigurationProperties;
 
@@ -45,15 +46,22 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
 
     /**
      * The default cookie name..
+     * @see <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins">Using Cookies with Host Prefixes to Identify Origins</a>
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIE_NAME = "csrfToken";
+    public static final String DEFAULT_COOKIE_NAME = "__Host-csrfToken";
 
     /**
      * The default HTTP Session name.
      */
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_HTTP_SESSION_NAME = "csrfToken";
+
+    /**
+     * The default Same Site Configuration.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final SameSite DEFAULT_SAME_SITE = SameSite.Strict;
 
     public static final int DEFAULT_RANDOM_VALUE_SIZE = 16;
 
@@ -75,6 +83,7 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIE_NAME;
+    private SameSite sameSite = DEFAULT_SAME_SITE;
     private String signatureKey;
 
     @Override
@@ -239,5 +248,17 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
      */
     public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
+    }
+
+    public Optional<SameSite> getCookieSameSite() {
+        return Optional.of(this.sameSite);
+    }
+
+    /**
+     * Cookie Same Site Configuration. It defaults to Strict.
+     * @param sameSite Same Site Configuration
+     */
+    public void setCookieSameSite(SameSite sameSite) {
+        this.sameSite = sameSite;
     }
 }

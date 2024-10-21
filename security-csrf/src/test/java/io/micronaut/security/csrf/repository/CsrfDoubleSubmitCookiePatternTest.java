@@ -33,8 +33,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.security.authentication", value = "cookie")
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
-@Property(name = "micronaut.security.csrf.signature-key", value = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
+@Property(name = "micronaut.security.csrf.signature-key", value = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
 @Property(name = "micronaut.security.redirect.enabled", value = StringUtils.FALSE)
+@Property(name = "micronaut.security.csrf.filter.regex-pattern", value = "^(?!\\/login).*$")
 @Property(name = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
 @MicronautTest
 class CsrfDoubleSubmitCookiePatternTest {
@@ -53,10 +54,10 @@ class CsrfDoubleSubmitCookiePatternTest {
         Optional<Cookie> cookieJwtOptional = loginRsp.getCookie("JWT");
         assertTrue(cookieJwtOptional.isPresent());
         Cookie cookieJwt = cookieJwtOptional.get();
-        Optional<Cookie> cookieCsrfTokenOptional = loginRsp.getCookie("csrfToken");
+        String csrfTokenCookieName = "__Host-csrfToken";
+        Optional<Cookie> cookieCsrfTokenOptional = loginRsp.getCookie(csrfTokenCookieName);
         assertTrue(cookieCsrfTokenOptional.isPresent());
         Cookie cookieCsrfToken = cookieCsrfTokenOptional.get();
-        String csrfTokenCookieName = "csrfToken";
 
         // CSRF Only in the cookie, not in the request headers or field, request is denied
         assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName,  new PasswordChange("sherlock", "evil"), cookieCsrfToken.getValue());

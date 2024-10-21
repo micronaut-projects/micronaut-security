@@ -1,5 +1,6 @@
 package io.micronaut.security.csrf;
 
+import io.micronaut.http.cookie.SameSite;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,13 @@ class CsrfConfigurationTest {
 
     @Test
     void defaultCookieName() {
-        assertEquals("csrfToken", csrfConfiguration.getCookieName());
+        assertEquals("__Host-csrfToken", csrfConfiguration.getCookieName());
+    }
+
+    @Test
+    void defaultSameSite() {
+        assertTrue(csrfConfiguration.getCookieSameSite().isPresent());
+        assertEquals(SameSite.Strict, csrfConfiguration.getCookieSameSite().get());
     }
 
     @Test
@@ -74,7 +81,7 @@ class CsrfConfigurationTest {
     }
 
     @Test
-    void defaultSignatureKey() {
+    void defaultSecretKey() {
         assertNull(csrfConfiguration.getSecretKey());
     }
 }

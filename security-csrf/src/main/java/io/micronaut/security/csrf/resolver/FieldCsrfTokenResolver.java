@@ -35,6 +35,7 @@ import java.util.Optional;
  *
  * @since 2.0.0
  */
+@Requires(classes = HttpRequest.class)
 @Requires(property = "micronaut.security.csrf.token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 class FieldCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {

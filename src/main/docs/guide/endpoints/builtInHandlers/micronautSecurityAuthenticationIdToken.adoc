@@ -1,0 +1,3 @@
+When you set `micronaut.security.authentication=idtoken`, api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[] a bean of type api:security.handlers.LoginHandler[] and api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[] a bean of type api:security.handlers.LogoutHandler[] are enabled.
+
+image::micronaut-security-authentication-idtoken.png[]

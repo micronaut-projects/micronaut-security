@@ -1,12 +1,1 @@
-|===
-|Resolver | Enabled by Default | Disable with
-
-|`io.micronaut.security.csrf.resolver.HttpHeaderCsrfTokenResolver`
-| Yes
-| `micronaut.security.csrf.token-resolvers.http-header.enabled=false`
-
-| `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver`
-| Yes
-| `micronaut.security.csrf.token-resolvers.field.enabled=false`
-
-|===
+Micronaut Security CSRF resolves a CSRF Token with beans of type api:security.csrf.resolver.CsrfTokenResolver[]

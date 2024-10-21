@@ -31,6 +31,7 @@ import static io.micronaut.security.token.Claims.TOKEN_ID;
  * @since 4.11.0
  * @author  Sergio del Amo
  */
+@Requires(classes = HttpRequest.class)
 @Requires(bean = JsonWebTokenParser.class)
 @Singleton
 public class JsonWebTokenIdSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {

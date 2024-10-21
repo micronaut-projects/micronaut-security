@@ -38,7 +38,7 @@ public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
     String getSecretKey();
 
     /**
-     *
+     * HTTP Header name to look for the CSRF token. It is recommended to use a custom request header. By using a custom HTTP Header name, it will not be possible to send them cross-origin without a permissive CORS implementation.
      * @return HTTP Header name to look for the CSRF token.
      */
     @NonNull

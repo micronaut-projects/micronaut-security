@@ -19,11 +19,13 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.FilterPatternStyle;
+import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
@@ -39,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * {@link RequestFilter} which validates CSRF tokens and returns a 401 Unauthorized if the token is invalid.
+ * {@link RequestFilter} which validates CSRF tokens and rejects a request if the token is invalid.
  * Which requests are intercepted can be controlled via {@link io.micronaut.security.csrf.CsrfConfiguration}.
  * @author Sergio del Amo
  * @since 4.11.0
@@ -50,7 +52,7 @@ import java.util.Optional;
 @Requires(beans = { CsrfTokenValidator.class })
 @ServerFilter(patternStyle = FilterPatternStyle.REGEX,
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
-final class CsrfFilter {
+final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
@@ -144,5 +146,10 @@ final class CsrfFilter {
                 .orElse(null);
         return exceptionHandler.handle(request,
                 new AuthorizationException(authentication));
+    }
+
+    @Override
+    public int getOrder() {
+        return ServerFilterPhase.SECURITY.order() + 100; // after {@link SecurityFilter}
     }
 }

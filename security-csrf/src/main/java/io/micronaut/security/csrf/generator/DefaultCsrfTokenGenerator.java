@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.generator;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
@@ -39,6 +40,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
 @Internal
 final class DefaultCsrfTokenGenerator implements CsrfTokenGenerator<HttpRequest<?>>, CsrfTokenValidator<HttpRequest<?>> {

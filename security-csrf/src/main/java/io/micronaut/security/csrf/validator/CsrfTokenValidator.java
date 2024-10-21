@@ -27,7 +27,7 @@ import io.micronaut.core.order.Ordered;
 @FunctionalInterface
 public interface CsrfTokenValidator<T> extends Ordered {
     /**
-     *
+     * Given a CSRF Token, validates whether it is valid.
      * @param request Request
      * @param token CSRF Token
      * @return Whether the CSRF token is valid

@@ -33,7 +33,12 @@ endpoints:
   logout:
     title: Logout Controller
     logoutHandler: Logout Handler
-  builtInHandlers: Built-in Login and Logout Handlers
+  builtInHandlers:
+    title: Built-in Login and Logout Handlers
+    micronautSecurityAuthenticationBearer: Micronaut Security Authentication Bearer
+    micronautSecurityAuthenticationSession: Micronaut Security Session Login Handler
+    micronautSecurityAuthenticationCookie: Micronaut Security Authentication Cookie
+    micronautSecurityAuthenticationIdToken: Micronaut Security Authentication ID Token
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
@@ -85,15 +90,21 @@ authenticationStrategies:
 rejection: Rejection Handling
 csrf:
   title: Cross-Site Request Forgery (CSRF)
-  csrfApis: CSRF APIs
   csrfDependency: CSRF Dependency
+  csrfFilter: CSRF Filter
   csrfMitigations:
     title: CSRF Mitigations
-    syncronizerTokenPattern: Syncronizer Token Pattern
+    syncronizerTokenPattern:
+      title: Syncronizer Token Pattern
+      csrfAndSession: CSRF and Session
     doubleSubmitCookiePattern: Double Submit Cookie Pattern
+    signedDoubleSubmitCookiePattern: Signed Double Submit Cookie Pattern
   csrfConfiguration: CSRF Configuration
-  csrfFilter: CSRF Filter
-  csrfTokenResolvers: CSRF Token Resolvers
+  csrfTokenResolvers:
+    title: CSRF Token Resolvers
+    httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
+    fieldCsrfTokenResolver: Field CSRF Token Resolution
+  csrfApis: CSRF APIs
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers

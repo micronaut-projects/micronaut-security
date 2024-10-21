@@ -1,0 +1,3 @@
+When you set `micronaut.security.authentication=bearer`, api:security.token.bearer.AccessRefreshTokenLoginHandler[] a bean of type  api:security.handlers.LoginHandler[] is enabled.
+
+image::micronaut-security-authentication-bearer.png[]

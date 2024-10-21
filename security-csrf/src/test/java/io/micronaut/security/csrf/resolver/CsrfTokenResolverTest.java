@@ -21,6 +21,7 @@ class CsrfTokenResolverTest {
         Collection<CsrfTokenResolver> csrfTokenResolverCollection = beanContext.getBeansOfType(CsrfTokenResolver.class);
         List<CsrfTokenResolver> csrfTokenResolverList = new ArrayList<>(csrfTokenResolverCollection);
         assertEquals(2, csrfTokenResolverList.size());
+        // It is important for HTTP Header to be the first one. FieldCsrfTokenResolver requires Netty. Moreover, it is more secure to supply the CSRF token via custom HTTP Header instead of a form field as it is more difficult to exploit.
         assertInstanceOf(HttpHeaderCsrfTokenResolver.class, csrfTokenResolverList.get(0));
         assertInstanceOf(FieldCsrfTokenResolver.class, csrfTokenResolverList.get(1));
 

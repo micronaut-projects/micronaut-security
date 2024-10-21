@@ -29,6 +29,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Requires(classes = HttpRequest.class)
 @Requires(property = "micronaut.security.csrf.token-resolvers.http-header.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 @Internal
