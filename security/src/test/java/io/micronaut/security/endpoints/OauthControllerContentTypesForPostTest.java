@@ -98,7 +98,7 @@ class OauthControllerContentTypesForPostTest {
 
         @Override
         public void persistToken(RefreshTokenGeneratedEvent event) {
-
+            throw new UnsupportedOperationException();
         }
 
         @Override
