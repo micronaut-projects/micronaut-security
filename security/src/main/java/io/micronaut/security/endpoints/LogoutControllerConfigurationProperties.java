@@ -62,6 +62,7 @@ public class LogoutControllerConfigurationProperties extends ControllerConfigura
      *
      * @param enabled true if it is
      */
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
     }
@@ -70,6 +71,7 @@ public class LogoutControllerConfigurationProperties extends ControllerConfigura
      * Path to the {@link io.micronaut.security.endpoints.LogoutController}. Default value {@value #DEFAULT_PATH}.
      * @param path The path
      */
+    @Override
     public void setPath(String path) {
         super.setPath(path);
     }
