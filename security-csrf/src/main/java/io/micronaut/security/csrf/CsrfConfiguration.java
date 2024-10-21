@@ -27,15 +27,15 @@ import io.micronaut.http.cookie.CookieConfiguration;
 public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
     /**
      *
-     * @return Random CSRF Token size in bytes.
+     * @return Random value's size in bytes. The random value used is used to build a CSRF Token.
      */
-    int getTokenSize();
+    int getRandomValueSize();
 
     /**
      *
-     * @return CSRF token HMAC signature key
+     * @return The Secret Key that is used to calculate an HMAC as part of a CSRF token generation.
      */
-    String getSignatureKey();
+    String getSecretKey();
 
     /**
      *

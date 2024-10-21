@@ -55,21 +55,22 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_HTTP_SESSION_NAME = "csrfToken";
 
-    public static final int DEFAULT_TOKEN_SIZE = 16;
+    public static final int DEFAULT_RANDOM_VALUE_SIZE = 16;
 
     public static final boolean DEFAULT_ENABLED = true;
 
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIEPATH = "/";
+    private static final Boolean DEFAULT_SECURE = true;
     private static final Duration DEFAULT_MAX_AGE =  Duration.ofSeconds(AccessTokenConfigurationProperties.DEFAULT_EXPIRATION);
 
     private boolean enabled = DEFAULT_ENABLED;
     private String headerName = DEFAULT_HTTP_HEADER_NAME;
     private String fieldName = DEFAULT_FIELD_NAME;
-    private int tokenSize = DEFAULT_TOKEN_SIZE;
+    private int randomValueSize = DEFAULT_RANDOM_VALUE_SIZE;
     private String httpSessionName = DEFAULT_HTTP_SESSION_NAME;
     private String cookieDomain;
-    private Boolean cookieSecure;
+    private Boolean cookieSecure = DEFAULT_SECURE;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
@@ -77,13 +78,13 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     private String signatureKey;
 
     @Override
-    public String getSignatureKey() {
+    public String getSecretKey() {
         return signatureKey;
     }
 
     /**
-     * CSRF token HMAC signature key.
-     * @param signatureKey CSRF token HMAC signature key
+     * The Secret Key that is used to calculate an HMAC as part of a CSRF token generation. Default Value `null`.
+     * @param signatureKey The Secret Key that is used to calculate an HMAC as part of a CSRF token generation.
      */
     public void setSignatureKey(String signatureKey) {
         this.signatureKey = signatureKey;
@@ -103,16 +104,16 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     @Override
-    public int getTokenSize() {
-        return tokenSize;
+    public int getRandomValueSize() {
+        return randomValueSize;
     }
 
     /**
-     * Random CSRF Token size in bytes. Default Value: {@value #DEFAULT_TOKEN_SIZE}.
-     * @param tokenSize Random CSRF Token size in bytes.
+     * Random value's size in bytes. The random value used is used to build a CSRF Token. Default Value: {@value #DEFAULT_RANDOM_VALUE_SIZE}.
+     * @param randomValueSize Random CSRF Token size in bytes.
      */
-    public void setTokenSize(int tokenSize) {
-        this.tokenSize = tokenSize;
+    public void setRandomValueSize(int randomValueSize) {
+        this.randomValueSize = randomValueSize;
     }
 
     @Override

@@ -1,0 +1,7 @@
+* api:security.csrf.CsrConfiguration[]
+* api:security.csrf.filter.CsrFilter[]
+* api:security.csrf.filter.CsrFilterConfiguration[]
+* api:security.csrf.resolvers.CsrfTokenResolver[]
+* api:security.csrf.generator.CsrfTokenGenerator[]
+* api:security.csrf.CsrTokenValidator[]
+* api:security.csrf.CsrfTokenRepository[]

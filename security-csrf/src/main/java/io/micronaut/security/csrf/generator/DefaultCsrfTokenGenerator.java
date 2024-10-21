@@ -35,7 +35,7 @@ import java.util.Base64;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link CsrfTokenGenerator} which generates a random base 64 encoded string using an instance of {@link SecureRandom} and random byte array of size {@link CsrfConfiguration#getTokenSize()}.
+ * Default implementation of {@link CsrfTokenGenerator} which generates a random base 64 encoded string using an instance of {@link SecureRandom} and random byte array of size {@link CsrfConfiguration#getRandomValueSize()}.
  * @author Sergio del Amo
  * @since 4.11.0
  */
@@ -58,9 +58,9 @@ final class DefaultCsrfTokenGenerator implements CsrfTokenGenerator<HttpRequest<
     @Override
     public String generate(HttpRequest<?> request) {
         // Gather the values
-        String secret = csrfConfiguration.getSignatureKey();
+        String secret = csrfConfiguration.getSecretKey();
         String sessionID = sessionIdResolver.findSessionId(request).orElse(""); // Current authenticated user session
-        byte[] tokenBytes = new byte[csrfConfiguration.getTokenSize()];
+        byte[] tokenBytes = new byte[csrfConfiguration.getRandomValueSize()];
         secureRandom.nextBytes(tokenBytes);
         String randomValue = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);  // Cryptographic random value
 
@@ -86,7 +86,7 @@ final class DefaultCsrfTokenGenerator implements CsrfTokenGenerator<HttpRequest<
             return false;
         }
         String csrfCookie =  csrfCookieOptional.get();
-        return validateHmac(request, csrfCookie) && csrfCookie.equals(token);
+        return csrfCookie.equals(token) && validateHmac(request, csrfCookie);
     }
 
     private boolean validateHmac(HttpRequest<?> request, @NonNull String csrfToken) {
@@ -102,7 +102,7 @@ final class DefaultCsrfTokenGenerator implements CsrfTokenGenerator<HttpRequest<
             String randomValue = arr[1];
             String sessionID = sessionIdResolver.findSessionId(request).orElse(""); // Current authenticated user session
             String message = sessionID + SESSION_RANDOM_SEPARATOR + randomValue;
-            String secret = csrfConfiguration.getSignatureKey();
+            String secret = csrfConfiguration.getSecretKey();
             String expectedHmac = secret != null
                     ? HMacUtils.base64EncodedHmacSha256(message, secret) // Generate the HMAC hash
                     : "";

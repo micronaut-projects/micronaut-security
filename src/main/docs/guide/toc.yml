@@ -85,6 +85,7 @@ authenticationStrategies:
 rejection: Rejection Handling
 csrf:
   title: Cross-Site Request Forgery (CSRF)
+  csrfApis: CSRF APIs
   csrfDependency: CSRF Dependency
   csrfMitigations:
     title: CSRF Mitigations

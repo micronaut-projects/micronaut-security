@@ -14,9 +14,9 @@ class HMacUtilsTest {
         String data = "abcdedf";
         String signatureKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow";
         String hmac = HMacUtils.base64EncodedHmacSha256(data, signatureKey);
-        Assertions.assertNotNull(hmac);
-        Assertions.assertEquals(hmac, HMacUtils.base64EncodedHmacSha256(data, signatureKey));
-        Assertions.assertNotEquals(hmac, HMacUtils.base64EncodedHmacSha256("foobar", signatureKey));
-        Assertions.assertNotEquals(hmac, HMacUtils.base64EncodedHmacSha256(data, signatureKey + "evil"));
+        assertNotNull(hmac);
+        assertEquals(hmac, HMacUtils.base64EncodedHmacSha256(data, signatureKey));
+        assertNotEquals(hmac, HMacUtils.base64EncodedHmacSha256("foobar", signatureKey));
+        assertNotEquals(hmac, HMacUtils.base64EncodedHmacSha256(data, signatureKey + "evil"));
     }
 }
