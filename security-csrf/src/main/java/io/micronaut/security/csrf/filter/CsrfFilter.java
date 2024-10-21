@@ -89,12 +89,13 @@ final class CsrfFilter implements Ordered {
     }
 
     private boolean shouldTheFilterProcessTheRequestAccordingToTheContentType(@NonNull HttpRequest<?> request) {
-        if (request.getContentType().isPresent() && csrfFilterConfiguration.getContentTypes().stream().noneMatch(method -> method.equals(request.getContentType().get()))) {
+        final MediaType contentType = request.getContentType().orElse(null);
+        if (contentType != null && csrfFilterConfiguration.getContentTypes().stream().noneMatch(method -> method.equals(contentType))) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request {} {} with content type {} is not processed by the CSRF filter. CSRF filter only processes Content Types: {}",
                         request.getMethod(),
                         request.getPath(),
-                        request.getContentType().get(),
+                        contentType,
                         csrfFilterConfiguration.getContentTypes().stream().map(MediaType::toString).toList());
             }
             return false;
