@@ -17,6 +17,9 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.http.MediaType;
+
+import java.util.Set;
 
 /**
  * Base configuration for all controllers.
@@ -33,4 +36,14 @@ public interface ControllerConfiguration extends Toggleable {
     @NonNull
     String getPath();
 
+    /**
+     *
+     * @return Supported HTTP methods for POST endpoints.
+     * @since 4.11.0
+     * @author Sergio del Amo
+     */
+    @NonNull
+    default Set<MediaType> getPostContentTypes() {
+        return Set.of(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+    }
 }

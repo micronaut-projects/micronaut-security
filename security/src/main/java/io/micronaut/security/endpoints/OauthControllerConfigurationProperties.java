@@ -17,7 +17,6 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -29,13 +28,15 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthControllerConfigurationProperties.PREFIX)
-public class OauthControllerConfigurationProperties implements OauthControllerConfiguration {
+public class OauthControllerConfigurationProperties extends ControllerConfigurationProperties implements OauthControllerConfiguration {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.oauth";
 
     /**
      * The default enable value.
+     * @deprecated Not used. {@link ControllerConfigurationProperties#DEFAULT_ENABLED} is used instead.
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
@@ -51,22 +52,10 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_GETALLOWED = true;
 
-    private boolean enabled = DEFAULT_ENABLED;
-    private String path = DEFAULT_PATH;
     private boolean getAllowed = DEFAULT_GETALLOWED;
 
-    /**
-     * @return true if you want to enable the {@link OauthController}
-     */
-    @Override
-    public boolean isEnabled() {
-         return this.enabled;
-    }
-
-    @Override
-    @NonNull
-    public String getPath() {
-        return this.path;
+    public OauthControllerConfigurationProperties() {
+        super(DEFAULT_PATH);
     }
 
     /**
@@ -74,8 +63,9 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
      *
      * @param enabled True if is enabled
      */
+    @Override
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        super.setEnabled(true);
     }
 
     /**
@@ -83,9 +73,10 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
      *
      * @param path The path
      */
+    @Override
     public void setPath(String path) {
         if (StringUtils.isNotEmpty(path)) {
-            this.path = path;
+            super.setPath(path);
         }
     }
 

@@ -57,6 +57,7 @@ public class LogoutController {
     private final boolean getAllowed;
     private final HttpHostResolver httpHostResolver;
     private final HttpLocaleResolver httpLocaleResolver;
+    private final LogoutControllerConfiguration logoutControllerConfiguration;
 
     /**
      * @param logoutHandler                 A collaborator which helps to build HTTP response if user logout.
@@ -64,7 +65,7 @@ public class LogoutController {
      * @param logoutControllerConfiguration Configuration for the Logout controller
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
-     * @since 4.7.0
+     * @since 4.11.0
      */
     @Inject
     public LogoutController(
@@ -72,13 +73,34 @@ public class LogoutController {
         ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
         LogoutControllerConfiguration logoutControllerConfiguration,
         HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver
-    ) {
+        HttpLocaleResolver httpLocaleResolver) {
         this.logoutHandler = logoutHandler;
         this.logoutEventPublisher = logoutEventPublisher;
         this.getAllowed = logoutControllerConfiguration.isGetAllowed();
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
+        this.logoutControllerConfiguration = logoutControllerConfiguration;
+    }
+
+    /**
+     * @param logoutHandler                 A collaborator which helps to build HTTP response if user logout.
+     * @param logoutEventPublisher          The application event publisher
+     * @param logoutControllerConfiguration Configuration for the Logout controller
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
+     * @param logoutControllerConfigurationProperties  Configuration for the Logout Controller.
+     * @since 4.7.0
+     * @deprecated Use {@link #LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration, HttpHostResolver, HttpLocaleResolver)} instead
+     */
+    @Deprecated(forRemoval = true, since = "4.11.0")
+    public LogoutController(
+            LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
+            ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
+            LogoutControllerConfiguration logoutControllerConfiguration,
+            HttpHostResolver httpHostResolver,
+            HttpLocaleResolver httpLocaleResolver,
+            LogoutControllerConfigurationProperties logoutControllerConfigurationProperties) {
+        this(logoutHandler, logoutEventPublisher, logoutControllerConfiguration, httpHostResolver, httpLocaleResolver);
     }
 
     /**
@@ -120,6 +142,10 @@ public class LogoutController {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && logoutControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get()))) {
+            return HttpResponse.notFound();
+        }
         return handleLogout(request, authentication);
     }
 

@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -73,6 +74,35 @@ public class LoginController<B> {
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
     protected final HttpHostResolver httpHostResolver;
     protected final HttpLocaleResolver httpLocaleResolver;
+    protected final LoginControllerConfiguration loginControllerConfiguration;
+
+    /**
+     * @param authenticator                 {@link Authenticator} collaborator
+     * @param loginHandler                  A collaborator which helps to build HTTP response depending on success or failure.
+     * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
+     * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
+     * @since 4.11.0
+     */
+    @Inject
+    public LoginController(
+            Authenticator<HttpRequest<B>> authenticator,
+            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
+            HttpHostResolver httpHostResolver,
+            HttpLocaleResolver httpLocaleResolver,
+            LoginControllerConfiguration loginControllerConfiguration
+    ) {
+        this.authenticator = authenticator;
+        this.loginHandler = loginHandler;
+        this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
+        this.loginFailedEventPublisher = loginFailedEventPublisher;
+        this.httpHostResolver = httpHostResolver;
+        this.httpLocaleResolver = httpLocaleResolver;
+        this.loginControllerConfiguration = loginControllerConfiguration;
+    }
 
     /**
      * @param authenticator                 {@link Authenticator} collaborator
@@ -82,8 +112,9 @@ public class LoginController<B> {
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
      * @since 4.7.0
+     * @deprecated Use {@link LoginController(Authenticator, LoginHandler, ApplicationEventPublisher, ApplicationEventPublisher, HttpHostResolver, HttpLocaleResolver, LoginControllerConfiguration)} instead.
      */
-    @Inject
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public LoginController(
         Authenticator<HttpRequest<B>> authenticator,
         LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
@@ -92,12 +123,12 @@ public class LoginController<B> {
         HttpHostResolver httpHostResolver,
         HttpLocaleResolver httpLocaleResolver
     ) {
-        this.authenticator = authenticator;
-        this.loginHandler = loginHandler;
-        this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
-        this.loginFailedEventPublisher = loginFailedEventPublisher;
-        this.httpHostResolver = httpHostResolver;
-        this.httpLocaleResolver = httpLocaleResolver;
+        this(authenticator,
+                loginHandler,
+                loginSuccessfulEventPublisher,
+                loginFailedEventPublisher,
+                httpHostResolver,
+                httpLocaleResolver, new LoginControllerConfigurationProperties());
     }
 
     /**
@@ -130,7 +161,8 @@ public class LoginController<B> {
                 public @NonNull Locale resolveOrDefault(@NonNull HttpRequest<?> context) {
                     return Locale.getDefault();
                 }
-            }
+            },
+                new LoginControllerConfigurationProperties()
         );
     }
 
@@ -143,6 +175,10 @@ public class LoginController<B> {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get()))) {
+            return Publishers.just(HttpResponse.notFound());
+        }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
             .map(authenticationResponse -> {
                 if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {

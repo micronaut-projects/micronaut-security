@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -41,6 +42,8 @@ import io.micronaut.security.token.validator.RefreshTokenValidator;
 
 import java.util.Map;
 import java.util.Optional;
+
+import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -66,22 +69,41 @@ public class OauthController {
 
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RefreshTokenValidator refreshTokenValidator;
-    private final OauthControllerConfigurationProperties oauthControllerConfigurationProperties;
+    private final OauthControllerConfiguration oauthControllerConfiguration;
     private final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
+
+    /**
+     * @param refreshTokenPersistence The persistence mechanism for the refresh token
+     * @param refreshTokenValidator The refresh token validator
+     * @param oauthControllerConfiguration The controller configuration
+     * @param loginHandler The login handler
+     */
+    @Inject
+    public OauthController(RefreshTokenPersistence refreshTokenPersistence,
+                           RefreshTokenValidator refreshTokenValidator,
+                           OauthControllerConfiguration oauthControllerConfiguration,
+                           LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler) {
+        this.refreshTokenPersistence = refreshTokenPersistence;
+        this.refreshTokenValidator = refreshTokenValidator;
+        this.oauthControllerConfiguration = oauthControllerConfiguration;
+        this.loginHandler = loginHandler;
+    }
 
     /**
      * @param refreshTokenPersistence The persistence mechanism for the refresh token
      * @param refreshTokenValidator The refresh token validator
      * @param oauthControllerConfigurationProperties The controller configuration
      * @param loginHandler The login handler
+     * @deprecated Use {@link #OauthController(RefreshTokenPersistence, RefreshTokenValidator, OauthControllerConfiguration, LoginHandler)} instead.
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public OauthController(RefreshTokenPersistence refreshTokenPersistence,
                            RefreshTokenValidator refreshTokenValidator,
                            OauthControllerConfigurationProperties oauthControllerConfigurationProperties,
                            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler) {
         this.refreshTokenPersistence = refreshTokenPersistence;
         this.refreshTokenValidator = refreshTokenValidator;
-        this.oauthControllerConfigurationProperties = oauthControllerConfigurationProperties;
+        this.oauthControllerConfiguration = oauthControllerConfigurationProperties;
         this.loginHandler = loginHandler;
     }
 
@@ -97,6 +119,10 @@ public class OauthController {
     public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
                                                    @Nullable @Body Map<String, String> body,
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && oauthControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get()))) {
+            return Publishers.just(HttpResponse.notFound());
+        }
         TokenRefreshRequest tokenRefreshRequest = body == null ? null :
             new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
@@ -112,7 +138,7 @@ public class OauthController {
     @SingleResult
     public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
-        if (!oauthControllerConfigurationProperties.isGetAllowed()) {
+        if (!oauthControllerConfiguration.isGetAllowed()) {
             return Mono.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
         }
         String refreshToken = resolveRefreshToken(null, cookieRefreshToken);

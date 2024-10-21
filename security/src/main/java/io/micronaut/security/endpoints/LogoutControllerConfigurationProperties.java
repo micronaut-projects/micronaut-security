@@ -17,7 +17,6 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -29,12 +28,14 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(LogoutControllerConfigurationProperties.PREFIX)
-public class LogoutControllerConfigurationProperties implements LogoutControllerConfiguration {
+public class LogoutControllerConfigurationProperties extends ControllerConfigurationProperties implements LogoutControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.logout";
 
     /**
      * The default enable value.
+     * @deprecated Not used. {@link ControllerConfigurationProperties#DEFAULT_ENABLED} is used instead.
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
@@ -50,22 +51,10 @@ public class LogoutControllerConfigurationProperties implements LogoutController
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_GETALLOWED = false;
 
-    private boolean enabled = DEFAULT_ENABLED;
-    private String path = DEFAULT_PATH;
     private boolean getAllowed = DEFAULT_GETALLOWED;
 
-    /**
-     * @return true if you want to enable the {@link LogoutController}
-     */
-    @Override
-    public boolean isEnabled() {
-         return this.enabled;
-    }
-
-    @Override
-    @NonNull
-    public String getPath() {
-        return this.path;
+    public LogoutControllerConfigurationProperties() {
+        super(DEFAULT_PATH);
     }
 
     /**
@@ -74,7 +63,7 @@ public class LogoutControllerConfigurationProperties implements LogoutController
      * @param enabled true if it is
      */
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        super.setEnabled(enabled);
     }
 
     /**
@@ -82,7 +71,7 @@ public class LogoutControllerConfigurationProperties implements LogoutController
      * @param path The path
      */
     public void setPath(String path) {
-        this.path = path;
+        super.setPath(path);
     }
 
     /**
