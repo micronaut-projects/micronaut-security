@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
@@ -25,24 +23,16 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
-import io.micronaut.security.csrf.validator.CsrfTokenValidator;
-import io.micronaut.security.errors.OauthErrorResponseException;
-import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.CookieLoginHandler;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
-import java.time.Duration;
 import java.util.*;
 
 /**
@@ -60,16 +50,19 @@ import java.util.*;
 public class CsrfIdTokenLoginHandler extends IdTokenLoginHandler {
     private final CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator;
     private final CsrfConfiguration csrfConfiguration;
+
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration          Redirect configuration
      * @param redirectService                Redirect service
      * @param priorToLoginPersistence        The prior to login persistence strategy
+     * @param csrfTokenGenerator CSRF Token Generator
+     * @param csrfConfiguration CSRF Configuration
      */
     public CsrfIdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                    RedirectConfiguration redirectConfiguration,
                                    RedirectService redirectService,
-                                   PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                                   @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
                                    CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator,
                                    CsrfConfiguration csrfConfiguration) {
         super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
