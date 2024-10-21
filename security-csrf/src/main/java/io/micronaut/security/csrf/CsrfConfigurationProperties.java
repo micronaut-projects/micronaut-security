@@ -250,6 +250,7 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
         this.cookieMaxAge = cookieMaxAge;
     }
 
+    @Override
     public Optional<SameSite> getCookieSameSite() {
         return Optional.of(this.sameSite);
     }
