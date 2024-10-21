@@ -83,6 +83,7 @@ public class LoginController<B> {
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
+     * @param loginControllerConfiguration Login Controller Configuration
      * @since 4.11.0
      */
     @Inject
@@ -176,7 +177,7 @@ public class LoginController<B> {
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
-        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get()))) {
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().toString()))) {
             return Publishers.just(HttpResponse.notFound());
         }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))

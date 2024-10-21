@@ -17,6 +17,6 @@ class OauthControllerConfigurationTest {
 
     @Test
     void defaultContentType() {
-        assertEquals(Set.of(MediaType.APPLICATION_FORM_URLENCODED_TYPE, MediaType.APPLICATION_JSON_TYPE), oauthControllerConfiguration.getPostContentTypes());
+        assertEquals(Set.of(MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON), oauthControllerConfiguration.getPostContentTypes());
     }
 }

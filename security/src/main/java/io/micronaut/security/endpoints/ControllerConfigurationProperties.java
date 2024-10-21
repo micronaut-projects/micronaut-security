@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.MediaType;
-
 import java.util.Set;
 
 @Internal
@@ -34,10 +33,10 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      * The default supported content types for endpoints.
      */
     @SuppressWarnings("WeakerAccess")
-    private static final Set<MediaType> DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS = Set.of(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+    private static final Set<String> DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS = Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
     private boolean enabled = DEFAULT_ENABLED;
     private String path;
-    private Set<MediaType> postContentTypes = DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS;
+    private Set<String> postContentTypes = DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS;
 
     /**
      *
@@ -48,7 +47,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
     }
 
     @Override
-    public Set<MediaType> getPostContentTypes() {
+    public Set<String> getPostContentTypes() {
         return postContentTypes;
     }
 
@@ -56,7 +55,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      * Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded
      * @param postContentTypes supported content types for POST endpoints.
      */
-    public void setPostContentTypes(Set<MediaType> postContentTypes) {
+    public void setPostContentTypes(Set<String> postContentTypes) {
         this.postContentTypes = postContentTypes;
     }
 

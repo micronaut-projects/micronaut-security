@@ -43,7 +43,7 @@ public interface ControllerConfiguration extends Toggleable {
      * @author Sergio del Amo
      */
     @NonNull
-    default Set<MediaType> getPostContentTypes() {
-        return Set.of(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+    default Set<String> getPostContentTypes() {
+        return Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
     }
 }
