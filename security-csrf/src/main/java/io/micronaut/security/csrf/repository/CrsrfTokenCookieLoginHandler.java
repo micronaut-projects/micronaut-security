@@ -94,7 +94,7 @@ public class CrsrfTokenCookieLoginHandler extends TokenCookieLoginHandler {
 
     @NonNull
     private Cookie csrfCookie(@NonNull HttpRequest<?> request) {
-        String csrfToken = csrfTokenGenerator.generate();
+        String csrfToken = csrfTokenGenerator.generate(request);
         return csrfCookie(csrfToken, request);
     }
 

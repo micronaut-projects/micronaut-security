@@ -11,6 +11,7 @@ dependencies {
     testImplementation(mnValidation.micronaut.validation)
     compileOnly(mn.micronaut.inject.java)
     compileOnly(projects.micronautSecurityJwt)
+    compileOnly(projects.micronautSecurityCsrf)
     compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
     implementation(mn.micronaut.http.client.core)

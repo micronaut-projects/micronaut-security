@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.repository;
+package io.micronaut.security.session.csrf;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.csrf.CsrfConfiguration;
+import io.micronaut.security.session.SessionIdResolver;
+import io.micronaut.session.Session;
+import io.micronaut.session.http.SessionForRequest;
 import jakarta.inject.Singleton;
+
 import java.util.Optional;
 
 /**
- * Implementation of {@link CsrfTokenRepository}, which retrieves a CSRF token from a cookie value.
- * It is used within a Double-Submit Cookie Pattern.
- *
+ * Implementation of {@link SessionIdResolver} that returns {@link Session#getId()} if an HTTP session  is associated with the request.
  * @author Sergio del Amo
  * @since 4.11.0
  */
 @Singleton
-public class CsrfCookieTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
-    private final CsrfConfiguration csrfConfiguration;
-
-    public CsrfCookieTokenRepository(CsrfConfiguration csrfConfiguration) {
-        this.csrfConfiguration = csrfConfiguration;
-    }
-
+public class HttpSessionSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
     @Override
-    public Optional<String> findCsrfToken(HttpRequest<?> request) {
-        return request.getCookies()
-                .findCookie(csrfConfiguration.getCookieName())
-                .map(Cookie::getValue);
+    public Optional<String> findSessionId(HttpRequest<?> request) {
+        return SessionForRequest.find(request).map(Session::getId);
     }
 }

@@ -11,14 +11,20 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.rules.SecurityRule;
+import io.micronaut.security.session.SessionIdResolver;
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider;
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario;
+import io.micronaut.security.token.cookie.TokenCookieConfigurationProperties;
+import io.micronaut.security.utils.HMacUtils;
 import io.micronaut.serde.annotation.Serdeable;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,17 +33,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.security.authentication", value = "cookie")
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
+@Property(name = "micronaut.security.csrf.signature-key", value = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
 @Property(name = "micronaut.security.redirect.enabled", value = StringUtils.FALSE)
 @Property(name = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
 @MicronautTest
 class CsrfDoubleSubmitCookiePatternTest {
+    public static final String FIX_SESSION_ID = "123456789";
 
     @Test
-    void loginSavesACsrfTokenInCookie(@Client("/") HttpClient httpClient) {
+    void loginSavesACsrfTokenInCookie(@Client("/") HttpClient httpClient,
+                                      CsrfConfiguration csrfConfiguration) throws NoSuchAlgorithmException, InvalidKeyException {
         BlockingHttpClient client = httpClient.toBlocking();
-        HttpRequest<?> csrfEcho = HttpRequest.GET("/csrf/echo");
-        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(csrfEcho));
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
 
         HttpRequest<?> loginRequest = HttpRequest.POST("/login",Map.of("username",  "sherlock", "password", "password"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
@@ -50,33 +56,67 @@ class CsrfDoubleSubmitCookiePatternTest {
         Optional<Cookie> cookieCsrfTokenOptional = loginRsp.getCookie("csrfToken");
         assertTrue(cookieCsrfTokenOptional.isPresent());
         Cookie cookieCsrfToken = cookieCsrfTokenOptional.get();
+        String csrfTokenCookieName = "csrfToken";
 
-        HttpRequest<?> csrfEchoRequestWithSession = HttpRequest.GET("/csrf/echo")
-                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
-                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()));
-        String csrfToken = assertDoesNotThrow(() -> client.retrieve(csrfEchoRequestWithSession));
-        assertNotNull(csrfToken);
+        // CSRF Only in the cookie, not in the request headers or field, request is denied
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName,  new PasswordChange("sherlock", "evil"), cookieCsrfToken.getValue());
 
-        PasswordChange form = new PasswordChange("sherlock", "evil");
-        HttpRequest<?> passwordChangeRequestNoSessionCookie = HttpRequest.POST("/password/change", form)
-                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
-                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()))
-                .accept(MediaType.TEXT_HTML)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-        ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(passwordChangeRequestNoSessionCookie));
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
-
+        // CSRF Token in request and in cookie don't match, request is unauthorized
+        String csrfToken = "abcdefg";
+        assertNotEquals(cookieCsrfToken.getValue(), csrfToken);
         PasswordChangeForm formWithCsrfToken = new PasswordChangeForm("sherlock", "evil", csrfToken);
-        HttpRequest<?> passwordChangeRequestWithSessionCookie = HttpRequest.POST("/password/change", formWithCsrfToken)
-                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
-                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()))
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, formWithCsrfToken, csrfToken);
+
+        // CSRF Token with HMAC but not session id feed into HMAC calculation, request is unauthorized
+        String randomValue = "abcdefg";
+        String hmac = HMacUtils.base64EncodedHmacSha256(randomValue, csrfConfiguration.getSignatureKey());
+        String csrfTokenCalculatedWithoutSessionId = hmac + "." + randomValue;
+        PasswordChangeForm body = new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedWithoutSessionId);
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, body, csrfToken);
+
+        String message = FIX_SESSION_ID + "!" + randomValue;
+        hmac = HMacUtils.base64EncodedHmacSha256(message, csrfConfiguration.getSignatureKey());
+        csrfToken = hmac + "." + randomValue;
+        assertOk(client, cookieJwt.getValue(), csrfTokenCookieName, csrfToken);
+
+        // Even if you have the same session id and random value, the attacker cannot generate the same hmac as he does not have the same secret key
+        String evilSignatureKey = "evilAyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAowevil";
+        csrfToken = HMacUtils.base64EncodedHmacSha256(message, evilSignatureKey);
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, new PasswordChangeForm("sherlock", "evil", csrfToken), csrfToken);
+
+        // CSRF Token in request match token in cookie and hmac signature is valid.
+        csrfToken = cookieCsrfToken.getValue();
+        assertOk(client, cookieJwt.getValue(), csrfTokenCookieName, csrfToken);
+    }
+
+    private void assertDenied(BlockingHttpClient client, String cookieJwt, String csrfTokenCookieName, Object body, String csrfToken) {
+        HttpRequest<?> request = HttpRequest.POST("/password/change", body)
+                .cookie(Cookie.of(TokenCookieConfigurationProperties.DEFAULT_COOKIENAME, cookieJwt))
+                .cookie(Cookie.of(csrfTokenCookieName, csrfToken))
                 .accept(MediaType.TEXT_HTML)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-        HttpResponse<String> passwordChangeRequestWithSessionCookieResponse = assertDoesNotThrow(() -> client.exchange(passwordChangeRequestWithSessionCookie, String.class));
-        assertEquals(HttpStatus.OK, passwordChangeRequestWithSessionCookieResponse.getStatus());
-        Optional<String> htmlOptional = passwordChangeRequestWithSessionCookieResponse.getBody();
-        assertTrue(htmlOptional.isPresent());
-        assertEquals("sherlock", htmlOptional.get());
+        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(request));
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+    }
+
+    private void assertOk(BlockingHttpClient client, String cookieJwt, String csrfTokenCookieName, String csrfToken) {
+        PasswordChangeForm body = new PasswordChangeForm("sherlock", "evil", csrfToken);
+        HttpRequest<?> request = HttpRequest.POST("/password/change", body)
+                .cookie(Cookie.of(TokenCookieConfigurationProperties.DEFAULT_COOKIENAME, cookieJwt))
+                .cookie(Cookie.of(csrfTokenCookieName, csrfToken))
+                .accept(MediaType.TEXT_HTML)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+        HttpResponse<String> response = assertDoesNotThrow(() -> client.exchange(request, String.class));
+        assertEquals(HttpStatus.OK, response.getStatus());
+    }
+
+    @Requires(property = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
+    @Singleton
+    static class MockSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
+        @Override
+        public Optional<String> findSessionId(HttpRequest<?> request) {
+            return Optional.of(FIX_SESSION_ID);
+        }
     }
 
     @Requires(property = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")

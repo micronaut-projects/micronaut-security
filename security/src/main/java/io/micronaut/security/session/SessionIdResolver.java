@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.generator;
+package io.micronaut.security.session;
 
-import io.micronaut.context.annotation.DefaultImplementation;
+
+import io.micronaut.core.order.Ordered;
+
+import java.util.Optional;
 
 /**
- * CSRF token Generation.
+ * API to resolve a session id for a given request. A session ID could be an HTTP Session ID but also a JSON Web Token Identifier in a token based state-less authentication.
  * @author Sergio del Amo
  * @since 4.11.0
- * @param <T> Request
+ * @param <T>  Request
  */
-@DefaultImplementation(DefaultCsrfTokenGenerator.class)
-@FunctionalInterface
-public interface CsrfTokenGenerator<T> {
+public interface SessionIdResolver<T> extends Ordered {
 
     /**
+     *
      * @param request Request
-     * @return A CSRF Token.
+     * @return Session ID for the given request. Empty if no session ID was found.
      */
-    String generate(T request);
+    Optional<String> findSessionId(T request);
 }

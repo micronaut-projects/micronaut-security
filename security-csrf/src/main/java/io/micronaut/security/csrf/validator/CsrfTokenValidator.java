@@ -16,7 +16,7 @@
 package io.micronaut.security.csrf.validator;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.order.Ordered;
 
 /**
  * CSRF Token Validation.
@@ -25,12 +25,12 @@ import io.micronaut.core.annotation.Nullable;
  * @param <T> request
  */
 @FunctionalInterface
-public interface CsrfTokenValidator<T> {
+public interface CsrfTokenValidator<T> extends Ordered {
     /**
      *
      * @param request Request
      * @param token CSRF Token
      * @return Whether the CSRF token is valid
      */
-    boolean validateCsrfToken(@Nullable T request, @NonNull String token);
+    boolean validateCsrfToken(@NonNull T request, @NonNull String token);
 }

@@ -74,6 +74,20 @@ class CsrfConfigurationProperties implements CsrfConfiguration {
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIE_NAME;
+    private String signatureKey;
+
+    @Override
+    public String getSignatureKey() {
+        return signatureKey;
+    }
+
+    /**
+     * CSRF token HMAC signature key.
+     * @param signatureKey CSRF token HMAC signature key
+     */
+    public void setSignatureKey(String signatureKey) {
+        this.signatureKey = signatureKey;
+    }
 
     @Override
     public String getHttpSessionName() {

@@ -33,6 +33,12 @@ public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
 
     /**
      *
+     * @return CSRF token HMAC signature key
+     */
+    String getSignatureKey();
+
+    /**
+     *
      * @return HTTP Header name to look for the CSRF token.
      */
     @NonNull

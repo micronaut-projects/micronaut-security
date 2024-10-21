@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.generator;
-
-import io.micronaut.context.annotation.DefaultImplementation;
-
 /**
- * CSRF token Generation.
  * @author Sergio del Amo
  * @since 4.11.0
- * @param <T> Request
  */
-@DefaultImplementation(DefaultCsrfTokenGenerator.class)
-@FunctionalInterface
-public interface CsrfTokenGenerator<T> {
-
-    /**
-     * @param request Request
-     * @return A CSRF Token.
-     */
-    String generate(T request);
-}
+package io.micronaut.security.session;
