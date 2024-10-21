@@ -28,7 +28,7 @@ import java.util.Set;
 @Internal
 @ConfigurationProperties(CsrfFilterConfigurationProperties.PREFIX)
 final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration {
-    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + "csrf.filter";
+    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf.filter";
 
     /**
      * The default enable value.
@@ -48,11 +48,11 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
             HttpMethod.DELETE,
             HttpMethod.PATCH
     );
+
     private static final Set<MediaType> DEFAULT_CONTENT_TYPES = Set.of(
             MediaType.APPLICATION_FORM_URLENCODED_TYPE,
             MediaType.MULTIPART_FORM_DATA_TYPE
     );
-
     private boolean enabled = DEFAULT_ENABLED;
     private String regexPattern = DEFAULT_REGEX_PATTERN;
     private Set<HttpMethod> methods = DEFAULT_METHODS;

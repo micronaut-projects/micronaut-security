@@ -1,4 +1,4 @@
-package io.micronaut.security.session.csrf;
+package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
@@ -11,7 +11,6 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider;
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario;
@@ -19,21 +18,22 @@ import io.micronaut.serde.annotation.Serdeable;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Property(name = "micronaut.security.authentication", value = "session")
+@Property(name = "micronaut.security.authentication", value = "cookie")
+@Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
 @Property(name = "micronaut.security.redirect.enabled", value = StringUtils.FALSE)
-@Property(name = "spec.name", value = "CsrfSessionLogingHandlerTest")
+@Property(name = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
 @MicronautTest
-class CsrfSessionLogingHandlerTest {
+class CsrfDoubleSubmitCookiePatternTest {
 
     @Test
-    void loginSavesACsrfTokenInSession(@Client("/") HttpClient httpClient) {
+    void loginSavesACsrfTokenInCookie(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpRequest<?> csrfEcho = HttpRequest.GET("/csrf/echo");
         HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(csrfEcho));
@@ -44,26 +44,32 @@ class CsrfSessionLogingHandlerTest {
 
         HttpResponse<?> loginRsp = assertDoesNotThrow(() -> client.exchange(loginRequest));
         assertEquals(HttpStatus.OK, loginRsp.getStatus());
-        String cookie = loginRsp.getHeaders().get(HttpHeaders.SET_COOKIE);
-        assertNotNull(cookie);
-        assertTrue(cookie.contains("SESSION="));
-        assertTrue(cookie.contains("; HTTPOnly"));
-        String sessionId = cookie.split(";")[0].split("=")[1];
-        assertNotNull(sessionId);
-        HttpRequest<?> csrfEchoRequestWithSession = HttpRequest.GET("/csrf/echo").cookie(Cookie.of("SESSION", sessionId));
+        Optional<Cookie> cookieJwtOptional = loginRsp.getCookie("JWT");
+        assertTrue(cookieJwtOptional.isPresent());
+        Cookie cookieJwt = cookieJwtOptional.get();
+        Optional<Cookie> cookieCsrfTokenOptional = loginRsp.getCookie("csrfToken");
+        assertTrue(cookieCsrfTokenOptional.isPresent());
+        Cookie cookieCsrfToken = cookieCsrfTokenOptional.get();
+
+        HttpRequest<?> csrfEchoRequestWithSession = HttpRequest.GET("/csrf/echo")
+                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
+                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()));
         String csrfToken = assertDoesNotThrow(() -> client.retrieve(csrfEchoRequestWithSession));
         assertNotNull(csrfToken);
 
         PasswordChange form = new PasswordChange("sherlock", "evil");
         HttpRequest<?> passwordChangeRequestNoSessionCookie = HttpRequest.POST("/password/change", form)
+                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
+                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()))
                 .accept(MediaType.TEXT_HTML)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(passwordChangeRequestNoSessionCookie));
-        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
 
         PasswordChangeForm formWithCsrfToken = new PasswordChangeForm("sherlock", "evil", csrfToken);
         HttpRequest<?> passwordChangeRequestWithSessionCookie = HttpRequest.POST("/password/change", formWithCsrfToken)
-                .cookie(Cookie.of("SESSION", sessionId))
+                .cookie(Cookie.of("JWT", cookieJwt.getValue()))
+                .cookie(Cookie.of("csrfToken", cookieCsrfToken.getValue()))
                 .accept(MediaType.TEXT_HTML)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         HttpResponse<String> passwordChangeRequestWithSessionCookieResponse = assertDoesNotThrow(() -> client.exchange(passwordChangeRequestWithSessionCookie, String.class));
@@ -73,7 +79,7 @@ class CsrfSessionLogingHandlerTest {
         assertEquals("sherlock", htmlOptional.get());
     }
 
-    @Requires(property = "spec.name", value = "CsrfSessionLogingHandlerTest")
+    @Requires(property = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
     @Singleton
     static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
@@ -81,7 +87,7 @@ class CsrfSessionLogingHandlerTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "CsrfSessionLogingHandlerTest")
+    @Requires(property = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
     @Controller
     static class PasswordChangeController {
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -106,7 +112,7 @@ class CsrfSessionLogingHandlerTest {
             String csrfToken) {
     }
 
-    @Requires(property = "spec.name", value = "CsrfSessionLogingHandlerTest")
+    @Requires(property = "spec.name", value = "CsrfDoubleSubmitCookiePatternTest")
     @Controller("/csrf")
     static class CsrfTokenEchoController {
 

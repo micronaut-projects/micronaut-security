@@ -14,6 +14,8 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(projects.micronautSecurityJwt)
 }
 
 tasks.withType<Test> {

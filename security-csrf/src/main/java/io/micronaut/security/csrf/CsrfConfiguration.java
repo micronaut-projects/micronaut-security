@@ -17,14 +17,14 @@ package io.micronaut.security.csrf;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.http.cookie.CookieConfiguration;
 
 /**
  * CSRF Configuration.
  * @author Sergio del Amo
  * @since 4.11.0
  */
-public interface CsrfConfiguration extends Toggleable {
-
+public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
     /**
      *
      * @return Random CSRF Token size in bytes.
