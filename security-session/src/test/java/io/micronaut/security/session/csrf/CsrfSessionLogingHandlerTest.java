@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Property(name = "micronaut.security.authentication", value = "session")
 @Property(name = "micronaut.security.redirect.enabled", value = StringUtils.FALSE)
+@Property(name = "micronaut.security.csrf.filter.regex-pattern", value = "^(?!\\/login).*$")
 @Property(name = "spec.name", value = "CsrfSessionLogingHandlerTest")
 @MicronautTest
 class CsrfSessionLogingHandlerTest {
