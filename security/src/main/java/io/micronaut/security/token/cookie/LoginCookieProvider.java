@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.cookie.Cookie;
 
 /**
+ * Provides a Cookie which will be included in the login response.
  * @author Sergio del Amo
  * @since 4.11.0
  * @param <T> Request
