@@ -66,7 +66,7 @@ class CsrfDoubleSubmitCookiePatternTest {
         String csrfToken = "abcdefg";
         assertNotEquals(cookieCsrfToken.getValue(), csrfToken);
         PasswordChangeForm formWithCsrfToken = new PasswordChangeForm("sherlock", "evil", csrfToken);
-        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, formWithCsrfToken, csrfToken);
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, formWithCsrfToken, cookieCsrfToken.getValue());
 
         // CSRF Token with HMAC but not session id feed into HMAC calculation, request is unauthorized
         String randomValue = "abcdefg";
