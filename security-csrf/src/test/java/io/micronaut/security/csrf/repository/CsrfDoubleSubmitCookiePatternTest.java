@@ -82,7 +82,7 @@ class CsrfDoubleSubmitCookiePatternTest {
 
         // Even if you have the same session id and random value, the attacker cannot generate the same hmac as he does not have the same secret key
         String evilSignatureKey = "evilAyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAowevil";
-        csrfToken = HMacUtils.base64EncodedHmacSha256(message, evilSignatureKey);
+        csrfToken = HMacUtils.base64EncodedHmacSha256(message, evilSignatureKey) + "." + randomValue;
         assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, new PasswordChangeForm("sherlock", "evil", csrfToken), csrfToken);
 
         // CSRF Token in request match token in cookie and hmac signature is valid.
