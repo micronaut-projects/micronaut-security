@@ -18,4 +18,10 @@
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Requires(classes = Session.class)
+@Configuration
 package io.micronaut.security.csrf.session;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.session.Session;
