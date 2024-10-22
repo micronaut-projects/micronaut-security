@@ -16,6 +16,7 @@
 package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,8 @@ public class CompositeSessionIdResolver<T> implements SessionIdResolver<T> {
     }
 
     @Override
-    public Optional<String> findSessionId(T request) {
+    @NonNull
+    public Optional<String> findSessionId(@NonNull T request) {
         return sessionIdResolvers.stream()
                 .map(sessionIdResolver -> sessionIdResolver.findSessionId(request))
                 .filter(Optional::isPresent)

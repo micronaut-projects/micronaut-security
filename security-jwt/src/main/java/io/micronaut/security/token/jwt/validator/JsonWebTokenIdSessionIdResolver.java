@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.session.SessionIdResolver;
 import jakarta.inject.Singleton;
@@ -42,7 +43,8 @@ public class JsonWebTokenIdSessionIdResolver implements SessionIdResolver<HttpRe
     }
 
     @Override
-    public Optional<String> findSessionId(HttpRequest<?> request) {
+    @NonNull
+    public Optional<String> findSessionId(@NonNull HttpRequest<?> request) {
         return request.getAttribute(TOKEN, String.class)
                 .flatMap(jsonWebTokenParser::parseClaims)
                 .flatMap(claims -> Optional.ofNullable(claims.get(TOKEN_ID)).map(Object::toString));

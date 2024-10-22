@@ -16,6 +16,7 @@
 package io.micronaut.security.session;
 
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
 
 import java.util.Optional;
@@ -33,5 +34,6 @@ public interface SessionIdResolver<T> extends Ordered {
      * @param request Request
      * @return Session ID for the given request. Empty if no session ID was found.
      */
-    Optional<String> findSessionId(T request);
+    @NonNull
+    Optional<String> findSessionId(@NonNull T request);
 }

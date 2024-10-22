@@ -2,6 +2,7 @@ package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
@@ -115,7 +116,8 @@ class CsrfDoubleSubmitCookiePatternTest {
     @Singleton
     static class MockSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
         @Override
-        public Optional<String> findSessionId(HttpRequest<?> request) {
+        @NonNull
+        public Optional<String> findSessionId(@NonNull HttpRequest<?> request) {
             return Optional.of(FIX_SESSION_ID);
         }
     }
