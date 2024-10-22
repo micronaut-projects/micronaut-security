@@ -21,12 +21,11 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.ServerHttpRequest;
 import io.micronaut.http.body.ByteBody;
-import io.micronaut.http.body.CloseableByteBody;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-import java.nio.charset.StandardCharsets;
+
 import java.util.Optional;
 
 /**
@@ -54,16 +53,10 @@ class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>
     }
 
     private Publisher<String> resolveToken(ServerHttpRequest<?> request) {
-        try (CloseableByteBody ourCopy =
-                     request.byteBody()
-                             .split(ByteBody.SplitBackpressureMode.SLOWEST)
-                             .allowDiscard()) {
-            return Mono.from(ourCopy.toByteArrayPublisher())
-                    .map(byteArr -> new String(byteArr, StandardCharsets.UTF_8))
-                    .flatMap(str -> extractCsrfTokenFromAFormUrlEncodedString(str)
-                            .map(Mono::just)
-                            .orElseGet(Mono::empty));
-        }
+        return Mono.fromFuture(request.byteBody().split(ByteBody.SplitBackpressureMode.FASTEST).buffer())
+            .map(bb -> bb.toString(request.getCharacterEncoding()))
+            .map(this::extractCsrfTokenFromAFormUrlEncodedString)
+            .flatMap(opt -> opt.map(Mono::just).orElseGet(Mono::empty));
     }
 
     private Optional<String> extractCsrfTokenFromAFormUrlEncodedString(String body) {
