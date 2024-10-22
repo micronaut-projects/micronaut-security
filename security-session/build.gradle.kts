@@ -16,11 +16,4 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mnTest.micronaut.test.junit5)
-
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testRuntimeOnly(mnLogging.logback.classic)
-
 }
