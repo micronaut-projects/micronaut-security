@@ -17,7 +17,6 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -28,12 +27,14 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(LoginControllerConfigurationProperties.PREFIX)
-public class LoginControllerConfigurationProperties implements LoginControllerConfiguration {
+public class LoginControllerConfigurationProperties extends ControllerConfigurationProperties implements LoginControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.login";
 
     /**
      * The default enable value.
+     * @deprecated Not used. {@link ControllerConfigurationProperties#DEFAULT_ENABLED} is used instead.
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
@@ -43,39 +44,7 @@ public class LoginControllerConfigurationProperties implements LoginControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/login";
 
-    private boolean enabled = DEFAULT_ENABLED;
-    private String path = DEFAULT_PATH;
-
-    /**
-     * Enables {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_ENABLED}.
-     * @return true if you want to enable the {@link LoginController}
-     */
-    @Override
-    public boolean isEnabled() {
-         return this.enabled;
-    }
-
-    @Override
-    @NonNull
-    public String getPath() {
-        return this.path;
-    }
-
-    /**
-     * Enables {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_ENABLED}
-     * @param enabled True if it is enabled
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
-     * Path to the {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_PATH}
-     * @param path The path
-     */
-    public void setPath(String path) {
-        if (StringUtils.isNotEmpty(path)) {
-            this.path = path;
-        }
+    public LoginControllerConfigurationProperties() {
+        super(DEFAULT_PATH);
     }
 }
