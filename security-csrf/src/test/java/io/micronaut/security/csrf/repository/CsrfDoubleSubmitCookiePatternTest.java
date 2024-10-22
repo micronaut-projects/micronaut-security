@@ -73,7 +73,7 @@ class CsrfDoubleSubmitCookiePatternTest {
         String hmac = HMacUtils.base64EncodedHmacSha256(randomValue, csrfConfiguration.getSecretKey());
         String csrfTokenCalculatedWithoutSessionId = hmac + "." + randomValue;
         PasswordChangeForm body = new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedWithoutSessionId);
-        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, body, csrfToken);
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, body, csrfTokenCalculatedWithoutSessionId);
 
         String message = FIX_SESSION_ID + "!" + randomValue;
         hmac = HMacUtils.base64EncodedHmacSha256(message, csrfConfiguration.getSecretKey());
