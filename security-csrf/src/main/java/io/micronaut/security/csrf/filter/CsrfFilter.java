@@ -22,23 +22,28 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
+import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.annotation.RequestFilter;
-import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.FilterPatternStyle;
+import io.micronaut.http.filter.HttpServerFilter;
+import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
-import io.micronaut.scheduling.TaskExecutors;
-import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
+import io.micronaut.security.csrf.resolver.ReactiveCsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.filters.SecurityFilter;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * {@link RequestFilter} which validates CSRF tokens and rejects a request if the token is invalid.
@@ -50,42 +55,81 @@ import java.util.Optional;
 @Requires(property = CsrfFilterConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = { ExceptionHandler.class, HttpRequest.class })
 @Requires(beans = { CsrfTokenValidator.class })
-@ServerFilter(patternStyle = FilterPatternStyle.REGEX,
+@Filter(patternStyle = FilterPatternStyle.REGEX,
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
-final class CsrfFilter implements Ordered {
+final class CsrfFilter implements Ordered, HttpServerFilter {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
+    private final List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
     private final ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler;
     private final CsrfFilterConfiguration csrfFilterConfiguration;
 
     CsrfFilter(CsrfFilterConfiguration csrfFilterConfiguration,
+               List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers,
                List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers,
                CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator,
                ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler) {
         this.csrfTokenResolvers = csrfTokenResolvers;
+        this.reactiveCsrfTokenResolvers = reactiveCsrfTokenResolvers.isEmpty()
+                ? reactiveCsrfTokenResolvers
+                : ReactiveCsrfTokenResolver.of(csrfTokenResolvers, reactiveCsrfTokenResolvers);
         this.csrfTokenValidator = csrfTokenValidator;
         this.exceptionHandler = exceptionHandler;
         this.csrfFilterConfiguration = csrfFilterConfiguration;
     }
 
-    @ExecuteOn(TaskExecutors.BLOCKING)
-    @RequestFilter
-    @Nullable
-    public HttpResponse<?> csrfFilter(@NonNull HttpRequest<?> request) {
+    @Override
+    public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
+        Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest = () -> chain.proceed(request);
+        Supplier<Publisher<MutableHttpResponse<?>>> denyRequest = () -> Mono.just(unauthorized(request));
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
-            return null; // continue normally
+            return proceedRequest.get();
         }
         if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
-            return null; // continue normally
+            return proceedRequest.get();
         }
-        if (!validateCsrfToken(request)) {
+        return reactiveCsrfTokenResolvers.isEmpty()
+                ? imperativeFilter(request, proceedRequest, denyRequest)
+                : reactiveFilter(request, proceedRequest, denyRequest);
+    }
+
+    private Publisher<MutableHttpResponse<?>> reactiveFilter(HttpRequest<?> request,
+                                                               Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest,
+                                                               Supplier<Publisher<MutableHttpResponse<?>>> denyRequest) {
+        return Flux.fromIterable(this.reactiveCsrfTokenResolvers)
+                .concatMap(resolver -> Mono.from(resolver.resolveToken(request))
+                        .filter(csrfToken -> {
+                            LOG.debug("CSRF Token resolved");
+                            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+                                return true;
+                            } else {
+                                LOG.debug("CSRF Token validation failed");
+                                return false;
+                            }
+                        }))
+                .next()
+                .flatMap(validToken -> Mono.from(proceedRequest.get()))
+                .switchIfEmpty(Mono.defer(() -> {
+                    LOG.debug("Request rejected by the CsrfFilter");
+                    return Mono.from(denyRequest.get());
+                }));
+    }
+    private Publisher<MutableHttpResponse<?>> imperativeFilter(HttpRequest<?> request,
+                                                               Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest,
+                                                               Supplier<Publisher<MutableHttpResponse<?>>> denyRequest) {
+        String csrfToken = resolveCsrfToken(request);
+        if (csrfToken == null) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Request rejected by the {} because the CSRF Token validation failed", this.getClass().getSimpleName());
+                LOG.debug("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
-            return unauthorized(request);
+            return denyRequest.get();
         }
-        return null; // continue normally
+        if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+            return proceedRequest.get();
+        }
+        LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
+        return denyRequest.get();
     }
 
     private boolean shouldTheFilterProcessTheRequestAccordingToTheContentType(@NonNull HttpRequest<?> request) {
@@ -118,31 +162,23 @@ final class CsrfFilter implements Ordered {
 
     @Nullable
     private String resolveCsrfToken(@NonNull HttpRequest<?> request) {
-        String csrfToken = null;
         for (CsrfTokenResolver<HttpRequest<?>> tokenResolver : csrfTokenResolvers) {
             Optional<String> tokenOptional = tokenResolver.resolveToken(request);
             if (tokenOptional.isPresent()) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
-                csrfToken = tokenOptional.get();
-                break;
+                return tokenOptional.get();
             }
         }
-        return csrfToken;
-    }
-
-    private boolean validateCsrfToken(@NonNull HttpRequest<?> request) {
-        String csrfToken = resolveCsrfToken(request);
-        if (csrfToken == null) {
+        if (LOG.isDebugEnabled()) {
             LOG.trace("No CSRF token found in request");
-            return false;
         }
-        return csrfTokenValidator.validateCsrfToken(request, csrfToken);
+        return null;
     }
 
     @NonNull
-    private HttpResponse<?> unauthorized(@NonNull HttpRequest<?> request) {
+    private MutableHttpResponse<?> unauthorized(@NonNull HttpRequest<?> request) {
         Authentication authentication = request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class)
                 .orElse(null);
         return exceptionHandler.handle(request,

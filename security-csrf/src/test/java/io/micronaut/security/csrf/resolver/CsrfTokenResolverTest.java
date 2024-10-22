@@ -1,6 +1,9 @@
 package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.type.Argument;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -15,15 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class CsrfTokenResolverTest {
 
     @Inject
-    BeanContext beanContext;
+    List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
+
+    @Inject
+    List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers;
     @Test
     void csrfTokenResolversOrder() {
-        Collection<CsrfTokenResolver> csrfTokenResolverCollection = beanContext.getBeansOfType(CsrfTokenResolver.class);
-        List<CsrfTokenResolver> csrfTokenResolverList = new ArrayList<>(csrfTokenResolverCollection);
-        assertEquals(2, csrfTokenResolverList.size());
+        assertEquals(1, csrfTokenResolvers.size());
+        assertEquals(1, reactiveCsrfTokenResolvers.size());
+        List<ReactiveCsrfTokenResolver<HttpRequest<?>>> all = ReactiveCsrfTokenResolver.of(csrfTokenResolvers, reactiveCsrfTokenResolvers);
+        assertEquals(2, all.size());
         // It is important for HTTP Header to be the first one. FieldCsrfTokenResolver requires Netty. Moreover, it is more secure to supply the CSRF token via custom HTTP Header instead of a form field as it is more difficult to exploit.
-        assertInstanceOf(HttpHeaderCsrfTokenResolver.class, csrfTokenResolverList.get(0));
-        assertInstanceOf(FieldCsrfTokenResolver.class, csrfTokenResolverList.get(1));
+        assertInstanceOf(ReactiveCsrfTokenResolverAdapter.class, all.get(0)); // with HttpHeaderCsrfTokenResolver inside
+        assertInstanceOf(FieldCsrfTokenResolver.class, all.get(1));
 
     }
 }

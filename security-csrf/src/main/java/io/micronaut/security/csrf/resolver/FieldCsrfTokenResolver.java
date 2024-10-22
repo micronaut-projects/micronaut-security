@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.ServerHttpRequest;
@@ -23,10 +24,8 @@ import io.micronaut.http.body.ByteBody;
 import io.micronaut.http.body.CloseableByteBody;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ import java.util.Optional;
 @Requires(classes = HttpRequest.class)
 @Requires(property = "micronaut.security.csrf.token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
-class FieldCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
+class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
 
     FieldCsrfTokenResolver(CsrfConfiguration csrfConfiguration) {
@@ -46,34 +45,25 @@ class FieldCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
     }
 
     @Override
-    public Optional<String> resolveToken(HttpRequest<?> request) {
+    @Singleton
+    public Publisher<String> resolveToken(HttpRequest<?> request) {
         if (request instanceof ServerHttpRequest<?> serverHttpRequest) {
             return resolveToken(serverHttpRequest);
         }
-        return Optional.empty();
+        return Publishers.empty();
     }
 
-    private Optional<String> resolveToken(ServerHttpRequest<?> request) {
+    private Publisher<String> resolveToken(ServerHttpRequest<?> request) {
         try (CloseableByteBody ourCopy =
                      request.byteBody()
                              .split(ByteBody.SplitBackpressureMode.SLOWEST)
                              .allowDiscard()) {
-            try (InputStream inputStream = ourCopy.toInputStream()) {
-                String str = ofInputStream(inputStream);
-                return extractCsrfTokenFromAFormUrlEncodedString(str);
-            } catch (IOException e) {
-                return Optional.empty();
-            }
+            return Mono.from(ourCopy.toByteArrayPublisher())
+                    .map(byteArr -> new String(byteArr, StandardCharsets.UTF_8))
+                    .flatMap(str -> extractCsrfTokenFromAFormUrlEncodedString(str)
+                            .map(Mono::just)
+                            .orElseGet(Mono::empty));
         }
-    }
-
-    private String ofInputStream(InputStream inputStream) throws IOException {
-        final ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        for (int length; (length = inputStream.read(buffer)) != -1; ) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString(StandardCharsets.UTF_8);
     }
 
     private Optional<String> extractCsrfTokenFromAFormUrlEncodedString(String body) {

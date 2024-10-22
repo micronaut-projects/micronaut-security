@@ -6,7 +6,7 @@ dependencies {
     api(projects.micronautSecurity)
     compileOnly(mn.micronaut.http.server)
     compileOnly(projects.micronautSecuritySession)
-
+    implementation(mnReactor.micronaut.reactor)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
