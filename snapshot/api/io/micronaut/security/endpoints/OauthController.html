@@ -109,7 +109,16 @@ loadScripts(document, 'script');</script>
  <a href="../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
  <a href="OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">OauthControllerConfigurationProperties</a>&nbsp;oauthControllerConfigurationProperties,
  <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.token.refresh.RefreshTokenPersistence,io.micronaut.security.token.validator.RefreshTokenValidator,io.micronaut.security.endpoints.OauthControllerConfiguration,io.micronaut.security.handlers.LoginHandler)"><code>OauthController(RefreshTokenPersistence, RefreshTokenValidator, OauthControllerConfiguration, LoginHandler)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.refresh.RefreshTokenPersistence,io.micronaut.security.token.validator.RefreshTokenValidator,io.micronaut.security.endpoints.OauthControllerConfiguration,io.micronaut.security.handlers.LoginHandler)" class="member-name-link">OauthController</a><wbr>(<a href="../token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
+ <a href="../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
+ <a href="OauthControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">OauthControllerConfiguration</a>&nbsp;oauthControllerConfiguration,
+ <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -151,12 +160,34 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.refresh.RefreshTokenPersistence,io.micronaut.security.token.validator.RefreshTokenValidator,io.micronaut.security.endpoints.OauthControllerConfiguration,io.micronaut.security.handlers.LoginHandler)">
+<h3>OauthController</h3>
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">OauthController</span><wbr><span class="parameters">(<a href="../token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
+ <a href="../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
+ <a href="OauthControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">OauthControllerConfiguration</a>&nbsp;oauthControllerConfiguration,
+ <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>refreshTokenPersistence</code> - The persistence mechanism for the refresh token</dd>
+<dd><code>refreshTokenValidator</code> - The refresh token validator</dd>
+<dd><code>oauthControllerConfiguration</code> - The controller configuration</dd>
+<dd><code>loginHandler</code> - The login handler</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.token.refresh.RefreshTokenPersistence,io.micronaut.security.token.validator.RefreshTokenValidator,io.micronaut.security.endpoints.OauthControllerConfigurationProperties,io.micronaut.security.handlers.LoginHandler)">
 <h3>OauthController</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OauthController</span><wbr><span class="parameters">(<a href="../token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.11.0")
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">OauthController</span><wbr><span class="parameters">(<a href="../token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
  <a href="../token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
  <a href="OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">OauthControllerConfigurationProperties</a>&nbsp;oauthControllerConfigurationProperties,
  <a href="../handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;,<wbr>io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;loginHandler)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.security.token.refresh.RefreshTokenPersistence,io.micronaut.security.token.validator.RefreshTokenValidator,io.micronaut.security.endpoints.OauthControllerConfiguration,io.micronaut.security.handlers.LoginHandler)"><code>OauthController(RefreshTokenPersistence, RefreshTokenValidator, OauthControllerConfiguration, LoginHandler)</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>refreshTokenPersistence</code> - The persistence mechanism for the refresh token</dd>

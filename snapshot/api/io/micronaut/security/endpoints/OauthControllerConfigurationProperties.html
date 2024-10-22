@@ -109,7 +109,9 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <div class="col-first even-row-color"><code>static final boolean</code></div>
 <div class="col-second even-row-color"><code><a href="#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The default enable value.</div>
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Not used.</div>
+</div>
 </div>
 <div class="col-first odd-row-color"><code>static final boolean</code></div>
 <div class="col-second odd-row-color"><code><a href="#DEFAULT_GETALLOWED" class="member-name-link">DEFAULT_GETALLOWED</a></code></div>
@@ -154,26 +156,36 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPath()" class="member-name-link">getPath</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPostContentTypes()" class="member-name-link">getPostContentTypes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isGetAllowed()" class="member-name-link">isGetAllowed</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnabled(boolean)" class="member-name-link">setEnabled</a><wbr>(boolean&nbsp;enabled)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the controller is enabled.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isGetAllowed()" class="member-name-link">isGetAllowed</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnabled(boolean)" class="member-name-link">setEnabled</a><wbr>(boolean&nbsp;enabled)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets whether the <a href="OauthController.html" title="class in io.micronaut.security.endpoints"><code>OauthController</code></a> is enabled.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGetAllowed(boolean)" class="member-name-link">setGetAllowed</a><wbr>(boolean&nbsp;getAllowed)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGetAllowed(boolean)" class="member-name-link">setGetAllowed</a><wbr>(boolean&nbsp;getAllowed)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Enables HTTP GET invocations of refresh token requests.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the path to map the <a href="OauthController.html" title="class in io.micronaut.security.endpoints"><code>OauthController</code></a> to.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPostContentTypes(java.util.Set)" class="member-name-link">setPostContentTypes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;postContentTypes)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Supported content types for POST endpoints.</div>
 </div>
 </div>
 </div>
@@ -181,6 +193,12 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.endpoints.ControllerConfiguration">Methods inherited from interface&nbsp;io.micronaut.security.endpoints.<a href="ControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">ControllerConfiguration</a></h3>
+<code><a href="ControllerConfiguration.html#getPath()">getPath</a>, <a href="ControllerConfiguration.html#getPostContentTypes()">getPostContentTypes</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.core.util.Toggleable">Methods inherited from interface&nbsp;io.micronaut.core.util.Toggleable</h3>
+<code>isEnabled</code></div>
 </section>
 </li>
 </ul>
@@ -209,7 +227,12 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <li>
 <section class="detail" id="DEFAULT_ENABLED">
 <h3>DEFAULT_ENABLED</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">DEFAULT_ENABLED</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.11.0")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">DEFAULT_ENABLED</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Not used. <code>ControllerConfigurationProperties.DEFAULT_ENABLED</code> is used instead.</div>
+</div>
 <div class="block">The default enable value.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -274,31 +297,6 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="isEnabled()">
-<h3>isEnabled</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnabled</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>isEnabled</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.util.Toggleable</code></dd>
-<dt>Returns:</dt>
-<dd>true if you want to enable the <a href="OauthController.html" title="class in io.micronaut.security.endpoints"><code>OauthController</code></a></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getPath()">
-<h3>getPath</h3>
-<div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPath</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="ControllerConfiguration.html#getPath()">getPath</a></code>&nbsp;in interface&nbsp;<code><a href="ControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">ControllerConfiguration</a></code></dd>
-<dt>Returns:</dt>
-<dd>the path where the controller is enabled.</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="setEnabled(boolean)">
 <h3>setEnabled</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEnabled</span><wbr><span class="parameters">(boolean&nbsp;enabled)</span></div>
@@ -341,6 +339,55 @@ implements <a href="OauthControllerConfiguration.html" title="interface in io.mi
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>getAllowed</code> - Whether Http GET should be supported.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPostContentTypes()">
+<h3>getPostContentTypes</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getPostContentTypes</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="ControllerConfiguration.html#getPostContentTypes()">getPostContentTypes</a></code>&nbsp;in interface&nbsp;<code><a href="ControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">ControllerConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Supported HTTP methods for POST endpoints.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPostContentTypes(java.util.Set)">
+<h3>setPostContentTypes</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPostContentTypes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;postContentTypes)</span></div>
+<div class="block">Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>postContentTypes</code> - supported content types for POST endpoints.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isEnabled()">
+<h3>isEnabled</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnabled</span>()</div>
+<div class="block">Whether the controller is enabled.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>isEnabled</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.util.Toggleable</code></dd>
+<dt>Returns:</dt>
+<dd>Whether the controller is enabled.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPath()">
+<h3>getPath</h3>
+<div class="member-signature"><span class="annotations">@NonNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPath</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="ControllerConfiguration.html#getPath()">getPath</a></code>&nbsp;in interface&nbsp;<code><a href="ControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">ControllerConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>the path where the controller is enabled.</dd>
 </dl>
 </section>
 </li>
