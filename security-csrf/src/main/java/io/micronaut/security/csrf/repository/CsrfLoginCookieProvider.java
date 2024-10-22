@@ -43,14 +43,8 @@ public class CsrfLoginCookieProvider implements LoginCookieProvider<HttpRequest<
     @NonNull
     public Cookie provideCookie(@NonNull HttpRequest<?> request) {
         String csrfToken = csrfTokenGenerator.generateCsrfToken(request);
-        return csrfCookie(csrfToken, request);
-    }
-
-    @NonNull
-    private Cookie csrfCookie(@NonNull String csrfToken, @NonNull HttpRequest<?> request) {
         Cookie cookie = Cookie.of(csrfConfiguration.getCookieName(), csrfToken);
         cookie.configure(csrfConfiguration, request.isSecure());
         return cookie;
     }
-
 }
