@@ -1,7 +1,6 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
@@ -9,7 +8,7 @@ class SecuritySessionBeansWithSecurityDisabledSpec extends ApplicationContextSpe
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.enabled': false
+                'micronaut.security.enabled': false,
         ]
     }
 

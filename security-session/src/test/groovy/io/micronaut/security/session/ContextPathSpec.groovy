@@ -1,7 +1,6 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType

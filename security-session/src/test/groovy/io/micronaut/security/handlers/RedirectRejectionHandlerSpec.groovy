@@ -1,7 +1,6 @@
 package io.micronaut.security.handlers
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -28,10 +27,8 @@ class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
     String accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 
     Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.redirect.unauthorized.url': '/login',
-                'micronaut.security.redirect.forbidden.url': '/forbidden'
-        ]
+        super.configuration + ['micronaut.security.redirect.unauthorized.url': '/login',
+                               'micronaut.security.redirect.forbidden.url': '/forbidden']
     }
 
     void "UnauthorizedRejectionUriProvider is used for 401"() {

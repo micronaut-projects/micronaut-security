@@ -1,6 +1,5 @@
 package io.micronaut.security.session
 
-import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class SessionLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
