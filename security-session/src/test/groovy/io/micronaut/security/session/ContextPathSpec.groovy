@@ -28,7 +28,6 @@ class ContextPathSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.server.context-path': 'foo',
                 'micronaut.security.authentication': 'session'
         ]

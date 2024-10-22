@@ -1,4 +1,4 @@
-package io.micronaut.security.session.csrf;
+package io.micronaut.security.csrf.session;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;

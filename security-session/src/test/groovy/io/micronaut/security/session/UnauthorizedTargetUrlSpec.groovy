@@ -18,7 +18,6 @@ class UnauthorizedTargetUrlSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.redirect.unauthorized.url': '/login/auth',
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/login/auth', httpMethod: 'GET', access: ['isAnonymous()']]

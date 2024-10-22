@@ -7,7 +7,6 @@ dependencies {
     api(mnSession.micronaut.session)
     api(projects.micronautSecurity)
     implementation(mnReactor.micronaut.reactor)
-    compileOnly(projects.micronautSecurityCsrf)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
@@ -20,7 +19,6 @@ dependencies {
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
-    testImplementation(projects.micronautSecurityCsrf)
 
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(mnLogging.logback.classic)

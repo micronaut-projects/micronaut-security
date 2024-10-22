@@ -10,7 +10,6 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends ApplicationCon
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.session.enabled': false,
         ]
     }

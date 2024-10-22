@@ -24,9 +24,7 @@ class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
-        return super.configuration + [
-                'micronaut.security.csrf.enabled': StringUtils.FALSE
-        ]
+        return super.configuration
     }
 
     void "RedirectRejectionHandler is the default rejection handler resolved"() {

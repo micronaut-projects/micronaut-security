@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 /**
- * Classes related to Cross Site Request Forgery (CSRF) and HTTP Session.
+ * Classes related to CSRF and HTTP session.
  * @author Sergio del Amo
  * @since 4.11.0
  */
-@Requires(classes = CsrfTokenRepository.class)
-@Configuration
-package io.micronaut.security.session.csrf;
-
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.csrf.repository.CsrfTokenRepository;
+package io.micronaut.security.csrf.session;

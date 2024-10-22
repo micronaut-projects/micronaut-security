@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.session.csrf;
+package io.micronaut.security.session;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.session.SessionIdResolver;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.session.Session;
-import io.micronaut.session.http.SessionForRequest;
 import jakarta.inject.Singleton;
 
-import java.util.Optional;
-
-/**
- * Implementation of {@link SessionIdResolver} that returns {@link Session#getId()} if an HTTP session  is associated with the request.
- * @author Sergio del Amo
- * @since 4.11.0
- */
 @Singleton
-public class HttpSessionSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
+public class DefaultSessionPopulator<T> implements SessionPopulator<T> {
     @Override
-    @NonNull
-    public Optional<String> findSessionId(@NonNull HttpRequest<?> request) {
-        return SessionForRequest.find(request).map(Session::getId);
+    public void populateSession(T request, @NonNull Authentication authentication, @NonNull Session session) {
+        session.put(SecurityFilter.AUTHENTICATION, authentication);
     }
 }

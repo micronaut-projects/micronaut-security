@@ -23,7 +23,6 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.csrf.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'session',
         ]
     }
