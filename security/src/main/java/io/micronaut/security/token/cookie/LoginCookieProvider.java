@@ -13,9 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.token.cookie;
+
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.cookie.Cookie;
+
 /**
- * Classes related to CSRF and HTTP session.
  * @author Sergio del Amo
  * @since 4.11.0
+ * @param <T> Request
  */
-package io.micronaut.security.csrf.session;
+public interface LoginCookieProvider<T> {
+    @NonNull
+    Cookie provideCookie(@NonNull T request);
+}

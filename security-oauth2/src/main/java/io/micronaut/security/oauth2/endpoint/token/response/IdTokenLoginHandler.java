@@ -32,17 +32,15 @@ import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.CookieLoginHandler;
+import io.micronaut.security.token.cookie.LoginCookieProvider;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Sets {@link CookieLoginHandler}`s cookie value to the idtoken received from an authentication provider.
@@ -57,6 +55,7 @@ import java.util.Optional;
 public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
+    private final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
 
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
@@ -64,11 +63,29 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
+    @Inject
+    public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                               RedirectConfiguration redirectConfiguration,
+                               RedirectService redirectService,
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                               List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
+        this.loginCookieProviders = loginCookieProviders;
+    }
+
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     * @deprecated Use {@link #IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence, List)} instead.
+     */
+    @Deprecated
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                RedirectService redirectService,
                                @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
+        this(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence, Collections.emptyList());
     }
 
     /**
@@ -83,6 +100,9 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
         jwtCookie.maxAge(cookieExpiration(authentication, request));
         cookies.add(jwtCookie);
+        for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
+            cookies.add(loginCookieProvider.provideCookie(request));
+        }
         return cookies;
     }
 

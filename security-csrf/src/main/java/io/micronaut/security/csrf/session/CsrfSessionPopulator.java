@@ -22,6 +22,12 @@ import io.micronaut.security.session.SessionPopulator;
 import io.micronaut.session.Session;
 import jakarta.inject.Singleton;
 
+/**
+ * Populates the session with a CSRF token.
+ * @author Sergio del Amo
+ * @since 4.11.0
+ * @param <T> Request
+ */
 @Singleton
 public class CsrfSessionPopulator<T> implements SessionPopulator<T> {
     private final CsrfConfiguration csrfConfiguration;
