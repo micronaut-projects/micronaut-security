@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.validator;
+package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Primary;
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Composite Pattern implementation of {@link CsrfTokenValidator}.
+ * Composite Pattern implementation of {@link CsrfTokenRepository}.
  * @see <a href="https://guides.micronaut.io/latest/micronaut-patterns-composite.html">Composite Pattern</a>
  * @param <T> Request
  */
 @Primary
 @Singleton
-public class CompositeCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
-
-    private final List<CsrfTokenValidator<T>> csrfTokenValidators;
+public class CompositeCsrfTokenRepository<T> implements CsrfTokenRepository<T> {
+    private final List<CsrfTokenRepository<T>> repositories;
 
     /**
      *
-     * @param csrfTokenValidators CSRF Token Validators
+     * @param repositories CSRF Token Repositories
      */
-    public CompositeCsrfTokenValidator(List<CsrfTokenValidator<T>> csrfTokenValidators) {
-        this.csrfTokenValidators = csrfTokenValidators;
+    public CompositeCsrfTokenRepository(List<CsrfTokenRepository<T>> repositories) {
+        this.repositories = repositories;
     }
 
     @Override
-    public boolean validateCsrfToken(@NonNull T request, @NonNull String csrfToken) {
-        for (CsrfTokenValidator<T> csrfTokenValidator : csrfTokenValidators) {
-            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
-                return true;
-            }
-        }
-        return false;
+    public Optional<String> findCsrfToken(T request) {
+        return repositories.stream()
+                .map(r -> r.findCsrfToken(request))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
     }
 }

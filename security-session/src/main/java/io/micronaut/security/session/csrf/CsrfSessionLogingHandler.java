@@ -72,7 +72,7 @@ public class CsrfSessionLogingHandler extends SessionLoginHandler {
     @Override
     protected Session saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
         Session session =  super.saveAuthenticationInSession(authentication, request);
-        session.put(csrfConfiguration.getHttpSessionName(), csrfTokenGenerator.generate(request));
+        session.put(csrfConfiguration.getHttpSessionName(), csrfTokenGenerator.generateCsrfToken(request));
         return session;
     }
 }

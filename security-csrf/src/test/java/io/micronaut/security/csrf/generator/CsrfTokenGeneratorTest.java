@@ -20,7 +20,7 @@ class CsrfTokenGeneratorTest {
         HttpRequest<?> request = new SimpleHttpRequest<>(HttpMethod.POST, "/password/change", "usenrame=sherlock&password=123456");
         Set<String> results = new HashSet<>();
         for (int i = 0; i < attempts; i++) {
-            results.add(csrfTokenGenerator.generate(request));
+            results.add(csrfTokenGenerator.generateCsrfToken(request));
         }
         assertEquals(attempts, results.size());
     }

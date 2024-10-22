@@ -13,49 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.resolver;
+package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
 /**
- * Resolves a CSRF token from a request HTTP Header named {@link CsrfConfiguration#getHeaderName()}.
+ * Retrieves a CSRF Token from a Cookie, for example, in a Double Submit Cookie pattern.
  * @author Sergio del Amo
  * @since 4.11.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = "micronaut.security.csrf.token-resolvers.http-header.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = "micronaut.security.csrf.repository.cookie.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
-@Internal
-final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
-    private static final int ORDER = -100;
+public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>>  {
     private final CsrfConfiguration csrfConfiguration;
 
-    HttpHeaderCsrfTokenResolver(CsrfConfiguration csrfConfiguration) {
+    /**
+     *
+     * @param csrfConfiguration CSRF Configuration
+     */
+    public CookieCsrfTokenRepository(CsrfConfiguration csrfConfiguration) {
         this.csrfConfiguration = csrfConfiguration;
     }
 
     @Override
-    public Optional<String> resolveToken(HttpRequest<?> request) {
-        String csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName());
-        if (csrfToken != null) {
-            return Optional.of(csrfToken);
-        }
-        csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName().toLowerCase());
-        if (csrfToken != null) {
-            return Optional.of(csrfToken);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public int getOrder() {
-        return ORDER;
+    public Optional<String> findCsrfToken(HttpRequest<?> request) {
+        return request.getCookies()
+                .findCookie(csrfConfiguration.getCookieName())
+                .map(Cookie::getValue);
     }
 }

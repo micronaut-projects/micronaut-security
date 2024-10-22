@@ -86,7 +86,7 @@ public class CsrfIdTokenLoginHandler extends IdTokenLoginHandler {
 
     @NonNull
     private Cookie csrfCookie(@NonNull HttpRequest<?> request) {
-        String csrfToken = csrfTokenGenerator.generate(request);
+        String csrfToken = csrfTokenGenerator.generateCsrfToken(request);
         return csrfCookie(csrfToken, request);
     }
 

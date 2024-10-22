@@ -16,8 +16,14 @@
 package io.micronaut.security.csrf.validator;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.csrf.generator.DefaultCsrfTokenGenerator;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Optional;
+
 
 /**
  * {@link CsrfTokenValidator} implementation that uses a {@link CsrfTokenRepository}.
@@ -26,19 +32,49 @@ import jakarta.inject.Singleton;
  * @since 4.11.0
  * @author Sergio del Amo
  */
-@Requires(bean = CsrfTokenRepository.class)
+@Requires(beans = { CsrfTokenRepository.class, DefaultCsrfTokenGenerator.class})
 @Singleton
 public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
-    private final CsrfTokenRepository<T> csrfTokenRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(RepositoryCsrfTokenValidator.class);
+    private final List<CsrfTokenRepository<T>> repositories;
+    private final DefaultCsrfTokenGenerator<T> defaultCsrfTokenGenerator;
 
-    public RepositoryCsrfTokenValidator(CsrfTokenRepository<T> csrfTokenRepository) {
-        this.csrfTokenRepository = csrfTokenRepository;
+    /**
+     *
+     * @param repositories CSRF Token Repositories
+     * @param defaultCsrfTokenGenerator Default CSRF Token Generator
+     */
+    public RepositoryCsrfTokenValidator(List<CsrfTokenRepository<T>> repositories,
+                                        DefaultCsrfTokenGenerator<T> defaultCsrfTokenGenerator) {
+        this.repositories = repositories;
+        this.defaultCsrfTokenGenerator = defaultCsrfTokenGenerator;
     }
 
     @Override
-    public boolean validateCsrfToken(T request, String token) {
-        return csrfTokenRepository.findCsrfToken(request)
-                .map(storedToken -> storedToken.equals(token))
-                .orElse(false);
+    public boolean validateCsrfToken(T request, String csrfTokenInRequest) {
+        for (CsrfTokenRepository<T> repo : repositories) {
+            Optional<String> csrfTokenOptional = repo.findCsrfToken(request);
+            if (csrfTokenOptional.isPresent()) {
+                String csrfTokenInRepository = csrfTokenOptional.get();
+                if (csrfTokenInRepository.equals(csrfTokenInRequest) && validateHmac(request, csrfTokenInRequest)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean validateHmac(T request, String csrfTokenInRequest) {
+        String[] arr = csrfTokenInRequest.split("\\.");
+        if (arr.length != 2) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Invalid CSRF token: {}", csrfTokenInRequest);
+            }
+            return false;
+        }
+        String hmac = arr[0];
+        String randomValue = arr[1];
+        String expectedHmac = defaultCsrfTokenGenerator.hmac(request, randomValue);
+        return hmac.contains(expectedHmac);
     }
 }

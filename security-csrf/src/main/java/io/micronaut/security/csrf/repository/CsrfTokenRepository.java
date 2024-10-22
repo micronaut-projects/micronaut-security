@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.csrf.repository;
 
+import io.micronaut.core.order.Ordered;
+
 import java.util.Optional;
 
 /**
@@ -22,7 +24,7 @@ import java.util.Optional;
  * @param <T> Request
  */
 @FunctionalInterface
-public interface CsrfTokenRepository<T> {
+public interface CsrfTokenRepository<T> extends Ordered {
     /**
      *
      * @param request Request

@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.generator;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * CSRF token Generation.
@@ -26,10 +27,11 @@ import io.micronaut.context.annotation.DefaultImplementation;
 @DefaultImplementation(DefaultCsrfTokenGenerator.class)
 @FunctionalInterface
 public interface CsrfTokenGenerator<T> {
-
     /**
+     * Generates a CSRF Token.
      * @param request Request
      * @return A CSRF Token.
      */
-    String generate(T request);
+    @NonNull
+    String generateCsrfToken(@NonNull T request);
 }

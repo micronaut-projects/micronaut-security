@@ -35,7 +35,7 @@ class CsrfConfigurationTest {
     }
 
     @Test
-    void defaultTokenSize() {
+    void defaultRandomValueSize() {
         assertEquals(16, csrfConfiguration.getRandomValueSize());
     }
 
