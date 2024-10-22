@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
- * Resolves a CSRF token from a form-urlencoded body using the {@link ServerHttpRequest#byteBody()} API..
+ * Resolves a CSRF token from a form-urlencoded body using the {@link ServerHttpRequest#byteBody()} API.
  *
  * @since 2.0.0
  */

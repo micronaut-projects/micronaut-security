@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Retrieves a CSRF Token from a Cookie, for example, in a Double Submit Cookie pattern.
+ * Retrieves a CSRF Token from a Cookie named {@link CsrfConfiguration#getCookieName()}, for example, in a Double Submit Cookie pattern.
  * @author Sergio del Amo
  * @since 4.11.0
  */

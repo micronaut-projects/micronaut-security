@@ -65,7 +65,7 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
     }
 
     private boolean validateHmac(T request, String csrfTokenInRequest) {
-        String[] arr = csrfTokenInRequest.split("\\.");
+        String[] arr = csrfTokenInRequest.split("\\" + DefaultCsrfTokenGenerator.HMAC_RANDOM_SEPARATOR);
         if (arr.length != 2) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Invalid CSRF token: {}", csrfTokenInRequest);
@@ -75,6 +75,6 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
         String hmac = arr[0];
         String randomValue = arr[1];
         String expectedHmac = defaultCsrfTokenGenerator.hmac(request, randomValue);
-        return hmac.contains(expectedHmac);
+        return hmac.equals(expectedHmac);
     }
 }

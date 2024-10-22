@@ -30,7 +30,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * Default implementation of {@link CsrfTokenGenerator} which generates a random base 64 encoded string using an instance of {@link SecureRandom} and random byte array of size {@link CsrfConfiguration#getRandomValueSize()}.
+ * Default implementation of {@link CsrfTokenGenerator} which generates a CSRF Token prefixed by an HMAC if a secret key is set.
+ * @see <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#pseudo-code-for-implementing-hmac-csrf-tokens">Pseudo Code for implementing hmac CSRF tokens</a>
  * @author Sergio del Amo
  * @since 4.11.0
  * @param <T> Request
@@ -38,8 +39,11 @@ import java.util.Base64;
 @Requires(classes = CookieConfiguration.class)
 @Singleton
 public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T> {
+    /**
+     * hmac random value separator.
+     */
+    public static final String HMAC_RANDOM_SEPARATOR = ".";
     private static final String SESSION_RANDOM_SEPARATOR = "!";
-    private static final String HMAC_RANDOM_SEPARATOR = ".";
     private final SecureRandom secureRandom = new SecureRandom();
     private final CsrfConfiguration csrfConfiguration;
     private final SessionIdResolver<T> sessionIdResolver;
