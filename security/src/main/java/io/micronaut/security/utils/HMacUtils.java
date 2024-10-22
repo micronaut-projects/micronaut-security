@@ -44,7 +44,7 @@ public final class HMacUtils {
      * @throws NoSuchAlgorithmException if no {@code Provider} supports a {@code MacSpi} implementation for the specified algorithm.
      * @throws  InvalidKeyException if the given key is inappropriate for initializing this MAC.
      */
-    public static  String base64EncodedHmacSha256(@NonNull String data, @NonNull String key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static String base64EncodedHmacSha256(@NonNull String data, @NonNull String key) throws NoSuchAlgorithmException, InvalidKeyException {
         return base64EncodedHmac(HMAC_SHA256, data, key);
     }
 
@@ -57,7 +57,7 @@ public final class HMacUtils {
      * @throws NoSuchAlgorithmException if no {@code Provider} supports a {@code MacSpi} implementation for the specified algorithm.
      * @throws  InvalidKeyException if the given key is inappropriate for initializing this MAC.
      */
-    public static  String base64EncodedHmac(@NonNull String algorithm, @NonNull String data, @NonNull String key)
+    public static String base64EncodedHmac(@NonNull String algorithm, @NonNull String data, @NonNull String key)
             throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), algorithm);
         Mac mac = Mac.getInstance(algorithm);
