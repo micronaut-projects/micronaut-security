@@ -44,9 +44,7 @@ public class CompositeSessionIdResolver<T> implements SessionIdResolver<T> {
     @NonNull
     public Optional<String> findSessionId(@NonNull T request) {
         return sessionIdResolvers.stream()
-                .map(sessionIdResolver -> sessionIdResolver.findSessionId(request))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(sessionIdResolver -> sessionIdResolver.findSessionId(request).stream())
                 .findFirst();
     }
 }
