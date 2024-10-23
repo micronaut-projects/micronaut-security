@@ -42,9 +42,7 @@ public class CompositeCsrfTokenRepository<T> implements CsrfTokenRepository<T> {
     @Override
     public Optional<String> findCsrfToken(T request) {
         return repositories.stream()
-                .map(r -> r.findCsrfToken(request))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(r -> r.findCsrfToken(request).stream())
                 .findFirst();
     }
 }
