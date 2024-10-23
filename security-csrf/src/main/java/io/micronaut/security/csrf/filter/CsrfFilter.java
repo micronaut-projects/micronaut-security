@@ -22,11 +22,9 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.annotation.RequestFilter;
+import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.FilterPatternStyle;
-import io.micronaut.http.filter.HttpServerFilter;
-import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.authentication.Authentication;
@@ -55,9 +53,9 @@ import java.util.function.Supplier;
 @Requires(property = CsrfFilterConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = { ExceptionHandler.class, HttpRequest.class })
 @Requires(beans = { CsrfTokenValidator.class })
-@Filter(patternStyle = FilterPatternStyle.REGEX,
+@ServerFilter(patternStyle = FilterPatternStyle.REGEX,
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
-final class CsrfFilter implements Ordered, HttpServerFilter {
+final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
     private final List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
@@ -79,10 +77,11 @@ final class CsrfFilter implements Ordered, HttpServerFilter {
         this.csrfFilterConfiguration = csrfFilterConfiguration;
     }
 
-    @Override
-    public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
-        Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest = () -> chain.proceed(request);
-        Supplier<Publisher<MutableHttpResponse<?>>> denyRequest = () -> Mono.just(unauthorized(request));
+    @RequestFilter
+    @Nullable
+    public Publisher<Optional<MutableHttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
+        Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest = () -> Mono.just(Optional.empty());
+        Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest = () -> Mono.just(Optional.of(unauthorized(request)));
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
             return proceedRequest.get();
         }
@@ -94,9 +93,9 @@ final class CsrfFilter implements Ordered, HttpServerFilter {
                 : reactiveFilter(request, proceedRequest, denyRequest);
     }
 
-    private Publisher<MutableHttpResponse<?>> reactiveFilter(HttpRequest<?> request,
-                                                               Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest,
-                                                               Supplier<Publisher<MutableHttpResponse<?>>> denyRequest) {
+    private Publisher<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request,
+                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest,
+                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest) {
         return Flux.fromIterable(this.reactiveCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.from(resolver.resolveToken(request))
                         .filter(csrfToken -> {
@@ -115,9 +114,9 @@ final class CsrfFilter implements Ordered, HttpServerFilter {
                     return Mono.from(denyRequest.get());
                 }));
     }
-    private Publisher<MutableHttpResponse<?>> imperativeFilter(HttpRequest<?> request,
-                                                               Supplier<Publisher<MutableHttpResponse<?>>> proceedRequest,
-                                                               Supplier<Publisher<MutableHttpResponse<?>>> denyRequest) {
+    private Publisher<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request,
+                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest,
+                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest) {
         String csrfToken = resolveCsrfToken(request);
         if (csrfToken == null) {
             if (LOG.isDebugEnabled()) {
