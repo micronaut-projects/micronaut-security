@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @Internal
 @ConfigurationProperties(CsrfConfigurationProperties.PREFIX)
-class CsrfConfigurationProperties implements CsrfConfiguration {
+final class CsrfConfigurationProperties implements CsrfConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf";
 
     /**
