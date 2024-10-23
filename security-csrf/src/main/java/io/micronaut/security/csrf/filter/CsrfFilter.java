@@ -41,7 +41,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * {@link RequestFilter} which validates CSRF tokens and rejects a request if the token is invalid.
@@ -80,22 +79,22 @@ final class CsrfFilter implements Ordered {
     @RequestFilter
     @Nullable
     public Publisher<Optional<MutableHttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
-        Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest = () -> Mono.just(Optional.empty());
-        Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest = () -> Mono.just(Optional.of(unauthorized(request)));
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
-            return proceedRequest.get();
+            return proceedRequest();
         }
         if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
-            return proceedRequest.get();
+            return proceedRequest();
         }
         return reactiveCsrfTokenResolvers.isEmpty()
-                ? imperativeFilter(request, proceedRequest, denyRequest)
-                : reactiveFilter(request, proceedRequest, denyRequest);
+                ? imperativeFilter(request)
+                : reactiveFilter(request);
     }
 
-    private Publisher<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request,
-                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest,
-                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest) {
+    private static Publisher<Optional<MutableHttpResponse<?>>> proceedRequest() {
+        return Mono.just(Optional.empty());
+    }
+
+    private Publisher<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
         return Flux.fromIterable(this.reactiveCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.from(resolver.resolveToken(request))
                         .filter(csrfToken -> {
@@ -108,27 +107,26 @@ final class CsrfFilter implements Ordered {
                             }
                         }))
                 .next()
-                .flatMap(validToken -> Mono.from(proceedRequest.get()))
+                .flatMap(validToken -> Mono.from(proceedRequest()))
                 .switchIfEmpty(Mono.defer(() -> {
                     LOG.debug("Request rejected by the CsrfFilter");
-                    return Mono.from(denyRequest.get());
+                    return Mono.from(reactiveUnauthorized(request));
                 }));
     }
-    private Publisher<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request,
-                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> proceedRequest,
-                                                               Supplier<Publisher<Optional<MutableHttpResponse<?>>>> denyRequest) {
+    
+    private Publisher<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (csrfToken == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
-            return denyRequest.get();
+            return reactiveUnauthorized(request);
         }
         if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
-            return proceedRequest.get();
+            return proceedRequest();
         }
         LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
-        return denyRequest.get();
+        return reactiveUnauthorized(request);
     }
 
     private boolean shouldTheFilterProcessTheRequestAccordingToTheContentType(@NonNull HttpRequest<?> request) {
@@ -174,6 +172,11 @@ final class CsrfFilter implements Ordered {
             LOG.trace("No CSRF token found in request");
         }
         return null;
+    }
+
+    @NonNull
+    private Publisher<Optional<MutableHttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
+        return Mono.just(Optional.of(unauthorized(request)));
     }
 
     @NonNull
