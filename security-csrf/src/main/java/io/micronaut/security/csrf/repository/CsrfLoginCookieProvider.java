@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.repository;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
 public class CsrfLoginCookieProvider implements LoginCookieProvider<HttpRequest<?>> {
     private final CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator;
