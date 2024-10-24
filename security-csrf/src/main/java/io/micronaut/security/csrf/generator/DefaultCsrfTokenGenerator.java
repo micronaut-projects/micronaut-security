@@ -97,6 +97,8 @@ public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T>
     }
 
     static String hmacMessagePayload(String sessionId, String randomValue) {
-        return sessionId + SESSION_RANDOM_SEPARATOR + randomValue;
+        return sessionId.replace(SESSION_RANDOM_SEPARATOR, "") +  // this ensures session ID, does not have the separator as a substring.
+                SESSION_RANDOM_SEPARATOR +
+                randomValue; // randomValue cannot have the separator, as ! is not a base64 character.
     }
 }
