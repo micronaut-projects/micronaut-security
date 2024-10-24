@@ -1,9 +1,8 @@
 The main APIs for CSRF protection are:
 
-* api:security.csrf.CsrConfiguration[]
-* api:security.csrf.filter.CsrFilter[]
-* api:security.csrf.filter.CsrFilterConfiguration[]
-* api:security.csrf.resolvers.CsrfTokenResolver[]
+* api:security.csrf.CsrfConfiguration[]
+* api:security.csrf.filter.CsrfFilterConfiguration[]
+* api:security.csrf.resolver.CsrfTokenResolver[]
 * api:security.csrf.generator.CsrfTokenGenerator[]
-* api:security.csrf.CsrTokenValidator[]
-* api:security.csrf.CsrfTokenRepository[]
+* api:security.csrf.validator.CsrfTokenValidator[]
+* api:security.csrf.repository.CsrfTokenRepository[]
