@@ -16,7 +16,7 @@
 package io.micronaut.security.csrf.validator;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.csrf.generator.DefaultCsrfTokenGenerator;
+import io.micronaut.security.csrf.generator.CsrfHmacTokenGenerator;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ import java.util.Optional;
  * @since 4.11.0
  * @author Sergio del Amo
  */
-@Requires(beans = { CsrfTokenRepository.class, DefaultCsrfTokenGenerator.class})
+@Requires(beans = { CsrfTokenRepository.class, CsrfHmacTokenGenerator.class})
 @Singleton
 public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(RepositoryCsrfTokenValidator.class);
     private final List<CsrfTokenRepository<T>> repositories;
-    private final DefaultCsrfTokenGenerator<T> defaultCsrfTokenGenerator;
+    private final CsrfHmacTokenGenerator<T> defaultCsrfTokenGenerator;
 
     /**
      *
@@ -45,7 +45,7 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
      * @param defaultCsrfTokenGenerator Default CSRF Token Generator
      */
     public RepositoryCsrfTokenValidator(List<CsrfTokenRepository<T>> repositories,
-                                        DefaultCsrfTokenGenerator<T> defaultCsrfTokenGenerator) {
+                                        CsrfHmacTokenGenerator<T> defaultCsrfTokenGenerator) {
         this.repositories = repositories;
         this.defaultCsrfTokenGenerator = defaultCsrfTokenGenerator;
     }
@@ -65,7 +65,7 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
     }
 
     private boolean validateHmac(T request, String csrfTokenInRequest) {
-        String[] arr = csrfTokenInRequest.split("\\" + DefaultCsrfTokenGenerator.HMAC_RANDOM_SEPARATOR);
+        String[] arr = csrfTokenInRequest.split("\\" + CsrfHmacTokenGenerator.HMAC_RANDOM_SEPARATOR);
         if (arr.length != 2) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Invalid CSRF token: {}", csrfTokenInRequest);

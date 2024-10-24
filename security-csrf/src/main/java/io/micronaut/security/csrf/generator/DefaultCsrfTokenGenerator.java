@@ -38,11 +38,10 @@ import java.util.Base64;
  */
 @Requires(classes = CookieConfiguration.class)
 @Singleton
-public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T> {
+final class DefaultCsrfTokenGenerator<T> implements CsrfHmacTokenGenerator<T> {
     /**
      * hmac random value separator.
      */
-    public static final String HMAC_RANDOM_SEPARATOR = ".";
     private static final String SESSION_RANDOM_SEPARATOR = "!";
     private final SecureRandom secureRandom = new SecureRandom();
     private final CsrfConfiguration csrfConfiguration;
@@ -53,7 +52,7 @@ public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T>
      * @param csrfConfiguration CSRF Configuration
      * @param sessionIdResolver SessionID Resolver
      */
-    public DefaultCsrfTokenGenerator(CsrfConfiguration csrfConfiguration,
+    DefaultCsrfTokenGenerator(CsrfConfiguration csrfConfiguration,
                               SessionIdResolver<T> sessionIdResolver) {
         this.csrfConfiguration = csrfConfiguration;
         this.sessionIdResolver = sessionIdResolver;
@@ -77,6 +76,7 @@ public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T>
      * @param randomValue Cryptographic random value
      * @return HMAC hash
      */
+    @Override
     @NonNull
     public String hmac(@NonNull T request, String randomValue) {
         // Gather the values
