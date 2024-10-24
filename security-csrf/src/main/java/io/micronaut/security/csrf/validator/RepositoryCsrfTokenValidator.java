@@ -75,6 +75,6 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
         String hmac = arr[0];
         String randomValue = arr[1];
         String expectedHmac = defaultCsrfTokenGenerator.hmac(request, randomValue);
-        return hmac.equals(expectedHmac);
+        return MessageDigest.isEquals(expectedHmac.getBytes(StandardCharsets.UTF_8), hmac.getBytes(StandardCharsets.UTF_8));
     }
 }
