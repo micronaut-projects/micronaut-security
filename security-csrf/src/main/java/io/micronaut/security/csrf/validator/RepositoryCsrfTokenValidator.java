@@ -21,9 +21,11 @@ import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-
+import java.security.MessageDigest;
 
 /**
  * {@link CsrfTokenValidator} implementation that uses a {@link CsrfTokenRepository}.
@@ -75,6 +77,6 @@ public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
         String hmac = arr[0];
         String randomValue = arr[1];
         String expectedHmac = defaultCsrfTokenGenerator.hmac(request, randomValue);
-        return MessageDigest.isEquals(expectedHmac.getBytes(StandardCharsets.UTF_8), hmac.getBytes(StandardCharsets.UTF_8));
+        return MessageDigest.isEqual(expectedHmac.getBytes(StandardCharsets.UTF_8), hmac.getBytes(StandardCharsets.UTF_8));
     }
 }
