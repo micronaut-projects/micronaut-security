@@ -59,7 +59,7 @@ public final class HMacUtils {
      */
     public static String base64EncodedHmac(@NonNull String algorithm, @NonNull String data, @NonNull String key)
             throws NoSuchAlgorithmException, InvalidKeyException {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), algorithm);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), algorithm);
         Mac mac = Mac.getInstance(algorithm);
         mac.init(secretKeySpec);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(data.getBytes()));
