@@ -67,6 +67,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * @param redirectConfiguration Redirect configuration
      * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
+     * @param loginCookieProviders List of beans of type {@link LoginCookieProvider}
      */
     @Inject
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
