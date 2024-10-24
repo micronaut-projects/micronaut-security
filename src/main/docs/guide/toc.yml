@@ -36,9 +36,9 @@ endpoints:
   builtInHandlers:
     title: Built-in Login and Logout Handlers
     micronautSecurityAuthenticationBearer: Micronaut Security Authentication Bearer
-    micronautSecurityAuthenticationSession: Micronaut Security Session Login Handler
-    micronautSecurityAuthenticationCookie: Micronaut Security Authentication Cookie
-    micronautSecurityAuthenticationIdToken: Micronaut Security Authentication ID Token
+    micronautSecurityAuthenticationSession: Authentication Mode Session
+    micronautSecurityAuthenticationCookie: Authentication Mode Cookie
+    micronautSecurityAuthenticationIdToken: Authentication Mode ID Token
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
