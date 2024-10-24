@@ -11,5 +11,3 @@ amount=100&toUser=intended&csrfToken=o24b65486f506e2cd4403caf0d640024
 ----
 
 You can disable it by setting `micronaut.security.csrf.token-resolvers.field.enabled=false`
-
-NOTE: `FieldCsrfTokenResolver` only works for Netty runtime.
