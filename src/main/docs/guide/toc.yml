@@ -35,7 +35,7 @@ endpoints:
     logoutHandler: Logout Handler
   builtInHandlers:
     title: Built-in Login and Logout Handlers
-    micronautSecurityAuthenticationBearer: Micronaut Security Authentication Bearer
+    micronautSecurityAuthenticationBearer: Authentication Mode Bearer
     micronautSecurityAuthenticationSession: Authentication Mode Session
     micronautSecurityAuthenticationCookie: Authentication Mode Cookie
     micronautSecurityAuthenticationIdToken: Authentication Mode ID Token
