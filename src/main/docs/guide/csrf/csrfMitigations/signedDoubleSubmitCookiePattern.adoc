@@ -1,0 +1,11 @@
+IMPORTANT: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended[Signed Double-Submit Cookie]. Sign the CSRF Token with to prevent attackers from overriding the cookie value with their own (e.g. with taken-over subdomain attacks) .
+
+To do sign the CSRF Token, set the property `micronaut.security.csrf.signature-key`.
+
+[configuration]
+----
+micronaut:
+  security:
+    csrf:
+      signature-key: pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow
+----

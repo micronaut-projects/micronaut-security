@@ -28,28 +28,5 @@ However, Micronaut security modules ship with several implementations which you 
 
 These handlers allow you to set the following scenarios:
 
-#### Micronaut Security Authentication Bearer
-
-When you set `micronaut.security.authentication=bearer`, api:security.token.bearer.AccessRefreshTokenLoginHandler[] a bean of type  api:security.handlers.LoginHandler[] is enabled.
-
-image::micronaut-security-authentication-bearer.png[]
-
-#### Micronaut Security Authentication Cookie
-
-When you set `micronaut.security.authentication=cookie`, api:security.token.cookie.TokenCookieLoginHandler[] a bean of type api:security.handlers.LoginHandler[] and api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[] a bean of type api:security.handlers.LogoutHandler[] are enabled.
-
-image::micronaut-security-authentication-cookie.png[]
-
-#### Micronaut Security Authentication SessionLoginHandler
-
-When you set `micronaut.security.authentication=session`, api:security.session.SessionLoginHandler[] a bean of type api:security.handlers.LoginHandler[] and api:security.session.SessionLogoutHandler[] a bean of type api:security.handlers.LogoutHandler[] are enabled.
-
-image::micronaut-security-authentication-session.png[]
-
-#### Micronaut Security Authentication ID Token
-
-When you set `micronaut.security.authentication=idtoken`, api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[] a bean of type api:security.handlers.LoginHandler[] and api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[] a bean of type api:security.handlers.LogoutHandler[] are enabled.
-
-image::micronaut-security-authentication-idtoken.png[]
 
 

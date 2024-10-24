@@ -1,0 +1,13 @@
+Micronaut Security CSRF ships a `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver` an implementation of api:security.csrf.resolver.CsrfTokenResolver[] which looks for a CSRF Token in a Request's  form-url-encoded field.
+
+[source, bash]
+----
+POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=<token>
+[...]
+amount=100&toUser=intended&csrfToken=o24b65486f506e2cd4403caf0d640024
+----
+
+You can disable it by setting `micronaut.security.csrf.token-resolvers.field.enabled=false`

@@ -1,0 +1,8 @@
+The core of Micronaut Security CSRF implementation is `io.micronaut.security.csrf.filter.CsrfFilter`.
+A https://docs.micronaut.io/latest/guide/#filters[Server Filter] which attempts to resolve a CSRF Token with
+every bean of type api:security.csrf.resolvers.CsrfTokenResolver[] and validates it with beans of type api:security.csrf.validator.CsrfTokenValidator[].
+
+The following configuration options are available for the CSRF Filter:
+
+include::{includedir}configurationProperties/io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties.adoc[]
+

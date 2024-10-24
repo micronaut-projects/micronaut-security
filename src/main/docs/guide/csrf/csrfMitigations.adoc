@@ -1,0 +1,2 @@
+IMPORTANT: Ensure your application does not perform state-changing actions via the GET request method. Your application should perform state-changing actions only via POST, PUT, PATCH, or DELETE methods.
+

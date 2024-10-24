@@ -31,10 +31,12 @@ import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.render.AccessRefreshToken;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,6 +52,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
     protected final AccessTokenConfiguration accessTokenConfiguration;
+    private final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
 
     /**
      * @param redirectService Redirection Service
@@ -60,6 +63,33 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      */
+    @Inject
+    public TokenCookieLoginHandler(RedirectService redirectService,
+                                   RedirectConfiguration redirectConfiguration,
+                                   AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                   RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                   AccessTokenConfiguration accessTokenConfiguration,
+                                   AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                                   @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                                   List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
+        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.loginCookieProviders = loginCookieProviders;
+    }
+
+    /**
+     * @param redirectService Redirection Service
+     * @param redirectConfiguration Redirect configuration
+     * @param accessTokenCookieConfiguration JWT Access Token Cookie Configuration
+     * @param refreshTokenCookieConfiguration Refresh Token Cookie Configuration
+     * @param accessTokenConfiguration JWT Generator Configuration
+     * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     * @deprecated Use {@link TokenCookieLoginHandler#TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence, List)} instead.
+     */
+    @Deprecated
     public TokenCookieLoginHandler(RedirectService redirectService,
                                  RedirectConfiguration redirectConfiguration,
                                  AccessTokenCookieConfiguration accessTokenCookieConfiguration,
@@ -67,10 +97,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
                                  AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator,
                                  @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
-        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-        this.accessTokenConfiguration = accessTokenConfiguration;
-        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this(redirectService, redirectConfiguration, accessTokenCookieConfiguration, refreshTokenCookieConfiguration, accessTokenConfiguration, accessRefreshTokenGenerator, priorToLoginPersistence, Collections.emptyList());
     }
 
     @Override
@@ -113,6 +140,9 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
             cookies.add(refreshCookie);
         }
 
+        for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
+            cookies.add(loginCookieProvider.provideCookie(request));
+        }
         return cookies;
     }
 }

@@ -1,0 +1,21 @@
+https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#alternative-using-a-double-submit-cookie-pattern[Double Submit Cookie Pattern].
+
+In a double-submit cookie pattern, the server generates a CSRF token, and it sends the CSRF token to the client in a cookie.
+
+Then, the server only needs to verify that following requests cookie's value matches the CSRF token sent in a request parameter (a hidden form field) or header. This process is stateless, as the server doesn’t need to store any information about the CSRF token.
+
+[source, bash]
+----
+POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=<token>; __Host-csrfToken=o24b65486f506e2cd4403caf0d640024
+[...]
+
+amount=100&toUser=intended&csrfToken=o24b65486f506e2cd4403caf0d640024
+----
+
+When you use Micronaut Security Authentication <<micronautSecurityAuthenticationCookie, `cookie`>>, or
+    <<micronautSecurityAuthenticationIdToken, `idtoken`>> a CSRF Token is saved in a Cookie upon login.
+
+You can <<csrfConfiguration, configure different cookie attributes>>. For example, by default the cookie name uses a `__Host-`  https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#cookie_prefixes[Cookie prefix], can extend https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins[security protections against CSRF Attacks].
