@@ -18,4 +18,4 @@ amount=100&toUser=intended&csrfToken=o24b65486f506e2cd4403caf0d640024
 When you use Micronaut Security Authentication <<micronautSecurityAuthenticationCookie, `cookie`>>, or
     <<micronautSecurityAuthenticationIdToken, `idtoken`>> a CSRF Token is saved in a Cookie upon login.
 
-You can <<csrfConfiguration, configure different cookie attributes>>. For example, by default the cookie name uses a `__Host-`  https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#cookie_prefixes[Cookie prefix], can extend https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins[security protections against CSF Attacks].
+You can <<csrfConfiguration, configure different cookie attributes>>. For example, by default the cookie name uses a `__Host-`  https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#cookie_prefixes[Cookie prefix], can extend https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins[security protections against CSRF Attacks].
