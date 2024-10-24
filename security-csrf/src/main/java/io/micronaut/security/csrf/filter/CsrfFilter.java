@@ -90,11 +90,11 @@ final class CsrfFilter implements Ordered {
                 : reactiveFilter(request);
     }
 
-    private static Publisher<Optional<MutableHttpResponse<?>>> proceedRequest() {
+    private static Mono<Optional<MutableHttpResponse<?>>> proceedRequest() {
         return Mono.just(Optional.empty());
     }
 
-    private Publisher<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
+    private Mono<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
         return Flux.fromIterable(this.reactiveCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.from(resolver.resolveToken(request))
                         .filter(csrfToken -> {
@@ -107,14 +107,14 @@ final class CsrfFilter implements Ordered {
                             }
                         }))
                 .next()
-                .flatMap(validToken -> Mono.from(proceedRequest()))
+                .flatMap(validToken -> proceedRequest())
                 .switchIfEmpty(Mono.defer(() -> {
                     LOG.debug("Request rejected by the CsrfFilter");
-                    return Mono.from(reactiveUnauthorized(request));
+                    return reactiveUnauthorized(request);
                 }));
     }
     
-    private Publisher<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
+    private Mono<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (csrfToken == null) {
             if (LOG.isDebugEnabled()) {
@@ -175,7 +175,7 @@ final class CsrfFilter implements Ordered {
     }
 
     @NonNull
-    private Publisher<Optional<MutableHttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
+    private Mono<Optional<MutableHttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
         return Mono.just(Optional.of(unauthorized(request)));
     }
 
