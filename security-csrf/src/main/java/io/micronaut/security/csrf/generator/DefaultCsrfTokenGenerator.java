@@ -84,7 +84,7 @@ public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T>
         String sessionID = sessionIdResolver.findSessionId(request).orElse(""); // Current authenticated user session
 
         // Create the CSRF Token
-        String message = sessionID + SESSION_RANDOM_SEPARATOR + randomValue; // HMAC message payload
+        String message = hmacMessagePayload(sessionID, randomValue);
         try {
             return secret != null
                     ? HMacUtils.base64EncodedHmacSha256(message, secret) // Generate the HMAC hash
@@ -94,5 +94,9 @@ public final class DefaultCsrfTokenGenerator<T> implements CsrfTokenGenerator<T>
         } catch (NoSuchAlgorithmException ex) {
             throw new ConfigurationException("Invalid algorithm for signing the CSRF token");
         }
+    }
+
+    static String hmacMessagePayload(String sessionId, String randomValue) {
+        return sessionId + SESSION_RANDOM_SEPARATOR + randomValue;
     }
 }

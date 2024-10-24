@@ -1,4 +1,4 @@
-package io.micronaut.security.csrf.repository;
+package io.micronaut.security.csrf.generator;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
@@ -13,6 +13,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.csrf.CsrfConfiguration;
+import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.session.SessionIdResolver;
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.micronaut.security.csrf.generator.DefaultCsrfTokenGenerator.hmacMessagePayload;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.security.authentication", value = "cookie")
@@ -76,7 +78,7 @@ class CsrfDoubleSubmitCookiePatternTest {
         PasswordChangeForm body = new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedWithoutSessionId);
         assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, body, csrfTokenCalculatedWithoutSessionId);
 
-        String message = FIX_SESSION_ID + "!" + randomValue;
+        String message = hmacMessagePayload(FIX_SESSION_ID, randomValue);
         hmac = HMacUtils.base64EncodedHmacSha256(message, csrfConfiguration.getSecretKey());
         csrfToken = hmac + "." + randomValue;
         assertOk(client, cookieJwt.getValue(), csrfTokenCookieName, csrfToken);
