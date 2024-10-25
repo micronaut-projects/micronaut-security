@@ -4,6 +4,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
@@ -54,7 +55,8 @@ class FieldCsrfTokenResolverTest {
             this.csrfToken = csrfToken;
         }
         @Override
-        public Optional<String> findCsrfToken(HttpRequest<?> request) {
+        @NonNull
+        public Optional<String> findCsrfToken(@NonNull HttpRequest<?> request) {
             return Optional.of(csrfToken);
         }
     }

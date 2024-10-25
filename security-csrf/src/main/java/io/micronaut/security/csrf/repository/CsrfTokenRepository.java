@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.repository;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
 
 import java.util.Optional;
@@ -30,5 +31,6 @@ public interface CsrfTokenRepository<T> extends Ordered {
      * @param request Request
      * @return A CSRF token or an empty optional.
      */
-    Optional<String> findCsrfToken(T request);
+    @NonNull
+    Optional<String> findCsrfToken(@NonNull T request);
 }

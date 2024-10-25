@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -40,7 +41,8 @@ public class CompositeCsrfTokenRepository<T> implements CsrfTokenRepository<T> {
     }
 
     @Override
-    public Optional<String> findCsrfToken(T request) {
+    @NonNull
+    public Optional<String> findCsrfToken(@NonNull T request) {
         return repositories.stream()
                 .flatMap(r -> r.findCsrfToken(request).stream())
                 .findFirst();

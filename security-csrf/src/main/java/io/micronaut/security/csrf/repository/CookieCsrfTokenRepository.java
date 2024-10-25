@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
@@ -44,7 +45,8 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpReques
     }
 
     @Override
-    public Optional<String> findCsrfToken(HttpRequest<?> request) {
+    @NonNull
+    public Optional<String> findCsrfToken(@NonNull HttpRequest<?> request) {
         return request.getCookies()
                 .findCookie(csrfConfiguration.getCookieName())
                 .map(Cookie::getValue);

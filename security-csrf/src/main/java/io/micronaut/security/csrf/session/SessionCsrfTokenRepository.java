@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.session;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csrf.CsrfConfiguration;
@@ -42,7 +43,8 @@ public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpReque
     }
 
     @Override
-    public Optional<String> findCsrfToken(HttpRequest<?> request) {
+    @NonNull
+    public Optional<String> findCsrfToken(@NonNull HttpRequest<?> request) {
         return SessionForRequest.find(request)
                 .flatMap(session -> session.get(csrfConfiguration.getHttpSessionName(), String.class));
     }
