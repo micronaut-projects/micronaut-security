@@ -16,7 +16,6 @@
 package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.order.Ordered;
 
@@ -39,9 +38,8 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
      * @param request The Request. Maybe an HTTP Request.
      * @return A CSRF token or an empty Optional if the token cannot be resolved.
      */
-    @SingleResult
     @NonNull
-    CompletableFuture<String> resolveToken(T request);
+    CompletableFuture<String> resolveToken(@NonNull T request);
 
     /**
      *
@@ -50,8 +48,10 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
      * @return Returns a List of {@link FutureCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to imperative.
      * @param <T>
      */
-    static <T> List<FutureCsrfTokenResolver<T>> of(List<CsrfTokenResolver<T>> resolvers,
-                                                   List<FutureCsrfTokenResolver<T>> futureCsrfTokenResolvers) {
+    @NonNull
+    static <T> List<FutureCsrfTokenResolver<T>> of(
+            @NonNull List<CsrfTokenResolver<T>> resolvers,
+            @NonNull List<FutureCsrfTokenResolver<T>> futureCsrfTokenResolvers) {
         List<FutureCsrfTokenResolver<T>> result  = new ArrayList<>(futureCsrfTokenResolvers.size() + resolvers.size());
         result.addAll(futureCsrfTokenResolvers);
         result.addAll(resolvers.stream().map(FutureCsrfTokenResolverAdapter::new).toList());

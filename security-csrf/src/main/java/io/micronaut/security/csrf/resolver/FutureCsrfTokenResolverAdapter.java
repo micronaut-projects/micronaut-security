@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.csrf.resolver;
 
+import io.micronaut.core.annotation.NonNull;
+
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,7 +36,8 @@ public class FutureCsrfTokenResolverAdapter<T> implements FutureCsrfTokenResolve
     }
 
     @Override
-    public CompletableFuture<String> resolveToken(T request) {
+    @NonNull
+    public CompletableFuture<String> resolveToken(@NonNull  T request) {
         return CompletableFuture.completedFuture(csrfTokenResolver.resolveToken(request).orElse(null));
     }
 

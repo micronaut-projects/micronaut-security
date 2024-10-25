@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.ServerHttpRequest;
@@ -47,8 +48,8 @@ class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpRequest<?>> 
     }
 
     @Override
-    @Singleton
-    public CompletableFuture<String> resolveToken(HttpRequest<?> request) {
+    @NonNull
+    public CompletableFuture<String> resolveToken(@NonNull HttpRequest<?> request) {
         if (request instanceof ServerHttpRequest<?> serverHttpRequest) {
             return resolveToken(serverHttpRequest);
         }
