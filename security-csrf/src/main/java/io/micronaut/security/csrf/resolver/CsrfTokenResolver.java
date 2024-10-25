@@ -36,5 +36,5 @@ public interface CsrfTokenResolver<T> extends Ordered {
      * @return A CSRF token or an empty Optional if the token cannot be resolved.
      */
     @NonNull
-    Optional<String> resolveToken(T request);
+    Optional<String> resolveToken(@NonNull T request);
 }
