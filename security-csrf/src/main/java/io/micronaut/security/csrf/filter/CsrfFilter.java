@@ -112,8 +112,8 @@ final class CsrfFilter implements Ordered {
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(String uri) {
         boolean matches = PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), uri);
         if (!matches) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request uri {} does not match fitler regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request uri {} does not match fitler regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
             }
             return false;
         }
@@ -124,18 +124,20 @@ final class CsrfFilter implements Ordered {
         return Flux.fromIterable(this.futureCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.fromFuture(resolver.resolveToken(request))
                         .filter(csrfToken -> {
-                            LOG.debug("CSRF Token resolved");
+                            LOG.trace("CSRF Token resolved");
                             if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
                                 return true;
                             } else {
-                                LOG.debug("CSRF Token validation failed");
+                                LOG.trace("CSRF Token validation failed");
                                 return false;
                             }
                         }))
                 .next()
                 .flatMap(validToken -> PROCEED)
                 .switchIfEmpty(Mono.defer(() -> {
-                    LOG.debug("Request rejected by the CsrfFilter");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Request rejected by the CsrfFilter");
+                    }
                     return reactiveUnauthorized(request);
                 }));
     }
@@ -143,15 +145,17 @@ final class CsrfFilter implements Ordered {
     private Mono<Optional<HttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (StringUtils.isEmpty(csrfToken)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
             return reactiveUnauthorized(request);
         }
         if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
             return PROCEED;
         }
-        LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
+        }
         return reactiveUnauthorized(request);
     }
 
@@ -194,7 +198,7 @@ final class CsrfFilter implements Ordered {
                 return tokenOptional.get();
             }
         }
-        if (LOG.isDebugEnabled()) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("No CSRF token found in request");
         }
         return null;
