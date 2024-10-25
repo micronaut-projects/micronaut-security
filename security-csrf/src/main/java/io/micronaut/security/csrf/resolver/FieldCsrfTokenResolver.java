@@ -20,13 +20,11 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.ServerHttpRequest;
-import io.micronaut.http.body.ByteBody;
+import io.micronaut.http.server.filter.FilterBodyParser;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 /**
  * Resolves a CSRF token from a form-urlencoded body using the {@link ServerHttpRequest#byteBody()} API.
@@ -38,9 +36,16 @@ import java.util.Optional;
 @Singleton
 class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
+    private final FilterBodyParser filterBodyParser;
 
-    FieldCsrfTokenResolver(CsrfConfiguration csrfConfiguration) {
+    /**
+     *
+     * @param csrfConfiguration CSRF Configuration
+     * @param filterBodyParser Filter Body Parser
+     */
+    FieldCsrfTokenResolver(CsrfConfiguration csrfConfiguration, FilterBodyParser filterBodyParser) {
         this.csrfConfiguration = csrfConfiguration;
+        this.filterBodyParser = filterBodyParser;
     }
 
     @Override
@@ -53,20 +58,12 @@ class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>
     }
 
     private Publisher<String> resolveToken(ServerHttpRequest<?> request) {
-        return Mono.fromFuture(request.byteBody().split(ByteBody.SplitBackpressureMode.FASTEST).buffer())
-            .map(bb -> bb.toString(request.getCharacterEncoding()))
-            .map(this::extractCsrfTokenFromAFormUrlEncodedString)
-            .flatMap(opt -> opt.map(Mono::just).orElseGet(Mono::empty));
-    }
-
-    private Optional<String> extractCsrfTokenFromAFormUrlEncodedString(String body) {
-        final String[] arr = body.split("&");
-        final String prefix = csrfConfiguration.getFieldName() + "=";
-        for (String s : arr) {
-            if (s.startsWith(prefix)) {
-                return Optional.of(s.substring(prefix.length()));
-            }
-        }
-        return Optional.empty();
+        return Mono.fromFuture(filterBodyParser.parseBody(request))
+                .flatMap(m -> {
+                    Object csrfToken = m.get(csrfConfiguration.getFieldName());
+                    return csrfToken == null || StringUtils.isEmpty(csrfToken.toString())
+                            ? Mono.empty()
+                            : Mono.just(csrfToken.toString());
+                });
     }
 }
