@@ -59,7 +59,7 @@ import java.util.Optional;
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
 final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
-    private static final Mono<Optional<MutableHttpResponse<?>>> PROCEED = Mono.just(Optional.empty());
+    private static final Mono<Optional<HttpResponse<?>>> PROCEED = Mono.just(Optional.empty());
     private final List<FutureCsrfTokenResolver<HttpRequest<?>>> futureCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
@@ -82,7 +82,7 @@ final class CsrfFilter implements Ordered {
 
     @RequestFilter
     @Nullable
-    public Publisher<Optional<MutableHttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
+    public Publisher<Optional<HttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
         if (!shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request)) {
             return PROCEED;
         }
@@ -120,7 +120,7 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private Mono<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
+    private Mono<Optional<HttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
         return Flux.fromIterable(this.futureCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.fromFuture(resolver.resolveToken(request))
                         .filter(csrfToken -> {
@@ -140,7 +140,7 @@ final class CsrfFilter implements Ordered {
                 }));
     }
 
-    private Mono<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
+    private Mono<Optional<HttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (StringUtils.isEmpty(csrfToken)) {
             if (LOG.isDebugEnabled()) {
@@ -201,7 +201,7 @@ final class CsrfFilter implements Ordered {
     }
 
     @NonNull
-    private Mono<Optional<MutableHttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
+    private Mono<Optional<HttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
         return Mono.just(Optional.of(unauthorized(request)));
     }
 
