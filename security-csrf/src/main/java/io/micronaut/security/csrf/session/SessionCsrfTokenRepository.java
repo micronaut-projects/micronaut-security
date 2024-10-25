@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 @Requires(classes = HttpRequest.class)
 @Requires(beans = CsrfConfiguration.class)
-@Requires(property = "micronaut.security.csrf.repositories.session.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfConfiguration.PREFIX + ".repositories.session.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;

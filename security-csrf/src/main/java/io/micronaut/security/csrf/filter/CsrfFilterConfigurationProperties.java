@@ -21,14 +21,15 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
-import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.csrf.CsrfConfiguration;
+
 import java.util.Set;
 
 @Requires(classes = { HttpMethod.class, MediaType.class })
 @Internal
 @ConfigurationProperties(CsrfFilterConfigurationProperties.PREFIX)
 final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration {
-    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf.filter";
+    public static final String PREFIX = CsrfConfiguration.PREFIX + ".filter";
 
     /**
      * The default enable value.

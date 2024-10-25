@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 2.0.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = "micronaut.security.csrf.token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfConfiguration.PREFIX + ".token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;

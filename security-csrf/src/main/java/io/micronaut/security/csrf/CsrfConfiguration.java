@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
  * CSRF Configuration.
@@ -26,6 +27,8 @@ import io.micronaut.http.cookie.CookieConfiguration;
  * @since 4.11.0
  */
 public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
+    String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf";
+
     /**
      *
      * @return Random value's size in bytes. The random value used is used to build a CSRF Token.

@@ -32,7 +32,7 @@ import java.util.Optional;
  * @since 4.11.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = "micronaut.security.csrf.token-resolvers.http-header.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfConfiguration.PREFIX + ".token-resolvers.http-header.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 @Internal
 final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {

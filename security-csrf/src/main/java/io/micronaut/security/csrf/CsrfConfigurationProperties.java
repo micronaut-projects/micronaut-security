@@ -20,7 +20,6 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.cookie.SameSite;
-import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.generator.AccessTokenConfigurationProperties;
 
 import java.time.Duration;
@@ -30,8 +29,6 @@ import java.util.Optional;
 @Internal
 @ConfigurationProperties(CsrfConfigurationProperties.PREFIX)
 final class CsrfConfigurationProperties implements CsrfConfiguration {
-    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".csrf";
-
     /**
      * The default HTTP Header name.
      */

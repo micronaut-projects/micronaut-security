@@ -31,7 +31,7 @@ import java.util.Optional;
  * @since 4.11.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = "micronaut.security.csrf.repository.cookie.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfConfiguration.PREFIX + ".repository.cookie.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>>  {
     private final CsrfConfiguration csrfConfiguration;
