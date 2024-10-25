@@ -1,23 +1,23 @@
-package io.micronaut.security.csrf.filter;
+package io.micronaut.security;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
-@Property(name = "micronaut.security.csrf.filter.enabled", value = StringUtils.FALSE)
+@Property(name = "micronaut.security.csrf.enabled", value = StringUtils.FALSE)
 @MicronautTest(startApplication = false)
-class CsrfFilterDisabledTest {
+class CsrfConfigurationDisabledTest {
 
     @Inject
     BeanContext beanContext;
 
     @Test
-    void testFieldCsrfTokenResolverDisabled() {
-        assertFalse(beanContext.containsBean(CsrfFilter.class));
+    void disabledCsrf() {
+        assertFalse(beanContext.containsBean(CsrfConfiguration.class));
     }
 }

@@ -113,10 +113,10 @@ final class CsrfFilter implements Ordered {
                     return reactiveUnauthorized(request);
                 }));
     }
-    
+
     private Mono<Optional<MutableHttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (csrfToken == null) {
+        if (StringUtils.isEmpty(csrfToken)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }

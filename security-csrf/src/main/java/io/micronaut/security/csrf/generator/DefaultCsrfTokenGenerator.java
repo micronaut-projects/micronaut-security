@@ -18,6 +18,7 @@ package io.micronaut.security.csrf.generator;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.session.SessionIdResolver;
@@ -86,7 +87,7 @@ final class DefaultCsrfTokenGenerator<T> implements CsrfHmacTokenGenerator<T> {
         // Create the CSRF Token
         String message = hmacMessagePayload(sessionID, randomValue);
         try {
-            return secret != null
+            return StringUtils.isNotEmpty(secret)
                     ? HMacUtils.base64EncodedHmacSha256(message, secret) // Generate the HMAC hash
                     : "";
         } catch (InvalidKeyException ex) {

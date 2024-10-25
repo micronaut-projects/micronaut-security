@@ -44,11 +44,11 @@ final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest
     @Override
     public Optional<String> resolveToken(HttpRequest<?> request) {
         String csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName());
-        if (csrfToken != null) {
+        if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
         csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName().toLowerCase());
-        if (csrfToken != null) {
+        if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
         return Optional.empty();
