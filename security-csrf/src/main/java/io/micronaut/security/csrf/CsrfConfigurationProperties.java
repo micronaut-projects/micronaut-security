@@ -27,7 +27,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 @Internal
-@ConfigurationProperties(CsrfConfigurationProperties.PREFIX)
+@ConfigurationProperties(CsrfConfiguration.PREFIX)
 final class CsrfConfigurationProperties implements CsrfConfiguration {
     /**
      * The default HTTP Header name.

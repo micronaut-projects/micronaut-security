@@ -20,7 +20,7 @@
  * @author Sergio del Amo
  * @since 4.11.0
  */
-@Requires(property = CsrfConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = CsrfConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Configuration
 package io.micronaut.security.csrf;
 
