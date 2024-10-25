@@ -115,17 +115,18 @@ class CsrfFilterTest {
 
             @Override
             public void fulfill(Map argumentValues) {
-
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void fulfillBeforeFilters(RequestBinderRegistry requestBinderRegistry, HttpRequest request) {
+                throw new UnsupportedOperationException();
 
             }
 
             @Override
             public void fulfillAfterFilters(RequestBinderRegistry requestBinderRegistry, HttpRequest request) {
-
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -135,17 +136,17 @@ class CsrfFilterTest {
 
             @Override
             public Optional<Argument<?>> getRequiredInput(String name) {
-                return Optional.empty();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public Object execute() {
-                return null;
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public boolean isSatisfied(String name) {
-                return false;
+                throw new UnsupportedOperationException();
             }
         };
     }
