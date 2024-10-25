@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.core.util.PathMatcher;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.RequestFilter;
@@ -33,6 +34,8 @@ import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
 import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.web.router.RouteMatch;
+import io.micronaut.web.router.UriRouteMatch;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +82,9 @@ final class CsrfFilter implements Ordered {
     @RequestFilter
     @Nullable
     public Publisher<Optional<MutableHttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
+        if (!shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request)) {
+            return proceedRequest();
+        }
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
             return proceedRequest();
         }
@@ -88,6 +94,29 @@ final class CsrfFilter implements Ordered {
         return futureCsrfTokenResolvers.isEmpty()
                 ? imperativeFilter(request)
                 : reactiveFilter(request);
+    }
+
+    private boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
+        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        if (routeMatch instanceof UriRouteMatch<?,?> uriRouteMatch) {
+            return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
+        }
+        return true;
+    }
+
+    private boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(UriRouteMatch<?, ?> uriRouteMatch) {
+        return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch.getUri());
+    }
+
+    boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(String uri) {
+        boolean matches = PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), uri);
+        if (!matches) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Request uri {} does not match fitler regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
+            }
+            return false;
+        }
+        return true;
     }
 
     private static Mono<Optional<MutableHttpResponse<?>>> proceedRequest() {
