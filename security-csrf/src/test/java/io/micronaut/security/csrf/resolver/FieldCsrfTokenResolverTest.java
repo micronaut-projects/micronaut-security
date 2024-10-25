@@ -2,7 +2,6 @@ package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Property;
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
@@ -20,7 +19,6 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

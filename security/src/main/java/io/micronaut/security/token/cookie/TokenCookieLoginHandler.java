@@ -90,7 +90,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      * @deprecated Use {@link TokenCookieLoginHandler#TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence, List)} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public TokenCookieLoginHandler(RedirectService redirectService,
                                  RedirectConfiguration redirectConfiguration,
                                  AccessTokenCookieConfiguration accessTokenCookieConfiguration,

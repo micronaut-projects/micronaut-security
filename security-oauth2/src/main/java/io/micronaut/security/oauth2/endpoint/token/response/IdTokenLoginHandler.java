@@ -86,7 +86,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * @param priorToLoginPersistence The prior to login persistence strategy
      * @deprecated Use {@link #IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence, List)} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                RedirectService redirectService,
