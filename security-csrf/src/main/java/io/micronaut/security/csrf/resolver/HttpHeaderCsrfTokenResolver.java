@@ -18,6 +18,7 @@ package io.micronaut.security.csrf.resolver;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
@@ -43,11 +44,12 @@ final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest
 
     @Override
     public Optional<String> resolveToken(HttpRequest<?> request) {
-        String csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName());
+        final HttpHeaders httpHeaders = request.getHeaders();
+        String csrfToken = httpHeaders.get(csrfConfiguration.getHeaderName());
         if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
-        csrfToken = request.getHeaders().get(csrfConfiguration.getHeaderName().toLowerCase());
+        csrfToken = httpHeaders.get(csrfConfiguration.getHeaderName().toLowerCase());
         if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
