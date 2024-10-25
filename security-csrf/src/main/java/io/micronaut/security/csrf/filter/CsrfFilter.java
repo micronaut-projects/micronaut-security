@@ -59,6 +59,7 @@ import java.util.Optional;
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
 final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
+    private static final Mono<Optional<MutableHttpResponse<?>>> PROCEED = Mono.just(Optional.empty());
     private final List<FutureCsrfTokenResolver<HttpRequest<?>>> futureCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
@@ -83,13 +84,13 @@ final class CsrfFilter implements Ordered {
     @Nullable
     public Publisher<Optional<MutableHttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
         if (!shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request)) {
-            return proceedRequest();
+            return PROCEED;
         }
         if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
-            return proceedRequest();
+            return PROCEED;
         }
         if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
-            return proceedRequest();
+            return PROCEED;
         }
         return futureCsrfTokenResolvers.isEmpty()
                 ? imperativeFilter(request)
@@ -119,10 +120,6 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private static Mono<Optional<MutableHttpResponse<?>>> proceedRequest() {
-        return Mono.just(Optional.empty());
-    }
-
     private Mono<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
         return Flux.fromIterable(this.futureCsrfTokenResolvers)
                 .concatMap(resolver -> Mono.fromFuture(resolver.resolveToken(request))
@@ -136,7 +133,7 @@ final class CsrfFilter implements Ordered {
                             }
                         }))
                 .next()
-                .flatMap(validToken -> proceedRequest())
+                .flatMap(validToken -> PROCEED)
                 .switchIfEmpty(Mono.defer(() -> {
                     LOG.debug("Request rejected by the CsrfFilter");
                     return reactiveUnauthorized(request);
@@ -152,7 +149,7 @@ final class CsrfFilter implements Ordered {
             return reactiveUnauthorized(request);
         }
         if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
-            return proceedRequest();
+            return PROCEED;
         }
         LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
         return reactiveUnauthorized(request);
