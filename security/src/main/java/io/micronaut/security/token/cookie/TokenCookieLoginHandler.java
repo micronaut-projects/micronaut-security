@@ -62,6 +62,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     * @param loginCookieProviders Login Cookie Providers
      */
     @Inject
     public TokenCookieLoginHandler(RedirectService redirectService,
