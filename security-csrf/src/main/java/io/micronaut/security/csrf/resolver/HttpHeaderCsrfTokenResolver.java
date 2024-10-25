@@ -36,20 +36,22 @@ import java.util.Optional;
 @Internal
 final class HttpHeaderCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
     private static final int ORDER = -100;
-    private final CsrfConfiguration csrfConfiguration;
+    private final String lowerHeaderName;
+    private final String headerName;
 
     HttpHeaderCsrfTokenResolver(CsrfConfiguration csrfConfiguration) {
-        this.csrfConfiguration = csrfConfiguration;
+        headerName = csrfConfiguration.getHeaderName();
+        lowerHeaderName = headerName.toLowerCase();
     }
 
     @Override
     public Optional<String> resolveToken(HttpRequest<?> request) {
         final HttpHeaders httpHeaders = request.getHeaders();
-        String csrfToken = httpHeaders.get(csrfConfiguration.getHeaderName());
+        String csrfToken = httpHeaders.get(headerName);
         if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
-        csrfToken = httpHeaders.get(csrfConfiguration.getHeaderName().toLowerCase());
+        csrfToken = httpHeaders.get(lowerHeaderName);
         if (StringUtils.isNotEmpty(csrfToken)) {
             return Optional.of(csrfToken);
         }
