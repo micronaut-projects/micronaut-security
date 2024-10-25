@@ -30,7 +30,7 @@ import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
-import io.micronaut.security.csrf.resolver.ReactiveCsrfTokenResolver;
+import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.filters.SecurityFilter;
 import org.reactivestreams.Publisher;
@@ -56,21 +56,21 @@ import java.util.Optional;
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
 final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
-    private final List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers;
+    private final List<FutureCsrfTokenResolver<HttpRequest<?>>> futureCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
     private final ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler;
     private final CsrfFilterConfiguration csrfFilterConfiguration;
 
     CsrfFilter(CsrfFilterConfiguration csrfFilterConfiguration,
-               List<ReactiveCsrfTokenResolver<HttpRequest<?>>> reactiveCsrfTokenResolvers,
+               List<FutureCsrfTokenResolver<HttpRequest<?>>> futureCsrfTokenResolvers,
                List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers,
                CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator,
                ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler) {
         this.csrfTokenResolvers = csrfTokenResolvers;
-        this.reactiveCsrfTokenResolvers = reactiveCsrfTokenResolvers.isEmpty()
-                ? reactiveCsrfTokenResolvers
-                : ReactiveCsrfTokenResolver.of(csrfTokenResolvers, reactiveCsrfTokenResolvers);
+        this.futureCsrfTokenResolvers = futureCsrfTokenResolvers.isEmpty()
+                ? futureCsrfTokenResolvers
+                : FutureCsrfTokenResolver.of(csrfTokenResolvers, futureCsrfTokenResolvers);
         this.csrfTokenValidator = csrfTokenValidator;
         this.exceptionHandler = exceptionHandler;
         this.csrfFilterConfiguration = csrfFilterConfiguration;
@@ -85,7 +85,7 @@ final class CsrfFilter implements Ordered {
         if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
             return proceedRequest();
         }
-        return reactiveCsrfTokenResolvers.isEmpty()
+        return futureCsrfTokenResolvers.isEmpty()
                 ? imperativeFilter(request)
                 : reactiveFilter(request);
     }
@@ -95,8 +95,8 @@ final class CsrfFilter implements Ordered {
     }
 
     private Mono<Optional<MutableHttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
-        return Flux.fromIterable(this.reactiveCsrfTokenResolvers)
-                .concatMap(resolver -> Mono.from(resolver.resolveToken(request))
+        return Flux.fromIterable(this.futureCsrfTokenResolvers)
+                .concatMap(resolver -> Mono.fromFuture(resolver.resolveToken(request))
                         .filter(csrfToken -> {
                             LOG.debug("CSRF Token resolved");
                             if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {

@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.csrf.resolver;
 
-import io.micronaut.core.async.publisher.Publishers;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Adapter from {@link CsrfTokenResolver} to {@link ReactiveCsrfTokenResolver}.
+ * Adapter from {@link CsrfTokenResolver} to {@link FutureCsrfTokenResolver}.
  * @param <T> Request
  */
-public class ReactiveCsrfTokenResolverAdapter<T> implements ReactiveCsrfTokenResolver<T> {
+public class FutureCsrfTokenResolverAdapter<T> implements FutureCsrfTokenResolver<T> {
 
     private final CsrfTokenResolver<T> csrfTokenResolver;
 
@@ -30,15 +29,13 @@ public class ReactiveCsrfTokenResolverAdapter<T> implements ReactiveCsrfTokenRes
      *
      * @param csrfTokenResolver CSRF Token resolver
      */
-    public ReactiveCsrfTokenResolverAdapter(CsrfTokenResolver<T> csrfTokenResolver) {
+    public FutureCsrfTokenResolverAdapter(CsrfTokenResolver<T> csrfTokenResolver) {
         this.csrfTokenResolver = csrfTokenResolver;
     }
 
     @Override
-    public Publisher<String> resolveToken(T request) {
-        return csrfTokenResolver.resolveToken(request)
-                .map(Publishers::just)
-                .orElseGet(Publishers::empty);
+    public CompletableFuture<String> resolveToken(T request) {
+        return CompletableFuture.completedFuture(csrfTokenResolver.resolveToken(request).orElse(null));
     }
 
     @Override

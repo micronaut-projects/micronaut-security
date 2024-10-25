@@ -19,20 +19,20 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.order.Ordered;
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Attempts to resolve a CSRF token from the provided request.
- * {@link ReactiveCsrfTokenResolver} is an {@link Ordered} api. Override the {@link #getOrder()} method to provide a custom order.
+ * {@link FutureCsrfTokenResolver} is an {@link Ordered} api. Override the {@link #getOrder()} method to provide a custom order.
  *
  * @author Sergio del Amo
  * @since 1.1.0
  * @param <T> request
  */
-public interface ReactiveCsrfTokenResolver<T> extends Ordered {
+public interface FutureCsrfTokenResolver<T> extends Ordered {
 
     /**
      *
@@ -41,20 +41,20 @@ public interface ReactiveCsrfTokenResolver<T> extends Ordered {
      */
     @SingleResult
     @NonNull
-    Publisher<String> resolveToken(T request);
+    CompletableFuture<String> resolveToken(T request);
 
     /**
      *
      * @param resolvers Imperative CSRF Token Resolvers
-     * @param reactiveCsrfTokenResolvers Reactive CSRF Token Resolvers
-     * @return Returns a List of {@link ReactiveCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to imperative.
+     * @param futureCsrfTokenResolvers Reactive CSRF Token Resolvers
+     * @return Returns a List of {@link FutureCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to imperative.
      * @param <T>
      */
-    static <T> List<ReactiveCsrfTokenResolver<T>> of(List<CsrfTokenResolver<T>> resolvers,
-                                                     List<ReactiveCsrfTokenResolver<T>> reactiveCsrfTokenResolvers) {
-        List<ReactiveCsrfTokenResolver<T>> result  = new ArrayList<>();
-        result.addAll(reactiveCsrfTokenResolvers);
-        result.addAll(resolvers.stream().map(ReactiveCsrfTokenResolverAdapter::new).toList());
+    static <T> List<FutureCsrfTokenResolver<T>> of(List<CsrfTokenResolver<T>> resolvers,
+                                                   List<FutureCsrfTokenResolver<T>> futureCsrfTokenResolvers) {
+        List<FutureCsrfTokenResolver<T>> result  = new ArrayList<>();
+        result.addAll(futureCsrfTokenResolvers);
+        result.addAll(resolvers.stream().map(FutureCsrfTokenResolverAdapter::new).toList());
         OrderUtil.sort(result);
         return result;
     }

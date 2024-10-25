@@ -16,15 +16,13 @@
 package io.micronaut.security.csrf.resolver;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.ServerHttpRequest;
 import io.micronaut.http.server.filter.FilterBodyParser;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Resolves a CSRF token from a form-urlencoded body using the {@link ServerHttpRequest#byteBody()} API.
@@ -34,7 +32,7 @@ import reactor.core.publisher.Mono;
 @Requires(classes = HttpRequest.class)
 @Requires(property = "micronaut.security.csrf.token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
-class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>> {
+class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
     private final FilterBodyParser filterBodyParser;
 
@@ -50,20 +48,20 @@ class FieldCsrfTokenResolver implements ReactiveCsrfTokenResolver<HttpRequest<?>
 
     @Override
     @Singleton
-    public Publisher<String> resolveToken(HttpRequest<?> request) {
+    public CompletableFuture<String> resolveToken(HttpRequest<?> request) {
         if (request instanceof ServerHttpRequest<?> serverHttpRequest) {
             return resolveToken(serverHttpRequest);
         }
-        return Publishers.empty();
+        return CompletableFuture.completedFuture(null);
     }
 
-    private Publisher<String> resolveToken(ServerHttpRequest<?> request) {
-        return Mono.fromFuture(filterBodyParser.parseBody(request))
-                .flatMap(m -> {
+    private CompletableFuture<String> resolveToken(ServerHttpRequest<?> request) {
+        return filterBodyParser.parseBody(request)
+                .thenApply(m -> {
                     Object csrfToken = m.get(csrfConfiguration.getFieldName());
                     return csrfToken == null || StringUtils.isEmpty(csrfToken.toString())
-                            ? Mono.empty()
-                            : Mono.just(csrfToken.toString());
+                            ? null
+                            : csrfToken.toString();
                 });
     }
 }
