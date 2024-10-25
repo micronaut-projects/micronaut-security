@@ -33,13 +33,21 @@ public class CsrfSessionPopulator<T> implements SessionPopulator<T> {
     private final CsrfConfiguration csrfConfiguration;
     private final CsrfTokenGenerator<T> csrfTokenGenerator;
 
-    public CsrfSessionPopulator(CsrfConfiguration csrfConfiguration, CsrfTokenGenerator<T> csrfTokenGenerator) {
+    /**
+     *
+     * @param csrfConfiguration CSRF Configuration
+     * @param csrfTokenGenerator CSRF Token Generator
+     */
+    public CsrfSessionPopulator(CsrfConfiguration csrfConfiguration,
+                                CsrfTokenGenerator<T> csrfTokenGenerator) {
         this.csrfConfiguration = csrfConfiguration;
         this.csrfTokenGenerator = csrfTokenGenerator;
     }
 
     @Override
-    public void populateSession(T request, Authentication authentication, Session session) {
+    public void populateSession(T request,
+                                Authentication authentication,
+                                Session session) {
         session.put(csrfConfiguration.getHttpSessionName(), csrfTokenGenerator.generateCsrfToken(request));
     }
 }
