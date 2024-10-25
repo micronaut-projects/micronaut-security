@@ -52,7 +52,7 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
      */
     static <T> List<FutureCsrfTokenResolver<T>> of(List<CsrfTokenResolver<T>> resolvers,
                                                    List<FutureCsrfTokenResolver<T>> futureCsrfTokenResolvers) {
-        List<FutureCsrfTokenResolver<T>> result  = new ArrayList<>();
+        List<FutureCsrfTokenResolver<T>> result  = new ArrayList<>(futureCsrfTokenResolvers.size() + resolvers.size());
         result.addAll(futureCsrfTokenResolvers);
         result.addAll(resolvers.stream().map(FutureCsrfTokenResolverAdapter::new).toList());
         OrderUtil.sort(result);
