@@ -96,7 +96,7 @@ final class CsrfFilter implements Ordered {
                 : reactiveFilter(request);
     }
 
-    private boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
+    boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
         if (routeMatch instanceof UriRouteMatch<?,?> uriRouteMatch) {
             return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
@@ -104,7 +104,7 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(UriRouteMatch<?, ?> uriRouteMatch) {
+    boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(UriRouteMatch<?, ?> uriRouteMatch) {
         return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch.getUri());
     }
 
