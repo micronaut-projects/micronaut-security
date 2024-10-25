@@ -74,18 +74,18 @@ final class DefaultCsrfTokenGenerator<T> implements CsrfHmacTokenGenerator<T> {
     /**
      *
      * @param request Request
-     * @param randomValue Cryptographic random value
+     * @param base64EncodedRandomValue Cryptographic random value encoded as Base64
      * @return HMAC hash
      */
     @Override
     @NonNull
-    public String hmac(@NonNull T request, String randomValue) {
+    public String hmac(@NonNull T request, @NonNull  String base64EncodedRandomValue) {
         // Gather the values
         String secret = csrfConfiguration.getSecretKey();
         String sessionID = sessionIdResolver.findSessionId(request).orElse(""); // Current authenticated user session
 
         // Create the CSRF Token
-        String message = hmacMessagePayload(sessionID, randomValue);
+        String message = hmacMessagePayload(sessionID, base64EncodedRandomValue);
         try {
             return StringUtils.isNotEmpty(secret)
                     ? HMacUtils.base64EncodedHmacSha256(message, secret) // Generate the HMAC hash

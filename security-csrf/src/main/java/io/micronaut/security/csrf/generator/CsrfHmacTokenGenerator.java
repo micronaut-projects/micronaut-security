@@ -32,9 +32,9 @@ public interface CsrfHmacTokenGenerator<T> extends CsrfTokenGenerator<T> {
     /**
      * Generates an HMAC.
      * @param request Request
-     * @param randomValue Cryptographic random value
+     * @param base64EncodedRandomValue Cryptographic random value encoded as Base64
      * @return HMAC hash
      */
     @NonNull
-    String hmac(@NonNull T request, String randomValue);
+    String hmac(@NonNull T request, @NonNull String base64EncodedRandomValue);
 }
