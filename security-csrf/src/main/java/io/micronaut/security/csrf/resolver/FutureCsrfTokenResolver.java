@@ -46,7 +46,7 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
      * @param resolvers Imperative CSRF Token Resolvers
      * @param futureCsrfTokenResolvers Reactive CSRF Token Resolvers
      * @return Returns a List of {@link FutureCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to imperative.
-     * @param <T>
+     * @param <T> request type
      */
     @NonNull
     static <T> List<FutureCsrfTokenResolver<T>> of(

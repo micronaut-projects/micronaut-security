@@ -35,6 +35,11 @@ public class CsrfLoginCookieProvider implements LoginCookieProvider<HttpRequest<
     private final CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator;
     private final CsrfConfiguration csrfConfiguration;
 
+    /**
+     *
+     * @param csrfTokenGenerator CSRF Token Generator
+     * @param csrfConfiguration CSRF Configuration
+     */
     public CsrfLoginCookieProvider(CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator,
                                    CsrfConfiguration csrfConfiguration) {
         this.csrfTokenGenerator = csrfTokenGenerator;

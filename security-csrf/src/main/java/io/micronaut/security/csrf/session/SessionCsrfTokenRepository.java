@@ -38,6 +38,10 @@ import java.util.Optional;
 public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
 
+    /**
+     *
+     * @param csrfConfiguration CSRF Configuration
+     */
     public SessionCsrfTokenRepository(CsrfConfiguration csrfConfiguration) {
         this.csrfConfiguration = csrfConfiguration;
     }
