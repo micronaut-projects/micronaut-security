@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
@@ -35,6 +36,7 @@ public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
      *
      * @return The Secret Key that is used to calculate an HMAC as part of a CSRF token generation.
      */
+    @Nullable
     String getSecretKey();
 
     /**

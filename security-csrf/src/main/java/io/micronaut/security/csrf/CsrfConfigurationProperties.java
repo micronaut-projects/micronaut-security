@@ -77,16 +77,22 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     private String fieldName = DEFAULT_FIELD_NAME;
     private int randomValueSize = DEFAULT_RANDOM_VALUE_SIZE;
     private String httpSessionName = DEFAULT_HTTP_SESSION_NAME;
+
+    @Nullable
     private String cookieDomain;
+
     private Boolean cookieSecure = DEFAULT_SECURE;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIE_NAME;
     private SameSite sameSite = DEFAULT_SAME_SITE;
+
+    @Nullable
     private String signatureKey;
 
     @Override
+    @Nullable
     public String getSecretKey() {
         return signatureKey;
     }
@@ -95,11 +101,12 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * The Secret Key that is used to calculate an HMAC as part of a CSRF token generation. Default Value `null`.
      * @param signatureKey The Secret Key that is used to calculate an HMAC as part of a CSRF token generation.
      */
-    public void setSignatureKey(String signatureKey) {
+    public void setSignatureKey(@Nullable String signatureKey) {
         this.signatureKey = signatureKey;
     }
 
     @Override
+    @NonNull
     public String getHttpSessionName() {
         return httpSessionName;
     }
@@ -108,7 +115,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Key to look for the CSRF token in an HTTP Session. Default Value: {@value #DEFAULT_HTTP_SESSION_NAME}.
      * @param httpSessionName Key to look for the CSRF token in an HTTP Session.
      */
-    public void setHttpSessionName(String httpSessionName) {
+    public void setHttpSessionName(@NonNull String httpSessionName) {
         this.httpSessionName = httpSessionName;
     }
 
@@ -140,6 +147,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     @Override
+    @NonNull
     public String getFieldName() {
         return fieldName;
     }
@@ -148,7 +156,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Field name in a form url encoded submission  to look for the CSRF token. Default Value: {@value #DEFAULT_FIELD_NAME}.
      * @param fieldName Field name in a form url encoded submission  to look for the CSRF token.
      */
-    public void setFieldName(String fieldName) {
+    public void setFieldName(@NonNull String fieldName) {
         this.fieldName = fieldName;
     }
 
