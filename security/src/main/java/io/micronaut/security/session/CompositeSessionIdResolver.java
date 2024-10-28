@@ -16,6 +16,7 @@
 package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -26,9 +27,10 @@ import java.util.Optional;
  * @see <a href="https://guides.micronaut.io/latest/micronaut-patterns-composite.html">Composite Pattern</a>
  * @param <T> Request
  */
+@Internal
 @Primary
 @Singleton
-public class CompositeSessionIdResolver<T> implements SessionIdResolver<T> {
+final class CompositeSessionIdResolver<T> implements SessionIdResolver<T> {
 
     private final List<SessionIdResolver<T>> sessionIdResolvers;
 
