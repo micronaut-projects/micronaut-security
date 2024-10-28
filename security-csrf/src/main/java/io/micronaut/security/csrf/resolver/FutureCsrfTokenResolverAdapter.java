@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
  * Adapter from {@link CsrfTokenResolver} to {@link FutureCsrfTokenResolver}.
  * @param <T> Request
  */
-public class FutureCsrfTokenResolverAdapter<T> implements FutureCsrfTokenResolver<T> {
+final class FutureCsrfTokenResolverAdapter<T> implements FutureCsrfTokenResolver<T> {
 
     private final CsrfTokenResolver<T> csrfTokenResolver;
 
