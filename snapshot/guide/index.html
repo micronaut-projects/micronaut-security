@@ -68,21 +68,23 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#rejection"><strong>12</strong><span>Rejection Handling</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tokenPropagation"><strong>13</strong><span>Token Propagation</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#csrf"><strong>13</strong><span>Cross-Site Request Forgery (CSRF)</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tokenendpoints"><strong>14</strong><span>Built-In Security Token Controllers</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tokenPropagation"><strong>14</strong><span>Token Propagation</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#retrievingAuthenticatedUser"><strong>15</strong><span>Retrieve the authenticated user</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tokenendpoints"><strong>15</strong><span>Built-In Security Token Controllers</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#dataAuditing"><strong>16</strong><span>Data Change Auditing</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#retrievingAuthenticatedUser"><strong>16</strong><span>Retrieve the authenticated user</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#securityEvents"><strong>17</strong><span>Security Events</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#dataAuditing"><strong>17</strong><span>Data Change Auditing</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>18</strong><span>OAuth 2.0</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#securityEvents"><strong>18</strong><span>Security Events</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>19</strong><span>Ahead-of-time optimizations</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>19</strong><span>OAuth 2.0</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>20</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>20</strong><span>Ahead-of-time optimizations</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>21</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -165,6 +167,14 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-builtInHandlers"><a href="#builtInHandlers"><strong>8.3</strong><span>Built-in Login and Logout Handlers</span></a></div>
         
+        <div class="toc-item" style="margin-left:20px" id="toc-item-micronautSecurityAuthenticationBearer"><a href="#micronautSecurityAuthenticationBearer"><strong>8.3.1</strong><span>Authentication Mode Bearer</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-micronautSecurityAuthenticationSession"><a href="#micronautSecurityAuthenticationSession"><strong>8.3.2</strong><span>Authentication Mode Session</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-micronautSecurityAuthenticationCookie"><a href="#micronautSecurityAuthenticationCookie"><strong>8.3.3</strong><span>Authentication Mode Cookie</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-micronautSecurityAuthenticationIdToken"><a href="#micronautSecurityAuthenticationIdToken"><strong>8.3.4</strong><span>Authentication Mode ID Token</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-securityConfiguration"><a href="#securityConfiguration"><strong>9</strong><span>Security Configuration</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-rejectNotFound"><a href="#rejectNotFound"><strong>9.1</strong><span>Reject Not Found Routes</span></a></div>
@@ -241,97 +251,123 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-rejection"><a href="#rejection"><strong>12</strong><span>Rejection Handling</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tokenPropagation"><a href="#tokenPropagation"><strong>13</strong><span>Token Propagation</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-csrf"><a href="#csrf"><strong>13</strong><span>Cross-Site Request Forgery (CSRF)</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tokenendpoints"><a href="#tokenendpoints"><strong>14</strong><span>Built-In Security Token Controllers</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfDependency"><a href="#csrfDependency"><strong>13.1</strong><span>CSRF Dependency</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-refresh"><a href="#refresh"><strong>14.1</strong><span>Refresh Controller</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfFilter"><a href="#csrfFilter"><strong>13.2</strong><span>CSRF Filter</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-keys"><a href="#keys"><strong>14.2</strong><span>Keys Controller</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfMitigations"><a href="#csrfMitigations"><strong>13.3</strong><span>CSRF Mitigations</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-introspectionendpoint"><a href="#introspectionendpoint"><strong>14.3</strong><span>Introspection Endpoint</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-syncronizerTokenPattern"><a href="#syncronizerTokenPattern"><strong>13.3.1</strong><span>Syncronizer Token Pattern</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-retrievingAuthenticatedUser"><a href="#retrievingAuthenticatedUser"><strong>15</strong><span>Retrieve the authenticated user</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-csrfAndSession"><a href="#csrfAndSession"><strong>13.3.1.1</strong><span>CSRF and Session</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-customAuthenticatedUser"><a href="#customAuthenticatedUser"><strong>15.1</strong><span>Custom Binding</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-doubleSubmitCookiePattern"><a href="#doubleSubmitCookiePattern"><strong>13.3.2</strong><span>Double Submit Cookie Pattern</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>15.2</strong><span>User outside of a controller</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-signedDoubleSubmitCookiePattern"><a href="#signedDoubleSubmitCookiePattern"><strong>13.3.3</strong><span>Signed Double Submit Cookie Pattern</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-dataAuditing"><a href="#dataAuditing"><strong>16</strong><span>Data Change Auditing</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfConfiguration"><a href="#csrfConfiguration"><strong>13.4</strong><span>CSRF Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-annotations"><a href="#annotations"><strong>16.1</strong><span>Auditing Annotations</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfTokenResolvers"><a href="#csrfTokenResolvers"><strong>13.5</strong><span>CSRF Token Resolvers</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-identityMapping"><a href="#identityMapping"><strong>16.2</strong><span>Custom Authentication Mapping</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-httpHeaderCsrfTokenResolver"><a href="#httpHeaderCsrfTokenResolver"><strong>13.5.1</strong><span>HTTP Header CSRF Token Resolution</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-securityEvents"><a href="#securityEvents"><strong>17</strong><span>Security Events</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-fieldCsrfTokenResolver"><a href="#fieldCsrfTokenResolver"><strong>13.5.2</strong><span>Field CSRF Token Resolution</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-oauth"><a href="#oauth"><strong>18</strong><span>OAuth 2.0</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-csrfApis"><a href="#csrfApis"><strong>13.6</strong><span>CSRF APIs</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-installation"><a href="#installation"><strong>18.1</strong><span>Installation</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tokenPropagation"><a href="#tokenPropagation"><strong>14</strong><span>Token Propagation</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-openid"><a href="#openid"><strong>18.2</strong><span>OpenID Connect</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tokenendpoints"><a href="#tokenendpoints"><strong>15</strong><span>Built-In Security Token Controllers</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-flows"><a href="#flows"><strong>18.3</strong><span>Flows</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-refresh"><a href="#refresh"><strong>15.1</strong><span>Refresh Controller</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-authorization-code"><a href="#authorization-code"><strong>18.3.1</strong><span>Authorization Code</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-keys"><a href="#keys"><strong>15.2</strong><span>Keys Controller</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-oauth2-authorization-code"><a href="#oauth2-authorization-code"><strong>18.3.1.1</strong><span>OAuth 2.0</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-introspectionendpoint"><a href="#introspectionendpoint"><strong>15.3</strong><span>Introspection Endpoint</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-configuration"><a href="#oauth2-configuration"><strong>18.3.1.1.1</strong><span>Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-retrievingAuthenticatedUser"><a href="#retrievingAuthenticatedUser"><strong>16</strong><span>Retrieve the authenticated user</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-user-details"><a href="#oauth2-user-details"><strong>18.3.1.1.2</strong><span>User Details Mapper</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-customAuthenticatedUser"><a href="#customAuthenticatedUser"><strong>16.1</strong><span>Custom Binding</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-openid-authorization-code"><a href="#openid-authorization-code"><strong>18.3.1.2</strong><span>OpenID Connect</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>16.2</strong><span>User outside of a controller</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-configuration"><a href="#openid-configuration"><strong>18.3.1.2.1</strong><span>Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-dataAuditing"><a href="#dataAuditing"><strong>17</strong><span>Data Change Auditing</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-user-details"><a href="#openid-user-details"><strong>18.3.1.2.2</strong><span>OAuth 2.0 Authentication Mapper</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-annotations"><a href="#annotations"><strong>17.1</strong><span>Auditing Annotations</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-auth-parameters"><a href="#openid-auth-parameters"><strong>18.3.1.2.3</strong><span>Parameters</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-identityMapping"><a href="#identityMapping"><strong>17.2</strong><span>Custom Authentication Mapping</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-nonce"><a href="#nonce"><strong>18.3.1.2.3.1</strong><span>Nonce</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-securityEvents"><a href="#securityEvents"><strong>18</strong><span>Security Events</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-login-hint"><a href="#login-hint"><strong>18.3.1.2.3.2</strong><span>Login Hint</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-oauth"><a href="#oauth"><strong>19</strong><span>OAuth 2.0</span></a></div>
         
-        <div class="toc-item" style="margin-left:50px" id="toc-item-id-token-hint"><a href="#id-token-hint"><strong>18.3.1.2.3.3</strong><span>ID Token Hint</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-installation"><a href="#installation"><strong>19.1</strong><span>Installation</span></a></div>
         
-        <div class="toc-item" style="margin-left:40px" id="toc-item-token-validation"><a href="#token-validation"><strong>18.3.1.2.4</strong><span>Token Validation</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-openid"><a href="#openid"><strong>19.2</strong><span>OpenID Connect</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>18.3.1.3</strong><span>State Parameter</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-flows"><a href="#flows"><strong>19.3</strong><span>Flows</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-pkce"><a href="#pkce"><strong>18.3.1.4</strong><span>PKCE</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-authorization-code"><a href="#authorization-code"><strong>19.3.1</strong><span>Authorization Code</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>18.3.2</strong><span>Client Credentials</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-oauth2-authorization-code"><a href="#oauth2-authorization-code"><strong>19.3.1.1</strong><span>OAuth 2.0</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>18.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-configuration"><a href="#oauth2-configuration"><strong>19.3.1.1.1</strong><span>Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>18.3.2.2</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-oauth2-user-details"><a href="#oauth2-user-details"><strong>19.3.1.1.2</strong><span>User Details Mapper</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>18.3.3</strong><span>Password</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-openid-authorization-code"><a href="#openid-authorization-code"><strong>19.3.1.2</strong><span>OpenID Connect</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>18.4</strong><span>Endpoints</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-configuration"><a href="#openid-configuration"><strong>19.3.1.2.1</strong><span>Configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-endsession"><a href="#endsession"><strong>18.4.1</strong><span>OpenID End Session</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-user-details"><a href="#openid-user-details"><strong>19.3.1.2.2</strong><span>OAuth 2.0 Authentication Mapper</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-introspection"><a href="#introspection"><strong>18.4.2</strong><span>Introspection</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-openid-auth-parameters"><a href="#openid-auth-parameters"><strong>19.3.1.2.3</strong><span>Parameters</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>18.4.3</strong><span>Revocation</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-nonce"><a href="#nonce"><strong>19.3.1.2.3.1</strong><span>Nonce</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>18.4.4</strong><span>OpenID User Info</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-login-hint"><a href="#login-hint"><strong>19.3.1.2.3.2</strong><span>Login Hint</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>18.5</strong><span>Custom Clients</span></a></div>
+        <div class="toc-item" style="margin-left:50px" id="toc-item-id-token-hint"><a href="#id-token-hint"><strong>19.3.1.2.3.3</strong><span>ID Token Hint</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>18.6</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:40px" id="toc-item-token-validation"><a href="#token-validation"><strong>19.3.1.2.4</strong><span>Token Validation</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>19</strong><span>Ahead-of-time optimizations</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>19.3.1.3</strong><span>State Parameter</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>19.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-pkce"><a href="#pkce"><strong>19.3.1.4</strong><span>PKCE</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>19.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>19.3.2</strong><span>Client Credentials</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>19.3</strong><span>JWKS Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>19.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>20</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>19.3.2.2</strong><span>Guides</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>19.3.3</strong><span>Password</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>19.4</strong><span>Endpoints</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-endsession"><a href="#endsession"><strong>19.4.1</strong><span>OpenID End Session</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-introspection"><a href="#introspection"><strong>19.4.2</strong><span>Introspection</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>19.4.3</strong><span>Revocation</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>19.4.4</strong><span>OpenID User Info</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>19.5</strong><span>Custom Clients</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>19.6</strong><span>Guides</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>20</strong><span>Ahead-of-time optimizations</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>20.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>20.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>20.3</strong><span>JWKS Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>21</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -2536,8 +2572,16 @@ However, Micronaut security modules ship with several implementations which you 
 <div class="paragraph">
 <p>These handlers allow you to set the following scenarios:</p>
 </div>
-<div class="sect3">
-<h4 id="_micronaut_security_authentication_bearer">Micronaut Security Authentication Bearer</h4>
+
+<h2 id="micronautSecurityAuthenticationBearer"><a class="anchor" href="#micronautSecurityAuthenticationBearer"></a>8.3.1 Authentication Mode Bearer</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/endpoints/builtInHandlers/micronautSecurityAuthenticationBearer.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
 <p>When you set <code>micronaut.security.authentication=bearer</code>, <a href="../api/io/micronaut/security/token/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a> a bean of type  <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> is enabled.</p>
 </div>
@@ -2546,20 +2590,16 @@ However, Micronaut security modules ship with several implementations which you 
 <img src="../img/micronaut-security-authentication-bearer.png" alt="micronaut security authentication bearer">
 </div>
 </div>
+
+<h2 id="micronautSecurityAuthenticationSession"><a class="anchor" href="#micronautSecurityAuthenticationSession"></a>8.3.2 Authentication Mode Session</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/endpoints/builtInHandlers/micronautSecurityAuthenticationSession.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
 </div>
-<div class="sect3">
-<h4 id="_micronaut_security_authentication_cookie">Micronaut Security Authentication Cookie</h4>
-<div class="paragraph">
-<p>When you set <code>micronaut.security.authentication=cookie</code>, <a href="../api/io/micronaut/security/token/cookie/TokenCookieLoginHandler.html">TokenCookieLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../img/micronaut-security-authentication-cookie.png" alt="micronaut security authentication cookie">
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_micronaut_security_authentication_sessionloginhandler">Micronaut Security Authentication SessionLoginHandler</h4>
+
+
 <div class="paragraph">
 <p>When you set <code>micronaut.security.authentication=session</code>, <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled.</p>
 </div>
@@ -2568,16 +2608,40 @@ However, Micronaut security modules ship with several implementations which you 
 <img src="../img/micronaut-security-authentication-session.png" alt="micronaut security authentication session">
 </div>
 </div>
+
+<h2 id="micronautSecurityAuthenticationCookie"><a class="anchor" href="#micronautSecurityAuthenticationCookie"></a>8.3.3 Authentication Mode Cookie</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/endpoints/builtInHandlers/micronautSecurityAuthenticationCookie.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
 </div>
-<div class="sect3">
-<h4 id="_micronaut_security_authentication_id_token">Micronaut Security Authentication ID Token</h4>
+
+
+<div class="paragraph">
+<p>When you set <code>micronaut.security.authentication=cookie</code>, <a href="../api/io/micronaut/security/token/cookie/TokenCookieLoginHandler.html">TokenCookieLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/micronaut-security-authentication-cookie.png" alt="micronaut security authentication cookie">
+</div>
+</div>
+
+<h2 id="micronautSecurityAuthenticationIdToken"><a class="anchor" href="#micronautSecurityAuthenticationIdToken"></a>8.3.4 Authentication Mode ID Token</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/endpoints/builtInHandlers/micronautSecurityAuthenticationIdToken.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
 <p>When you set <code>micronaut.security.authentication=idtoken</code>, <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../img/micronaut-security-authentication-idtoken.png" alt="micronaut security authentication idtoken">
-</div>
 </div>
 </div>
 
@@ -5854,7 +5918,507 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 </div>
 </div>
 
-<h1 id="tokenPropagation"><a class="anchor" href="#tokenPropagation"></a>13 Token Propagation</h1>
+<h1 id="csrf"><a class="anchor" href="#csrf"></a>13 Cross-Site Request Forgery (CSRF)</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p><a href="https://owasp.org/www-community/attacks/csrf">Cross-Site Request Forgery (CSRF)</a>:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Cross-Site Request Forgery (CSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated</p>
+</div>
+</blockquote>
+</div>
+
+<h2 id="csrfDependency"><a class="anchor" href="#csrfDependency"></a>13.1 CSRF Dependency</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfDependency.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Add the Micronaut Security CSRF dependency to protect against CSRF:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-csrf")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-csrf&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+
+<h2 id="csrfFilter"><a class="anchor" href="#csrfFilter"></a>13.2 CSRF Filter</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfFilter.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The core of Micronaut Security CSRF implementation is <code>io.micronaut.security.csrf.filter.CsrfFilter</code>.
+A <a href="https://docs.micronaut.io/latest/guide/#filters">Server Filter</a> which attempts to resolve a CSRF Token with
+every bean of type <a href="../api/io/micronaut/security/csrf/resolvers/CsrfTokenResolver.html">CsrfTokenResolver</a> and validates it with beans of type <a href="../api/io/micronaut/security/csrf/validator/CsrfTokenValidator.html">CsrfTokenValidator</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following configuration options are available for the CSRF Filter:</p>
+</div>
+<a id="io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties" href="#io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/csrf/filter/CsrfFilterConfigurationProperties.html">CsrfFilterConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.methods</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose method matches any of these methods. Default Value is POST, PUT, DELETE, PATCH.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.content-types</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose content type matches any of these content types. Default Value is application/x-www-form-urlencoded, multipart/form-data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the filter is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.regex-pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSRF filter processes only request paths matching this regular expression. Default Value: "^.*$"</p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="csrfMitigations"><a class="anchor" href="#csrfMitigations"></a>13.3 CSRF Mitigations</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfMitigations.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Ensure your application does not perform state-changing actions via the GET request method. Your application should perform state-changing actions only via POST, PUT, PATCH, or DELETE methods.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="syncronizerTokenPattern"><a class="anchor" href="#syncronizerTokenPattern"></a>13.3.1 Syncronizer Token Pattern</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfMitigations/syncronizerTokenPattern.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">Syncronizer Token Pattern</a>.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>In a synchronized token pattern, the server generates a CSRF token and shares it with the client before returning it,
+usually through a hidden form parameter for the associated action. On form submission, the server checks the CSRF token against
+one stored in the user’s session. If they match, the request is approved; otherwise, it’s rejected</p>
+</div>
+</blockquote>
+</div>
+
+<h2 id="csrfAndSession"><a class="anchor" href="#csrfAndSession"></a>13.3.1.1 CSRF and Session</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfMitigations/syncronizerTokenPattern/csrfAndSession.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>If you use <a href="#session">Session-Based Authentication</a> and Micronaut Security CSRF, a CSRF token is automatically generated upon login and saved into the HTTP Session. <a href="#session">Micronaut Session</a> provides an implementation
+<a href="../api/io/micronaut/security/csrf/CsrfTokenRepository.html">CsrfTokenRepository</a> which fetches the CSRF token from the user&#8217;s HTTP session. Thus, when the application sends new request to the sever with a CSRF token (e.g. in a hidden form field or HTTP Header), the server validates the supplied token against the value stored in the HTTP Session.</p>
+</div>
+<div class="paragraph">
+<p>You can disable the CSRF Session repository by setting <code>micronaut.security.csrf.repositories.session.enabled</code> to false.</p>
+</div>
+
+<h2 id="doubleSubmitCookiePattern"><a class="anchor" href="#doubleSubmitCookiePattern"></a>13.3.2 Double Submit Cookie Pattern</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfMitigations/doubleSubmitCookiePattern.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#alternative-using-a-double-submit-cookie-pattern">Double Submit Cookie Pattern</a>.</p>
+</div>
+<div class="paragraph">
+<p>In a double-submit cookie pattern, the server generates a CSRF token, and it sends the CSRF token to the client in a cookie.</p>
+</div>
+<div class="paragraph">
+<p>Then, the server only needs to verify that following requests cookie&#8217;s value matches the CSRF token sent in a request parameter (a hidden form field) or header. This process is stateless, as the server doesn’t need to store any information about the CSRF token.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=&lt;token&gt;; __Host-csrfToken=o24b65486f506e2cd4403caf0d640024
+[...]
+
+amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you use Micronaut Security Authentication <a href="#micronautSecurityAuthenticationCookie"><code>cookie</code></a>, or
+    <a href="#micronautSecurityAuthenticationIdToken"><code>idtoken</code></a> a CSRF Token is saved in a Cookie upon login.</p>
+</div>
+<div class="paragraph">
+<p>You can <a href="#csrfConfiguration">configure different cookie attributes</a>. For example, by default the cookie name uses a <code>__Host-</code>  <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#cookie_prefixes">Cookie prefix</a>, can extend <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins">security protections against CSRF Attacks</a>.</p>
+</div>
+
+<h2 id="signedDoubleSubmitCookiePattern"><a class="anchor" href="#signedDoubleSubmitCookiePattern"></a>13.3.3 Signed Double Submit Cookie Pattern</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfMitigations/signedDoubleSubmitCookiePattern.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended">Signed Double-Submit Cookie</a>. Sign the CSRF Token with to prevent attackers from overriding the cookie value with their own (e.g. with taken-over subdomain attacks) .
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To do sign the CSRF Token, set the property <code>micronaut.security.csrf.signature-key</code>.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.csrf.signature-key=pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    csrf:
+      signature-key: pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.security]
+    [micronaut.security.csrf]
+      signature-key="pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    csrf {
+      signatureKey = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      csrf {
+        signature-key = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "csrf": {
+        "signature-key": "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="csrfConfiguration"><a class="anchor" href="#csrfConfiguration"></a>13.4 CSRF Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfConfiguration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following configuration options are available for CSRF:</p>
+</div>
+<a id="io.micronaut.security.csrf.CsrfConfigurationProperties" href="#io.micronaut.security.csrf.CsrfConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/csrf/CsrfConfigurationProperties.html">CsrfConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.signature-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Secret Key that is used to calculate an HMAC as part of a CSRF token generation. Default Value <code>null</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.http-session-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key to look for the CSRF token in an HTTP Session. Default Value: "csrfToken".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.random-value-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Random value&#8217;s size in bytes. The random value used is used to build a CSRF Token. Default Value: 16.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP Header name to look for the CSRF token. Default Value: "X-CSRF-TOKEN".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.field-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field name in a form url encoded submission  to look for the CSRF token. Default Value: "csrfToken".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the CSRF integration is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value (null).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie. Default value ({@value AccessTokenConfigurationProperties#DEFAULT_EXPIRATION} seconds).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-same-site</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/http/cookie/SameSite.html">SameSite</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Same Site Configuration. It defaults to Strict.</p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="csrfTokenResolvers"><a class="anchor" href="#csrfTokenResolvers"></a>13.5 CSRF Token Resolvers</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfTokenResolvers.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security CSRF resolves a CSRF Token with beans of type <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a></p>
+</div>
+
+<h2 id="httpHeaderCsrfTokenResolver"><a class="anchor" href="#httpHeaderCsrfTokenResolver"></a>13.5.1 HTTP Header CSRF Token Resolution</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfTokenResolvers/httpHeaderCsrfTokenResolver.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security CSRF ships a <code>io.micronaut.security.csrf.resolver.HttpHeaderCsrfTokenResolver</code> an implementation of <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> which looks for a CSRF Token in a Request&#8217;s  HTTP Header.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=&lt;token&gt;
+X-CSRF-TOKEN: o24b65486f506e2cd4403caf0d640024
+[...]
+amount=100&amp;toUser=intended</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can disable it by setting <code>micronaut.security.csrf.token-resolvers.http-header.enabled=false</code></p>
+</div>
+<div class="paragraph">
+<p>The HTTP Header name used by <code>HttpHeaderCsrfTokenResolver</code> <a href="#csrfConfiguration">can be configured</a>.
+It is recommended to use a custom HTTP Header Name. By using a custom HTTP Header name, it will not be possible to send them cross-origin without a permissive CORS implementation.</p>
+</div>
+<div class="paragraph">
+<p>Moreover, If possible, we recommend you to send the CSRF token via an HTTP Header instead of a form field as it is harder to attack.</p>
+</div>
+<div class="paragraph">
+<p>For example, <a href="https://turbo.hotwired.dev/handbook/frames#anti-forgery-support-(csrf)">Turbo</a> sends the CSRF token via a custom HTTP Header upon form submission. You can find information about <a href="https://micronaut-projects.github.io/micronaut-views/latest/guide/#turbo">Micronaut Turbo integration</a>.</p>
+</div>
+
+<h2 id="fieldCsrfTokenResolver"><a class="anchor" href="#fieldCsrfTokenResolver"></a>13.5.2 Field CSRF Token Resolution</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfTokenResolvers/fieldCsrfTokenResolver.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security CSRF ships a <code>io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver</code> an implementation of <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> which looks for a CSRF Token in a Request&#8217;s  form-url-encoded field.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=&lt;token&gt;
+[...]
+amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can disable it by setting <code>micronaut.security.csrf.token-resolvers.field.enabled=false</code></p>
+</div>
+
+<h2 id="csrfApis"><a class="anchor" href="#csrfApis"></a>13.6 CSRF APIs</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/csrf/csrfApis.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The main APIs for CSRF protection are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/CsrfConfiguration.html">CsrfConfiguration</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html">CsrfFilterConfiguration</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/generator/CsrfTokenGenerator.html">CsrfTokenGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html">CsrfHmacTokenGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/validator/CsrfTokenValidator.html">CsrfTokenValidator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/repository/CsrfTokenRepository.html">CsrfTokenRepository</a></p>
+</li>
+</ul>
+</div>
+
+<h1 id="tokenPropagation"><a class="anchor" href="#tokenPropagation"></a>14 Token Propagation</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/tokenPropagation.adoc"'>
@@ -6151,7 +6715,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 </table>
 </div>
 
-<h1 id="tokenendpoints"><a class="anchor" href="#tokenendpoints"></a>14 Built-In Security Token Controllers</h1>
+<h1 id="tokenendpoints"><a class="anchor" href="#tokenendpoints"></a>15 Built-In Security Token Controllers</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/tokenendpoints.adoc"'>
@@ -6162,7 +6726,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 
 
 
-<h2 id="refresh"><a class="anchor" href="#refresh"></a>14.1 Refresh Controller</h2>
+<h2 id="refresh"><a class="anchor" href="#refresh"></a>15.1 Refresh Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/tokenendpoints/refresh.adoc"'>
@@ -6420,7 +6984,7 @@ See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of t
 </div>
 </div>
 
-<h2 id="keys"><a class="anchor" href="#keys"></a>14.2 Keys Controller</h2>
+<h2 id="keys"><a class="anchor" href="#keys"></a>15.2 Keys Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/tokenendpoints/keys.adoc"'>
@@ -6482,7 +7046,7 @@ This controller can only be enabled if you are using JWT authentication.
 </tbody>
 </table>
 
-<h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>14.3 Introspection Endpoint</h2>
+<h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>15.3 Introspection Endpoint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/tokenendpoints/introspectionendpoint.adoc"'>
@@ -6559,7 +7123,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 </tbody>
 </table>
 
-<h1 id="retrievingAuthenticatedUser"><a class="anchor" href="#retrievingAuthenticatedUser"></a>15 Retrieve the authenticated user</h1>
+<h1 id="retrievingAuthenticatedUser"><a class="anchor" href="#retrievingAuthenticatedUser"></a>16 Retrieve the authenticated user</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
@@ -6630,7 +7194,7 @@ class UserController {
 </div>
 </div>
 
-<h2 id="customAuthenticatedUser"><a class="anchor" href="#customAuthenticatedUser"></a>15.1 Custom Binding</h2>
+<h2 id="customAuthenticatedUser"><a class="anchor" href="#customAuthenticatedUser"></a>16.1 Custom Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/retrievingAuthenticatedUser/customAuthenticatedUser.adoc"'>
@@ -6845,7 +7409,7 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 </div>
 </div>
 
-<h2 id="securityService"><a class="anchor" href="#securityService"></a>15.2 User outside of a controller</h2>
+<h2 id="securityService"><a class="anchor" href="#securityService"></a>16.2 User outside of a controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
@@ -6894,7 +7458,7 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 </div>
 </div>
 
-<h1 id="dataAuditing"><a class="anchor" href="#dataAuditing"></a>16 Data Change Auditing</h1>
+<h1 id="dataAuditing"><a class="anchor" href="#dataAuditing"></a>17 Data Change Auditing</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/dataAuditing.adoc"'>
@@ -6907,7 +7471,7 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 <p>Micronaut Security provides integration with <a href="https://micronaut-projects.github.io/micronaut-data/latest/guide/">Micronaut Data</a> for automatically capturing the identity of the user that created or updated a particular entity.</p>
 </div>
 
-<h2 id="annotations"><a class="anchor" href="#annotations"></a>16.1 Auditing Annotations</h2>
+<h2 id="annotations"><a class="anchor" href="#annotations"></a>17.1 Auditing Annotations</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/dataAuditing/annotations.adoc"'>
@@ -7023,7 +7587,7 @@ data class Book(
 </table>
 </div>
 
-<h2 id="identityMapping"><a class="anchor" href="#identityMapping"></a>16.2 Custom Authentication Mapping</h2>
+<h2 id="identityMapping"><a class="anchor" href="#identityMapping"></a>17.2 Custom Authentication Mapping</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/dataAuditing/identityMapping.adoc"'>
@@ -7108,7 +7672,7 @@ class AuthenticationToStringConverter : TypeConverter&lt;Authentication, String&
 <p>The type conversion mechanism could also be used to map <code>Authentication</code> to more complex field types other than String, such as a custom domain-specific <code>User</code> object.</p>
 </div>
 
-<h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>17 Security Events</h1>
+<h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>18 Security Events</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/securityEvents.adoc"'>
@@ -7160,7 +7724,7 @@ class AuthenticationToStringConverter : TypeConverter&lt;Authentication, String&
 <p>To learn how to listen for events, see the <a href="https://docs.micronaut.io/latest/guide/index.html#contextEvents">Context Events</a> section of the documentation.</p>
 </div>
 
-<h1 id="oauth"><a class="anchor" href="#oauth"></a>18 OAuth 2.0</h1>
+<h1 id="oauth"><a class="anchor" href="#oauth"></a>19 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth.adoc"'>
@@ -7298,7 +7862,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 </table>
 </div>
 
-<h2 id="installation"><a class="anchor" href="#installation"></a>18.1 Installation</h2>
+<h2 id="installation"><a class="anchor" href="#installation"></a>19.1 Installation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/installation.adoc"'>
@@ -7330,7 +7894,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <p>Code can be found at the <a href="https://github.com/micronaut-projects/micronaut-security/tree/master/security-oauth2">micronaut-security</a> repository.</p>
 </div>
 
-<h2 id="openid"><a class="anchor" href="#openid"></a>18.2 OpenID Connect</h2>
+<h2 id="openid"><a class="anchor" href="#openid"></a>19.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/openid.adoc"'>
@@ -7390,7 +7954,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 </table>
 </div>
 
-<h2 id="flows"><a class="anchor" href="#flows"></a>18.3 Flows</h2>
+<h2 id="flows"><a class="anchor" href="#flows"></a>19.3 Flows</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows.adoc"'>
@@ -7401,7 +7965,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 
 
 
-<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>18.3.1 Authorization Code</h2>
+<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>19.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
@@ -7591,7 +8155,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 </div>
 </div>
 
-<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>18.3.1.1 OAuth 2.0</h2>
+<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>19.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
@@ -7612,7 +8176,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 </div>
 </div>
 
-<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>18.3.1.1.1 Configuration</h2>
+<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>19.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
@@ -7811,7 +8375,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </table>
 </div>
 
-<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>18.3.1.1.2 User Details Mapper</h2>
+<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>19.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
@@ -8065,7 +8629,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 </table>
 </div>
 
-<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>18.3.1.2 OpenID Connect</h2>
+<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>19.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
@@ -8086,7 +8650,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 </div>
 </div>
 
-<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>18.3.1.2.1 Configuration</h2>
+<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>19.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
@@ -8448,7 +9012,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 
-<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>18.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
+<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>19.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
@@ -8715,7 +9279,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </table>
 </div>
 
-<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>18.3.1.2.3 Parameters</h2>
+<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>19.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
@@ -8795,7 +9359,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </tbody>
 </table>
 
-<h2 id="nonce"><a class="anchor" href="#nonce"></a>18.3.1.2.3.1 Nonce</h2>
+<h2 id="nonce"><a class="anchor" href="#nonce"></a>19.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
@@ -9063,7 +9627,7 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 
-<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>18.3.1.2.3.2 Login Hint</h2>
+<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>19.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
@@ -9076,7 +9640,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html">LoginHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>18.3.1.2.3.3 ID Token Hint</h2>
+<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>19.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
@@ -9089,7 +9653,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>18.3.1.2.4 Token Validation</h2>
+<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>19.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
@@ -9108,7 +9672,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
 </div>
 
-<h2 id="state"><a class="anchor" href="#state"></a>18.3.1.3 State Parameter</h2>
+<h2 id="state"><a class="anchor" href="#state"></a>19.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
@@ -9288,7 +9852,7 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 
-<h2 id="pkce"><a class="anchor" href="#pkce"></a>18.3.1.4 PKCE</h2>
+<h2 id="pkce"><a class="anchor" href="#pkce"></a>19.3.1.4 PKCE</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/authorization-code/pkce.adoc"'>
@@ -9308,7 +9872,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>If the built-in implementation does not fulfill your needs, you can  provide a <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of bean <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html">CodeVerifierGenerator</a> or <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html">PkceGenerator</a>.</p>
 </div>
 
-<h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>18.3.2 Client Credentials</h2>
+<h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>19.3.2 Client Credentials</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
@@ -9485,7 +10049,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <p><a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> caches the token response. If the cached access token is expired, they renew it automatically.</p>
 </div>
 
-<h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>18.3.2.1 HTTP Client Filter for Client Credentials</h2>
+<h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>19.3.2.1 HTTP Client Filter for Client Credentials</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
@@ -9671,7 +10235,7 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </tbody>
 </table>
 
-<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>18.3.2.2 Guides</h2>
+<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>19.3.2.2 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/clientcredentials/clientCredentialGuides.adoc"'>
@@ -9694,7 +10258,7 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </ul>
 </div>
 
-<h2 id="password"><a class="anchor" href="#password"></a>18.3.3 Password</h2>
+<h2 id="password"><a class="anchor" href="#password"></a>19.3.3 Password</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/flows/password.adoc"'>
@@ -9822,7 +10386,7 @@ This example above is not intended to be a complete configuration reference
 <p>When a client is configured for the password grant type, the authorization code endpoints will not be available and instead an <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> will be created that will participate in the <a href="#login">normal login flow</a>.</p>
 </div>
 
-<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>18.4 Endpoints</h2>
+<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>19.4 Endpoints</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
@@ -9833,7 +10397,7 @@ This example above is not intended to be a complete configuration reference
 
 
 
-<h2 id="endsession"><a class="anchor" href="#endsession"></a>18.4.1 OpenID End Session</h2>
+<h2 id="endsession"><a class="anchor" href="#endsession"></a>19.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
@@ -9955,7 +10519,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="introspection"><a class="anchor" href="#introspection"></a>18.4.2 Introspection</h2>
+<h2 id="introspection"><a class="anchor" href="#introspection"></a>19.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
@@ -10004,7 +10568,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="revocation"><a class="anchor" href="#revocation"></a>18.4.3 Revocation</h2>
+<h2 id="revocation"><a class="anchor" href="#revocation"></a>19.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
@@ -10053,7 +10617,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="user-info"><a class="anchor" href="#user-info"></a>18.4.4 OpenID User Info</h2>
+<h2 id="user-info"><a class="anchor" href="#user-info"></a>19.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
@@ -10092,7 +10656,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>18.5 Custom Clients</h2>
+<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>19.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/custom-client.adoc"'>
@@ -10153,7 +10717,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
 </div>
 
-<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>18.6 Guides</h2>
+<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>19.6 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/oauth/oauthGuides.adoc"'>
@@ -10191,7 +10755,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </ul>
 </div>
 
-<h1 id="aot"><a class="anchor" href="#aot"></a>19 Ahead-of-time optimizations</h1>
+<h1 id="aot"><a class="anchor" href="#aot"></a>20 Ahead-of-time optimizations</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/aot.adoc"'>
@@ -10211,7 +10775,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>Micronaut Security offers several ahead-of-time optimizations.</p>
 </div>
 
-<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>19.1 Micronaut Security AOT Configuration</h2>
+<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>20.1 Micronaut Security AOT Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/aot/aotConfiguration.adoc"'>
@@ -10259,7 +10823,7 @@ aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
 </div>
 </div>
 
-<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>19.2 OpenID Configuration Optimization</h2>
+<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>20.2 OpenID Configuration Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/aot/aotOpenidConfiguration.adoc"'>
@@ -10298,7 +10862,7 @@ The application uses the configuration present at the authorization server at bu
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>19.3 JWKS Optimization</h2>
+<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>20.3 JWKS Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/aot/aotJwks.adoc"'>
@@ -10333,7 +10897,7 @@ The application uses the JWKS exposed by the authorization server at build time.
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>20 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>21 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.11.x/src/main/docs/guide/repository.adoc"'>

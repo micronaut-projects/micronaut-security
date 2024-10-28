@@ -579,6 +579,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/utils/HMacUtils.html#base64EncodedHmac(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">base64EncodedHmac(String, String, String)</a> - Static method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/HMacUtils.html" title="class in io.micronaut.security.utils">HMacUtils</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/utils/HMacUtils.html#base64EncodedHmacSha256(java.lang.String,java.lang.String)" class="member-name-link">base64EncodedHmacSha256(String, String)</a> - Static method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/HMacUtils.html" title="class in io.micronaut.security.utils">HMacUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" class="type-name-link" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Configuration for basic authentication.</div>
@@ -1108,6 +1112,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#cookieConfiguration" class="member-name-link">cookieConfiguration</a> - Variable in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html" class="type-name-link" title="class in io.micronaut.security.csrf.repository">CookieCsrfTokenRepository</a> - Class in <a href="io/micronaut/security/csrf/repository/package-summary.html">io.micronaut.security.csrf.repository</a></dt>
+<dd>
+<div class="block">Retrieves a CSRF Token from a Cookie named <code>CookieConfiguration.getCookieName()</code>, for example, in a Double Submit Cookie pattern.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html#%3Cinit%3E(io.micronaut.security.csrf.CsrfConfiguration)" class="member-name-link">CookieCsrfTokenRepository(CsrfConfiguration)</a> - Constructor for class io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html" title="class in io.micronaut.security.csrf.repository">CookieCsrfTokenRepository</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieDomain" class="member-name-link">cookieDomain</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieDomain" class="member-name-link">cookieDomain</a> - Variable in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
@@ -1256,6 +1266,38 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailureReason.html#CREDENTIALS_DO_NOT_MATCH" class="member-name-link">CREDENTIALS_DO_NOT_MATCH</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum class in io.micronaut.security.authentication">AuthenticationFailureReason</a></dt>
 <dd>
 <div class="block">Failure when the cause is the credentials don't match.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a> - Interface in <a href="io/micronaut/security/csrf/package-summary.html">io.micronaut.security.csrf</a></dt>
+<dd>
+<div class="block">CSRF Configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.csrf.filter">CsrfFilterConfiguration</a> - Interface in <a href="io/micronaut/security/csrf/filter/package-summary.html">io.micronaut.security.csrf.filter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html" class="type-name-link" title="interface in io.micronaut.security.csrf.generator">CsrfHmacTokenGenerator</a>&lt;<a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html" title="type parameter in CsrfHmacTokenGenerator">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/generator/package-summary.html">io.micronaut.security.csrf.generator</a></dt>
+<dd>
+<div class="block">CSRF token Generation with HMAC.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CsrfLoginCookieProvider.html" class="type-name-link" title="class in io.micronaut.security.csrf.repository">CsrfLoginCookieProvider</a> - Class in <a href="io/micronaut/security/csrf/repository/package-summary.html">io.micronaut.security.csrf.repository</a></dt>
+<dd>
+<div class="block">Provides a CSRF Cookie which can be included in the login response.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CsrfLoginCookieProvider.html#%3Cinit%3E(io.micronaut.security.csrf.generator.CsrfTokenGenerator,io.micronaut.security.csrf.CsrfConfiguration)" class="member-name-link">CsrfLoginCookieProvider(CsrfTokenGenerator&lt;HttpRequest&lt;?&gt;&gt;, CsrfConfiguration)</a> - Constructor for class io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CsrfLoginCookieProvider.html" title="class in io.micronaut.security.csrf.repository">CsrfLoginCookieProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/generator/CsrfTokenGenerator.html" class="type-name-link" title="interface in io.micronaut.security.csrf.generator">CsrfTokenGenerator</a>&lt;<a href="io/micronaut/security/csrf/generator/CsrfTokenGenerator.html" title="type parameter in CsrfTokenGenerator">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/generator/package-summary.html">io.micronaut.security.csrf.generator</a></dt>
+<dd>
+<div class="block">CSRF token Generation.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html" class="type-name-link" title="interface in io.micronaut.security.csrf.repository">CsrfTokenRepository</a>&lt;<a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html" title="type parameter in CsrfTokenRepository">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/repository/package-summary.html">io.micronaut.security.csrf.repository</a></dt>
+<dd>
+<div class="block">Repository API for CSRF Tokens.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/resolver/CsrfTokenResolver.html" class="type-name-link" title="interface in io.micronaut.security.csrf.resolver">CsrfTokenResolver</a>&lt;<a href="io/micronaut/security/csrf/resolver/CsrfTokenResolver.html" title="type parameter in CsrfTokenResolver">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/resolver/package-summary.html">io.micronaut.security.csrf.resolver</a></dt>
+<dd>
+<div class="block">Attempts to resolve a CSRF token from the provided request.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/validator/CsrfTokenValidator.html" class="type-name-link" title="interface in io.micronaut.security.csrf.validator">CsrfTokenValidator</a>&lt;<a href="io/micronaut/security/csrf/validator/CsrfTokenValidator.html" title="type parameter in CsrfTokenValidator">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/validator/package-summary.html">io.micronaut.security.csrf.validator</a></dt>
+<dd>
+<div class="block">CSRF Token Validation.</div>
 </dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailureReason.html#CUSTOM" class="member-name-link">CUSTOM</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum class in io.micronaut.security.authentication">AuthenticationFailureReason</a></dt>
 <dd>
@@ -2188,9 +2230,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#FIELDS_ATTRIBUTE_NAMES" class="member-name-link">FIELDS_ATTRIBUTE_NAMES</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html#findCsrfToken(io.micronaut.http.HttpRequest)" class="member-name-link">findCsrfToken(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html" title="class in io.micronaut.security.csrf.repository">CookieCsrfTokenRepository</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html#findCsrfToken(io.micronaut.http.HttpRequest)" class="member-name-link">findCsrfToken(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.csrf.session.<a href="io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html" title="class in io.micronaut.security.csrf.session">SessionCsrfTokenRepository</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html#findCsrfToken(T)" class="member-name-link">findCsrfToken(T)</a> - Method in interface io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html" title="interface in io.micronaut.security.csrf.repository">CsrfTokenRepository</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.Optimizations.html#findJwkSet(java.lang.String)" class="member-name-link">findJwkSet(String)</a> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.Optimizations.html" title="class in io.micronaut.security.token.jwt.signature.jwks">DefaultJwkSetFetcher.Optimizations</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadataFetcher.Optimizations.html#findMetadata(java.lang.String)" class="member-name-link">findMetadata(String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadataFetcher.Optimizations.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadataFetcher.Optimizations</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/session/SessionIdResolver.html#findSessionId(T)" class="member-name-link">findSessionId(T)</a> - Method in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SessionIdResolver.html" title="interface in io.micronaut.security.session">SessionIdResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html#findToken(io.micronaut.http.HttpRequest)" class="member-name-link">findToken(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagator</a></dt>
 <dd>
@@ -2232,6 +2282,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectService.html#forbiddenUrl()" class="member-name-link">forbiddenUrl()</a> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" class="type-name-link" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver</a>&lt;<a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" title="type parameter in FutureCsrfTokenResolver">T</a>&gt; - Interface in <a href="io/micronaut/security/csrf/resolver/package-summary.html">io.micronaut.security.csrf.resolver</a></dt>
+<dd>
+<div class="block">Attempts to resolve a CSRF token from the provided request.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -2287,6 +2341,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#generateClaimsSet(java.util.Map,java.lang.Integer)" class="member-name-link">generateClaimsSet(Map&lt;String, ?&gt;, Integer)</a> - Method in class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/generator/CsrfTokenGenerator.html#generateCsrfToken(T)" class="member-name-link">generateCsrfToken(T)</a> - Method in interface io.micronaut.security.csrf.generator.<a href="io/micronaut/security/csrf/generator/CsrfTokenGenerator.html" title="interface in io.micronaut.security.csrf.generator">CsrfTokenGenerator</a></dt>
+<dd>
+<div class="block">Generates a CSRF Token.</div>
+</dd>
 <dt><a href="io/micronaut/security/aot/GeneratedFile.html" class="type-name-link" title="class in io.micronaut.security.aot">GeneratedFile</a> - Class in <a href="io/micronaut/security/aot/package-summary.html">io.micronaut.security.aot</a></dt>
 <dd>
 <div class="block">A generated file.</div>
@@ -2697,6 +2755,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html#getContentType()" class="member-name-link">getContentType()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html#getContentTypes()" class="member-name-link">getContentTypes()</a> - Method in interface io.micronaut.security.csrf.filter.<a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html" title="interface in io.micronaut.security.csrf.filter">CsrfFilterConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html#getContext()" class="member-name-link">getContext()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/annotation/expressions/SecuredEvaluationContextRegistrar.html#getContextClassName()" class="member-name-link">getContextClassName()</a> - Method in class io.micronaut.security.annotation.expressions.<a href="io/micronaut/security/annotation/expressions/SecuredEvaluationContextRegistrar.html" title="class in io.micronaut.security.annotation.expressions">SecuredEvaluationContextRegistrar</a></dt>
@@ -2919,6 +2979,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">family_name.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getFieldName()" class="member-name-link">getFieldName()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/GroupPropertiesSearchSettings.html#getFilter()" class="member-name-link">getFilter()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/GroupPropertiesSearchSettings.html" title="class in io.micronaut.security.ldap.configuration">GroupPropertiesSearchSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#getFilter()" class="member-name-link">getFilter()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.GroupConfiguration</a></dt>
@@ -2991,6 +3053,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html#getGroups()" class="member-name-link">getGroups()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getHeaderName()" class="member-name-link">getHeaderName()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
+<dd>
+<div class="block">HTTP Header name to look for the CSRF token.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagatorConfiguration.html#getHeaderName()" class="member-name-link">getHeaderName()</a> - Method in interface io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagatorConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html#getHeaderName()" class="member-name-link">getHeaderName()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></dt>
@@ -3021,6 +3087,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">httpMethod getter.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getHttpSessionName()" class="member-name-link">getHttpSessionName()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html#getIat()" class="member-name-link">getIat()</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationRequest.html#getIdentity()" class="member-name-link">getIdentity()</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a></dt>
@@ -3199,6 +3267,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">method Getter.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html#getMethods()" class="member-name-link">getMethods()</a> - Method in interface io.micronaut.security.csrf.filter.<a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html" title="interface in io.micronaut.security.csrf.filter">CsrfFilterConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getMiddleName()" class="member-name-link">getMiddleName()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getMiddleName()" class="member-name-link">getMiddleName()</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
@@ -3464,6 +3534,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html#getPublicKey()" class="member-name-link">getPublicKey()</a> - Method in interface io.micronaut.security.token.jwt.signature.rsa.<a href="io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.rsa">RSASignatureConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getRandomValueSize()" class="member-name-link">getRandomValueSize()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#getReason()" class="member-name-link">getReason()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/testutils/authprovider/FailedAuthenticationScenario.html#getReason()" class="member-name-link">getReason()</a> - Method in class io.micronaut.security.testutils.authprovider.<a href="io/micronaut/security/testutils/authprovider/FailedAuthenticationScenario.html" title="class in io.micronaut.security.testutils.authprovider">FailedAuthenticationScenario</a></dt>
@@ -3506,6 +3578,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">refreshToken getter.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html#getRegexPattern()" class="member-name-link">getRegexPattern()</a> - Method in interface io.micronaut.security.csrf.filter.<a href="io/micronaut/security/csrf/filter/CsrfFilterConfiguration.html" title="interface in io.micronaut.security.csrf.filter">CsrfFilterConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#getRegion()" class="member-name-link">getRegion()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html#getRegistration()" class="member-name-link">getRegistration()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></dt>
@@ -3698,6 +3772,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignature.html#getSecret()" class="member-name-link">getSecret()</a> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignature.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignature</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html#getSecret()" class="member-name-link">getSecret()</a> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignatureConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getSecretKey()" class="member-name-link">getSecretKey()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#getServer()" class="member-name-link">getServer()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.ContextConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -4064,6 +4140,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#headerValue(java.lang.String)" class="member-name-link">headerValue(String)</a> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html#hmac(T,java.lang.String)" class="member-name-link">hmac(T, String)</a> - Method in interface io.micronaut.security.csrf.generator.<a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html" title="interface in io.micronaut.security.csrf.generator">CsrfHmacTokenGenerator</a></dt>
+<dd>
+<div class="block">Generates an HMAC.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html#HMAC_RANDOM_SEPARATOR" class="member-name-link">HMAC_RANDOM_SEPARATOR</a> - Static variable in interface io.micronaut.security.csrf.generator.<a href="io/micronaut/security/csrf/generator/CsrfHmacTokenGenerator.html" title="interface in io.micronaut.security.csrf.generator">CsrfHmacTokenGenerator</a></dt>
+<dd>
+<div class="block">Dot is used as separator between the HMAC and the random value.</div>
+</dd>
+<dt><a href="io/micronaut/security/utils/HMacUtils.html" class="type-name-link" title="class in io.micronaut.security.utils">HMacUtils</a> - Class in <a href="io/micronaut/security/utils/package-summary.html">io.micronaut.security.utils</a></dt>
+<dd>
+<div class="block">Utility methods for HMAC.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/keycloak/docker/Keycloak.html#HOST_TESTCONTAINERS_INTERNAL" class="member-name-link">HOST_TESTCONTAINERS_INTERNAL</a> - Static variable in class io.micronaut.security.oauth2.keycloak.docker.<a href="io/micronaut/security/oauth2/keycloak/docker/Keycloak.html" title="class in io.micronaut.security.oauth2.keycloak.docker">Keycloak</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/HttpClientJwksClient.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.signature.jwks">HttpClientJwksClient</a> - Class in <a href="io/micronaut/security/token/jwt/signature/jwks/package-summary.html">io.micronaut.security.token.jwt.signature.jwks</a></dt>
@@ -4150,6 +4238,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets <a href="io/micronaut/security/token/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.cookie"><code>CookieLoginHandler</code></a>`s cookie value to the idtoken received from an authentication provider.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)"><code>IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence, List)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)" class="member-name-link">IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, List&lt;LoginCookieProvider&lt;HttpRequest&lt;?&gt;&gt;&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#idTokenSigningAlgValuesSupported(java.util.List)" class="member-name-link">idTokenSigningAlgValuesSupported(List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -4293,6 +4387,32 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/converters/package-summary.html">io.micronaut.security.converters</a> - package io.micronaut.security.converters</dt>
 <dd>
 <div class="block">Security <code>TypeConverter</code>s.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/package-summary.html">io.micronaut.security.csrf</a> - package io.micronaut.security.csrf</dt>
+<dd>
+<div class="block">Classes related to Cross Site Request Forgery (CSRF).</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/filter/package-summary.html">io.micronaut.security.csrf.filter</a> - package io.micronaut.security.csrf.filter</dt>
+<dd>
+<div class="block">Classes related to the CSRF Filter.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/generator/package-summary.html">io.micronaut.security.csrf.generator</a> - package io.micronaut.security.csrf.generator</dt>
+<dd>
+<div class="block">Classes related to CSRF Token Generation.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/repository/package-summary.html">io.micronaut.security.csrf.repository</a> - package io.micronaut.security.csrf.repository</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/resolver/package-summary.html">io.micronaut.security.csrf.resolver</a> - package io.micronaut.security.csrf.resolver</dt>
+<dd>
+<div class="block">Classes related to CSRF Token Resolution.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/session/package-summary.html">io.micronaut.security.csrf.session</a> - package io.micronaut.security.csrf.session</dt>
+<dd>
+<div class="block">Classes related to CSRF and HTTP session.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/validator/package-summary.html">io.micronaut.security.csrf.validator</a> - package io.micronaut.security.csrf.validator</dt>
+<dd>
+<div class="block">Classes related to CSRF token validation.</div>
 </dd>
 <dt><a href="io/micronaut/security/endpoints/package-summary.html">io.micronaut.security.endpoints</a> - package io.micronaut.security.endpoints</dt>
 <dd>
@@ -5276,6 +5396,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">LoginControllerConfigurationProperties()</a> - Constructor for class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">LoginControllerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/cookie/LoginCookieProvider.html" class="type-name-link" title="interface in io.micronaut.security.token.cookie">LoginCookieProvider</a>&lt;<a href="io/micronaut/security/token/cookie/LoginCookieProvider.html" title="type parameter in LoginCookieProvider">T</a>&gt; - Interface in <a href="io/micronaut/security/token/cookie/package-summary.html">io.micronaut.security.token.cookie</a></dt>
+<dd>
+<div class="block">Provides a Cookie which will be included in the login response.</div>
+</dd>
 <dt><a href="io/micronaut/security/handlers/LoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,I)" class="member-name-link">loginFailed(AuthenticationResponse, I)</a> - Method in interface io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html#loginFailed(io.micronaut.security.authentication.AuthenticationResponse,io.micronaut.http.HttpRequest)" class="member-name-link">loginFailed(AuthenticationResponse, HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
@@ -5749,6 +5873,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A single ASCII error code as described in Obtaining Authorization - Error Response seciton of OAuth 2.0 spec.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html#of(java.util.List,java.util.List)" class="member-name-link">of(List&lt;CsrfTokenResolver&lt;T&gt;&gt;, List&lt;FutureCsrfTokenResolver&lt;T&gt;&gt;)</a> - Static method in interface io.micronaut.security.csrf.resolver.<a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#OKTA" class="member-name-link">OKTA</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/endsession/request/package-summary.html">io.micronaut.security.oauth2.endpoint.endsession.request</a></dt>
@@ -6165,6 +6291,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populateScope(io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest,java.util.Map)" class="member-name-link">populateScope(AuthorizationRequest, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/session/SessionPopulator.html#populateSession(T,io.micronaut.security.authentication.Authentication,io.micronaut.session.Session)" class="member-name-link">populateSession(T, Authentication, Session)</a> - Method in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SessionPopulator.html" title="interface in io.micronaut.security.session">SessionPopulator</a></dt>
+<dd>
+<div class="block">Populates the session.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populateState(io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest,java.util.Map,io.micronaut.http.MutableHttpResponse)" class="member-name-link">populateState(AuthorizationRequest, Map&lt;String, Object&gt;, MutableHttpResponse)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateSub(com.nimbusds.jwt.JWTClaimsSet.Builder,io.micronaut.security.authentication.Authentication)" class="member-name-link">populateSub(JWTClaimsSet.Builder, Authentication)</a> - Method in class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
@@ -6188,6 +6318,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -6233,6 +6365,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/session/SessionIdResolver.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SessionIdResolver.html" title="interface in io.micronaut.security.session">SessionIdResolver</a></dt>
+<dd>
+<div class="block">Prefix used in SessionID resolver implementation.s.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/bearer/BearerTokenConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.token.bearer.<a href="io/micronaut/security/token/bearer/BearerTokenConfigurationProperties.html" title="class in io.micronaut.security.token.bearer">BearerTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
@@ -6301,6 +6437,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">OpenID connect prompt parameter.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/repository/CsrfLoginCookieProvider.html#provideCookie(io.micronaut.http.HttpRequest)" class="member-name-link">provideCookie(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CsrfLoginCookieProvider.html" title="class in io.micronaut.security.csrf.repository">CsrfLoginCookieProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/cookie/LoginCookieProvider.html#provideCookie(T)" class="member-name-link">provideCookie(T)</a> - Method in interface io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/LoginCookieProvider.html" title="interface in io.micronaut.security.token.cookie">LoginCookieProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html#PROVIDER_KEY" class="member-name-link">PROVIDER_KEY</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a></dt>
 <dd>
 <div class="block">A key to be stored in the user details to denote which
@@ -6614,6 +6754,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the first token found by the supplied token readers.</div>
 </dd>
+<dt><a href="io/micronaut/security/csrf/resolver/CsrfTokenResolver.html#resolveToken(T)" class="member-name-link">resolveToken(T)</a> - Method in interface io.micronaut.security.csrf.resolver.<a href="io/micronaut/security/csrf/resolver/CsrfTokenResolver.html" title="interface in io.micronaut.security.csrf.resolver">CsrfTokenResolver</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html#resolveToken(T)" class="member-name-link">resolveToken(T)</a> - Method in interface io.micronaut.security.csrf.resolver.<a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/reader/TokenResolver.html#resolveToken(T)" class="member-name-link">resolveToken(T)</a> - Method in interface io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -7007,11 +7151,27 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/session/SessionAuthenticationModeCondition.html#%3Cinit%3E()" class="member-name-link">SessionAuthenticationModeCondition()</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthenticationModeCondition.html" title="class in io.micronaut.security.session">SessionAuthenticationModeCondition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html" class="type-name-link" title="class in io.micronaut.security.csrf.session">SessionCsrfTokenRepository</a> - Class in <a href="io/micronaut/security/csrf/session/package-summary.html">io.micronaut.security.csrf.session</a></dt>
+<dd>
+<div class="block">Implementation of <a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html" title="interface in io.micronaut.security.csrf.repository"><code>CsrfTokenRepository</code></a> that retrieves the CSRF token from an HTTP session using the key defined in <a href="io/micronaut/security/csrf/CsrfConfiguration.html#getHttpSessionName()"><code>CsrfConfiguration.getHttpSessionName()</code></a>.</div>
+</dd>
+<dt><a href="io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html#%3Cinit%3E(io.micronaut.security.csrf.CsrfConfiguration)" class="member-name-link">SessionCsrfTokenRepository(CsrfConfiguration)</a> - Constructor for class io.micronaut.security.csrf.session.<a href="io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html" title="class in io.micronaut.security.csrf.session">SessionCsrfTokenRepository</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/session/SessionIdResolver.html" class="type-name-link" title="interface in io.micronaut.security.session">SessionIdResolver</a>&lt;<a href="io/micronaut/security/session/SessionIdResolver.html" title="type parameter in SessionIdResolver">T</a>&gt; - Interface in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
+<dd>
+<div class="block">API to resolve a session id for a given request.</div>
+</dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html" class="type-name-link" title="class in io.micronaut.security.session">SessionLoginHandler</a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
 <dd>
 <div class="block">A <a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 </dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)" class="member-name-link">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, RedirectService)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService,java.util.List)"><code>SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence, RedirectService, List)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService,java.util.List)" class="member-name-link">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, RedirectService, List&lt;SessionPopulator&lt;HttpRequest&lt;?&gt;&gt;&gt;)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -7035,6 +7195,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html#%3Cinit%3E(io.micronaut.session.SessionStore)" class="member-name-link">SessionPkcePersistence(SessionStore&lt;Session&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session">SessionPkcePersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/session/SessionPopulator.html" class="type-name-link" title="interface in io.micronaut.security.session">SessionPopulator</a>&lt;<a href="io/micronaut/security/session/SessionPopulator.html" title="type parameter in SessionPopulator">T</a>&gt; - Interface in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
+<dd>
+<div class="block">API that allows to populate the session after a successful login.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/SessionStatePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session">SessionStatePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session</a></dt>
 <dd>
 <div class="block">Persists the state in the session.</div>
@@ -8264,6 +8428,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html" class="type-name-link" title="class in io.micronaut.security.token.cookie">TokenCookieLoginHandler</a> - Class in <a href="io/micronaut/security/token/cookie/package-summary.html">io.micronaut.security.token.cookie</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;)</a> - Constructor for class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">TokenCookieLoginHandler</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)"><code>TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence, List)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)" class="member-name-link">TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, List&lt;LoginCookieProvider&lt;HttpRequest&lt;?&gt;&gt;&gt;)</a> - Constructor for class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">TokenCookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/cookie/TokenCookieTokenReader.html" class="type-name-link" title="class in io.micronaut.security.token.cookie">TokenCookieTokenReader</a> - Class in <a href="io/micronaut/security/token/cookie/package-summary.html">io.micronaut.security.token.cookie</a></dt>
 <dd>
@@ -8621,6 +8791,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><a href="io/micronaut/security/csrf/validator/CsrfTokenValidator.html#validateCsrfToken(T,java.lang.String)" class="member-name-link">validateCsrfToken(T, String)</a> - Method in interface io.micronaut.security.csrf.validator.<a href="io/micronaut/security/csrf/validator/CsrfTokenValidator.html" title="interface in io.micronaut.security.csrf.validator">CsrfTokenValidator</a></dt>
+<dd>
+<div class="block">Given a CSRF Token, validates whether it is valid.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List)" class="member-name-link">validateIssuerAudienceAndAzp(Claims, String, List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validateIssuerAudienceAndAzp(io.micronaut.security.token.Claims,java.lang.String,java.util.List,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">validateIssuerAudienceAndAzp(Claims, String, List&lt;String&gt;, OauthClientConfiguration)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>

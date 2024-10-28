@@ -5,6 +5,13 @@ io.micronaut.security.authentication
 io.micronaut.security.authentication.provider
 io.micronaut.security.config
 io.micronaut.security.converters
+io.micronaut.security.csrf
+io.micronaut.security.csrf.filter
+io.micronaut.security.csrf.generator
+io.micronaut.security.csrf.repository
+io.micronaut.security.csrf.resolver
+io.micronaut.security.csrf.session
+io.micronaut.security.csrf.validator
 io.micronaut.security.endpoints
 io.micronaut.security.endpoints.introspection
 io.micronaut.security.errors
