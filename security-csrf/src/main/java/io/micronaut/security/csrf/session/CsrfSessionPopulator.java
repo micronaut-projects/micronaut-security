@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.session;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
@@ -29,7 +30,8 @@ import jakarta.inject.Singleton;
  * @param <T> Request
  */
 @Singleton
-public class CsrfSessionPopulator<T> implements SessionPopulator<T> {
+@Internal
+final class CsrfSessionPopulator<T> implements SessionPopulator<T> {
     private final CsrfConfiguration csrfConfiguration;
     private final CsrfTokenGenerator<T> csrfTokenGenerator;
 
