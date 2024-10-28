@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.ExecutionHandleLocator;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.HttpMethod;
@@ -48,6 +49,7 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(classes = DefaultRouteBuilder.class)
 @Singleton
 @Internal
 class OauthRouteBuilder extends DefaultRouteBuilder {
