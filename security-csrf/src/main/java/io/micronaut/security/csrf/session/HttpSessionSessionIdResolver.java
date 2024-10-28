@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.session;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.session.SessionIdResolver;
@@ -29,8 +30,9 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Internal
 @Singleton
-public class HttpSessionSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
+final class HttpSessionSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
     @Override
     @NonNull
     public Optional<String> findSessionId(@NonNull HttpRequest<?> request) {
