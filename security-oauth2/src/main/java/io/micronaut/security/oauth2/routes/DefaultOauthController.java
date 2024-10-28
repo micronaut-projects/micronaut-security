@@ -49,7 +49,7 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(beans = RedirectingLoginHandler.class)
+@Requires(beans = {RedirectingLoginHandler.class, HttpHostResolver.class, HttpLocaleResolver.class})
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
 
