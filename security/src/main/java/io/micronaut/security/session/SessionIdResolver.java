@@ -18,6 +18,7 @@ package io.micronaut.security.session;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 
 import java.util.Optional;
 
@@ -28,6 +29,10 @@ import java.util.Optional;
  * @param <T>  Request
  */
 public interface SessionIdResolver<T> extends Ordered {
+    /**
+     * Prefix used in SessionID resolver implementation.s.
+     */
+    String PREFIX = SecurityConfigurationProperties.PREFIX  + ".sessionid-resolver";
 
     /**
      *

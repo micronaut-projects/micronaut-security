@@ -18,6 +18,7 @@ package io.micronaut.security.token.jwt.validator;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.session.SessionIdResolver;
 import jakarta.inject.Singleton;
@@ -33,6 +34,7 @@ import static io.micronaut.security.token.Claims.TOKEN_ID;
  * @since 4.11.0
  * @author  Sergio del Amo
  */
+@Requires(property = SessionIdResolver.PREFIX + ".jwt-id.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = HttpRequest.class)
 @Requires(bean = JsonWebTokenParser.class)
 @Singleton

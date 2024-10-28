@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.session;
+package io.micronaut.security.session;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.session.SessionIdResolver;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.SessionForRequest;
 import jakarta.inject.Singleton;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@Requires(property = SessionIdResolver.PREFIX + ".httpsession-id.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
 final class HttpSessionSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
