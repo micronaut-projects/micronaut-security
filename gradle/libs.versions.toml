@@ -24,7 +24,7 @@ micronaut-servlet = "4.11.1"
 micronaut-session = "4.4.0"
 micronaut-views = "5.5.1"
 micronaut-validation = "4.8.0"
-micronaut-data = "4.9.5"
+micronaut-data = "4.9.6"
 micronaut-sql="5.8.2"
 micronaut-test-resources="2.6.2"
 
