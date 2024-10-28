@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.session.SessionIdResolver;
@@ -35,7 +36,8 @@ import static io.micronaut.security.token.Claims.TOKEN_ID;
 @Requires(classes = HttpRequest.class)
 @Requires(bean = JsonWebTokenParser.class)
 @Singleton
-public class JsonWebTokenIdSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
+@Internal
+final class JsonWebTokenIdSessionIdResolver implements SessionIdResolver<HttpRequest<?>> {
     private final JsonWebTokenParser<?> jsonWebTokenParser;
 
     public JsonWebTokenIdSessionIdResolver(JsonWebTokenParser<?> jsonWebTokenParser) {
