@@ -36,14 +36,11 @@ import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.UriRouteMatch;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * {@link RequestFilter} which validates CSRF tokens and rejects a request if the token is invalid.
@@ -59,7 +56,7 @@ import java.util.Optional;
         value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:" + CsrfFilterConfigurationProperties.DEFAULT_REGEX_PATTERN + "}")
 final class CsrfFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfFilter.class);
-    private static final Mono<Optional<HttpResponse<?>>> PROCEED = Mono.just(Optional.empty());
+    private static final CompletableFuture<@Nullable HttpResponse<?>> PROCEED = CompletableFuture.completedFuture(null);
     private final List<FutureCsrfTokenResolver<HttpRequest<?>>> futureCsrfTokenResolvers;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator<HttpRequest<?>> csrfTokenValidator;
@@ -82,7 +79,8 @@ final class CsrfFilter implements Ordered {
 
     @RequestFilter
     @Nullable
-    public Publisher<Optional<HttpResponse<?>>> csrfFilter(@NonNull HttpRequest<?> request) {
+
+    public CompletableFuture<@Nullable HttpResponse<?>> csrfFilter(@NonNull HttpRequest<?> request) {
         if (!shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request)) {
             return PROCEED;
         }
@@ -120,29 +118,31 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private Mono<Optional<HttpResponse<?>>> reactiveFilter(HttpRequest<?> request) {
-        return Flux.fromIterable(this.futureCsrfTokenResolvers)
-                .concatMap(resolver -> Mono.fromFuture(resolver.resolveToken(request))
-                        .filter(csrfToken -> {
-                            LOG.trace("CSRF Token resolved");
-                            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
-                                return true;
-                            } else {
-                                LOG.trace("CSRF Token validation failed");
-                                return false;
+    private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(HttpRequest<?> request) {
+        List<CompletableFuture<Boolean>> futures = futureCsrfTokenResolvers.stream()
+                .map(resolver -> resolver.resolveToken(request)
+                        .thenApply(csrfToken -> {
+                            if (LOG.isTraceEnabled()) {
+                                LOG.trace("CSRF Token resolved");
                             }
-                        }))
-                .next()
-                .flatMap(validToken -> PROCEED)
-                .switchIfEmpty(Mono.defer(() -> {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Request rejected by the CsrfFilter");
+                            return csrfTokenValidator.validateCsrfToken(request, csrfToken);
+                        })
+                )
+                .toList();
+        CompletableFuture<?>[] futuresArray = futures.toArray(new CompletableFuture<?>[0]);
+        return  CompletableFuture.allOf(futuresArray)
+                .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
+                .thenApply(validations -> {
+                    if (validations.stream().anyMatch(Boolean::booleanValue)) {
+                        return null;
+                    } else if (LOG.isTraceEnabled()) {
+                        LOG.trace("CSRF Token validation failed");
                     }
-                    return reactiveUnauthorized(request);
-                }));
+                    return unauthorized(request);
+                });
     }
 
-    private Mono<Optional<HttpResponse<?>>> imperativeFilter(HttpRequest<?> request) {
+    private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (StringUtils.isEmpty(csrfToken)) {
             if (LOG.isTraceEnabled()) {
@@ -205,8 +205,8 @@ final class CsrfFilter implements Ordered {
     }
 
     @NonNull
-    private Mono<Optional<HttpResponse<?>>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
-        return Mono.just(Optional.of(unauthorized(request)));
+    private CompletableFuture<@Nullable HttpResponse<?>> reactiveUnauthorized(@NonNull HttpRequest<?> request) {
+        return CompletableFuture.completedFuture(unauthorized(request));
     }
 
     @NonNull
