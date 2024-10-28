@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 
@@ -27,9 +28,10 @@ import java.util.Optional;
  * @see <a href="https://guides.micronaut.io/latest/micronaut-patterns-composite.html">Composite Pattern</a>
  * @param <T> Request
  */
+@Internal
 @Primary
 @Singleton
-public class CompositeCsrfTokenRepository<T> implements CsrfTokenRepository<T> {
+final class CompositeCsrfTokenRepository<T> implements CsrfTokenRepository<T> {
     private final List<CsrfTokenRepository<T>> repositories;
 
     /**
