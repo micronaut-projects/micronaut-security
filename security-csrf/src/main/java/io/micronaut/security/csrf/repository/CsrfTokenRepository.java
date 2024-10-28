@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.repository;
 
+import io.micronaut.core.annotation.Indexed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
 
@@ -24,6 +25,7 @@ import java.util.Optional;
  * Repository API for CSRF Tokens.
  * @param <T> Request
  */
+@Indexed(CsrfTokenRepository.class)
 @FunctionalInterface
 public interface CsrfTokenRepository<T> extends Ordered {
     /**

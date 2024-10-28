@@ -16,8 +16,10 @@
 package io.micronaut.security.session;
 
 
+import io.micronaut.core.annotation.Indexed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.data.annotation.Index;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.Optional;
  * @since 4.11.0
  * @param <T>  Request
  */
+@Indexed(SessionIdResolver.class)
 public interface SessionIdResolver<T> extends Ordered {
     /**
      * Prefix used in SessionID resolver implementation.s.
