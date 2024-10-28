@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.session;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.SecurityFilter;
@@ -26,7 +27,8 @@ import jakarta.inject.Singleton;
  * @param <T> Request
  */
 @Singleton
-public class DefaultSessionPopulator<T> implements SessionPopulator<T> {
+@Internal
+final class DefaultSessionPopulator<T> implements SessionPopulator<T> {
     /**
      * Adds the {@link Authentication} object to the session with the key {@link SecurityFilter#AUTHENTICATION}.
      * @param request  The request
