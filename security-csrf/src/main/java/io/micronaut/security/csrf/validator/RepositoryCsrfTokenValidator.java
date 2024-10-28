@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.validator;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csrf.generator.CsrfHmacTokenGenerator;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
 import jakarta.inject.Singleton;
@@ -35,8 +36,9 @@ import java.security.MessageDigest;
  * @author Sergio del Amo
  */
 @Requires(beans = { CsrfTokenRepository.class, CsrfHmacTokenGenerator.class})
+@Internal
 @Singleton
-public class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
+class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(RepositoryCsrfTokenValidator.class);
     private final List<CsrfTokenRepository<T>> repositories;
     private final CsrfHmacTokenGenerator<T> defaultCsrfTokenGenerator;
