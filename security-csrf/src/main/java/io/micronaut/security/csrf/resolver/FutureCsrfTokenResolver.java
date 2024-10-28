@@ -18,8 +18,7 @@ package io.micronaut.security.csrf.resolver;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.order.Ordered;
-
-import java.util.ArrayList;
+import io.micronaut.core.util.CollectionUtils;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,9 +51,10 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
     static <T> List<FutureCsrfTokenResolver<T>> of(
             @NonNull List<CsrfTokenResolver<T>> resolvers,
             @NonNull List<FutureCsrfTokenResolver<T>> futureCsrfTokenResolvers) {
-        List<FutureCsrfTokenResolver<T>> result  = new ArrayList<>(futureCsrfTokenResolvers.size() + resolvers.size());
-        result.addAll(futureCsrfTokenResolvers);
-        result.addAll(resolvers.stream().map(FutureCsrfTokenResolverAdapter::new).toList());
+        List<FutureCsrfTokenResolver<T>> result = CollectionUtils.concat(futureCsrfTokenResolvers,
+                resolvers.stream()
+                        .map(resolver -> (FutureCsrfTokenResolver<T>) new FutureCsrfTokenResolverAdapter<>(resolver))
+                        .toList());
         OrderUtil.sort(result);
         return result;
     }
