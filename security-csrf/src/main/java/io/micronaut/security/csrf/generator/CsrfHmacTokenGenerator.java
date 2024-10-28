@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csrf.generator;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 
 /**
@@ -23,6 +24,7 @@ import io.micronaut.core.annotation.NonNull;
  * @since 4.11.0
  * @param <T> request
  */
+@Internal
 public interface CsrfHmacTokenGenerator<T> extends CsrfTokenGenerator<T> {
     /**
      * Dot is used as separator between the HMAC and the random value. As the random value and hmac are base64 encoded, they will not contain a dot.
