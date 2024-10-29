@@ -763,48 +763,9 @@
 </div>
 <div class="sect2">
 <h3 id="_micronaut_security_csrf_config_properties">Micronaut Security Csrf Config Properties</h3>
-<a id="io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties" href="#io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. Configuration Properties for <a href="../api/io/micronaut/security/csrf/filter/CsrfFilterConfigurationProperties.html">CsrfFilterConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.methods</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose method matches any of these methods. Default Value is POST, PUT, DELETE, PATCH.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.content-types</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose content type matches any of these content types. Default Value is application/x-www-form-urlencoded, multipart/form-data.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the filter is enabled. Default value true.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.regex-pattern</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CSRF filter processes only request paths matching this regular expression. Default Value: "^.*$"</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
 <a id="io.micronaut.security.csrf.CsrfConfigurationProperties" href="#io.micronaut.security.csrf.CsrfConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. Configuration Properties for <a href="../api/io/micronaut/security/csrf/CsrfConfigurationProperties.html">CsrfConfigurationProperties</a></caption>
+<caption class="title">Table 20. Configuration Properties for <a href="../api/io/micronaut/security/csrf/CsrfConfigurationProperties.html">CsrfConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -882,6 +843,45 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.cookie-same-site</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/http/cookie/SameSite.html">SameSite</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Same Site Configuration. It defaults to Strict.</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<a id="io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties" href="#io.micronaut.security.csrf.filter.CsrfFilterConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. Configuration Properties for <a href="../api/io/micronaut/security/csrf/filter/CsrfFilterConfigurationProperties.html">CsrfFilterConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.methods</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose method matches any of these methods. Default Value is POST, PUT, DELETE, PATCH.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.content-types</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter will only process requests whose content type matches any of these content types. Default Value is application/x-www-form-urlencoded, multipart/form-data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the filter is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.filter.regex-pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSRF filter processes only request paths matching this regular expression. Default Value: "^.*$"</p></td>
 </tr>
 </tbody>
 </table>
