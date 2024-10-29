@@ -1740,6 +1740,18 @@ When the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Don&#8217;t use both annotations, <code>@Secured</code> and <code>@RolesAllowed</code>, in the same method. If you use it, the first occurrence (either <code>@RolesAllowed</code> or <code>@Secured</code>) is used. The other annotation is ignored.
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="securedExpression"><a class="anchor" href="#securedExpression"></a>6.2.2.2 Secured with expressions</h2>
 
