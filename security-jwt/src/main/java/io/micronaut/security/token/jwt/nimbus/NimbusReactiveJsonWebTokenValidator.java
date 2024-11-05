@@ -21,6 +21,7 @@ import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
@@ -29,10 +30,14 @@ import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory;
 import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenSignatureValidator;
 import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
+import java.util.concurrent.ExecutorService;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +51,7 @@ import java.util.Optional;
 class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements ReactiveJsonWebTokenValidator<JWT, R> {
     private final JwtAuthenticationFactory jwtAuthenticationFactory;
     private final JsonWebTokenParser<JWT> jsonWebTokenParser;
+    private final Scheduler scheduler;
     private final ReactiveJsonWebTokenSignatureValidator<SignedJWT> signatureValidator;
 
     NimbusReactiveJsonWebTokenValidator(
@@ -54,17 +60,20 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
             List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations,
             JsonWebTokenParser<JWT> jsonWebTokenParser,
             ReactiveJsonWebTokenSignatureValidator<SignedJWT> signatureValidator,
-            JwtAuthenticationFactory jwtAuthenticationFactory) {
+            JwtAuthenticationFactory jwtAuthenticationFactory,
+            @Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
         super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations);
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
+        this.scheduler = Schedulers.fromExecutorService(executorService);
     }
 
     @Override
     @SingleResult
     public Publisher<Authentication> validateToken(String token, R request) {
         return Mono.from(validate(token, request))
+                .subscribeOn(scheduler)
                 .map(jwtAuthenticationFactory::createAuthentication)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
