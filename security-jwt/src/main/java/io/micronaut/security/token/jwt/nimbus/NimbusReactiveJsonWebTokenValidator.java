@@ -18,10 +18,13 @@ package io.micronaut.security.token.jwt.nimbus;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
@@ -43,6 +46,7 @@ import java.util.Optional;
  * @param <R> The request type
  */
 @Singleton
+@Requires(property = JwtConfigurationProperties.PREFIX + ".reactive-validator.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements ReactiveJsonWebTokenValidator<JWT, R> {
     private final JwtAuthenticationFactory jwtAuthenticationFactory;
     private final JsonWebTokenParser<JWT> jsonWebTokenParser;
