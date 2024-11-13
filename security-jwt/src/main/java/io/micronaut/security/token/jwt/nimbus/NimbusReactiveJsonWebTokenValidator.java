@@ -46,7 +46,7 @@ import java.util.Optional;
  * @param <R> The request type
  */
 @Singleton
-@Requires(property = JwtConfigurationProperties.PREFIX + ".reactive-validator.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = NimbusJsonWebTokenValidatorConfigurationProperties.PREFIX + ".reactive-validator", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements ReactiveJsonWebTokenValidator<JWT, R> {
     private final JwtAuthenticationFactory jwtAuthenticationFactory;
     private final JsonWebTokenParser<JWT> jsonWebTokenParser;
