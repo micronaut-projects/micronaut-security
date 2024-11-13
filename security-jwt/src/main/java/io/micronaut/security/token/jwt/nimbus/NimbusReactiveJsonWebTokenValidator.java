@@ -72,11 +72,13 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
     @Override
     @SingleResult
     public Publisher<Authentication> validateToken(String token, R request) {
-        return Mono.from(validate(token, request))
-                .subscribeOn(scheduler)
+        Mono<Authentication> authenticationMono = Mono.from(validate(token, request))
                 .map(jwtAuthenticationFactory::createAuthentication)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
+
+        //
+        return authenticationMono.subscribeOn(scheduler);
     }
 
     @NonNull
