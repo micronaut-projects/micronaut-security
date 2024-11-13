@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.nimbus;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
@@ -24,7 +25,8 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
  * @since 4.11.1
  */
 @ConfigurationProperties(NimbusJsonWebTokenValidatorConfigurationProperties.PREFIX)
-public class NimbusJsonWebTokenValidatorConfigurationProperties implements NimbusJsonWebTokenValidatorConfiguration {
+@Internal
+class NimbusJsonWebTokenValidatorConfigurationProperties implements NimbusJsonWebTokenValidatorConfiguration {
     /**
      * The default reactive validator value.
      */
@@ -38,6 +40,11 @@ public class NimbusJsonWebTokenValidatorConfigurationProperties implements Nimbu
     public static final boolean DEFAULT_REACTIVE_VALIDATOR = true;
 
     /**
+     * The default reactive validator execute on blocking.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_REACTIVE_VALIDATOR_EXECUTE_ON_BLOCKING = false;
+    /**
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
@@ -45,6 +52,7 @@ public class NimbusJsonWebTokenValidatorConfigurationProperties implements Nimbu
 
     private boolean reactiveValidator = DEFAULT_REACTIVE_VALIDATOR;
     private boolean validator = DEFAULT_VALIDATOR;
+    private boolean reactiveValidatorExecuteOnBlocking = DEFAULT_REACTIVE_VALIDATOR_EXECUTE_ON_BLOCKING;
 
     @Override
     public boolean isReactiveValidator() {
@@ -70,5 +78,18 @@ public class NimbusJsonWebTokenValidatorConfigurationProperties implements Nimbu
      */
     public void setValidator(boolean validator) {
         this.validator = validator;
+    }
+
+    @Override
+    public boolean isReactiveValidatorExecuteOnBlocking() {
+        return reactiveValidatorExecuteOnBlocking;
+    }
+
+    /**
+     *  Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor. Default value {@value #DEFAULT_REACTIVE_VALIDATOR_EXECUTE_ON_BLOCKING}.
+     * @param  reactiveValidatorExecuteOnBlocking Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor.
+     */
+    public void setReactiveValidatorExecuteOnBlocking(boolean reactiveValidatorExecuteOnBlocking) {
+        this.reactiveValidatorExecuteOnBlocking = reactiveValidatorExecuteOnBlocking;
     }
 }

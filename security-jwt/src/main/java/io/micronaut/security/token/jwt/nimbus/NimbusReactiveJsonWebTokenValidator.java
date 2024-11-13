@@ -54,6 +54,7 @@ import java.util.Optional;
 class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> implements ReactiveJsonWebTokenValidator<JWT, R> {
     private final JwtAuthenticationFactory jwtAuthenticationFactory;
     private final JsonWebTokenParser<JWT> jsonWebTokenParser;
+    @Nullable
     private final Scheduler scheduler;
     private final ReactiveJsonWebTokenSignatureValidator<SignedJWT> signatureValidator;
 
@@ -64,12 +65,13 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
             JsonWebTokenParser<JWT> jsonWebTokenParser,
             ReactiveJsonWebTokenSignatureValidator<SignedJWT> signatureValidator,
             JwtAuthenticationFactory jwtAuthenticationFactory,
-            @Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
+            @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
+            NimbusJsonWebTokenValidatorConfiguration nimbusJsonWebTokenValidatorConfiguration) {
         super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations);
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
-        this.scheduler = Schedulers.fromExecutorService(executorService);
+        this.scheduler = nimbusJsonWebTokenValidatorConfiguration.isReactiveValidatorExecuteOnBlocking() ? Schedulers.fromExecutorService(executorService) : null;
     }
 
     @Override
@@ -79,9 +81,9 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
                 .map(jwtAuthenticationFactory::createAuthentication)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
-
-        //
-        return authenticationMono.subscribeOn(scheduler);
+        return scheduler != null
+                ? authenticationMono.subscribeOn(scheduler)
+                : authenticationMono;
     }
 
     @NonNull

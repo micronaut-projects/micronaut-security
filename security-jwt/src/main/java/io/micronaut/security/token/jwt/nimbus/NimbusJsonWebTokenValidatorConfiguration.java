@@ -29,6 +29,12 @@ public interface NimbusJsonWebTokenValidatorConfiguration {
 
     /**
      *
+     * @return Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor.
+     */
+    boolean isReactiveValidatorExecuteOnBlocking();
+
+    /**
+     *
      * @return Whether the bean {@link NimbusJsonWebTokenValidator} is enabled.
      */
     boolean isValidator();

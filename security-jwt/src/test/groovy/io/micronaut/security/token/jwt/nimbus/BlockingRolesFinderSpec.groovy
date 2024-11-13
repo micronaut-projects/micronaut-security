@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.type.Argument
 import io.micronaut.core.util.CollectionUtils
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
@@ -30,6 +31,7 @@ import java.util.Map;
 
 @Property(name = "micronaut.security.token.jwt.signatures.secret.generator.secret", value = "pleaseChangeThisSecretForANewOne")
 @Property(name = "micronaut.security.authentication", value = "bearer")
+@Property(name = "micronaut.security.token.jwt.nimbus.reactive-validator-execute-on-blocking", value = StringUtils.TRUE)
 @Property(name = "spec.name", value = "BlockingRolesFinderSpec")
 @MicronautTest
 class BlockingRolesFinderSpec extends Specification {
