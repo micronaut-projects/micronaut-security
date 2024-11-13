@@ -21,7 +21,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
@@ -55,7 +54,6 @@ public class JwtTokenValidator<T> implements TokenValidator<T> {
      * @param jwtAuthenticationFactory Utility to generate an Authentication given a JWT.
      * @param executorService Executor Service
      */
-    @Inject
     public JwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
                              Collection<EncryptionConfiguration> encryptionConfigurations,
                              Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
