@@ -66,7 +66,7 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
         when:
         LoginPage loginPage = browser.page LoginPage
-        loginPage.login("user", "password")
+        loginPage.login(Keycloak.TEST_USERNAME, Keycloak.TEST_PASSWORD)
 
         then:
         browser.at HomePage
