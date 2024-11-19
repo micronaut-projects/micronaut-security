@@ -68,15 +68,16 @@ class Keycloak {
 
     static void init() {
         if (container == null) {
+            Map<String, String> containerConfiguration = [
+                    "KEYCLOAK_DATABASE_VENDOR": "h2",
+                    "KC_HTTP_RELATIVE_PATH": "/auth", // https://github.com/micronaut-projects/micronaut-security/issues/1024
+                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_LEGACY_LOGOUT_REDIRECT_URI": "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
+                    "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_SUPPRESS_LOGOUT_CONFIRMATION_SCREEN": "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
+                    "KC_DB": "dev-file"
+            ]
             container = new GenericContainer<>("bitnami/keycloak:16.1.1")
                     .withExposedPorts(8080)
-                    .withEnv(Map.of(
-                            "KEYCLOAK_DATABASE_VENDOR", "h2",
-                            "KC_HTTP_RELATIVE_PATH", "/auth", // https://github.com/micronaut-projects/micronaut-security/issues/1024
-                            "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_LEGACY_LOGOUT_REDIRECT_URI", "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
-                            "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_SUPPRESS_LOGOUT_CONFIRMATION_SCREEN", "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
-                            "KC_DB", "dev-file"
-                    ))
+                    .withEnv(containerConfiguration)
                     .withLogConsumer(outputFrame -> System.out.print("[--KEYCLOAK--] " + outputFrame.getUtf8String()))
                     .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Running the server in development mode. DO NOT use this configuration in production.*").withStartupTimeout(Duration.ofMinutes(5)))
             container.start()
