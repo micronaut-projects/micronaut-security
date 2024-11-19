@@ -75,7 +75,7 @@ class Keycloak {
                     "KC_SPI_LOGIN_PROTOCOL_OPENID_CONNECT_SUPPRESS_LOGOUT_CONFIRMATION_SCREEN": "true", // https://github.com/micronaut-projects/micronaut-security/issues/1024
                     "KC_DB": "dev-file"
             ]
-            container = new GenericContainer<>("bitnami/keycloak:16.1.1")
+            container = new GenericContainer<>("bitnami/keycloak:23")
                     .withExposedPorts(8080)
                     .withEnv(containerConfiguration)
                     .withLogConsumer(outputFrame -> System.out.print("[--KEYCLOAK--] " + outputFrame.getUtf8String()))
