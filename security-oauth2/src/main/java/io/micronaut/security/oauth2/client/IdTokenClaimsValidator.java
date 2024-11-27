@@ -53,6 +53,9 @@ import org.slf4j.LoggerFactory;
 public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
+    private static final String HTTP = "http://";
+    private static final String HTTPS = "https://";
+    private static final String EMPTY = "";
 
     protected final Collection<OauthClientConfiguration> oauthClientConfigurations;
 
@@ -204,7 +207,7 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
         boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
         if (!matchesIssuer) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(""), iss);
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(EMPTY), iss);
             }
             return false;
         }
@@ -235,9 +238,16 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     @NonNull
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
+        String issWithoutProtocol = removeProtocol(iss);
         return openIdClientConfiguration.getIssuer()
                 .map(URL::toString)
-                .map(issuer -> issuer.equalsIgnoreCase(iss));
+                .map(IdTokenClaimsValidator::removeProtocol)
+                .map(issuer -> issuer.endsWith(issWithoutProtocol));
+    }
+
+    private static String removeProtocol(String iss) {
+        return iss.replace(HTTP, EMPTY)
+                .replace(HTTPS, EMPTY);
     }
 
     /**
