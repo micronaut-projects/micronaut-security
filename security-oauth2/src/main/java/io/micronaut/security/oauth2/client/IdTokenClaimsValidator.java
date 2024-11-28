@@ -23,6 +23,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ClaimsUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
@@ -53,8 +54,6 @@ import org.slf4j.LoggerFactory;
 public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
-    private static final String HTTP = "http://";
-    private static final String HTTPS = "https://";
     private static final String EMPTY = "";
 
     protected final Collection<OauthClientConfiguration> oauthClientConfigurations;
@@ -238,16 +237,9 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     @NonNull
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
-        String issWithoutProtocol = removeProtocol(iss);
         return openIdClientConfiguration.getIssuer()
                 .map(URL::toString)
-                .map(IdTokenClaimsValidator::removeProtocol)
-                .map(issuer -> issuer.endsWith(issWithoutProtocol));
-    }
-
-    private static String removeProtocol(String iss) {
-        return iss.replace(HTTP, EMPTY)
-                .replace(HTTPS, EMPTY);
+                .map(issuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(issuer, iss));
     }
 
     /**

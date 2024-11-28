@@ -19,7 +19,6 @@ package io.micronaut.security.session;
 import io.micronaut.core.annotation.Indexed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.order.Ordered;
-import io.micronaut.data.annotation.Index;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 import java.util.Optional;

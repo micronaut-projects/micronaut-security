@@ -25,11 +25,13 @@ import java.util.Optional;
  */
 public enum AuthorizationServer {
     OKTA,
+    ORACLE_CLOUD,
     COGNITO,
     KEYCLOAK,
     AUTH0;
 
     private static final String ISSUER_PART_OKTA = "okta";
+    private static final String ISSUER_PART_ORACLE_CLOUD = "oraclecloud";
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
@@ -40,6 +42,9 @@ public enum AuthorizationServer {
      */
     @NonNull
     public static Optional<AuthorizationServer> infer(@NonNull String issuer) {
+        if (issuer.contains(ISSUER_PART_ORACLE_CLOUD)) {
+            return Optional.of(AuthorizationServer.ORACLE_CLOUD);
+        }
         if (issuer.contains(ISSUER_PART_OKTA)) {
             return Optional.of(AuthorizationServer.OKTA);
         }

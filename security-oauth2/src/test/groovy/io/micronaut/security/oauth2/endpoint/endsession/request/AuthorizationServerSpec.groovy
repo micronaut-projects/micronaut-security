@@ -16,6 +16,7 @@ class AuthorizationServerSpec extends Specification {
         "https://dev-XXXXX.oktapreview.com/oauth2/default"    || AuthorizationServer.OKTA
         "https://cognito-idp.us-east-1.amazonaws.com/12345}/" || AuthorizationServer.COGNITO
         "https://micronautguides.eu.auth0.com"                || AuthorizationServer.AUTH0
+        "https://identity.oraclecloud.com/"                                      || AuthorizationServer.ORACLE_CLOUD
     }
 
     void "Infer authorization server based on the issuer url may return empty Optional"() {

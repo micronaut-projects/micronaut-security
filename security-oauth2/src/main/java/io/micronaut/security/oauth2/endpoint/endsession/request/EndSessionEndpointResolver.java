@@ -128,9 +128,10 @@ public class EndSessionEndpointResolver {
             return Optional.empty();
         }
         switch (inferOptional.get()) {
-            case OKTA:
+            //  Oracle Cloud Logout https://docs.oracle.com/en/cloud/paas/identity-cloud/rest-api/op-oauth2-v1-userlogout-get.html
+            case ORACLE_CLOUD, OKTA:
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
+                    LOG.debug("Resolved auth server {} for provider [{}]", inferOptional.get(), providerName);
                 }
                 return oktaEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
             case COGNITO:
