@@ -18,6 +18,7 @@ class AuthorizationServerResolverTest {
 
     static Stream<Arguments> paramsProvider() {
         return Stream.of(
+                arguments("https://login.microsoftonline.com/8177030d-4c56-3c4a-a111-15a102c55cba/v2.0", AuthorizationServer.MICROSOFT),
                 arguments("http://localhost:8180/auth/realms/master", AuthorizationServer.KEYCLOAK),
                 arguments("https://dev-XXXXX.oktapreview.com/oauth2/default", AuthorizationServer.OKTA),
                 arguments("https://cognito-idp.us-east-1.amazonaws.com/12345}/", AuthorizationServer.COGNITO),

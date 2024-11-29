@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 final class DefaultAuthorizationServerResolver implements AuthorizationServerResolver {
     private static final String ISSUER_PART_OKTA = "okta";
     private static final String ISSUER_PART_ORACLE_CLOUD = "oraclecloud";
+    private static final String ISSUER_PART_MICROSOFT = "login.microsoftonline.com";
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
@@ -48,6 +49,9 @@ final class DefaultAuthorizationServerResolver implements AuthorizationServerRes
 
     @Nullable
     static AuthorizationServer infer (@NonNull String issuer) {
+        if (issuer.contains(ISSUER_PART_MICROSOFT)) {
+            return AuthorizationServer.MICROSOFT;
+        }
         if (issuer.contains(ISSUER_PART_ORACLE_CLOUD)) {
             return AuthorizationServer.ORACLE_CLOUD;
         }

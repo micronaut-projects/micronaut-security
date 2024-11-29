@@ -28,7 +28,8 @@ public enum AuthorizationServer {
     ORACLE_CLOUD,
     COGNITO,
     KEYCLOAK,
-    AUTH0;
+    AUTH0,
+    MICROSOFT;
 
     /**
      * @param issuer Issuer url
