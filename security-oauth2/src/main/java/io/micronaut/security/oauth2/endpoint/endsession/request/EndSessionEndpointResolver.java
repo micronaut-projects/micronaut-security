@@ -141,6 +141,12 @@ public class EndSessionEndpointResolver {
             return Optional.empty();
         }
         switch (inferOptional.get()) {
+            case MICROSOFT:
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Resolved the MicrosoftEndSessionEndpoint for provider [{}]", providerName);
+                }
+                return Optional.of(new MicrosoftEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+
             //  Oracle Cloud Logout https://docs.oracle.com/en/cloud/paas/identity-cloud/rest-api/op-oauth2-v1-userlogout-get.html
             case ORACLE_CLOUD, OKTA:
                 if (LOG.isDebugEnabled()) {
