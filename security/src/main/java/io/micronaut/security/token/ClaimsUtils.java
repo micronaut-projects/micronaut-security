@@ -55,7 +55,7 @@ public final class ClaimsUtils {
 
     @NonNull
     private static String removeTrailingSlash(@NonNull String iss) {
-        return iss.endsWith(SLASH) ? iss.substring(0, iss.length() - 1) : iss;
+        return iss.endsWith(SLASH) ? iss.substring(0, iss.length() - SLASH.length()) : iss;
     }
 
     @NonNull
