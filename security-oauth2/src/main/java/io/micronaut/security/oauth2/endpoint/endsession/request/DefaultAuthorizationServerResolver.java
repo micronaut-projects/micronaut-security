@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ class DefaultAuthorizationServerResolver implements AuthorizationServerResolver 
         return Optional.ofNullable(cache.computeIfAbsent(issuer, DefaultAuthorizationServerResolver::infer));
     }
 
+    @Nullable
     static AuthorizationServer infer (@NonNull String issuer) {
         if (issuer.contains(ISSUER_PART_ORACLE_CLOUD)) {
             return AuthorizationServer.ORACLE_CLOUD;
