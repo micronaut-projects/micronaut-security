@@ -17,6 +17,8 @@ package io.micronaut.security.token;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class to compare claims.
@@ -30,6 +32,8 @@ public final class ClaimsUtils {
     private static final String EMPTY = "";
     private static final String SLASH = "/";
 
+    private static final Map<ClaimPair, Boolean> cache = new HashMap<>();
+
     private ClaimsUtils() {
     }
 
@@ -40,7 +44,10 @@ public final class ClaimsUtils {
      * @return Whether the expected claim ends with the supplied claim. Both claims are compared without leading protocol and trailing slash.
      */
     public static boolean endsWithIgnoringProtocolAndTrailingSlash(@NonNull String expectedClaim, @NonNull String claim) {
-        return removeLeadingProtocolAndTrailingSlash(expectedClaim).endsWith(removeLeadingProtocolAndTrailingSlash(claim));
+        ClaimPair pair = new ClaimPair(expectedClaim, claim);
+        return cache.computeIfAbsent(pair, claimPair ->
+                removeLeadingProtocolAndTrailingSlash(claimPair.expectedClaim())
+                        .endsWith(removeLeadingProtocolAndTrailingSlash(claimPair.claim())));
     }
 
     /**
@@ -62,5 +69,8 @@ public final class ClaimsUtils {
     private static String removeProtocol(@NonNull String iss) {
         return iss.replace(HTTP, EMPTY)
                 .replace(HTTPS, EMPTY);
+    }
+
+    record ClaimPair(String expectedClaim, String claim) {
     }
 }
