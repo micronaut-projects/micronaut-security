@@ -562,6 +562,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Authorization Servers.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServerResolver.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServerResolver</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/endsession/request/package-summary.html">io.micronaut.security.oauth2.endpoint.endsession.request</a></dt>
+<dd>
+<div class="block">API to resolve an <a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request"><code>AuthorizationServer</code></a> based on the issuer url.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#AUTHORIZED_PARTY" class="member-name-link">AUTHORIZED_PARTY</a> - Static variable in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/AuthorizedPartyClaimValidator.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">AuthorizedPartyClaimValidator</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/token/response/validation/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response.validation</a></dt>
@@ -884,6 +888,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#claimsSupported(java.util.List)" class="member-name-link">claimsSupported(List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/ClaimsUtils.html" class="type-name-link" title="class in io.micronaut.security.token">ClaimsUtils</a> - Class in <a href="io/micronaut/security/token/package-summary.html">io.micronaut.security.token</a></dt>
+<dd>
+<div class="block">Utility class to compare claims.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">ClaimsValidationConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#claimTypesSupported(java.util.List)" class="member-name-link">claimTypesSupported(List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
@@ -2121,6 +2129,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Responsible for resolving which end session request to use for a given OpenID client configuration.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html#%3Cinit%3E(io.micronaut.context.BeanContext)" class="member-name-link">EndSessionEndpointResolver(BeanContext)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpointResolver</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html#%3Cinit%3E(io.micronaut.context.BeanContext,io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServerResolver)" class="member-name-link">EndSessionEndpointResolver(BeanContext, AuthorizationServerResolver)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpointResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#endSessionRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)" class="member-name-link">endSessionRedirect(HttpRequest&lt;?&gt;, Authentication)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
@@ -2128,6 +2140,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Redirects to the end session endpoint of an OpenID
  provider.</div>
+</dd>
+<dt><a href="io/micronaut/security/token/ClaimsUtils.html#endsWithIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)" class="member-name-link">endsWithIgnoringProtocolAndTrailingSlash(String, String)</a> - Static method in class io.micronaut.security.token.<a href="io/micronaut/security/token/ClaimsUtils.html" title="class in io.micronaut.security.token">ClaimsUtils</a></dt>
+<dd>
+<div class="block">For example, for input <code>"https://idcs-214ecfa9143532ca8c3fba0ecb1fe65b.identity.oraclecloud.com"</code> and <code>identity.oraclecloud.com</code>, it returns <code>true</code>.</div>
 </dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>&nbsp;</dd>
@@ -4266,7 +4282,11 @@ loadScripts(document, 'script');</script>
 <div class="block">GET endpoint for Logout Controller.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#infer(java.lang.String)" class="member-name-link">infer(String)</a> - Static method in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServerResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request"><code>AuthorizationServerResolver</code></a> instead</div>
+</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#instantiateParameters(io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest,io.micronaut.http.MutableHttpResponse)" class="member-name-link">instantiateParameters(AuthorizationRequest, MutableHttpResponse)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html#INTERACTION_REQUIRED" class="member-name-link">INTERACTION_REQUIRED</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorCode</a></dt>
@@ -6040,6 +6060,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#opTosUri(java.lang.String)" class="member-name-link">opTosUri(String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#ORACLE_CLOUD" class="member-name-link">ORACLE_CLOUD</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
@@ -6689,6 +6711,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#requestUriParameterSupported(java.lang.Boolean)" class="member-name-link">requestUriParameterSupported(Boolean)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#requireRequestUriRegistration(java.lang.Boolean)" class="member-name-link">requireRequestUriRegistration(Boolean)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServerResolver.html#resolve(java.lang.String)" class="member-name-link">resolve(String)</a> - Method in interface io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServerResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServerResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html#resolve(io.micronaut.http.HttpRequest)" class="member-name-link">resolve(HttpRequest&lt;?&gt;)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">IdTokenHintResolver</a></dt>
 <dd>&nbsp;</dd>
