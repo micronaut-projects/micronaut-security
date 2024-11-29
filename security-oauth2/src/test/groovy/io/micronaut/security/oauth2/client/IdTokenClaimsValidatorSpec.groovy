@@ -31,6 +31,7 @@ class IdTokenClaimsValidatorSpec extends ApplicationContextSpecification {
 
         where:
         configIss | iss
+        "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com/"
         "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com"
         "https://identity.oraclecloud.com" | "https://identity.oraclecloud.com"
     }
