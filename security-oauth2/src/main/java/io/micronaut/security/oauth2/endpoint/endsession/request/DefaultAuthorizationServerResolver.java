@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * {@link io.micronaut.context.annotation.DefaultImplementation} of {@link AuthorizationServerResolver}.
  * Based on substrings of the issuer url it returns an {@link AuthorizationServer}.
+ * @author Sergio del Amo
+ * @since 4.12.0
  */
 @Internal
 @Singleton

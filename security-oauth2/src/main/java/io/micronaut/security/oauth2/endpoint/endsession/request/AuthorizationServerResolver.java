@@ -22,6 +22,8 @@ import java.util.Optional;
 
 /**
  * API to resolve an {@link AuthorizationServer} based on the issuer url.
+ * @author Sergio del Amo
+ * @since 4.12.0
  */
 @FunctionalInterface
 @DefaultImplementation(DefaultAuthorizationServerResolver.class)
