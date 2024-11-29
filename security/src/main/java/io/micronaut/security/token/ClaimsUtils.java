@@ -32,7 +32,7 @@ public final class ClaimsUtils {
     private static final String EMPTY = "";
     private static final String SLASH = "/";
 
-    private static final Map<ClaimPair, Boolean> cache = new HashMap<>();
+    private static final Map<ClaimPair, Boolean> CACHE = new HashMap<>();
 
     private ClaimsUtils() {
     }
@@ -45,7 +45,7 @@ public final class ClaimsUtils {
      */
     public static boolean endsWithIgnoringProtocolAndTrailingSlash(@NonNull String expectedClaim, @NonNull String claim) {
         ClaimPair pair = new ClaimPair(expectedClaim, claim);
-        return cache.computeIfAbsent(pair, claimPair ->
+        return CACHE.computeIfAbsent(pair, claimPair ->
                 removeLeadingProtocolAndTrailingSlash(claimPair.expectedClaim())
                         .endsWith(removeLeadingProtocolAndTrailingSlash(claimPair.claim())));
     }
