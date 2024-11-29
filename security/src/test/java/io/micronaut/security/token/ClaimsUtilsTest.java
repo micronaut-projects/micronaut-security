@@ -21,7 +21,8 @@ public class ClaimsUtilsTest extends TestCase {
 
     static Stream<Arguments> startsWithParamsProvider() {
         return Stream.of(
-                arguments("https://idcs-214ecfa9143532ca8c3fba0ecb1fe65b.identity.oraclecloud.com", "https://identity.oraclecloud.com/"));
+                arguments("https://idcs-214ecfa9143532ca8c3fba0ecb1fe65b.identity.oraclecloud.com", "https://identity.oraclecloud.com/")
+        );
     }
 
     @ParameterizedTest

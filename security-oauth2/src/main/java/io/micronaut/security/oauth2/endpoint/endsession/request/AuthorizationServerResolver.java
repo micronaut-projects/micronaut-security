@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,22 @@
  */
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.NonNull;
+
 import java.util.Optional;
 
 /**
- * Authorization Servers.
- * @author Sergio del Amo
- * @since 3.2.0
+ * API to resolve an {@link AuthorizationServer} based on the issuer url.
  */
-public enum AuthorizationServer {
-    OKTA,
-    ORACLE_CLOUD,
-    COGNITO,
-    KEYCLOAK,
-    AUTH0;
-
+@FunctionalInterface
+@DefaultImplementation(DefaultAuthorizationServerResolver.class)
+public interface AuthorizationServerResolver {
     /**
-     * @param issuer Issuer url
-     * @return An Authorization Server if it could be inferred based on the contents of the issuer or empty if not
-     * @deprecated Use {@link AuthorizationServerResolver} instead
-    */
-    @Deprecated
+     *
+     * @param issuer OpenID Authorization Server issuer
+     * @return Based on substrings of the issuer url, it returns an {@link AuthorizationServer}.
+     */
     @NonNull
-    public static Optional<AuthorizationServer> infer(@NonNull String issuer) {
-        return Optional.ofNullable(DefaultAuthorizationServerResolver.infer(issuer));
-    }
+    Optional<AuthorizationServer> resolve(@NonNull String issuer);
 }
