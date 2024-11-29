@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Internal
 @Singleton
-class DefaultAuthorizationServerResolver implements AuthorizationServerResolver {
+final class DefaultAuthorizationServerResolver implements AuthorizationServerResolver {
     private static final String ISSUER_PART_OKTA = "okta";
     private static final String ISSUER_PART_ORACLE_CLOUD = "oraclecloud";
     private static final String ISSUER_PART_COGNITO = "cognito";
