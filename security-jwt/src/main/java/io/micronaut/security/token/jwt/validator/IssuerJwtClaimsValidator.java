@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ClaimsUtils;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class IssuerJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T>
             }
             return false;
         }
-        if (!expectedIssuer.equals(issuerObject.toString())) {
+        if (!ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(expectedIssuer, issuerObject.toString())) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject);
             }
