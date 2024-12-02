@@ -3,20 +3,33 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpMethod;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.simple.SimpleHttpRequest;
+import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.runtime.server.EmbeddedServer;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OpenIdClient;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
+import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MicrosoftEndSessionEndpointTest {
+    private static final String LOGOUT = "https://login.microsoftonline.com/8177030d-4c56-3c4a-a111-15a102c55cba/oauth2/v2.0/logout";
     private static final String OPENID_CONFIG = """
  {
  "token_endpoint":"https://login.microsoftonline.com/8177030d-4c56-3c4a-a111-15a102c55cba/oauth2/v2.0/token",
@@ -57,6 +70,31 @@ class MicrosoftEndSessionEndpointTest {
                     ))) {
                 var openIdClient = server.getApplicationContext().getBean(OpenIdClient.class, Qualifiers.byName(nameQualifier));
                 assertTrue(openIdClient.supportsEndSession());
+                var endSessionEndpointResolver = server.getApplicationContext().getBean(EndSessionEndpointResolver.class);
+                var oauthClientConfiguration = server.getApplicationContext().getBean(OauthClientConfiguration.class, Qualifiers.byName(nameQualifier));
+                var openIdProviderMetadata = server.getApplicationContext().getBean(OpenIdProviderMetadata.class);
+                var endSessionCallbackUrlBuilder = server.getApplicationContext().getBean(EndSessionCallbackUrlBuilder.class);
+                Optional<EndSessionEndpoint> endSessionEndpointOptional = endSessionEndpointResolver.resolve(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
+                assertTrue(endSessionEndpointOptional.isPresent());
+                EndSessionEndpoint endSessionEndpoint = endSessionEndpointOptional.get();
+
+                // if no login_hint is provided, only post_logout_redirect_uri is added
+                Authentication authentication = Authentication.build("sherlock");
+                String url = endSessionEndpoint.getUrl(new SimpleHttpRequest<>(HttpMethod.GET, "/foo/bar", Collections.emptyMap()), authentication);
+                String expected = UriBuilder.of(LOGOUT)
+                        .queryParam("post_logout_redirect_uri", "http://localhost:"+ server.getPort() + "/logout")
+                        .build()
+                        .toString();
+                assertEquals(expected, url);
+
+                // if  login_hint is provided, logout_hint is added
+                authentication = Authentication.build("sherlock", Collections.singletonMap("login_hint", "xyz"));
+                url = endSessionEndpoint.getUrl(new SimpleHttpRequest<>(HttpMethod.GET, "/foo/bar", Collections.emptyMap()), authentication);
+                URI expectedURI = UriBuilder.of(LOGOUT)
+                        .queryParam("logout_hint", "xyz")
+                        .queryParam("post_logout_redirect_uri", "http://localhost:"+ server.getPort() + "/logout")
+                        .build();
+                assertEquals(expectedURI, URI.create(url));
             }
         }
     }
@@ -74,6 +112,7 @@ class MicrosoftEndSessionEndpointTest {
     @Requires(property = "spec.name", value = "MicrosoftEndSessionEndpointTestAuthServer")
     @Controller
     static class OpenidConfigurationController {
+        @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/.well-known/openid-configuration")
         String index() {
             return OPENID_CONFIG;
