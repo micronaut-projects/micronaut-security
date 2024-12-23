@@ -27,8 +27,9 @@ micronaut-validation = "4.8.0"
 micronaut-data = "4.10.5"
 micronaut-sql="5.8.3"
 micronaut-test-resources="2.6.2"
+sonatype-scan = "2.8.3"
+graalvm-native-buildtools = "0.10.3"
 
-micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
@@ -70,6 +71,8 @@ junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engi
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
+sonatype-scan = { module = "org.sonatype.gradle.plugins:scan-gradle-plugin", version.ref = "sonatype-scan" }
+graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
