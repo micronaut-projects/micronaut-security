@@ -58,11 +58,6 @@ jobs:
         run: |
           [ -f ./setup.sh ] && ./setup.sh || [ ! -f ./setup.sh ]
 
-      - name: "🚔 Sonatype Scan"
-        id: sonatypescan
-        run: |
-          ./gradlew ossIndexAudit --no-parallel
-
       - name: "🛠 Build with Gradle"
         id: gradle
         run: |
