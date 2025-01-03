@@ -27,7 +27,7 @@ micronaut-validation = "4.8.0"
 micronaut-data = "4.10.5"
 micronaut-sql="6.0.2"
 micronaut-test-resources="2.7.0"
-sonatype-scan = "2.8.3"
+sonatype-scan = "3.0.0"
 graalvm-native-buildtools = "0.10.4"
 
 [libraries]
