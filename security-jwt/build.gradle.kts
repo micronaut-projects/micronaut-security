@@ -38,6 +38,10 @@ dependencies {
     testImplementation(mnTestResources.testcontainers.core)
 
     testImplementation(libs.system.stubs.core)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 tasks.test {

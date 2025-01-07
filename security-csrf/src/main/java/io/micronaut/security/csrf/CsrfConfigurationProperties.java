@@ -42,7 +42,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     public static final String DEFAULT_FIELD_NAME = "csrfToken";
 
     /**
-     * The default cookie name..
+     * The default cookie name.
      * @see <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#using-cookies-with-host-prefixes-to-identify-origins">Using Cookies with Host Prefixes to Identify Origins</a>
      */
     @SuppressWarnings("WeakerAccess")
@@ -59,6 +59,11 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_SAME_SITE = SameSite.Strict;
+    /**
+     * The default is session cookie value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_SESSION_COOKIE = false;
 
     public static final int DEFAULT_RANDOM_VALUE_SIZE = 16;
 
@@ -87,6 +92,22 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
 
     @Nullable
     private String signatureKey;
+    private boolean sessionCookie = DEFAULT_SESSION_COOKIE;
+
+    @Override
+    public boolean isSessionCookie() {
+        return sessionCookie;
+    }
+
+    /**
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. Default value ({@value #DEFAULT_SESSION_COOKIE}).
+     *
+     * @param sessionCookie Whether the cookie is a session cookie.
+     * @since 4.12.0
+     */
+    public void setSessionCookie(boolean sessionCookie) {
+        this.sessionCookie = sessionCookie;
+    }
 
     @Override
     @Nullable
@@ -243,6 +264,9 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
 
     @Override
     public Optional<TemporalAmount> getCookieMaxAge() {
+        if (isSessionCookie()) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(cookieMaxAge);
     }
 

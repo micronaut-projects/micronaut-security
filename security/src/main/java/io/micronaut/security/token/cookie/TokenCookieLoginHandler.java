@@ -128,8 +128,10 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
         List<Cookie> cookies = new ArrayList<>(2);
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
-        TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
-        jwtCookie.maxAge(maxAge);
+        if (!accessTokenCookieConfiguration.isSessionCookie()) {
+            TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
+            jwtCookie.maxAge(maxAge);
+        }
 
         cookies.add(jwtCookie);
 
@@ -137,7 +139,9 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
         if (StringUtils.isNotEmpty(refreshToken)) {
             Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
             refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
-            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
+            if (!refreshTokenCookieConfiguration.isSessionCookie()) {
+                refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
+            }
             cookies.add(refreshCookie);
         }
 
