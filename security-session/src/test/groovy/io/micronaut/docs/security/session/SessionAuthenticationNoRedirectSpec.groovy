@@ -4,12 +4,16 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.session.SessionIdResolver
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
@@ -78,6 +82,23 @@ class SessionAuthenticationNoRedirectSpec extends EmbeddedServerSpecification {
         rsp.body().contains('sherlock')
 
         when:
+        String sessionIdInResolver = client.retrieve(HttpRequest.GET('/session/id')
+                .accept(MediaType.TEXT_PLAIN)
+                .cookie(Cookie.of('SESSION', sessionId)))
+
+        then:
+        noExceptionThrown()
+        sessionIdInResolver
+
+        when:
+        client.exchange(HttpRequest.GET('/session/id')
+                .accept(MediaType.TEXT_PLAIN))
+
+        then:
+        HttpClientResponseException ex = thrown()
+        HttpStatus.NOT_FOUND == ex.status
+
+        when:
         HttpRequest logoutRequest = HttpRequest.POST('/logout', "").cookie(Cookie.of('SESSION', sessionId))
         HttpResponse<String> logoutRsp = client.exchange(logoutRequest, String)
 
@@ -106,10 +127,23 @@ class SessionAuthenticationNoRedirectSpec extends EmbeddedServerSpecification {
     @Secured("isAnonymous()")
     @Controller("/")
     static class HomeController {
+        private final SessionIdResolver<HttpRequest<?>> sessionIdResolver
+
+        HomeController(SessionIdResolver<HttpRequest<?>> sessionIdResolver) {
+            this.sessionIdResolver = sessionIdResolver
+        }
+
         @Produces(MediaType.TEXT_PLAIN)
         @Get
         String index(@Nullable Principal principal) {
             return principal?.name ?: 'You are not logged in'
+        }
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/session/id")
+        Optional<String> index(HttpRequest<?> request) {
+            return sessionIdResolver.findSessionId(request)
         }
     }
 }

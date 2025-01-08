@@ -1,0 +1,3 @@
+When you set `micronaut.security.authentication=cookie`, api:security.token.cookie.TokenCookieLoginHandler[] a bean of type api:security.handlers.LoginHandler[] and api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[] a bean of type api:security.handlers.LogoutHandler[] are enabled.
+
+image::micronaut-security-authentication-cookie.png[]

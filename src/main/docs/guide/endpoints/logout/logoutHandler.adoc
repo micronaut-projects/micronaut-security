@@ -1,0 +1,1 @@
+The api:security.handlers.LogoutHandler[] API defines how to respond to a logout attempt. For example, with the <<logout, Logout Controller>>.

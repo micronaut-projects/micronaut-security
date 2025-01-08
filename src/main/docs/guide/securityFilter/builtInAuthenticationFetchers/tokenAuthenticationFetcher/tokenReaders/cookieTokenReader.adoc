@@ -1,0 +1,5 @@
+api:io.micronaut.security.token.cookie.CookieTokenReader[] attempts to read token from a request cookie.
+
+The following configuration properties are available to customize how the token will be read from a cookie:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.cookie.TokenCookieConfigurationProperties.adoc[]

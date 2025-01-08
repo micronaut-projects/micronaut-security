@@ -21,4 +21,5 @@ package io.micronaut.security.endpoints;
  * @since 1.0
  */
 public interface LoginControllerConfiguration extends ControllerConfiguration {
+
 }

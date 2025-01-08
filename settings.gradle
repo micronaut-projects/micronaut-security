@@ -6,7 +6,7 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "7.2.1"
+    id("io.micronaut.build.shared.settings") version "7.3.1"
 }
 
 rootProject.name = 'security-parent'
@@ -15,12 +15,14 @@ include "security-bom"
 include "security"
 include "security-aot"
 include "security-annotations"
+include "security-csrf"
 include "security-jwt"
 include "security-processor"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
 include "test-suite-graal"
+include "test-suite-jwks-cache"
 include "test-suite-groovy"
 include "test-suite"
 include "test-suite-jwt-tck"
@@ -49,6 +51,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-cache")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-sql")
     importMicronautCatalog("micronaut-servlet")

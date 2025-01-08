@@ -18,6 +18,7 @@ package io.micronaut.security.endpoints;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.Body;
@@ -42,6 +43,8 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 /**
  * Handles login requests.
  *
@@ -52,7 +55,7 @@ import reactor.core.publisher.Mono;
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
-@Requires(beans = {LoginHandler.class, Authenticator.class})
+@Requires(beans = {LoginHandler.class, Authenticator.class, HttpHostResolver.class, HttpHostResolver.class})
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LoginController<B> {
@@ -65,6 +68,7 @@ public class LoginController<B> {
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
     protected final HttpHostResolver httpHostResolver;
     protected final HttpLocaleResolver httpLocaleResolver;
+    protected final LoginControllerConfiguration loginControllerConfiguration;
 
     /**
      * @param authenticator                 {@link Authenticator} collaborator
@@ -73,15 +77,17 @@ public class LoginController<B> {
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
-     * @since 4.7.0
+     * @param loginControllerConfiguration Login Controller Configuration
+     * @since 4.11.0
      */
     public LoginController(
-        Authenticator<HttpRequest<B>> authenticator,
-        LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
-        ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-        ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
-        HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver
+            Authenticator<HttpRequest<B>> authenticator,
+            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
+            HttpHostResolver httpHostResolver,
+            HttpLocaleResolver httpLocaleResolver,
+            LoginControllerConfiguration loginControllerConfiguration
     ) {
         this.authenticator = authenticator;
         this.loginHandler = loginHandler;
@@ -89,6 +95,7 @@ public class LoginController<B> {
         this.loginFailedEventPublisher = loginFailedEventPublisher;
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
+        this.loginControllerConfiguration = loginControllerConfiguration;
     }
 
     /**
@@ -100,6 +107,10 @@ public class LoginController<B> {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().toString()))) {
+            return Publishers.just(HttpResponse.notFound());
+        }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
             .map(authenticationResponse -> {
                 if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {

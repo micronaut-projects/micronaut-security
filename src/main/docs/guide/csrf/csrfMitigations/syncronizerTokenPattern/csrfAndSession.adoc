@@ -1,0 +1,4 @@
+If you use <<session, Session-Based Authentication>> and Micronaut Security CSRF, a CSRF token is automatically generated upon login and saved into the HTTP Session. <<session, Micronaut Session>> provides an implementation
+api:security.csrf.CsrfTokenRepository[] which fetches the CSRF token from the user's HTTP session. Thus, when the application sends new request to the sever with a CSRF token (e.g. in a hidden form field or HTTP Header), the server validates the supplied token against the value stored in the HTTP Session.
+
+You can disable the CSRF Session repository by setting `micronaut.security.csrf.repositories.session.enabled` to false.

@@ -38,6 +38,8 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(platform(mnTest.boms.junit))
+    testImplementation(libs.junit.jupiter.params)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

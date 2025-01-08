@@ -1,0 +1,7 @@
+https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern[Syncronizer Token Pattern].
+
+____
+In a synchronized token pattern, the server generates a CSRF token and shares it with the client before returning it,
+usually through a hidden form parameter for the associated action. On form submission, the server checks the CSRF token against
+one stored in the user’s session. If they match, the request is approved; otherwise, it’s rejected
+____

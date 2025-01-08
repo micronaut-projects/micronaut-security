@@ -1,0 +1,30 @@
+Json Web Key Set (JWKS) fetched from a remote web server are cached. By default, they are cached via the internal bean api:security.token.jwt.signature.jwks.ReactorCacheJwkSetFetcher[] using
+Project Reactor's `Mono::cacheInvalidateIf`. You can configure the cache expiration with `micronaut.security.token.jwt.signatures.jwks.*.cache-expiration`. It defaults to 60 seconds.
+
+NOTE: However, we recommend you enable caching via https://micronaut-projects.github.io/micronaut-cache/latest/guide/[Micronaut Cache]. This will be the only option in the future.
+
+**Caching via Micronaut Cache**
+
+To cache JWKS with Micronaut Cache, you need to add an implementation of Micronaut Cache (E.g.
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine[Caffeine],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#redis[Redis],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#ehcache[Ehcache],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#hazelcast[Hazelcast],
+https://micronaut-projects.github.io/micronaut-coherence/latest/guide/#cache[Coherence],
+https://micronaut-projects.github.io/micronaut-cache/latest/guide/#infinispan[Infinispan],
+https://micronaut-projects.github.io/micronaut-eclipsestore/latest/guide/#cache[EclipseStore],
+or https://micronaut-projects.github.io/micronaut-cache/latest/guide/#microstream[MicroStream]) and configure the expiration.
+
+For example, you could add https://micronaut-projects.github.io/micronaut-cache/latest/guide/#caffeine[Caffeine] implementation:
+
+dependency:micronaut-cache-caffeine[groupId=io.micronaut.cache]
+
+The cache name is `jwks`. You can configure the cache expiration with:
+
+[configuration]
+----
+micronaut:
+  caches:
+    jwks:
+      expire-after-write: 24h
+----

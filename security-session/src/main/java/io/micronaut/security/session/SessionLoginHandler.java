@@ -28,14 +28,15 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,22 +61,44 @@ public class SessionLoginHandler implements RedirectingLoginHandler<HttpRequest<
 
     private final PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence;
 
+    private final List<SessionPopulator<HttpRequest<?>>> sessionPopulators;
+
     /**
      * Constructor.
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param priorToLoginPersistence The persistence to store the original url
      * @param redirectService Redirection Service
+     * @param sessionPopulators Session Populators
      */
+    @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
                                @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
-                               RedirectService redirectService) {
+                               RedirectService redirectService,
+                               List<SessionPopulator<HttpRequest<?>>> sessionPopulators) {
         this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
         this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
         this.priorToLoginPersistence = priorToLoginPersistence;
+        this.sessionPopulators = sessionPopulators;
+    }
+
+    /**
+     * Constructor.
+     * @param redirectConfiguration Redirect configuration
+     * @param sessionStore The session store
+     * @param priorToLoginPersistence The persistence to store the original url
+     * @param redirectService Redirection Service
+     * @deprecated Use {@link #SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence, RedirectService, List)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.11.0")
+    public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
+                               SessionStore<Session> sessionStore,
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                               RedirectService redirectService) {
+        this(redirectConfiguration, sessionStore, priorToLoginPersistence, redirectService, List.of(new DefaultSessionPopulator<>()));
     }
 
     @Override
@@ -130,8 +153,13 @@ public class SessionLoginHandler implements RedirectingLoginHandler<HttpRequest<
         return uriSupplier;
     }
 
+    /**
+     * Saves the authentication in the session.
+     * @param authentication Authentication
+     * @param request HTTP Request
+     */
     private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, authentication);
+        sessionPopulators.forEach(sessionPopulator -> sessionPopulator.populateSession(request, authentication, session));
     }
 }

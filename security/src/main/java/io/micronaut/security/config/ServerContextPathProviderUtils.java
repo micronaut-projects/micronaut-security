@@ -17,8 +17,11 @@ package io.micronaut.security.config;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.context.ServerContextPathProvider;
 import io.micronaut.http.uri.UriBuilder;
+
+import java.net.URI;
 
 /**
  * Utility methods to prepend a URL with the context path provided via {@link ServerContextPathProvider}.
@@ -39,11 +42,20 @@ public final class ServerContextPathProviderUtils {
     @NonNull
     public static String prependContextPath(@NonNull String url,
                                             @NonNull ServerContextPathProvider serverContextPathProvider) {
+        URI uri = URI.create(url);
+        if (uri.isAbsolute()) {
+            return url;
+        }
+
         String contextPath = serverContextPathProvider.getContextPath();
-        return contextPath == null ?
-            url :
-            UriBuilder.of("/")
-                .path(contextPath)
-                .build() + url;
+        if (!StringUtils.hasText(contextPath)) {
+            return url;
+        }
+
+        return UriBuilder.of("/")
+            .path(contextPath)
+            .path(url)
+            .build()
+            .toString();
     }
 }

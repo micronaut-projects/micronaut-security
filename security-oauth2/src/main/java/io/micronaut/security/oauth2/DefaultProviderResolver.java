@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ClaimsUtils;
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public class DefaultProviderResolver implements ProviderResolver {
     protected Optional<String> openIdClientNameWhichMatchesIssuer(@NonNull String issuer) {
         return openIdClientConfigurations.stream()
                 .filter(conf -> conf.getIssuer().isPresent())
-                .filter(conf -> conf.getIssuer().get().toString().startsWith(issuer))
+                .filter(conf -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(conf.getIssuer().get().toString(), issuer))
                 .map(Named::getName)
                 .findFirst();
     }

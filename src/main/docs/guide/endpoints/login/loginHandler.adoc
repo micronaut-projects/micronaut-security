@@ -1,0 +1,1 @@
+The api:security.handlers.LoginHandler[] API defines how to respond to a successful or failed login attempt. For example, with the <<login, Login Controller>> or with <<oauth, OAuth 2.0>> support.

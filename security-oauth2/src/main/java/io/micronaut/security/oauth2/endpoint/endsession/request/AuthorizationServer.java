@@ -25,33 +25,20 @@ import java.util.Optional;
  */
 public enum AuthorizationServer {
     OKTA,
+    ORACLE_CLOUD,
     COGNITO,
     KEYCLOAK,
-    AUTH0;
-
-    private static final String ISSUER_PART_OKTA = "okta";
-    private static final String ISSUER_PART_COGNITO = "cognito";
-    private static final String ISSUER_PART_AUTH0 = "auth0";
-    private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
+    AUTH0,
+    MICROSOFT;
 
     /**
      * @param issuer Issuer url
-     * @return An Authorization Server if it could be infered based on the contents of the issuer or empty if not
-     */
+     * @return An Authorization Server if it could be inferred based on the contents of the issuer or empty if not
+     * @deprecated Use {@link AuthorizationServerResolver} instead
+    */
+    @Deprecated
     @NonNull
     public static Optional<AuthorizationServer> infer(@NonNull String issuer) {
-        if (issuer.contains(ISSUER_PART_OKTA)) {
-            return Optional.of(AuthorizationServer.OKTA);
-        }
-        if (issuer.contains(ISSUER_PART_COGNITO)) {
-            return Optional.of(AuthorizationServer.COGNITO);
-        }
-        if (issuer.contains(ISSUER_PART_AUTH0)) {
-            return Optional.of(AuthorizationServer.AUTH0);
-        }
-        if (issuer.contains(ISSUER_PART_KEYCLOAK)) {
-            return Optional.of(AuthorizationServer.KEYCLOAK);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(DefaultAuthorizationServerResolver.infer(issuer));
     }
 }

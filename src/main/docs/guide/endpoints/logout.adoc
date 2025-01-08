@@ -7,11 +7,3 @@ include::{includedir}configurationProperties/io.micronaut.security.endpoints.Log
 
 TIP: If you are using JWT authentication not stored in a cookie, you may not need to invoke the `/logout` endpoint. Since logging out normally means simply deleting the JWT token in the client.
 
-== Logout Endpoint invocation example
-
-[source, bash]
-.Logout endpoint invocation example
-----
-curl -X "POST" "http://localhost:8080/logout"
-----
-

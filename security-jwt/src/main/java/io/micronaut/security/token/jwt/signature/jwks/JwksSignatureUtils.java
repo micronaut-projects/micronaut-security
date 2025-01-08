@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -71,10 +72,7 @@ public final class JwksSignatureUtils {
      * @return whether this signature configuration supports this algorithm
      */
     public static boolean supports(JWSAlgorithm algorithm, JWKSet jwkSet) {
-        return jwkSet.getKeys()
-            .stream()
-            .map(JWK::getAlgorithm)
-            .anyMatch(algorithm::equals);
+        return supports(algorithm, jwkSet.getKeys());
     }
 
     /**
@@ -88,6 +86,7 @@ public final class JwksSignatureUtils {
         return keys
             .stream()
             .map(JWK::getAlgorithm)
+            .filter(Objects::nonNull)
             .anyMatch(algorithm::equals);
     }
 
@@ -106,6 +105,7 @@ public final class JwksSignatureUtils {
     public static String supportedAlgorithmsMessage(List<JWK> keys) {
         return keys.stream()
             .map(JWK::getAlgorithm)
+            .filter(Objects::nonNull)
             .map(Algorithm::getName)
             .distinct()
             .reduce((a, b) -> a + ", " + b)
