@@ -38,7 +38,6 @@ class JwtCookieSessionCookieTest {
         HttpResponse<?> loginRsp = client.exchange(loginRequest, String.class);
 
         String cookie = loginRsp.getHeaders().get("Set-Cookie");
-        System.out.println(cookie);
         assertFalse(cookie.contains("Max-Age="));
         assertFalse(cookie.contains("Expires="));
     }
