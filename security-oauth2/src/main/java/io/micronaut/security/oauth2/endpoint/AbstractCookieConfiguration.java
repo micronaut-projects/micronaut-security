@@ -33,7 +33,6 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIEPATH = "/";
     private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
-    private static final boolean DEFAULT_SESSION_COOKIE = false;
 
     protected String cookieDomain;
     protected Boolean cookieSecure;
@@ -42,10 +41,10 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
     protected String cookieName = null;
-    protected boolean sessionCookie = DEFAULT_SESSION_COOKIE;
+    protected boolean sessionCookie;
 
     /**
-     *
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
      * @return whether the cookie is a session cookie. A session cookie does not have an expiration date. If set to true, then {@link CookieConfiguration#getCookieMaxAge()} is ignored.
      * @since 4.12.0
      */
@@ -54,7 +53,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     }
 
     /**
-     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. Default value ({@value #DEFAULT_SESSION_COOKIE}).
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
      *
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0

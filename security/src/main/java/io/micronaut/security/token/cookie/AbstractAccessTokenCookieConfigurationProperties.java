@@ -38,12 +38,6 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     public static final boolean DEFAULT_HTTPONLY = true;
 
     /**
-     * The default is session cookie value.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_SESSION_COOKIE = false;
-
-    /**
      * The default same-site setting for the JWT cookie.
      */
     @SuppressWarnings("WeakerAccess")
@@ -54,7 +48,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     protected Boolean cookieSecure;
     protected Duration cookieMaxAge;
     protected SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
-    protected boolean sessionCookie = DEFAULT_SESSION_COOKIE;
+    protected boolean sessionCookie;
 
     @Override
     public boolean isSessionCookie() {
@@ -62,7 +56,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     }
 
     /**
-     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. Default value ({@value #DEFAULT_SESSION_COOKIE}).
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
      *
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0

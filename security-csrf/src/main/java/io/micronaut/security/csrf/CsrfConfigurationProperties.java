@@ -100,7 +100,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     /**
-     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. Default value ({@value #DEFAULT_SESSION_COOKIE}).
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value ({@value #DEFAULT_SESSION_COOKIE}).
      *
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0
