@@ -16,6 +16,7 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -38,6 +39,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -52,7 +54,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
     protected final AccessTokenConfiguration accessTokenConfiguration;
-    private final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
+    protected final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
 
     /**
      * @param redirectService Redirection Service
@@ -126,28 +128,49 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
      */
     protected List<Cookie> getCookies(AccessRefreshToken accessRefreshToken, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(2);
+        cookies.add(accessTokenCookie(accessRefreshToken, request));
+        refreshTokenCookie(accessRefreshToken, request).ifPresent(cookies::add);
+        for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
+            cookies.add(loginCookieProvider.provideCookie(request));
+        }
+        return cookies;
+    }
+
+    /**
+     * Instantiates an Access Token Cookie.
+     * @param accessRefreshToken The access refresh token
+     * @param request The current request
+     * @return Access Token Cookie
+     */
+    @NonNull
+    protected Cookie accessTokenCookie(@NonNull AccessRefreshToken accessRefreshToken, @NonNull HttpRequest<?> request) {
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
         if (!accessTokenCookieConfiguration.isSessionCookie()) {
             TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
             jwtCookie.maxAge(maxAge);
         }
+        return jwtCookie;
+    }
 
-        cookies.add(jwtCookie);
-
+    /**
+     * Instantiates a Refresh Token Cookie.
+     * @param accessRefreshToken The access refresh token
+     * @param request The current request
+     * @return Refresh Token Cookie
+     */
+    @NonNull
+    protected Optional<Cookie> refreshTokenCookie(@NonNull AccessRefreshToken accessRefreshToken,
+                                                  @NonNull HttpRequest<?> request) {
         String refreshToken = accessRefreshToken.getRefreshToken();
-        if (StringUtils.isNotEmpty(refreshToken)) {
-            Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
-            refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
-            if (!refreshTokenCookieConfiguration.isSessionCookie()) {
-                refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
-            }
-            cookies.add(refreshCookie);
+        if (StringUtils.isEmpty(refreshToken)) {
+            return Optional.empty();
         }
-
-        for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
-            cookies.add(loginCookieProvider.provideCookie(request));
+        Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
+        refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
+        if (!refreshTokenCookieConfiguration.isSessionCookie()) {
+            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
         }
-        return cookies;
+        return Optional.of(refreshCookie);
     }
 }
