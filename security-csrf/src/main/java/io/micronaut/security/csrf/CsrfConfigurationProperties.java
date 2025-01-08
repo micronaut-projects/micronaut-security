@@ -59,12 +59,6 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_SAME_SITE = SameSite.Strict;
-    /**
-     * The default is session cookie value.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_SESSION_COOKIE = false;
-
     public static final int DEFAULT_RANDOM_VALUE_SIZE = 16;
 
     public static final boolean DEFAULT_ENABLED = true;
@@ -92,7 +86,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
 
     @Nullable
     private String signatureKey;
-    private boolean sessionCookie = DEFAULT_SESSION_COOKIE;
+    private boolean sessionCookie;
 
     @Override
     public boolean isSessionCookie() {
@@ -100,7 +94,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     /**
-     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value ({@value #DEFAULT_SESSION_COOKIE}).
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
      *
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0
