@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
-
 import java.io.Serializable;
 
 /**
@@ -30,11 +29,9 @@ import java.io.Serializable;
 @Serdeable
 public class UsernamePasswordCredentials implements Serializable, AuthenticationRequest<String, String> {
     @NotBlank
-    @Nullable
     private String username;
 
     @NotBlank
-    @Nullable
     private String password;
 
     /**
@@ -43,7 +40,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * @param password raw password
      */
     @Creator
-    public UsernamePasswordCredentials(@Nullable String username, @Nullable String password) {
+    public UsernamePasswordCredentials(String username, String password) {
         this.username = username;
         this.password = password;
     }

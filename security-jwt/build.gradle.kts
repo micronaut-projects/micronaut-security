@@ -15,6 +15,7 @@ dependencies {
     implementation(mnReactor.micronaut.reactor)
     compileOnly(mnCache.micronaut.cache.core)
     testImplementation(libs.bcpkix.jdk15on)
+    testImplementation(mnCache.micronaut.cache.caffeine)
 
     compileOnly(mn.micronaut.http.client.core)
     compileOnly(mn.micronaut.http.server)
@@ -41,6 +42,7 @@ dependencies {
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
