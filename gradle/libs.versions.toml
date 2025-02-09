@@ -28,7 +28,7 @@ micronaut-data = "4.11.1"
 micronaut-sql="6.0.2"
 micronaut-test-resources="2.7.3"
 sonatype-scan = "3.0.0"
-graalvm-native-buildtools = "0.10.4"
+graalvm-native-buildtools = "0.10.5"
 
 [libraries]
 # Core
