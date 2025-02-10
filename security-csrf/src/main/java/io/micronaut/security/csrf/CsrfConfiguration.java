@@ -62,4 +62,13 @@ public interface CsrfConfiguration extends CookieConfiguration, Toggleable {
      */
     @NonNull
     String getFieldName();
+
+    /**
+     *
+     * @return whether the CSRF cookie is a session cookie. A session cookie does not have an expiration date. If set to true, then {@link CsrfConfiguration#getCookieMaxAge()} is ignored.
+     * @since 4.12.0
+     */
+    default boolean isSessionCookie() {
+        return false;
+    }
 }

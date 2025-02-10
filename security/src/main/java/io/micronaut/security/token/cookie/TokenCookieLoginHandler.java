@@ -146,8 +146,10 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
     protected Cookie accessTokenCookie(@NonNull AccessRefreshToken accessRefreshToken, @NonNull HttpRequest<?> request) {
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
-        TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
-        jwtCookie.maxAge(maxAge);
+        if (!accessTokenCookieConfiguration.isSessionCookie()) {
+            TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
+            jwtCookie.maxAge(maxAge);
+        }
         return jwtCookie;
     }
 
@@ -166,7 +168,9 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
         }
         Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
         refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
-        refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
+        if (!refreshTokenCookieConfiguration.isSessionCookie()) {
+            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
+        }
         return Optional.of(refreshCookie);
     }
 }

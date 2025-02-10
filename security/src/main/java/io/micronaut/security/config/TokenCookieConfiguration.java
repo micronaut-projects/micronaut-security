@@ -25,4 +25,12 @@ import io.micronaut.http.cookie.CookieConfiguration;
  * @since 2.0.0
  */
 public interface TokenCookieConfiguration extends CookieConfiguration, Toggleable {
+    /**
+     *
+     * @return whether the cookie is a session cookie. A session cookie does not have an expiration date. If set to true, then {@link CookieConfiguration#getCookieMaxAge()} is ignored.
+      * @since 4.12.0
+     */
+    default boolean isSessionCookie() {
+        return false;
+    }
 }

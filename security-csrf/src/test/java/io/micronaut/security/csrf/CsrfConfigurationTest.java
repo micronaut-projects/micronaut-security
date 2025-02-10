@@ -20,6 +20,11 @@ class CsrfConfigurationTest {
     }
 
     @Test
+    void defaultIsSessionCookie() {
+        assertFalse(csrfConfiguration.isSessionCookie());
+    }
+
+    @Test
     void defaultFieldName() {
         assertEquals("csrfToken", csrfConfiguration.getFieldName());
     }

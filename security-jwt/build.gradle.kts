@@ -40,6 +40,7 @@ dependencies {
 
     testImplementation(libs.system.stubs.core)
 
+    testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)

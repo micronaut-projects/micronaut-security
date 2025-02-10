@@ -48,6 +48,22 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     protected Boolean cookieSecure;
     protected Duration cookieMaxAge;
     protected SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
+    protected boolean sessionCookie;
+
+    @Override
+    public boolean isSessionCookie() {
+        return sessionCookie;
+    }
+
+    /**
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
+     *
+     * @param sessionCookie Whether the cookie is a session cookie.
+     * @since 4.12.0
+     */
+    public void setSessionCookie(boolean sessionCookie) {
+        this.sessionCookie = sessionCookie;
+    }
 
     /**
      *
@@ -80,6 +96,9 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      */
     @Override
     public Optional<TemporalAmount> getCookieMaxAge() {
+        if (isSessionCookie()) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(cookieMaxAge);
     }
 
