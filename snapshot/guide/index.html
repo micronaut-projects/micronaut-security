@@ -1324,6 +1324,11 @@ and then it tries to validate the token via the <a href="../api/io/micronaut/sec
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.session-cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the cookie is a session cookie. A session cookie does not have an expiration date. <code>cookie-max-age</code> is ignored if session cookie is set to true. Default value (false).</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -3659,6 +3664,11 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.session-cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the cookie is a session cookie. A session cookie does not have an expiration date. <code>cookie-max-age</code> is ignored if session cookie is set to true. Default value (false).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6248,6 +6258,11 @@ amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</c
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.session-cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the cookie is a session cookie. A session cookie does not have an expiration date. <code>cookie-max-age</code> is ignored if session cookie is set to true. Default value (false).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.csrf.signature-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -9441,6 +9456,11 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.session-cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the cookie is a session cookie. A session cookie does not have an expiration date. <code>cookie-max-age</code> is ignored if session cookie is set to true. Default value (false).</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value (null).</p></td>
@@ -9715,6 +9735,11 @@ If nonce validation fails, the user will not be authenticated.
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.session-cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the cookie is a session cookie. A session cookie does not have an expiration date. <code>cookie-max-age</code> is ignored if session cookie is set to true. Default value (false).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
