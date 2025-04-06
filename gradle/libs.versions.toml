@@ -8,7 +8,7 @@ micronaut-docs = "2.0.0"
 
 geb = "7.0"
 selenium = "4.28.1"
-system-stubs-core = "2.1.7"
+system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.2"
 bouncycastle = "1.70"
 kotlin = "2.1.20"
