@@ -120,7 +120,7 @@ public class OauthController {
                                                    @Nullable @Body Map<String, String> body,
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
-        if (!(contentTypeOptional.isPresent() && oauthControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().toString()))) {
+        if (!(contentTypeOptional.isPresent() && oauthControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
             return Publishers.just(HttpResponse.notFound());
         }
         TokenRefreshRequest tokenRefreshRequest = body == null ? null :
