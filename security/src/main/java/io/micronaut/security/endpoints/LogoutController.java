@@ -37,6 +37,8 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -51,6 +53,7 @@ import java.util.Optional;
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {
+    private static final Logger LOG = LoggerFactory.getLogger(LogoutController.class);
 
     private final LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler;
     private final ApplicationEventPublisher<LogoutEvent> logoutEventPublisher;
@@ -144,6 +147,11 @@ public class LogoutController {
     public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
         if (!(contentTypeOptional.isPresent() && logoutControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Unsupported content type {}. Logout Controller supports: {}",
+                    contentTypeOptional.map(MediaType::getName).orElse(""),
+                    String.join(",", logoutControllerConfiguration.getPostContentTypes()));
+            }
             return HttpResponse.status(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus());
         }
         return handleLogout(request, authentication);
