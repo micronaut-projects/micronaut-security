@@ -177,7 +177,7 @@ public class LoginController<B> {
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
-        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().toString()))) {
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
             return Publishers.just(HttpResponse.notFound());
         }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))

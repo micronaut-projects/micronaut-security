@@ -84,6 +84,20 @@ class OauthControllerContentTypesForPostTest {
         server.close();
     }
 
+    @Test
+    void defaultContentTypesSupportJsonWithCharset() {
+        EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", "OauthControllerContentTypesForPostTest"
+        ));
+        HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL());
+        BlockingHttpClient client = httpClient.toBlocking();
+        HttpRequest<?> request = HttpRequest.POST("/oauth/access_token", Collections.emptyMap()).contentType("application/json; charset=UTF-8");
+        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () ->client.exchange(request));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        httpClient.close();
+        server.close();
+    }
+
     @Requires(property = "spec.name", value = "OauthControllerContentTypesForPostTest")
     @Singleton
     static class CustomAuthenticationProvider extends MockAuthenticationProvider {
