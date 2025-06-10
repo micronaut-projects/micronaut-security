@@ -77,6 +77,20 @@ class LogoutControllerContentTypesForPostTest {
         server.close();
     }
 
+    @Test
+    void defaultContentTypesSupportJsonWithCharset() {
+        EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", "LogoutControllerContentTypesForPostTest"
+        ));
+        HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL());
+        BlockingHttpClient client = httpClient.toBlocking();
+        HttpRequest<?> request = HttpRequest.POST("/logout", Collections.emptyMap()).contentType("application/json; charset=UTF-8");
+        assertDoesNotThrow(() -> client.exchange(request));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.POST("/logout", Collections.emptyMap())));
+        httpClient.close();
+        server.close();
+    }
+
     @Requires(property = "spec.name", value = "LogoutControllerContentTypesForPostTest")
     @Singleton
     static class CustomAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {

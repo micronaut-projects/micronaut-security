@@ -81,6 +81,21 @@ class LoginControllerContentTypesForPostTest {
         server.close();
     }
 
+    @Test
+    void defaultContentTypesSupportJsonWithCharset() {
+        EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", "LoginControllerContentTypesForPostTest"
+        ));
+        HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL());
+        BlockingHttpClient client = httpClient.toBlocking();
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("user", "password");
+        HttpRequest<?> request = HttpRequest.POST("/login", creds).contentType("application/json; charset=UTF-8");
+        assertDoesNotThrow(() -> client.exchange(request));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.POST("/login", creds)));
+        httpClient.close();
+        server.close();
+    }
+
     @Requires(property = "spec.name", value = "LoginControllerContentTypesForPostTest")
     @Singleton
     static class CustomAuthenticationProvider extends MockAuthenticationProvider {
