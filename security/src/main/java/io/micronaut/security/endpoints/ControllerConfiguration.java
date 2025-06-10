@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 
 import java.util.Set;
@@ -45,5 +46,15 @@ public interface ControllerConfiguration extends Toggleable {
     @NonNull
     default Set<String> getPostContentTypes() {
         return Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    /**
+     *
+     * @return Status code for unsupported content type. Default to 404
+     * @since 4.13.0
+     */
+    @NonNull
+    default HttpStatus getUnsupportedPostContentTypeStatus() {
+        return HttpStatus.NOT_FOUND;
     }
 }

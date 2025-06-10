@@ -121,7 +121,7 @@ public class OauthController {
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
         if (!(contentTypeOptional.isPresent() && oauthControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
-            return Publishers.just(HttpResponse.notFound());
+            return Publishers.just(HttpResponse.status(oauthControllerConfiguration.getUnsupportedPostContentTypeStatus()));
         }
         TokenRefreshRequest tokenRefreshRequest = body == null ? null :
             new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));

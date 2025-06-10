@@ -144,7 +144,7 @@ public class LogoutController {
     public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
         if (!(contentTypeOptional.isPresent() && logoutControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
-            return HttpResponse.notFound();
+            return HttpResponse.status(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus());
         }
         return handleLogout(request, authentication);
     }
