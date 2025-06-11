@@ -129,7 +129,7 @@ public class OauthController {
                     contentTypeOptional.map(MediaType::getName).orElse(""),
                     String.join(",", oauthControllerConfiguration.getPostContentTypes()));
             }
-            return Publishers.just(HttpResponse.status(oauthControllerConfiguration.getUnsupportedPostContentTypeStatus()));
+            return Publishers.just(HttpResponse.status(HttpStatus.valueOf(oauthControllerConfiguration.getUnsupportedPostContentTypeStatus())));
         }
         TokenRefreshRequest tokenRefreshRequest = body == null ? null :
             new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));

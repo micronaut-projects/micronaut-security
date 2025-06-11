@@ -54,7 +54,7 @@ public interface ControllerConfiguration extends Toggleable {
      * @since 4.13.0
      */
     @NonNull
-    default HttpStatus getUnsupportedPostContentTypeStatus() {
-        return HttpStatus.NOT_FOUND;
+    default int getUnsupportedPostContentTypeStatus() {
+        return 404;
     }
 }

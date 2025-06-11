@@ -183,7 +183,7 @@ public class LoginController<B> {
                     contentTypeOptional.map(MediaType::getName).orElse(""),
                     String.join(",", loginControllerConfiguration.getPostContentTypes()));
             }
-            return Publishers.just(HttpResponse.status(loginControllerConfiguration.getUnsupportedPostContentTypeStatus()));
+            return Publishers.just(HttpResponse.status(HttpStatus.valueOf(loginControllerConfiguration.getUnsupportedPostContentTypeStatus())));
         }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
             .map(authenticationResponse -> {

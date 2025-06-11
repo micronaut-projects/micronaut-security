@@ -35,11 +35,11 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      */
     @SuppressWarnings("WeakerAccess")
     private static final Set<String> DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS = Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
-    private static final HttpStatus DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS = HttpStatus.NOT_FOUND;
+    private static final int DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS = 404;
     private boolean enabled = DEFAULT_ENABLED;
     private String path;
     private Set<String> postContentTypes = DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS;
-    private HttpStatus unsupportedPostContentTypeStatus = DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS;
+    private int unsupportedPostContentTypeStatus = DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS;
 
     /**
      *
@@ -63,8 +63,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
     }
 
     @Override
-    @NonNull
-    public HttpStatus getUnsupportedPostContentTypeStatus() {
+    public int getUnsupportedPostContentTypeStatus() {
         return unsupportedPostContentTypeStatus;
     }
 
@@ -72,7 +71,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      *
      * @param unsupportedPostContentTypeStatus Status code for unsupported content type. Default to 404
      */
-    public void setUnsupportedPostContentTypeStatus(@NonNull HttpStatus unsupportedPostContentTypeStatus) {
+    public void setUnsupportedPostContentTypeStatus(int unsupportedPostContentTypeStatus) {
         this.unsupportedPostContentTypeStatus = unsupportedPostContentTypeStatus;
     }
 

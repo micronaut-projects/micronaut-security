@@ -36,7 +36,7 @@ class LoginControllerContentTypesForPostTest {
         conf.put("spec.name", "LoginControllerContentTypesForPostTest");
         conf.put("micronaut.security.endpoints.login.post-content-types", List.of(MediaType.APPLICATION_FORM_URLENCODED));
         if (httpStatus != HttpStatus.NOT_FOUND) {
-            conf.put("micronaut.security.endpoints.login.unsupported-post-content-type-status", httpStatus);
+            conf.put("micronaut.security.endpoints.login.unsupported-post-content-type-status", httpStatus.getCode());
         }
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, conf);
         HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL());

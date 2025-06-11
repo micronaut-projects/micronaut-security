@@ -152,7 +152,7 @@ public class LogoutController {
                     contentTypeOptional.map(MediaType::getName).orElse(""),
                     String.join(",", logoutControllerConfiguration.getPostContentTypes()));
             }
-            return HttpResponse.status(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus());
+            return HttpResponse.status(HttpStatus.valueOf(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus()));
         }
         return handleLogout(request, authentication);
     }
