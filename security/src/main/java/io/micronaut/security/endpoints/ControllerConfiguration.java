@@ -17,7 +17,6 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 
 import java.util.Set;
