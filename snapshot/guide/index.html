@@ -2426,6 +2426,11 @@ How do you obtain such a token or how is the user saved into the HTTP Session in
 <td class="tableblock halign-left valign-top"><p class="tableblock">Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.unsupported-post-content-type-status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Status code for unsupported content type. Default to 404</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether the controller is enabled.</p></td>
@@ -2487,6 +2492,11 @@ A custom implementation can, of course, be provided. However, several <a href="#
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.post-content-types</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.unsupported-post-content-type-status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Status code for unsupported content type. Default to 404</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.enabled</code></p></td>
@@ -6946,6 +6956,11 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.post-content-types</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Set</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.unsupported-post-content-type-status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Status code for unsupported content type. Default to 404</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.enabled</code></p></td>
