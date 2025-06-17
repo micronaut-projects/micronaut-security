@@ -45,8 +45,6 @@ import java.util.Optional;
 
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import static io.micronaut.security.endpoints.TokenRefreshRequest.GRANT_TYPE;
@@ -68,7 +66,6 @@ import static io.micronaut.security.endpoints.TokenRefreshRequest.GRANT_TYPE;
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class OauthController {
-    private static final Logger LOG = LoggerFactory.getLogger(OauthController.class);
 
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RefreshTokenValidator refreshTokenValidator;
@@ -124,12 +121,7 @@ public class OauthController {
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
         if (!(contentTypeOptional.isPresent() && oauthControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Unsupported content type {}. OAuth Controller supports: {}",
-                    contentTypeOptional.map(MediaType::getName).orElse(""),
-                    String.join(",", oauthControllerConfiguration.getPostContentTypes()));
-            }
-            return Publishers.just(HttpResponse.status(HttpStatus.valueOf(oauthControllerConfiguration.getUnsupportedPostContentTypeStatus())));
+            return Publishers.just(HttpResponse.notFound());
         }
         TokenRefreshRequest tokenRefreshRequest = body == null ? null :
             new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));

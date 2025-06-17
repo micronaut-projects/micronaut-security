@@ -46,14 +46,4 @@ public interface ControllerConfiguration extends Toggleable {
     default Set<String> getPostContentTypes() {
         return Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
     }
-
-    /**
-     *
-     * @return Status code for unsupported content type. Default to 404
-     * @since 4.13.0
-     */
-    @NonNull
-    default int getUnsupportedPostContentTypeStatus() {
-        return 404;
-    }
 }
