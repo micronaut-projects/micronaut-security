@@ -17,8 +17,8 @@ package io.micronaut.security.token;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class to compare claims.
@@ -32,7 +32,7 @@ public final class ClaimsUtils {
     private static final String EMPTY = "";
     private static final String SLASH = "/";
 
-    private static final Map<ClaimPair, Boolean> CACHE = new HashMap<>();
+    private static final Map<ClaimPair, Boolean> CACHE = new ConcurrentHashMap<>();
 
     private ClaimsUtils() {
     }
