@@ -5,9 +5,9 @@ However, Micronaut security modules ship with several implementations which you 
 | `micronaut.security.authentication` Value | Required Module | Login Handler | Logout Handler
 
 | `cookie`
-| `micronaut-jwt`
+| `micronaut-security`
 | api:security.token.cookie.TokenCookieLoginHandler[]
-| api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
+| api:security.token.cookie.TokenCookieClearerLogoutHandler[]
 
 | `session`
 | `micronaut-session`
@@ -22,7 +22,7 @@ However, Micronaut security modules ship with several implementations which you 
 | `idtoken`
 | `micronaut-oauth`
 | api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[]
-| api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
+|
 |===
 
 
