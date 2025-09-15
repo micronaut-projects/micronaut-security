@@ -92,8 +92,14 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
             }
             return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
         } catch (HttpClientException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
             throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
         } catch (MalformedURLException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
             throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
         }
     }
