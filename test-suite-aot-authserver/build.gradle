@@ -26,6 +26,7 @@ dependencies {
     implementation(mn.micronaut.management)
     implementation(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
+    testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 shadowJar {
