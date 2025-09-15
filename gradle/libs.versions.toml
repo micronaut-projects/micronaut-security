@@ -1,7 +1,6 @@
 [versions]
 managed-nimbus-jose-jwt = "10.5"
-managed-jjwt = "0.12.6"
-
+managed-jjwt = "0.13.0"
 micronaut = "4.9.11"
 micronaut-platform = "4.8.3"
 micronaut-docs = "2.0.0"
