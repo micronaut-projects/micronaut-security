@@ -467,6 +467,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private AuthorizationEndpointConfigurationProperties authorization;
         private TokenEndpointConfigurationProperties token;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+        private boolean protectedResourceMetadata = DEFAULT_PROTECTED_RESOURCE_METADATA;
 
         /**
          * @param name The provider name
@@ -479,6 +480,19 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public boolean isProtectedResourceMetadata() {
+            return protectedResourceMetadata;
+        }
+
+        /**
+         * Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.
+         * @param protectedResourceMetadata Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
+         */
+        public void setProtectedResourceMetadata(boolean protectedResourceMetadata) {
+            this.protectedResourceMetadata = protectedResourceMetadata;
         }
 
         @Override
