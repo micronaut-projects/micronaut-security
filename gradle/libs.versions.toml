@@ -27,7 +27,6 @@ micronaut-validation = "4.9.0"
 micronaut-data = "4.12.2"
 micronaut-sql = "6.1.1"
 micronaut-test-resources = "2.8.0"
-sonatype-scan = "3.0.0"
 graalvm-native-buildtools = "0.10.6"
 
 [libraries]
@@ -71,7 +70,6 @@ junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engi
 
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
-sonatype-scan = { module = "org.sonatype.gradle.plugins:scan-gradle-plugin", version.ref = "sonatype-scan" }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
 
 [plugins]
