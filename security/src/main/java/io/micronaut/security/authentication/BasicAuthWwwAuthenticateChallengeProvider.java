@@ -25,6 +25,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.runtime.ApplicationConfiguration;
 import jakarta.inject.Singleton;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * {@link WwwAuthenticateChallengeProvider} implementation for basic auth authentication.
  * @since 4.14.0
@@ -37,6 +39,8 @@ import jakarta.inject.Singleton;
 @Singleton
 class BasicAuthWwwAuthenticateChallengeProvider implements WwwAuthenticateChallengeProvider<HttpRequest<?>> {
     private static final String PARAM_REALM = "realm";
+    private static final String PARAM_NAME_CHARSET = "charset";
+    private static final String UTF_8 = "UTF-8";
     private final ApplicationConfiguration applicationConfiguration;
 
     BasicAuthWwwAuthenticateChallengeProvider(ApplicationConfiguration applicationConfiguration) {
@@ -47,7 +51,8 @@ class BasicAuthWwwAuthenticateChallengeProvider implements WwwAuthenticateChalle
     @NonNull
     public String getWwwAuthenticateChallenge(@Nullable HttpRequest<?> request) {
         WwwAuthenticateChallenge.Builder builder = WwwAuthenticateChallenge.builder()
-            .authScheme(HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC);
+            .authScheme(HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC)
+            .param(PARAM_NAME_CHARSET, UTF_8);
         applicationConfiguration.getName().ifPresent(name -> builder.param(PARAM_REALM, name));
         return builder.build().toString();
     }

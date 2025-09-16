@@ -49,7 +49,7 @@ class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
 
         then:
         HttpClientResponseException e = thrown()
-        'Basic realm="demo"' == e.response.headers.get("WWW-Authenticate")
+        'Basic charset="UTF-8", realm="demo"' == e.response.headers.get("WWW-Authenticate")
 
         when:
         String token = 'dXNlcjpwYXNzd29yZA==' // user:passsword Base64
