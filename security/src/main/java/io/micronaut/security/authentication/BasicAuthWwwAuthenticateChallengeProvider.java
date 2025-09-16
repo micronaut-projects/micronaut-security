@@ -25,8 +25,6 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.runtime.ApplicationConfiguration;
 import jakarta.inject.Singleton;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * {@link WwwAuthenticateChallengeProvider} implementation for basic auth authentication.
  * @since 4.14.0

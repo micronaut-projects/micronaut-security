@@ -23,6 +23,7 @@ import io.micronaut.core.annotation.Nullable;
  * API to provide WWW-Authenticate Response Header Challenges.
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9110#section-11.6.1">RFC 9110 WWW-Authenticate</a>
  * @since 4.14.0
+ * @param <T> Request Type
  */
 @Experimental
 @FunctionalInterface
