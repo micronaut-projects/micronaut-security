@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 
 /**
  *
+ * This is a helper class to create a challenge, the value of a WWW-Authenticate response header as described in WWW-Authenticate.
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc9110#section-11.6.1">RFC 9110 WWW-Authenticate</a>
  * @param authScheme Authentication Schema
  * @param authParameters Authentication Parameters
  * @since 4.14.0
