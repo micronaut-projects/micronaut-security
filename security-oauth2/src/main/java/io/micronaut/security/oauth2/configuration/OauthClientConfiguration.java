@@ -129,7 +129,7 @@ public interface OauthClientConfiguration extends Toggleable {
     }
 
     /**
-     * @return The {@link AuthorizationServer} used by the OpenID Client.
+     * @return The {@link AuthorizationServer} used by the OAuth Client.
      * @since 4.15.0
      */
     @Nullable
