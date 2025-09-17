@@ -30,7 +30,7 @@ dependencies {
     testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
     testImplementation(mn.micronaut.retry)
-
+    testImplementation(libs.jsonassert)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)

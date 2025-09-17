@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2025 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.oauth2.metadata;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.util.Toggleable;
-import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 
-/**
- * Configuration for basic authentication.
- *
- * @author James Kleeh
- * @since 2.0.0
- */
-@ConfigurationProperties(BasicAuthAuthenticationConfiguration.PREFIX)
-public class BasicAuthAuthenticationConfiguration implements Toggleable {
-
-    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".basic-auth";
-    public static final String PROPERTY_ENABLED = PREFIX + ".enabled";
-    public static final String PROPERTY_WWW_AUTHENTICATE = PREFIX + ".www-authenticate";
-
+@Internal
+@ConfigurationProperties(ProtectedResourceMetadataConfiguration.PREFIX)
+class ProtectedResourceMetadataConfigurationProperties implements ProtectedResourceMetadataConfiguration {
     /**
      * The default enable value.
      */
+    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
-
     private boolean enabled = DEFAULT_ENABLED;
 
     @Override
@@ -45,12 +34,10 @@ public class BasicAuthAuthenticationConfiguration implements Toggleable {
     }
 
     /**
-     * Enables the {@link BasicAuthAuthenticationFetcher}. Default value {@value #DEFAULT_ENABLED}.
-     *
-     * @param enabled True if enabled
+     * Whether /.well-known/oauth-protected-resource is exposed. Default value: {@value #DEFAULT_ENABLED}.
+     * @param enabled Whether /.well-known/oauth-protected-resource is exposed
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
 }

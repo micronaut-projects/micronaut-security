@@ -12,8 +12,10 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
+import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
@@ -75,6 +77,14 @@ class LoginControllerValidationTest {
             assertTrue(jsonError.contains("must not be blank") || jsonError.contains("must not be null"));
     }
 
+    @Requires(property = "spec.name", value = "LoginControllerValidationTest")
+    @Singleton
+    static class CustomAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+        @Override
+        public AuthenticationResponse authenticate(HttpRequest<B> requestContext, AuthenticationRequest<String, String> authRequest) {
+            return AuthenticationResponse.success("sherlock");
+        }
+    }
 
     @Requires(property = "spec.name", value = "LoginControllerValidationTest")
     @Singleton

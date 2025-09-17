@@ -5,7 +5,9 @@ import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.runtime.server.EmbeddedServer
@@ -24,6 +26,7 @@ class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
 
     @Shared
     Map<String, Object> config = [
+            "micronaut.application.name": "demo",
             'spec.name' : 'docsbasicauth',
             'endpoints.beans.enabled'                 : true,
             'endpoints.beans.sensitive'               : true,
@@ -38,9 +41,19 @@ class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
     HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
     void "test /beans is secured but accesible if you supply valid credentials with Basic Auth"() {
+        given:
+        BlockingHttpClient httpClient = client.toBlocking()
+
+        when:
+        httpClient.exchange(HttpRequest.GET("/beans"))
+
+        then:
+        HttpClientResponseException e = thrown()
+        'Basic charset="UTF-8", realm="demo"' == e.response.headers.get("WWW-Authenticate")
+
         when:
         String token = 'dXNlcjpwYXNzd29yZA==' // user:passsword Base64
-        client.toBlocking().exchange(HttpRequest.GET("/beans")
+        httpClient.exchange(HttpRequest.GET("/beans")
                 .header("Authorization", "Basic ${token}".toString()), String)
 
         then:
