@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -129,6 +129,15 @@ implements <a href="OpenIdClientConfiguration.html" title="interface in io.micro
 </div>
 </section>
 </li>
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration">Fields inherited from interface&nbsp;io.micronaut.security.oauth2.configuration.<a href="OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></h3>
+<code><a href="OpenIdClientConfiguration.html#DEFAULT_PROTECTED_RESOURCE_METADATA">DEFAULT_PROTECTED_RESOURCE_METADATA</a></code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -167,31 +176,39 @@ implements <a href="OpenIdClientConfiguration.html" title="interface in io.micro
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="endpoints/EndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndpointConfiguration</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUserInfo()" class="member-name-link">getUserInfo</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthorization(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties)" class="member-name-link">setAuthorization</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a>&nbsp;authorization)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthorization(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties)" class="member-name-link">setAuthorization</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a>&nbsp;authorization)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the authorization endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setConfigurationPath(java.lang.String)" class="member-name-link">setConfigurationPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configurationPath)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setConfigurationPath(java.lang.String)" class="member-name-link">setConfigurationPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configurationPath)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The configuration path to discover openid configuration.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndSession(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties)" class="member-name-link">setEndSession</a><wbr>(@NonNull <a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a>&nbsp;endSession)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndSession(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties)" class="member-name-link">setEndSession</a><wbr>(@NonNull <a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a>&nbsp;endSession)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the end session endpoint configuration.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIssuer(java.net.URL)" class="member-name-link">setIssuer</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;issuer)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIssuer(java.net.URL)" class="member-name-link">setIssuer</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;issuer)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">URL using the https scheme with no query or fragment component that the
  Open ID provider asserts as its issuer identifier.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJwksUri(java.lang.String)" class="member-name-link">setJwksUri</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;jwksUri)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJwksUri(java.lang.String)" class="member-name-link">setJwksUri</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;jwksUri)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The JWKS signature URI.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProtectedResourceMetadata(boolean)" class="member-name-link">setProtectedResourceMetadata</a><wbr>(boolean&nbsp;protectedResourceMetadata)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRegistration(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties)" class="member-name-link">setRegistration</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties</a>&nbsp;registration)</code></div>
@@ -233,6 +250,29 @@ implements <a href="OpenIdClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getName</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.naming.Named</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isProtectedResourceMetadata()">
+<h3>isProtectedResourceMetadata</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProtectedResourceMetadata</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="OpenIdClientConfiguration.html#isProtectedResourceMetadata()">isProtectedResourceMetadata</a></code>&nbsp;in interface&nbsp;<code><a href="OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setProtectedResourceMetadata(boolean)">
+<h3>setProtectedResourceMetadata</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProtectedResourceMetadata</span><wbr><span class="parameters">(boolean&nbsp;protectedResourceMetadata)</span></div>
+<div class="block">Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>protectedResourceMetadata</code> - Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.</dd>
 </dl>
 </section>
 </li>

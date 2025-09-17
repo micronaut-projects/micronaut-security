@@ -251,6 +251,8 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-rejection"><a href="#rejection"><strong>12</strong><span>Rejection Handling</span></a></div>
         
+        <div class="toc-item" style="margin-left:10px" id="toc-item-wwwAuthenticate"><a href="#wwwAuthenticate"><strong>12.1</strong><span>WWW-Authenticate Response</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-csrf"><a href="#csrf"><strong>13</strong><span>Cross-Site Request Forgery (CSRF)</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-csrfDependency"><a href="#csrfDependency"><strong>13.1</strong><span>CSRF Dependency</span></a></div>
@@ -354,6 +356,8 @@
         <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>19.4.3</strong><span>Revocation</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>19.4.4</strong><span>OpenID User Info</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-protectedResourceMetadata"><a href="#protectedResourceMetadata"><strong>19.4.5</strong><span>Protected Resource Metadata</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>19.5</strong><span>Custom Clients</span></a></div>
         
@@ -3095,7 +3099,10 @@ If your implementation is blocking (e.g., you fetch the user credentials from a 
 
 
 <div class="paragraph">
-<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default. You can disable it by setting <code>micronaut.security.basic-auth.enabled</code> to <code>false</code>.</p>
+<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.</p>
+</div>
+<div class="paragraph">
+<p>Basic authentication is enabled by default if you have any <a href="#authenticationProviders">Authentication Provider</a>. You can disable it by setting <code>micronaut.security.basic-auth.enabled</code> to <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following sequence illustrates the authentication flow:</p>
@@ -5948,6 +5955,32 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
     }
 }</code></pre>
 </div>
+</div>
+
+<h2 id="wwwAuthenticate"><a class="anchor" href="#wwwAuthenticate"></a>12.1 WWW-Authenticate Response</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.14.x/src/main/docs/guide/rejection/wwwAuthenticate.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The HTTP WWW-Authenticate response header advertises the HTTP authentication methods (or challenges) that might be used to gain access to a specific resource.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>If any bean of type <a href="../api/io/micronaut/security/authentication/WwwAuthenticateChallengeProvider.html">WwwAuthenticateChallengeProvider</a> is available, Micronaut Security uses them to populate the <code>WWW-Authenticate</code> header when a 401 Unauthorized response is returned.</p>
+</div>
+<div class="paragraph">
+<p>If you have &lt;&lt;basicAuth, basic auth&gt; enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting <code>micronaut.security.basic-auth.www-authenticate</code> to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you have &lt;&lt;protectedResourceMetadata, Resource Metadata&gt; enabled, an entry as defined in the <a href="https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response">WWW-Authenticate Response</a> section of RFC9728 is added</p>
 </div>
 
 <h1 id="csrf"><a class="anchor" href="#csrf"></a>13 Cross-Site Request Forgery (CSRF)</h1>
@@ -8859,6 +8892,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.protected-resource-metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -10706,6 +10744,56 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tr>
 </tbody>
 </table>
+
+<h2 id="protectedResourceMetadata"><a class="anchor" href="#protectedResourceMetadata"></a>19.4.5 Protected Resource Metadata</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.14.x/src/main/docs/guide/oauth/oauth-endpoints/protectedResourceMetadata.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><a href="https://datatracker.ietf.org/doc/html/rfc9728">RFC 9728</a> metadata format that an OAuth 2.0 client or authorization server can use to obtain the information needed to interact with an OAuth 2.0 protected resource.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>You can configure whether to expose the protected resource metadata:</p>
+</div>
+<a id="io.micronaut.security.oauth2.metadata.ProtectedResourceMetadataConfigurationProperties" href="#io.micronaut.security.oauth2.metadata.ProtectedResourceMetadataConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/metadata/ProtectedResourceMetadataConfigurationProperties.html">ProtectedResourceMetadataConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.protected-resource-metadata.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether /.well-known/oauth-protected-resource is exposed. Default value: true.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A GET endpoint is exposed in <code>/.well-known/oauth-protected-resource</code>. The API to control the metadata is:
+<a href="../api/io/micronaut/security/oauth2/metadata/ProtectedResourceMetadataProvider.html">ProtectedResourceMetadataProvider</a></p>
+</div>
+<div class="paragraph">
+<p>You can create a bean replacement for it if the default implementation does not fit your needs.</p>
+</div>
 
 <h2 id="custom-client"><a class="anchor" href="#custom-client"></a>19.5 Custom Clients</h2>
 

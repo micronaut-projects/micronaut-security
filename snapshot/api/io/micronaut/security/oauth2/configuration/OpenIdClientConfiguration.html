@@ -45,13 +45,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -93,12 +93,27 @@ extends io.micronaut.core.naming.Named</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_PROTECTED_RESOURCE_METADATA" class="member-name-link">DEFAULT_PROTECTED_RESOURCE_METADATA</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -128,6 +143,9 @@ extends io.micronaut.core.naming.Named</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="endpoints/EndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndpointConfiguration</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getUserInfo()" class="member-name-link">getUserInfo</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -140,6 +158,20 @@ extends io.micronaut.core.naming.Named</span></div>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="DEFAULT_PROTECTED_RESOURCE_METADATA">
+<h3>DEFAULT_PROTECTED_RESOURCE_METADATA</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">DEFAULT_PROTECTED_RESOURCE_METADATA</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">
@@ -256,6 +288,18 @@ extends io.micronaut.core.naming.Named</span></div>
 <li><a href="https://openid.net/specs/openid-connect-session-1_0.html">OpenID Connect Session 1.0</a></li>
 </ul>
 </dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isProtectedResourceMetadata()">
+<h3>isProtectedResourceMetadata</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProtectedResourceMetadata</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.</dd>
+<dt>Since:</dt>
+<dd>4.14.0</dd>
 </dl>
 </section>
 </li>

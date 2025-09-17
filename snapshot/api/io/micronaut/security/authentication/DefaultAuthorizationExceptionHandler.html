@@ -107,7 +107,17 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
  <a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService,
  @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List,io.micronaut.security.errors.PriorToLoginPersistence)"><code>DefaultAuthorizationExceptionHandler(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List&lt;io.micronaut.security.authentication.WwwAuthenticateChallengeProvider&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;,@io.micronaut.core.annotation.Nullable io.micronaut.security.errors.PriorToLoginPersistence)</code></a> instead.</div>
+</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">DefaultAuthorizationExceptionHandler</a><wbr>(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;&nbsp;errorResponseProcessor,
+ <a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
+ <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="WwwAuthenticateChallengeProvider.html" title="interface in io.micronaut.security.authentication">WwwAuthenticateChallengeProvider</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;wwwAuthenticateChallengeProviders,
+ @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -163,13 +173,38 @@ implements io.micronaut.http.server.exceptions.ExceptionHandler&lt;<a href="Auth
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List,io.micronaut.security.errors.PriorToLoginPersistence)">
+<h3>DefaultAuthorizationExceptionHandler</h3>
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultAuthorizationExceptionHandler</span><wbr><span class="parameters">(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;&nbsp;errorResponseProcessor,
+ <a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
+ <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="WwwAuthenticateChallengeProvider.html" title="interface in io.micronaut.security.authentication">WwwAuthenticateChallengeProvider</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;wwwAuthenticateChallengeProviders,
+ @Nullable
+ @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>errorResponseProcessor</code> - ErrorResponse processor API</dd>
+<dd><code>redirectConfiguration</code> - Redirect configuration</dd>
+<dd><code>redirectService</code> - Redirection Service</dd>
+<dd><code>wwwAuthenticateChallengeProviders</code> - WWW-Authenticate Challenges</dd>
+<dd><code>priorToLoginPersistence</code> - Persistence mechanism to redirect to prior login url</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)">
 <h3>DefaultAuthorizationExceptionHandler</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultAuthorizationExceptionHandler</span><wbr><span class="parameters">(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;&nbsp;errorResponseProcessor,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="4.14.0")
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultAuthorizationExceptionHandler</span><wbr><span class="parameters">(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;&nbsp;errorResponseProcessor,
  <a href="../config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
  <a href="../config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a>&nbsp;redirectService,
  @Nullable
  @Nullable <a href="../errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List,io.micronaut.security.errors.PriorToLoginPersistence)"><code>DefaultAuthorizationExceptionHandler(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor&lt;?&gt;,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,java.util.List&lt;io.micronaut.security.authentication.WwwAuthenticateChallengeProvider&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;,@io.micronaut.core.annotation.Nullable io.micronaut.security.errors.PriorToLoginPersistence)</code></a> instead.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>errorResponseProcessor</code> - ErrorResponse processor API</dd>
