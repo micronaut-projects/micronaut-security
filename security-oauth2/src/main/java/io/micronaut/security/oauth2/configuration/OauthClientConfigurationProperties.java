@@ -32,6 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
+import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorMatcher;
 
@@ -73,12 +74,28 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
     private ClientCredentialsConfigurationProperties clientCredentials;
+    private AuthorizationServer authorizationServer;
 
     /**
      * @param name The provider name
      */
     public OauthClientConfigurationProperties(@Parameter String name) {
         this.name = name;
+    }
+
+    /**
+     * Micronaut attempts to infer the authorization server used by the client based on the issuer. However, if you are using a custom domain, it may be impossible to infer it.
+     * You can set it explicitly via this property.
+     * @param authorizationServer The authorization server
+     */
+    public void setAuthorizationServer(@Nullable AuthorizationServer authorizationServer) {
+        this.authorizationServer = authorizationServer;
+    }
+
+    @Override
+    @Nullable
+    public AuthorizationServer getAuthorizationServer() {
+        return authorizationServer;
     }
 
     @NonNull

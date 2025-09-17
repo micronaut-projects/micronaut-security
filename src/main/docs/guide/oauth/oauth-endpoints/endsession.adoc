@@ -15,6 +15,8 @@ IMPORTANT: The `get-allowed` configuration option must be set to `true` because 
 
 This library supports end session for Auth0, AWS Cognito, and Okta out of the box. The api:security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver[] is responsible for determining which api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] will be used for a given provider, if any.
 
+WARNING: If you are using a custom domain URL for your auth server, instead of inferring it, you can set the authorization server you use by setting the property `micronaut.security.oauth2.clients.*.authorization-server`.
+
 Before choosing any of the default providers, the endpoint resolver will first look for an api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.
 
 If for example you are using one of the providers that is supported out of the box and you don't want the end session support, it is possible to disable it per client.

@@ -33,6 +33,10 @@ class OauthClientConfigurationTest {
     @Named("stravanew")
     OauthClientConfiguration stravaNewConfiguration;
 
+    @Test
+    void authorizationServerDefaultsToNull() {
+        assertNull(stravaNewConfiguration.getAuthorizationServer());
+    }
 
     @Test
     void deprecatedAuthMethodConfigurationIsStillSupported() {

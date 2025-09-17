@@ -36,6 +36,7 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
     testImplementation(platform(mnTest.boms.junit))
     testImplementation(libs.junit.jupiter.params)
+    testImplementation(mnTest.mockito.core)
 }
 tasks.withType<Test> {
     useJUnitPlatform()
