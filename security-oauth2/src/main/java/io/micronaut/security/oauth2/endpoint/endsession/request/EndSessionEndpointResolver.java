@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -127,20 +128,31 @@ public class EndSessionEndpointResolver {
         return getEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder, providerName, issuer);
     }
 
+    @Nullable
+    static AuthorizationServer authorizationServer(@NonNull AuthorizationServerResolver authorizationServerResolver,
+                                                   @NonNull OauthClientConfiguration oauthClientConfiguration,
+                                                   @NonNull String issuer) {
+        AuthorizationServer authorizationServer = oauthClientConfiguration.getAuthorizationServer();
+        if (authorizationServer == null) {
+            return authorizationServerResolver.resolve(issuer).orElse(null);
+        }
+        return authorizationServer;
+    }
+
     @NonNull
     private Optional<EndSessionEndpoint> getEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
                                                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                                EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                                                @NonNull String providerName,
                                                                @NonNull String issuer) {
-        Optional<AuthorizationServer> inferOptional = authorizationServerResolver.resolve(issuer);
-        if (!inferOptional.isPresent()) {
+        AuthorizationServer authorizationServer = authorizationServer(authorizationServerResolver, oauthClientConfiguration, issuer);
+        if (authorizationServer == null) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
+                LOG.debug("No EndSessionEndpoint can be resolved. no authorization-server is set for [{}] and the issuer does not match any of the providers supported by default", providerName);
             }
             return Optional.empty();
         }
-        switch (inferOptional.get()) {
+        switch (authorizationServer) {
             case MICROSOFT:
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Resolved the MicrosoftEndSessionEndpoint for provider [{}]", providerName);
@@ -150,7 +162,7 @@ public class EndSessionEndpointResolver {
             //  Oracle Cloud Logout https://docs.oracle.com/en/cloud/paas/identity-cloud/rest-api/op-oauth2-v1-userlogout-get.html
             case ORACLE_CLOUD, OKTA:
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Resolved auth server {} for provider [{}]", inferOptional.get(), providerName);
+                    LOG.debug("Resolved auth server {} for provider [{}]", authorizationServer, providerName);
                 }
                 return oktaEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
             case COGNITO:
