@@ -88,6 +88,7 @@ class HomePageSpec extends GebSpec {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+    @IgnoreIf({ env['CI'] })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
     @Ignore
     def "check websocket connects"() {

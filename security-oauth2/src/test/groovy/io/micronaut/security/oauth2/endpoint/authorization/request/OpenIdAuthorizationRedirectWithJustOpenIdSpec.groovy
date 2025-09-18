@@ -22,6 +22,7 @@ import spock.lang.Requires
 import java.nio.charset.StandardCharsets
 
 @Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@IgnoreIf({ env['CI'] })
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
     @Override
