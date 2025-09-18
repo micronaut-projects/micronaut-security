@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.minimal.application' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "8.3.7"
 }
 
 repositories {
@@ -26,6 +26,7 @@ dependencies {
     implementation(mn.micronaut.management)
     implementation(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
+    testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 shadowJar {

@@ -35,6 +35,7 @@ import reactor.core.publisher.Flux;
  */
 @Requires(classes = HttpRequest.class)
 @Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Requires(beans = { Authenticator.class })
 @Singleton
 public class BasicAuthAuthenticationFetcher<B> implements AuthenticationFetcher<HttpRequest<B>> {
 
