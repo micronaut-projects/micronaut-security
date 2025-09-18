@@ -37,7 +37,7 @@ import java.io.IOException;
  * {@link TokenValidator} which uses a remote `UserInfo` endpoint to validate a token.
  */
 @Internal
-class UserInfoClientTokenValidator implements Closeable, TokenValidator<HttpRequest<?>>, Named {
+final class UserInfoClientTokenValidator implements Closeable, TokenValidator<HttpRequest<?>>, Named {
     private static final Logger LOG = LoggerFactory.getLogger(UserInfoClientTokenValidator.class);
     private final HttpClient httpClient;
     private final String path;
