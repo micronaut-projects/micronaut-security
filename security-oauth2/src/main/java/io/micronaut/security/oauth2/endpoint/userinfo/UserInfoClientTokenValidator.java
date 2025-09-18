@@ -57,7 +57,7 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         httpClient.close();
     }
 
