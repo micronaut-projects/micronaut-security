@@ -25,6 +25,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -38,9 +39,12 @@ import java.net.URL;
 @Internal
 final class UserInfoClientFactory {
     private final BeanContext beanContext;
+    private final HttpClientConfiguration httpClientConfiguration;
 
-    UserInfoClientFactory(BeanContext beanContext) {
+    UserInfoClientFactory(BeanContext beanContext,
+                          HttpClientConfiguration httpClientConfiguration) {
         this.beanContext = beanContext;
+        this.httpClientConfiguration = httpClientConfiguration;
     }
 
     @EachBean(OpenIdProviderMetadata.class)
@@ -57,7 +61,7 @@ final class UserInfoClientFactory {
     @Singleton
     UserInfoClientTokenValidator createUserInfoClient(UserInfoClientTokenValidatorConfiguration config) {
         try {
-            HttpClient httpClient = beanContext.createBean(HttpClient.class, new URL(config.baseUrl()));
+            HttpClient httpClient = beanContext.createBean(HttpClient.class, new URL(config.baseUrl()), httpClientConfiguration);
             return new UserInfoClientTokenValidator(config.name(), httpClient, config.path());
         } catch (MalformedURLException e) {
             throw new DisabledBeanException("Malformed URL Exception for UserInfo endpoint " + config.baseUrl() + " for " + config.getName());
