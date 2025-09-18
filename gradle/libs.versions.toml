@@ -5,8 +5,8 @@ micronaut = "4.9.11"
 micronaut-platform = "4.9.3"
 micronaut-docs = "2.0.0"
 
-geb = "7.0"
-selenium = "4.33.0"
+geb = "8.0.0"
+selenium = "4.34.0"
 system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.3"
 bouncycastle = "1.70"
@@ -51,7 +51,7 @@ managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
 
-geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
+geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
