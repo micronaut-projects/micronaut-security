@@ -32,6 +32,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * {@link TokenValidator} which uses a remote `UserInfo` endpoint to validate a token.
@@ -39,6 +40,7 @@ import java.io.IOException;
 @Internal
 final class UserInfoClientTokenValidator implements Closeable, TokenValidator<HttpRequest<?>>, Named {
     private static final Logger LOG = LoggerFactory.getLogger(UserInfoClientTokenValidator.class);
+    private static final Argument<Map<String, Object>> MAP_ARGUMENT = Argument.mapOf(String.class, Object.class);
     private final HttpClient httpClient;
     private final String path;
     private final String name;
@@ -63,7 +65,7 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
     @NonNull
     public Publisher<Authentication> validateToken(@NonNull String token, @Nullable HttpRequest<?> request) {
         return Mono.from(httpClient.retrieve(HttpRequest.GET(path).bearerAuth(token),
-                Argument.mapOf(String.class, Object.class)))
+                MAP_ARGUMENT))
             .flatMap(m -> {
                 Object subject = m.get(Claims.SUBJECT);
                 if (subject == null) {
