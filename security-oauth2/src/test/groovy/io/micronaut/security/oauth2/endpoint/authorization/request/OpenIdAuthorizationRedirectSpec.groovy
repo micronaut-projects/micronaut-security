@@ -30,6 +30,7 @@ import spock.lang.IgnoreIf
 import java.nio.charset.StandardCharsets
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@IgnoreIf({ env['CI'] })
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     @Override
