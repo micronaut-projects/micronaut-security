@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
 @Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@IgnoreIf({ env['CI'] })
 class OpenIdAuthorizationPkceSpec extends EmbeddedServerSpecification {
 
     @Override

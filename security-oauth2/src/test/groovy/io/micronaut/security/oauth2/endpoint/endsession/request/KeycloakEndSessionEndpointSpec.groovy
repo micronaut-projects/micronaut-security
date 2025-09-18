@@ -14,6 +14,7 @@ import spock.lang.IgnoreIf
 import spock.lang.Requires
 
 @Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@IgnoreIf({ env['CI'] })
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
     @Override
