@@ -36,7 +36,7 @@ import java.net.URL;
 
 @Factory
 @Internal
-class UserInfoClientFactory {
+final class UserInfoClientFactory {
     private final BeanContext beanContext;
 
     UserInfoClientFactory(BeanContext beanContext) {
