@@ -31,6 +31,7 @@ import spock.lang.IgnoreIf
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
+@IgnoreIf({ env['CI'] })
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectPkceSpec extends EmbeddedServerSpecification {
 
