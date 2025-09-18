@@ -22,6 +22,7 @@ import io.micronaut.core.naming.Named;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.validator.TokenValidator;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -67,18 +67,29 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
         return Mono.from(httpClient.retrieve(HttpRequest.GET(path).bearerAuth(token),
                 MAP_ARGUMENT))
             .flatMap(m -> {
-                Object subject = m.get(Claims.SUBJECT);
-                if (subject == null) {
-                    return Mono.empty();
-                }
-                return Mono.just(Authentication.build(subject.toString(), m));
+                Authentication authentication = createAuthentication(m);
+                return authentication == null ? Mono.empty() : Mono.just(authentication);
             })
             .onErrorResume(t -> {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(t.getMessage(), t);
+                if (t instanceof HttpClientResponseException ex) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Token not validated. UserInfo endpoint for client {} responded with HTTP status code {} while validating the token", getName(), ex.getStatus().getCode());
+                    }
+                }
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace(t.getMessage(), t);
                 }
                 return Mono.empty();
             });
+    }
+
+    @Nullable
+    private static Authentication createAuthentication(@NonNull Map<String, Object> claims) {
+        Object subject = claims.get(Claims.SUBJECT);
+        if (subject == null) {
+            return null;
+        }
+        return Authentication.build(subject.toString(), claims);
     }
 
     @Override
