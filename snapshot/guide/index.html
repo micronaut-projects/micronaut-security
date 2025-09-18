@@ -10573,6 +10573,18 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>This library supports end session for Auth0, AWS Cognito, and Okta out of the box. The <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html">EndSessionEndpointResolver</a> is responsible for determining which <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html">EndSessionEndpoint</a> will be used for a given provider, if any.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you are using a custom domain URL for your auth server, instead of inferring it, you can set the authorization server you use by setting the property <code>micronaut.security.oauth2.clients.*.authorization-server</code>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Before choosing any of the default providers, the endpoint resolver will first look for an <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html">EndSessionEndpoint</a> bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.</p>
 </div>
