@@ -158,7 +158,7 @@ oauth:
     endsession: OpenID End Session
     introspection: Introspection
     revocation: Revocation
-    user-info: OpenID User Info
+    user-info: UserInfo Endpoint
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
   oauthGuides: Guides
