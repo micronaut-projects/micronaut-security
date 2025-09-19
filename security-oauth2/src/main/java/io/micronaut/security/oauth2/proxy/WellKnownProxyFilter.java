@@ -62,8 +62,10 @@ class WellKnownProxyFilter implements HttpServerFilter {
             return chain.proceed(request);
         }
         URL issuer = settings.issuer();
-        return proxyHttpClient.proxy(request.mutate().uri(b ->
-            b.host(issuer.getHost()).scheme(issuer.getProtocol()).port(issuer.getPort())));
+        return proxyHttpClient.proxy(request.mutate().uri(b -> b
+            .host(issuer.getHost())
+            .scheme(issuer.getProtocol())
+            .port(issuer.getPort())));
     }
 
     boolean proceed(@NonNull HttpRequest<?> request) {
