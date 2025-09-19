@@ -355,7 +355,7 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-revocation"><a href="#revocation"><strong>19.4.3</strong><span>Revocation</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>19.4.4</strong><span>OpenID User Info</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-user-info"><a href="#user-info"><strong>19.4.4</strong><span>UserInfo Endpoint</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-protectedResourceMetadata"><a href="#protectedResourceMetadata"><strong>19.4.5</strong><span>Protected Resource Metadata</span></a></div>
         
@@ -10718,7 +10718,7 @@ If you are using a custom domain URL for your auth server, instead of inferring 
 </tbody>
 </table>
 
-<h2 id="user-info"><a class="anchor" href="#user-info"></a>19.4.4 OpenID User Info</h2>
+<h2 id="user-info"><a class="anchor" href="#user-info"></a>19.4.4 UserInfo Endpoint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.15.x/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
@@ -10728,10 +10728,20 @@ If you are using a custom domain URL for your auth server, instead of inferring 
 
 
 <div class="paragraph">
-<p>It is possible to configure the user info endpoint URL for OpenID providers, however Micronaut currently does not use this configuration in any way.</p>
+<p>Micronaut Security OAuth2 registers a bean of type <a href="../api/io/micronaut/security/token/validator/TokenValidator.html">TokenValidator</a> for each OpenID provider.
+It provides token validation using the remote authorization server&#8217;s
+<a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo"><code>UserInfo</code> endpoint</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/userinfo.svg" alt="userinfo">
+</div>
 </div>
 <div class="paragraph">
-<p>See the following configuration table:</p>
+<p>The <code>UserInfo</code> endpoint URL is obtained automatically from the authorization server&#8217;s metadata (obtained by visiting the <code>.well-known/openid-configuration</code> endpoint of the authorization server).</p>
+</div>
+<div class="paragraph">
+<p>However, you can set it also via configuration:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
@@ -10756,6 +10766,18 @@ If you are using a custom domain URL for your auth server, instead of inferring 
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Set <code>micronaut.security.oauth2.userinfo.validator</code> to <code>false</code> to disable <code>UserInfo</code> endpoint token validation.
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="protectedResourceMetadata"><a class="anchor" href="#protectedResourceMetadata"></a>19.4.5 Protected Resource Metadata</h2>
 

@@ -54,6 +54,7 @@ io.micronaut.security.oauth2.endpoint.token.request.context
 io.micronaut.security.oauth2.endpoint.token.request.password
 io.micronaut.security.oauth2.endpoint.token.response
 io.micronaut.security.oauth2.endpoint.token.response.validation
+io.micronaut.security.oauth2.endpoint.userinfo
 io.micronaut.security.oauth2.grants
 io.micronaut.security.oauth2.keycloak.docker
 io.micronaut.security.oauth2.metadata
