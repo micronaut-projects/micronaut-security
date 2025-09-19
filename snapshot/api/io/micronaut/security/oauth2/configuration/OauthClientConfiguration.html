@@ -170,6 +170,12 @@ extends io.micronaut.core.util.Toggleable</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getTokenEndpoint()" class="member-name-link">getTokenEndpoint</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isProxyWellKnownOauthAuthorizationServer()" class="member-name-link">isProxyWellKnownOauthAuthorizationServer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isProxyWellKnownOpenidConfiguration()" class="member-name-link">isProxyWellKnownOpenidConfiguration</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -387,6 +393,30 @@ extends io.micronaut.core.util.Toggleable</span></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>The <a href="../endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request"><code>AuthorizationServer</code></a> used by the OAuth Client.</dd>
+<dt>Since:</dt>
+<dd>4.15.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isProxyWellKnownOauthAuthorizationServer()">
+<h3>isProxyWellKnownOauthAuthorizationServer</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProxyWellKnownOauthAuthorizationServer</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.</dd>
+<dt>Since:</dt>
+<dd>4.15.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isProxyWellKnownOpenidConfiguration()">
+<h3>isProxyWellKnownOpenidConfiguration</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProxyWellKnownOpenidConfiguration</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.</dd>
 <dt>Since:</dt>
 <dd>4.15.0</dd>
 </dl>

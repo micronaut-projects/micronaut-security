@@ -361,7 +361,9 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>19.5</strong><span>Custom Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>19.6</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-proxyToAuthServer"><a href="#proxyToAuthServer"><strong>19.6</strong><span>Proxy .well-known requests to Auth Server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>19.7</strong><span>Guides</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>20</strong><span>Ahead-of-time optimizations</span></a></div>
         
@@ -10890,7 +10892,49 @@ Set <code>micronaut.security.oauth2.userinfo.validator</code> to <code>false</co
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
 </div>
 
-<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>19.6 Guides</h2>
+<h2 id="proxyToAuthServer"><a class="anchor" href="#proxyToAuthServer"></a>19.6 Proxy .well-known requests to Auth Server</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.15.x/src/main/docs/guide/oauth/proxyToAuthServer.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can proxy GET requests to <code>/.well-known/oauth-authorization-server</code> <a href="https://datatracker.ietf.org/doc/html/rfc8414">RFC8414</a>
+and <code>/.well-known/openid-configuration</code> <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">Open ID Connect Discovery</a> to an authorization server.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/proxy.svg" alt="proxy">
+</div>
+</div>
+<div class="paragraph">
+<p>To proxy set the following configuration properties to <code>true</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to proxy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/oauth-authorization-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.proxy-well-known-oauth-authorization-server</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/openid-configuration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.proxy-well-known-openid-configuration</code></p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>19.7 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.15.x/src/main/docs/guide/oauth/oauthGuides.adoc"'>

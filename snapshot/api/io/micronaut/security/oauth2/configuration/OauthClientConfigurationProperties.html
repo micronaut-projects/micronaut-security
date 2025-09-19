@@ -220,6 +220,12 @@ implements <a href="OauthClientConfiguration.html" title="interface in io.micron
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isProxyWellKnownOauthAuthorizationServer()" class="member-name-link">isProxyWellKnownOauthAuthorizationServer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isProxyWellKnownOpenidConfiguration()" class="member-name-link">isProxyWellKnownOpenidConfiguration</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthorization(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties)" class="member-name-link">setAuthorization</a><wbr>(<a href="OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a>&nbsp;authorization)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -264,6 +270,16 @@ implements <a href="OauthClientConfiguration.html" title="interface in io.micron
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOpenid(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties)" class="member-name-link">setOpenid</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a>&nbsp;openid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The open id configuration.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProxyWellKnownOauthAuthorizationServer(boolean)" class="member-name-link">setProxyWellKnownOauthAuthorizationServer</a><wbr>(boolean&nbsp;proxyWellKnownOauthAuthorizationServer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProxyWellKnownOpenidConfiguration(boolean)" class="member-name-link">setProxyWellKnownOpenidConfiguration</a><wbr>(boolean&nbsp;proxyWellKnownOpenidConfiguration)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRevocation(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties)" class="member-name-link">setRevocation</a><wbr>(<a href="OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties</a>&nbsp;revocation)</code></div>
@@ -342,6 +358,52 @@ implements <a href="OauthClientConfiguration.html" title="interface in io.micron
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="isProxyWellKnownOauthAuthorizationServer()">
+<h3>isProxyWellKnownOauthAuthorizationServer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProxyWellKnownOauthAuthorizationServer</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="OauthClientConfiguration.html#isProxyWellKnownOauthAuthorizationServer()">isProxyWellKnownOauthAuthorizationServer</a></code>&nbsp;in interface&nbsp;<code><a href="OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setProxyWellKnownOauthAuthorizationServer(boolean)">
+<h3>setProxyWellKnownOauthAuthorizationServer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProxyWellKnownOauthAuthorizationServer</span><wbr><span class="parameters">(boolean&nbsp;proxyWellKnownOauthAuthorizationServer)</span></div>
+<div class="block">Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server. Default to false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>proxyWellKnownOauthAuthorizationServer</code> - Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isProxyWellKnownOpenidConfiguration()">
+<h3>isProxyWellKnownOpenidConfiguration</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProxyWellKnownOpenidConfiguration</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="OauthClientConfiguration.html#isProxyWellKnownOpenidConfiguration()">isProxyWellKnownOpenidConfiguration</a></code>&nbsp;in interface&nbsp;<code><a href="OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setProxyWellKnownOpenidConfiguration(boolean)">
+<h3>setProxyWellKnownOpenidConfiguration</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProxyWellKnownOpenidConfiguration</span><wbr><span class="parameters">(boolean&nbsp;proxyWellKnownOpenidConfiguration)</span></div>
+<div class="block">Whether a request to /.well-known/openid-configuration should be proxied to the authorization server. Default to false.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>proxyWellKnownOpenidConfiguration</code> - Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="setAuthorizationServer(io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer)">
 <h3>setAuthorizationServer</h3>
