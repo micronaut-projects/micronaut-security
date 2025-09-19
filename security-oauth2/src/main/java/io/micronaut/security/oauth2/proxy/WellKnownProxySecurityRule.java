@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.proxy;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
@@ -34,6 +35,7 @@ import org.reactivestreams.Publisher;
 @Requires(condition = WellKnownProxyFilterCondition.class)
 @Requires(classes = HttpRequest.class)
 @Singleton
+@Internal
 final class WellKnownProxySecurityRule implements SecurityRule<HttpRequest<?>> {
     @Override
     @NonNull

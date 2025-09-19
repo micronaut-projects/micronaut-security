@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.proxy;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
@@ -41,6 +42,7 @@ import java.util.List;
 @Requires(beans = ProxyHttpClient.class)
 @Filter(value = WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH + "|" + WellKnownProxyFilter.OPENID_CONFIGURATION_PATH,
     patternStyle = FilterPatternStyle.REGEX)
+@Internal
 final class WellKnownProxyFilter implements HttpServerFilter {
 
     static final String OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH = "/.well-known/oauth-authorization-server";
