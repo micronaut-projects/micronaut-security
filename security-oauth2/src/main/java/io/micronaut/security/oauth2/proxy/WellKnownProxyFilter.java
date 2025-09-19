@@ -41,7 +41,7 @@ import java.util.List;
 @Requires(beans = ProxyHttpClient.class)
 @Filter(value = WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH + "|" + WellKnownProxyFilter.OPENID_CONFIGURATION_PATH,
     patternStyle = FilterPatternStyle.REGEX)
-class WellKnownProxyFilter implements HttpServerFilter {
+final class WellKnownProxyFilter implements HttpServerFilter {
 
     static final String OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH = "/.well-known/oauth-authorization-server";
     static final String OPENID_CONFIGURATION_PATH = "/.well-known/openid-configuration";
