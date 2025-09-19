@@ -73,7 +73,7 @@ public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
                     if (LOG.isDebugEnabled()) {
                         String method = request.getMethod().toString();
                         String path = request.getPath();
-                        LOG.debug("Token {} found in request {} {}", token, method, path);
+                        LOG.debug("Token found in request {} {}", method, path);
                     }
                 })
                 .toList();
