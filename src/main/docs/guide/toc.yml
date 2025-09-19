@@ -161,6 +161,7 @@ oauth:
     user-info: OpenID User Info
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
+  proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
 aot:
   title: Ahead-of-time optimizations
