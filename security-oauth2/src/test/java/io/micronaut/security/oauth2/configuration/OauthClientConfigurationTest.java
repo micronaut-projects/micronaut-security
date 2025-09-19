@@ -39,6 +39,16 @@ class OauthClientConfigurationTest {
     }
 
     @Test
+    void testDefaultIsProxyWellKnownOpenidConfiguration() {
+        assertFalse(stravaNewConfiguration.isProxyWellKnownOpenidConfiguration());
+    }
+
+    @Test
+    void testDefaultIsProxyWellKnownOauthAuthorizationServer() {
+        assertFalse(stravaNewConfiguration.isProxyWellKnownOauthAuthorizationServer());
+    }
+
+    @Test
     void deprecatedAuthMethodConfigurationIsStillSupported() {
         assertTrue(stravaOldConfiguration.getToken().isPresent());
         SecureEndpointConfiguration tokenEndpoint = stravaOldConfiguration.getToken().get();
