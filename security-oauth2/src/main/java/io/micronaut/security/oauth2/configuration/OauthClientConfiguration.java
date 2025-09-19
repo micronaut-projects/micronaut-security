@@ -136,4 +136,22 @@ public interface OauthClientConfiguration extends Toggleable {
     default AuthorizationServer getAuthorizationServer() {
         return null;
     }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOauthAuthorizationServer() {
+        return false;
+    }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOpenidConfiguration() {
+        return false;
+    }
 }

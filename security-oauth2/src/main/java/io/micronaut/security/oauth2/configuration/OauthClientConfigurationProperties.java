@@ -75,12 +75,40 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private OpenIdClientConfigurationProperties openid;
     private ClientCredentialsConfigurationProperties clientCredentials;
     private AuthorizationServer authorizationServer;
+    private boolean proxyWellKnownOauthAuthorizationServer;
+    private boolean proxyWellKnownOpenidConfiguration;
 
     /**
      * @param name The provider name
      */
     public OauthClientConfigurationProperties(@Parameter String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOauthAuthorizationServer() {
+        return proxyWellKnownOauthAuthorizationServer;
+    }
+
+    /**
+     * Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOauthAuthorizationServer Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOauthAuthorizationServer(boolean proxyWellKnownOauthAuthorizationServer) {
+        this.proxyWellKnownOauthAuthorizationServer = proxyWellKnownOauthAuthorizationServer;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOpenidConfiguration() {
+        return proxyWellKnownOpenidConfiguration;
+    }
+
+    /**
+     * Whether a request to /.well-known/openid-configuration should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOpenidConfiguration Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOpenidConfiguration(boolean proxyWellKnownOpenidConfiguration) {
+        this.proxyWellKnownOpenidConfiguration = proxyWellKnownOpenidConfiguration;
     }
 
     /**
