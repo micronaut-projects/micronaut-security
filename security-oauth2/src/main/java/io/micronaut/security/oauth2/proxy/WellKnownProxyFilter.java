@@ -36,6 +36,7 @@ import java.util.List;
  * A filter which proxies GET requests to paths /.well-known/oauth-authorization-server or /.well-known/openid-configuration to an authorization server.
  * This filter is loaded only if {@link WellKnownProxyFilterCondition} condition evaluates to true.
  */
+@Requires(condition = WellKnownProxyFilterCondition.class)
 @Requires(classes = HttpRequest.class)
 @Requires(beans = ProxyHttpClient.class)
 @Filter(value = WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH + "|" + WellKnownProxyFilter.OPENID_CONFIGURATION_PATH,
