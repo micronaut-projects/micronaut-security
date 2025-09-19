@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Classes related to proxying GET requests to /.well-known/oauth-authorization-server and /.well-known/openid-configuration to an Authorization Server.
- */
-@Requires(condition = WellKnownProxyFilterCondition.class)
-@Configuration
 package io.micronaut.security.oauth2.proxy;
 
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
+
+import java.net.URL;
+
+@Internal
+record WellKnownProxySettings(
+    @Nullable URL issuer,
+    boolean proxyWellKnownOauthAuthorizationServer,
+    boolean proxyWellKnownOpenidConfiguration
+) {
+}

@@ -16,6 +16,8 @@
 package io.micronaut.security.oauth2.proxy;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
@@ -30,27 +32,44 @@ import org.reactivestreams.Publisher;
 import java.net.URL;
 import java.util.List;
 
-@Requires(condition = WellKnownProxyFilterCondition.class)
-@Filter(value = "/.well-known/oauth-authorization-server|/.well-known/openid-configuration",
+/**
+ * A filter which proxies GET requests to paths /.well-known/oauth-authorization-server or /.well-known/openid-configuration to an authorization server.
+ * This filter is loaded only if {@link WellKnownProxyFilterCondition} condition evaluates to true.
+ */
+@Requires(classes = HttpRequest.class)
+@Requires(beans = ProxyHttpClient.class)
+@Filter(value = WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH + "|" + WellKnownProxyFilter.OPENID_CONFIGURATION_PATH,
     patternStyle = FilterPatternStyle.REGEX)
 class WellKnownProxyFilter implements HttpServerFilter {
 
-@Nullable
-    private final URL issuer;
+    static final String OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH = "/.well-known/oauth-authorization-server";
+    static final String OPENID_CONFIGURATION_PATH = "/.well-known/openid-configuration";
+
+    @Nullable
+    private final WellKnownProxySettings settings;
     private final ProxyHttpClient proxyHttpClient;
 
     WellKnownProxyFilter(List<OauthClientConfiguration> oauthClientConfigurations,
                          ProxyHttpClient proxyHttpClient) {
-        this.issuer = WellKnownProxyFilterCondition.issuer(oauthClientConfigurations);
+        this.settings = WellKnownProxyFilterCondition.issuer(oauthClientConfigurations);
         this.proxyHttpClient = proxyHttpClient;
     }
 
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
-        if (issuer == null) {
+        if (proceed(request)) {
             return chain.proceed(request);
         }
+        URL issuer = settings.issuer();
         return proxyHttpClient.proxy(request.mutate().uri(b ->
             b.host(issuer.getHost()).scheme(issuer.getProtocol()).port(issuer.getPort())));
+    }
+
+    boolean proceed(@NonNull HttpRequest<?> request) {
+        return settings == null
+            || settings.issuer() == null
+            || request.getMethod() != HttpMethod.GET
+            || (request.getPath().equals(OPENID_CONFIGURATION_PATH) && !settings.proxyWellKnownOpenidConfiguration())
+            || (request.getPath().equals(OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH) && !settings.proxyWellKnownOauthAuthorizationServer());
     }
 }

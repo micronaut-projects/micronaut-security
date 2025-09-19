@@ -38,7 +38,7 @@ final class WellKnownProxyFilterCondition implements Condition {
     }
 
     @Nullable
-    static URL issuer(@NonNull Collection<OauthClientConfiguration> oauthClientConfigurations) {
+    static WellKnownProxySettings issuer(@NonNull Collection<OauthClientConfiguration> oauthClientConfigurations) {
         if (CollectionUtils.isEmpty(oauthClientConfigurations)) {
             return null;
         }
@@ -46,7 +46,9 @@ final class WellKnownProxyFilterCondition implements Condition {
             if (config.isProxyWellKnownOpenidConfiguration() || config.isProxyWellKnownOauthAuthorizationServer()) {
                 URL issuer = issuer(config);
                 if (issuer != null) {
-                    return issuer;
+                    return new WellKnownProxySettings(issuer,
+                        config.isProxyWellKnownOauthAuthorizationServer(),
+                        config.isProxyWellKnownOpenidConfiguration());
                 }
             }
         }
