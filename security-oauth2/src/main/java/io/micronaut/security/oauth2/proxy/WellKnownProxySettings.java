@@ -20,6 +20,12 @@ import io.micronaut.core.annotation.Nullable;
 
 import java.net.URL;
 
+/**
+ * Encapsulates behaviour for the {@link WellKnownProxyFilter}.
+ * @param issuer The Authorization Server URL.
+ * @param proxyWellKnownOauthAuthorizationServer Whether to proxy requests to /.well-known/oauth-authorization-server
+ * @param proxyWellKnownOpenidConfiguration Whether to proxy requests to /.well-known/openid-configuration
+ */
 @Internal
 record WellKnownProxySettings(
     @Nullable URL issuer,
