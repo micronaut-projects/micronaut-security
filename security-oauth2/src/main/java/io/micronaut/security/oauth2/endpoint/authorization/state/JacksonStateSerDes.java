@@ -61,7 +61,7 @@ public class JacksonStateSerDes implements StateSerDes {
     @Override
     public String serialize(State state) {
         try {
-            return Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(state));
+            return Base64.getUrlEncoder().encodeToString(jsonMapper.writeValueAsBytes(state));
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to serialize the authorization request state to JSON", e);
