@@ -34,9 +34,11 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      */
     @SuppressWarnings("WeakerAccess")
     private static final Set<String> DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS = Set.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED);
+    private static final int DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS = 404;
     private boolean enabled = DEFAULT_ENABLED;
     private String path;
     private Set<String> postContentTypes = DEFAULT_CONTENT_TYPES_FOR_POST_ENDPOINTS;
+    private int unsupportedPostContentTypeStatus = DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS;
 
     /**
      *
@@ -57,6 +59,19 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      */
     public void setPostContentTypes(Set<String> postContentTypes) {
         this.postContentTypes = postContentTypes;
+    }
+
+    @Override
+    public int getUnsupportedPostContentTypeStatus() {
+        return unsupportedPostContentTypeStatus;
+    }
+
+    /**
+     *
+     * @param unsupportedPostContentTypeStatus Status code for unsupported content type. Default to 404
+     */
+    public void setUnsupportedPostContentTypeStatus(int unsupportedPostContentTypeStatus) {
+        this.unsupportedPostContentTypeStatus = unsupportedPostContentTypeStatus;
     }
 
     /**

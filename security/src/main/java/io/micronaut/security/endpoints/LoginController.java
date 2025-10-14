@@ -108,8 +108,13 @@ public class LoginController<B> {
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
         Optional<MediaType> contentTypeOptional = request.getContentType();
-        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().toString()))) {
-            return Publishers.just(HttpResponse.notFound());
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Unsupported content type {}. Login Controller supports: {}",
+                    contentTypeOptional.map(MediaType::getName).orElse(""),
+                    String.join(",", loginControllerConfiguration.getPostContentTypes()));
+            }
+            return Publishers.just(HttpResponse.status(HttpStatus.valueOf(loginControllerConfiguration.getUnsupportedPostContentTypeStatus())));
         }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
             .map(authenticationResponse -> {

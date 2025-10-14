@@ -8,8 +8,10 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider
 import io.micronaut.security.handlers.LoginHandler
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
@@ -60,6 +62,15 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         ''       | 'aabbc12345678'
         'johnny' | null
         'johnny' | ''
+    }
+
+    @Requires(property = "spec.name", value = "LoginControllerValidationSpec")
+    @Singleton
+    static class CustomAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+        @Override
+        AuthenticationResponse authenticate(HttpRequest<B> requestContext, AuthenticationRequest<String, String> authRequest) {
+            return AuthenticationResponse.success("sherlock");
+        }
     }
 
     @Requires(property = 'spec.name', value = 'LoginControllerValidationSpec')

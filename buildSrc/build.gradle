@@ -8,5 +8,4 @@ repositories {
 
 dependencies {
     implementation(libs.graalvm.native.buildtools)
-    implementation(libs.sonatype.scan)
 }

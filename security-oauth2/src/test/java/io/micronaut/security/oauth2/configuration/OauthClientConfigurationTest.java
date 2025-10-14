@@ -21,6 +21,20 @@ class OauthClientConfigurationTest {
     @Named("stravanew")
     OauthClientConfiguration stravaNewConfiguration;
 
+    @Test
+    void authorizationServerDefaultsToNull() {
+        assertNull(stravaNewConfiguration.getAuthorizationServer());
+    }
+
+    @Test
+    void testDefaultIsProxyWellKnownOpenidConfiguration() {
+        assertFalse(stravaNewConfiguration.isProxyWellKnownOpenidConfiguration());
+    }
+
+    @Test
+    void testDefaultIsProxyWellKnownOauthAuthorizationServer() {
+        assertFalse(stravaNewConfiguration.isProxyWellKnownOauthAuthorizationServer());
+    }
 
     @Test
     void deprecatedAuthMethodConfigurationIsStillSupported() {

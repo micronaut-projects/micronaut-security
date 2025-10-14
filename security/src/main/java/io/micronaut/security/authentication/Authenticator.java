@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.OrderUtil;
@@ -54,6 +55,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  * @param <T> Request Context Type
  */
+@Requires(condition = AuthenticatorCondition.class)
 @Singleton
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);

@@ -32,6 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
+import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorMatcher;
 
@@ -74,12 +75,56 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
     private ClientCredentialsConfigurationProperties clientCredentials;
+    private AuthorizationServer authorizationServer;
+    private boolean proxyWellKnownOauthAuthorizationServer;
+    private boolean proxyWellKnownOpenidConfiguration;
 
     /**
      * @param name The provider name
      */
     public OauthClientConfigurationProperties(@Parameter String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOauthAuthorizationServer() {
+        return proxyWellKnownOauthAuthorizationServer;
+    }
+
+    /**
+     * Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOauthAuthorizationServer Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOauthAuthorizationServer(boolean proxyWellKnownOauthAuthorizationServer) {
+        this.proxyWellKnownOauthAuthorizationServer = proxyWellKnownOauthAuthorizationServer;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOpenidConfiguration() {
+        return proxyWellKnownOpenidConfiguration;
+    }
+
+    /**
+     * Whether a request to /.well-known/openid-configuration should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOpenidConfiguration Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOpenidConfiguration(boolean proxyWellKnownOpenidConfiguration) {
+        this.proxyWellKnownOpenidConfiguration = proxyWellKnownOpenidConfiguration;
+    }
+
+    /**
+     * Micronaut attempts to infer the authorization server used by the client based on the issuer. However, if you are using a custom domain, it may be impossible to infer it.
+     * You can set it explicitly via this property.
+     * @param authorizationServer The authorization server
+     */
+    public void setAuthorizationServer(@Nullable AuthorizationServer authorizationServer) {
+        this.authorizationServer = authorizationServer;
+    }
+
+    @Override
+    @Nullable
+    public AuthorizationServer getAuthorizationServer() {
+        return authorizationServer;
     }
 
     @NonNull
@@ -469,6 +514,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private AuthorizationEndpointConfigurationProperties authorization;
         private TokenEndpointConfigurationProperties token;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+        private boolean protectedResourceMetadata = DEFAULT_PROTECTED_RESOURCE_METADATA;
 
         /**
          * @param name The provider name
@@ -481,6 +527,19 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public boolean isProtectedResourceMetadata() {
+            return protectedResourceMetadata;
+        }
+
+        /**
+         * Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.
+         * @param protectedResourceMetadata Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
+         */
+        public void setProtectedResourceMetadata(boolean protectedResourceMetadata) {
+            this.protectedResourceMetadata = protectedResourceMetadata;
         }
 
         @Override

@@ -1,0 +1,12 @@
+____
+https://datatracker.ietf.org/doc/html/rfc9728[RFC 9728] metadata format that an OAuth 2.0 client or authorization server can use to obtain the information needed to interact with an OAuth 2.0 protected resource.
+____
+
+You can configure whether to expose the protected resource metadata:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.metadata.ProtectedResourceMetadataConfigurationProperties.adoc[]
+
+A GET endpoint is exposed in `/.well-known/oauth-protected-resource`. The API to control the metadata is:
+api:security.oauth2.metadata.ProtectedResourceMetadataProvider[]
+
+You can create a bean replacement for it if the default implementation does not fit your needs.

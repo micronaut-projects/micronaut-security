@@ -38,9 +38,10 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(mn.snakeyaml)
     testImplementation(libs.bcpkix)
-
+    testImplementation(mnLogging.logback.classic)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.mockito.core)
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }

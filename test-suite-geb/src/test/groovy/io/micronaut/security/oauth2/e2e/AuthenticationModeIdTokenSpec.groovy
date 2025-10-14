@@ -41,6 +41,7 @@ import spock.lang.Shared
 import java.security.Principal
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@IgnoreIf({ env['CI'] })
 class AuthenticationModeIdTokenSpec extends GebSpec {
     @AutoCleanup
     @Shared

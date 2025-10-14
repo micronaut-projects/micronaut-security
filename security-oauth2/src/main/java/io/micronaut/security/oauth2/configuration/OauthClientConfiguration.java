@@ -25,6 +25,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfig
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
 import java.time.Duration;
 import java.util.List;
@@ -118,5 +119,32 @@ public interface OauthClientConfiguration extends Toggleable {
     default SecureEndpoint getTokenEndpoint() throws ConfigurationException {
         return getToken().map(secureEndpointConfiguration -> new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD))
                 .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
+    }
+
+    /**
+     * @return The {@link AuthorizationServer} used by the OAuth Client.
+     * @since 4.15.0
+     */
+    @Nullable
+    default AuthorizationServer getAuthorizationServer() {
+        return null;
+    }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOauthAuthorizationServer() {
+        return false;
+    }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOpenidConfiguration() {
+        return false;
     }
 }

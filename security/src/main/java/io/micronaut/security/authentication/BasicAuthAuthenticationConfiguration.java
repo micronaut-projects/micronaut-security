@@ -29,6 +29,8 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 public class BasicAuthAuthenticationConfiguration implements Toggleable {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".basic-auth";
+    public static final String PROPERTY_ENABLED = PREFIX + ".enabled";
+    public static final String PROPERTY_WWW_AUTHENTICATE = PREFIX + ".www-authenticate";
 
     /**
      * The default enable value.

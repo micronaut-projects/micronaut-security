@@ -116,6 +116,16 @@ public class Keycloak {
 
             LOG.info(execResult.getStdout());
 
+            // Relax realm SSL requirement
+            execResult = container.execInContainer(
+                "/opt/bitnami/keycloak/bin/kcadm.sh",
+                "update", "realms/master",
+                "-s", "sslRequired=NONE",
+                "--realm", REALM,
+                "--server", ADMIN_SERVER,
+                "--user", ADMIN_USERNAME, "--password", ADMIN_PASSWORD
+            );
+
             execResult = container.execInContainer(
                 "/opt/bitnami/keycloak/bin/kcadm.sh",
                 "create", "users",

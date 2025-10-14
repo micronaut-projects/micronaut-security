@@ -1,5 +1,13 @@
-It is possible to configure the user info endpoint URL for OpenID providers, however Micronaut currently does not use this configuration in any way.
+Micronaut Security OAuth2 registers a bean of type api:io.micronaut.security.token.validator.TokenValidator[] for each OpenID provider.
+It provides token validation using the remote authorization server's
+https://openid.net/specs/openid-connect-core-1_0.html#UserInfo[`UserInfo` endpoint].
 
-See the following configuration table:
+image::userinfo.svg[]
+
+The `UserInfo` endpoint URL is obtained automatically from the authorization server's metadata (obtained by visiting the `.well-known/openid-configuration` endpoint of the authorization server).
+
+However, you can set it also via configuration:
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]
+
+NOTE: Set `micronaut.security.oauth2.userinfo.validator` to `false` to disable `UserInfo` endpoint token validation.
