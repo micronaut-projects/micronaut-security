@@ -37,7 +37,7 @@ dependencies {
     testImplementation(libs.jsonassert)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(platform(mnTest.boms.junit))
     testImplementation(libs.junit.jupiter.params)
     testImplementation(mnTest.mockito.core)

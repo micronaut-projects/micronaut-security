@@ -8,9 +8,9 @@ dependencies {
 
     testRuntimeOnly(mnLogging.logback.classic)
 
-    testImplementation(libs.junit.jupiter.api)
+    testImplementation(mnTest.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)

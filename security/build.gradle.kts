@@ -43,5 +43,5 @@ dependencies {
     testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mnTest.mockito.core)
     testImplementation(libs.junit.jupiter.params)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
