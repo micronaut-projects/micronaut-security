@@ -34,6 +34,11 @@ jobs:
       OSS_INDEX_PASSWORD: ${{ secrets.OSS_INDEX_PASSWORD }}
     steps:
        # https://github.com/actions/virtual-environments/issues/709
+      - name: Remove system JDKs
+        run: |
+          sudo rm -rf /usr/lib/jvm/*
+          unset JAVA_HOME
+          export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v '/usr/lib/jvm' | paste -sd:)
       - name: "🗑 Free disk space"
         run: |
          sudo rm -rf "/usr/local/share/boost"
@@ -69,7 +74,7 @@ jobs:
       - name: "🛠 Build with Gradle"
         id: gradle
         run: |
-          ./gradlew jacocoReport check --no-daemon --continue
+          ./gradlew check jacocoReport --no-daemon --continue
 
       - name: "🔎 Run static analysis"
         if: env.SONAR_TOKEN != '' && matrix.java == '21'
