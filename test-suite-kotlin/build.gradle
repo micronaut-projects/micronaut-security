@@ -38,7 +38,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
