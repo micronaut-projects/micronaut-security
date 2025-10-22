@@ -45,3 +45,4 @@ dependencies {
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
+

@@ -46,7 +46,6 @@ public interface OauthAuthenticationMapper {
      */
     String REFRESH_TOKEN_KEY = "refreshToken";
 
-
     /**
      * Convert the token response and state into an authentication response.
      *

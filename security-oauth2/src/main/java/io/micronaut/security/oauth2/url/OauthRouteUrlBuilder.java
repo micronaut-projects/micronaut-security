@@ -49,7 +49,6 @@ public interface OauthRouteUrlBuilder<T> extends AbsoluteUrlBuilder<T> {
      */
     URL buildCallbackUrl(@Nullable T originating, String providerName);
 
-
     /**
      * Builds the URI to start the OAuth 2.0 authorization code flow.
      *

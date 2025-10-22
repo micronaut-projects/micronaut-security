@@ -42,8 +42,7 @@ public interface OpenIdClientConfiguration extends Named {
      * @return The OpenID configuration path
      */
     String getConfigurationPath();
-
-
+    
     /**
      * @return The JWKS configuration
      */

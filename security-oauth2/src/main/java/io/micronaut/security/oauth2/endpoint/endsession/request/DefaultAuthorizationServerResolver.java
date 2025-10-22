@@ -39,12 +39,12 @@ final class DefaultAuthorizationServerResolver implements AuthorizationServerRes
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
-    private static final Map<String, AuthorizationServer> cache = new ConcurrentHashMap<>();
+    private static final Map<String, AuthorizationServer> CACHE = new ConcurrentHashMap<>();
 
     @Override
     @NonNull
     public Optional<AuthorizationServer> resolve(@NonNull String issuer) {
-        return Optional.ofNullable(cache.computeIfAbsent(issuer, DefaultAuthorizationServerResolver::infer));
+        return Optional.ofNullable(CACHE.computeIfAbsent(issuer, DefaultAuthorizationServerResolver::infer));
     }
 
     @Nullable
