@@ -22,25 +22,12 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 graalvmNative {
-    toolchainDetection = true
     metadataRepository {
         enabled = true
-    }
-    binaries {
-        test {
-            // Ensure certain JUnit Platform classes are initialized at run time for native tests
-            buildArgs.addAll([
-                '--initialize-at-build-time=org.junit.platform.launcher.core.HierarchicalOutputDirectoryCreator,org.junit.platform.launcher.core.LauncherPhase,org.junit.platform.launcher.core.DiscoveryIssueNotifier,org.junit.platform.engine.support.store.NamespacedHierarchicalStore$EvaluatedValue'
-            ])
-        }
     }
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.GRAAL_VM
-    }
 }
