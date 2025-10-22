@@ -22,6 +22,7 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 graalvmNative {
+    toolchainDetection = true
     metadataRepository {
         enabled = true
     }
@@ -31,9 +32,6 @@ graalvmNative {
             buildArgs.addAll([
                 '--initialize-at-build-time=org.junit.platform.launcher.core.HierarchicalOutputDirectoryCreator,org.junit.platform.launcher.core.LauncherPhase,org.junit.platform.launcher.core.DiscoveryIssueNotifier,org.junit.platform.engine.support.store.NamespacedHierarchicalStore$EvaluatedValue'
             ])
-            javaLauncher.set(javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(21)
-            })
         }
     }
 }
@@ -43,5 +41,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.GRAAL_VM
     }
 }
