@@ -45,3 +45,8 @@ dependencies {
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
