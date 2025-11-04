@@ -78,11 +78,13 @@ class OpenIdClientFactorySpec extends Specification {
 
         when:
         server.applicationContext.createBean(HttpClient, server.URL).toBlocking().exchange(HttpRequest.GET("/"))
+        LinkedBlockingQueue events = appender.events
 
         then:
-        appender.events.size() == 2
-        1L == appender.events.stream().filter(threadName ->
-                threadName.contains("EventLoop")).count()
+        events.size() == 2
+        1L == events.stream()
+                .filter(threadName -> threadName.toLowerCase().contains("eventloop"))
+                .count()
 
         cleanup:
         authServer.close()
