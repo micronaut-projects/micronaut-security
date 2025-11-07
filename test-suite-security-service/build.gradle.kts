@@ -36,6 +36,9 @@ dependencies {
     testImplementation(mnReactor.micronaut.reactor)
     // Test Fails without this dependency
     testImplementation(mnReactor.micrometer.context.propagation)
+
+    // https://github.com/testcontainers/testcontainers-java/issues/8798
+    testRuntimeOnly(libs.commons.codec)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

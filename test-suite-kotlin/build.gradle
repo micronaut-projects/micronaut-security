@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.kapt)
+    id("io.micronaut.build.internal.kotlin-kapt")
     id "io.micronaut.build.internal.security-tests"
 }
 
@@ -20,7 +19,6 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.kotlin.stdlib.jdk8)
     testImplementation(mnReactor.micronaut.reactor)
 
     testImplementation(mn.jackson.databind)
@@ -35,9 +33,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-    }
 }
