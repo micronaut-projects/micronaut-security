@@ -82,7 +82,7 @@ class OpenIdClientFactorySpec extends Specification {
         then:
         appender.events.size() == 2
         1L == appender.events.stream().filter(threadName ->
-                threadName.contains("EventLoop")).count()
+                threadName.toLowerCase().contains("eventloop")).count()
 
         cleanup:
         authServer.close()
