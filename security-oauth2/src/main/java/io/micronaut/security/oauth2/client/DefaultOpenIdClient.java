@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.*;

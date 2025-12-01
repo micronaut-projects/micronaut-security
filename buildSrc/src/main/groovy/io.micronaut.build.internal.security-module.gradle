@@ -3,6 +3,7 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 dependencies {
+    api(libs.jspecify)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")   
 }
 

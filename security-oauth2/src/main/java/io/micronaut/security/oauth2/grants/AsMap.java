@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 

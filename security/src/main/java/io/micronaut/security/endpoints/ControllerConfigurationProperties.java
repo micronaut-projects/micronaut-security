@@ -16,7 +16,7 @@
 package io.micronaut.security.endpoints;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.MediaType;
 import java.util.Set;

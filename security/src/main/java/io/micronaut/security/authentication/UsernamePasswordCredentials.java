@@ -16,7 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.Creator;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;

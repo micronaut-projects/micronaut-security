@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration to enable or disable beans of type {@link JwtClaimsValidator}.

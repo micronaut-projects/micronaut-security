@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.client.condition;
 
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;

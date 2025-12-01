@@ -19,7 +19,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.io.ResourceResolver;
 
 import java.io.IOException;

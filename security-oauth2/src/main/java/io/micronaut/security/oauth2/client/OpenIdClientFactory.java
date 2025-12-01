@@ -24,7 +24,7 @@ import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClientRegistry;
 import io.micronaut.json.JsonMapper;

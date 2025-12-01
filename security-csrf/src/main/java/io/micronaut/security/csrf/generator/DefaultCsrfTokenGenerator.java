@@ -17,7 +17,7 @@ package io.micronaut.security.csrf.generator;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.csrf.CsrfConfiguration;

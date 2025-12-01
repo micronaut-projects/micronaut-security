@@ -1,7 +1,7 @@
 package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.annotation.Property;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.ReturnType;
 import io.micronaut.http.HttpMethod;

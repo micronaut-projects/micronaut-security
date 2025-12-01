@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.propagation;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 
 import java.util.regex.Pattern;

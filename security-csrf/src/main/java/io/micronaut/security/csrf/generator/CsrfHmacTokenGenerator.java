@@ -16,7 +16,7 @@
 package io.micronaut.security.csrf.generator;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * CSRF token Generation with HMAC.

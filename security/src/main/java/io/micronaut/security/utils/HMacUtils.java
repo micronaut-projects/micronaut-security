@@ -16,7 +16,7 @@
 package io.micronaut.security.utils;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

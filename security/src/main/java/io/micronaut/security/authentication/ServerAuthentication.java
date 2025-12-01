@@ -16,8 +16,8 @@
 package io.micronaut.security.authentication;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.serde.annotation.Serdeable;
 

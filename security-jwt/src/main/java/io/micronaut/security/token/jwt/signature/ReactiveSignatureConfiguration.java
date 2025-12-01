@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.signature;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import org.reactivestreams.Publisher;
 

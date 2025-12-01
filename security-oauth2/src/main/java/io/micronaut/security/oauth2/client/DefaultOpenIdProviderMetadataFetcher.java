@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;

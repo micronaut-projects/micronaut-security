@@ -3,6 +3,7 @@ managed-nimbus-jose-jwt = "10.6"
 managed-jjwt = "0.13.0"
 micronaut = "4.10.9"
 micronaut-platform = "4.10.1"
+jspecify = "1.0.0"
 
 geb = "8.0.1"
 selenium = "4.34.0"
@@ -67,4 +68,5 @@ commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-
 testcontainers-selenium = { module = "org.testcontainers:selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter"}
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 

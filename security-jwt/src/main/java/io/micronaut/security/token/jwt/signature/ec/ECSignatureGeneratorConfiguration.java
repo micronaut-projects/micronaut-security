@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.signature.ec;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.security.interfaces.ECPrivateKey;
 import java.util.Optional;

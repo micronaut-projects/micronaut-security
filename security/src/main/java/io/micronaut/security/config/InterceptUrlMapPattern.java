@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpMethod;
 
 import java.util.ArrayList;

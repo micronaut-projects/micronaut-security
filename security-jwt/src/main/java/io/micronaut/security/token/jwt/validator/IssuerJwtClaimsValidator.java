@@ -16,8 +16,8 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.ClaimsUtils;
 import jakarta.inject.Singleton;

@@ -16,7 +16,7 @@
 package io.micronaut.security.token.generator;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.render.AccessRefreshToken;
 import java.util.Map;

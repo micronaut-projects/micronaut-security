@@ -16,7 +16,7 @@
 package io.micronaut.security.testutils.authprovider;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 
 /**
