@@ -17,8 +17,8 @@ package io.micronaut.security.csrf;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.token.generator.AccessTokenConfigurationProperties;
 

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;

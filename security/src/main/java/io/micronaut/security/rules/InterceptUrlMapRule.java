@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.rules;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;

@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.userinfo;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.naming.Named;
 
 import java.util.Objects;

@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Responsible for serialization and de-serialization of the state.

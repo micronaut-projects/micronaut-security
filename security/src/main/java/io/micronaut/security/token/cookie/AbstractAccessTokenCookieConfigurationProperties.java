@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.cookie;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.TokenCookieConfiguration;
 

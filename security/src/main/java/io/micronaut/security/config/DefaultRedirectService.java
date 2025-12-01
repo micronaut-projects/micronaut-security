@@ -17,7 +17,7 @@ package io.micronaut.security.config;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.context.ServerContextPathProvider;
 import jakarta.inject.Singleton;
 

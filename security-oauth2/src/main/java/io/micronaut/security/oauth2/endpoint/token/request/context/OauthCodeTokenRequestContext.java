@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;

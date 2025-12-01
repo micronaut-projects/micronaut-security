@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Configuration JSON Web Key Sets defined as static resources.

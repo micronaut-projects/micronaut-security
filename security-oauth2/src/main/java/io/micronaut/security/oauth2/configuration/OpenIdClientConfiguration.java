@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;

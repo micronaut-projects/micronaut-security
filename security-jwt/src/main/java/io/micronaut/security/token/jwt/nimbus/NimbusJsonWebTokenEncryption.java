@@ -22,7 +22,7 @@ import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenEncryption;
 import jakarta.inject.Singleton;

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import jakarta.inject.Singleton;
 import java.security.SecureRandom;
 import java.util.Base64;

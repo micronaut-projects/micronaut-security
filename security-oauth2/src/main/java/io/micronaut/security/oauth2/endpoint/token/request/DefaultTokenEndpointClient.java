@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;

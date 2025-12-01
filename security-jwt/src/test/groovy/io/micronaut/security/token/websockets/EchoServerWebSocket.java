@@ -1,7 +1,7 @@
 package io.micronaut.security.token.websockets;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;

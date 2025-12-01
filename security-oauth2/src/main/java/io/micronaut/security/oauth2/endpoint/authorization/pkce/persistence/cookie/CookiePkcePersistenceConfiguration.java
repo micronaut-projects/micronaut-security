@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;

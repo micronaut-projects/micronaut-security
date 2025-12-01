@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.url;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.URL;
 
 /**
