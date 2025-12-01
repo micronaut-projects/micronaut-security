@@ -28,7 +28,8 @@ public enum Prompt {
     NONE("none"),
     LOGIN("login"),
     CONSENT("consent"),
-    SELECT_ACCOUNT("select_account");
+    SELECT_ACCOUNT("select_account"),
+    CREATE("create");
 
     private String promptName;
 
