@@ -6,7 +6,6 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation(libs.jspecify)
     testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
