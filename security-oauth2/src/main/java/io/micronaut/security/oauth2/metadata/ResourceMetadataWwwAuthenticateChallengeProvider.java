@@ -31,7 +31,8 @@ import jakarta.inject.Singleton;
  * Use of WWW-Authenticate for Protected Resource Metadata.
  * <a href="https://datatracker.ietf.org/doc/html/rfc9728#WWW-Authenticate">RFC 9728 WWW Authenticate</a>
  */
-@Requires(classes = HttpRequest.class)
+@Requires(classes = { HttpRequest.class, HttpHostResolver.class })
+@Requires(beans = { HttpHostResolver.class })
 @Requires(property = ProtectedResourceMetadataConfiguration.PROPERTY_WWW_AUTHENTICATE, notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
