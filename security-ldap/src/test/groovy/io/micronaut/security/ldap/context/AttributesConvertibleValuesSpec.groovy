@@ -1,4 +1,5 @@
 package io.micronaut.security.ldap.context
+import io.micronaut.core.convert.ArgumentConversionContext
 
 import spock.lang.Specification
 
@@ -14,7 +15,7 @@ class AttributesConvertibleValuesSpec extends Specification {
         AttributesConvertibleValues values = new AttributesConvertibleValues(attrs)
 
         when:
-        Optional opt = values.get('foo', null)
+        Optional opt = values.get('foo', (ArgumentConversionContext) null)
 
         then:
         noExceptionThrown()
