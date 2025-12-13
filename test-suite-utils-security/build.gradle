@@ -10,6 +10,7 @@ dependencies {
     api(mn.micronaut.inject)
     implementation(projects.micronautSecurity)
     implementation(mnReactor.micronaut.reactor)
+    testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
 spotless {
