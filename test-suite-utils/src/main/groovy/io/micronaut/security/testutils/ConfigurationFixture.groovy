@@ -18,11 +18,11 @@ package io.micronaut.security.testutils
 interface ConfigurationFixture {
     default Map<String, Object> getConfiguration() {
         Map<String, Object> m = [:]
-        if (specName) {
-            m['spec.name'] = specName
+        if (getSpecName()) {
+            m['spec.name'] = getSpecName()
         }
-        m += loginModeCookie
-        m += oauth2ClientConfiguration
+        m += getLoginModeCookie()
+        m += getOauth2ClientConfiguration()
         m
     }
 
@@ -44,11 +44,11 @@ interface ConfigurationFixture {
 
     default Map<String, Object> getOauth2ClientConfiguration() {
         Map m = [
-                ("micronaut.security.oauth2.clients.${openIdClientName}.client-id".toString()): 'XXXX',
-                ("micronaut.security.oauth2.clients.${openIdClientName}.client-secret".toString()): 'YYYY',
+                ("micronaut.security.oauth2.clients.${getOpenIdClientName()}.client-id".toString()): 'XXXX',
+                ("micronaut.security.oauth2.clients.${getOpenIdClientName()}.client-secret".toString()): 'YYYY',
         ]
-        if (issuer != null) {
-            m[("micronaut.security.oauth2.clients.${openIdClientName}.openid.issuer".toString())] = issuer
+        if (getIssuer() != null) {
+            m[("micronaut.security.oauth2.clients.${getOpenIdClientName()}.openid.issuer".toString())] = getIssuer()
         }
         m
     }
