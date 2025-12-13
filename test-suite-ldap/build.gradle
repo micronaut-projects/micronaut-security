@@ -22,6 +22,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(libs.unboundid.ldapsdk)
+    testImplementation(mnTest.junit.jupiter.engine)
 }
 
 tasks.withType(Test).configureEach {
