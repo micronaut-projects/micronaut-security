@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import java.io.Serializable;

@@ -1,6 +1,6 @@
 package io.micronaut.security.test.aot;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.io.ResourceLoader;
@@ -46,11 +46,7 @@ class HomeController {
         }
         InputStream inputStream = inputStreamOptional.get();
 
-        try {
-            this.expectedDefaultOpenIdProviderMetadata = objectMapper.readValue(inputStream, DefaultOpenIdProviderMetadata.class);
-        } catch (IOException e) {
-            throw new ConfigurationException("could not readValue to  DefaultOpenIdProviderMetadata");
-        }
+        this.expectedDefaultOpenIdProviderMetadata = objectMapper.readValue(inputStream, DefaultOpenIdProviderMetadata.class);
 
         fileName = "jwks.json";
         inputStreamOptional = resourceLoader.getResourceAsStream("classpath:" + fileName);
