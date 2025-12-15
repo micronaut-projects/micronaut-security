@@ -15,7 +15,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
 
-    testImplementation(platform(mnTestResources.boms.testcontainers))
+    testImplementation(platform(mnTest.boms.testcontainers))
     testImplementation(libs.testcontainers.junit.jupiter)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
@@ -30,8 +30,9 @@ dependencies {
     testImplementation(mnSql.vertx.mysql.client)
     testImplementation(mnSql.mysql.connector.java)
 
-    testImplementation(mnTestResources.testcontainers.core)
-    testImplementation(mnTestResources.testcontainers.mysql)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.mysql)
 
     testImplementation(mnReactor.micronaut.reactor)
     // Test Fails without this dependency
