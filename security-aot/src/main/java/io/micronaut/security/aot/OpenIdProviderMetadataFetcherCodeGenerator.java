@@ -165,7 +165,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         return methodBuilder.addStatement("return builder.build()").build();
     }
 
-    private void addStringSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addStringSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                           @NonNull String setter,
                                           @Nullable String value) {
         if (value != null) {
@@ -173,7 +173,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         }
     }
 
-    private void addBooleanSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addBooleanSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                            @NonNull String setter,
                                            @Nullable Boolean value) {
         if (value != null) {
@@ -181,7 +181,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         }
     }
 
-    private void addListStringSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addListStringSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                               @NonNull String listVariableName,
                                               @NonNull String setter,
                                               @Nullable List<String> values) {

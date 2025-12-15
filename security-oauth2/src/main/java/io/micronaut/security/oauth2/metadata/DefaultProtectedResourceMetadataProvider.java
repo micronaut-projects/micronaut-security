@@ -84,8 +84,7 @@ public class DefaultProtectedResourceMetadataProvider implements ProtectedResour
      * @param request The HTTP Request
      * @return a Protected Resource Metadata builder
      */
-    @NonNull
-    protected ProtectedResourceMetadata.Builder builder(@Nullable String path, @NonNull HttpRequest<?> request) {
+    protected ProtectedResourceMetadata.@NonNull Builder builder(@Nullable String path, @NonNull HttpRequest<?> request) {
         ProtectedResourceMetadata.Builder builder = ProtectedResourceMetadata.builder()
             .resource(resource(path, request));
         List<String> authorizationServers = authorizationServers(path, request);

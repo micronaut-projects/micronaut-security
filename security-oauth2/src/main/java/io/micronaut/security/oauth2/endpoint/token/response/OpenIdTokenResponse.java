@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.core.annotation.ReflectiveAccess;
