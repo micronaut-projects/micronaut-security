@@ -57,7 +57,6 @@ bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bo
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
 jsonassert = { module = 'org.skyscreamer:jsonassert', version.ref = 'jsonassert'}
 commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-codec'}
 testcontainers-selenium = { module = "org.testcontainers:testcontainers-selenium"}

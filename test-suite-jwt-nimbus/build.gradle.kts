@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     testImplementation(platform(mnTest.micronaut.test.bom))
-    testImplementation(libs.junit.platform.engine)
+    testImplementation(mnTest.junit.platform.engine)
     testImplementation(mnTest.junit.jupiter.engine)
     testImplementation(projects.testSuiteJwtTck)
 }
