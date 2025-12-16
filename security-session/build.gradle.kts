@@ -10,7 +10,8 @@ dependencies {
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
-    testImplementation(mnTestResources.testcontainers.core)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
