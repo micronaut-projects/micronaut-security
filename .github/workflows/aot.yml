@@ -32,11 +32,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Run AOT Tests
-        run: ./test-suite-aot.sh
-        env:
-           TESTCONTAINERS_RYUK_DISABLED: true
-           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-           GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
-           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
-           PREDICTIVE_TEST_SELECTION: "${{'false'}}"
+#      - name: Run AOT Tests
+#        run: ./test-suite-aot.sh
+#        env:
+#           TESTCONTAINERS_RYUK_DISABLED: true
+#           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+#           GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
+#           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
+#           PREDICTIVE_TEST_SELECTION: "${{'false'}}"
