@@ -36,7 +36,8 @@ dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.groovy.json)
-    testImplementation(mnTestResources.testcontainers.core)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
 
     testImplementation(libs.system.stubs.core)
 

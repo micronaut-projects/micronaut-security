@@ -17,7 +17,7 @@ package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;

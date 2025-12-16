@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.ldap.context;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 

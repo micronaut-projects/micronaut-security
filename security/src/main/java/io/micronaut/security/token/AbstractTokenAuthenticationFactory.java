@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;

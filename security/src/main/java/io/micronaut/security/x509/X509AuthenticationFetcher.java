@@ -18,7 +18,7 @@ package io.micronaut.security.x509;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;

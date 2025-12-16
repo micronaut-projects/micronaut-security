@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.keycloak;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler;
 import io.micronaut.security.testutils.TestContainersUtils;
 

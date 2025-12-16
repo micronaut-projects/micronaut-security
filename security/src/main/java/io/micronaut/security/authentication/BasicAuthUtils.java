@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpHeaderValues;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

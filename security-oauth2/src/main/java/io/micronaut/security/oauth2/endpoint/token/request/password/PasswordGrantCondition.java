@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.condition.AbstractCondition;

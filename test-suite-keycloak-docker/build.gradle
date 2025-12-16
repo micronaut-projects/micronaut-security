@@ -5,7 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(mnTestResources.testcontainers.core)
+    implementation(platform(mnTest.boms.testcontainers))
+    implementation(libs.testcontainers)
+    testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
 spotless {
