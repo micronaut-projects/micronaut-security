@@ -15,7 +15,7 @@ dependencies {
     testImplementation(mn.micronaut.jackson.databind)
     testImplementation(mnHibernateValidator.micronaut.hibernate.validator)
     testImplementation(platform(mnTest.boms.junit))
-    testImplementation(libs.junit.jupiter.params)
+    testImplementation(mnTest.junit.jupiter.params)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

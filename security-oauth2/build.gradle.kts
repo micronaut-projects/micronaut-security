@@ -40,7 +40,7 @@ dependencies {
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(platform(mnTest.boms.junit))
-    testImplementation(libs.junit.jupiter.params)
+    testImplementation(mnTest.junit.jupiter.params)
     testImplementation(mnTest.mockito.core)
 }
 tasks.withType<Test> {
