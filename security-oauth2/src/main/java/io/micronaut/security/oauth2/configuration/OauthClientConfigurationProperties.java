@@ -79,6 +79,8 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private boolean proxyWellKnownOauthAuthorizationServer;
     private boolean proxyWellKnownOpenidConfiguration;
 
+    private String version = "";
+
     /**
      * @param name The provider name
      */
@@ -125,6 +127,26 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @Nullable
     public AuthorizationServer getAuthorizationServer() {
         return authorizationServer;
+    }
+
+
+    /**
+     * Retrieves the configured version.
+     *
+     * @return the version string (e.g., "v2.0").
+     */
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * Sets the version. Called by Spring Boot Binder.
+     *
+     * @param version the version string.
+     */
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @NonNull

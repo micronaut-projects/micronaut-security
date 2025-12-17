@@ -147,4 +147,13 @@ public interface OauthClientConfiguration extends Toggleable {
     default boolean isProxyWellKnownOpenidConfiguration() {
         return false;
     }
+
+    /**
+     * @return The version of the provider (e.g. "18.0.0"). Used to determine feature support.
+     * @since 5.0.0
+     */
+    @Nullable
+    default String getVersion() {
+        return null;
+    }
 }
