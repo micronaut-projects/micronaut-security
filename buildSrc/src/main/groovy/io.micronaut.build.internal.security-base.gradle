@@ -9,15 +9,15 @@ tasks.withType(Test) {
     }
     testLogging {
         events "passed", "skipped", "failed"//, "standardOut"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
+        showExceptions = true
+        exceptionFormat = "full"
+        showCauses = true
+        showStackTraces = true
 
         // set options for log level DEBUG and INFO
         debug {
             events "passed", "skipped", "failed"//, "started", "standardOut", "standardError"
-            exceptionFormat "full"
+            exceptionFormat = "full"
         }
         info.events = debug.events
         info.exceptionFormat = debug.exceptionFormat

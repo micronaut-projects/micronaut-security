@@ -80,6 +80,9 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private List<String> requestObjectEncryptionEncValuesSupported;
     private String checkSessionIframe;
 
+    public DefaultOpenIdProviderMetadata() {
+    }
+
     /**
      *
      * @param providerName Provider Name
