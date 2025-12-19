@@ -58,7 +58,6 @@ class OauthConfigurationSpec extends Specification {
                 'micronaut.security.oauth2.openid.claims-validation.audience': false,
                 'micronaut.security.oauth2.openid.claims-validation.authorized-party': false,
                 'micronaut.security.oauth2.openid.additional-claims.jwt': true,
-                'micronaut.security.oauth2.openid.additional-claims.access-token': true,
                 'micronaut.security.oauth2.openid.additional-claims.refresh-token': true,
         ])
 

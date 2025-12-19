@@ -7,28 +7,32 @@ import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.server.util.HttpHostResolver
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.IdTokenClaimsValidator
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint
+import io.micronaut.security.oauth2.endpoint.endsession.request.KeycloakEndSessionEndpoint
+import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder
 import io.micronaut.security.pages.HomePage
+import io.micronaut.security.pages.KeycloakLogoutConfirmPage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
-import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration
 import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
 import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakAuthorizationRedirectHandler
-import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
 import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
+import io.micronaut.security.testutils.TestContainersUtils
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.security.utils.BaseUrlUtils
@@ -39,6 +43,7 @@ import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 import java.security.Principal
+import java.util.function.Supplier
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 @IgnoreIf({ env['CI'] })
@@ -59,16 +64,16 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
         browser
     }
 
+
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = ConfigurationUtils.getConfiguration('AuthenticationModeIdTokenSpec') + [
                 'micronaut.security.authentication'              : 'idtoken',
                 "micronaut.security.endpoints.logout.get-allowed": true,
+                // ADDED: Persist the ID Token so it is available for the Logout Hint
+                "micronaut.security.oauth2.openid.additional-claims.jwt": true,
         ] as Map<String, Object>
         if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
             m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
-
-
-
                           "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
                           "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
             ] as Map<String, Object>)
@@ -82,31 +87,42 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
         applicationContext.containsBean(ReactiveJwksSignature)
         applicationContext.containsBean(TokenValidator)
 
-        when:
+        when: "Navigating to the Keycloak login endpoint"
         go "/oauth/login/keycloak"
 
-        then:
-        at LoginPage
+        then: "We should be redirected to the Keycloak Login Page"
+        waitFor(5) { at LoginPage }
 
-        when:
+        when: "We submit valid credentials"
         LoginPage loginPage = browser.page LoginPage
         loginPage.login(Keycloak.TEST_USERNAME, Keycloak.TEST_PASSWORD)
 
-        then:
-        at HomePage
+        then: "We should be redirected back to the Home Page"
 
-        when:
+        waitFor(5) { at HomePage }
+
+        when: "We inspect the HomePage content"
         HomePage homePage = browser.page HomePage
 
-        then:
+        then: "The user is authenticated"
         !homePage.message.contains("Hello anonymous")
         homePage.message.matches("Hello .*")
 
-        when:
+        when: "We log out"
         via OAuthLogoutPage
 
-        then:
-        at HomePage
+        then: "Either we are back home, or Keycloak asks for confirmation"
+
+        waitFor(5) { browser.isAt(HomePage) || browser.isAt(KeycloakLogoutConfirmPage) }
+
+        when: "If Keycloak requires confirmation, confirm it"
+        if (browser.isAt(KeycloakLogoutConfirmPage)) {
+            page(KeycloakLogoutConfirmPage).confirm()
+        }
+
+        then: "We are redirected back home as anonymous"
+
+        waitFor(5) { at HomePage  }
 
         when:
         homePage = browser.page HomePage
@@ -135,16 +151,32 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
         }
     }
 
+
     @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
     @Singleton
     @Named("keycloak")
-    static class CustomEndSessionEndpoint extends KeycloakEndSessionEndpoint {
+    @Replaces(bean = EndSessionEndpoint, named = "keycloak")
+    static class TestcontainersKeycloakEndSessionEndpoint extends KeycloakEndSessionEndpoint {
 
-        CustomEndSessionEndpoint(@Named("keycloak") OpenIdProviderMetadata openIdProviderMetadata,
-                                 EndSessionConfiguration endSessionConfiguration,
-                                 HttpHostResolver httpHostResolver) {
-            super(openIdProviderMetadata, endSessionConfiguration, httpHostResolver)
+        TestcontainersKeycloakEndSessionEndpoint(EndSessionCallbackUrlBuilder builder,
+                                                 @Named("keycloak") OauthClientConfiguration cfg,
+                                                 @Named("keycloak") OpenIdProviderMetadata md) {
+            super(builder, cfg, (Supplier<OpenIdProviderMetadata>) { -> md })
         }
+
+        @Override
+        String getUrl(HttpRequest<?> originating, Authentication authentication) {
+            def url = super.getUrl(originating, authentication)
+            if (!url) return null
+
+            def v = System.getProperty(Keycloak.SYS_TESTCONTAINERS)
+            def rewrite = (v == null || Boolean.valueOf(v))
+            if (rewrite) {
+                return url.replace("localhost", TestContainersUtils.getHost())
+            }
+            return url
+        }
+
     }
 
     @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
