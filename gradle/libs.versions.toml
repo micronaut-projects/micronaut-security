@@ -1,7 +1,7 @@
 [versions]
 managed-nimbus-jose-jwt = "10.6"
 managed-jjwt = "0.13.0"
-micronaut = "5.0.0-M3"
+micronaut = "5.0.0-M6"
 micronaut-platform = "4.10.2"
 geb = "8.0.1"
 selenium = "4.34.0"
