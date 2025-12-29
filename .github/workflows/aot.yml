@@ -20,7 +20,7 @@ jobs:
          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
          sudo apt-get clean
          df -h
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/cache@v5
         with:
           path: ~/.gradle/caches
