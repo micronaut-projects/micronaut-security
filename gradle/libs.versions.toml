@@ -1,26 +1,26 @@
 [versions]
 managed-nimbus-jose-jwt = "10.6"
 managed-jjwt = "0.13.0"
-micronaut = "5.0.0-M2"
-micronaut-platform = "4.10.2"
+micronaut = "5.0.0-M6"
+micronaut-platform = "4.10.6"
 geb = "8.0.1"
-selenium = "4.34.0"
+selenium = "4.39.0"
 system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.4"
 bouncycastle = "1.70"
 bcpkix = "1.70"
-micronaut-hibernate-validator = "4.8.0"
-micronaut-multitenancy = "5.8.0"
-micronaut-cache = "5.3.0"
+micronaut-hibernate-validator = "5.0.0-M1"
+micronaut-multitenancy = "6.0.0-M1"
+micronaut-cache = "6.0.0-M1"
 micronaut-reactor = "4.0.0-M1"
 micronaut-serde = "3.0.0-M1"
 micronaut-servlet = "6.0.0-M1"
-micronaut-session = "4.8.0"
+micronaut-session = "5.0.0-M1"
 micronaut-views = "5.9.0"
 micronaut-validation = "5.0.0-M1"
-micronaut-test = "5.0.0-M2"
-micronaut-data = "4.14.1"
-micronaut-sql = "6.3.2"
+micronaut-test = "5.0.0-M3"
+micronaut-data = "4.14.2"
+micronaut-sql = "7.0.0-M4"
 graalvm-native-buildtools = "0.11.3"
 jsonassert = "1.5.3"
 commons-codec = "1.20.0"
@@ -56,8 +56,6 @@ bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bo
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
 jsonassert = { module = 'org.skyscreamer:jsonassert', version.ref = 'jsonassert'}
 commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-codec'}
 testcontainers-selenium = { module = "org.testcontainers:testcontainers-selenium"}

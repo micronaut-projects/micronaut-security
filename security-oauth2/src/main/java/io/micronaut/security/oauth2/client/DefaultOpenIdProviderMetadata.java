@@ -81,6 +81,14 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private String checkSessionIframe;
 
     /**
+     * @deprecated Use {@link DefaultOpenIdProviderMetadata(String)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public DefaultOpenIdProviderMetadata() {
+        this.providerName = "";
+    }
+
+    /**
      *
      * @param providerName Provider Name
      */

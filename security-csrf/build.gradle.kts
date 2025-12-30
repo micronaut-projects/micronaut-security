@@ -22,7 +22,3 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-micronautBuild {
-    binaryCompatibility.enabled = false
-}
