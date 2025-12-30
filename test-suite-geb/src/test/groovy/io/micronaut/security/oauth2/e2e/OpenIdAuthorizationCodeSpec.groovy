@@ -41,7 +41,6 @@ import spock.lang.Shared
 import java.security.Principal
 import java.util.function.Supplier
 
-@IgnoreIf({ env['CI'] })
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationCodeSpec extends GebSpec {
 

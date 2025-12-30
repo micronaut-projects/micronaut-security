@@ -32,7 +32,6 @@ import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
-@IgnoreIf({ env['CI'] })
 class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecification {
 
     @Override
