@@ -46,7 +46,6 @@ import java.security.Principal
 import java.util.function.Supplier
 
 @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
-@IgnoreIf({ env['CI'] })
 class AuthenticationModeIdTokenSpec extends GebSpec {
     @AutoCleanup
     @Shared
@@ -69,7 +68,7 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
         Map<String, Object> m = ConfigurationUtils.getConfiguration('AuthenticationModeIdTokenSpec') + [
                 'micronaut.security.authentication'              : 'idtoken',
                 "micronaut.security.endpoints.logout.get-allowed": true,
-                // ADDED: Persist the ID Token so it is available for the Logout Hint
+                // Persist the ID Token so it is available for the Logout Hint
                 "micronaut.security.oauth2.openid.additional-claims.jwt": true,
         ] as Map<String, Object>
         if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
