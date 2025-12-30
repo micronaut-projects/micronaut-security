@@ -1,9 +1,11 @@
 plugins {
     id("io.micronaut.build.internal.kotlin-kapt")
-    id "io.micronaut.build.internal.security-tests"
+    id("io.micronaut.build.internal.security-tests")
 }
 
 dependencies {
+    testImplementation(platform(kotlin("bom")))
+    testImplementation(kotlin("stdlib"))
     kaptTest(mn.micronaut.inject.java)
     kaptTest(projects.micronautSecurityProcessor)
 
@@ -30,7 +32,6 @@ dependencies {
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
 }
-
-tasks.named('test') {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
