@@ -383,7 +383,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> 4.16.0 </p>
+        <p><strong>Version:</strong> 4.16.1 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -3236,7 +3236,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 </table>
 </div>
 <div class="paragraph">
-<p>To use the Micronaut&#8217;s session based authentication capabilities you must have the <code>security-session</code> dependency on your classpath. For example:</p>
+<p>To use the Micronaut&#8217;s session based authentication capabilities, you must have the <code>security-session</code> dependency on your classpath. For example:</p>
 </div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
@@ -3368,7 +3368,7 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Read the following guides to learn more abut session based authentication:</p>
+<p>Read the following guides to learn more about session based authentication:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3389,7 +3389,7 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
 <p>When you set <code>micronaut.security.authentication</code> to <code>session</code>, you enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> and <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a>.</p>
 </div>
 <div class="paragraph">
-<p>These handlers return 303 responses to the urls defined in the <a href="#redirection">Redirection Configuration</a>. Disable redirection configuration with <code>micronaut.security.redirection.enabled=false</code> to respond with 200 responses instead.</p>
+<p>These handlers return 303 responses to the urls defined in the <a href="#redirection">Redirection Configuration</a>. Disable redirection configuration with <code>micronaut.security.redirect.enabled=false</code> to respond with 200 responses instead.</p>
 </div>
 </div>
 </div>
@@ -5212,7 +5212,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>sub</code> claim is not null.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled by default. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.subject</code> to false.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled by default. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.subject-not-null</code> to false.</p></td>
 </tr>
 </tbody>
 </table>
