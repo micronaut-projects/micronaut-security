@@ -60,6 +60,32 @@ class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
                 .toString()
 
         then:
-        "http://localhost:" + Keycloak.port + "/auth/realms/master/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A" + embeddedServer.port + "%2Flogout" == redirect
+        redirect.startsWith("http://localhost:${Keycloak.port}/auth/realms/master/protocol/openid-connect/logout?")
+        redirect.contains("post_logout_redirect_uri=")
+        redirect.contains("client_id=${Keycloak.CLIENT_ID}")
+
+    }
+
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    void "keycloak configuration supports endSession with id_token_hint"() {
+        given:
+        String name = "keycloak"
+        String idToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+        HttpRequest<?> request = new SimpleHttpRequest<>(HttpMethod.GET,
+                "http://localhost:" + embeddedServer.port + "/oauth/logout", null)
+
+        when:
+        String redirect = applicationContext.getBean(DefaultOpenIdClient, Qualifiers.byName(name))
+                .endSessionRedirect(request, Authentication.build("sherlock", ["openIdToken": idToken]))
+                .get()
+                .getHeaders()
+                .get(HttpHeaders.LOCATION)
+                .toString()
+
+        then:
+        redirect.contains("id_token_hint=" + idToken)
+        redirect.contains("post_logout_redirect_uri=")
+        redirect.contains("client_id=" + Keycloak.CLIENT_ID)
     }
 }
