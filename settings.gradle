@@ -21,6 +21,7 @@ include "security-processor"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
+include "security-websocket"
 include "test-suite-graal"
 include "test-suite-jwks-cache"
 include "test-suite-groovy"
@@ -46,7 +47,7 @@ include "test-suite-hibernate-validator"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
-    useStandardizedProjectNames=true
+    useStandardizedProjectNames = true
     importMicronautCatalog()
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
