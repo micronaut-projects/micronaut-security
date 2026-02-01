@@ -920,9 +920,9 @@
 </div>
 <div class="sect2">
 <h3 id="_micronaut_security_jwt_config_properties">Micronaut Security Jwt Config Properties</h3>
-<a id="io.micronaut.security.token.jwt.nimbus.NimbusJsonWebTokenValidatorConfigurationProperties" href="#io.micronaut.security.token.jwt.nimbus.NimbusJsonWebTokenValidatorConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.jwt.config.JwtConfigurationProperties" href="#io.micronaut.security.token.jwt.config.JwtConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/nimbus/NimbusJsonWebTokenValidatorConfigurationProperties.html">NimbusJsonWebTokenValidatorConfigurationProperties</a></caption>
+<caption class="title">Table 22. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html">JwtConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -937,19 +937,9 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.reactive-validator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the bean {@link NimbusReactiveJsonWebTokenValidator} is enabled. Default value true.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.validator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the bean {@link NimbusJsonWebTokenValidator} is enabled. Default value true.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.reactive-validator-execute-on-blocking</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor. Default value false.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -983,9 +973,9 @@
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
-<a id="io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.jwt.signature.jwks.StaticJwksSignatureConfigurationProperties" href="#io.micronaut.security.token.jwt.signature.jwks.StaticJwksSignatureConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html">RefreshTokenConfigurationProperties</a></caption>
+<caption class="title">Table 24. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/jwks/StaticJwksSignatureConfigurationProperties.html">StaticJwksSignatureConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1000,24 +990,9 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> is enabled. Default value (true).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.secret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks-static.*.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">shared secret. For HS256 must be at least 256 bits.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.base64</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value false.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A path either starting with <code>classpath:</code> or <code>file:</code>. You can serve a JSON JWKS from anywhere on disk or the classpath. For example to serve static resources from <code>src/main/resources/security/jwks.json</code>, you would use <code>classpath:security/jwks.json</code> as the path.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1056,9 +1031,150 @@
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
+<a id="io.micronaut.security.token.jwt.nimbus.NimbusJsonWebTokenValidatorConfigurationProperties" href="#io.micronaut.security.token.jwt.nimbus.NimbusJsonWebTokenValidatorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 26. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/nimbus/NimbusJsonWebTokenValidatorConfigurationProperties.html">NimbusJsonWebTokenValidatorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.reactive-validator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the bean {@link NimbusReactiveJsonWebTokenValidator} is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.validator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the bean {@link NimbusJsonWebTokenValidator} is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.nimbus.reactive-validator-execute-on-blocking</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor. Default value false.</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<a id="io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html">RefreshTokenConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> is enabled. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.secret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shared secret. For HS256 must be at least 256 bits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.base64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value false.</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<a id="io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties" href="#io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 28. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html">JwksSignatureConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.cache-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWKS cache expiration. Default value 60 seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remote JSON Web Key set url. e.g. <a href="https://&#8230;&#8203;/.well-known/jwks.json" class="bare">https://&#8230;&#8203;/.well-known/jwks.json</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.key-type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.jwk.KeyType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<a id="io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration" href="#io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 29. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.jws-algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.secret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Secret used to sign JWT. Length must be at least 256 bits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.base64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded.</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
 <a id="io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties" href="#io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 26. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html">JwtClaimsValidatorConfigurationProperties</a></caption>
+<caption class="title">Table 30. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html">JwtClaimsValidatorConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1106,122 +1222,6 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.claims-validators.openid-idtoken</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether <code>IdTokenClaimsValidator</code>, which performs some fo the verifications described in OpenID Connect Spec, is enabled. Default value true. Only applies for <code>idtoken</code> authentication mode.</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration" href="#io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.jws-algorithm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.secret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret used to sign JWT. Length must be at least 256 bits.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.secret.*.base64</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded.</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.security.token.jwt.signature.jwks.StaticJwksSignatureConfigurationProperties" href="#io.micronaut.security.token.jwt.signature.jwks.StaticJwksSignatureConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/jwks/StaticJwksSignatureConfigurationProperties.html">StaticJwksSignatureConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks-static.*.path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A path either starting with <code>classpath:</code> or <code>file:</code>. You can serve a JSON JWKS from anywhere on disk or the classpath. For example to serve static resources from <code>src/main/resources/security/jwks.json</code>, you would use <code>classpath:security/jwks.json</code> as the path.</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.security.token.jwt.config.JwtConfigurationProperties" href="#io.micronaut.security.token.jwt.config.JwtConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html">JwtConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (true).</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties" href="#io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html">JwksSignatureConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.cache-expiration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWKS cache expiration. Default value 60 seconds.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Remote JSON Web Key set url. e.g. <a href="https://&#8230;&#8203;/.well-known/jwks.json" class="bare">https://&#8230;&#8203;/.well-known/jwks.json</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.signatures.jwks.*.key-type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.jwk.KeyType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).</p></td>
 </tr>
 </tbody>
 </table>
