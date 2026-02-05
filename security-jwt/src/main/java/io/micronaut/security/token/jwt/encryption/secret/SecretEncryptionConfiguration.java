@@ -31,6 +31,7 @@ public class SecretEncryptionConfiguration {
     private JWEAlgorithm jweAlgorithm;
     private EncryptionMethod encryptionMethod;
     private String secret;
+    private boolean base64 = false;
     private final String name;
 
     /**
@@ -88,6 +89,22 @@ public class SecretEncryptionConfiguration {
      */
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    /**
+     * @return true if the secret is Base64 encoded
+     */
+    public boolean isBase64() {
+        return base64;
+    }
+
+    /**
+     * Indicates whether the supplied secret is base64 encoded.
+     *
+     * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
+     */
+    public void setBase64(boolean base64) {
+        this.base64 = base64;
     }
 
     /**
