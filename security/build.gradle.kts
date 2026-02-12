@@ -12,7 +12,7 @@ dependencies {
     }
     api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     api(projects.micronautSecurityAnnotations)
-
+    compileOnly(mn.micronaut.websocket)
     compileOnly(mnValidation.micronaut.validation)
     testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
