@@ -75,6 +75,7 @@ authenticationStrategies:
       jwtGeneratorRSA: Example of JWT Signed with RSA
     jwtEncryption:
       title: JWT Encryption
+      jwtEncryptionSecret: Example of JWT Encrypted with Secret
       jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
     claimsValidation: Claims Validation
