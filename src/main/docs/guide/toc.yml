@@ -115,6 +115,7 @@ tokenendpoints:
   introspectionendpoint: Introspection Endpoint
 retrievingAuthenticatedUser:
   title: Retrieve the authenticated user
+  websocket: WebSocket methods
   customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
 dataAuditing:
