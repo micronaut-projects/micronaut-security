@@ -31,7 +31,7 @@ dependencies {
     testImplementation(mnMultitenancy.micronaut.multitenancy)
     testImplementation(mnViews.micronaut.views.velocity)
     testRuntimeOnly(mnViews.velocity.engine.core)
-    testRuntimeOnly(mnLogging.logback.classic)
+    testImplementation(mnLogging.logback.classic)
 
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
