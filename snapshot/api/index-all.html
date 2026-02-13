@@ -361,6 +361,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/testutils/authprovider/MockAuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)" class="member-name-link">authenticate(T, AuthenticationRequest&lt;I, S&gt;)</a> - Method in class io.micronaut.security.testutils.authprovider.<a href="io/micronaut/security/testutils/authprovider/MockAuthenticationProvider.html" title="class in io.micronaut.security.testutils.authprovider">MockAuthenticationProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/utils/SecurityBindingResultUtils.html#authentication(io.micronaut.http.HttpRequest,java.lang.Class)" class="member-name-link">authentication(HttpRequest&lt;?&gt;, Class&lt;A&gt;)</a> - Static method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/SecurityBindingResultUtils.html" title="class in io.micronaut.security.utils">SecurityBindingResultUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/Authentication.html" class="type-name-link" title="interface in io.micronaut.security.authentication">Authentication</a> - Interface in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Represents the state of an authentication.</div>
@@ -475,6 +477,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Options for how to handle multiple authentication providers.</div>
 </dd>
+<dt><a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html" class="type-name-link" title="class in io.micronaut.security.websockets">AuthenticationWebSocketStateBinder</a> - Class in <a href="io/micronaut/security/websockets/package-summary.html">io.micronaut.security.websockets</a></dt>
+<dd>
+<div class="block"><code>WebSocketStateBinder</code> implementation for <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
+</dd>
+<dt><a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html#%3Cinit%3E()" class="member-name-link">AuthenticationWebSocketStateBinder()</a> - Constructor for class io.micronaut.security.websockets.<a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html" title="class in io.micronaut.security.websockets">AuthenticationWebSocketStateBinder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/LoginController.html#authenticator" class="member-name-link">authenticator</a> - Variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/Authenticator.html" class="type-name-link" title="class in io.micronaut.security.authentication">Authenticator</a>&lt;<a href="io/micronaut/security/authentication/Authenticator.html" title="type parameter in Authenticator">T</a>&gt; - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
@@ -692,6 +700,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/token/render/BearerTokenRenderer.html#%3Cinit%3E()" class="member-name-link">BearerTokenRenderer()</a> - Constructor for class io.micronaut.security.token.render.<a href="io/micronaut/security/token/render/BearerTokenRenderer.html" title="class in io.micronaut.security.token.render">BearerTokenRenderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AbstractPrincipalArgumentBinder.html#bind(io.micronaut.core.convert.ArgumentConversionContext,io.micronaut.http.HttpRequest)" class="member-name-link">bind(ArgumentConversionContext&lt;A&gt;, HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AbstractPrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication">AbstractPrincipalArgumentBinder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html#bind(io.micronaut.core.convert.ArgumentConversionContext,io.micronaut.websocket.bind.WebSocketState)" class="member-name-link">bind(ArgumentConversionContext&lt;Authentication&gt;, WebSocketState)</a> - Method in class io.micronaut.security.websockets.<a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html" title="class in io.micronaut.security.websockets">AuthenticationWebSocketStateBinder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html" title="class in io.micronaut.security.authentication">WwwAuthenticateChallenge.Builder</a></dt>
 <dd>
@@ -4899,6 +4909,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/utils/package-summary.html">io.micronaut.security.utils</a> - package io.micronaut.security.utils</dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/websockets/package-summary.html">io.micronaut.security.websockets</a> - package io.micronaut.security.websockets</dt>
+<dd>
+<div class="block">Integration with WebSocket support in Micronaut.</div>
+</dd>
 <dt><a href="io/micronaut/security/x509/package-summary.html">io.micronaut.security.x509</a> - package io.micronaut.security.x509</dt>
 <dd>
 <div class="block">Contains classes specific to x509.</div>
@@ -7376,6 +7390,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">AOT Module ID.</div>
 </dd>
+<dt><a href="io/micronaut/security/utils/SecurityBindingResultUtils.html" class="type-name-link" title="class in io.micronaut.security.utils">SecurityBindingResultUtils</a> - Class in <a href="io/micronaut/security/utils/package-summary.html">io.micronaut.security.utils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilter.html#securityConfiguration" class="member-name-link">securityConfiguration</a> - Variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/SecurityConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.config">SecurityConfiguration</a> - Interface in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>

@@ -291,9 +291,11 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-retrievingAuthenticatedUser"><a href="#retrievingAuthenticatedUser"><strong>16</strong><span>Retrieve the authenticated user</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-customAuthenticatedUser"><a href="#customAuthenticatedUser"><strong>16.1</strong><span>Custom Binding</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-websocket"><a href="#websocket"><strong>16.1</strong><span>WebSocket methods</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>16.2</strong><span>User outside of a controller</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-customAuthenticatedUser"><a href="#customAuthenticatedUser"><strong>16.2</strong><span>Custom Binding</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>16.3</strong><span>User outside of a controller</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-dataAuditing"><a href="#dataAuditing"><strong>17</strong><span>Data Change Auditing</span></a></div>
         
@@ -7444,7 +7446,36 @@ class UserController {
 </div>
 </div>
 
-<h2 id="customAuthenticatedUser"><a class="anchor" href="#customAuthenticatedUser"></a>16.1 Custom Binding</h2>
+<h2 id="websocket"><a class="anchor" href="#websocket"></a>16.1 WebSocket methods</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.17.x/src/main/docs/guide/retrievingAuthenticatedUser/websocket.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>When using <a href="https://docs.micronaut.io/latest/guide/#websocketServer">WebSocket Servers</a>, you can bind the authenticated user in a method annotated with <code>@OnMessage</code> or <code>@OnOpen</code>.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">        @OnOpen
+        void onOpen(WebSocketSession session, Authentication authentication) {
+            broadcaster.broadcastSync("joined! " + authentication.getName(), isValid(session));
+        }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">        @OnOpen
+        fun onOpen(session: WebSocketSession, authentication: Authentication) {
+            broadcaster.broadcastSync("joined! " + authentication.name, isValid(session))
+        }</code></pre>
+</div>
+</div>
+
+<h2 id="customAuthenticatedUser"><a class="anchor" href="#customAuthenticatedUser"></a>16.2 Custom Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.17.x/src/main/docs/guide/retrievingAuthenticatedUser/customAuthenticatedUser.adoc"'>
@@ -7659,7 +7690,7 @@ class AuthenticationWithEmailArgumentBinder : TypedRequestArgumentBinder&lt;Auth
 </div>
 </div>
 
-<h2 id="securityService"><a class="anchor" href="#securityService"></a>16.2 User outside of a controller</h2>
+<h2 id="securityService"><a class="anchor" href="#securityService"></a>16.3 User outside of a controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.17.x/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
