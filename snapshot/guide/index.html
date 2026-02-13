@@ -229,7 +229,9 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-jwtEncryption"><a href="#jwtEncryption"><strong>11.3.6</strong><span>JWT Encryption</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorEncryption"><a href="#jwtGeneratorEncryption"><strong>11.3.6.1</strong><span>Example of JWT Signed with Secret and Encrypted with RSA</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtEncryptionSecret"><a href="#jwtEncryptionSecret"><strong>11.3.6.1</strong><span>Example of JWT Encrypted with Secret</span></a></div>
+        
+        <div class="toc-item" style="margin-left:30px" id="toc-item-jwtGeneratorEncryption"><a href="#jwtGeneratorEncryption"><strong>11.3.6.2</strong><span>Example of JWT Signed with Secret and Encrypted with RSA</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-claimsGeneration"><a href="#claimsGeneration"><strong>11.3.7</strong><span>Claims Generation</span></a></div>
         
@@ -4913,7 +4915,264 @@ class MySignatureGeneratorConfigurationFactory {
 <p>The API <a href="../api/io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html">JsonWebTokenEncryption</a> allows you to decrypt an encrypted token.</p>
 </div>
 
-<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>11.3.6.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
+<h2 id="jwtEncryptionSecret"><a class="anchor" href="#jwtEncryptionSecret"></a>11.3.6.1 Example of JWT Encrypted with Secret</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.17.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtEncryptionSecret.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can setup a <a href="../api/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html">SecretEncryptionConfiguration</a> qualified with <code>@Named</code> <code>generator</code> easily via configuration:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.encryptions.secret.generator.secret=pleaseChangeThisSecretForANewOne
+micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm=dir
+micronaut.security.token.jwt.encryptions.secret.generator.encryption-method=A256GCM</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        encryptions:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+              jwe-algorithm: dir
+              encryption-method: A256GCM</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.security]
+    [micronaut.security.token]
+      [micronaut.security.token.jwt]
+        [micronaut.security.token.jwt.encryptions]
+          [micronaut.security.token.jwt.encryptions.secret]
+            [micronaut.security.token.jwt.encryptions.secret.generator]
+              secret="pleaseChangeThisSecretForANewOne"
+              jwe-algorithm="dir"
+              encryption-method="A256GCM"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        encryptions {
+          secret {
+            generator {
+              secret = "pleaseChangeThisSecretForANewOne"
+              jweAlgorithm = "dir"
+              encryptionMethod = "A256GCM"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          encryptions {
+            secret {
+              generator {
+                secret = "pleaseChangeThisSecretForANewOne"
+                jwe-algorithm = "dir"
+                encryption-method = "A256GCM"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "encryptions": {
+            "secret": {
+              "generator": {
+                "secret": "pleaseChangeThisSecretForANewOne",
+                "jwe-algorithm": "dir",
+                "encryption-method": "A256GCM"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Change the <code>secret</code> property to your own secret and keep it safe</strong>.</p>
+</li>
+<li>
+<p><code>jwe-algorithm</code> specifies the JSON Web Encryption algorithm. In this example, <code>dir</code> (Direct Encryption with a Shared Symmetric Key).</p>
+</li>
+<li>
+<p><code>encryption-method</code> specifies the encryption method. In this example, <code>A256GCM</code> (AES GCM using 256-bit key).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can supply the secret with Base64 encoding.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.encryptions.secret.generator.secret=cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=
+micronaut.security.token.jwt.encryptions.secret.generator.base64=true
+micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm=dir
+micronaut.security.token.jwt.encryptions.secret.generator.encryption-method=A256GCM</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        encryptions:
+          secret:
+            generator:
+              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU='
+              base64: true
+              jwe-algorithm: dir
+              encryption-method: A256GCM</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.security]
+    [micronaut.security.token]
+      [micronaut.security.token.jwt]
+        [micronaut.security.token.jwt.encryptions]
+          [micronaut.security.token.jwt.encryptions.secret]
+            [micronaut.security.token.jwt.encryptions.secret.generator]
+              secret="cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
+              base64=true
+              jwe-algorithm="dir"
+              encryption-method="A256GCM"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        encryptions {
+          secret {
+            generator {
+              secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
+              base64 = true
+              jweAlgorithm = "dir"
+              encryptionMethod = "A256GCM"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          encryptions {
+            secret {
+              generator {
+                secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
+                base64 = true
+                jwe-algorithm = "dir"
+                encryption-method = "A256GCM"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "encryptions": {
+            "secret": {
+              "generator": {
+                "secret": "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=",
+                "base64": true,
+                "jwe-algorithm": "dir",
+                "encryption-method": "A256GCM"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This example of <code>secret</code> is Base64 encoded</p>
+</li>
+<li>
+<p>Set <code>base64</code> to signal that the secret is Base64 encoded</p>
+</li>
+</ul>
+</div>
+
+<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>11.3.6.2 Example of JWT Signed with Secret and Encrypted with RSA</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/4.17.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
