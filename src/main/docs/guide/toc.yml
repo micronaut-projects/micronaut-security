@@ -75,6 +75,7 @@ authenticationStrategies:
       jwtGeneratorRSA: Example of JWT Signed with RSA
     jwtEncryption:
       title: JWT Encryption
+      jwtEncryptionSecret: Example of JWT Encrypted with Secret
       jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
     claimsValidation: Claims Validation
@@ -115,6 +116,7 @@ tokenendpoints:
   introspectionendpoint: Introspection Endpoint
 retrievingAuthenticatedUser:
   title: Retrieve the authenticated user
+  websocket: WebSocket methods
   customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
 dataAuditing:
