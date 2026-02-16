@@ -11,7 +11,6 @@ import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
 import spock.lang.AutoCleanup
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -29,7 +28,6 @@ class SecuredExpressionsSpec extends Specification {
     @AutoCleanup
     HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
-    @Ignore
     void "verify you can access an endpoint annotated with @Secured() expression with an authenticated user"() {
         when:
         client.toBlocking().exchange(HttpRequest.GET("/authenticated/principal").basicAuth("watson", "password"))

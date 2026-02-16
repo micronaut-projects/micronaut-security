@@ -14,7 +14,6 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import java.util.*
@@ -29,7 +28,6 @@ class SecuredExpressionsTest {
     @field:Client("/")
     lateinit var httpClient: HttpClient
 
-    @Disabled
     @Test
     fun authenticatedByEmail() {
         val client = httpClient.toBlocking()
