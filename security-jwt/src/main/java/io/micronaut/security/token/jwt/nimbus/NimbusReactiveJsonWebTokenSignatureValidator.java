@@ -22,10 +22,12 @@ import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.signature.jwks.JwksClientReactorContext;
 import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenSignatureValidator;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +45,12 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
     @Override
     @SingleResult
     public Publisher<Boolean> validateSignature(@NonNull SignedJWT signedToken) {
+        JwksClientReactorContext jwksClientReactorContext = new JwksClientReactorContext();
         return Flux.fromIterable(signatures)
-                .flatMap(signatureConfiguration -> signatureConfiguration.verify(signedToken))
+                .flatMap(signatureConfiguration -> Mono.from(signatureConfiguration.verify(signedToken))
+                    .contextWrite(ctx -> ctx.put(JwksClientReactorContext.class, jwksClientReactorContext)))
                 .filter(Boolean::booleanValue)
+                .doOnNext(ignored -> jwksClientReactorContext.markTokenVerified())
                 .next();
     }
 
