@@ -29,6 +29,7 @@ import io.micronaut.http.client.HttpVersionSelection;
 import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.http.client.ServiceHttpClientConfiguration;
 import io.micronaut.http.client.exceptions.HttpClientException;
+import io.micronaut.http.client.exceptions.ReadTimeoutException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.inject.Singleton;
@@ -36,6 +37,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -78,14 +80,25 @@ public class HttpClientJwksClient implements JwksClient {
     @Override
     @SingleResult
     public Publisher<String> load(@Nullable String providerName, @NonNull String url) throws HttpClientException {
-        return Mono.from(getClient(providerName)
-                .retrieve(url))
-                .onErrorResume(HttpClientException.class, throwable -> {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception loading JWK from " + url, throwable);
+        return Mono.deferContextual(ctx -> Mono.from(getClient(providerName).retrieve(url))
+            .onErrorResume(HttpClientException.class, throwable -> {
+                if (throwable instanceof ReadTimeoutException && alreadyVerified(ctx)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Read timeout loading JWK from {} (ignored because token already verified)", url, throwable);
                     }
-                    return Mono.empty();
-                });
+                } else if (LOG.isErrorEnabled()) {
+                    LOG.error("Exception loading JWK from " + url, throwable);
+                }
+                return Mono.empty();
+            }));
+    }
+
+    private static boolean alreadyVerified(ContextView ctx) {
+        if (ctx != null && ctx.hasKey(JwksClientReactorContext.class)) {
+            JwksClientReactorContext reactorContext = ctx.get(JwksClientReactorContext.class);
+            return reactorContext.isTokenVerified();
+        }
+        return false;
     }
 
     /**
