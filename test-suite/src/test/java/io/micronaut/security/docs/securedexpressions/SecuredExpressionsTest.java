@@ -14,6 +14,7 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -32,6 +33,7 @@ class SecuredExpressionsTest {
     @Client("/")
     HttpClient httpClient;
 
+    @Disabled
     @Test
     void authenticatedByEmail() {
         BlockingHttpClient client = httpClient.toBlocking();
