@@ -122,7 +122,7 @@ final class UserAuditingEntityEventListener extends AutoPopulatedEntityEventList
             return true;
         }
         if (listenerAnnotation == PreUpdate.class) {
-            return persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATEABLE).orElse(true);
+            return persistentProperty.getAnnotationMetadata().booleanValue(AutoPopulated.class, AutoPopulated.UPDATABLE).orElse(true);
         }
         return false;
     }
