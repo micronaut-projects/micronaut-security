@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono
 @Requires(property = "spec.name", value = "ReactiveAuthenticationProviderTest")
 //tag::clazz[]
 @Singleton
-class CustomAuthenticationProvider<Any> :
+class CustomAuthenticationProvider :
     HttpRequestReactiveAuthenticationProvider<Any> {
     override fun authenticate(
         requestContext: HttpRequest<Any>?,

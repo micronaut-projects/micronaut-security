@@ -55,5 +55,5 @@ class CustomPrincipalConverterTest {
 
     @Requires(property = "spec.name", value = "CustomPrincipalConverterTest")
     @JdbcRepository(dialect = Dialect.H2)
-    interface BookRepository : CrudRepository<Book?, Long?>
+    interface BookRepository : CrudRepository<Book, Long>
 }

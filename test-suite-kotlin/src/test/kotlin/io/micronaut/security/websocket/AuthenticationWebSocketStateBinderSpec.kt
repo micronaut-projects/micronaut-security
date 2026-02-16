@@ -58,7 +58,7 @@ internal class AuthenticationWebSocketStateBinderSpec {
             wsClient.connect(
                 AuthenticationEchoClientWebSocket::class.java, request
             )
-        ).blockFirst()
+        ).blockFirst()!!
 
         //then:
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
@@ -92,8 +92,8 @@ internal class AuthenticationWebSocketStateBinderSpec {
         }
 
         companion object {
-            private fun isValid(session: WebSocketSession): Predicate<WebSocketSession?> {
-                return Predicate { s: WebSocketSession? -> s == session }
+            private fun isValid(session: WebSocketSession): Predicate<WebSocketSession> {
+                return Predicate { s: WebSocketSession -> s == session }
             }
         }
     }
