@@ -17,6 +17,7 @@ package io.micronaut.security.rules;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.web.router.RouteAttributes;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
@@ -67,7 +68,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
-        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);

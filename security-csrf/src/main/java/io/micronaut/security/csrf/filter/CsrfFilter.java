@@ -17,6 +17,7 @@ package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.web.router.RouteAttributes;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.order.Ordered;
@@ -95,7 +96,7 @@ final class CsrfFilter implements Ordered {
     }
 
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
-        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
         if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
             return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
         }
