@@ -31,6 +31,13 @@ public final class SecurityBindingResultUtils {
     private SecurityBindingResultUtils() {
     }
 
+    /**
+     *
+     * @param request HTTP Request
+     * @param authenticationClass class to bind into
+     * @return A BindingResult
+     * @param <A> Authentication Class
+     */
     public static <A extends Principal> @NonNull ArgumentBinder.BindingResult<A> authentication(@NonNull HttpRequest<?> request,
                                                                                                 @NonNull Class<A> authenticationClass) {
         if (!request.getAttributes().contains(SecurityFilter.KEY)) {
