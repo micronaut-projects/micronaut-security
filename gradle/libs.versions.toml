@@ -22,7 +22,7 @@ micronaut-validation = "5.0.0-M1"
 micronaut-test = "5.0.0-M6"
 micronaut-data = "5.0.0-M1"
 micronaut-sql = "7.0.0-M6"
-graalvm-native-buildtools = "0.11.4"
+graalvm-native-buildtools = "0.11.5"
 jsonassert = "1.5.3"
 commons-codec = "1.20.0"
 
