@@ -39,7 +39,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
 
     private boolean enabled = DEFAULT_ENABLED;
 
-    private boolean storeAsAttribute = false;
+    private boolean storeAsAttribute = TokenConfiguration.DEFAULT_STORE_AS_ATTRIBUTE;
 
     @NonNull
     private String attributeName = TokenConfiguration.DEFAULT_TOKEN_ATTRIBUTE_NAME;
