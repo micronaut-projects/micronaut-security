@@ -170,7 +170,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
                     request.setAttribute(TOKEN, tokenValue);
                     if (tokenConfiguration.isStoreAsAttribute()) {
                         Map<String, Object> attributes = new LinkedHashMap<>(authentication.getAttributes());
-                        attributes.put(tokenConfiguration.getAttributeName(), tokenValue);
+                        attributes.putIfAbsent(tokenConfiguration.getAttributeName(), tokenValue);
                         authentication = Authentication.build(authentication.getName(), authentication.getRoles(), attributes);
                     }
                     tokenValidatedEventPublisher.publishEvent(
