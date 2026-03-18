@@ -24,6 +24,8 @@ import java.time.Duration
 @MicronautTest
 class TokenAuthenticationAttributeNameConfigurableSpec extends Specification {
 
+    private static final Duration BLOCK_TIMEOUT = Duration.ofSeconds(1)
+
     @Inject
     TokenAuthenticationFetcher tokenAuthenticationFetcher
 
@@ -34,7 +36,7 @@ class TokenAuthenticationAttributeNameConfigurableSpec extends Specification {
         when:
         def request = new SimpleHttpRequest(HttpMethod.GET, "/", null)
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer yyy")
-        Authentication authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block(Duration.ofSeconds(5))
+        Authentication authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block(BLOCK_TIMEOUT)
 
         then:
         tokenConfiguration.attributeName == 'rawToken'
