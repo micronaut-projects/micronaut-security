@@ -3,7 +3,6 @@ package io.micronaut.security.token
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
-import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.core.order.Ordered
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
@@ -16,7 +15,8 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers;
 import spock.lang.Specification;
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
@@ -62,6 +62,24 @@ class TokenAuthenticationFetcherSpec extends Specification {
         then:
         authentication
         "bar" == authentication.name
+
+        when: 'Two token validators, the TokenValidator with highest order should take precedence'
+        request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "aaa")
+        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+
+        then:
+        authentication
+        "high-precedence" == authentication.name
+
+        when: 'Two token validators, use TokenValidator which provides authentication'
+        request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "bbb")
+        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+
+        then:
+        authentication
+        "baz" == authentication.name
     }
 
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
@@ -92,17 +110,51 @@ class TokenAuthenticationFetcherSpec extends Specification {
 
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
     @Singleton
-    static class ApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
+    static class HighPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
 
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
-            if (token.equals("xxx")) {
-                return Publishers.just(Authentication.build("bar"))
-            }
-            if (token.equals("yyy")) {
-                return Publishers.just(Authentication.build("foo"))
-            }
-            return Publishers.empty()
+            return Mono.fromCallable {
+                if (token.equals("xxx")) {
+                    return Authentication.build("bar")
+                }
+                if (token.equals("yyy")) {
+                    return Authentication.build("foo")
+                }
+                if (token.equals("aaa")) {
+                    Thread.sleep(1000)
+                    return Authentication.build("high-precedence")
+                }
+                return null as Authentication
+            }.subscribeOn(Schedulers.boundedElastic()).filter(Objects::nonNull)
+        }
+
+        @Override
+        int getOrder() {
+            return HIGHEST_PRECEDENCE
+        }
+    }
+
+    @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
+    @Singleton
+    static class LowPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
+
+        @Override
+        Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+            return Mono.fromCallable {
+                if (token.equals("aaa")) {
+                    return Authentication.build("low-precedence")
+                }
+                if (token.equals("bbb")) {
+                    return Authentication.build("baz")
+                }
+                return null as Authentication
+            }.subscribeOn(Schedulers.boundedElastic()).filter(Objects::nonNull)
+        }
+
+        @Override
+        int getOrder() {
+            return LOWEST_PRECEDENCE
         }
     }
 }
