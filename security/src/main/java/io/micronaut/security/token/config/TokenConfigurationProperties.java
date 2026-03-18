@@ -39,6 +39,11 @@ public class TokenConfigurationProperties implements TokenConfiguration {
 
     private boolean enabled = DEFAULT_ENABLED;
 
+    private boolean storeAsAttribute = false;
+
+    @NonNull
+    private String attributeName = TokenConfiguration.DEFAULT_TOKEN_ATTRIBUTE_NAME;
+
     @NonNull
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
 
@@ -51,6 +56,35 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean isStoreAsAttribute() {
+        return storeAsAttribute;
+    }
+
+    /**
+     *
+     * @param storeAsAttribute Whether to store the token as an attribute in  {@link io.micronaut.security.authentication.Authentication#getAttributes()}. Default value: `false`.
+     */
+    public void setStoreAsAttribute(boolean storeAsAttribute) {
+        this.storeAsAttribute = storeAsAttribute;
+    }
+
+    @Override
+    @NonNull
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    /**
+     *
+     * @param attributeName the {@link io.micronaut.security.authentication.Authentication#getAttributes()} key to store the token if {@link TokenConfiguration#isStoreAsAttribute()} returns {@literal true}. Default value: `token`.
+     */
+    public void setAttributeName(@NonNull String attributeName) {
+        if (StringUtils.isNotEmpty(attributeName)) {
+            this.attributeName = attributeName;
+        }
     }
 
 

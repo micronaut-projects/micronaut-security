@@ -27,6 +27,7 @@ import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
+import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
@@ -34,7 +35,9 @@ import reactor.core.publisher.Flux;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -62,6 +65,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
     protected final HttpLocaleResolver httpLocaleResolver;
     protected final ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher;
     private final TokenResolver<HttpRequest<?>> tokenResolver;
+    private final TokenConfiguration tokenConfiguration;
 
     /**
      * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
@@ -113,7 +117,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
      * @param httpLocaleResolver           The http locale resolver
      * @since 4.7.0
      */
-    @Inject
+    @Deprecated(forRemoval = true, since = "4.18.0")
     public TokenAuthenticationFetcher(
         List<TokenValidator<HttpRequest<?>>> tokenValidators,
         TokenResolver<HttpRequest<?>> tokenResolver,
@@ -121,11 +125,34 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         HttpHostResolver httpHostResolver,
         HttpLocaleResolver httpLocaleResolver
     ) {
+        this(tokenValidators, tokenResolver, tokenValidatedEventPublisher, httpHostResolver, httpLocaleResolver, new TokenConfiguration() {
+        });
+    }
+
+    /**
+     * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
+     * @param tokenResolver                The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
+     * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
+     * @param httpHostResolver             The http host resolver
+     * @param httpLocaleResolver           The http locale resolver
+     * @param tokenConfiguration Token Configuration
+     * @since 4.7.0
+     */
+    @Inject
+    public TokenAuthenticationFetcher(
+        List<TokenValidator<HttpRequest<?>>> tokenValidators,
+        TokenResolver<HttpRequest<?>> tokenResolver,
+        ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher,
+        HttpHostResolver httpHostResolver,
+        HttpLocaleResolver httpLocaleResolver,
+        TokenConfiguration tokenConfiguration
+    ) {
         this.tokenValidatedEventPublisher = tokenValidatedEventPublisher;
         this.tokenResolver = tokenResolver;
         this.tokenValidators = tokenValidators;
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
+        this.tokenConfiguration = tokenConfiguration;
     }
 
     @Override
@@ -141,6 +168,11 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
                 .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
+                    if (tokenConfiguration.isStoreAsAttribute()) {
+                        Map<String, Object> attributes = new LinkedHashMap<>(authentication.getAttributes());
+                        attributes.put(tokenConfiguration.getAttributeName(), tokenValue);
+                        authentication = Authentication.build(authentication.getName(), authentication.getRoles(), attributes);
+                    }
                     tokenValidatedEventPublisher.publishEvent(
                         new TokenValidatedEvent(
                             tokenValue,

@@ -18,6 +18,7 @@ package io.micronaut.security.token.config;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Defines Security Token Configuration.
@@ -31,6 +32,27 @@ public interface TokenConfiguration extends Toggleable {
     String DEFAULT_NAME_KEY = "sub";
 
     String DEFAULT_ROLES_SEPARATOR = null;
+
+    boolean DEFAULT_STORE_AS_ATTRIBUTE = false;
+
+    String DEFAULT_TOKEN_ATTRIBUTE_NAME = "token";
+
+    /**
+     *
+     * @return Whether to store the token as an attribute in  {@link io.micronaut.security.authentication.Authentication#getAttributes()}. Default value: `false`.
+     */
+    default boolean isStoreAsAttribute() {
+        return DEFAULT_STORE_AS_ATTRIBUTE;
+    }
+
+    /**
+     *
+     * @return the {@link Authentication#getAttributes()} key to store the token if {@link TokenConfiguration#isStoreAsAttribute()} returns {@literal true}. Default value {@value #DEFAULT_TOKEN_ATTRIBUTE_NAME}.
+     */
+    @NonNull
+    default String getAttributeName() {
+        return DEFAULT_TOKEN_ATTRIBUTE_NAME;
+    }
 
     /**
      * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s roles.

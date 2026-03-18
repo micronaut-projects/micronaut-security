@@ -16,8 +16,8 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
-import reactor.core.publisher.Mono;
-import spock.lang.Specification;
+import reactor.core.publisher.Mono
+import spock.lang.Specification
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
 @MicronautTest
