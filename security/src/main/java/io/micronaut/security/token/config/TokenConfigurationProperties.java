@@ -64,8 +64,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
+     * Sets whether to store the token as an attribute.
      *
-     * @param storeAsAttribute Whether to store the token as an attribute in  {@link io.micronaut.security.authentication.Authentication#getAttributes()}. Default value: `false`.
+     * @param storeAsAttribute whether to store the token as an attribute in {@link io.micronaut.security.authentication.Authentication#getAttributes()}. Default value: {@code false}.
      */
     public void setStoreAsAttribute(boolean storeAsAttribute) {
         this.storeAsAttribute = storeAsAttribute;
@@ -78,8 +79,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
+     * Sets the attribute name used to store the token.
      *
-     * @param attributeName the {@link io.micronaut.security.authentication.Authentication#getAttributes()} key to store the token if {@link TokenConfiguration#isStoreAsAttribute()} returns {@literal true}. Default value: `token`.
+     * @param attributeName the {@link io.micronaut.security.authentication.Authentication#getAttributes()} key to store the token if {@link TokenConfiguration#isStoreAsAttribute()} returns {@code true}. Default value: {@code token}.
      */
     public void setAttributeName(@NonNull String attributeName) {
         if (StringUtils.isNotEmpty(attributeName)) {
@@ -89,7 +91,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
 
 
     /**
-     * @see TokenConfiguration#getRolesName() ().
+     * Returns the name of the roles key in the token.
+     *
+     * @see TokenConfiguration#getRolesName()
      * If not specified, defaults to {@link #DEFAULT_ROLES_NAME}.
      */
     @Override
