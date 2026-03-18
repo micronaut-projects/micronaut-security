@@ -136,7 +136,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
      * @param httpHostResolver             The http host resolver
      * @param httpLocaleResolver           The http locale resolver
      * @param tokenConfiguration Token Configuration
-     * @since 4.7.0
+     * @since 4.18.0
      */
     @Inject
     public TokenAuthenticationFetcher(
