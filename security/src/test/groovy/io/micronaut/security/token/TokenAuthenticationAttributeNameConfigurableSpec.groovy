@@ -16,6 +16,7 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 import spock.lang.Specification
+import java.time.Duration
 
 @Property(name = "spec.name", value = "TokenAuthenticationAttributeNameConfigurableSpec")
 @Property(name = "micronaut.security.token.store-as-attribute", value = "true")
@@ -33,7 +34,7 @@ class TokenAuthenticationAttributeNameConfigurableSpec extends Specification {
         when:
         def request = new SimpleHttpRequest(HttpMethod.GET, "/", null)
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer yyy")
-        Authentication authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        Authentication authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block(Duration.ofSeconds(5))
 
         then:
         tokenConfiguration.attributeName == 'rawToken'
