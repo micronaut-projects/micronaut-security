@@ -86,6 +86,9 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
      * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
      * @deprecated Use {@link TokenAuthenticationFetcher(List, TokenResolver, ApplicationEventPublisher, HttpHostResolver, HttpLocaleResolver)} instead.
      */
+    private static final TokenConfiguration DEFAULT_TOKEN_CONFIGURATION = new TokenConfiguration() {
+    };
+
     @Deprecated(forRemoval = true, since = "4.7.0")
     public TokenAuthenticationFetcher(List<TokenValidator<HttpRequest<?>>> tokenValidators,
                                       TokenResolver<HttpRequest<?>> tokenResolver,
@@ -125,9 +128,9 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         HttpHostResolver httpHostResolver,
         HttpLocaleResolver httpLocaleResolver
     ) {
-        this(tokenValidators, tokenResolver, tokenValidatedEventPublisher, httpHostResolver, httpLocaleResolver, new TokenConfiguration() {
-        });
+        this(tokenValidators, tokenResolver, tokenValidatedEventPublisher, httpHostResolver, httpLocaleResolver, DEFAULT_TOKEN_CONFIGURATION);
     }
+
 
     /**
      * @param tokenValidators              The list of {@link TokenValidator} which attempt to validate the request
