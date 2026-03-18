@@ -36,3 +36,4 @@ src/main/docs/resources/img/micronaut-logo-white.svg
 **/.micronaut/test-resources/
 .kotlin
 /buildSrc/gradle.properties
+.oca
