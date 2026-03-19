@@ -2,7 +2,7 @@
 managed-nimbus-jose-jwt = "10.7"
 managed-jjwt = "0.13.0"
 micronaut = "5.0.0-M17"
-micronaut-platform = "4.10.9"
+micronaut-platform = "4.10.10"
 awaitility = "4.3.0"
 geb = "8.0.1"
 selenium = "4.40.0"
