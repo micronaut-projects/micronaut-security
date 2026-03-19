@@ -13,7 +13,6 @@ import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.testcontainers.containers.MySQLContainer;
@@ -33,7 +32,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @MicronautTest(transactional = false)
 @Testcontainers(disabledWithoutDocker = true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Disabled("needs a release of Micronaut Data first")
 class TestSuiteSecurityServiceTest implements TestPropertyProvider {
     static final MySQLContainer MY_SQL_CONTAINER;
 
