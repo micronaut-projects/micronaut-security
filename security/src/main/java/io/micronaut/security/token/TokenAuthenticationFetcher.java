@@ -89,7 +89,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
             return Flux.empty();
         }
         return Flux.fromIterable(tokens)
-            .flatMapSequential(tokenValue -> Flux.fromIterable(tokenValidators)
+            .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
                 .flatMapSequential(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {

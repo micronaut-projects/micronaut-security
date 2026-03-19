@@ -122,7 +122,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
                     return Authentication.build("foo")
                 }
                 if (token.equals("aaa")) {
-                    Thread.sleep(1000)
+                    sleep(1000)
                     return Authentication.build("high-precedence")
                 }
                 return null as Authentication
