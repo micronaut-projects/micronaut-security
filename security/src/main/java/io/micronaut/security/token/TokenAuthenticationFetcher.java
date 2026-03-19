@@ -29,6 +29,7 @@ import io.micronaut.security.token.validator.TokenValidator;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
