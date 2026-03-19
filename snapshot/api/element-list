@@ -19,7 +19,6 @@ io.micronaut.security.event
 io.micronaut.security.expressions
 io.micronaut.security.filters
 io.micronaut.security.handlers
-io.micronaut.security.info
 io.micronaut.security.ldap
 io.micronaut.security.ldap.configuration
 io.micronaut.security.ldap.context
@@ -61,7 +60,6 @@ io.micronaut.security.oauth2.keycloak.docker
 io.micronaut.security.oauth2.metadata
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
-io.micronaut.security.processor
 io.micronaut.security.rules
 io.micronaut.security.session
 io.micronaut.security.testutils
@@ -95,5 +93,4 @@ io.micronaut.security.token.refresh
 io.micronaut.security.token.render
 io.micronaut.security.token.validator
 io.micronaut.security.utils
-io.micronaut.security.websockets
 io.micronaut.security.x509
