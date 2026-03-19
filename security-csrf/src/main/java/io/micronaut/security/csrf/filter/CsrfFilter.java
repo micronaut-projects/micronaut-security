@@ -96,7 +96,7 @@ final class CsrfFilter implements Ordered {
     }
 
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
-        try  (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
             if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
                 return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
             }
