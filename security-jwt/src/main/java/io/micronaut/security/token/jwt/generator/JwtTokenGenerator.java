@@ -19,7 +19,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.CollectionUtils;
 
 import java.util.ArrayList;

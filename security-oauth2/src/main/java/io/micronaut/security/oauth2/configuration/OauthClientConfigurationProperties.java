@@ -20,8 +20,8 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
@@ -48,6 +48,7 @@ import java.util.*;
  */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
+@Requires(classes = OutgoingRequestProcessorMatcher.class)
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
 
     /**
@@ -395,6 +396,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Client credentials http header token propagation configuration.
          */
         @ConfigurationProperties("header-propagation")
+        @Requires(classes = OutgoingRequestProcessorMatcher.class)
         public static class HeaderTokenPropagatorConfigurationProperties implements ClientCredentialsHeaderTokenPropagatorConfiguration {
 
             private String prefix = DEFAULT_PREFIX;
@@ -803,6 +805,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Token endpoint configuration.
          */
         @ConfigurationProperties("token")
+        @Requires(classes = MediaType.class)
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
             private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;

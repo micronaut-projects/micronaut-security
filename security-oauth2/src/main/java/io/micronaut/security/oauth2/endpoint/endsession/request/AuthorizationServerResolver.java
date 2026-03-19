@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 

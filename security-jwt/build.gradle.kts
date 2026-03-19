@@ -36,14 +36,15 @@ dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.groovy.json)
-    testImplementation(mnTestResources.testcontainers.core)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
 
     testImplementation(libs.system.stubs.core)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
-    testImplementation(libs.junit.jupiter.params)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(mnTest.junit.jupiter.params)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
 
 tasks.test {

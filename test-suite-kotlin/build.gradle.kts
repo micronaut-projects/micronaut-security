@@ -1,16 +1,17 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.kapt)
-    id "io.micronaut.build.internal.security-tests"
+    id("io.micronaut.build.internal.kotlin-kapt")
+    id("io.micronaut.build.internal.security-tests")
 }
 
 dependencies {
+    testImplementation(platform(kotlin("bom")))
+    testImplementation(kotlin("stdlib"))
     kaptTest(mn.micronaut.inject.java)
-    kaptTest(projects.micronautSecurityAnnotations)
+    kaptTest(projects.micronautSecurityProcessor)
 
-    testImplementation(libs.junit.jupiter.api)
+    testImplementation(mnTest.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 
     testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(mn.micronaut.management)
@@ -20,7 +21,6 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.kotlin.stdlib.jdk8)
     testImplementation(mnReactor.micronaut.reactor)
 
     testImplementation(mn.jackson.databind)
@@ -33,17 +33,6 @@ dependencies {
     testImplementation(mnSql.micronaut.jdbc.hikari)
     testImplementation(libs.awaitility)
 }
-
-tasks.named('test') {
+tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
 }

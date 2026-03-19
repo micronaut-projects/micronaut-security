@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.validator.RefreshTokenValidator;

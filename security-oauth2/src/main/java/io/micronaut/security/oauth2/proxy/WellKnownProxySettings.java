@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.proxy;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
 

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -61,7 +61,6 @@ public interface RedirectConfiguration extends Toggleable {
      */
     @NonNull
     RefreshRedirectConfiguration getRefresh();
-
 
     /**
      * @return If the user attempted to access a URL while unauthenticated, and was subsequently redirected to

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
@@ -95,12 +95,12 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
             if (LOG.isErrorEnabled()) {
                 LOG.error(e.getMessage(), e);
             }
-            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name qualifier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
         } catch (MalformedURLException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error(e.getMessage(), e);
             }
-            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name qualifier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
         }
     }
 

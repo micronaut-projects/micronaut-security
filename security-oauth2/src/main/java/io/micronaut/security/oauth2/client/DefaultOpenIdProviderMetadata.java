@@ -16,10 +16,10 @@
 package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.serde.annotation.Serdeable;
 
@@ -181,18 +181,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      */
     public void setIdTokenEncryptionEncValuesSupported(@Nullable List<String> idTokenEncryptionEncValuesSupported) {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
-    }
-
-    /**
-     * userinfo_encryption_alg_values_supported.
-     * OPTIONAL.
-     * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
-     * @deprecated Use {@link DefaultOpenIdProviderMetadata#getUserinfoEncryptionAlgValuesSupported()} instead.
-     */
-    @Deprecated
-    @Override
-    public List<String> getUserInfoEncryptionAlgValuesSupported() {
-        return getUserinfoEncryptionAlgValuesSupported();
     }
 
     @Override
@@ -919,17 +907,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     }
 
     /**
-     *
-     * @return Creates a Builder.
-     * @deprecated Use {@link DefaultOpenIdProviderMetadata(String)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "4.5.0")
-    @NonNull
-    public static Builder builder() {
-        return new Builder("");
-    }
-
-    /**
      * @param providerName Provider Name
      * @return Creates a Builder with a given provider name.
      */
@@ -1035,14 +1012,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         private List<String> requestObjectEncryptionEncValuesSupported;
         @Nullable
         private String checkSessionIframe;
-
-        /**
-         * @deprecated Use {@link Builder(String)} instead.
-         */
-        @Deprecated(forRemoval = true, since = "4.5.0")
-        public Builder() {
-            this("");
-        }
 
         /**
          *

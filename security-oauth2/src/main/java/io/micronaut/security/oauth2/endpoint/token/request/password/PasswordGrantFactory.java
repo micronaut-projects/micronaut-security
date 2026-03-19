@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -73,8 +73,8 @@ class PasswordGrantFactory {
             return new ReactiveOauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, authenticationMapper);
         }
         if (openIdAuthenticationMapper == null) {
-                openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
+            openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
         }
-         return new ReactiveOpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
+        return new ReactiveOpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
     }
 }

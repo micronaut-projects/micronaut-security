@@ -16,7 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = HttpClientConfiguration.class)
 @Singleton
 public class DefaultTokenEndpointClient implements TokenEndpointClient  {
 

@@ -51,9 +51,9 @@ authenticationProviders:
   authenticationProvidersUseCases: Authentication Providers Use Cases
   builtInAuthenticationProviders: Built-In Authentication Providers
 authenticationStrategies:
-  title: Authorization Strategies
+  title: Authentication Strategies
   basicAuth: Basic Authentication
-  session: Session Authorization
+  session: Session Authentication
   jwt:
     title: JSON Web Token
     reader:
@@ -87,7 +87,7 @@ authenticationStrategies:
     configuration: Configuration
     extending: Extending Default Behavior
   x509: X.509 Certificate Authentication
-  custom: Custom Authorization Strategies
+  custom: Custom Authentication Strategies
 rejection:
   title: Rejection Handling
   wwwAuthenticate: WWW-Authenticate Response

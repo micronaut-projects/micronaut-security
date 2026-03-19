@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.url;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.URI;
 import java.net.URL;
 
@@ -48,7 +48,6 @@ public interface OauthRouteUrlBuilder<T> extends AbsoluteUrlBuilder<T> {
      * @return The URL
      */
     URL buildCallbackUrl(@Nullable T originating, String providerName);
-
 
     /**
      * Builds the URI to start the OAuth 2.0 authorization code flow.

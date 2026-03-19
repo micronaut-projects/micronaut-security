@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = { StateSerDes.class, CookieStatePersistenceConfiguration.class })
 @Singleton
 public class CookieStatePersistence extends CookiePersistence implements StatePersistence {
 

@@ -8,20 +8,20 @@ dependencies {
 
     testRuntimeOnly(mnLogging.logback.classic)
 
-    testImplementation(libs.junit.jupiter.api)
+    testImplementation(mnTest.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
 
-    testImplementation(platform(mnTestResources.boms.testcontainers))
+    testImplementation(platform(mnTest.boms.testcontainers))
     testImplementation(libs.testcontainers.junit.jupiter)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
 
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
     testImplementation(projects.micronautSecurity)
 
     testAnnotationProcessor(mnData.micronaut.data.processor)
@@ -30,12 +30,16 @@ dependencies {
     testImplementation(mnSql.vertx.mysql.client)
     testImplementation(mnSql.mysql.connector.java)
 
-    testImplementation(mnTestResources.testcontainers.core)
-    testImplementation(mnTestResources.testcontainers.mysql)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.mysql)
 
     testImplementation(mnReactor.micronaut.reactor)
     // Test Fails without this dependency
     testImplementation(mnReactor.micrometer.context.propagation)
+
+    // https://github.com/testcontainers/testcontainers-java/issues/8798
+    testRuntimeOnly(libs.commons.codec)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

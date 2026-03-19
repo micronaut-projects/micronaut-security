@@ -21,7 +21,7 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
-    testCompileOnly(projects.micronautSecurityAnnotations)
+    testCompileOnly(projects.micronautSecurityProcessor)
     testCompileOnly(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
 

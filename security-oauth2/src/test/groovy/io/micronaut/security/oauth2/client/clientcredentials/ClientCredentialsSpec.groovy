@@ -32,7 +32,7 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
+
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant

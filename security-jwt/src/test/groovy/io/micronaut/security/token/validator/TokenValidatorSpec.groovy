@@ -6,7 +6,6 @@ import io.micronaut.core.util.StringUtils
 import io.micronaut.security.token.jwt.nimbus.NimbusJsonWebTokenValidator
 import io.micronaut.security.token.jwt.nimbus.NimbusReactiveJsonWebTokenValidator
 import io.micronaut.security.token.jwt.validator.JsonWebTokenValidator
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
@@ -21,11 +20,6 @@ class TokenValidatorSpec extends Specification {
 
     @Inject
     BeanContext beanContext
-
-    void "JwtTokenValidator should not be considered a bean by default"() {
-        expect:
-        tokenValidators.stream().noneMatch {it instanceof JwtTokenValidator}
-    }
 
     void "NimbusReactiveJsonWebTokenValidator should be considered a bean by default"() {
         expect:

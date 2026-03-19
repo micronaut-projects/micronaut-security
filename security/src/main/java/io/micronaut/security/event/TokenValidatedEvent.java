@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.core.annotation.Nullable;
-
 import java.util.Locale;
 
 /**
@@ -38,21 +36,9 @@ public class TokenValidatedEvent extends SecurityEvent {
      */
     public TokenValidatedEvent(
         Object source,
-        @Nullable String host,
+        String host,
         Locale locale
     ) {
         super(source, host, locale);
-    }
-
-    /**
-     * Triggered when a token is validated.
-     *
-     * @param source A String containing the token being validated.
-     * @throws IllegalArgumentException if source is null.
-     * @deprecated Use {@link #TokenValidatedEvent(Object, String, Locale)} instead
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    public TokenValidatedEvent(Object source) {
-        this(source, null, Locale.getDefault());
     }
 }

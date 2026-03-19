@@ -49,5 +49,5 @@ class UserAuditingTest {
 
     @Requires(property = "spec.name", value = "UserAuditingTest")
     @JdbcRepository(dialect = Dialect.H2)
-    interface BookRepository : CrudRepository<Book?, Long?>
+    interface BookRepository : CrudRepository<Book, Long>
 }

@@ -4,5 +4,5 @@ If you need to access the currently authenticated user outside of a controller, 
 
 If you use Micronaut Reactor and access api:security.utils.SecurityService[] within a reactive chain,  add the following dependencies to handle the https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor Context Propagation].
 
-dependency:micronaut-security-reactor[groupId=io.micronaut.reactor]
+dependency:micronaut-reactor[groupId=io.micronaut.reactor]
 dependency:context-propagation[groupId=io.micrometer]

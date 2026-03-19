@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Generates a Code Verifier for PKCE.

@@ -54,7 +54,7 @@ internal class LoggersTest {
         val response = client.exchange(request, Map::class.java)
         Assertions.assertEquals(HttpStatus.OK, response.status())
         val m = response.body()
-        Assertions.assertTrue(m.containsKey("levels"))
+        Assertions.assertTrue(m!!.containsKey("levels"))
         Assertions.assertTrue(m.containsKey("loggers"))
     }
 

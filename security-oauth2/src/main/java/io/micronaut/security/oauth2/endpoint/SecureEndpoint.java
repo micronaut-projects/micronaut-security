@@ -15,10 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -34,11 +32,4 @@ public interface SecureEndpoint extends Endpoint {
      */
     @Nullable
     Set<String> getAuthenticationMethodsSupported();
-
-    /**
-     * @deprecated Use {@link SecureEndpoint#getAuthenticationMethodsSupported()} instead.
-     * @return An optional list of supported authentication methods
-     */
-    @Deprecated(forRemoval = true)
-    Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods();
 }

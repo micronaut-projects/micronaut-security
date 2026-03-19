@@ -19,9 +19,12 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecuritySession)
-    testImplementation(libs.geb.spock)
-
-    testImplementation(platform(mnTestResources.boms.testcontainers))
+    testImplementation(libs.geb.spock) {
+        exclude(group = "org.spockframework", module = "spock-core")
+        exclude(group = "org.apache.groovy.geb", module = "geb-implicit-assertions")
+    }
+    testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(platform(mnTest.boms.testcontainers))
     testImplementation(libs.testcontainers.selenium)
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)

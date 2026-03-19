@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.*;
@@ -157,14 +157,5 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
-    }
-
-    /**
-     * @return The token endpoint
-     * @deprecated Not used.
-     */
-    @Deprecated(forRemoval = true)
-    protected SecureEndpoint getTokenEndpoint() {
-        return openIdProviderMetadata.get().tokenEndpoint();
     }
 }

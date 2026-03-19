@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception thrown when access to a protected resource is denied.

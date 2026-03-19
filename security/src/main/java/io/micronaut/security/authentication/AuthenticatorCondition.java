@@ -32,9 +32,6 @@ class AuthenticatorCondition implements Condition {
         if (CollectionUtils.isNotEmpty(context.getBeansOfType(io.micronaut.security.authentication.provider.AuthenticationProvider.class))) {
             return true;
         }
-        if (CollectionUtils.isNotEmpty(context.getBeansOfType(io.micronaut.security.authentication.AuthenticationProvider.class))) {
-            return true;
-        }
         return false;
     }
 }

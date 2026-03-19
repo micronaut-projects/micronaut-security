@@ -16,7 +16,7 @@
 package io.micronaut.security.token.jwt.validator;
 
 /**
- * Any {@link JwtTokenValidator} which should be verified for any JWT should implement this interface.
+ * Any {@link JwtClaimsValidator} which should be verified for any JWT should implement this interface.
  *
  * @author Sergio del Amo
  * @since 1.1.0

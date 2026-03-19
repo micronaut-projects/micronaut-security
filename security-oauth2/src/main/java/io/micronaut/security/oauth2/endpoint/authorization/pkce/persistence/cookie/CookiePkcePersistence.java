@@ -15,7 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @since 3.9.0
  */
 @Singleton
+@Requires(beans = CookiePkcePersistenceConfiguration.class)
 public class CookiePkcePersistence extends CookiePersistence implements PkcePersistence {
     /**
      * @param configuration The cookie configuration

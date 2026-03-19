@@ -16,7 +16,8 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.web.router.RouteAttributes;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
@@ -173,13 +174,14 @@ public class SecurityFilter implements HttpServerFilter {
                                 method,
                                 path);
                     }
-                    RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
-                    // no rule found for the given request
-                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                        return chain.proceed(request);
-                    } else {
-                        request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-                        return Mono.error(new AuthorizationException(authentication));
+                    try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+                        // no rule found for the given request
+                        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+                            return chain.proceed(request);
+                        } else {
+                            request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                            return Mono.error(new AuthorizationException(authentication));
+                        }
                     }
                 }));
     }

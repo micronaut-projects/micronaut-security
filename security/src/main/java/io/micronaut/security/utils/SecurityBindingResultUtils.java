@@ -26,6 +26,9 @@ import java.util.Optional;
 
 import static io.micronaut.core.bind.ArgumentBinder.BindingResult;
 
+/**
+ * Security Binding Result Utils.
+ */
 @Internal
 public final class SecurityBindingResultUtils {
     private SecurityBindingResultUtils() {

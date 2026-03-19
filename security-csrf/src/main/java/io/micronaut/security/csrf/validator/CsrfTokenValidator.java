@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.csrf.validator;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.order.Ordered;
 
 /**

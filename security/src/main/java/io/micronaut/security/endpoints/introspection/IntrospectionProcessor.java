@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 

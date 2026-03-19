@@ -16,17 +16,14 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.naming.Named;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Metadata describing the configuration of OpenID Providers.
@@ -150,16 +147,6 @@ public interface OpenIdProviderMetadata extends Named {
      */
     @Nullable
     List<String> getIdTokenEncryptionEncValuesSupported();
-
-    /**
-     * userinfo_encryption_alg_values_supported.
-     * OPTIONAL.
-     * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
-     * @deprecated Use {@link OpenIdProviderMetadata#getUserinfoEncryptionAlgValuesSupported()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @Nullable
-    List<String> getUserInfoEncryptionAlgValuesSupported();
 
     /**
      * userinfo_encryption_alg_values_supported.
@@ -370,24 +357,6 @@ public interface OpenIdProviderMetadata extends Named {
      */
     @Nullable
     String getEndSessionEndpoint();
-
-    /**
-     *
-     * @deprecated Use {@link OpenIdProviderMetadata#getTokenEndpointAuthMethodsSupported()} instead.
-     * @return the token endpoint authentication methods.
-     */
-    @NonNull
-    @Deprecated(forRemoval = true)
-    default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
-        List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
-        if (authMethodsSupported == null) {
-            return Optional.empty();
-        }
-        return Optional.of(authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList()));
-    }
 
     /**
      *

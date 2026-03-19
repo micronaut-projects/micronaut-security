@@ -50,7 +50,7 @@ internal class CustomAuthenticationTest {
     @Requires(property = "spec.name", value = "CustomAuthenticationTest")
     @Controller
     internal class CustomAuthenticationProvider : TokenValidator<HttpRequest<*>> {
-        override fun validateToken(token: String, request: HttpRequest<*>): Publisher<Authentication> {
+        override fun validateToken(token: String, request: HttpRequest<*>?): Publisher<Authentication> {
             return Mono.just(Authentication.build("sherlock", mapOf("email" to "sherlock@micronaut.example")))
         }
     }

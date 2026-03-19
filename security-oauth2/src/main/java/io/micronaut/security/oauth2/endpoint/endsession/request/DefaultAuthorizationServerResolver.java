@@ -16,8 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
@@ -39,12 +39,12 @@ final class DefaultAuthorizationServerResolver implements AuthorizationServerRes
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
-    private static final Map<String, AuthorizationServer> cache = new ConcurrentHashMap<>();
+    private static final Map<String, AuthorizationServer> CACHE = new ConcurrentHashMap<>();
 
     @Override
     @NonNull
     public Optional<AuthorizationServer> resolve(@NonNull String issuer) {
-        return Optional.ofNullable(cache.computeIfAbsent(issuer, DefaultAuthorizationServerResolver::infer));
+        return Optional.ofNullable(CACHE.computeIfAbsent(issuer, DefaultAuthorizationServerResolver::infer));
     }
 
     @Nullable

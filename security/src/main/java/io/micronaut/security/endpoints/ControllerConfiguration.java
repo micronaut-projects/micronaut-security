@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.MediaType;
 

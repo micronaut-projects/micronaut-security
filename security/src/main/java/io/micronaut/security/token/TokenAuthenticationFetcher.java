@@ -17,7 +17,6 @@ package io.micronaut.security.token;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
@@ -167,7 +166,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         }
         return Flux.fromIterable(tokens)
             .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                .flatMapSequential(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);

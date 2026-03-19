@@ -24,3 +24,4 @@ spotless {
 tasks.withType(Checkstyle) {
     enabled = false
 }
+

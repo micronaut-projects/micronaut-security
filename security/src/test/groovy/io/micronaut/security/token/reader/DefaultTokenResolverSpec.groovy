@@ -41,19 +41,6 @@ class DefaultTokenResolverSpec extends Specification {
         request.headers.add("X-API-KEY", apiKey)
 
         when:
-        Optional<String> tokenOptional = defaultTokenResolver.resolveToken(request)
-
-        then:
-        tokenOptional.isPresent()
-        apiKey == tokenOptional.get()
-
-        and: 'token is not logged'
-        CollectionUtils.isNotEmpty(appender.events)
-        1 == appender.events.size()
-        appender.events.stream().noneMatch(e -> e.contains(apiKey))
-        appender.events.stream().anyMatch(e -> e == "Token found in request POST /analytics/report")
-
-        when:
         List<String> tokens = defaultTokenResolver.resolveTokens(request)
 
         then:
@@ -63,7 +50,6 @@ class DefaultTokenResolverSpec extends Specification {
         request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
 
         then:
-        defaultTokenResolver.resolveToken(request).isEmpty()
         !defaultTokenResolver.resolveTokens(request)
 
         when:
@@ -72,8 +58,6 @@ class DefaultTokenResolverSpec extends Specification {
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer validyyy")
 
         then:
-        defaultTokenResolver.resolveToken(request).isPresent()
-        "validxxx" == defaultTokenResolver.resolveToken(request).get()
         ["validxxx", "validyyy"] == defaultTokenResolver.resolveTokens(request)
 
     }

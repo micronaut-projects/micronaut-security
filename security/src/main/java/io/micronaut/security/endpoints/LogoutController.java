@@ -17,8 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -36,11 +35,8 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
-import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -70,7 +66,6 @@ public class LogoutController {
      * @param httpLocaleResolver            The http locale resolver
      * @since 4.11.0
      */
-    @Inject
     public LogoutController(
         LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
         ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
@@ -104,35 +99,6 @@ public class LogoutController {
             HttpLocaleResolver httpLocaleResolver,
             LogoutControllerConfigurationProperties logoutControllerConfigurationProperties) {
         this(logoutHandler, logoutEventPublisher, logoutControllerConfiguration, httpHostResolver, httpLocaleResolver);
-    }
-
-    /**
-     * @param logoutHandler                 A collaborator which helps to build HTTP response if user logout.
-     * @param logoutEventPublisher          The application event publisher
-     * @param logoutControllerConfiguration Configuration for the Logout controller
-     * @deprecated Use {@link #LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration, HttpHostResolver, HttpLocaleResolver)} instead
-     */
-    @Deprecated(forRemoval = true, since = "4.7.0")
-    public LogoutController(LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
-                            ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
-                            LogoutControllerConfiguration logoutControllerConfiguration) {
-        this(
-            logoutHandler,
-            logoutEventPublisher,
-            logoutControllerConfiguration,
-            request -> null,
-            new HttpLocaleResolver() {
-                @Override
-                public @NonNull Optional<Locale> resolve(@NonNull HttpRequest<?> context) {
-                    return Optional.of(Locale.getDefault());
-                }
-
-                @Override
-                public @NonNull Locale resolveOrDefault(@NonNull HttpRequest<?> context) {
-                    return Locale.getDefault();
-                }
-            }
-        );
     }
 
     /**

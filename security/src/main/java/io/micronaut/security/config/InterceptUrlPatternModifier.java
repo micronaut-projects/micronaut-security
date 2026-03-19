@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Decorates a {@link InterceptUrlMapPattern}. It can for example prepend the pattern with a server context path.

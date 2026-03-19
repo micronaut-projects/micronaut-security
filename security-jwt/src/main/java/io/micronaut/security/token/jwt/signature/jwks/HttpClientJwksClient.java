@@ -17,8 +17,8 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
@@ -54,7 +54,7 @@ import java.util.function.Supplier;
  *  @since 4.5.0
  */
 @Singleton
-@Requires(classes = HttpClient.class)
+@Requires(beans = HttpClientRegistry.class)
 @Requires(property = JwtConfigurationProperties.PREFIX + ".signatures.jwks-client.http-client.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class HttpClientJwksClient implements JwksClient {
 

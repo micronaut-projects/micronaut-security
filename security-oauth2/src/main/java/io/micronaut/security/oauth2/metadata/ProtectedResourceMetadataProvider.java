@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.metadata;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Protected Resource Metadata Provider.

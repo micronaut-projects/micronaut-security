@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.csrf;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
