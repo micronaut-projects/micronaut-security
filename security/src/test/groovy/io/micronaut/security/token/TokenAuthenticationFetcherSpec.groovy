@@ -16,8 +16,8 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers;
-import spock.lang.Specification;
+import reactor.core.scheduler.Schedulers
+import spock.lang.Specification
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
 @MicronautTest
