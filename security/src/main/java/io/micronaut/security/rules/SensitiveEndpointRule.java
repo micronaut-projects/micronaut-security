@@ -16,9 +16,9 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.web.router.RouteAttributes;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
@@ -107,11 +107,12 @@ public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>>, Endp
 
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
-        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
-        if (routeMatch instanceof MethodBasedRouteMatch) {
-            ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
-            if (endpointMethods.containsKey(method)) {
-                return check(request, authentication, method);
+        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+            if (routeMatch instanceof MethodBasedRouteMatch) {
+                ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
+                if (endpointMethods.containsKey(method)) {
+                    return check(request, authentication, method);
+                }
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);
