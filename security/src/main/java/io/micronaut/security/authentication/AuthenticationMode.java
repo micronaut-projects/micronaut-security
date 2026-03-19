@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.BuildTimeInit;
 import io.micronaut.core.annotation.Internal;
 
 /**
@@ -27,7 +26,6 @@ import io.micronaut.core.annotation.Internal;
  * @since 2.0.0
  */
 @Internal
-@BuildTimeInit("io.micronaut.security.authentication.AuthenticationMode")
 public enum AuthenticationMode {
     BEARER,
     COOKIE,
