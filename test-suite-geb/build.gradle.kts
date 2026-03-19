@@ -21,6 +21,7 @@ dependencies {
     testImplementation(projects.micronautSecuritySession)
     testImplementation(libs.geb.spock) {
         exclude(group = "org.spockframework", module = "spock-core")
+        exclude(group = "org.apache.groovy.geb", module = "geb-implicit-assertions")
     }
     testImplementation(mnTest.micronaut.test.spock)
     testImplementation(platform(mnTest.boms.testcontainers))
