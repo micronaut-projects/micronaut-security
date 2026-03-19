@@ -1,11 +1,11 @@
 [versions]
-managed-nimbus-jose-jwt = "10.7"
+managed-nimbus-jose-jwt = "10.8"
 managed-jjwt = "0.13.0"
 micronaut = "5.0.0-M17"
 micronaut-platform = "4.10.10"
 awaitility = "4.3.0"
 geb = "8.0.1"
-selenium = "4.40.0"
+selenium = "4.41.0"
 system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.4"
 bouncycastle = "1.70"
