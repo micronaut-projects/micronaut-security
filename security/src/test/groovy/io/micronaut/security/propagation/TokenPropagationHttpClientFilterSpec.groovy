@@ -35,11 +35,11 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
         ServerHttpRequestContext
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        PropagatedContext base = PropagatedContext.getOrEmpty();
+        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
+        enriched.propagate({ ->
             clientFilter.doFilter(targetRequest)
-        }
+        })
         then:
         1 * tokenPropagator.writeToken(targetRequest, sampleJwt)
     }
@@ -59,11 +59,11 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        PropagatedContext base = PropagatedContext.getOrEmpty();
+        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
+        enriched.propagate({ ->
             clientFilter.doFilter(targetRequest)
-        }
+        })
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, _)
@@ -85,11 +85,11 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        PropagatedContext base = PropagatedContext.getOrEmpty();
+        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
+        enriched.propagate({ ->
             clientFilter.doFilter(targetRequest)
-        }
+        })
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, sampleJwt)
