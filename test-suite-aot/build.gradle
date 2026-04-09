@@ -33,7 +33,6 @@ dependencies {
     implementation(projects.micronautSecurityOauth2)
     implementation(mn.micronaut.jackson.databind)
     aotPlugins(projects.micronautSecurityAot)
-    runtimeOnly(mn.snakeyaml)
 }
 
 version = '0.1'
