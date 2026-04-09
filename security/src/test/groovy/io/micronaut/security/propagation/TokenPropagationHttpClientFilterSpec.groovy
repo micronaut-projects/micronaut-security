@@ -33,13 +33,10 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
             getAttribute(SecurityFilter.TOKEN, String.class) >> Optional.of(sampleJwt)
         }
-        ServerHttpRequestContext
         when:
-        PropagatedContext base = PropagatedContext.getOrEmpty();
-        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
-        enriched.propagate({ ->
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
-        })
+        }
         then:
         1 * tokenPropagator.writeToken(targetRequest, sampleJwt)
     }
@@ -59,11 +56,9 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        PropagatedContext base = PropagatedContext.getOrEmpty();
-        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
-        enriched.propagate({ ->
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
-        })
+        }
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, _)
@@ -85,11 +80,9 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        PropagatedContext base = PropagatedContext.getOrEmpty();
-        PropagatedContext enriched = base + new ServerHttpRequestContext(currentRequest);
-        enriched.propagate({ ->
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
-        })
+        }
 
         then:
         0 * tokenPropagator.writeToken(targetRequest, sampleJwt)
