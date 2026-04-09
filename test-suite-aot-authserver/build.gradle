@@ -25,7 +25,6 @@ dependencies {
     implementation(mn.micronaut.http.client)
     implementation(mn.micronaut.management)
     implementation(mnSerde.micronaut.serde.jackson)
-    runtimeOnly(mn.snakeyaml)
     testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
     testImplementation("org.junit.platform:junit-platform-launcher")
 }
