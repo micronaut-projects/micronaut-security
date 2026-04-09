@@ -33,11 +33,8 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
             getAttribute(SecurityFilter.TOKEN, String.class) >> Optional.of(sampleJwt)
         }
-        ServerHttpRequestContext
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
         }
         then:
@@ -59,9 +56,7 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
         }
 
@@ -85,9 +80,7 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         }
 
         when:
-        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty()
-                .plus(new ServerHttpRequestContext(currentRequest))
-                .propagate()) {
+        (PropagatedContext.getOrEmpty() + new ServerHttpRequestContext(currentRequest)).propagate {
             clientFilter.doFilter(targetRequest)
         }
 
