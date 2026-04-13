@@ -17,6 +17,7 @@ package io.micronaut.security.context;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.context.ServerRequestContext;
 
@@ -30,7 +31,7 @@ import io.micronaut.http.context.ServerRequestContext;
 public class ServerRequestContextSecurityContextSupplier implements SecurityContextSupplier {
 
     @NonNull
-    public SecurityContext get(HttpRequest<?> request) {
+    public SecurityContext get(@Nullable HttpRequest<?> request) {
         return new MutableAttributeHolderSecurityContext(request);
     }
 
@@ -46,7 +47,7 @@ public class ServerRequestContextSecurityContextSupplier implements SecurityCont
      * @return The current Security Context
      */
     @NonNull
-    public static SecurityContext getSecurityContext(HttpRequest<?> httpRequest) {
+    public static SecurityContext getSecurityContext(@Nullable HttpRequest<?> httpRequest) {
         if (SecurityContextHolder.INSTANCE instanceof ServerRequestContextSecurityContextSupplier supplier) {
             return supplier.get(httpRequest);
         }
