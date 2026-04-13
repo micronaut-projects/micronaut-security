@@ -1,6 +1,7 @@
 package io.micronaut.security.context;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.SecurityFilter;
@@ -58,18 +59,31 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
+    void setRejectionStatusWritesHttpStatusToAttributeHolder() {
+        MutableHttpRequest<?> request = HttpRequest.GET("/context");
+        MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
+
+        securityContext.setRejectionStatus(HttpStatus.UNAUTHORIZED.getCode());
+
+        assertSame(HttpStatus.UNAUTHORIZED, request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
+    }
+
+    @Test
     void settersAcceptNullToClearValues() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         Authentication authentication = Authentication.build("sherlock");
         request.setAttribute(SecurityFilter.AUTHENTICATION, authentication);
         request.setAttribute(SecurityFilter.TOKEN, "jwt-token");
+        request.setAttribute(SecurityFilter.REJECTION, HttpStatus.UNAUTHORIZED);
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
 
         securityContext.setAuthentication(null);
         securityContext.setToken(null);
+        securityContext.clear();
 
         assertNull(request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
         assertNull(request.getAttribute(SecurityFilter.TOKEN, String.class).orElse(null));
+        assertNull(request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
         assertNull(securityContext.getAuthentication());
         assertNull(securityContext.getToken());
     }

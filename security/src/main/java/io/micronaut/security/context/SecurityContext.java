@@ -60,7 +60,21 @@ public interface SecurityContext {
     void setToken(@Nullable String token);
 
     /**
-     * Clears the current authentication and token.
+     * Sets the rejection status associated with the current security context.
+     *
+     * @param statusCode the HTTP status code to associate with the current rejection
+     */
+    void setRejectionStatus(int statusCode);
+
+    /**
+     *
+     * @return statusCode the HTTP status code to associate with the current rejection
+     */
+    @Nullable
+    Integer getRejectionStatus();
+
+    /**
+     * Clears the current authentication, token, and rejection status.
      */
     void clear();
 }

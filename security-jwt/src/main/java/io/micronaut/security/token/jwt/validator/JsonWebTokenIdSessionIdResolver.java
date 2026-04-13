@@ -20,12 +20,12 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.session.SessionIdResolver;
 import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
-import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 import static io.micronaut.security.token.Claims.TOKEN_ID;
 
 /**
@@ -49,7 +49,7 @@ final class JsonWebTokenIdSessionIdResolver implements SessionIdResolver<HttpReq
     @Override
     @NonNull
     public Optional<String> findSessionId(@NonNull HttpRequest<?> request) {
-        return request.getAttribute(TOKEN, String.class)
+        return Optional.ofNullable(ServerRequestContextSecurityContextSupplier.getSecurityContext(request).getToken())
                 .flatMap(jsonWebTokenParser::parseClaims)
                 .flatMap(claims -> Optional.ofNullable(claims.get(TOKEN_ID)).map(Object::toString));
     }
