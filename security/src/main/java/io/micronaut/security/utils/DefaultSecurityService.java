@@ -26,7 +26,9 @@ import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
+ * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It delegates to
+ * {@link io.micronaut.security.context.SecurityContextHolder} to retrieve the
+ * {@link io.micronaut.security.authentication.Authentication} object if any.
  *
  * @author Sergio del Amo
  * @since 1.0

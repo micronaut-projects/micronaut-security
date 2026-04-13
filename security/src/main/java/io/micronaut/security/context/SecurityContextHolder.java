@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.context;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.context.ServerRequestContext;
 
 /**
@@ -36,7 +35,6 @@ public final class SecurityContextHolder {
      * @return a {@link SecurityContext} backed by the current request, or an empty context if no
      * request is active
      */
-    @Nullable
     public static SecurityContext getSecurityContext() {
         return new MutableAttributeHolderSecurityContext(ServerRequestContext.currentRequest().orElse(null));
     }
