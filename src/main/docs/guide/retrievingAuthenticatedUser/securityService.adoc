@@ -2,7 +2,7 @@ If you need to access the currently authenticated user outside of a controller, 
 
 Under the hood, it uses the api:security.context.SecurityContextHolder[] and api:security.context.SecurityContext[] APIs.
 
-The default supplier for `SecurityContext` uses Server Request attributes. You can replace providing an implementation of api:io.micronaut.security.context.SecurityContextSupplier[] via a https://docs.oracle.com/javase/tutorial/ext/basics/spi.html[Java SPI].
+The default supplier for `SecurityContext` uses server request attributes. You can replace it by providing an implementation of api:io.micronaut.security.context.SecurityContextSupplier[] via a https://docs.oracle.com/javase/tutorial/ext/basics/spi.html[Java SPI].
 
 === SecurityService with Project Reactor
 
