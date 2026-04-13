@@ -67,8 +67,9 @@ public interface SecurityContext {
     void setRejectionStatus(@Nullable Integer statusCode);
 
     /**
+     * Returns the rejection status associated with the current security context.
      *
-     * @return statusCode the HTTP status code to associate with the current rejection
+     * @return the HTTP status code associated with the current rejection, or {@code null}
      */
     @Nullable
     Integer getRejectionStatus();
