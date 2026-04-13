@@ -93,9 +93,6 @@ class MutableAttributeHolderSecurityContext implements SecurityContext {
 
     @Override
     public void clear() {
-        if (attributeHolder != null) {
-            attributeHolder.setAttribute(SecurityFilter.REJECTION, null);
-        }
         setRejectionStatus(null);
         setToken(null);
         setAuthentication(null);
