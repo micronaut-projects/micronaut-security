@@ -74,9 +74,9 @@ class MutableAttributeHolderSecurityContext implements SecurityContext {
     }
 
     @Override
-    public void setRejectionStatus(int statusCode) {
+    public void setRejectionStatus(@Nullable Integer statusCode) {
         if (attributeHolder != null) {
-            attributeHolder.setAttribute(SecurityFilter.REJECTION, HttpStatus.valueOf(statusCode));
+            attributeHolder.setAttribute(SecurityFilter.REJECTION, statusCode == null ? null : HttpStatus.valueOf(statusCode));
         }
     }
 
@@ -96,6 +96,7 @@ class MutableAttributeHolderSecurityContext implements SecurityContext {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.REJECTION, null);
         }
+        setRejectionStatus(null);
         setToken(null);
         setAuthentication(null);
     }
