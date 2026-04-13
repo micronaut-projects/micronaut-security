@@ -30,7 +30,7 @@ public final class SecurityContextHolder {
     /**
      * The default {@link SecurityContextSupplier} instance.
      */
-     public static final SecurityContextSupplier INSTANCE = SoftServiceLoader
+     static final SecurityContextSupplier INSTANCE = SoftServiceLoader
             .load(SecurityContextSupplier.class)
             .firstOr("io.micronaut.security.context.ServerRequestContextSecurityContextSupplier", SecurityContextSupplier.class.getClassLoader())
             .map(ServiceDefinition::load)
