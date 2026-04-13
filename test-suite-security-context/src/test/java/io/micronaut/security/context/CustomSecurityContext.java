@@ -10,38 +10,38 @@ public class CustomSecurityContext implements SecurityContext {
     @Override
     @Nullable
     public Authentication getAuthentication() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     @Nullable
     public String getToken() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setAuthentication(@Nullable Authentication authentication) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setToken(@Nullable String token) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setRejectionStatus(@Nullable Integer statusCode) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     @Nullable
     public Integer getRejectionStatus() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException();
     }
 }
