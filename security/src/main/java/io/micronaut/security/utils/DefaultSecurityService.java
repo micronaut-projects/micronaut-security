@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.utils;
 
+import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
@@ -61,7 +62,7 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public Optional<Authentication> getAuthentication() {
-        return ServerRequestContext.currentRequest().flatMap(request -> request.getUserPrincipal(Authentication.class));
+        return Optional.ofNullable(SecurityContextHolder.getSecurityContext().getAuthentication());
     }
 
 
