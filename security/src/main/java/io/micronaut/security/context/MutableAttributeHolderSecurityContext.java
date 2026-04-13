@@ -29,14 +29,14 @@ import io.micronaut.security.filters.SecurityFilter;
  * @since 4.18.0
  */
 @Internal
-public class MutableAttributeHolderSecurityContext implements SecurityContext {
+class MutableAttributeHolderSecurityContext implements SecurityContext {
     @Nullable
     private final MutableAttributeHolder attributeHolder;
 
     /**
      * @param attributeHolder The attribute holder containing the security attributes
      */
-    public MutableAttributeHolderSecurityContext(@Nullable MutableAttributeHolder attributeHolder) {
+    MutableAttributeHolderSecurityContext(@Nullable MutableAttributeHolder attributeHolder) {
         this.attributeHolder = attributeHolder;
     }
 
