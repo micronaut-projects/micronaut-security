@@ -178,7 +178,7 @@ public class SecurityFilter implements HttpServerFilter {
                     if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
                         return chain.proceed(request);
                     } else {
-                        request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).setRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     }
                 }));
