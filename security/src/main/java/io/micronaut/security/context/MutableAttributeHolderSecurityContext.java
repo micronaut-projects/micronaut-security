@@ -16,8 +16,10 @@
 package io.micronaut.security.context;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.attr.MutableAttributeHolder;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.SecurityFilter;
 
@@ -29,14 +31,14 @@ import io.micronaut.security.filters.SecurityFilter;
  * @since 4.18.0
  */
 @Internal
-public class MutableAttributeHolderSecurityContext implements SecurityContext {
+class MutableAttributeHolderSecurityContext implements SecurityContext {
     @Nullable
     private final MutableAttributeHolder attributeHolder;
 
     /**
      * @param attributeHolder The attribute holder containing the security attributes
      */
-    public MutableAttributeHolderSecurityContext(@Nullable MutableAttributeHolder attributeHolder) {
+    MutableAttributeHolderSecurityContext(@Nullable MutableAttributeHolder attributeHolder) {
         this.attributeHolder = attributeHolder;
     }
 
@@ -59,22 +61,47 @@ public class MutableAttributeHolderSecurityContext implements SecurityContext {
     }
 
     @Override
-    public void setAuthentication(@Nullable Authentication authentication) {
+    @NonNull
+    public SecurityContext withAuthentication(@Nullable Authentication authentication) {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.AUTHENTICATION, authentication);
         }
+        return this;
     }
 
     @Override
-    public void setToken(@Nullable String token) {
+    @NonNull
+    public SecurityContext withToken(@Nullable String token) {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.TOKEN, token);
         }
+        return this;
+    }
+
+    @Override
+    @NonNull
+    public SecurityContext withRejectionStatus(@Nullable Integer statusCode) {
+        if (attributeHolder != null) {
+            attributeHolder.setAttribute(SecurityFilter.REJECTION, statusCode == null ? null : HttpStatus.valueOf(statusCode));
+        }
+        return this;
+    }
+
+    @Override
+    @Nullable
+    public Integer getRejectionStatus() {
+        if (attributeHolder == null) {
+            return null;
+        }
+        return attributeHolder.getAttribute(SecurityFilter.REJECTION, HttpStatus.class)
+            .map(HttpStatus::getCode)
+            .orElse(null);
     }
 
     @Override
     public void clear() {
-        setToken(null);
-        setAuthentication(null);
+        withRejectionStatus(null)
+            .withToken(null)
+            .withAuthentication(null);
     }
 }

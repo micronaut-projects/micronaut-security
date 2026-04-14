@@ -16,7 +16,8 @@
 package io.micronaut.security.context;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.http.context.ServerRequestContext;
+import io.micronaut.core.io.service.ServiceDefinition;
+import io.micronaut.core.io.service.SoftServiceLoader;
 
 /**
  * Access point for the {@link SecurityContext} associated with the current server request.
@@ -26,6 +27,14 @@ import io.micronaut.http.context.ServerRequestContext;
  * @since 4.18.0
  */
 public final class SecurityContextHolder {
+    /**
+     * The default {@link SecurityContextSupplier} instance.
+     */
+    static final SecurityContextSupplier INSTANCE = SoftServiceLoader
+            .load(SecurityContextSupplier.class)
+            .first()
+            .map(ServiceDefinition::load)
+            .orElseGet(ServerRequestContextSecurityContextSupplier::new);
 
     private SecurityContextHolder() {
     }
@@ -38,7 +47,7 @@ public final class SecurityContextHolder {
      */
     @NonNull
     public static SecurityContext getSecurityContext() {
-        return new MutableAttributeHolderSecurityContext(ServerRequestContext.currentRequest().orElse(null));
+        return INSTANCE.getSecurityContext();
     }
 
     /**

@@ -1,6 +1,7 @@
 package io.micronaut.security.context;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
@@ -41,12 +42,14 @@ class SecurityContextHolderTest {
         Authentication authentication = Authentication.build("watson");
         request.setAttribute(SecurityFilter.AUTHENTICATION, authentication);
         request.setAttribute(SecurityFilter.TOKEN, "signed-token");
+        request.setAttribute(SecurityFilter.REJECTION, HttpStatus.UNAUTHORIZED);
 
         ServerRequestContext.with(request, () -> {
             SecurityContextHolder.clearContext();
             SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
             assertNull(securityContext.getAuthentication());
             assertNull(securityContext.getToken());
+            assertNull(request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
         });
     }
 
@@ -57,13 +60,25 @@ class SecurityContextHolderTest {
 
         ServerRequestContext.with(request, () -> {
             SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
-            securityContext.setAuthentication(authentication);
-            securityContext.setToken("signed-token");
+            securityContext.withAuthentication(authentication)
+                .withToken("signed-token");
 
             assertSame(authentication, securityContext.getAuthentication());
             assertEquals("signed-token", securityContext.getToken());
             assertSame(authentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
             assertEquals("signed-token", request.getAttribute(SecurityFilter.TOKEN, String.class).orElse(null));
+        });
+    }
+
+    @Test
+    void securityContextHolderAllowsSettingRejectionStatus() {
+        MutableHttpRequest<?> request = HttpRequest.GET("/context-holder");
+
+        ServerRequestContext.with(request, () -> {
+            SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
+            securityContext.withRejectionStatus(HttpStatus.FORBIDDEN.getCode());
+
+            assertSame(HttpStatus.FORBIDDEN, request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
         });
     }
 }
