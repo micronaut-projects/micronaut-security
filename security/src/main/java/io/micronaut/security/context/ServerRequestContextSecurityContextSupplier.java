@@ -28,7 +28,7 @@ import io.micronaut.http.context.ServerRequestContext;
  * @since 4.18.0
  */
 @Internal
-public class ServerRequestContextSecurityContextSupplier implements SecurityContextSupplier {
+public final class ServerRequestContextSecurityContextSupplier implements SecurityContextSupplier {
 
     @NonNull
     public SecurityContext get(@Nullable HttpRequest<?> request) {
