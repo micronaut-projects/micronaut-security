@@ -44,13 +44,13 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
-    void settersWriteAuthenticationAndTokenToAttributeHolder() {
+    void withersWriteAuthenticationAndTokenToAttributeHolder() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
         Authentication authentication = Authentication.build("sherlock");
 
-        securityContext.setAuthentication(authentication);
-        securityContext.setToken("jwt-token");
+        securityContext.withAuthentication(authentication)
+            .withToken("jwt-token");
 
         assertSame(authentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
         assertEquals("jwt-token", request.getAttribute(SecurityFilter.TOKEN, String.class).orElse(null));
@@ -59,17 +59,17 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
-    void setRejectionStatusWritesHttpStatusToAttributeHolder() {
+    void withRejectionStatusWritesHttpStatusToAttributeHolder() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
 
-        securityContext.setRejectionStatus(HttpStatus.UNAUTHORIZED.getCode());
+        securityContext.withRejectionStatus(HttpStatus.UNAUTHORIZED.getCode());
 
         assertSame(HttpStatus.UNAUTHORIZED, request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
     }
 
     @Test
-    void settersAcceptNullToClearValues() {
+    void withersAcceptNullToClearValues() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         Authentication authentication = Authentication.build("sherlock");
         request.setAttribute(SecurityFilter.AUTHENTICATION, authentication);
@@ -77,8 +77,8 @@ class MutableAttributeHolderSecurityContextTest {
         request.setAttribute(SecurityFilter.REJECTION, HttpStatus.UNAUTHORIZED);
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
 
-        securityContext.setAuthentication(null);
-        securityContext.setToken(null);
+        securityContext.withAuthentication(null)
+            .withToken(null);
         securityContext.clear();
 
         assertNull(request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));

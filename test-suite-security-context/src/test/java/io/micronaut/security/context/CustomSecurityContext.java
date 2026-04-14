@@ -1,5 +1,6 @@
 package io.micronaut.security.context;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 
@@ -20,17 +21,20 @@ public class CustomSecurityContext implements SecurityContext {
     }
 
     @Override
-    public void setAuthentication(@Nullable Authentication authentication) {
+    @NonNull
+    public SecurityContext withAuthentication(@Nullable Authentication authentication) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setToken(@Nullable String token) {
+    @NonNull
+    public SecurityContext withToken(@Nullable String token) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setRejectionStatus(@Nullable Integer statusCode) {
+    @NonNull
+    public SecurityContext withRejectionStatus(@Nullable Integer statusCode) {
         throw new UnsupportedOperationException();
     }
 

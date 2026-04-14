@@ -139,7 +139,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
                 .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
-                    ServerRequestContextSecurityContextSupplier.getSecurityContext(request).setToken(tokenValue);
+                    ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken(tokenValue);
                     tokenValidatedEventPublisher.publishEvent(
                         new TokenValidatedEvent(
                             tokenValue,

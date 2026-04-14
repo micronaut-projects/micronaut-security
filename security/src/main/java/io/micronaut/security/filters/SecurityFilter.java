@@ -118,7 +118,7 @@ public class SecurityFilter implements HttpServerFilter {
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
                                                              HttpRequest<?> request,
                                                              ServerFilterChain chain) {
-        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).setAuthentication(authentication);
+        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
         logAuthenticationAttributes(authentication);
         return checkRules(request, chain, authentication);
     }
@@ -158,7 +158,7 @@ public class SecurityFilter implements HttpServerFilter {
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {
-                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).setRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     } else if (result == SecurityRuleResult.ALLOWED) {
                         return chain.proceed(request);
@@ -178,7 +178,7 @@ public class SecurityFilter implements HttpServerFilter {
                     if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
                         return chain.proceed(request);
                     } else {
-                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).setRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     }
                 }));
