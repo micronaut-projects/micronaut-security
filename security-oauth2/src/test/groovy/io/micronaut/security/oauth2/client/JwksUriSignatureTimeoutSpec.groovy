@@ -12,7 +12,7 @@ import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.*
 import io.micronaut.http.annotation.Consumes
