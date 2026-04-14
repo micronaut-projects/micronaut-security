@@ -4,6 +4,7 @@ io.micronaut.security.aot
 io.micronaut.security.authentication
 io.micronaut.security.authentication.provider
 io.micronaut.security.config
+io.micronaut.security.context
 io.micronaut.security.converters
 io.micronaut.security.csrf
 io.micronaut.security.csrf.filter
@@ -19,7 +20,6 @@ io.micronaut.security.event
 io.micronaut.security.expressions
 io.micronaut.security.filters
 io.micronaut.security.handlers
-io.micronaut.security.info
 io.micronaut.security.ldap
 io.micronaut.security.ldap.configuration
 io.micronaut.security.ldap.context
@@ -61,7 +61,6 @@ io.micronaut.security.oauth2.keycloak.docker
 io.micronaut.security.oauth2.metadata
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
-io.micronaut.security.processor
 io.micronaut.security.rules
 io.micronaut.security.session
 io.micronaut.security.testutils

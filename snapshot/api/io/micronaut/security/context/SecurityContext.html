@@ -72,10 +72,6 @@ loadScripts(document, 'script');</script>
 <h1 title="Interface SecurityContext" class="title">Interface SecurityContext</h1>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Known Implementing Classes:</dt>
-<dd><code><a href="MutableAttributeHolderSecurityContext.html" title="class in io.micronaut.security.context">MutableAttributeHolderSecurityContext</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SecurityContext</span></div>
 <div class="block">Represents the security state associated with the current execution.
@@ -103,25 +99,35 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Clears the current authentication and token.</div>
+<div class="block">Clears the current authentication, token, and rejection status.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@Nullable <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getAuthentication()" class="member-name-link">getAuthentication</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the authentication associated with the current user.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getToken()" class="member-name-link">getToken</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getRejectionStatus()" class="member-name-link">getRejectionStatus</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns the rejection status associated with the current security context.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getToken()" class="member-name-link">getToken</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the token associated with the current security context.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setAuthentication(io.micronaut.security.authentication.Authentication)" class="member-name-link">setAuthentication</a><wbr>(@Nullable <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withAuthentication(io.micronaut.security.authentication.Authentication)" class="member-name-link">withAuthentication</a><wbr>(@Nullable <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Sets the authentication associated with the current security context.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setToken(java.lang.String)" class="member-name-link">setToken</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withRejectionStatus(java.lang.Integer)" class="member-name-link">withRejectionStatus</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;statusCode)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Sets the rejection code associated with the current security context.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withToken(java.lang.String)" class="member-name-link">withToken</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Sets the token associated with the current security context.</div>
 </div>
@@ -165,26 +171,59 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setAuthentication(io.micronaut.security.authentication.Authentication)">
-<h3>setAuthentication</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">setAuthentication</span><wbr><span class="parameters">(@Nullable
+<section class="detail" id="withAuthentication(io.micronaut.security.authentication.Authentication)">
+<h3>withAuthentication</h3>
+<div class="member-signature"><span class="annotations">@NonNull
+</span><span class="return-type">@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></span>&nbsp;<span class="element-name">withAuthentication</span><wbr><span class="parameters">(@Nullable
  @Nullable <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
 <div class="block">Sets the authentication associated with the current security context.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authentication</code> - the authentication to associate, or <code>null</code> to clear it</dd>
+<dt>Returns:</dt>
+<dd>this security context instance, for method chaining</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setToken(java.lang.String)">
-<h3>setToken</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">setToken</span><wbr><span class="parameters">(@Nullable
+<section class="detail" id="withToken(java.lang.String)">
+<h3>withToken</h3>
+<div class="member-signature"><span class="annotations">@NonNull
+</span><span class="return-type">@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></span>&nbsp;<span class="element-name">withToken</span><wbr><span class="parameters">(@Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;token)</span></div>
 <div class="block">Sets the token associated with the current security context.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>token</code> - the token to associate, or <code>null</code> to clear it</dd>
+<dt>Returns:</dt>
+<dd>this security context instance, for method chaining</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withRejectionStatus(java.lang.Integer)">
+<h3>withRejectionStatus</h3>
+<div class="member-signature"><span class="annotations">@NonNull
+</span><span class="return-type">@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></span>&nbsp;<span class="element-name">withRejectionStatus</span><wbr><span class="parameters">(@Nullable
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;statusCode)</span></div>
+<div class="block">Sets the rejection code associated with the current security context.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>statusCode</code> - a code associated with the current rejection. For example, in an HTTP context it can be an HTTP status code.</dd>
+<dt>Returns:</dt>
+<dd>this security context instance, for method chaining</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRejectionStatus()">
+<h3>getRejectionStatus</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">getRejectionStatus</span>()</div>
+<div class="block">Returns the rejection status associated with the current security context.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the HTTP status code associated with the current rejection, or <code>null</code></dd>
 </dl>
 </section>
 </li>
@@ -192,7 +231,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="clear()">
 <h3>clear</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
-<div class="block">Clears the current authentication and token.</div>
+<div class="block">Clears the current authentication, token, and rejection status.</div>
 </section>
 </li>
 </ul>
