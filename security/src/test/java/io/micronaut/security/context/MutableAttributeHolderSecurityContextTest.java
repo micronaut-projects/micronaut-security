@@ -44,7 +44,7 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
-    void settersWriteAuthenticationAndTokenToAttributeHolder() {
+    void withersWriteAuthenticationAndTokenToAttributeHolder() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
         Authentication authentication = Authentication.build("sherlock");
@@ -59,7 +59,7 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
-    void setRejectionStatusWritesHttpStatusToAttributeHolder() {
+    void withRejectionStatusWritesHttpStatusToAttributeHolder() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         MutableAttributeHolderSecurityContext securityContext = new MutableAttributeHolderSecurityContext(request);
 
@@ -69,7 +69,7 @@ class MutableAttributeHolderSecurityContextTest {
     }
 
     @Test
-    void settersAcceptNullToClearValues() {
+    void withersAcceptNullToClearValues() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context");
         Authentication authentication = Authentication.build("sherlock");
         request.setAttribute(SecurityFilter.AUTHENTICATION, authentication);

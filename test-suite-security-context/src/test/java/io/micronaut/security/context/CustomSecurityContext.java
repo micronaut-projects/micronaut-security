@@ -26,11 +26,13 @@ public class CustomSecurityContext implements SecurityContext {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     @NonNull
     public SecurityContext withToken(@Nullable String token) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     @NonNull
     public SecurityContext withRejectionStatus(@Nullable Integer statusCode) {
         throw new UnsupportedOperationException();

@@ -50,6 +50,7 @@ public interface SecurityContext {
      * Sets the authentication associated with the current security context.
      *
      * @param authentication the authentication to associate, or {@code null} to clear it
+     * @return this security context instance, for method chaining
      */
     @NonNull
     SecurityContext withAuthentication(@Nullable Authentication authentication);
@@ -58,6 +59,7 @@ public interface SecurityContext {
      * Sets the token associated with the current security context.
      *
      * @param token the token to associate, or {@code null} to clear it
+     * @return this security context instance, for method chaining
      */
     @NonNull
     SecurityContext withToken(@Nullable String token);
@@ -66,6 +68,7 @@ public interface SecurityContext {
      * Sets the rejection code associated with the current security context.
      *
      * @param statusCode a code associated with the current rejection. For example, in an HTTP context it can be an HTTP status code.
+     * @return this security context instance, for method chaining
      */
     @NonNull
     SecurityContext withRejectionStatus(@Nullable Integer statusCode);
