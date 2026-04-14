@@ -60,9 +60,9 @@ public interface SecurityContext {
     void setToken(@Nullable String token);
 
     /**
-     * Sets the rejection status associated with the current security context.
+     * Sets the rejection code associated with the current security context.
      *
-     * @param statusCode the HTTP status code to associate with the current rejection
+     * @param statusCode a code associated with the current rejection. For example, in an HTTP context it can be an HTTP status code.
      */
     void setRejectionStatus(@Nullable Integer statusCode);
 
