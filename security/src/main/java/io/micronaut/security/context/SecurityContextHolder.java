@@ -32,9 +32,9 @@ public final class SecurityContextHolder {
      */
     static final SecurityContextSupplier INSTANCE = SoftServiceLoader
             .load(SecurityContextSupplier.class)
-            .firstOr("io.micronaut.security.context.ServerRequestContextSecurityContextSupplier", SecurityContextSupplier.class.getClassLoader())
+            .first()
             .map(ServiceDefinition::load)
-            .orElse(null);
+            .orElseGet(ServerRequestContextSecurityContextSupplier::new);
 
     private SecurityContextHolder() {
     }
