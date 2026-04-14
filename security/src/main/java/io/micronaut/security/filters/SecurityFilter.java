@@ -31,6 +31,7 @@ import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
@@ -118,7 +119,7 @@ public class SecurityFilter implements HttpServerFilter {
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
                                                              HttpRequest<?> request,
                                                              ServerFilterChain chain) {
-        request.setAttribute(AUTHENTICATION, authentication);
+        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
         logAuthenticationAttributes(authentication);
         return checkRules(request, chain, authentication);
     }
@@ -158,8 +159,7 @@ public class SecurityFilter implements HttpServerFilter {
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {
-                        request.setAttribute(
-                                REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     } else if (result == SecurityRuleResult.ALLOWED) {
                         return chain.proceed(request);
@@ -179,7 +179,7 @@ public class SecurityFilter implements HttpServerFilter {
                         if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
                             return chain.proceed(request);
                         } else {
-                            request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                            ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                             return Mono.error(new AuthorizationException(authentication));
                         }
                     }

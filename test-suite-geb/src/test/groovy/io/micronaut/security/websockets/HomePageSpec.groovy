@@ -4,7 +4,7 @@ import geb.Browser
 import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller

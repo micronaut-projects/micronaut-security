@@ -34,7 +34,7 @@ import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
 import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
-import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.UriRouteMatch;
 import org.slf4j.Logger;
@@ -212,8 +212,7 @@ final class CsrfFilter implements Ordered {
 
     @NonNull
     private MutableHttpResponse<?> unauthorized(@NonNull HttpRequest<?> request) {
-        Authentication authentication = request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class)
-                .orElse(null);
+        Authentication authentication = ServerRequestContextSecurityContextSupplier.getSecurityContext(request).getAuthentication();
         return exceptionHandler.handle(request,
                 new AuthorizationException(authentication));
     }

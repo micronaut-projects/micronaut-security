@@ -22,6 +22,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
@@ -32,8 +33,6 @@ import reactor.core.publisher.Flux;
 
 import java.util.Collection;
 import java.util.List;
-
-import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
 /**
  * Attempts to retrieve a token form the {@link HttpRequest} and if existing validated.
@@ -93,7 +92,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
                 .flatMapSequential(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
-                    request.setAttribute(TOKEN, tokenValue);
+                    ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken(tokenValue);
                     tokenValidatedEventPublisher.publishEvent(
                         new TokenValidatedEvent(
                             tokenValue,

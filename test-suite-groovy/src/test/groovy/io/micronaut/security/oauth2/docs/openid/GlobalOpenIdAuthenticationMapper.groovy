@@ -2,8 +2,8 @@ package io.micronaut.security.oauth2.docs.openid
 
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 
 //tag::clazz[]
 

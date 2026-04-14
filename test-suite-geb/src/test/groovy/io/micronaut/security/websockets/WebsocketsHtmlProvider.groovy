@@ -1,7 +1,7 @@
 package io.micronaut.security.websockets
 
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable;
 
 class WebsocketsHtmlProvider {
     private final String serverUrl
