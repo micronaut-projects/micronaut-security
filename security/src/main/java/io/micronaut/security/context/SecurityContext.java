@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.context;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 
@@ -50,21 +51,24 @@ public interface SecurityContext {
      *
      * @param authentication the authentication to associate, or {@code null} to clear it
      */
-    void setAuthentication(@Nullable Authentication authentication);
+    @NonNull
+    SecurityContext withAuthentication(@Nullable Authentication authentication);
 
     /**
      * Sets the token associated with the current security context.
      *
      * @param token the token to associate, or {@code null} to clear it
      */
-    void setToken(@Nullable String token);
+    @NonNull
+    SecurityContext withToken(@Nullable String token);
 
     /**
      * Sets the rejection code associated with the current security context.
      *
      * @param statusCode a code associated with the current rejection. For example, in an HTTP context it can be an HTTP status code.
      */
-    void setRejectionStatus(@Nullable Integer statusCode);
+    @NonNull
+    SecurityContext withRejectionStatus(@Nullable Integer statusCode);
 
     /**
      * Returns the rejection status associated with the current security context.

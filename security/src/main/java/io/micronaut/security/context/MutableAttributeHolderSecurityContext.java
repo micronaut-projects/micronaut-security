@@ -16,6 +16,7 @@
 package io.micronaut.security.context;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.attr.MutableAttributeHolder;
 import io.micronaut.http.HttpStatus;
@@ -60,24 +61,30 @@ class MutableAttributeHolderSecurityContext implements SecurityContext {
     }
 
     @Override
-    public void setAuthentication(@Nullable Authentication authentication) {
+    @NonNull
+    public SecurityContext withAuthentication(@Nullable Authentication authentication) {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.AUTHENTICATION, authentication);
         }
+        return this;
     }
 
     @Override
-    public void setToken(@Nullable String token) {
+    @NonNull
+    public SecurityContext withToken(@Nullable String token) {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.TOKEN, token);
         }
+        return this;
     }
 
     @Override
-    public void setRejectionStatus(@Nullable Integer statusCode) {
+    @NonNull
+    public SecurityContext withRejectionStatus(@Nullable Integer statusCode) {
         if (attributeHolder != null) {
             attributeHolder.setAttribute(SecurityFilter.REJECTION, statusCode == null ? null : HttpStatus.valueOf(statusCode));
         }
+        return this;
     }
 
     @Override
@@ -93,8 +100,8 @@ class MutableAttributeHolderSecurityContext implements SecurityContext {
 
     @Override
     public void clear() {
-        setRejectionStatus(null);
-        setToken(null);
-        setAuthentication(null);
+        withRejectionStatus(null)
+            .withToken(null)
+            .withAuthentication(null);
     }
 }

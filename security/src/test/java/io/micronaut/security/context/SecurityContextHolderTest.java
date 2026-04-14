@@ -60,8 +60,8 @@ class SecurityContextHolderTest {
 
         ServerRequestContext.with(request, () -> {
             SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
-            securityContext.setAuthentication(authentication);
-            securityContext.setToken("signed-token");
+            securityContext.withAuthentication(authentication)
+                .withToken("signed-token");
 
             assertSame(authentication, securityContext.getAuthentication());
             assertEquals("signed-token", securityContext.getToken());
@@ -76,7 +76,7 @@ class SecurityContextHolderTest {
 
         ServerRequestContext.with(request, () -> {
             SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
-            securityContext.setRejectionStatus(HttpStatus.FORBIDDEN.getCode());
+            securityContext.withRejectionStatus(HttpStatus.FORBIDDEN.getCode());
 
             assertSame(HttpStatus.FORBIDDEN, request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class).orElse(null));
         });
