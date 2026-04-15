@@ -93,4 +93,5 @@ io.micronaut.security.token.refresh
 io.micronaut.security.token.render
 io.micronaut.security.token.validator
 io.micronaut.security.utils
+io.micronaut.security.websockets
 io.micronaut.security.x509
