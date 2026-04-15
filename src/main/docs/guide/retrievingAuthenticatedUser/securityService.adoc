@@ -6,7 +6,6 @@ The default supplier for `SecurityContext` uses server request attributes. You c
 
 === SecurityService with Project Reactor
 
-If you use Micronaut Reactor and access api:security.utils.SecurityService[] within a reactive chain,  add the following dependencies to handle the https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor Context Propagation].
+If you use Micronaut Reactor and access api:security.utils.SecurityService[] within a reactive chain, add the following dependency to handle the https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor Context Propagation].
 
-dependency:micronaut-security-reactor[groupId=io.micronaut.reactor]
 dependency:context-propagation[groupId=io.micrometer]
