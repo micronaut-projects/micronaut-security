@@ -136,7 +136,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         }
         return Flux.fromIterable(tokens)
             .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                .flatMapSequential(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
                     ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken(tokenValue);
