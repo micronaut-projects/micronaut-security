@@ -16,7 +16,7 @@
 package io.micronaut.security.testutils
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer

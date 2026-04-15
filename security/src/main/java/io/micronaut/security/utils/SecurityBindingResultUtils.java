@@ -16,7 +16,7 @@
 package io.micronaut.security.utils;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.bind.ArgumentBinder;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.filters.SecurityFilter;
@@ -34,7 +34,7 @@ public final class SecurityBindingResultUtils {
     private SecurityBindingResultUtils() {
     }
 
-    public static <A extends Principal> @NonNull ArgumentBinder.BindingResult<A> authentication(@NonNull HttpRequest<?> request,
+    public static <A extends Principal> ArgumentBinder. @NonNull BindingResult<A> authentication(@NonNull HttpRequest<?> request,
                                                                                                 @NonNull Class<A> authenticationClass) {
         if (!request.getAttributes().contains(SecurityFilter.KEY)) {
             return BindingResult.UNSATISFIED;

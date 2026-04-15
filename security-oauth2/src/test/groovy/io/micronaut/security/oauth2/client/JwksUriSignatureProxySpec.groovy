@@ -11,7 +11,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.*

@@ -5,7 +5,7 @@ import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
