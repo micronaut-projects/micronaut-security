@@ -19,17 +19,22 @@ import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
 @MicronautTest
 class TokenAuthenticationFetcherSpec extends Specification {
 
+    private static final String LOW_PRECEDENCE_VALIDATOR_LATCH = "low-precedence-validator-latch"
+
     @Inject
     TokenAuthenticationFetcher tokenAuthenticationFetcher
 
-    void "Beans of type TokenReader are evaluated in order"() {
+    void "beans of type TokenReader are evaluated in order"() {
         when: 'no token no authentication'
         SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
-        Authentication authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        Authentication authentication = fetchAuthentication(request)
 
         then:
         !authentication
@@ -37,7 +42,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         when: 'valid token'
         request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
         request.headers.add("X-API-KEY", "xxx")
-        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        authentication = fetchAuthentication(request)
 
         then:
         authentication
@@ -47,7 +52,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
         request.headers.add("X-API-KEY", "zzz")
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer yyy")
-        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        authentication = fetchAuthentication(request)
 
         then:
         authentication
@@ -57,29 +62,38 @@ class TokenAuthenticationFetcherSpec extends Specification {
         request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
         request.headers.add("X-API-KEY", "xxx")
         request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer yyy")
-        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        authentication = fetchAuthentication(request)
 
         then:
         authentication
         "bar" == authentication.name
+    }
 
-        when: 'Two token validators, the TokenValidator with highest order should take precedence'
-        request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+    void "token validator order is preserved when multiple validators authenticate the same token"() {
+        when:
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.setAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, new CountDownLatch(1))
         request.headers.add("X-API-KEY", "aaa")
-        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        Authentication authentication = fetchAuthentication(request)
 
         then:
         authentication
         "high-precedence" == authentication.name
+    }
 
-        when: 'Two token validators, use TokenValidator which provides authentication'
-        request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+    void "lower precedence validator is used when higher precedence validator returns empty"() {
+        when:
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
         request.headers.add("X-API-KEY", "bbb")
-        authentication = Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+        Authentication authentication = fetchAuthentication(request)
 
         then:
         authentication
         "baz" == authentication.name
+    }
+
+    private Authentication fetchAuthentication(SimpleHttpRequest request) {
+        Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
     }
 
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
@@ -92,9 +106,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
 
         @Override
         Optional<String> findToken(HttpRequest<?> request) {
-            Optional<String> response = super.findToken(request)
-            sleep(2_000)
-            return response
+            super.findToken(request)
         }
 
         @Override
@@ -114,19 +126,23 @@ class TokenAuthenticationFetcherSpec extends Specification {
 
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
-            return Mono.fromCallable {
-                if (token.equals("xxx")) {
-                    return Authentication.build("bar")
-                }
-                if (token.equals("yyy")) {
-                    return Authentication.build("foo")
-                }
-                if (token.equals("aaa")) {
-                    sleep(1000)
-                    return Authentication.build("high-precedence")
-                }
-                return null as Authentication
-            }.subscribeOn(Schedulers.boundedElastic()).filter(Objects::nonNull)
+            if (token.equals("xxx")) {
+                return Mono.just(Authentication.build("bar"))
+            }
+            if (token.equals("yyy")) {
+                return Mono.just(Authentication.build("foo"))
+            }
+            if (token.equals("aaa")) {
+                return Mono.fromCallable {
+                    CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
+                        .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
+                    if (!latch.await(5, TimeUnit.SECONDS)) {
+                        throw new IllegalStateException("Timed out waiting for the lower precedence validator")
+                    }
+                    Authentication.build("high-precedence")
+                }.subscribeOn(Schedulers.boundedElastic())
+            }
+            Mono.empty()
         }
 
         @Override
@@ -141,15 +157,16 @@ class TokenAuthenticationFetcherSpec extends Specification {
 
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
-            return Mono.fromCallable {
-                if (token.equals("aaa")) {
-                    return Authentication.build("low-precedence")
-                }
-                if (token.equals("bbb")) {
-                    return Authentication.build("baz")
-                }
-                return null as Authentication
-            }.subscribeOn(Schedulers.boundedElastic()).filter(Objects::nonNull)
+            if (token.equals("aaa")) {
+                CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
+                    .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
+                return Mono.just(Authentication.build("low-precedence"))
+                    .doOnNext { latch.countDown() }
+            }
+            if (token.equals("bbb")) {
+                return Mono.just(Authentication.build("baz"))
+            }
+            Mono.empty()
         }
 
         @Override
