@@ -40,6 +40,8 @@ dependencies {
 
     // https://github.com/testcontainers/testcontainers-java/issues/8798
     testRuntimeOnly(libs.commons.codec)
+
+    testImplementation(mnTest.junit.jupiter.params)
 }
 tasks.withType<Test> {
     useJUnitPlatform()

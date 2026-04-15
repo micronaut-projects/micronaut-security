@@ -21,7 +21,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 import jakarta.inject.Singleton;
@@ -54,7 +54,8 @@ public class DefaultStateFactory implements StateFactory {
     @Nullable
     @Override
     public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
-        Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
+        Optional<HttpStatus> rejectedStatus = Optional.ofNullable(ServerRequestContextSecurityContextSupplier.getSecurityContext(request).getRejectionStatus())
+            .map(HttpStatus::valueOf);
         MutableState state = createInitialState();
 
        rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).ifPresent(status ->

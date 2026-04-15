@@ -4,8 +4,8 @@ import com.nimbusds.jwt.JWT
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get

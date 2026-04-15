@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.utils;
 
+import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
@@ -25,7 +26,9 @@ import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
+ * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It delegates to
+ * {@link io.micronaut.security.context.SecurityContextHolder} to retrieve the
+ * {@link io.micronaut.security.authentication.Authentication} object if any.
  *
  * @author Sergio del Amo
  * @since 1.0
@@ -61,7 +64,7 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public Optional<Authentication> getAuthentication() {
-        return ServerRequestContext.currentRequest().flatMap(request -> request.getUserPrincipal(Authentication.class));
+        return Optional.ofNullable(SecurityContextHolder.getSecurityContext().getAuthentication());
     }
 
 
