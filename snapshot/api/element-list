@@ -4,7 +4,6 @@ io.micronaut.security.aot
 io.micronaut.security.authentication
 io.micronaut.security.authentication.provider
 io.micronaut.security.config
-io.micronaut.security.context
 io.micronaut.security.converters
 io.micronaut.security.csrf
 io.micronaut.security.csrf.filter
