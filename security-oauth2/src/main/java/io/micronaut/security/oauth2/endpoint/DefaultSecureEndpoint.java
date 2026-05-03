@@ -19,7 +19,8 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * The default implementation of {@link SecureEndpoint}.

@@ -20,6 +20,16 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
@@ -27,7 +37,6 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
@@ -38,7 +47,12 @@ import io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorM
 
 import java.net.URL;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
