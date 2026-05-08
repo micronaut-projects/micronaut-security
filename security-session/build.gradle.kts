@@ -5,6 +5,7 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     api(mnSession.micronaut.session)
+    api(mn.micronaut.router)
     api(projects.micronautSecurity)
     implementation(mnReactor.micronaut.reactor)
 
