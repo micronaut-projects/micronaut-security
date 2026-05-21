@@ -19,6 +19,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
 
@@ -59,6 +60,7 @@ public class SecretSignatureConfiguration {
      *
      * @param jwsAlgorithm JWS Algorithm
      */
+    @Bindable(defaultValue = "HS256")
     public void setJwsAlgorithm(JWSAlgorithm jwsAlgorithm) {
         this.jwsAlgorithm = jwsAlgorithm;
     }
@@ -99,6 +101,7 @@ public class SecretSignatureConfiguration {
      *
      * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
      */
+    @Bindable(defaultValue = "" + DEFAULT_BASE64)
     public void setBase64(boolean base64) {
         this.base64 = base64;
     }

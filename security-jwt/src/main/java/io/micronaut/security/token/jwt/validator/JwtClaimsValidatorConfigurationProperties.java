@@ -16,8 +16,9 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link JwtClaimsValidatorConfiguration}.
@@ -113,6 +114,7 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
      *
      * @param subjectNotNull Whether the JWT subject claim should be validated to ensure it is not null. Default value {@value #DEFAULT_SUBJECT_NOT_NULL}.
      */
+    @Bindable(defaultValue = "" + DEFAULT_SUBJECT_NOT_NULL)
     public void setSubjectNotNull(boolean subjectNotNull) {
         this.subjectNotNull = subjectNotNull;
     }
@@ -130,6 +132,7 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
      *
      * @param notBefore Whether it should be validated that validation time is not before the not-before claim (nbf) of a JWT token. Default value {@value #DEFAULT_NOT_BEFORE}.
      */
+    @Bindable(defaultValue = "" + DEFAULT_NOT_BEFORE)
     public void setNotBefore(boolean notBefore) {
         this.notBefore = notBefore;
     }
@@ -143,6 +146,7 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
      *
      * @param expiration Whether the expiration date of the JWT should be validated. Default value {@value #DEFAULT_EXPIRATION}.
      */
+    @Bindable(defaultValue = "" + DEFAULT_EXPIRATION)
     public void setExpiration(boolean expiration) {
         this.expiration = expiration;
     }
@@ -156,6 +160,7 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
      *
      * @param nonce Whether the nonce claim should be validated when a nonce was present. Default value {@value #DEFAULT_NONCE}.
      */
+    @Bindable(defaultValue = "" + DEFAULT_NONCE)
     public void setNonce(boolean nonce) {
         this.nonce = nonce;
     }
@@ -168,6 +173,7 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
     /**
      * @param openidIdtoken Whether `IdTokenClaimsValidator`, which performs some fo the verifications described in OpenID Connect Spec, is enabled. Default value {@value #DEFAULT_OPENID_ID_TOKEN}. Only applies for `idtoken` authentication mode.
      */
+    @Bindable(defaultValue = "" + DEFAULT_OPENID_ID_TOKEN)
     public void setOpenidIdtoken(boolean openidIdtoken) {
         this.openidIdtoken = openidIdtoken;
     }

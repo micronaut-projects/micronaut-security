@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import reactor.util.annotation.NonNull;
 
@@ -59,6 +60,7 @@ public class PkceConfigurationProperties implements PkceConfiguration {
      * entropy (in bytes) used for the code verifier generation. Default value {@value #DEFAULT_CODE_VERIFIER_ENTROPY}.
      * @param entropy entropy (in bytes) used for the code verifier.
      */
+    @Bindable(defaultValue = "" + DEFAULT_CODE_VERIFIER_ENTROPY)
     public void setEntropy(int entropy) {
         this.entropy = entropy;
     }
@@ -75,6 +77,7 @@ public class PkceConfigurationProperties implements PkceConfiguration {
      *
      * @param persistence The persistence mechanism
      */
+    @Bindable(defaultValue = DEFAULT_PERSISTENCE)
     public void setPersistence(String persistence) {
         this.persistence = persistence;
     }
@@ -89,6 +92,7 @@ public class PkceConfigurationProperties implements PkceConfiguration {
      *
      * @param enabled The enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

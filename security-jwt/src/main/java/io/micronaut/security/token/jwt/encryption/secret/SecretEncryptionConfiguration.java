@@ -19,6 +19,7 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
@@ -108,6 +109,7 @@ public class SecretEncryptionConfiguration {
      *
      * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
      */
+    @Bindable(defaultValue = "" + DEFAULT_BASE64)
     public void setBase64(boolean base64) {
         this.base64 = base64;
     }

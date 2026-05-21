@@ -16,9 +16,10 @@
 package io.micronaut.security.endpoints.introspection;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author Sergio del Amo
@@ -62,6 +63,7 @@ public class IntrospectionConfigurationProperties implements IntrospectionConfig
      * Enables {@link io.micronaut.security.endpoints.introspection.IntrospectionController}. Default value {@value #DEFAULT_ENABLED}
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -70,6 +72,7 @@ public class IntrospectionConfigurationProperties implements IntrospectionConfig
      * Path to the {@link io.micronaut.security.endpoints.introspection.IntrospectionController}. Default value {@value #DEFAULT_PATH}
      * @param path The path
      */
+    @Bindable(defaultValue = DEFAULT_PATH)
     public void setPath(@NonNull String path) {
         if (StringUtils.isNotEmpty(path)) {
             this.path = path;

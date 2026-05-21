@@ -16,9 +16,10 @@
 package io.micronaut.security.x509;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Configuration for X.509 authentication.
@@ -60,6 +61,7 @@ public class X509ConfigurationProperties implements X509Configuration {
      *
      * @param subjectDnRegex the regex
      */
+    @Bindable(defaultValue = DEFAULT_SUBJECT_DN_REGEX)
     public void setSubjectDnRegex(@NonNull String subjectDnRegex) {
         this.subjectDnRegex = subjectDnRegex;
     }
@@ -74,6 +76,7 @@ public class X509ConfigurationProperties implements X509Configuration {
      *
      * @param enabled true if enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Secondary;
+import io.micronaut.core.bind.annotation.Bindable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
@@ -106,6 +107,7 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      * Sets whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -114,6 +116,7 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      * Cookie Name. Default value ({@value #DEFAULT_COOKIENAME}).
      * @param cookieName Cookie name
      */
+    @Bindable(defaultValue = DEFAULT_COOKIENAME)
     public void setCookieName(String cookieName) {
         this.cookieName = cookieName;
     }
@@ -122,6 +125,7 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
+    @Bindable(defaultValue = DEFAULT_COOKIEPATH)
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
     }

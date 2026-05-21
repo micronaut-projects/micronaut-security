@@ -15,9 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
+import io.micronaut.core.bind.annotation.Bindable;
+import io.micronaut.http.cookie.CookieConfiguration;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import io.micronaut.http.cookie.CookieConfiguration;
 
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -58,6 +59,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0
      */
+    @Bindable(defaultValue = "false")
     public void setSessionCookie(boolean sessionCookie) {
         this.sessionCookie = sessionCookie;
     }
@@ -120,6 +122,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      *
      * @param cookiePath The path of the cookie.
      */
+    @Bindable(defaultValue = DEFAULT_COOKIEPATH)
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
     }
@@ -134,6 +137,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      *
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
+    @Bindable(defaultValue = "" + DEFAULT_HTTPONLY)
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
         this.cookieHttpOnly = cookieHttpOnly;
     }
@@ -151,6 +155,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      *
      * @param cookieMaxAge The maximum age of the cookie
      */
+    @Bindable(defaultValue = "300")
     public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
     }

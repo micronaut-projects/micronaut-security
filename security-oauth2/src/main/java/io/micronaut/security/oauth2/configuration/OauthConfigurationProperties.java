@@ -16,10 +16,11 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -58,6 +59,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param enabled True if is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -74,6 +76,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param loginUri The Login uri
      */
+    @Bindable(defaultValue = DEFAULT_LOGIN)
     public void setLoginUri(@NonNull String loginUri) {
         this.loginUri = loginUri;
     }
@@ -105,6 +108,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param callbackUri The callback Uri
      */
+    @Bindable(defaultValue = DEFAULT_CALLBACK)
     public void setCallbackUri(@NonNull String callbackUri) {
         this.callbackUri = callbackUri;
     }
@@ -149,6 +153,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
          *
          * @param logoutUri The logout uri
          */
+        @Bindable(defaultValue = DEFAULT_LOGOUT)
         public void setLogoutUri(String logoutUri) {
             this.logoutUri = logoutUri;
         }
@@ -214,6 +219,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              *
              * @param redirectUri Redirect uri
              */
+            @Bindable(defaultValue = DEFAULT_REDIRECT_URI)
             public void setRedirectUri(String redirectUri) {
                 this.redirectUri = redirectUri;
             }
@@ -244,6 +250,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              * @param issuer Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator}
              *               is enabled. Default value ({@value #DEFAULT_ISSUER_ENABLED}).
              */
+            @Bindable(defaultValue = "" + DEFAULT_ISSUER_ENABLED)
             public void setIssuer(boolean issuer) {
                 this.issuer = issuer;
             }
@@ -257,6 +264,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              * @param audience Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AudienceClaimValidator}
              *                 is enabled. Default value ({@value #DEFAULT_AUDIENCE_ENABLED}).
              */
+            @Bindable(defaultValue = "" + DEFAULT_AUDIENCE_ENABLED)
             public void setAudience(boolean audience) {
                 this.audience = audience;
             }
@@ -270,6 +278,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              * @param authorizedParty Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AuthorizedPartyClaimValidator}
              *                        is enabled. Default value ({@value #DEFAULT_AUTHORIZED_PARTY_ENABLED}).
              */
+            @Bindable(defaultValue = "" + DEFAULT_AUTHORIZED_PARTY_ENABLED)
             public void setAuthorizedParty(boolean authorizedParty) {
                 this.authorizedParty = authorizedParty;
             }
@@ -298,6 +307,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              *
              * @param jwt The jwt
              */
+            @Bindable(defaultValue = "false")
             public void setJwt(boolean jwt) {
                 this.jwt = jwt;
             }
@@ -313,6 +323,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              *
              * @param accessToken Access token
              */
+            @Bindable(defaultValue = "false")
             public void setAccessToken(boolean accessToken) {
                 this.accessToken = accessToken;
             }
@@ -328,6 +339,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              *
              * @param refreshToken Refresh token
              */
+            @Bindable(defaultValue = "false")
             public void setRefreshToken(boolean refreshToken) {
                 this.refreshToken = refreshToken;
             }

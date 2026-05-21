@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
      *
      * @param authenticationMethod Authentication Method
      */
+    @Bindable(defaultValue = AuthenticationMethods.CLIENT_SECRET_BASIC)
     public void setAuthenticationMethod(String authenticationMethod) {
         this.authenticationMethod = authenticationMethod;
     }

@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -64,6 +65,7 @@ public class OauthControllerConfigurationProperties extends ControllerConfigurat
      * @param enabled True if is enabled
      */
     @Override
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         super.setEnabled(true);
     }
@@ -74,6 +76,7 @@ public class OauthControllerConfigurationProperties extends ControllerConfigurat
      * @param path The path
      */
     @Override
+    @Bindable(defaultValue = DEFAULT_PATH)
     public void setPath(String path) {
         if (StringUtils.isNotEmpty(path)) {
             super.setPath(path);
@@ -93,6 +96,7 @@ public class OauthControllerConfigurationProperties extends ControllerConfigurat
      *  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value ({@value #DEFAULT_GETALLOWED}).
      * @param getAllowed Whether Http GET should be supported.
      */
+    @Bindable(defaultValue = "" + DEFAULT_GETALLOWED)
     public void setGetAllowed(boolean getAllowed) {
         this.getAllowed = getAllowed;
     }
