@@ -2,3 +2,4 @@ The following global configuration options are available:
 
 include::{includedir}configurationProperties/io.micronaut.security.config.SecurityConfigurationProperties.adoc[]
 
+By default, role comparisons are case-sensitive. Set `micronaut.security.roles-case-sensitive=false` to make the default `RolesFinder` compare roles case-insensitively for authorization rules and `SecurityService.hasRole`. Enable this only when your role model intentionally treats roles differing only by case as equivalent.

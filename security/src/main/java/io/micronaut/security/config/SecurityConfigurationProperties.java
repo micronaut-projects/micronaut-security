@@ -58,6 +58,12 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
+    /**
+     * The default roles case-sensitive value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ROLES_CASE_SENSITIVE = true;
+
     private boolean enabled = DEFAULT_ENABLED;
 
     private boolean interceptUrlMapPrependPatternWithContextPath = DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH;
@@ -66,6 +72,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
     private AuthenticationStrategy authenticationProviderStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
     private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
+    private boolean rolesCaseSensitive = DEFAULT_ROLES_CASE_SENSITIVE;
 
     @Nullable
     private AuthenticationMode authentication = null;
@@ -165,5 +172,20 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     public void setRejectNotFound(boolean rejectNotFound) {
         this.rejectNotFound = rejectNotFound;
+    }
+
+    @Override
+    public boolean isRolesCaseSensitive() {
+        return rolesCaseSensitive;
+    }
+
+    /**
+     * Whether role comparison is case-sensitive. When set to {@code false}, roles differing only by case are treated as equivalent.
+     * Default value ({@value #DEFAULT_ROLES_CASE_SENSITIVE}).
+     *
+     * @param rolesCaseSensitive True if roles should be compared case-sensitively
+     */
+    public void setRolesCaseSensitive(boolean rolesCaseSensitive) {
+        this.rolesCaseSensitive = rolesCaseSensitive;
     }
 }
