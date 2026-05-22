@@ -497,29 +497,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     @ConfigurationProperties("token")
     @Requires(classes = MediaType.class)
-    public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
-        private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
-
-        @NonNull
-        private MediaType contentType = DEFAULT_CONTENT_TYPE;
-
+    public static class TokenEndpointConfigurationProperties extends AbstractTokenEndpointConfigurationProperties {
         @Nullable
         private ClientAssertionConfigurationProperties clientAssertion;
-
-        @NonNull
-        @Override
-        public MediaType getContentType() {
-            return contentType;
-        }
-
-        /**
-         * The content type of token endpoint requests. Default value (application/x-www-form-urlencoded).
-         *
-         * @param contentType The content type
-         */
-        public void setContentType(@NonNull MediaType contentType) {
-            this.contentType = contentType;
-        }
 
         @NonNull
         @Override
@@ -542,7 +522,31 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @ConfigurationProperties("client-assertion")
         public static class ClientAssertionConfigurationProperties extends AbstractClientAssertionConfigurationProperties {
         }
+    }
 
+    /**
+     * Shared token endpoint configuration.
+     */
+    abstract static class AbstractTokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
+        private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
+
+        @NonNull
+        private MediaType contentType = DEFAULT_CONTENT_TYPE;
+
+        @NonNull
+        @Override
+        public MediaType getContentType() {
+            return contentType;
+        }
+
+        /**
+         * The content type of token endpoint requests. Default value (application/x-www-form-urlencoded).
+         *
+         * @param contentType The content type
+         */
+        public void setContentType(@NonNull MediaType contentType) {
+            this.contentType = contentType;
+        }
     }
 
     /**
@@ -979,28 +983,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         @ConfigurationProperties("token")
         @Requires(classes = MediaType.class)
-        public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
-            private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
-            @NonNull
-            private MediaType contentType = DEFAULT_CONTENT_TYPE;
-
+        public static class TokenEndpointConfigurationProperties extends AbstractTokenEndpointConfigurationProperties {
             @Nullable
             private ClientAssertionConfigurationProperties clientAssertion;
-
-            @NonNull
-            @Override
-            public MediaType getContentType() {
-                return this.contentType;
-            }
-
-            /**
-             * The content type of token endpoint requests. Default value (application/x-www-form-urlencoded).
-             *
-             * @param contentType The content type
-             */
-            public void setContentType(@NonNull MediaType contentType) {
-                this.contentType = contentType;
-            }
 
             @NonNull
             @Override

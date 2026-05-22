@@ -20,11 +20,20 @@ import static org.junit.jupiter.api.Assertions.*;
 @Property(name = "micronaut.security.oauth2.clients.stravanew.token.client-assertion.signing-algorithm", value = "HS384")
 @Property(name = "micronaut.security.oauth2.clients.stravanew.client-id", value = "xxx")
 @Property(name = "micronaut.security.oauth2.clients.stravanew.client-secret", value = "yyy")
+@Property(name = "micronaut.security.oauth2.clients.okta.client-id", value = "xxx")
+@Property(name = "micronaut.security.oauth2.clients.okta.openid.token.url", value = "https://dev-123456.okta.com/oauth2/v1/token")
+@Property(name = "micronaut.security.oauth2.clients.okta.openid.token.client-assertion.lifetime", value = "PT3M")
+@Property(name = "micronaut.security.oauth2.clients.okta.openid.token.client-assertion.audience", value = "https://dev-123456.okta.com/oauth2/v1/token")
+@Property(name = "micronaut.security.oauth2.clients.okta.openid.token.client-assertion.signer-name", value = "assertion")
 @MicronautTest(startApplication = false)
 class OauthClientConfigurationTest {
     @Inject
     @Named("stravanew")
     OauthClientConfiguration stravaNewConfiguration;
+
+    @Inject
+    @Named("okta")
+    OauthClientConfiguration oktaConfiguration;
 
     @Test
     void authorizationServerDefaultsToNull() {
@@ -60,6 +69,17 @@ class OauthClientConfigurationTest {
         assertEquals(Duration.ofMinutes(2), tokenEndpointConfiguration.getClientAssertion().get().getLifetime());
         assertEquals("https://www.strava.com/oauth/token", tokenEndpointConfiguration.getClientAssertion().get().getAudience().orElseThrow());
         assertEquals("HS384", tokenEndpointConfiguration.getClientAssertion().get().getSigningAlgorithm().orElseThrow());
+    }
+
+    @Test
+    void openIdClientAssertionConfigurationIsBound() {
+        assertTrue(oktaConfiguration.getOpenid().isPresent());
+        assertTrue(oktaConfiguration.getOpenid().get().getToken().isPresent());
+        TokenEndpointConfiguration tokenEndpointConfiguration = oktaConfiguration.getOpenid().get().getToken().get();
+        assertTrue(tokenEndpointConfiguration.getClientAssertion().isPresent());
+        assertEquals(Duration.ofMinutes(3), tokenEndpointConfiguration.getClientAssertion().get().getLifetime());
+        assertEquals("https://dev-123456.okta.com/oauth2/v1/token", tokenEndpointConfiguration.getClientAssertion().get().getAudience().orElseThrow());
+        assertEquals("assertion", tokenEndpointConfiguration.getClientAssertion().get().getSignerName().orElseThrow());
     }
 
 }
