@@ -97,9 +97,6 @@ class ResourceMetadataWwwAuthenticateChallengeProvider implements WwwAuthenticat
         ProtectedResourceMetadata metadata = path == null
             ? protectedResourceMetadataProvider.get(request)
             : protectedResourceMetadataProvider.get(path, request);
-        if (metadata == null) {
-            return "";
-        }
         List<String> scopes = metadata.scopesSupported();
         if (scopes == null || scopes.isEmpty()) {
             return "";
