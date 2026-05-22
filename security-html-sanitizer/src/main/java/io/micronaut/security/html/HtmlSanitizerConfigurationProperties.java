@@ -47,12 +47,6 @@ public class HtmlSanitizerConfigurationProperties implements HtmlSanitizerConfig
         HtmlSanitizerPolicy.LINKS
     ));
 
-    /**
-     * Constructs the configuration properties with conservative defaults.
-     */
-    public HtmlSanitizerConfigurationProperties() {
-    }
-
     @Override
     public boolean isEnabled() {
         return enabled;
