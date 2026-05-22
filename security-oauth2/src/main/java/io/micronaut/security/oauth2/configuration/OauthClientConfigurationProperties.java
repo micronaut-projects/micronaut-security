@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.ClientAssertionConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -495,8 +496,166 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * OAuth 2.0 token endpoint configuration.
      */
     @ConfigurationProperties("token")
-    public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
+    @Requires(classes = MediaType.class)
+    public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
+        private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 
+        @NonNull
+        private MediaType contentType = DEFAULT_CONTENT_TYPE;
+
+        @Nullable
+        private ClientAssertionConfigurationProperties clientAssertion;
+
+        @NonNull
+        @Override
+        public MediaType getContentType() {
+            return contentType;
+        }
+
+        /**
+         * The content type of token endpoint requests. Default value (application/x-www-form-urlencoded).
+         *
+         * @param contentType The content type
+         */
+        public void setContentType(@NonNull MediaType contentType) {
+            this.contentType = contentType;
+        }
+
+        @NonNull
+        @Override
+        public Optional<ClientAssertionConfiguration> getClientAssertion() {
+            return Optional.ofNullable(clientAssertion);
+        }
+
+        /**
+         * JWT client assertion configuration for token endpoint authentication.
+         *
+         * @param clientAssertion JWT client assertion configuration
+         */
+        public void setClientAssertion(@Nullable ClientAssertionConfigurationProperties clientAssertion) {
+            this.clientAssertion = clientAssertion;
+        }
+
+        /**
+         * JWT client assertion configuration.
+         */
+        @ConfigurationProperties("client-assertion")
+        public static class ClientAssertionConfigurationProperties extends AbstractClientAssertionConfigurationProperties {
+        }
+
+    }
+
+    /**
+     * JWT client assertion configuration.
+     */
+    public abstract static class AbstractClientAssertionConfigurationProperties implements ClientAssertionConfiguration {
+        @NonNull
+        private Duration lifetime = ClientAssertionConfiguration.DEFAULT_LIFETIME;
+
+        @Nullable
+        private String audience;
+
+        @Nullable
+        private String issuer;
+
+        @Nullable
+        private String subject;
+
+        @Nullable
+        private String signingAlgorithm;
+
+        @Nullable
+        private String signerName;
+
+        @NonNull
+        @Override
+        public Duration getLifetime() {
+            return lifetime;
+        }
+
+        /**
+         * JWT client assertion lifetime. Default value (5 minutes).
+         *
+         * @param lifetime JWT client assertion lifetime
+         */
+        public void setLifetime(@NonNull Duration lifetime) {
+            this.lifetime = lifetime;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getAudience() {
+            return Optional.ofNullable(audience);
+        }
+
+        /**
+         * JWT client assertion audience. Defaults to the token endpoint URL.
+         *
+         * @param audience JWT client assertion audience
+         */
+        public void setAudience(@Nullable String audience) {
+            this.audience = audience;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getIssuer() {
+            return Optional.ofNullable(issuer);
+        }
+
+        /**
+         * JWT client assertion issuer. Defaults to the OAuth client id.
+         *
+         * @param issuer JWT client assertion issuer
+         */
+        public void setIssuer(@Nullable String issuer) {
+            this.issuer = issuer;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getSubject() {
+            return Optional.ofNullable(subject);
+        }
+
+        /**
+         * JWT client assertion subject. Defaults to the OAuth client id.
+         *
+         * @param subject JWT client assertion subject
+         */
+        public void setSubject(@Nullable String subject) {
+            this.subject = subject;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getSigningAlgorithm() {
+            return Optional.ofNullable(signingAlgorithm);
+        }
+
+        /**
+         * JWS signing algorithm used for client_secret_jwt. Defaults to HS256.
+         *
+         * @param signingAlgorithm JWS signing algorithm
+         */
+        public void setSigningAlgorithm(@Nullable String signingAlgorithm) {
+            this.signingAlgorithm = signingAlgorithm;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getSignerName() {
+            return Optional.ofNullable(signerName);
+        }
+
+        /**
+         * Named SignatureGeneratorConfiguration bean used for private_key_jwt.
+         *
+         * @param signerName Named SignatureGeneratorConfiguration bean
+         */
+        public void setSignerName(@Nullable String signerName) {
+            this.signerName = signerName;
+        }
     }
 
     /**
@@ -822,7 +981,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Requires(classes = MediaType.class)
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
             private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
+            @NonNull
             private MediaType contentType = DEFAULT_CONTENT_TYPE;
+
+            @Nullable
+            private ClientAssertionConfigurationProperties clientAssertion;
 
             @NonNull
             @Override
@@ -837,6 +1000,28 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              */
             public void setContentType(@NonNull MediaType contentType) {
                 this.contentType = contentType;
+            }
+
+            @NonNull
+            @Override
+            public Optional<ClientAssertionConfiguration> getClientAssertion() {
+                return Optional.ofNullable(clientAssertion);
+            }
+
+            /**
+             * JWT client assertion configuration for token endpoint authentication.
+             *
+             * @param clientAssertion JWT client assertion configuration
+             */
+            public void setClientAssertion(@Nullable ClientAssertionConfigurationProperties clientAssertion) {
+                this.clientAssertion = clientAssertion;
+            }
+
+            /**
+             * JWT client assertion configuration.
+             */
+            @ConfigurationProperties("client-assertion")
+            public static class ClientAssertionConfigurationProperties extends AbstractClientAssertionConfigurationProperties {
             }
         }
 

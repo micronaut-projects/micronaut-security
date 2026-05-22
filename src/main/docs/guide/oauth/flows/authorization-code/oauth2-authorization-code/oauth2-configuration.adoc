@@ -31,8 +31,56 @@ micronaut:
 - Optionally specify desired `scopes`
 - Provide an `authorization` endpoint URL
 - Additionally, the `token` endpoint URL and authentication method
-- `auth-method` is one of api:security.oauth2.endpoint.AuthenticationMethod[]. Choose the one your provider requires.
+- `auth-method` is one of api:security.oauth2.endpoint.AuthenticationMethods[]. Choose the one your provider requires.
 
-Authentication methods are not clearly defined in link:https://tools.ietf.org/html/rfc6749#section-3.2.1[RFC 6749], however most OAuth 2.0 providers either accept `client-secret-basic` (basic authentication with id and secret), or `client-secret-post` (client id and secret are sent in the request body).
+Authentication methods are not clearly defined in link:https://tools.ietf.org/html/rfc6749#section-3.2.1[RFC 6749], however most OAuth 2.0 providers either accept `client_secret_basic` (basic authentication with id and secret), or `client_secret_post` (client id and secret are sent in the request body).
+
+Micronaut also supports link:https://www.rfc-editor.org/rfc/rfc7523#section-2.2[RFC 7523 JWT client authentication] for token endpoint requests. With `client_secret_jwt`, the OAuth client secret signs a short-lived JWT assertion:
+
+[configuration]
+----
+micronaut:
+  security:
+    oauth2:
+      clients:
+        github:
+          client-id: <<my client id>>
+          client-secret: <<my client secret>>
+          token:
+            url: https://github.com/login/oauth/access_token
+            auth-method: client_secret_jwt
+            client-assertion:
+              lifetime: 2m
+              signing-algorithm: HS256
+----
+
+With `private_key_jwt`, configure a JWT signature generator and point the token endpoint at that signer:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          rsa:
+            assertion:
+              # configure private signing material for this signer
+              jws-algorithm: RS256
+    oauth2:
+      clients:
+        github:
+          client-id: <<my client id>>
+          token:
+            url: https://github.com/login/oauth/access_token
+            auth-method: private_key_jwt
+            client-assertion:
+              signer-name: assertion
+              lifetime: 2m
+----
+
+For both JWT methods, Micronaut sends `client_id`, `client_assertion_type`, and `client_assertion` in the token request body. By default the assertion issuer and subject are the client id, the audience is the token endpoint URL, and each request gets a new `jti`. Keep client secrets and private keys out of logs and source control.
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$TokenEndpointConfigurationProperties$ClientAssertionConfigurationProperties.adoc[]
 
 TIP: To disable a specific client for any given environment, set `enabled: false` within the client configuration.

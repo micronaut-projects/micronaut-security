@@ -18,6 +18,8 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.MediaType;
 
+import java.util.Optional;
+
 /**
  * TokenEndpoint Configuration.
  *
@@ -41,5 +43,14 @@ public interface TokenEndpointConfiguration extends SecureEndpointConfiguration 
     @NonNull
     static TokenEndpointConfigurationBuilder builder() {
         return new TokenEndpointConfigurationBuilder();
+    }
+
+    /**
+     * @return The optional JWT client assertion configuration.
+     * @since 5.1.0
+     */
+    @NonNull
+    default Optional<ClientAssertionConfiguration> getClientAssertion() {
+        return Optional.empty();
     }
 }

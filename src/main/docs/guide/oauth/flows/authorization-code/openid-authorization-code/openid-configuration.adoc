@@ -22,6 +22,54 @@ micronaut:
 
 The issuer URL will be used to discover the endpoints exposed by the provider.
 
+If the provider requires JWT client authentication at the token endpoint, configure the discovered token endpoint authentication method explicitly. For `client_secret_jwt`, the OAuth client secret signs the assertion:
+
+[configuration]
+----
+micronaut:
+    security:
+        oauth2:
+            clients:
+                okta:
+                    client-id: <<my client id>>
+                    client-secret: <<my client secret>>
+                    openid:
+                        issuer: <<my openid issuer>>
+                        token:
+                            auth-method: client_secret_jwt
+                            client-assertion:
+                                lifetime: 2m
+                                signing-algorithm: HS256
+----
+
+For `private_key_jwt`, configure a JWT signature generator and select it by name:
+
+[configuration]
+----
+micronaut:
+    security:
+        token:
+            jwt:
+                signatures:
+                    rsa:
+                        assertion:
+                            # configure private signing material for this signer
+                            jws-algorithm: RS256
+        oauth2:
+            clients:
+                okta:
+                    client-id: <<my client id>>
+                    openid:
+                        issuer: <<my openid issuer>>
+                        token:
+                            auth-method: private_key_jwt
+                            client-assertion:
+                                signer-name: assertion
+                                lifetime: 2m
+----
+
+For both JWT methods, Micronaut sends `client_id`, `client_assertion_type`, and `client_assertion` in the token request body. By default the assertion issuer and subject are the client id, the audience is the token endpoint URL, and each request gets a new `jti`. Keep client secrets and private keys out of logs and source control.
+
 TIP: To disable a specific client for any given environment, set `enabled: false` within the client configuration.
 
 See the following tables for the configuration options:
@@ -29,6 +77,7 @@ See the following tables for the configuration options:
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties$ClientAssertionConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]
