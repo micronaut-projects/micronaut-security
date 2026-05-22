@@ -45,6 +45,7 @@ securityConfiguration:
   authenticationStrategy: Authentication Strategy
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
+  onePasswordSecretsAutomation: 1Password Secrets Automation
 authenticationProviders:
   title: Reactive Authentication Providers
   imperativeAuthenticationProviders: Authentication Provider
