@@ -80,7 +80,7 @@ import java.util.List;
 
 public class AotOpenIdProviderMetadataFetcherCognito {
   public static DefaultOpenIdProviderMetadata create() {
-    DefaultOpenIdProviderMetadata.Builder builder = DefaultOpenIdProviderMetadata.builder();
+    DefaultOpenIdProviderMetadata.Builder builder = DefaultOpenIdProviderMetadata.builder("cognito");
     builder.userinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
     builder.authorizationEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
     List<String> idTokenSigningAlgValuesSupported = new ArrayList<>();

@@ -8,6 +8,9 @@ dependencies {
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mnTest.micronaut.test.spock)
     runtimeOnly(mnLogging.logback.classic)
+
+    testCompileOnly(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)

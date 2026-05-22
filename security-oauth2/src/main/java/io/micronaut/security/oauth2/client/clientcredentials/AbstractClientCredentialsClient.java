@@ -18,8 +18,8 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
@@ -29,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Signal;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
@@ -81,17 +79,14 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
         return Flux.from(scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope)))
-                .materialize()
-                .next()
-                .flatMap((Function<Signal<TokenResponse>, Mono<TokenResponse>>) tokenNotif -> {
-                    if (!force && tokenNotif.isOnNext() && !isExpired(tokenNotif.get())) {
-                        TokenResponse tokenResponse = tokenNotif.get();
-                        return tokenResponse != null ? Mono.just(tokenResponse) : Mono.empty();
-                    } else if (tokenNotif.isOnError()) {
-                        return tokenNotif.getThrowable() != null ? Mono.error(tokenNotif.getThrowable()) : Mono.error(Throwable::new);
-                    }
-                    return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
-                });
+            .flatMap((Function<TokenResponse, Mono<TokenResponse>>) response -> {
+                if (!force && !isExpired(response)) {
+                    return Mono.just(response);
+                }
+                return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
+            }).doOnError(error -> {
+                scopeToPublisherMap.remove(resolvedScope);
+            });
     }
 
     @NonNull

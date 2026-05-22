@@ -4,7 +4,7 @@ image::jwt-bearer-token.svg[]
 
 The following configuration properties are available to customize how the Bearer Token will be read:
 
-include::{includedir}configurationProperties/io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.token.bearer.BearerTokenConfigurationProperties.adoc[]
 
 == Sending tokens in the request
 

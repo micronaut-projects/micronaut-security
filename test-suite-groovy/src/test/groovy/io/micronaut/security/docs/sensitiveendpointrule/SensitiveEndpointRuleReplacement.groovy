@@ -3,7 +3,7 @@ package io.micronaut.security.docs.sensitiveendpointrule
 //tag::imports[]
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor

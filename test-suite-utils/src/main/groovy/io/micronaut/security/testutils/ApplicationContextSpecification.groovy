@@ -16,7 +16,7 @@
 package io.micronaut.security.testutils
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification

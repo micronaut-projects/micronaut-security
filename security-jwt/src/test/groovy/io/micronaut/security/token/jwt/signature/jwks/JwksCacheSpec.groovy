@@ -17,6 +17,7 @@ import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
@@ -114,6 +115,7 @@ class JwksCacheSpec extends Specification {
 
     void "JWK are cached"() {
         given:
+
         HttpClient googleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, googleEmbeddedServer.URL)
         BlockingHttpClient googleClient = googleHttpClient.toBlocking()
 
@@ -128,6 +130,17 @@ class JwksCacheSpec extends Specification {
 
         expect:
         0 == totalInvocations()
+        when:
+        !embeddedServer.getApplicationContext().getBean(CacheableJwkSetFetcher.class)
+
+        then:
+        thrown(NoSuchBeanException)
+
+        when:
+        embeddedServer.getApplicationContext().getBean(ReactorCacheJwkSetFetcher.class);
+
+        then:
+        noExceptionThrown()
 
         when:
         BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)

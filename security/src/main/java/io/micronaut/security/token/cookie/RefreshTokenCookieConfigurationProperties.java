@@ -19,14 +19,13 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Secondary;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.endpoints.OauthControllerConfigurationProperties;
-import io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties;
-
 import java.util.Optional;
 
 /**
@@ -34,6 +33,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = CookieConfiguration.class)
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)

@@ -11,8 +11,8 @@ import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -32,7 +32,8 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
+
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
@@ -152,6 +153,13 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authservermanual.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex'                            : 'resourceclient',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : '1s',
+
+            'micronaut.security.oauth2.clients.authservererrorcache.token.auth-method'                                              : "client_secret_basic",
+            'micronaut.security.oauth2.clients.authservererrorcache.token.url'                                                      : "http://localhost:$authServerPort/token".toString(),
+            'micronaut.security.oauth2.clients.authservererrorcache.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-credentials.service-id-regex'                            : 'resourceclient',
+            'micronaut.security.oauth2.clients.authservererrorcache.client-credentials.advanced-expiration'                         : '1s',
 
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer'                         : "http://localhost:$authServerDownPort".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.token.auth-method'                     : "client_secret_basic",
@@ -299,7 +307,7 @@ class ClientCredentialsSpec extends Specification {
         then:
         metadata
         metadata.tokenEndpoint == "http://localhost:$authServerPort/token".toString()
-        
+
         when:
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
@@ -350,6 +358,45 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
+
+    void 'test client credentials token does not cache errors'() {
+        given:
+        ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservererrorcache"))
+
+        when: 'calling client credentials while service is down'
+        authServer.applicationContext.getBean(TokenController).down = true
+        TokenResponse noToken = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        noToken == null
+        RuntimeException e = thrown(RuntimeException)
+        e.message == 'Internal Server Error'
+
+        when: 'calling client credentials returns an access token'
+        authServer.applicationContext.getBean(TokenController).down = false
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        noExceptionThrown()
+
+        when: 'calling client credentials returns the old access token'
+        TokenResponse nextTokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then:
+        tokenResponse.accessToken == nextTokenResponse.accessToken
+        noExceptionThrown()
+
+        when: 'calling client credentials while service is down again'
+        authServer.applicationContext.getBean(TokenController).down = true
+        nextTokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
+
+        then: 'we get the previously cached access token'
+        tokenResponse.accessToken == nextTokenResponse.accessToken
+        noExceptionThrown()
+
+        cleanup:
+        authServer.applicationContext.getBean(TokenController).down = false
     }
 
     void 'test client credentials token caching'() {
@@ -437,13 +484,13 @@ class ClientCredentialsSpec extends Specification {
     @Controller("/.well-known")
     static class OpenIdConfigurationAuthServerDownController {
         private final String url
-        private final List<AuthenticationMethod> authenticationMethods
+        private final List<String> authenticationMethods
 
         OpenIdConfigurationAuthServerDownController(@Property(name = "micronaut.server.port") Integer port) {
             this.url = "http://localhost:$port"
             this.authenticationMethods = [
-                    AuthenticationMethod.CLIENT_SECRET_POST,
-                    AuthenticationMethod.CLIENT_SECRET_BASIC
+                    AuthenticationMethods.CLIENT_SECRET_POST,
+                    AuthenticationMethods.CLIENT_SECRET_BASIC
             ]
         }
 
@@ -451,11 +498,11 @@ class ClientCredentialsSpec extends Specification {
         @Get("/openid-configuration")
         Map<String, Object> index() {
             [
-                    "issuer": "${url}",
-                    "authorization_endpoint": "${url}/authorize",
-                    "jwks_uri" : "${url}/keys",
+                    "issuer": "${url}".toString(),
+                    "authorization_endpoint": "${url}/authorize".toString(),
+                    "jwks_uri" : "${url}/keys".toString(),
                     "token_endpoint": "${url}/token".toString(),
-                    "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
+                    "token_endpoint_auth_methods_supported": authenticationMethods*.toString(),
                     "grant_types_supported": ["client_credentials"],
                     "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
                     "subject_types_supported": ["public", "pairwise"],
@@ -479,13 +526,13 @@ class ClientCredentialsSpec extends Specification {
     @Controller("/.well-known")
     static class OpenIdConfigurationController {
         private final String url
-        private final List<AuthenticationMethod> authenticationMethods
+        private final List<String> authenticationMethods
 
         OpenIdConfigurationController(@Property(name = "micronaut.server.port") Integer port) {
             this.url = "http://localhost:$port"
             this.authenticationMethods = [
-                    AuthenticationMethod.CLIENT_SECRET_POST,
-                    AuthenticationMethod.CLIENT_SECRET_BASIC
+                    AuthenticationMethods.CLIENT_SECRET_POST,
+                    AuthenticationMethods.CLIENT_SECRET_BASIC
             ]
         }
 
@@ -493,14 +540,14 @@ class ClientCredentialsSpec extends Specification {
         @Get("/openid-configuration")
         Map<String, Object> index() {
             [
-                    "issuer": "${url}",
-                    "authorization_endpoint": "${url}/authorize",
-                    "jwks_uri" : "${url}/keys",
+                    "issuer": "${url}".toString(),
+                    "authorization_endpoint": "${url}/authorize".toString(),
+                    "jwks_uri" : "${url}/keys".toString(),
                     "token_endpoint": "${url}/token".toString(),
                     "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
                     "subject_types_supported": ["public", "pairwise"],
                     "id_token_signing_alg_values_supported": ["RS256", "ES256", "HS256"],
-                    "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
+                    "token_endpoint_auth_methods_supported": authenticationMethods*.toString(),
                     "grant_types_supported": ["client_credentials"],
             ]
         }

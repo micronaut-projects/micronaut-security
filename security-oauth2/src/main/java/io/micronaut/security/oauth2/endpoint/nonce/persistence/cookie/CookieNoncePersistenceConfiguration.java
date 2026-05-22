@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 

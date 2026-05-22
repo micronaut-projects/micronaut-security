@@ -16,8 +16,9 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.naming.Named;
 
 /**
  * JSON Web Key Set Configuration.
@@ -25,7 +26,7 @@ import io.micronaut.core.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.1.0
  */
-public interface JwksSignatureConfiguration {
+public interface JwksSignatureConfiguration extends Named {
 
     /**
      * Json Web Key Set endpoint url.
@@ -42,8 +43,10 @@ public interface JwksSignatureConfiguration {
     KeyType getKeyType();
 
     /**
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      * @return The number of seconds to cache the JWKS.
      */
     @NonNull
+    @Deprecated(forRemoval = true, since = "4.11.0")
     Integer getCacheExpiration();
 }

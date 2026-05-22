@@ -15,10 +15,11 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.serde.annotation.Serdeable;
 
@@ -37,6 +38,7 @@ import java.util.Objects;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
+    private String providerName;
     private String authorizationEndpoint;
     private List<String> idTokenSigningAlgValuesSupported;
     private String issuer;
@@ -77,6 +79,41 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private List<String> requestObjectEncryptionAlgValuesSupported;
     private List<String> requestObjectEncryptionEncValuesSupported;
     private String checkSessionIframe;
+
+    /**
+     * @deprecated Use {@link DefaultOpenIdProviderMetadata(String)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.5.0")
+    public DefaultOpenIdProviderMetadata() {
+        this.providerName = "";
+    }
+
+    /**
+     *
+     * @param providerName Provider Name
+     */
+    public DefaultOpenIdProviderMetadata(@NonNull String providerName) {
+        this.providerName = providerName;
+    }
+
+    @Override
+    @NonNull
+    @JsonIgnore
+    /**
+     *
+     * @return The configured provider name
+     */
+    public String getName() {
+        return this.providerName;
+    }
+
+    /**
+     *
+     * @param name The configured provider name
+     */
+    public void setName(@NonNull String name) {
+        this.providerName = name;
+    }
 
     /**
      *
@@ -146,9 +183,8 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
     }
 
-    @Nullable
     @Override
-    public List<String> getUserInfoEncryptionAlgValuesSupported() {
+    public List<String> getUserinfoEncryptionAlgValuesSupported() {
         return userinfoEncryptionAlgValuesSupported;
     }
 
@@ -701,6 +737,9 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
         DefaultOpenIdProviderMetadata that = (DefaultOpenIdProviderMetadata) o;
 
+        if (providerName != null ? !providerName.equals(that.providerName) : that.providerName != null) {
+            return false;
+        }
         if (authorizationEndpoint != null ? !authorizationEndpoint.equals(that.authorizationEndpoint) : that.authorizationEndpoint != null) {
             return false;
         }
@@ -823,7 +862,8 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
     @Override
     public int hashCode() {
-        int result = authorizationEndpoint != null ? authorizationEndpoint.hashCode() : 0;
+        int result = providerName != null ? providerName.hashCode() : 0;
+        result = 31 * result + (authorizationEndpoint != null ? authorizationEndpoint.hashCode() : 0);
         result = 31 * result + (idTokenSigningAlgValuesSupported != null ? idTokenSigningAlgValuesSupported.hashCode() : 0);
         result = 31 * result + (issuer != null ? issuer.hashCode() : 0);
         result = 31 * result + (jwksUri != null ? jwksUri.hashCode() : 0);
@@ -866,20 +906,23 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         return result;
     }
 
-
     /**
-     *
-     * @return Creates a Builder.
+     * @param providerName Provider Name
+     * @return Creates a Builder with a given provider name.
      */
     @NonNull
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(String providerName) {
+        return new Builder(providerName);
     }
 
     /**
      * Builder.
      */
     public static class Builder {
+
+        @NonNull
+        private final String providerName;
+
         @Nullable
         private String authorizationEndpoint;
 
@@ -969,6 +1012,14 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         private List<String> requestObjectEncryptionEncValuesSupported;
         @Nullable
         private String checkSessionIframe;
+
+        /**
+         *
+         * @param providerName The configured Open ID provider name
+         */
+        public Builder(String providerName) {
+            this.providerName = providerName;
+        }
 
         /**
          *
@@ -1419,7 +1470,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
          */
         @NonNull
         public DefaultOpenIdProviderMetadata build() {
-            DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
+            DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata(providerName);
             metadata.setAuthorizationEndpoint(Objects.requireNonNull(authorizationEndpoint));
             metadata.setIdTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported);
             metadata.setIssuer(issuer);

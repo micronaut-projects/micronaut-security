@@ -15,10 +15,12 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * The default implementation of {@link SecureEndpoint}.
@@ -28,15 +30,28 @@ import java.util.Optional;
  */
 public class DefaultSecureEndpoint implements SecureEndpoint {
 
+    @NonNull
     private final String url;
-    private final List<AuthenticationMethod> supportedAuthenticationMethods;
+
+    @Nullable
+    private final Set<String> supportedAuthenticationMethods;
+
+    /**
+     * @param secureEndpointConfiguration Secure endpoint configuration
+     * @param defaultAuthMethod The default authentication method if {@link SecureEndpointConfiguration#getAuthenticationMethod()} is null
+     */
+    public DefaultSecureEndpoint(@NonNull SecureEndpointConfiguration secureEndpointConfiguration,
+                                 @NonNull String defaultAuthMethod) {
+        this(secureEndpointConfiguration.getUrl().orElseThrow(() -> new IllegalArgumentException("URL is required")),
+                Collections.singleton(secureEndpointConfiguration.getAuthenticationMethod().orElse(defaultAuthMethod)));
+    }
 
     /**
      * @param url The endpoint URL
      * @param supportedAuthenticationMethods The endpoint authentication methods
      */
     public DefaultSecureEndpoint(@NonNull String url,
-                                 @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
+                                 @Nullable Set<String> supportedAuthenticationMethods) {
         this.url = url;
         this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
@@ -48,7 +63,8 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
     }
 
     @Override
-    public Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods() {
-        return Optional.ofNullable(supportedAuthenticationMethods);
+    @Nullable
+    public Set<String> getAuthenticationMethodsSupported() {
+        return supportedAuthenticationMethods;
     }
 }

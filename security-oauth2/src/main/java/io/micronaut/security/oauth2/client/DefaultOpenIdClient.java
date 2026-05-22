@@ -16,15 +16,17 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.SupplierUtil;
-import io.micronaut.http.*;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
@@ -40,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -89,7 +90,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
+        this.tokenEndpoint = SupplierUtil.memoized(() -> openIdProviderMetadata.get().tokenEndpoint());
     }
 
     @Override
@@ -110,8 +111,13 @@ public class DefaultOpenIdClient implements OpenIdClient {
         }
         return Optional.ofNullable(endSessionEndpoint)
                 .map(esr -> esr.getUrl(request, authentication))
-                .map(url -> HttpResponse.status(HttpStatus.FOUND)
-                        .header(HttpHeaders.LOCATION, url));
+                .map(url -> {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Redirecting to [{}]", url);
+                    }
+                    return HttpResponse.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, url);
+                });
     }
 
     @Override
@@ -155,13 +161,5 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
-    }
-
-    /**
-     * @return The token endpoint
-     */
-    protected SecureEndpoint getTokenEndpoint() {
-        Optional<List<AuthenticationMethod>> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethods();
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authMethodsSupported.orElse(null));
     }
 }

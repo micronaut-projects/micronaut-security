@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.context.event.ApplicationEvent;
+import java.util.Locale;
 
 /**
  * Event triggered when a successful login takes place.
@@ -23,15 +23,18 @@ import io.micronaut.context.event.ApplicationEvent;
  * @author Sergio del Amo
  * @since 1.0
  */
-public class LoginSuccessfulEvent extends ApplicationEvent {
+public class LoginSuccessfulEvent extends SecurityEvent {
 
     /**
      * Event triggered when a successful login takes place.
      *
      * @param source the {@link io.micronaut.security.authentication.Authentication} of the person logging in.
+     * @param host   The hostname from the request if available
+     * @param locale The locale of the request
      * @throws IllegalArgumentException if source is null.
+     * @since 4.7.0
      */
-    public LoginSuccessfulEvent(Object source) {
-        super(source);
+    public LoginSuccessfulEvent(Object source, String host, Locale locale) {
+        super(source, host, locale);
     }
 }

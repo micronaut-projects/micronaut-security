@@ -33,7 +33,7 @@ import java.util.Map;
  * @author sdelamo
  * @since 2.0.0
  */
-@Requires(classes = OauthErrorResponseException.class)
+@Requires(classes = { OauthErrorResponseException.class, ExceptionHandler.class })
 @Produces
 @Singleton
 public class OauthErrorResponseExceptionHandler implements ExceptionHandler<OauthErrorResponseException, MutableHttpResponse<?>> {

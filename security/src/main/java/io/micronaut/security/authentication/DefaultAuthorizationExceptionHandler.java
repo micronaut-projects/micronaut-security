@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -27,9 +30,13 @@ import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,14 +46,17 @@ import org.slf4j.LoggerFactory;
  * @author James Kleeh
  * @since 1.4.0
  */
+@Requires(classes = ExceptionHandler.class)
 @Singleton
 public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationExceptionHandler.class);
+    private static final String COMMA_SPACE = ", ";
 
     private final ErrorResponseProcessor<?> errorResponseProcessor;
 
     private final RedirectConfiguration redirectConfiguration;
+    private final List<WwwAuthenticateChallengeProvider<HttpRequest<?>>> wwwAuthenticateChallengeProviders;
 
     private final RedirectService redirectService;
     private final PriorToLoginPersistence priorToLoginPersistence;
@@ -55,16 +65,35 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @param errorResponseProcessor ErrorResponse processor API
      * @param redirectConfiguration Redirect configuration
      * @param redirectService Redirection Service
+     * @param wwwAuthenticateChallengeProviders  WWW-Authenticate Challenges
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
      */
+    @Inject
     public DefaultAuthorizationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor,
                                                 RedirectConfiguration redirectConfiguration,
                                                 RedirectService redirectService,
+                                                List<WwwAuthenticateChallengeProvider<HttpRequest<?>>> wwwAuthenticateChallengeProviders,
                                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.errorResponseProcessor = errorResponseProcessor;
         this.redirectConfiguration = redirectConfiguration;
         this.redirectService = redirectService;
         this.priorToLoginPersistence = priorToLoginPersistence;
+        this.wwwAuthenticateChallengeProviders = wwwAuthenticateChallengeProviders;
+    }
+
+    /**
+     * @param errorResponseProcessor ErrorResponse processor API
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirection Service
+     * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
+     * @deprecated Use {@link DefaultAuthorizationExceptionHandler(ErrorResponseProcessor, RedirectConfiguration, RedirectService, List, PriorToLoginPersistence)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.14.0")
+    public DefaultAuthorizationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor,
+                                                RedirectConfiguration redirectConfiguration,
+                                                RedirectService redirectService,
+                                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this(errorResponseProcessor, redirectConfiguration, redirectService, Collections.emptyList(), priorToLoginPersistence);
     }
 
     @Override
@@ -98,10 +127,17 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      */
     protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest<?> request, AuthorizationException exception) {
         HttpStatus status = exception.isForbidden() ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
+        MutableHttpResponse<?> response = HttpResponse.status(status);
+        if (CollectionUtils.isNotEmpty(wwwAuthenticateChallengeProviders)) {
+            response.header(HttpHeaders.WWW_AUTHENTICATE,
+                String.join(COMMA_SPACE, wwwAuthenticateChallengeProviders.stream()
+                    .map(provider -> provider.getWwwAuthenticateChallenge(request))
+                    .toList()));
+        }
         return errorResponseProcessor.processResponse(ErrorContext.builder(request)
             .cause(exception)
             .errorMessage(status.getReason())
-            .build(), HttpResponse.status(status));
+            .build(), response);
     }
 
     /**

@@ -5,7 +5,7 @@ import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
@@ -24,8 +24,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.oauth2.keycloack.v16.Keycloak
-import io.micronaut.security.testutils.ConfigurationFixture
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario

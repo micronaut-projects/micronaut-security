@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.x509;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.ServerAuthentication;
 import java.security.cert.X509Certificate;
 import java.util.Collection;

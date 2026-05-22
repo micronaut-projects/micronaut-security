@@ -6,9 +6,9 @@ plugins {
 dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
 
-    testImplementation(libs.junit.jupiter.api)
+    testImplementation(mnTest.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 
     testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(mn.micronaut.management)
@@ -19,10 +19,16 @@ dependencies {
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
 
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testCompileOnly(mn.jackson.databind)
     testImplementation(mnSerde.micronaut.serde.jackson)
+
+    testAnnotationProcessor(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(libs.awaitility)
 }
 
 tasks.named('test') {

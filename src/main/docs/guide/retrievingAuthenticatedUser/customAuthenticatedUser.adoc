@@ -1,0 +1,14 @@
+
+You can create a custom argument binder to bind the authenticated user to a custom class tailored to your application needs.
+
+If, in your application, the authenticated user has an email address, you can create a class such as:
+
+snippet::io.micronaut.security.docs.customauthentication.AuthenticationWithEmail[]
+
+and then a `TypedRequestArgumentBinder`:
+
+snippet::io.micronaut.security.docs.customauthentication.AuthenticationWithEmailArgumentBinder[]
+
+Then you can bind it in a controller method parameter:
+
+snippet::io.micronaut.security.docs.customauthentication.CustomAuthenticationTest[tags="method"]

@@ -1,30 +1,37 @@
 [versions]
-managed-nimbus-jose-jwt = "9.31"
-
-micronaut = "4.0.0-M3"
-micronaut-docs = "2.0.0"
-groovy = "4.0.11"
-
-geb = "7.0"
-selenium = "4.9.1"
-testcontainers = "1.18.1"
-unboundid-ldapsdk = "6.0.8"
+managed-nimbus-jose-jwt = "10.9"
+managed-jjwt = "0.13.0"
+micronaut = "5.0.0"
+micronaut-platform = "5.0.0-RC1"
+awaitility = "4.3.0"
+geb = "8.0.1"
+selenium = "4.41.0"
+system-stubs-core = "2.1.8"
+unboundid-ldapsdk = "7.0.4"
 bouncycastle = "1.70"
-kotlin = "1.8.21"
 bcpkix = "1.70"
-jpaseto="0.7.0"
-micronaut-test = "4.0.0-M3"
-micronaut-multitenancy = "5.0.0-M2"
-micronaut-reactor = "3.0.0-M1"
-micronaut-logging = "1.0.0-M1"
-micronaut-serde = "2.0.0-M6"
-micronaut-servlet = "4.0.0-M5"
-micronaut-session = "4.0.0-M1"
-micronaut-views = "4.0.0-M1"
-micronaut-validation = "4.0.0-M6"
+jpaseto = "0.7.0"
+micronaut-hibernate-validator = "5.0.0"
+micronaut-multitenancy = "6.0.0"
+micronaut-cache = "6.0.0"
+micronaut-reactor = "4.0.0"
+micronaut-serde = "3.0.0"
+micronaut-servlet = "6.0.0"
+micronaut-session = "5.0.0"
+micronaut-views = "6.0.0"
+micronaut-validation = "5.0.0"
+micronaut-test = "5.0.0"
+micronaut-data = "5.0.0"
+micronaut-sql = "7.0.1"
+graalvm-native-buildtools = "1.0.0"
+jsonassert = "1.5.3"
+commons-codec = "1.20.0"
 
 [libraries]
-micronaut-logging = { module = "io.micronaut.logging:micronaut-logging-bom", version.ref = "micronaut-logging" }
+# Core
+micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+micronaut-cache = { module = "io.micronaut.cache:micronaut-cache-bom", version.ref = "micronaut-cache" }
+micronaut-hibernate-validator = { module = "io.micronaut.beanvalidation:micronaut-hibernate-validator-bom", version.ref = "micronaut-hibernate-validator" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
@@ -32,6 +39,8 @@ micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", ver
 micronaut-session = { module = "io.micronaut.session:micronaut-session-bom", version.ref = "micronaut-session" }
 micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.ref = "micronaut-views" }
 micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-bom", version.ref = "micronaut-validation" }
+micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
+micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-jpaseto-api = { module = "dev.paseto:jpaseto-api", version.ref = "jpaseto" }
 managed-jpaseto-bouncy-castle = { module = "dev.paseto:jpaseto-bouncy-castle", version.ref = "jpaseto" }
@@ -39,9 +48,11 @@ managed-jpaseto-impl = { module = "dev.paseto:jpaseto-impl", version.ref = "jpas
 managed-jpaseto-jackson = { module = "dev.paseto:jpaseto-jackson", version.ref = "jpaseto" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
-geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed-jjwt" }
+managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
+managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
+
+geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
@@ -50,13 +61,13 @@ selenium-support = { module = "org.seleniumhq.selenium:selenium-support", versio
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
-
-testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+jsonassert = { module = 'org.skyscreamer:jsonassert', version.ref = 'jsonassert'}
+commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-codec'}
+testcontainers-selenium = { module = "org.testcontainers:testcontainers-selenium"}
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter"}
+testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium"}
-
-[plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
+graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }

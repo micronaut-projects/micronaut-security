@@ -1,0 +1,22 @@
+Micronaut Security CSRF ships a `io.micronaut.security.csrf.resolver.HttpHeaderCsrfTokenResolver` an implementation of api:security.csrf.resolver.CsrfTokenResolver[] which looks for a CSRF Token in a Request's  HTTP Header.
+
+[source, bash]
+----
+POST /transfer HTTP/1.1
+Host: vulnerable bank
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=<token>
+X-CSRF-TOKEN: o24b65486f506e2cd4403caf0d640024
+[...]
+amount=100&toUser=intended
+----
+
+You can disable it by setting `micronaut.security.csrf.token-resolvers.http-header.enabled=false`
+
+The HTTP Header name used by `HttpHeaderCsrfTokenResolver` <<csrfConfiguration, can be configured>>.
+It is recommended to use a custom HTTP Header Name. By using a custom HTTP Header name, it will not be possible to send them cross-origin without a permissive CORS implementation.
+
+Moreover, If possible, we recommend you to send the CSRF token via an HTTP Header instead of a form field as it is harder to attack.
+
+For example, https://turbo.hotwired.dev/handbook/frames#anti-forgery-support-(csrf)[Turbo] sends the CSRF token via a custom HTTP Header upon form submission. You can find information about https://micronaut-projects.github.io/micronaut-views/latest/guide/#turbo[Micronaut Turbo integration].
+

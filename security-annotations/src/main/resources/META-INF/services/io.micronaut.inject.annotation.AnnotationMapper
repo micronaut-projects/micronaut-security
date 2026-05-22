@@ -1,3 +1,0 @@
-io.micronaut.security.annotation.JakartaPermitAllAnnotationMapper
-io.micronaut.security.annotation.JakartaRolesAllowedAnnotationMapper
-io.micronaut.security.annotation.JakartaDenyAllAnnotationMapper

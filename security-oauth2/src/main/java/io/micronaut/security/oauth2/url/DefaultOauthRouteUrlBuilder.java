@@ -15,12 +15,13 @@
  */
 package io.micronaut.security.oauth2.url;
 
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.http.uri.UriTemplate;
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.web.router.exceptions.RoutingException;
 import jakarta.inject.Singleton;
 import java.net.MalformedURLException;
@@ -36,8 +37,9 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = HttpHostResolver.class)
 @Singleton
-public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
+public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpRequest<?>> {
 
     private static final String HTTP = "http";
     private final HttpHostResolver hostResolver;
@@ -46,13 +48,13 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 
     /**
      * @param hostResolver The host resolver
-     * @param oauthConfigurationProperties The oauth configuration
+     * @param oauthConfiguration The oauth configuration
      */
     DefaultOauthRouteUrlBuilder(HttpHostResolver hostResolver,
-                                OauthConfigurationProperties oauthConfigurationProperties) {
+                                OauthConfiguration oauthConfiguration) {
         this.hostResolver = hostResolver;
-        this.loginUriTemplate = oauthConfigurationProperties.getLoginUri();
-        this.callbackUriTemplate = oauthConfigurationProperties.getCallbackUri();
+        this.loginUriTemplate = oauthConfiguration.getLoginUri();
+        this.callbackUriTemplate = oauthConfiguration.getCallbackUri();
     }
 
     @Override

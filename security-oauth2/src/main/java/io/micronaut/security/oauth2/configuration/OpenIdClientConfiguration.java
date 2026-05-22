@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -31,6 +31,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface OpenIdClientConfiguration extends Named {
+    Boolean DEFAULT_PROTECTED_RESOURCE_METADATA = true;
 
     /**
      * @return URL that the OpenID provider asserts as its issuer identifier.
@@ -41,8 +42,7 @@ public interface OpenIdClientConfiguration extends Named {
      * @return The OpenID configuration path
      */
     String getConfigurationPath();
-
-
+    
     /**
      * @return The JWKS configuration
      */
@@ -81,4 +81,12 @@ public interface OpenIdClientConfiguration extends Named {
      */
     @NonNull
     EndSessionEndpointConfiguration getEndSession();
+
+    /**
+     * @since 4.14.0
+     * @return whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
+     */
+    default boolean isProtectedResourceMetadata() {
+        return DEFAULT_PROTECTED_RESOURCE_METADATA;
+    }
 }

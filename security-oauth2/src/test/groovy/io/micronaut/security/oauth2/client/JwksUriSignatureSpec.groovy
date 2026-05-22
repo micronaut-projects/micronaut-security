@@ -13,7 +13,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.*
@@ -36,6 +36,7 @@ import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.claims.JtiGenerator
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -54,7 +55,7 @@ import java.security.interfaces.RSAPublicKey
 class JwksUriSignatureSpec extends Specification {
     private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureSpec.class)
 
-    void "registering an open id client, creates a JwskUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
+    void "registering an open id client, creates a JwksUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
         given:
         int authServerAPort = SocketUtils.findAvailableTcpPort()
         int authServerBPort = SocketUtils.findAvailableTcpPort()
@@ -97,7 +98,7 @@ class JwksUriSignatureSpec extends Specification {
         new PollingConditions().eventually {
             assert embeddedServer.isRunning()
         }
-        embeddedServer.applicationContext.containsBean(SignatureConfiguration)
+        embeddedServer.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         when: 'it is possible to get a JWT from the auth server A'
         BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()

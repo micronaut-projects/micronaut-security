@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An OAuth 2.0 provider endpoint.

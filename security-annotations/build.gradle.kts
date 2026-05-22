@@ -3,4 +3,5 @@ plugins {
 }
 dependencies {
     compileOnly("io.micronaut:micronaut-core-processor")
+    compileOnly(mnData.micronaut.data.model)
 }

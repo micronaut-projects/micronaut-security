@@ -1,8 +1,8 @@
 package io.micronaut.security.token.jwt.validator
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
@@ -131,8 +131,11 @@ class AudienceJwtClaimsValidatorSpec extends Specification {
 
     @Nullable
     private static Authentication authenticate(@NonNull ApplicationContext context, @NonNull String jwt) {
-        JwtTokenValidator jwtValidator = context.getBean(JwtTokenValidator.class)
-        Flux.from(jwtValidator.validateToken(jwt, null)).blockFirst()
+        JsonWebTokenValidator jwtValidator = context.getBean(JsonWebTokenValidator.class)
+        JwtAuthenticationFactory jwtAuthenticationFactory = context.getBean(JwtAuthenticationFactory.class)
+        jwtValidator.validate(jwt, null)
+                .flatMap(i -> jwtAuthenticationFactory.createAuthentication(i))
+                .orElse(null)
     }
 
     @NonNull

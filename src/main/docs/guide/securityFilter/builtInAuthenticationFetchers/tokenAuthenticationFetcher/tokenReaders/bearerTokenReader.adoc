@@ -1,0 +1,5 @@
+api:io.micronaut.security.token.bearer.BearerTokenReader[] attempts to read a https://tools.ietf.org/html/rfc6750[RFC 6750 Bearer Token].
+
+The following configuration properties are available to customize how the Bearer Token will be read:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.bearer.BearerTokenConfigurationProperties.adoc[]

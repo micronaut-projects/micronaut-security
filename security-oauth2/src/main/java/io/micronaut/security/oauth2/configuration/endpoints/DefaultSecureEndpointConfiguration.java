@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
+
 import java.util.Optional;
 
 /**
@@ -27,18 +27,18 @@ import java.util.Optional;
  */
 public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfiguration implements SecureEndpointConfiguration {
 
-    private AuthenticationMethod authMethod = AuthenticationMethod.CLIENT_SECRET_BASIC;
+    private String authenticationMethod = AuthenticationMethods.CLIENT_SECRET_BASIC;
 
     @Override
-    public Optional<AuthenticationMethod> getAuthMethod() {
-        return Optional.ofNullable(authMethod);
+    public Optional<String> getAuthenticationMethod() {
+        return Optional.ofNullable(authenticationMethod);
     }
 
     /**
      *
-     * @param authMethod Authentication Method
+     * @param authenticationMethod Authentication Method
      */
-    public void setAuthMethod(@NonNull AuthenticationMethod authMethod) {
-        this.authMethod = authMethod;
+    public void setAuthenticationMethod(String authenticationMethod) {
+        this.authenticationMethod = authenticationMethod;
     }
 }

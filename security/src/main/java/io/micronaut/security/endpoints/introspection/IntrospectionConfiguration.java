@@ -16,7 +16,7 @@
 package io.micronaut.security.endpoints.introspection;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**

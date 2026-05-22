@@ -16,7 +16,7 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -35,9 +35,10 @@ import java.net.URISyntaxException;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = { MutableHttpResponse.class, HttpRequest.class })
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Singleton
-public class TokenCookieClearerLogoutHandler implements LogoutHandler {
+public class TokenCookieClearerLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String logout;
@@ -63,9 +64,9 @@ public class TokenCookieClearerLogoutHandler implements LogoutHandler {
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         try {
             MutableHttpResponse<?> response = logout == null ? HttpResponse.ok() : HttpResponse.seeOther(new URI(logout));
-            clearCookie(accessTokenCookieConfiguration, response);
+            clearCookie(accessTokenCookieConfiguration, response, request.isSecure());
             if (refreshTokenCookieConfiguration != null) {
-                clearCookie(refreshTokenCookieConfiguration, response);
+                clearCookie(refreshTokenCookieConfiguration, response, request.isSecure());
             }
             return response;
         } catch (URISyntaxException var5) {
@@ -73,11 +74,10 @@ public class TokenCookieClearerLogoutHandler implements LogoutHandler {
         }
     }
 
-    private void clearCookie(CookieConfiguration cookieConfiguration, MutableHttpResponse<?> response) {
-        String domain = cookieConfiguration.getCookieDomain().orElse(null);
-        String path = cookieConfiguration.getCookiePath().orElse(null);
+    private void clearCookie(CookieConfiguration cookieConfiguration, MutableHttpResponse<?> response, boolean isSecure) {
         Cookie cookie = Cookie.of(cookieConfiguration.getCookieName(), "");
-        cookie.maxAge(0).domain(domain).path(path);
+        cookie.configure(cookieConfiguration, isSecure);
+        cookie.maxAge(0);
         response.cookie(cookie);
     }
 }

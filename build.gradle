@@ -1,9 +1,15 @@
 plugins {
-    id "io.micronaut.build.internal.docs"
-    id "io.micronaut.build.internal.quality-reporting"
+    id "io.micronaut.build.internal.parent"
 }
 
 repositories {
     mavenCentral()
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+project(":test-suite-keycloak-docker") {
+    if (System.getenv("SONAR_TOKEN") != null) {
+        sonar {
+            skipProject = true
+        }
+    }
 }

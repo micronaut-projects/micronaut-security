@@ -3,10 +3,20 @@ https://tools.ietf.org/html/rfc7515[JSON Web Signature] specification.
 
 Micronaut's JWT validation supports multiple signature configurations. Thus, you can validate JSON Web tokens signed by different issuers in the same application.
 
-To verify the signature of JWT tokens, you need beans of type link:{api}/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html[SignatureConfiguration].
+To verify the signature of JWT tokens, you need beans of type
+api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] or api:io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration[]
 
-The easiest way is to create a bean of type link:{api}/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html[SignatureConfiguration] is to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html[RSASignatureConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureConfiguration], or
-link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] which must be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html[RSASignatureFactory],
-link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureFactory]) or other beans (link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature])  which use
+The easiest way is to create a bean of type api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] is to have in your app a bean of type api:io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration[],
+api:io.micronaut.security.token.jwt.signature.ec.ECSignatureConfiguration[], or
+api:io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration[] which must be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (api:io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory.html[],
+api:io.micronaut.security.token.jwt.signature.ec.ECSignatureConfiguration[]) or other beans (api:io.micronaut.security.token.jwt.signature.secret.SecretSignature[])  which use
 https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
+
+The APIs
+api:io.micronaut.security.token.jwt.validator.JsonWebTokenSignatureValidator[],
+and api:io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenSignatureValidator[]
+allows you to validate the signature of a JWT token.
+
+`ReactiveJsonWebTokenSignatureValidator` validates the signature using both api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] or api:io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration[].
+
+`JsonWebTokenSignatureValidator` validates the signature using beans of type api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[].

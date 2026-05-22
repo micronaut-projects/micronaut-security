@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import java.util.Optional;
 
 /**
@@ -25,10 +24,9 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface SecureEndpointConfiguration extends EndpointConfiguration {
-
     /**
      *
      * @return An optional Authentication Method.
      */
-    Optional<AuthenticationMethod> getAuthMethod();
+    Optional<String> getAuthenticationMethod();
 }

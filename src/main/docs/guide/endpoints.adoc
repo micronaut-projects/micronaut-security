@@ -1,0 +1,2 @@
+The <<securityFilter, Security Filter>> section describes how for each request an api:security.authentication.Authentication[] maybe resolved. It maybe a token placed in an HTTP Header, in a cookie, or an HTTP session.
+How do you obtain such a token or how is the user saved into the HTTP Session in the first place?. In a Micronaut application, you can expose the <<loginController, LoginController>>.

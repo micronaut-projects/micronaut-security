@@ -1,3 +1,15 @@
 plugins {
     id "io.micronaut.build.internal.security-base"
+    id 'java-library'
 }
+repositories {
+    mavenCentral()
+}
+dependencies {
+    testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+configurations.configureEach {
+    resolutionStrategy.preferProjectModules()
+}
+

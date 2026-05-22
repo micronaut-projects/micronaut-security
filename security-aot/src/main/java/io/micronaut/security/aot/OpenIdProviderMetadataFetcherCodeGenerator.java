@@ -24,9 +24,10 @@ import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.Qualifier;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
@@ -61,6 +62,10 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
 
     @Override
     public void generate(@NonNull AOTContext context) {
+        ApplicationContext applicationContext = context.getAnalyzer().getApplicationContext();
+        if (!applicationContext.isRunning()) {
+            applicationContext.start();
+        }
         List<GeneratedFile> files = generateJavaFiles(context);
         if (!files.isEmpty()) {
             context.registerStaticOptimization("AotOpenIdProviderMetadataFetcherCode", DefaultOpenIdProviderMetadataFetcher.Optimizations.class, body -> {
@@ -116,13 +121,13 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("create")
                 .returns(DefaultOpenIdProviderMetadata.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addStatement("$T builder = $T.builder()", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class);
+                .addStatement("$T builder = $T.builder($S)", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class, defaultOpenIdProviderMetadata.getName());
         addStringSetterStatement(methodBuilder, "userinfoEndpoint", defaultOpenIdProviderMetadata.getUserinfoEndpoint());
         addBooleanSetterStatement(methodBuilder, "requireRequestUriRegistration", defaultOpenIdProviderMetadata.getRequireRequestUriRegistration());
         addStringSetterStatement(methodBuilder, "authorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
         addListStringSetterStatement(methodBuilder, "userinfoEncryptionEncValuesSupported", "userinfoEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
         addListStringSetterStatement(methodBuilder, "idTokenEncryptionEncValuesSupported", "idTokenEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getIdTokenEncryptionEncValuesSupported());
-        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "userinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserInfoEncryptionAlgValuesSupported());
+        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "userinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
         addListStringSetterStatement(methodBuilder, "idTokenSigningAlgValuesSupported", "idTokenSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getIdTokenSigningAlgValuesSupported());
         addStringSetterStatement(methodBuilder, "issuer", defaultOpenIdProviderMetadata.getIssuer());
         addStringSetterStatement(methodBuilder, "jwksUri", defaultOpenIdProviderMetadata.getJwksUri());
@@ -160,7 +165,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         return methodBuilder.addStatement("return builder.build()").build();
     }
 
-    private void addStringSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addStringSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                           @NonNull String setter,
                                           @Nullable String value) {
         if (value != null) {
@@ -168,7 +173,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         }
     }
 
-    private void addBooleanSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addBooleanSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                            @NonNull String setter,
                                            @Nullable Boolean value) {
         if (value != null) {
@@ -176,7 +181,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         }
     }
 
-    private void addListStringSetterStatement(@NonNull MethodSpec.Builder methodBuilder,
+    private void addListStringSetterStatement(MethodSpec.@NonNull Builder methodBuilder,
                                               @NonNull String listVariableName,
                                               @NonNull String setter,
                                               @Nullable List<String> values) {

@@ -1,0 +1,6 @@
+Read the following guides to learn more about JSON Web Token and JSON Web Keys:
+
+- https://guides.micronaut.io/latest/micronaut-cli-jwkgen.html[JWK generation with a micronaut command line application]
+- https://guides.micronaut.io/latest/micronaut-security-keys-jwks.html[JWK keys endpoint]
+- https://guides.micronaut.io/latest/micronaut-security-jwt.html[Micronaut JWT authentication]
+- https://guides.micronaut.io/latest/micronaut-security-jwt-cookie.html[Micronaut JWT authentication via cookies]

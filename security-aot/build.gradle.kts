@@ -5,7 +5,7 @@ plugins {
 
 micronautBuild {
     aot {
-        version.set("2.0.0-M1")
+        version.set("2.0.1")
     }
 }
 
@@ -14,7 +14,10 @@ dependencies {
     compileOnly(platform(mn.micronaut.core.bom))
     implementation(projects.micronautSecurityOauth2)
     implementation(projects.micronautSecurityJwt)
+    implementation(mn.micronaut.http.client.jdk)
+    implementation(mnReactor.micronaut.reactor)
     testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }

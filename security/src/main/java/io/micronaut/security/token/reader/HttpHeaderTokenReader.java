@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Sergio del Amo
  * @since 1.0
  */
-public abstract class HttpHeaderTokenReader implements TokenReader {
+public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenReader.class);
 

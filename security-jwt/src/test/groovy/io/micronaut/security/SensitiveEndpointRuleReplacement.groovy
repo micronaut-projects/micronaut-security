@@ -1,7 +1,7 @@
 package io.micronaut.security
 
 import io.micronaut.context.annotation.Replaces
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor

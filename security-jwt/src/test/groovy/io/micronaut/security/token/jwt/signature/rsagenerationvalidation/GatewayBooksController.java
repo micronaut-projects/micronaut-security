@@ -4,6 +4,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import java.util.List;
@@ -19,6 +21,7 @@ public class GatewayBooksController {
         this.booksClient = booksClient;
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Get
     List<Book> findAll(@Header("Authorization") String authorization) {
         return booksClient.findAll(authorization);

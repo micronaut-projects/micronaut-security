@@ -5,22 +5,44 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    implementation(mnSerde.micronaut.serde.jackson)
-    api(mn.micronaut.http)
-    api(mn.micronaut.http.server)
     annotationProcessor(mnValidation.micronaut.validation.processor)
-    api(mnValidation.micronaut.validation)
+
+    api(mnSerde.micronaut.serde.api) {
+        exclude(group = "io.micronaut", module = "micronaut-json-core")
+    }
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     api(projects.micronautSecurityAnnotations)
+    compileOnly(mn.micronaut.websocket)
+    compileOnly(mnValidation.micronaut.validation)
+    testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
+    compileOnly(mnData.micronaut.data.runtime)
+    compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
+
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+
+    testCompileOnly(mnData.micronaut.data.processor)
+    testCompileOnly(projects.micronautSecurityProcessor)
+
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
-    testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteUtils)
     testImplementation(mn.snakeyaml)
     testImplementation(libs.bcpkix)
+    testImplementation(mnLogging.logback.classic)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.mockito.core)
+    testImplementation(mnTest.junit.jupiter.params)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
+

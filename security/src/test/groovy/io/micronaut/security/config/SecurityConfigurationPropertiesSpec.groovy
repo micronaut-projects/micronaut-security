@@ -79,16 +79,16 @@ class SecurityConfigurationPropertiesSpec extends Specification {
         config.interceptUrlMap.size() == 4
         config.interceptUrlMap[0].pattern == '/health'
         config.interceptUrlMap[0].access == ['foo']
-        !config.interceptUrlMap[0].httpMethod.isPresent()
+        !config.interceptUrlMap[0].httpMethod
         config.interceptUrlMap[1].pattern == '/health'
         config.interceptUrlMap[1].access == ['isAnonymous()']
-        !config.interceptUrlMap[1].httpMethod.isPresent()
+        !config.interceptUrlMap[1].httpMethod
         config.interceptUrlMap[2].pattern == '/health'
         config.interceptUrlMap[2].access == ['isAnonymous()']
-        config.interceptUrlMap[2].httpMethod.get() == HttpMethod.POST
+        config.interceptUrlMap[2].httpMethod == HttpMethod.POST
         config.interceptUrlMap[3].pattern == '/health'
         config.interceptUrlMap[3].access == ['isAnonymous()']
-        config.interceptUrlMap[3].httpMethod.get() == HttpMethod.POST
+        config.interceptUrlMap[3].httpMethod == HttpMethod.POST
 
         cleanup:
         ctx.stop()

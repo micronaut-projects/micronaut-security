@@ -1,7 +1,7 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
     id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "9.4.1"
 }
 
 repositories {
@@ -13,7 +13,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
@@ -27,24 +27,13 @@ micronaut {
 }
 
 dependencies {
+    implementation(mn.micronaut.http.client)
+    implementation(mnReactor.micronaut.reactor)
+    annotationProcessor(projects.micronautSecurityProcessor)
     implementation(projects.micronautSecurityJwt)
     implementation(projects.micronautSecurityOauth2)
     implementation(mn.micronaut.jackson.databind)
     aotPlugins(projects.micronautSecurityAot)
-    runtimeOnly(mn.snakeyaml)
 }
 
 version = '0.1'
-
-configurations.all {
-    resolutionStrategy {
-        preferProjectModules()
-        // TODO: Remove this once aligned
-        eachDependency {
-            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
-                useVersion("4.0.0-M1")
-                because("There's no M2 platform yet")
-            }
-        }
-    }
-}

@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.filters;
 
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.web.router.RouteAttributes;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
@@ -28,10 +28,10 @@ import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
-import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Requires(property = SecurityFilterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Replaces(EndpointsFilter.class)
+@Requires(classes = { HttpServerFilter.class })
 @Filter("${" + SecurityFilterConfigurationProperties.PREFIX + ".pattern:" + Filter.MATCH_ALL_PATTERN + "}")
 public class SecurityFilter implements HttpServerFilter {
 
@@ -81,8 +81,8 @@ public class SecurityFilter implements HttpServerFilter {
      */
     private static final Integer ORDER = ServerFilterPhase.SECURITY.order();
 
-    protected final Collection<SecurityRule> securityRules;
-    protected final Collection<AuthenticationFetcher> authenticationFetchers;
+    protected final Collection<SecurityRule<HttpRequest<?>>> securityRules;
+    protected final Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
 
@@ -91,8 +91,8 @@ public class SecurityFilter implements HttpServerFilter {
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
      */
-    public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers,
+    public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
+                          Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
@@ -107,23 +107,21 @@ public class SecurityFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
-        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
 
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
-                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
-                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain, routeMatch))
+                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
+                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
                         .next());
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
                                                              HttpRequest<?> request,
-                                                             ServerFilterChain chain,
-                                                             RouteMatch<?> routeMatch) {
-        request.setAttribute(AUTHENTICATION, authentication);
+                                                             ServerFilterChain chain) {
+        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
         logAuthenticationAttributes(authentication);
-        return checkRules(request, chain, routeMatch, authentication);
+        return checkRules(request, chain, authentication);
     }
 
     private void logAuthenticationAttributes(@Nullable Authentication authentication) {
@@ -132,7 +130,7 @@ public class SecurityFilter implements HttpServerFilter {
             LOG.debug("Attributes: {}", attributes
                     .entrySet()
                     .stream()
-                    .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                    .map((entry) -> entry.getKey() + "=>" + (entry.getValue() != null ? entry.getValue().toString() : "null"))
                     .collect(Collectors.joining(", ")));
         }
     }
@@ -142,29 +140,26 @@ public class SecurityFilter implements HttpServerFilter {
      *
      * @param request The request
      * @param chain The server chain
-     * @param routeMatch The route match
      * @param authentication The authentication
      * @return A response publisher
      */
     protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
                                                            ServerFilterChain chain,
-                                                           @Nullable RouteMatch<?> routeMatch,
                                                            @Nullable Authentication authentication) {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
 
         return Flux.fromIterable(securityRules)
-                .concatMap(rule -> Mono.from(rule.check(request, routeMatch, authentication))
+                .concatMap(rule -> Mono.from(rule.check(request, authentication))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter(result -> result != SecurityRuleResult.UNKNOWN)
-                                        .doOnSuccess(result -> logResult(result, method, path, rule)))
+                                        .doOnSuccess(result -> logResult((SecurityRuleResult) result, method, path, rule)))
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {
-                        request.setAttribute(
-                                REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     } else if (result == SecurityRuleResult.ALLOWED) {
                         return chain.proceed(request);
@@ -179,12 +174,14 @@ public class SecurityFilter implements HttpServerFilter {
                                 method,
                                 path);
                     }
-                    // no rule found for the given request
-                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                        return chain.proceed(request);
-                    } else {
-                        request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-                        return Mono.error(new AuthorizationException(authentication));
+                    try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+                        // no rule found for the given request
+                        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+                            return chain.proceed(request);
+                        } else {
+                            ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
+                            return Mono.error(new AuthorizationException(authentication));
+                        }
                     }
                 }));
     }

@@ -17,7 +17,8 @@ package io.micronaut.security.x509;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
@@ -38,8 +39,9 @@ import reactor.core.publisher.Mono;
  * @author Burt Beckwith
  * @since 3.3
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class X509AuthenticationFetcher implements AuthenticationFetcher {
+public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     /**
      * The order of the fetcher.

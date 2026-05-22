@@ -16,14 +16,14 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ClaimsUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
@@ -46,13 +46,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sergio del Amo
  * @since 2.2.0
+ * @param <T> request
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".openid-idtoken", notEquals = StringUtils.FALSE)
 @Singleton
-public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
+public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
+    private static final String EMPTY = "";
 
     protected final Collection<OauthClientConfiguration> oauthClientConfigurations;
 
@@ -65,15 +67,21 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("issuer claim not present");
+            }
             return false;
         }
         String iss = claimIssuerOptional.get();
 
         Optional<List<String>> audiencesOptional = parseAudiences(claims);
         if (!audiencesOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences claim not present");
+            }
             return false;
         }
         List<String> audiences = audiencesOptional.get();
@@ -195,16 +203,43 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
                                                    @NonNull List<String> audiences,
                                                    @NonNull String clientId,
                                                    @NonNull OpenIdClientConfiguration openIdClientConfiguration) {
-        if (openIdClientConfiguration.getIssuer().isPresent()) {
-            Optional<URL> issuerOptional = openIdClientConfiguration.getIssuer();
-            if (issuerOptional.isPresent()) {
-                String issuer = issuerOptional.get().toString();
-                return issuer.equalsIgnoreCase(iss) ||
-                        audiences.contains(clientId) &&
-                                validateAzp(claims, clientId, audiences);
+        boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
+        if (!matchesIssuer) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(EMPTY), iss);
             }
+            return false;
         }
-        return false;
+
+        boolean audiencesContainsClientId = audiences.contains(clientId);
+        if (!audiencesContainsClientId) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences '{}' does not contain client id '{}'", String.join(" " , audiences), clientId);
+            }
+            return false;
+        }
+        boolean azpValid = validateAzp(claims, clientId, audiences);
+        if (!azpValid) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp not valid");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param iss Issuer claim
+     * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
+     * @return true wrapped in an Optional if the OAuth 2.0 client OpenID issuer matches the iss claim. Empty Optional of OpenID Client configuration does not define an issuer.
+     */
+    @NonNull
+    protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
+                                              @NonNull String iss) {
+        return openIdClientConfiguration.getIssuer()
+                .map(URL::toString)
+                .map(issuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(issuer, iss));
     }
 
     /**
@@ -234,12 +269,15 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
         }
        Optional<String> azpOptional = parseAzpClaim(claims);
         if (!azpOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp claim not present");
+            }
             return false;
         }
         String azp = azpOptional.get();
         boolean result = azp.equalsIgnoreCase(clientId);
-        if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
+        if (!result && LOG.isDebugEnabled()) {
+            LOG.debug("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
         return result;
     }

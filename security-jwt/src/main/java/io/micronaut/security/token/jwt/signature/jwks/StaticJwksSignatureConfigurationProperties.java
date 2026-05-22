@@ -16,7 +16,7 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.annotation.EachProperty;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**

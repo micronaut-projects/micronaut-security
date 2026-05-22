@@ -3,6 +3,8 @@ package io.micronaut.security.token.multitenancy.principal
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 
@@ -16,6 +18,7 @@ class GatewayController {
         this.bookFetcher = bookFetcher
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get
     List<String> index() {

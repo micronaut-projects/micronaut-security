@@ -16,9 +16,8 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 
@@ -44,7 +43,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      */
     @NonNull
     @NotBlank
-    private String pattern = Filter.MATCH_ALL_PATTERN;
+    private String pattern = "/**";
 
     private boolean enabled = DEFAULT_ENABLED;
 

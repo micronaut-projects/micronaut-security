@@ -94,7 +94,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsSpec')
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
             return HttpResponse.ok()

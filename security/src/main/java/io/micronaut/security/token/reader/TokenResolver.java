@@ -16,24 +16,27 @@
 package io.micronaut.security.token.reader;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.http.HttpRequest;
-import java.util.Optional;
+import org.jspecify.annotations.NonNull;
+
+import java.util.List;
 
 /**
  * Returns the token from the provided request.
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> request
  */
 @DefaultImplementation(DefaultTokenResolver.class)
 @FunctionalInterface
-public interface TokenResolver {
-
+public interface TokenResolver<T> {
     /**
-     * Resolves the token from the provided request.
+     * Returns tokens found by the supplied token readers.
      *
-     * @param request The HTTP request.
-     * @return The token in the supplied request. Empty if no token was found.
+     * @param request The current HTTP request.
+     * @return the tokens found in the supplied request.
+     * @since 4.4.0
      */
-    Optional<String> resolveToken(HttpRequest<?> request);
+    @NonNull
+    List<String> resolveTokens(@NonNull T request);
 }

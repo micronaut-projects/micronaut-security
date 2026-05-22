@@ -17,8 +17,9 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Parameter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
@@ -46,15 +47,33 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    @Nullable
+    private final String name;
+
     @NonNull
     private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
 
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
+    
+    public JwksSignatureConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
 
     @Override
     @NonNull
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
+     * @return The number of seconds to cache the JWKS.
+     */
+    @Override
+    @NonNull
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public Integer getCacheExpiration() {
         return cacheExpiration;
     }
@@ -62,7 +81,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     /**
      * JWKS cache expiration. Default value {@value #DEFAULT_CACHE_EXPIRATION} seconds.
      * @param cacheExpiration The expiration
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public void setCacheExpiration(Integer cacheExpiration) {
         ArgumentUtils.requireNonNull("cacheExpiration", cacheExpiration);
         this.cacheExpiration = cacheExpiration;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,20 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.server.util.HttpHostResolver;
+import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
+
 import java.util.Map;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -41,33 +45,44 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(beans = RedirectingLoginHandler.class)
+@Requires(beans = {RedirectingLoginHandler.class, HttpHostResolver.class, HttpLocaleResolver.class})
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
     private final OauthClient oauthClient;
-    private final RedirectingLoginHandler loginHandler;
+    private final RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
 
     private final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
 
     private final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
+    private final HttpHostResolver httpHostResolver;
+    private final HttpLocaleResolver httpLocaleResolver;
 
     /**
      * @param oauthClient                   The oauth client
      * @param loginHandler                  The login handler
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
+     * @since 4.7.0
      */
-    DefaultOauthController(@Parameter OauthClient oauthClient,
-                           RedirectingLoginHandler loginHandler,
-                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
+    DefaultOauthController(
+        @Parameter OauthClient oauthClient,
+        RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+        ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+        ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
+        HttpHostResolver httpHostResolver,
+        HttpLocaleResolver httpLocaleResolver
+    ) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;
         this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
         this.loginFailedEventPublisher = loginFailedEventPublisher;
+        this.httpHostResolver = httpHostResolver;
+        this.httpLocaleResolver = httpLocaleResolver;
     }
 
     @Override
@@ -88,25 +103,41 @@ public class DefaultOauthController implements OauthController {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }
-        Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
-        return Flux.from(authenticationResponse).map(response -> {
-
-            if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
-                Authentication authentication = response.getAuthentication().get();
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
-                }
-                loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
-                return loginHandler.loginSuccess(authentication, request);
-            } else {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
-                }
-                loginFailedEventPublisher.publishEvent(new LoginFailedEvent(response));
-                return loginHandler.loginFailed(response, request);
-            }
-        }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
-
+        return Flux.from(oauthClient.onCallback(request))
+                .map(response -> response.isAuthenticated() && response.getAuthentication().isPresent()
+                        ? success(response.getAuthentication().get(), request)
+                        : failure(response, request))
+                .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }
 
+    private MutableHttpResponse<?> failure(@NonNull AuthenticationResponse response,
+                                           @NonNull HttpRequest<Map<String, Object>> request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
+        }
+        loginFailedEventPublisher.publishEvent(
+                new LoginFailedEvent(
+                        response,
+                        null,
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                )
+        );
+        return loginHandler.loginFailed(response, request);
+    }
+
+    private MutableHttpResponse<?> success(@NonNull Authentication authentication,
+                                           @NonNull HttpRequest<Map<String, Object>> request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
+        }
+        loginSuccessfulEventPublisher.publishEvent(
+                new LoginSuccessfulEvent(
+                        authentication,
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                )
+        );
+        return loginHandler.loginSuccess(authentication, request);
+    }
 }

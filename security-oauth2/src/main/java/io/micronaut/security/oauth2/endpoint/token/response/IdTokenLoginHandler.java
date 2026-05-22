@@ -18,8 +18,9 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationMode;
@@ -31,6 +32,8 @@ import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.CookieLoginHandler;
+import io.micronaut.security.token.cookie.LoginCookieProvider;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,22 +55,43 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
+@Requires(classes = HttpRequest.class)
 @Singleton
 public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
+    private final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
 
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration Redirect configuration
      * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
+     * @param loginCookieProviders List of beans of type {@link LoginCookieProvider}
      */
+    @Inject
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                RedirectService redirectService,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                               List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders) {
         super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
+        this.loginCookieProviders = loginCookieProviders;
+    }
+
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     * @deprecated Use {@link #IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence, List)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.11.0")
+    public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                               RedirectConfiguration redirectConfiguration,
+                               RedirectService redirectService,
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
+        this(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence, Collections.emptyList());
     }
 
     /**
@@ -79,8 +104,13 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessToken);
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
-        jwtCookie.maxAge(cookieExpiration(authentication, request));
+        if (!accessTokenCookieConfiguration.isSessionCookie()) {
+            jwtCookie.maxAge(cookieExpiration(authentication, request));
+        }
         cookies.add(jwtCookie);
+        for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
+            cookies.add(loginCookieProvider.provideCookie(request));
+        }
         return cookies;
     }
 

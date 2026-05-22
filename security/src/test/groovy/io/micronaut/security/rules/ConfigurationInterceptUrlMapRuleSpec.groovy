@@ -1,6 +1,6 @@
 package io.micronaut.security.rules
 
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.context.ServerContextPathProvider
@@ -50,7 +50,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
 
         expect:
-        Mono.from(provider.check(request, null, null)).block() == securityRuleResult
+        Mono.from(provider.check(request, null)).block() == securityRuleResult
 
         where:
         securityRuleResult          | interceptUrlMap                                                                               | description

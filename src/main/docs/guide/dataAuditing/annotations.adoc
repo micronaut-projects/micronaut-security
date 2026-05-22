@@ -1,0 +1,6 @@
+The annotations ann:security.annotation.CreatedBy[] and ann:security.annotation.UpdatedBy[] annotations are provided for application to your Micronaut Data entities. The annotated fields will be automatically populated with the currently authenticated user's identity. For example:
+
+snippet::io.micronaut.security.audit.docs.createdby.Book[tags="clazz"]
+<1> The class is mapped and persisted by Micronaut Data
+<2> The creator field will be populated on `save()`
+<3> The editor field will be populated on both `save()` and `update()`

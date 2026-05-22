@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD:security/src/main/java/io/micronaut/security/token/generator/DefaultAccessRefreshTokenGenerator.java
- * Copyright 2017-2021 original authors
-=======
  * Copyright 2017-2023 original authors
->>>>>>> master:security-jwt/src/main/java/io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +16,10 @@
 package io.micronaut.security.token.generator;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
@@ -45,8 +42,14 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * Generates http responses with access and refresh token.
  *
  * @author Sergio del Amo
- * @since 3.2.0
+ * @since 1.0
  */
+@Requires(beans = {
+    AccessTokenConfiguration.class,
+    TokenRenderer.class,
+    TokenGenerator.class,
+    ClaimsGenerator.class
+})
 @Singleton
 public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGenerator {
 

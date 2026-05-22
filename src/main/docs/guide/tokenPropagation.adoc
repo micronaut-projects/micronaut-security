@@ -12,8 +12,7 @@ You can configure token propagation to achieve that.
 include::{testssecurity}/security/token/propagation/TokenPropagationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-The previous configuration, configures a link:{api}/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html[HttpHeaderTokenPropagator] and a
-and a propagation filter, link:{api}/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
+The previous configuration, configures a link:{api}/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html[HttpHeaderTokenPropagator] and a propagation filter, link:{api}/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
 will propagate the security token seamlessly.
 
 If you use https://micronaut-projects.github.io/micronaut-core/latest/guide/#serviceDiscovery[Service Discovery] features, you can use the service id in your service id regular expression:
@@ -30,6 +29,10 @@ include::{includedir}configurationProperties/io.micronaut.security.token.propaga
 For propagation via an HTTP Header, you can configure:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties.adoc[]
+
+Token propagation requires *Context Propagation* dependencies, as explained in https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor context propagation] section.
+
+dependency:context-propagation[groupId=io.micrometer]
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-token-propagation.html[Token Propagation tutorial] to learn more.
 

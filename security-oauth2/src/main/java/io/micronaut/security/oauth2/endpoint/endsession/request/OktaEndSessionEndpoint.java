@@ -43,7 +43,7 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
 
     private final SecurityConfiguration securityConfiguration;
-    private final TokenResolver tokenResolver;
+    private final TokenResolver<HttpRequest<?>> tokenResolver;
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
@@ -56,7 +56,7 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
                                   OauthClientConfiguration clientConfiguration,
                                   Supplier<OpenIdProviderMetadata> providerMetadata,
                                   SecurityConfiguration securityConfiguration,
-                                  TokenResolver tokenResolver) {
+                                  TokenResolver<HttpRequest<?>> tokenResolver) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
         this.securityConfiguration = securityConfiguration;
         this.tokenResolver = tokenResolver;
@@ -90,7 +90,7 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
             return Optional.of(attributes.get(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY).toString());
         }
         if (securityConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN) {
-            return tokenResolver.resolveToken(request);
+            return tokenResolver.resolveTokens(request).stream().findFirst();
         }
         return Optional.empty();
     }

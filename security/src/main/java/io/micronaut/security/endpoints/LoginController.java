@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.micronaut.security.endpoints;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.async.annotation.SingleResult;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -28,54 +29,77 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.server.util.HttpHostResolver;
+import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.validation.Validated;
 import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 /**
  * Handles login requests.
  *
+ * @param <B> The HTTP Request Body type
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(beans = LoginHandler.class)
-@Requires(beans = Authenticator.class)
+@Requires(classes = Controller.class)
+@Requires(beans = {LoginHandler.class, Authenticator.class, HttpHostResolver.class, HttpHostResolver.class})
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Validated
-public class LoginController {
+public class LoginController<B> {
 
-    protected final Authenticator authenticator;
-    protected final LoginHandler loginHandler;
+    private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
+
+    protected final Authenticator<HttpRequest<B>> authenticator;
+    protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
     protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
     protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
+    protected final HttpHostResolver httpHostResolver;
+    protected final HttpLocaleResolver httpLocaleResolver;
+    protected final LoginControllerConfiguration loginControllerConfiguration;
 
     /**
      * @param authenticator                 {@link Authenticator} collaborator
      * @param loginHandler                  A collaborator which helps to build HTTP response depending on success or failure.
      * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
+     * @param loginControllerConfiguration Login Controller Configuration
+     * @since 4.11.0
      */
-    public LoginController(Authenticator authenticator,
-                           LoginHandler loginHandler,
-                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
+    public LoginController(
+            Authenticator<HttpRequest<B>> authenticator,
+            LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
+            ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+            ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
+            HttpHostResolver httpHostResolver,
+            HttpLocaleResolver httpLocaleResolver,
+            LoginControllerConfiguration loginControllerConfiguration
+    ) {
         this.authenticator = authenticator;
         this.loginHandler = loginHandler;
         this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
         this.loginFailedEventPublisher = loginFailedEventPublisher;
+        this.httpHostResolver = httpHostResolver;
+        this.httpLocaleResolver = httpLocaleResolver;
+        this.loginControllerConfiguration = loginControllerConfiguration;
     }
 
     /**
@@ -86,17 +110,52 @@ public class LoginController {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
+    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && loginControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Unsupported content type {}. Login Controller supports: {}",
+                    contentTypeOptional.map(MediaType::getName).orElse(""),
+                    String.join(",", loginControllerConfiguration.getPostContentTypes()));
+            }
+            return Publishers.just(HttpResponse.status(HttpStatus.valueOf(loginControllerConfiguration.getUnsupportedPostContentTypeStatus())));
+        }
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
-                .map(authenticationResponse -> {
-                    if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
-                        Authentication authentication = authenticationResponse.getAuthentication().get();
-                        loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
-                        return loginHandler.loginSuccess(authentication, request);
-                    } else {
-                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
-                        return loginHandler.loginFailed(authenticationResponse, request);
+            .map(authenticationResponse -> {
+                if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                    Authentication authentication = authenticationResponse.getAuthentication().get();
+                    publishLoginSuccessfulEvent(authentication, request);
+                    return loginHandler.loginSuccess(authentication, request);
+                } else {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("login failed for username: {}", usernamePasswordCredentials.getUsername());
                     }
-                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
+                    publishLoginFailedEvent(authenticationResponse, usernamePasswordCredentials, request);
+                    return loginHandler.loginFailed(authenticationResponse, request);
+                }
+            }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
+    }
+
+    private void publishLoginSuccessfulEvent(Authentication authentication, HttpRequest<?> request) {
+        loginSuccessfulEventPublisher.publishEvent(
+            new LoginSuccessfulEvent(
+                authentication,
+                httpHostResolver.resolve(request),
+                httpLocaleResolver.resolveOrDefault(request)
+            )
+        );
+    }
+
+    private void publishLoginFailedEvent(AuthenticationResponse authenticationResponse,
+                                         UsernamePasswordCredentials usernamePasswordCredentials,
+                                         HttpRequest<?> request) {
+        loginFailedEventPublisher.publishEvent(
+                new LoginFailedEvent(
+                        authenticationResponse,
+                        usernamePasswordCredentials,
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                )
+        );
     }
 }

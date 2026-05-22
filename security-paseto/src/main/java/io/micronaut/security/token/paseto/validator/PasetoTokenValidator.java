@@ -17,6 +17,7 @@ package io.micronaut.security.token.paseto.validator;
 
 import dev.paseto.jpaseto.ClaimPasetoException;
 import dev.paseto.jpaseto.Paseto;
+import dev.paseto.jpaseto.PasetoException;
 import dev.paseto.jpaseto.PasetoParser;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -33,7 +34,7 @@ import java.util.Optional;
  * @author Utsav Varia
  * @since 3.0
  */
-public class PasetoTokenValidator implements TokenValidator {
+public class PasetoTokenValidator implements TokenValidator<HttpRequest<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(PasetoTokenValidator.class);
     protected PasetoAuthenticationFactory pasetoAuthenticationFactory;
     protected PasetoParser pasetoParser;
@@ -63,6 +64,10 @@ public class PasetoTokenValidator implements TokenValidator {
         try {
             return Optional.of(pasetoParser.parse(token));
         } catch (ClaimPasetoException e) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Failed to parse Paseto token: {}", e.getMessage());
+            }
+        } catch (PasetoException e) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Failed to parse Paseto token: {}", e.getMessage());
             }

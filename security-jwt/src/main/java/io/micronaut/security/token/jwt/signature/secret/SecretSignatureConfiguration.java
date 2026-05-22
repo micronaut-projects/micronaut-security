@@ -30,10 +30,14 @@ import jakarta.validation.constraints.NotNull;
 @EachProperty(JwtConfigurationProperties.PREFIX + ".signatures.secret")
 @Context
 public class SecretSignatureConfiguration {
-
+    /**
+     * The default base64 value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_BASE64 = false;
     private JWSAlgorithm jwsAlgorithm = JWSAlgorithm.HS256;
     private String secret;
-    private boolean base64 = false;
+    private boolean base64 = DEFAULT_BASE64;
     private final String name;
 
     /**
@@ -91,7 +95,7 @@ public class SecretSignatureConfiguration {
     }
 
     /**
-     * Indicates whether the supplied secret is base64 encoded.
+     * Indicates whether the supplied secret is base64 encoded. Default value {@value #DEFAULT_BASE64}.
      *
      * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
      */

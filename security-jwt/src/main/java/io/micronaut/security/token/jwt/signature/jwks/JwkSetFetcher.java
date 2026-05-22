@@ -16,10 +16,10 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import java.util.Optional;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
+import org.reactivestreams.Publisher;
 
 /**
  * Fetch a Json Web Key Set by a given url.
@@ -30,13 +30,14 @@ import java.util.Optional;
 @DefaultImplementation(DefaultJwkSetFetcher.class)
 public interface JwkSetFetcher<T> {
     /**
-     *
+     * @param providerName The jwks provider name
      * @param url The Jwks uri
      * @return The Json Web Key Set representation or an empty optional if it could not be loaded
+     * @since 4.5.0
      */
     @NonNull
-    @Blocking
-    Optional<T> fetch(@Nullable String url);
+    @SingleResult
+    Publisher<T> fetch(@Nullable String providerName, @Nullable String url);
 
     /**
      * @param url The Jwks uri

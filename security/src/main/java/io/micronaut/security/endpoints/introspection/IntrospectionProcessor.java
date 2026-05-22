@@ -15,8 +15,7 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.http.HttpRequest;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
@@ -25,26 +24,27 @@ import org.reactivestreams.Publisher;
  * @see <a href="https://tools.ietf.org/html/rfc7662">RFC7662</a>
  * @author Sergio del Amo
  * @since 2.1.0
+ * @param <T> Request
  */
-public interface IntrospectionProcessor {
+public interface IntrospectionProcessor<T> {
 
     /**
      *
      * @param introspectionRequest A parameter representing the token along with optional parameters representing additional context
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                @NonNull HttpRequest<?> httpRequest);
+                                                @NonNull T requestContext);
 
     /**
      *
      * @param authentication The authentication
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return Introspection Response
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                @NonNull HttpRequest<?> httpRequest);
+                                                @NonNull T requestContext);
 }

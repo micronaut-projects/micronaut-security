@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.config.InterceptUrlPatternModifier;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import java.util.List;
+import io.micronaut.http.HttpRequest;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfiguration#getInterceptUrlMap()}.
@@ -28,13 +30,15 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
+@Requires(beans = { RolesFinder.class, SecurityConfiguration.class, InterceptUrlPatternModifier.class })
 @Singleton
 public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
 
     /**
      * The order of the rule.
      */
-    public static final Integer ORDER = SensitiveEndpointRule.ORDER - 100;
+    public static final Integer ORDER = -100;
 
     private final List<InterceptUrlMapPattern> patternList;
 

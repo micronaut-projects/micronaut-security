@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.minimal.application' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "9.4.1"
 }
 
 repositories {
@@ -12,7 +12,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
@@ -22,10 +22,11 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-management")
+    implementation(mn.micronaut.http.client)
+    implementation(mn.micronaut.management)
     implementation(mnSerde.micronaut.serde.jackson)
-    runtimeOnly(mn.snakeyaml)
+    testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
+    testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 shadowJar {
@@ -37,12 +38,5 @@ shadowJar {
 configurations.all {
     resolutionStrategy {
         preferProjectModules()
-        // TODO: Remove this once aligned
-        eachDependency {
-            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
-                useVersion("4.0.0-M1")
-                because("There's no M2 platform yet")
-            }
-        }
     }
 }

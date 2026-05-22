@@ -3,42 +3,71 @@ introduction:
 releaseHistory: Release History
 whatsNew: What's New
 breaks: Breaking Changes
-gettingStarted:
-  title: Getting Started
+security-installation: Installation
+securityFilter:
+  title: How It Works - Security Filter
+  builtInAuthenticationFetchers:
+    title: Built-In Authentication Fetchers
+    basicAuthAuthenticationFetcher: Basic-Auth Authentication Fetcher
+    tokenAuthenticationFetcher:
+      title: Token Authentication Fetcher
+      tokenReaders:
+        title: Token Readers
+        bearerTokenReader: Bearer Token Reader
+        cookieTokenReader: Cookie Token Reader
+  securityRule:
+    title: Security Rules
+    ipPattern: IP Pattern Rule
+    secured:
+      title: Secured Annotation
+      jakartaAnnotations: Jakarta Annotations
+      securedExpression: Secured with expressions
+    interceptUrlMap: Intercept URL Map
+    builtInEndpointsAccess: Built-In Endpoints Security
 exceptionHandlers: 'Exception Handlers'
+endpoints:
+  title: Endpoints
+  login:
+    title: Login Controller
+    loginHandler: Login Handler
+  logout:
+    title: Logout Controller
+    logoutHandler: Logout Handler
+  builtInHandlers:
+    title: Built-in Login and Logout Handlers
+    micronautSecurityAuthenticationBearer: Authentication Mode Bearer
+    micronautSecurityAuthenticationSession: Authentication Mode Session
+    micronautSecurityAuthenticationCookie: Authentication Mode Cookie
+    micronautSecurityAuthenticationIdToken: Authentication Mode ID Token
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
   authenticationStrategy: Authentication Strategy
-  loginHandler: Login Handler
-  logoutHandler: Logout Handler
   noRedirection: Handlers without redirection
   redirection: Redirection Configuration
-authenticationProviders: Authentication Providers
-securityRule:
-  title: Security Rules
-  ipPattern: IP Pattern Rule
-  secured:
-    title: Secured Annotation
-    jakartaAnnotations: Jakarta Annotations
-    securedExpression: Secured with expressions
-  interceptUrlMap: Intercept URL Map
-  builtInEndpointsAccess: Built-In Endpoints Security
+authenticationProviders:
+  title: Reactive Authentication Providers
+  imperativeAuthenticationProviders: Authentication Provider
+  authenticationProvidersUseCases: Authentication Providers Use Cases
+  builtInAuthenticationProviders: Built-In Authentication Providers
 authenticationStrategies:
-  title: Authorization Strategies
+  title: Authentication Strategies
   basicAuth: Basic Authentication
-  session: Session Authorization
+  session: Session Authentication
   jwt:
     title: JSON Web Token
     reader:
       title: Reading JWT Token
       bearerToken: Bearer Token Reader
       cookieToken: Cookie Token Reader
+    jwtParser: JWT Parser
     jwtValidation:
       title: JWT Signature Validation
       jwks:
         title: Remote JWKS
+        jwksCache: JWKS Caching
         staticJwks: Local JWKS
+    jsonWebTokenValidator: JWT Validation
     jwtGenerator:
       title: JWT Token Generation
       jwtGeneratorSignature: Signed JWT Generation
@@ -46,29 +75,54 @@ authenticationStrategies:
       jwtGeneratorRSA: Example of JWT Signed with RSA
     jwtEncryption:
       title: JWT Encryption
+      jwtEncryptionSecret: Example of JWT Encrypted with Secret
       jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
     claimsValidation: Claims Validation
     render:
       title: Token Render
+    jwtGuides: Guides
   ldap:
     title: LDAP Authentication
     configuration: Configuration
     extending: Extending Default Behavior
   x509: X.509 Certificate Authentication
-  custom: Custom Authorization Strategies
-rejection: Rejection Handling
+  custom: Custom Authentication Strategies
+rejection:
+  title: Rejection Handling
+  wwwAuthenticate: WWW-Authenticate Response
+csrf:
+  title: Cross-Site Request Forgery (CSRF)
+  csrfDependency: CSRF Dependency
+  csrfFilter: CSRF Filter
+  csrfMitigations:
+    title: CSRF Mitigations
+    syncronizerTokenPattern:
+      title: Syncronizer Token Pattern
+      csrfAndSession: CSRF and Session
+    doubleSubmitCookiePattern: Double Submit Cookie Pattern
+    signedDoubleSubmitCookiePattern: Signed Double Submit Cookie Pattern
+  csrfConfiguration: CSRF Configuration
+  csrfTokenResolvers:
+    title: CSRF Token Resolvers
+    httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
+    fieldCsrfTokenResolver: Field CSRF Token Resolution
+  csrfApis: CSRF APIs
 tokenPropagation: Token Propagation
-endpoints:
-  title: Built-In Security Controllers
-  login: Login Controller
-  logout: Logout Controller
+tokenendpoints:
+  title: Built-In Security Token Controllers
   refresh: Refresh Controller
   keys: Keys Controller
   introspectionendpoint: Introspection Endpoint
 retrievingAuthenticatedUser:
   title: Retrieve the authenticated user
+  websocket: WebSocket methods
+  customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
+dataAuditing:
+  title: Data Change Auditing
+  annotations: Auditing Annotations
+  identityMapping: Custom Authentication Mapping
 securityEvents: Security Events
 oauth:
   title: OAuth 2.0
@@ -99,14 +153,18 @@ oauth:
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
+      clientCredentialGuides: Guides
     password: Password
   oauth-endpoints:
     title: Endpoints
     endsession: OpenID End Session
     introspection: Introspection
     revocation: Revocation
-    user-info: OpenID User Info
+    user-info: UserInfo Endpoint
+    protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
+  proxyToAuthServer: Proxy .well-known requests to Auth Server
+  oauthGuides: Guides
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration

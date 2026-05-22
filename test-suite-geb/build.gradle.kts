@@ -6,9 +6,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven {
-        setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
 }
 
 dependencies {
@@ -16,15 +13,18 @@ dependencies {
     testImplementation(mn.reactor)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteKeycloak)
-    testImplementation(projects.testSuiteKeycloak16)
+    testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecuritySession)
-    testImplementation(libs.geb.spock)
-
-    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.geb.spock) {
+        exclude(group = "org.spockframework", module = "spock-core")
+        exclude(group = "org.apache.groovy.geb", module = "geb-implicit-assertions")
+    }
+    testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(platform(mnTest.boms.testcontainers))
     testImplementation(libs.testcontainers.selenium)
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)

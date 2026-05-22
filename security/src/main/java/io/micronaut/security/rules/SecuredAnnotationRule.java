@@ -15,8 +15,10 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationValue;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.web.router.RouteAttributes;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.annotation.EvaluatedAnnotationValue;
 import io.micronaut.security.annotation.Secured;
@@ -38,8 +40,9 @@ import reactor.core.publisher.Mono;
  * @author James Kleeh
  * @since 1.0
  */
+@Requires(classes = { HttpRequest.class })
 @Singleton
-public class SecuredAnnotationRule extends AbstractSecurityRule {
+public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> {
 
     /**
      * The order of the rule.
@@ -59,29 +62,30 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
      * found on the method or class, or if the route match is not method based.
      *
      * @param request The current request
-     * @param routeMatch The matched route
      * @param authentication The authentication, or null if none found
      * @return The result
      */
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
-        if (routeMatch instanceof MethodBasedRouteMatch) {
-            MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
-            if (methodRoute.hasAnnotation(Secured.class)) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
+        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+            if (routeMatch instanceof MethodBasedRouteMatch) {
+                MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
                 AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
-                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-                    boolean[] arr = securedAnnotation.booleanValues();
-                    if (arr.length > 0) {
-                        return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+                if (securedAnnotation != null) {
+                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                        boolean[] arr = securedAnnotation.booleanValues();
+                        if (arr.length > 0) {
+                            return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+                        }
                     }
-                }
-                Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
-                if (optionalValue.isPresent()) {
-                    List<String> values = Arrays.asList(optionalValue.get());
-                    if (values.contains(SecurityRule.DENY_ALL)) {
-                        return Mono.just(SecurityRuleResult.REJECTED);
+                    Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
+                    if (optionalValue.isPresent()) {
+                        List<String> values = Arrays.asList(optionalValue.get());
+                        if (values.contains(SecurityRule.DENY_ALL)) {
+                            return Mono.just(SecurityRuleResult.REJECTED);
+                        }
+                        return compareRoles(values, getRoles(authentication));
                     }
-                    return compareRoles(values, getRoles(authentication));
                 }
             }
         }

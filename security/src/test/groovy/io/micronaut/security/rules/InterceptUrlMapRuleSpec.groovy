@@ -24,7 +24,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        Mono.from(rule.check(HttpRequest.GET(uri), null, Authentication.build("john", ["ROLE_ADMIN"]))).block() == expectedResult
+        Mono.from(rule.check(HttpRequest.GET(uri)   , Authentication.build("john", ["ROLE_ADMIN"]))).block() == expectedResult
 
         where:
         uri             || expectedResult
@@ -56,7 +56,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        Mono.from(rule.check(request, null, null)).block() == expectedResult
+        Mono.from(rule.check(request, null)).block() == expectedResult
 
         where:
         request                                       || expectedResult

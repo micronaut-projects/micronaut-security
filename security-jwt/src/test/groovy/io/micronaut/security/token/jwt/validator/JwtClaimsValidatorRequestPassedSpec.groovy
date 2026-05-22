@@ -1,13 +1,16 @@
 package io.micronaut.security.token.jwt.validator
 
+import com.nimbusds.jwt.JWT
+import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
@@ -17,13 +20,17 @@ import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
+import io.micronaut.security.token.jwt.nimbus.NimbusReactiveJsonWebTokenValidator
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
+import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 import java.security.Principal
+import java.util.concurrent.ExecutorService
 
 class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     @Override
@@ -62,30 +69,10 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
-    @Replaces(JwtTokenValidator)
-    static class CustomJwtTokenValidator extends JwtTokenValidator {
-        CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
-                                Collection<EncryptionConfiguration> encryptionConfigurations,
-                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                JwtAuthenticationFactory jwtAuthenticationFactory) {
-            super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory)
-        }
+    static class HttpRequestClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
         @Override
-        Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
-            return validator.validate(token, request)
-                    .flatMap(jwtAuthenticationFactory::createAuthentication)
-                    .map(Flux::just)
-                    .orElse(Flux.empty())
-        }
-    }
-
-    @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
-    @Singleton
-    static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
-
-        @Override
-        boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+        boolean validate(@NonNull Claims claims, @Nullable T request) {
             request != null
         }
     }

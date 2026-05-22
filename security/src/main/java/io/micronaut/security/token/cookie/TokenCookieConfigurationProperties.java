@@ -17,13 +17,12 @@ package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
-import io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties;
-
 import java.util.Optional;
 
 /**
@@ -31,6 +30,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = CookieConfiguration.class)
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(TokenCookieConfigurationProperties.PREFIX)
@@ -61,7 +61,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     private String cookieName = DEFAULT_COOKIENAME;
 
     /**
-     *
+     * Whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @return a boolean flag indicating whether the JwtCookieTokenReader should be enabled or not
      */
     @Override
@@ -86,7 +86,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     }
 
     /**
-     *
+     * Cookie Name. Default value ({@value #DEFAULT_COOKIENAME}).
      * @return a name for the cookie
      */
     @NonNull
@@ -96,7 +96,7 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     }
 
     /**
-     *
+     * The path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @return The path of the cookie.
      */
     @Nullable

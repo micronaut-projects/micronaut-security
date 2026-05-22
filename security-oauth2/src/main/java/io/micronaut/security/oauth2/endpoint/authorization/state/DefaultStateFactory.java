@@ -16,12 +16,12 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 import jakarta.inject.Singleton;
@@ -35,7 +35,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
-@Requires(beans = StatePersistence.class)
+@Requires(beans = {StateSerDes.class, StatePersistence.class})
 public class DefaultStateFactory implements StateFactory {
 
     private final StateSerDes stateSerDes;
@@ -54,7 +54,8 @@ public class DefaultStateFactory implements StateFactory {
     @Nullable
     @Override
     public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
-        Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
+        Optional<HttpStatus> rejectedStatus = Optional.ofNullable(ServerRequestContextSecurityContextSupplier.getSecurityContext(request).getRejectionStatus())
+            .map(HttpStatus::valueOf);
         MutableState state = createInitialState();
 
        rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).ifPresent(status ->

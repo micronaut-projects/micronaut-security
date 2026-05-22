@@ -16,7 +16,7 @@
 package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -39,7 +39,7 @@ import java.util.Optional;
  */
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
-public class SessionLogoutHandler implements LogoutHandler {
+public class SessionLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String logout;

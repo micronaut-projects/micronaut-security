@@ -43,7 +43,7 @@ class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification 
 
     @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsGetSpec')
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
         int invocations = 0
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {

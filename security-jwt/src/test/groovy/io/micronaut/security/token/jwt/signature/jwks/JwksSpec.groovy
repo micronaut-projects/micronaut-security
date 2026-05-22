@@ -18,12 +18,14 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
 import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -77,7 +79,7 @@ class JwksSpec extends Specification {
                 RSAJwkProvider,
                 JwkProvider,
                 RSASignatureGeneratorConfiguration,
-                AuthenticationProvider,
+                ReactiveAuthenticationProvider,
         ]) {
             gatewayEmbeddedServer.applicationContext.getBean(beanClazz)
         }
@@ -86,17 +88,19 @@ class JwksSpec extends Specification {
         noExceptionThrown()
     }
 
-    def "setup books server"() {
+    def "#beanClazz exists"(Class beanClazz) {
         when:
-        for (Class beanClazz : [SignatureConfiguration,
-                                JwksSignatureConfigurationProperties,
-                                JwksSignature,
-                                HomeController]) {
-            booksEmbeddedServer.applicationContext.getBean(beanClazz)
-        }
+        booksEmbeddedServer.applicationContext.getBean(beanClazz)
 
         then:
         noExceptionThrown()
+
+        where:
+        beanClazz << [
+                ReactiveJwksSignature,
+                JwksSignatureConfigurationProperties,
+                ReactiveSignatureConfiguration,
+                HomeController]
     }
 
     def "gateway exposes /keys"() {

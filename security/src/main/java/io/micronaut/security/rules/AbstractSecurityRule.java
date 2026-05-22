@@ -32,8 +32,9 @@ import reactor.core.publisher.Mono;
  *
  * @author James Kleeh
  * @since 1.0
+ * @param <T> Request
  */
-public abstract class AbstractSecurityRule implements SecurityRule {
+public abstract class AbstractSecurityRule<T> implements SecurityRule<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractSecurityRule.class);
 

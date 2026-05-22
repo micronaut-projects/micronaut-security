@@ -15,9 +15,10 @@
  */
 package io.micronaut.security.token.validator;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.Ordered;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
@@ -25,12 +26,18 @@ import org.reactivestreams.Publisher;
  * Responsible for token validation and claims retrieval.
  *
  * @author Sergio del Amo
+ * @param <T> Request
  * @since 1.0
  */
-public interface TokenValidator extends Ordered {
+public interface TokenValidator<T> extends Ordered {
 
     /**
      * Validates the provided token and returns the authentication state.
+     *
+     * <p> An implementation of this method should never block
+     * (for example, waiting for a result of an IO operation) as it's called from the event loop.
+     * Instead, it should immediately return a Publisher that is filled with an authentication result
+     * when the result is available.
      *
      * @param token The token string
      * @param request The current request (or null)
@@ -38,6 +45,8 @@ public interface TokenValidator extends Ordered {
      * be attempted and the validation will fail. If the publisher is empty, further validators will be
      * attempted. If the publisher emits an authentication, that authentication will be used.
      */
-    Publisher<Authentication> validateToken(String token,
-                                            @Nullable HttpRequest<?> request);
+    @NonNull
+    @SingleResult
+    Publisher<Authentication> validateToken(@NonNull String token,
+                                            @Nullable T request);
 }

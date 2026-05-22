@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -32,6 +33,7 @@ import jakarta.inject.Singleton;
  * @author James Kleeh
  * @since 1.0
  */
+@Requires(classes = ExceptionHandler.class)
 @Singleton
 @Primary
 @Produces

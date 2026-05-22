@@ -40,8 +40,9 @@ import java.util.Collections;
  * @since 1.1.0
  * @author Sergio del Amo
  */
+@Requires(classes = { Controller.class })
 @Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(beans = JwkProvider.class)
+@Requires(beans = {JwkProvider.class, JsonMapper.class})
 @Controller("${" + KeysControllerConfigurationProperties.PREFIX + ".path:/keys}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {

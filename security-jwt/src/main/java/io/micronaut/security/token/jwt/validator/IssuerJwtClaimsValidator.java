@@ -16,10 +16,10 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ClaimsUtils;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +30,11 @@ import org.slf4j.LoggerFactory;
  * @author Jason Schindler
  * @author Sergio del Amo
  * @since 2.4.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = IssuerJwtClaimsValidator.ISSUER_PROP)
-public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class IssuerJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     public static final String ISSUER_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".issuer";
 
@@ -54,7 +55,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         if (expectedIssuer == null) {
             return true;
         }
@@ -65,7 +66,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
             }
             return false;
         }
-        if (!expectedIssuer.equals(issuerObject.toString())) {
+        if (!ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(expectedIssuer, issuerObject.toString())) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject);
             }

@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.naming.Named;
 
 /**

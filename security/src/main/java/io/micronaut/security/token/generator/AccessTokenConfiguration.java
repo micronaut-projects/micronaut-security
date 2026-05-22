@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.generator;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Configuration for access tokens.

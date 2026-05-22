@@ -16,19 +16,18 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +38,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface OauthClientConfiguration extends Toggleable {
-
-    AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
+    String DEFAULT_AUTH_METHOD = AuthenticationMethods.CLIENT_SECRET_POST;
 
     /**
      * The default advanced expiration value for client credentials grant.
@@ -119,10 +117,34 @@ public interface OauthClientConfiguration extends Toggleable {
      * @throws ConfigurationException if token endpoint url is not set in configuration
      */
     default SecureEndpoint getTokenEndpoint() throws ConfigurationException {
-        Optional<SecureEndpointConfiguration> tokenOptional = getToken();
-        return new DefaultSecureEndpoint(tokenOptional.flatMap(EndpointConfiguration::getUrl)
-                .orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration")),
-                Collections.singletonList(tokenOptional.flatMap(SecureEndpointConfiguration::getAuthMethod)
-                        .orElse(DEFAULT_AUTHENTICATION_METHOD)));
+        return getToken().map(secureEndpointConfiguration -> new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD))
+                .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
+    }
+
+    /**
+     * @return The {@link AuthorizationServer} used by the OAuth Client.
+     * @since 4.15.0
+     */
+    @Nullable
+    default AuthorizationServer getAuthorizationServer() {
+        return null;
+    }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOauthAuthorizationServer() {
+        return false;
+    }
+
+    /**
+     *
+     * @return Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     * @since 4.15.0
+     */
+    default boolean isProxyWellKnownOpenidConfiguration() {
+        return false;
     }
 }

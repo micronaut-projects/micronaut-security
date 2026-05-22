@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
 import java.time.Duration;
@@ -32,7 +32,6 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
 
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIEPATH = "/";
-
     private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
 
     protected String cookieDomain;
@@ -42,6 +41,26 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
     protected String cookieName = null;
+    protected boolean sessionCookie;
+
+    /**
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
+     * @return whether the cookie is a session cookie. A session cookie does not have an expiration date. If set to true, then {@link CookieConfiguration#getCookieMaxAge()} is ignored.
+     * @since 4.12.0
+     */
+    public boolean isSessionCookie() {
+        return sessionCookie;
+    }
+
+    /**
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
+     *
+     * @param sessionCookie Whether the cookie is a session cookie.
+     * @since 4.12.0
+     */
+    public void setSessionCookie(boolean sessionCookie) {
+        this.sessionCookie = sessionCookie;
+    }
 
     @Override
     public Optional<String> getCookieDomain() {
@@ -121,6 +140,9 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
 
     @Override
     public Optional<TemporalAmount> getCookieMaxAge() {
+        if (isSessionCookie()) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(cookieMaxAge);
     }
 

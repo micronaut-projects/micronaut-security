@@ -54,7 +54,7 @@ internal class LoggersTest {
         val response = client.exchange(request, Map::class.java)
         Assertions.assertEquals(HttpStatus.OK, response.status())
         val m = response.body()
-        Assertions.assertTrue(m.containsKey("levels"))
+        Assertions.assertTrue(m!!.containsKey("levels"))
         Assertions.assertTrue(m.containsKey("loggers"))
     }
 
@@ -69,7 +69,7 @@ internal class LoggersTest {
     @Requires(property = "spec.name", value = "LoggersTest")
     @Singleton
     internal class AuthenticationProviderUserPassword :
-        MockAuthenticationProvider(
+        MockAuthenticationProvider<HttpRequest<Any>, Any, Any>(
             listOf(
                 SuccessAuthenticationScenario("user"),
                 SuccessAuthenticationScenario("system", listOf("ROLE_SYSTEM"))

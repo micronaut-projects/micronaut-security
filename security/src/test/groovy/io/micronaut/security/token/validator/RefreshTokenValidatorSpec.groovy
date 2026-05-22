@@ -1,7 +1,7 @@
 package io.micronaut.security.token.validator
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import jakarta.inject.Singleton
 import spock.lang.Shared

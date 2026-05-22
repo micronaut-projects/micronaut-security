@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.session;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
@@ -34,8 +35,9 @@ import reactor.core.publisher.Mono;
  * @author Graeme Rocher
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class SessionAuthenticationFetcher implements AuthenticationFetcher {
+public class SessionAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     /**
      * The order of the fetcher.

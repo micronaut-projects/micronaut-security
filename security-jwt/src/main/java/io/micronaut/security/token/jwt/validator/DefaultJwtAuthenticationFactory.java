@@ -19,7 +19,6 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.AbstractTokenAuthenticationFactory;
-import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
@@ -63,17 +62,5 @@ public class DefaultJwtAuthenticationFactory extends AbstractTokenAuthentication
             }
         }
         return Optional.empty();
-    }
-
-    /**
-     *
-     * @param claimSet JWT Claims
-     * @return the username defined by {@link TokenConfiguration#getNameKey()} ()} or the sub claim.
-     * @deprecated Use {@link AbstractTokenAuthenticationFactory#usernameForClaims(io.micronaut.security.token.Claims)} instead.
-     * @throws ParseException might be thrown parsing claims
-     */
-    @Deprecated
-    protected Optional<String> usernameForClaims(JWTClaimsSet claimSet) throws ParseException {
-        return super.usernameForClaims(new MapClaims(claimSet.getClaims()));
     }
 }

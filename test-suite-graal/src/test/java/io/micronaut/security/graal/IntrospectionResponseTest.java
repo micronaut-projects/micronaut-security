@@ -34,7 +34,7 @@ class IntrospectionResponseTest {
         BlockingHttpClient client = httpClient.toBlocking();
         URI uri = UriBuilder.of("/introspection").path("response").build();
         String json = client.retrieve(HttpRequest.GET(uri), String.class);
-        assertEquals("{\"active\":false,\"foo\":\"bar\"}", json);
+        assertEquals("{\"foo\":\"bar\",\"active\":false}", json);
     }
 
     @Requires(property = "spec.name", value = "IntrospectionResponseTest")

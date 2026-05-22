@@ -15,12 +15,15 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.context.exceptions.ConfigurationException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.naming.Named;
+import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Metadata describing the configuration of OpenID Providers.
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public interface OpenIdProviderMetadata {
+public interface OpenIdProviderMetadata extends Named {
 
     /**
      * issuer.
@@ -149,9 +152,12 @@ public interface OpenIdProviderMetadata {
      * userinfo_encryption_alg_values_supported.
      * OPTIONAL.
      * @return List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
+     * @since 4.0.2
      */
     @Nullable
-    List<String> getUserInfoEncryptionAlgValuesSupported();
+    default List<String> getUserinfoEncryptionAlgValuesSupported() {
+        return getUserinfoEncryptionEncValuesSupported();
+    }
 
     /**
      * userinfo_encryption_enc_values_supported
@@ -352,15 +358,16 @@ public interface OpenIdProviderMetadata {
     @Nullable
     String getEndSessionEndpoint();
 
-    @NonNull
-    default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
-        List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
-        if (authMethodsSupported == null) {
-            return Optional.empty();
+    /**
+     *
+     * @since 4.10.1
+     * @return The Token endpoint
+     * @throws ConfigurationException if token endpoint url is not set in configuration
+     */
+    default SecureEndpoint tokenEndpoint() throws ConfigurationException {
+        if (getTokenEndpoint() == null) {
+            throw new ConfigurationException("token endpoint requires a token endpoint url");
         }
-        return Optional.of(authMethodsSupported.stream()
-                .map(String::toUpperCase)
-                .map(AuthenticationMethod::valueOf)
-                .collect(Collectors.toList()));
+        return new DefaultSecureEndpoint(getTokenEndpoint(), getTokenEndpointAuthMethodsSupported() == null ? null : new HashSet<>(getTokenEndpointAuthMethodsSupported()));
     }
 }

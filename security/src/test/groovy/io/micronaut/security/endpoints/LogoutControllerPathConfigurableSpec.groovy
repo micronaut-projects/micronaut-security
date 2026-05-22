@@ -50,7 +50,7 @@ class LogoutControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LogoutControllerPathConfigurableSpec')
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
             return HttpResponse.ok()

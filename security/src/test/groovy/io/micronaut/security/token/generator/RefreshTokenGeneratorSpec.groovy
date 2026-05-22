@@ -1,7 +1,7 @@
 package io.micronaut.security.token.generator
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.config.TokenConfiguration

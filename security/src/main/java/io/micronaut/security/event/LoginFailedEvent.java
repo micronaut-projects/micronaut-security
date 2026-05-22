@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.context.event.ApplicationEvent;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.security.authentication.AuthenticationRequest;
+
+import java.util.Locale;
 
 /**
  * Event triggered when an unsuccessful login takes place.
@@ -23,16 +26,38 @@ import io.micronaut.context.event.ApplicationEvent;
  * @author Sergio del Amo
  * @since 1.0
  */
-public class LoginFailedEvent extends ApplicationEvent {
+public class LoginFailedEvent extends SecurityEvent {
+
+    @Nullable
+    private final AuthenticationRequest authenticationRequest;
 
     /**
      * Event triggered when an unsuccessful login takes place.
      *
-     * @param source The {@link io.micronaut.security.authentication.AuthenticationResponse} object
-     *               signaling the authentication failure and reason.
+     * @param source                The {@link io.micronaut.security.authentication.AuthenticationResponse} object
+     *                              signaling the authentication failure and reason.
+     * @param authenticationRequest A request to authenticate.
+     * @param host                  The hostname from the request if available
+     * @param locale                The locale of the request
      * @throws IllegalArgumentException if source is null.
+     * @since 4.7.0
      */
-    public LoginFailedEvent(Object source) {
-        super(source);
+    public LoginFailedEvent(
+        Object source,
+        AuthenticationRequest authenticationRequest,
+        String host,
+        Locale locale
+    ) {
+        super(source, host, locale);
+        this.authenticationRequest = authenticationRequest;
+    }
+
+    /**
+     * @return A request to authenticate.
+     * @since 4.1.0
+     */
+    @Nullable
+    public AuthenticationRequest getAuthenticationRequest() {
+        return authenticationRequest;
     }
 }

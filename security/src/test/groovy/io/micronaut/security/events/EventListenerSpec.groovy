@@ -43,6 +43,9 @@ class EventListenerSpec extends EmbeddedServerSpecification {
     }
 
     def "failed login publishes LoginFailedEvent"() {
+        given:
+        LoginFailedEventListener loginFailedEventListener = embeddedServer.applicationContext.getBean(LoginFailedEventListener)
+
         when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
         client.exchange(request)
@@ -51,22 +54,33 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         def e = thrown(HttpClientResponseException)
         e.status == HttpStatus.UNAUTHORIZED
         new PollingConditions().eventually {
-            embeddedServer.applicationContext.getBean(LoginFailedEventListener).events.size() == 1
+            loginFailedEventListener.events.size() == 1
+            loginFailedEventListener.events.authenticationRequest.identity == ["bogus"]
+            loginFailedEventListener.events.host == [embeddedServer.getURL().toString()]
+            loginFailedEventListener.events.locale == [Locale.default]
         }
     }
 
     def "successful login publishes LoginSuccessfulEvent"() {
+        given:
+        LoginSuccessfulEventListener loginSuccessfulEventListener = embeddedServer.applicationContext.getBean(LoginSuccessfulEventListener)
+
         when:
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("user", "password"))
         client.exchange(request)
 
         then:
         new PollingConditions().eventually {
-            embeddedServer.applicationContext.getBean(LoginSuccessfulEventListener).events.size() == 1
+            loginSuccessfulEventListener.events.size() == 1
+            loginSuccessfulEventListener.events.host == [embeddedServer.getURL().toString()]
+            loginSuccessfulEventListener.events.locale == [Locale.default]
         }
     }
 
     def "invoking logout triggers LogoutEvent"() {
+        given:
+        LogoutEventListener logoutEventListener = embeddedServer.applicationContext.getBean(LogoutEventListener)
+
         when:
         HttpRequest request = HttpRequest.POST("/logout", "").basicAuth("user", "password")
         client.exchange(request)
@@ -74,8 +88,10 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         then:
         noExceptionThrown()
         new PollingConditions().eventually {
-            embeddedServer.applicationContext.getBean(LogoutEventListener).events.size() == 1
-            (embeddedServer.applicationContext.getBean(LogoutEventListener).events*.getSource() as List<Authentication>).any { it.name == 'user'}
+            logoutEventListener.events.size() == 1
+            logoutEventListener.events.source.name == ['user']
+            logoutEventListener.events.host == [embeddedServer.getURL().toString()]
+            logoutEventListener.events.locale == [Locale.default]
         }
     }
 
@@ -135,7 +151,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
@@ -153,7 +169,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

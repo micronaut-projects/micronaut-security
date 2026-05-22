@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.event;
 
-import io.micronaut.context.event.ApplicationEvent;
+import java.util.Locale;
 
 /**
  * Event triggered when the user logs out.
@@ -23,15 +23,18 @@ import io.micronaut.context.event.ApplicationEvent;
  * @author Sergio del Amo
  * @since 1.0
  */
-public class LogoutEvent extends ApplicationEvent {
+public class LogoutEvent extends SecurityEvent {
 
     /**
      * Event triggered when the user logs out.
      *
      * @param source The {@link io.micronaut.security.authentication.Authentication} of the user logging out.
+     * @param host   The hostname from the request
+     * @param locale The locale of the request
      * @throws IllegalArgumentException if source is null.
+     * @since 4.7.0
      */
-    public LogoutEvent(Object source) {
-        super(source);
+    public LogoutEvent(Object source, String host, Locale locale) {
+        super(source, host, locale);
     }
 }
