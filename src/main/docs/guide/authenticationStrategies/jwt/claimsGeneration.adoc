@@ -1,3 +1,10 @@
 If the built-in
 link:{api}/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html[JWTClaimsSetGenerator], does not
-fulfil your needs you can provide your own https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of link:{api}/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html[ClaimsGenerator].
+fulfil your needs you can provide your own https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of api:io.micronaut.security.token.claims.ClaimsGenerator[].
+
+The built-in `JWTClaimsSetGenerator` adds the JWT ID (`jti`) claim when the application provides a bean of type api:io.micronaut.security.token.claims.JtiGenerator[].
+The value returned by `generateJtiClaim()` is used as the case-sensitive unique identifier for the JWT:
+
+snippet::io.micronaut.docs.claimsjti.CustomJtiGenerator[tags="clazz"]
+
+If you are migrating from the old `io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator`, use `io.micronaut.security.token.claims.JtiGenerator` instead.
