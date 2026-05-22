@@ -39,16 +39,22 @@ import org.biscuitsec.biscuit.crypto.KeyPair;
 import org.biscuitsec.biscuit.error.Error;
 import org.biscuitsec.biscuit.token.Authorizer;
 import org.biscuitsec.biscuit.token.Biscuit;
+import org.biscuitsec.biscuit.token.builder.Term;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Base64;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -65,6 +71,7 @@ class BiscuitTokenValidatorTest {
         "1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed",
         16
     );
+    private static final BigInteger ED25519_FIELD_PRIME = BigInteger.ONE.shiftLeft(255).subtract(BigInteger.valueOf(19));
 
     @Test
     void validatorCanBeDisabled() {
@@ -125,6 +132,9 @@ class BiscuitTokenValidatorTest {
         String token = biscuit.serialize_b64url();
         String revocationId = biscuit.revocation_identifiers().get(0).toHex();
         try (ApplicationContext context = ApplicationContext.run(properties());
+             ApplicationContext invalidKeyContext = ApplicationContext.run(properties(
+                 "micronaut.security.token.biscuit.root-public-key", "not-a-valid-hex-key"
+             ));
              ApplicationContext wrongKeyContext = ApplicationContext.run(properties(
                  "micronaut.security.token.biscuit.root-public-key", WRONG_ROOT_KEY.public_key().toHex()
              ));
@@ -137,6 +147,7 @@ class BiscuitTokenValidatorTest {
                  "micronaut.security.token.biscuit.run-limits.max-facts", 1
              ))) {
             assertNull(Mono.from(context.getBean(BiscuitTokenValidator.class).validateToken("not-a-biscuit", HttpRequest.GET("/secure"))).block());
+            assertNull(Mono.from(invalidKeyContext.getBean(BiscuitTokenValidator.class).validateToken(token, HttpRequest.GET("/secure"))).block());
             assertNull(Mono.from(wrongKeyContext.getBean(BiscuitTokenValidator.class).validateToken(token, HttpRequest.GET("/secure"))).block());
             assertNull(Mono.from(revokedContext.getBean(BiscuitTokenValidator.class).validateToken(token, HttpRequest.GET("/secure"))).block());
             assertNull(Mono.from(runLimitContext.getBean(BiscuitTokenValidator.class).validateToken(token, HttpRequest.GET("/secure"))).block());
@@ -163,6 +174,20 @@ class BiscuitTokenValidatorTest {
     }
 
     @Test
+    void nonCanonicalSignaturePointEncodingIsRejectedBeforeValidation() throws Exception {
+        String token = token();
+        String malleatedToken = replaceAuthoritySignatureR(token, littleEndian(ED25519_FIELD_PRIME, 32));
+
+        assertFalse(BiscuitSignatureValidator.hasCanonicalSignatures(malleatedToken));
+        try (ApplicationContext context = ApplicationContext.run(properties())) {
+            Authentication result = Mono.from(context.getBean(BiscuitTokenValidator.class)
+                .validateToken(malleatedToken, HttpRequest.GET("/secure"))).block();
+
+            assertNull(result);
+        }
+    }
+
+    @Test
     void revocationCheckerFailureReturnsEmptyPublisher() throws Exception {
         try (ApplicationContext context = ApplicationContext.run(properties(
             "spec.name", "BiscuitRevocationCheckerFailure"
@@ -172,6 +197,72 @@ class BiscuitTokenValidatorTest {
 
             assertNull(result);
         }
+    }
+
+    @Test
+    void missingPrincipalReturnsEmptyPublisher() throws Exception {
+        try (ApplicationContext context = ApplicationContext.run(properties(
+            "micronaut.security.token.biscuit.authentication.principal-query", "missing($name) <- missing($name)"
+        ))) {
+            Authentication result = Mono.from(context.getBean(BiscuitTokenValidator.class)
+                .validateToken(token(), HttpRequest.GET("/secure"))).block();
+
+            assertNull(result);
+        }
+    }
+
+    @Test
+    void configurationPropertiesExposeDefaultsAndSetters() {
+        BiscuitConfigurationProperties configuration = new BiscuitConfigurationProperties();
+        BiscuitConfigurationProperties.RunLimitsConfigurationProperties runLimits = new BiscuitConfigurationProperties.RunLimitsConfigurationProperties();
+        BiscuitConfigurationProperties.AuthenticationConfigurationProperties authentication = new BiscuitConfigurationProperties.AuthenticationConfigurationProperties();
+
+        runLimits.setMaxFacts(5);
+        runLimits.setMaxIterations(6);
+        runLimits.setMaxTime(Duration.ofSeconds(7));
+        authentication.setPrincipalQuery("user($name) <- user($name)");
+        authentication.setRolesQuery("group($role) <- group($role)");
+        configuration.setEnabled(false);
+        configuration.setValidatorEnabled(false);
+        configuration.setRootPublicKey("abc123");
+        configuration.setRootKeyId(42);
+        configuration.setFacts(List.of("fact(\"value\")"));
+        configuration.setRules(List.of("derived($value) <- fact($value)"));
+        configuration.setChecks(List.of("check if fact(\"value\")"));
+        configuration.setPolicies(List.of("allow if fact(\"value\")"));
+        configuration.setRevokedIdentifiers(Set.of("revoked"));
+        configuration.setRunLimits(runLimits);
+        configuration.setAuthentication(authentication);
+
+        assertFalse(configuration.isEnabled());
+        assertFalse(configuration.isValidatorEnabled());
+        assertEquals("abc123", configuration.getRootPublicKey());
+        assertEquals(42, configuration.getRootKeyId());
+        assertEquals(List.of("fact(\"value\")"), configuration.getFacts());
+        assertEquals(List.of("derived($value) <- fact($value)"), configuration.getRules());
+        assertEquals(List.of("check if fact(\"value\")"), configuration.getChecks());
+        assertEquals(List.of("allow if fact(\"value\")"), configuration.getPolicies());
+        assertEquals(Set.of("revoked"), configuration.getRevokedIdentifiers());
+        assertEquals(5, configuration.getRunLimits().getMaxFacts());
+        assertEquals(6, configuration.getRunLimits().getMaxIterations());
+        assertEquals(Duration.ofSeconds(7), configuration.getRunLimits().getMaxTime());
+        assertEquals("user($name) <- user($name)", configuration.getAuthentication().getPrincipalQuery());
+        assertEquals("group($role) <- group($role)", configuration.getAuthentication().getRolesQuery());
+    }
+
+    @Test
+    void biscuitTermMapperConvertsSupportedTermTypes() {
+        byte[] bytes = {1, 2, 3};
+        Set<Term> values = new LinkedHashSet<>();
+        values.add(new Term.Str("nested"));
+        values.add(new Term.Integer(99));
+
+        assertEquals("sherlock", BiscuitTermMapper.toJavaValue(new Term.Str("sherlock")));
+        assertEquals(221L, BiscuitTermMapper.toJavaValue(new Term.Integer(221)));
+        assertEquals(true, BiscuitTermMapper.toJavaValue(new Term.Bool(true)));
+        assertEquals(Instant.ofEpochSecond(100), BiscuitTermMapper.toJavaValue(new Term.Date(100)));
+        assertArrayEquals(bytes, (byte[]) BiscuitTermMapper.toJavaValue(new Term.Bytes(bytes)));
+        assertEquals(List.of("nested", 99L), BiscuitTermMapper.toJavaValue(new Term.Set(values)));
     }
 
     @Test
@@ -227,11 +318,12 @@ class BiscuitTokenValidatorTest {
             String accepted = client.retrieve(HttpRequest.GET("/secure")
                 .accept(MediaType.TEXT_PLAIN)
                 .bearerAuth(token()));
+            HttpRequest<?> rejectedRequest = HttpRequest.GET("/secure")
+                .accept(MediaType.TEXT_PLAIN)
+                .bearerAuth(tokenForPath("/other"));
             HttpClientResponseException rejected = assertThrows(
                 HttpClientResponseException.class,
-                () -> client.retrieve(HttpRequest.GET("/secure")
-                    .accept(MediaType.TEXT_PLAIN)
-                    .bearerAuth(tokenForPath("/other")))
+                () -> client.retrieve(rejectedRequest)
             );
 
             assertEquals("sherlock", accepted);
@@ -305,10 +397,25 @@ class BiscuitTokenValidatorTest {
     }
 
     private static String malleateAuthoritySignature(String token) throws Exception {
+        return replaceAuthoritySignature(token, malleateSignature(signature(token)));
+    }
+
+    private static String replaceAuthoritySignatureR(String token, byte[] r) throws Exception {
+        byte[] signature = signature(token);
+        System.arraycopy(r, 0, signature, 0, r.length);
+        return replaceAuthoritySignature(token, signature);
+    }
+
+    private static byte[] signature(String token) throws Exception {
+        Schema.Biscuit biscuit = Schema.Biscuit.parseFrom(Base64.getUrlDecoder().decode(padBase64Url(token)));
+        return biscuit.getAuthority().getSignature().toByteArray();
+    }
+
+    private static String replaceAuthoritySignature(String token, byte[] signature) throws Exception {
         Schema.Biscuit biscuit = Schema.Biscuit.parseFrom(Base64.getUrlDecoder().decode(padBase64Url(token)));
         Schema.SignedBlock authority = biscuit.getAuthority()
             .toBuilder()
-            .setSignature(ByteString.copyFrom(malleateSignature(biscuit.getAuthority().getSignature().toByteArray())))
+            .setSignature(ByteString.copyFrom(signature))
             .build();
         return Base64.getUrlEncoder()
             .withoutPadding()
@@ -327,6 +434,16 @@ class BiscuitTokenValidatorTest {
             malleated[32 + i] = source >= 0 ? malleatedScalar[source] : 0;
         }
         return malleated;
+    }
+
+    private static byte[] littleEndian(BigInteger value, int length) {
+        byte[] bigEndian = value.toByteArray();
+        byte[] littleEndian = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int source = bigEndian.length - 1 - i;
+            littleEndian[i] = source >= 0 ? bigEndian[source] : 0;
+        }
+        return littleEndian;
     }
 
     private static String padBase64Url(String token) {
@@ -357,6 +474,12 @@ class BiscuitTokenValidatorTest {
 
         @Override
         public Optional<Authentication> createAuthentication(BiscuitAuthenticationContext context) {
+            assertNotNull(context.getToken());
+            assertNotNull(context.getAuthorizer());
+            assertEquals(0, context.getPolicyIndex());
+            assertFalse(context.getRevocationIdentifiers().isEmpty());
+            assertNotNull(context.getRequest());
+            assertEquals("/secure", context.getRequest().getPath());
             return Optional.of(Authentication.build("watson", List.of("ROLE_ASSISTANT")));
         }
     }

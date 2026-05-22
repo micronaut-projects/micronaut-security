@@ -135,7 +135,7 @@ public class BiscuitTokenValidator implements TokenValidator<HttpRequest<?>> {
     private Optional<Biscuit> deserialize(String token) {
         try {
             if (!BiscuitSignatureValidator.hasCanonicalSignatures(token)) {
-                debug(LOG, "Biscuit deserialization failed because the token contains a non-canonical signature");
+                debug(LOG, "Biscuit deserialization failed because the token is malformed or contains a non-canonical signature");
                 return Optional.empty();
             }
             return Optional.of(Biscuit.from_b64url(token, keyId -> {

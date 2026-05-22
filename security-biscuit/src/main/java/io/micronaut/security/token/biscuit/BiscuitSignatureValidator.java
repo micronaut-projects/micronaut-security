@@ -20,7 +20,9 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Optional;
 
 /**
  * Performs strict Ed25519 signature encoding checks before delegating to Biscuit Java.
@@ -31,12 +33,26 @@ import java.util.Base64;
 final class BiscuitSignatureValidator {
 
     private static final int ED25519_SIGNATURE_LENGTH = 64;
+    private static final int ED25519_ENCODED_POINT_LENGTH = 32;
     private static final int ED25519_SCALAR_OFFSET = 32;
     private static final int ED25519_SCALAR_LENGTH = 32;
+    private static final int ED25519_SIGN_BIT_MASK = 0x80;
+    private static final int ED25519_SIGN_BIT_OFFSET = 31;
+    private static final BigInteger ED25519_FIELD_PRIME = BigInteger.ONE.shiftLeft(255).subtract(BigInteger.valueOf(19));
     private static final BigInteger ED25519_GROUP_ORDER = new BigInteger(
         "1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed",
         16
     );
+    private static final BigInteger ED25519_D = BigInteger.valueOf(-121665)
+        .multiply(BigInteger.valueOf(121666).modInverse(ED25519_FIELD_PRIME))
+        .mod(ED25519_FIELD_PRIME);
+    private static final BigInteger ED25519_SQRT_M1 = BigInteger.TWO.modPow(
+        ED25519_FIELD_PRIME.subtract(BigInteger.ONE).divide(BigInteger.valueOf(4)),
+        ED25519_FIELD_PRIME
+    );
+    private static final BigInteger ED25519_SQRT_EXPONENT = ED25519_FIELD_PRIME
+        .add(BigInteger.valueOf(3))
+        .divide(BigInteger.valueOf(8));
 
     private BiscuitSignatureValidator() {
     }
@@ -77,11 +93,48 @@ final class BiscuitSignatureValidator {
             return false;
         }
         byte[] bytes = signature.toByteArray();
-        byte[] scalar = new byte[ED25519_SCALAR_LENGTH];
-        for (int i = 0; i < ED25519_SCALAR_LENGTH; i++) {
-            scalar[ED25519_SCALAR_LENGTH - 1 - i] = bytes[ED25519_SCALAR_OFFSET + i];
+        return isCanonicalEncodedPoint(bytes)
+            && littleEndianToBigInteger(Arrays.copyOfRange(bytes, ED25519_SCALAR_OFFSET, ED25519_SIGNATURE_LENGTH)).compareTo(ED25519_GROUP_ORDER) < 0;
+    }
+
+    private static boolean isCanonicalEncodedPoint(byte[] signature) {
+        byte[] encodedY = Arrays.copyOf(signature, ED25519_ENCODED_POINT_LENGTH);
+        boolean xOdd = (encodedY[ED25519_SIGN_BIT_OFFSET] & ED25519_SIGN_BIT_MASK) != 0;
+        encodedY[ED25519_SIGN_BIT_OFFSET] &= ~ED25519_SIGN_BIT_MASK;
+        BigInteger y = littleEndianToBigInteger(encodedY);
+        if (y.compareTo(ED25519_FIELD_PRIME) >= 0) {
+            return false;
         }
-        return new BigInteger(1, scalar).compareTo(ED25519_GROUP_ORDER) < 0;
+        Optional<BigInteger> decodedX = recoverX(y);
+        return decodedX
+            .map(x -> x.signum() != 0 || !xOdd)
+            .orElse(false);
+    }
+
+    private static Optional<BigInteger> recoverX(BigInteger y) {
+        BigInteger ySquared = y.multiply(y).mod(ED25519_FIELD_PRIME);
+        BigInteger numerator = ySquared.subtract(BigInteger.ONE).mod(ED25519_FIELD_PRIME);
+        BigInteger denominator = ED25519_D.multiply(ySquared).add(BigInteger.ONE).mod(ED25519_FIELD_PRIME);
+        if (denominator.signum() == 0) {
+            return Optional.empty();
+        }
+        BigInteger xSquared = numerator.multiply(denominator.modInverse(ED25519_FIELD_PRIME)).mod(ED25519_FIELD_PRIME);
+        BigInteger x = xSquared.modPow(ED25519_SQRT_EXPONENT, ED25519_FIELD_PRIME);
+        if (!x.multiply(x).mod(ED25519_FIELD_PRIME).equals(xSquared)) {
+            x = x.multiply(ED25519_SQRT_M1).mod(ED25519_FIELD_PRIME);
+        }
+        if (!x.multiply(x).mod(ED25519_FIELD_PRIME).equals(xSquared)) {
+            return Optional.empty();
+        }
+        return Optional.of(x);
+    }
+
+    private static BigInteger littleEndianToBigInteger(byte[] littleEndian) {
+        byte[] bigEndian = new byte[littleEndian.length];
+        for (int i = 0; i < littleEndian.length; i++) {
+            bigEndian[littleEndian.length - 1 - i] = littleEndian[i];
+        }
+        return new BigInteger(1, bigEndian);
     }
 
     private static String padBase64Url(String token) {

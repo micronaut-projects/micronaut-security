@@ -28,6 +28,7 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 5.1.0
  */
+@SuppressWarnings("java:S6206") // Keep JavaBean accessors for Micronaut public API consistency.
 public final class BiscuitAuthenticationContext {
 
     private final Biscuit token;
@@ -88,6 +89,7 @@ public final class BiscuitAuthenticationContext {
      * @return The HTTP request
      */
     @Nullable
+    @SuppressWarnings("java:S1452") // The request body type is intentionally unknown to authentication mappers.
     public HttpRequest<?> getRequest() {
         return request;
     }

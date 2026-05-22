@@ -21,8 +21,12 @@ import io.micronaut.core.util.StringUtils;
 import jakarta.inject.Singleton;
 import org.biscuitsec.biscuit.crypto.PublicKey;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+
+import static io.micronaut.security.utils.LoggingUtils.debug;
 
 /**
  * Configuration-backed {@link BiscuitRootKeyLocator}.
@@ -33,6 +37,8 @@ import java.util.Optional;
 @Requires(missingBeans = BiscuitRootKeyLocator.class)
 @Singleton
 public class DefaultBiscuitRootKeyLocator implements BiscuitRootKeyLocator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultBiscuitRootKeyLocator.class);
 
     private final BiscuitConfiguration configuration;
 
@@ -56,6 +62,7 @@ public class DefaultBiscuitRootKeyLocator implements BiscuitRootKeyLocator {
         try {
             return Optional.of(new PublicKey(Schema.PublicKey.Algorithm.Ed25519, rootPublicKey));
         } catch (RuntimeException e) {
+            debug(LOG, "Biscuit root public key parsing failed: {}", e.getClass().getSimpleName());
             return Optional.empty();
         }
     }
