@@ -31,8 +31,6 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
@@ -62,7 +60,7 @@ public final class RunWithSecurityAttributeInterceptor implements MethodIntercep
 
         String value = context.stringValue(RunWithSecurityAttribute.class, AnnotationMetadata.VALUE_MEMBER)
             .orElse("true");
-        Authentication scopedAuthentication = new RunWithSecurityAttributeAuthentication(authentication, name, value);
+        Authentication scopedAuthentication = scopedAuthentication(authentication, name, value);
         securityContext.withAuthentication(scopedAuthentication);
 
         boolean restoreOnExit = true;
@@ -115,7 +113,7 @@ public final class RunWithSecurityAttributeInterceptor implements MethodIntercep
             if (previousAuthentication == null) {
                 return mono;
             }
-            securityContext.withAuthentication(new RunWithSecurityAttributeAuthentication(previousAuthentication, name, value));
+            securityContext.withAuthentication(scopedAuthentication(previousAuthentication, name, value));
             return mono.doFinally(signalType -> restore(securityContext, previousAuthentication));
         });
     }
@@ -130,43 +128,21 @@ public final class RunWithSecurityAttributeInterceptor implements MethodIntercep
             if (previousAuthentication == null) {
                 return Flux.from(publisher);
             }
-            securityContext.withAuthentication(new RunWithSecurityAttributeAuthentication(previousAuthentication, name, value));
+            securityContext.withAuthentication(scopedAuthentication(previousAuthentication, name, value));
             return Flux.from(publisher).doFinally(signalType -> restore(securityContext, previousAuthentication));
         });
     }
 
-    private void restore(@NonNull SecurityContext securityContext, @NonNull Authentication authentication) {
-        securityContext.withAuthentication(authentication);
+    @NonNull
+    private Authentication scopedAuthentication(@NonNull Authentication authentication,
+                                                @NonNull String name,
+                                                @NonNull String value) {
+        Map<String, Object> attributes = new LinkedHashMap<>(authentication.getAttributes());
+        attributes.put(name, value);
+        return Authentication.build(authentication.getName(), authentication.getRoles(), attributes);
     }
 
-    private static final class RunWithSecurityAttributeAuthentication implements Authentication {
-        private static final long serialVersionUID = 1L;
-
-        private final Authentication delegate;
-        private final Map<String, Object> attributes;
-
-        private RunWithSecurityAttributeAuthentication(Authentication delegate, String name, String value) {
-            this.delegate = delegate;
-            Map<String, Object> mutableAttributes = new LinkedHashMap<>(delegate.getAttributes());
-            mutableAttributes.put(name, value);
-            this.attributes = Collections.unmodifiableMap(mutableAttributes);
-        }
-
-        @Override
-        public String getName() {
-            return delegate.getName();
-        }
-
-        @Override
-        @NonNull
-        public Collection<String> getRoles() {
-            return delegate.getRoles();
-        }
-
-        @Override
-        @NonNull
-        public Map<String, Object> getAttributes() {
-            return attributes;
-        }
+    private void restore(@NonNull SecurityContext securityContext, @NonNull Authentication authentication) {
+        securityContext.withAuthentication(authentication);
     }
 }

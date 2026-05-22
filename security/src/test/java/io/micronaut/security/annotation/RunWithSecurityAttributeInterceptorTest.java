@@ -212,7 +212,8 @@ class RunWithSecurityAttributeInterceptorTest {
 
             CompletionStage<String> errorStage = withRequest(request, service::error);
             service.future.completeExceptionally(new IllegalStateException("stage-boom"));
-            CompletionException thrown = assertThrows(CompletionException.class, () -> errorStage.toCompletableFuture().join());
+            CompletableFuture<String> errorFuture = errorStage.toCompletableFuture();
+            CompletionException thrown = assertThrows(CompletionException.class, errorFuture::join);
             assertEquals("stage-boom", thrown.getCause().getMessage());
             assertSame(authentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
         }
@@ -333,7 +334,7 @@ class RunWithSecurityAttributeInterceptorTest {
         @RunWithSecurityAttribute(name = "feature", value = "stage")
         CompletionStage<String> error() {
             future = new CompletableFuture<>();
-            return future;
+            return future.minimalCompletionStage();
         }
     }
 
