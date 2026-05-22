@@ -27,30 +27,42 @@ import io.micronaut.security.authentication.WwwAuthenticateChallenge;
 import io.micronaut.security.authentication.WwwAuthenticateChallengeProvider;
 import jakarta.inject.Singleton;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Use of WWW-Authenticate for Protected Resource Metadata.
  * <a href="https://datatracker.ietf.org/doc/html/rfc9728#WWW-Authenticate">RFC 9728 WWW Authenticate</a>
  */
 @Requires(classes = { HttpRequest.class, HttpHostResolver.class })
-@Requires(beans = { HttpHostResolver.class })
+@Requires(beans = { HttpHostResolver.class, ProtectedResourceMetadataProvider.class })
 @Requires(property = ProtectedResourceMetadataConfiguration.PROPERTY_WWW_AUTHENTICATE, notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
 class ResourceMetadataWwwAuthenticateChallengeProvider implements WwwAuthenticateChallengeProvider<HttpRequest<?>> {
     private static final String PARAM_RESOURCE_METADATA = "resource_metadata";
+    private static final String PARAM_SCOPE = "scope";
     private static final String SLASH = "/";
-    private final HttpHostResolver  httpHostResolver;
+    private final HttpHostResolver httpHostResolver;
+    private final ProtectedResourceMetadataProvider<HttpRequest<?>> protectedResourceMetadataProvider;
 
-    ResourceMetadataWwwAuthenticateChallengeProvider(HttpHostResolver httpHostResolver) {
+    ResourceMetadataWwwAuthenticateChallengeProvider(HttpHostResolver httpHostResolver,
+                                                     ProtectedResourceMetadataProvider<HttpRequest<?>> protectedResourceMetadataProvider) {
         this.httpHostResolver = httpHostResolver;
+        this.protectedResourceMetadataProvider = protectedResourceMetadataProvider;
     }
 
     @Override
     @NonNull
     public String getWwwAuthenticateChallenge(@Nullable HttpRequest<?> request) {
-        return WwwAuthenticateChallenge.builder()
+        WwwAuthenticateChallenge.Builder builder = WwwAuthenticateChallenge.builder()
             .authScheme(HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER)
-            .param(PARAM_RESOURCE_METADATA,  resourceMetadata(request))
+            .param(PARAM_RESOURCE_METADATA,  resourceMetadata(request));
+        String scope = scope(request);
+        if (StringUtils.isNotEmpty(scope)) {
+            builder.param(PARAM_SCOPE, scope);
+        }
+        return builder
             .build()
             .toString();
     }
@@ -60,9 +72,41 @@ class ResourceMetadataWwwAuthenticateChallengeProvider implements WwwAuthenticat
         StringBuilder sb = new StringBuilder();
         sb.append(httpHostResolver.resolve(request));
         sb.append(ProtectedResourceMetadataConfiguration.PATH);
-        if (request != null && StringUtils.isNotEmpty(request.getPath()) && !request.getPath().equals(SLASH)) {
-            sb.append(request.getPath());
+        String path = resourcePath(request);
+        if (path != null) {
+            sb.append(path);
         }
         return sb.toString();
+    }
+
+    @Nullable
+    private String resourcePath(@Nullable HttpRequest<?> request) {
+        if (request == null) {
+            return null;
+        }
+        String path = request.getPath();
+        return StringUtils.isNotEmpty(path) && !SLASH.equals(path) ? path : null;
+    }
+
+    @NonNull
+    private String scope(@Nullable HttpRequest<?> request) {
+        if (request == null) {
+            return "";
+        }
+        String path = resourcePath(request);
+        ProtectedResourceMetadata metadata = path == null
+            ? protectedResourceMetadataProvider.get(request)
+            : protectedResourceMetadataProvider.get(path, request);
+        if (metadata == null) {
+            return "";
+        }
+        List<String> scopes = metadata.scopesSupported();
+        if (scopes == null || scopes.isEmpty()) {
+            return "";
+        }
+        return scopes.stream()
+            .filter(scope -> scope != null && StringUtils.isNotEmpty(scope.trim()))
+            .map(String::trim)
+            .collect(Collectors.joining(" "));
     }
 }
