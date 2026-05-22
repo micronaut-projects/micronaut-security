@@ -9,3 +9,19 @@ The default supplier for `SecurityContext` uses server request attributes. You c
 If you use Micronaut Reactor and access api:security.utils.SecurityService[] within a reactive chain, add the following dependency to handle the https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor Context Propagation].
 
 dependency:context-propagation[groupId=io.micrometer]
+
+=== Run with a security attribute
+
+You can annotate a bean method with ann:security.annotation.RunWithSecurityAttribute[] to temporarily add one literal attribute to the current api:security.authentication.Authentication[] while the method executes:
+
+[source,java]
+----
+@RunWithSecurityAttribute(name = "tenant", value = "store-a")
+void processTenantWork() {
+    // code reached from this method can read the tenant attribute
+}
+----
+
+If no user is authenticated, the method proceeds unchanged and no authentication is created. The original authentication is restored after the method completes, throws an exception, or a reactive or `CompletionStage` result terminates.
+
+The annotation value is a literal string and is not evaluated as an expression. It also cannot grant access to the same route's ann:security.annotation.Secured[] check, because route authorization runs before the controller method executes.
