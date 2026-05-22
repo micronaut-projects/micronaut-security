@@ -16,10 +16,12 @@
 package io.micronaut.security.annotation;
 
 import io.micronaut.aop.InterceptorBean;
+import io.micronaut.aop.InterceptedMethod;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.SecurityContextHolder;
@@ -71,7 +73,7 @@ public final class RunWithSecurityAttributeInterceptor implements MethodIntercep
                 return completionStage.whenComplete((unused, throwable) -> restore(securityContext, authentication));
             }
             if (result instanceof Publisher<?> publisher) {
-                return wrapPublisher(publisher, securityContext, authentication, scopedAuthentication);
+                return wrapPublisher(context, publisher, securityContext, name, value);
             }
             return result;
         } finally {
@@ -82,25 +84,54 @@ public final class RunWithSecurityAttributeInterceptor implements MethodIntercep
     }
 
     @NonNull
-    private Object wrapPublisher(@NonNull Publisher<?> publisher,
+    private Object wrapPublisher(@NonNull MethodInvocationContext<Object, Object> context,
+                                 @NonNull Publisher<?> publisher,
                                  @NonNull SecurityContext securityContext,
-                                 @NonNull Authentication originalAuthentication,
-                                 @NonNull Authentication scopedAuthentication) {
+                                 @NonNull String name,
+                                 @NonNull String value) {
         if (publisher instanceof Mono<?> mono) {
-            return Mono.defer(() -> {
-                securityContext.withAuthentication(scopedAuthentication);
-                return mono.doFinally(signalType -> restore(securityContext, originalAuthentication));
-            });
+            return wrapMono(mono, securityContext, name, value);
         }
         if (publisher instanceof Flux<?> flux) {
-            return Flux.defer(() -> {
-                securityContext.withAuthentication(scopedAuthentication);
-                return flux.doFinally(signalType -> restore(securityContext, originalAuthentication));
-            });
+            return wrapFlux(flux, securityContext, name, value);
         }
+        Publisher<?> scopedPublisher = wrapFlux(publisher, securityContext, name, value);
+        Object result = InterceptedMethod.of(context, ConversionService.SHARED).handleResult(scopedPublisher);
+        Class<?> returnType = context.getReturnType().getType();
+        if (!returnType.isInstance(result)) {
+            throw new IllegalStateException("@RunWithSecurityAttribute does not support concrete Publisher return type: "
+                + returnType.getName());
+        }
+        return result;
+    }
+
+    @NonNull
+    private <T> Mono<T> wrapMono(@NonNull Mono<T> mono,
+                                 @NonNull SecurityContext securityContext,
+                                 @NonNull String name,
+                                 @NonNull String value) {
+        return Mono.defer(() -> {
+            Authentication previousAuthentication = securityContext.getAuthentication();
+            if (previousAuthentication == null) {
+                return mono;
+            }
+            securityContext.withAuthentication(new RunWithSecurityAttributeAuthentication(previousAuthentication, name, value));
+            return mono.doFinally(signalType -> restore(securityContext, previousAuthentication));
+        });
+    }
+
+    @NonNull
+    private <T> Flux<T> wrapFlux(@NonNull Publisher<T> publisher,
+                                 @NonNull SecurityContext securityContext,
+                                 @NonNull String name,
+                                 @NonNull String value) {
         return Flux.defer(() -> {
-            securityContext.withAuthentication(scopedAuthentication);
-            return Flux.from(publisher).doFinally(signalType -> restore(securityContext, originalAuthentication));
+            Authentication previousAuthentication = securityContext.getAuthentication();
+            if (previousAuthentication == null) {
+                return Flux.from(publisher);
+            }
+            securityContext.withAuthentication(new RunWithSecurityAttributeAuthentication(previousAuthentication, name, value));
+            return Flux.from(publisher).doFinally(signalType -> restore(securityContext, previousAuthentication));
         });
     }
 

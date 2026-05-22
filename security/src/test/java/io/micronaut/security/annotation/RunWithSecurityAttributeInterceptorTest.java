@@ -24,7 +24,11 @@ import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.security.filters.SecurityFilter;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -157,6 +161,40 @@ class RunWithSecurityAttributeInterceptorTest {
     }
 
     @Test
+    void supportsGenericPublisherAndRestoresPerSubscription() {
+        try (ApplicationContext context = ApplicationContext.run()) {
+            ReactiveAttributeService service = context.getBean(ReactiveAttributeService.class);
+            Authentication authentication = Authentication.build("sherlock");
+            Authentication laterAuthentication = Authentication.build("watson");
+            MutableHttpRequest<?> request = authenticatedRequest(authentication);
+
+            Publisher<String> publisher = withRequest(request, service::genericPublisher);
+            assertSame(authentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
+
+            assertEquals("sherlock:reactive", withRequest(request, () -> Flux.from(publisher).single().block()));
+            assertSame(authentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
+
+            request.setAttribute(SecurityFilter.AUTHENTICATION, laterAuthentication);
+            assertEquals("watson:reactive", withRequest(request, () -> Flux.from(publisher).single().block()));
+            assertSame(laterAuthentication, request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class).orElse(null));
+        }
+    }
+
+    @Test
+    void rejectsUnsupportedConcretePublisherReturnType() {
+        try (ApplicationContext context = ApplicationContext.run()) {
+            ReactiveAttributeService service = context.getBean(ReactiveAttributeService.class);
+            MutableHttpRequest<?> request = authenticatedRequest(Authentication.build("sherlock"));
+
+            IllegalStateException thrown = assertThrows(IllegalStateException.class, () ->
+                withRequest(request, service::concretePublisher)
+            );
+
+            assertTrue(thrown.getMessage().contains("does not support concrete Publisher return type"));
+        }
+    }
+
+    @Test
     void restoresAfterCompletionStageCompletionAndError() {
         try (ApplicationContext context = ApplicationContext.run()) {
             CompletionStageAttributeService service = context.getBean(CompletionStageAttributeService.class);
@@ -193,6 +231,11 @@ class RunWithSecurityAttributeInterceptorTest {
     private static String currentAttributeValue() {
         Authentication authentication = SecurityContextHolder.getSecurityContext().getAuthentication();
         return authentication == null ? null : (String) authentication.getAttributes().get("feature");
+    }
+
+    private static String currentNameAndAttributeValue() {
+        Authentication authentication = SecurityContextHolder.getSecurityContext().getAuthentication();
+        return authentication == null ? null : authentication.getName() + ":" + authentication.getAttributes().get("feature");
     }
 
     @Singleton
@@ -265,6 +308,16 @@ class RunWithSecurityAttributeInterceptorTest {
             return Mono.<String>never()
                 .doOnSubscribe(subscription -> subscriptionValue = currentAttributeValue());
         }
+
+        @RunWithSecurityAttribute(name = "feature", value = "reactive")
+        Publisher<String> genericPublisher() {
+            return new TestPublisher<>(RunWithSecurityAttributeInterceptorTest::currentNameAndAttributeValue);
+        }
+
+        @RunWithSecurityAttribute(name = "feature", value = "reactive")
+        TestPublisher<String> concretePublisher() {
+            return new TestPublisher<>(RunWithSecurityAttributeInterceptorTest::currentNameAndAttributeValue);
+        }
     }
 
     @Singleton
@@ -281,6 +334,43 @@ class RunWithSecurityAttributeInterceptorTest {
         CompletionStage<String> error() {
             future = new CompletableFuture<>();
             return future;
+        }
+    }
+
+    private static final class TestPublisher<T> implements Publisher<T> {
+        private final Supplier<T> supplier;
+
+        private TestPublisher(Supplier<T> supplier) {
+            this.supplier = supplier;
+        }
+
+        @Override
+        public void subscribe(Subscriber<? super T> subscriber) {
+            subscriber.onSubscribe(new Subscription() {
+                private boolean done;
+
+                @Override
+                public void request(long n) {
+                    if (done) {
+                        return;
+                    }
+                    done = true;
+                    if (n <= 0) {
+                        subscriber.onError(new IllegalArgumentException("Demand must be positive"));
+                        return;
+                    }
+                    T value = supplier.get();
+                    if (value != null) {
+                        subscriber.onNext(value);
+                    }
+                    subscriber.onComplete();
+                }
+
+                @Override
+                public void cancel() {
+                    done = true;
+                }
+            });
         }
     }
 }
