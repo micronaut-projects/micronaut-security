@@ -88,7 +88,7 @@ class DefaultTokenEndpointClientClientAssertionTest {
     private static final String CLIENT_ID = "client-id";
     private static final String CLIENT_SECRET = "012345678901234567890123456789012345678901234567";
     private static final String CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
-    private static final String INTEGRATION_SPEC_NAME = "DefaultTokenEndpointClientClientAssertionIntegrationTest";
+    private static final String INTEGRATION_SPEC_NAME = "DefaultTokenEndpointClientClientAssertionTest";
 
     @Test
     void clientSecretBasicBehaviorIsUnchanged() {
@@ -218,9 +218,11 @@ class DefaultTokenEndpointClientClientAssertionTest {
     void missingClientSecretFailsClosed() {
         try (ApplicationContext context = ApplicationContext.run()) {
             ExposedTokenEndpointClient client = client(context);
+            MutableHttpRequest<Map<String, String>> request = request(new SecureGrantMap());
+            TokenRequestContext<Map<String, String>, TokenResponse> requestContext = context(AuthenticationMethods.CLIENT_SECRET_JWT, clientConfiguration(null, Optional.empty(), Optional.empty()));
 
             ConfigurationException exception = assertThrows(ConfigurationException.class,
-                    () -> client.secure(request(new SecureGrantMap()), context(AuthenticationMethods.CLIENT_SECRET_JWT, clientConfiguration(null, Optional.empty(), Optional.empty()))));
+                    () -> client.secure(request, requestContext));
 
             assertTrue(exception.getMessage().contains("requires a client secret"));
         }
@@ -230,9 +232,11 @@ class DefaultTokenEndpointClientClientAssertionTest {
     void missingPrivateKeySignerFailsClosed() {
         try (ApplicationContext context = ApplicationContext.run()) {
             ExposedTokenEndpointClient client = client(context);
+            MutableHttpRequest<Map<String, String>> request = request(new SecureGrantMap());
+            TokenRequestContext<Map<String, String>, TokenResponse> requestContext = context(AuthenticationMethods.PRIVATE_KEY_JWT, clientConfiguration(null, Optional.empty(), Optional.empty()));
 
             ConfigurationException exception = assertThrows(ConfigurationException.class,
-                    () -> client.secure(request(new SecureGrantMap()), context(AuthenticationMethods.PRIVATE_KEY_JWT, clientConfiguration(null, Optional.empty(), Optional.empty()))));
+                    () -> client.secure(request, requestContext));
 
             assertTrue(exception.getMessage().contains("requires a SignatureGeneratorConfiguration bean"));
         }

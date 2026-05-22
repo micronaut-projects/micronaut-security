@@ -48,7 +48,7 @@ micronaut:
           client-secret: <<my client secret>>
           token:
             url: https://github.com/login/oauth/access_token
-            auth-method: client_secret_jwt
+            authentication-method: client_secret_jwt
             client-assertion:
               lifetime: 2m
               signing-algorithm: HS256
@@ -73,7 +73,7 @@ micronaut:
           client-id: <<my client id>>
           token:
             url: https://github.com/login/oauth/access_token
-            auth-method: private_key_jwt
+            authentication-method: private_key_jwt
             client-assertion:
               signer-name: assertion
               lifetime: 2m

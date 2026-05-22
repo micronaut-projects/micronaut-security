@@ -162,47 +162,62 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         }
 
         if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
-            }
-            request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
-        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
-            }
-            request.getBody()
-                    .filter(SecureGrant.class::isInstance)
-                    .map(SecureGrant.class::cast)
-                    .ifPresent(body -> {
-                        body.setClientId(clientConfiguration.getClientId());
-                        body.setClientSecret(clientConfiguration.getClientSecret());
-                    });
-        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_JWT)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using client_secret_jwt authentication. A signed client assertion will be present in the body");
-            }
-            secureRequestWithClientAssertion(request, requestContext, AuthenticationMethods.CLIENT_SECRET_JWT);
-        } else if (authMethodsSupported.contains(AuthenticationMethods.PRIVATE_KEY_JWT)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using private_key_jwt authentication. A signed client assertion will be present in the body");
-            }
-            secureRequestWithClientAssertion(request, requestContext, AuthenticationMethods.PRIVATE_KEY_JWT);
-        } else {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
-            }
-            request.getBody()
-                    .filter(SecureGrant.class::isInstance)
-                    .map(SecureGrant.class::cast)
-                    .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
+            secureRequestWithClientSecretBasic(request, clientConfiguration);
+            return;
         }
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
+            secureRequestWithClientSecretPost(request, clientConfiguration);
+            return;
+        }
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_JWT)) {
+            secureRequestWithClientAssertion(request, requestContext, AuthenticationMethods.CLIENT_SECRET_JWT);
+            return;
+        }
+        if (authMethodsSupported.contains(AuthenticationMethods.PRIVATE_KEY_JWT)) {
+            secureRequestWithClientAssertion(request, requestContext, AuthenticationMethods.PRIVATE_KEY_JWT);
+            return;
+        }
+        secureRequestWithClientId(request, clientConfiguration);
+    }
+
+    private <G> void secureRequestWithClientSecretBasic(MutableHttpRequest<G> request,
+                                                        OauthClientConfiguration clientConfiguration) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
+        }
+        request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
+    }
+
+    private <G> void secureRequestWithClientSecretPost(MutableHttpRequest<G> request,
+                                                       OauthClientConfiguration clientConfiguration) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
+        }
+        request.getBody()
+                .filter(SecureGrant.class::isInstance)
+                .map(SecureGrant.class::cast)
+                .ifPresent(body -> {
+                    body.setClientId(clientConfiguration.getClientId());
+                    body.setClientSecret(clientConfiguration.getClientSecret());
+                });
+    }
+
+    private <G> void secureRequestWithClientId(MutableHttpRequest<G> request,
+                                               OauthClientConfiguration clientConfiguration) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
+        }
+        request.getBody()
+                .filter(SecureGrant.class::isInstance)
+                .map(SecureGrant.class::cast)
+                .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
     }
 
     private <G, R extends TokenResponse> void secureRequestWithClientAssertion(@NonNull MutableHttpRequest<G> request,
                                                                                TokenRequestContext<G, R> requestContext,
                                                                                String authenticationMethod) {
         ClientAssertionConfiguration clientAssertionConfiguration = clientAssertionConfiguration(requestContext.getClientConfiguration())
-                .orElse(DefaultClientAssertionConfiguration.INSTANCE);
+                .orElseGet(DefaultClientAssertionConfiguration::new);
         String clientAssertion = clientAssertionGenerator
                 .orElseThrow(() -> new ConfigurationException("OAuth client " + requestContext.getClientConfiguration().getName() + " requires micronaut-security-jwt for " + authenticationMethod + " authentication"))
                 .generate(requestContext, clientAssertionConfiguration, authenticationMethod);
@@ -212,13 +227,13 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 .map(Map.class::cast)
                 .ifPresentOrElse(body -> {
                     @SuppressWarnings("unchecked")
-                    Map<String, String> grant = (Map<String, String>) body;
+                    Map<String, String> grant = body;
                     grant.put(SecureGrant.KEY_CLIENT_ID, requestContext.getClientConfiguration().getClientId());
                     grant.remove(SecureGrant.KEY_CLIENT_SECRET);
                     grant.put(KEY_CLIENT_ASSERTION_TYPE, CLIENT_ASSERTION_TYPE);
                     grant.put(KEY_CLIENT_ASSERTION, clientAssertion);
                 }, () -> {
-                    throw new ConfigurationException("OAuth client assertion authentication requires a token request body map");
+                    throw new ConfigurationException("OAuth client " + requestContext.getClientConfiguration().getName() + " requires a token request body map for " + authenticationMethod + " authentication");
                 });
     }
 
@@ -246,7 +261,6 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     }
 
     private static final class DefaultClientAssertionConfiguration implements ClientAssertionConfiguration {
-        private static final DefaultClientAssertionConfiguration INSTANCE = new DefaultClientAssertionConfiguration();
 
         @NonNull
         @Override
