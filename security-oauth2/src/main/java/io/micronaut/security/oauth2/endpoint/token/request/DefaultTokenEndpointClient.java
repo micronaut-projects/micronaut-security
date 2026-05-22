@@ -75,7 +75,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     public DefaultTokenEndpointClient(Supplier<HttpClient> defaultTokenClientSupplier,
                                       BeanContext beanContext) {
-        this.defaultTokenClient = defaultTokenClientSupplier;
+        this.defaultTokenClient = SupplierUtil.memoized(defaultTokenClientSupplier);
         this.beanContext = beanContext;
     }
 
