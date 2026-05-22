@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.reader.TokenReader;
 import jakarta.inject.Singleton;
 
@@ -32,7 +31,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(condition = CookieBasedAuthenticationModeCondition.class)
+@Requires(condition = TokenCookieEnabledCondition.class)
 @Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class CookieTokenReader implements TokenReader<HttpRequest<?>> {
