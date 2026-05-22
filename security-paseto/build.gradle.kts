@@ -23,3 +23,9 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
 }
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter("5.0.1")
+    }
+}
