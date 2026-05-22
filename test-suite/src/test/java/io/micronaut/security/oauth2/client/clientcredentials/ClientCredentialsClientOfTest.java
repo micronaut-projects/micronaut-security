@@ -49,7 +49,7 @@ class ClientCredentialsClientOfTest {
 
             // Request a token again.
             TokenResponse newTokenResponse = Mono.from(clientCredentialsClient.requestToken()).block();
-            assertNotNull(tokenResponse);
+            assertNotNull(newTokenResponse);
             assertNotNull(newTokenResponse.getAccessToken());
             // Token is cached
             assertEquals(tokenResponse, newTokenResponse);
