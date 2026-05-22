@@ -153,7 +153,7 @@ oauth:
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
-      clientCredentailsClientOf: Static ClientCredentialsClient
+      clientCredentialsClientOf: Static ClientCredentialsClient
       clientCredentialGuides: Guides
     password: Password
   oauth-endpoints:
