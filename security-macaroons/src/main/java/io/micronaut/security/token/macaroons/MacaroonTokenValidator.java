@@ -184,16 +184,19 @@ public class MacaroonTokenValidator implements TokenValidator<HttpRequest<?>> {
         if (caveatPackets == null) {
             return caveats;
         }
-        for (int i = 0; i < caveatPackets.length; i++) {
+        int i = 0;
+        while (i < caveatPackets.length) {
             CaveatPacket caveatPacket = caveatPackets[i];
             if (caveatPacket.getType() == CaveatPacket.Type.cid) {
                 boolean thirdParty = i + 1 < caveatPackets.length && caveatPackets[i + 1].getType() == CaveatPacket.Type.vid;
                 if (thirdParty) {
-                    i++;
+                    i += 2;
+                    continue;
                 } else {
                     caveats.add(new MacaroonCaveat(caveatPacket.getValueAsText()));
                 }
             }
+            i++;
         }
         return caveats;
     }

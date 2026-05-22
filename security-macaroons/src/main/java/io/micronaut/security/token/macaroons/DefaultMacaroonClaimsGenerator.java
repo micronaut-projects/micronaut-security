@@ -51,7 +51,9 @@ class DefaultMacaroonClaimsGenerator implements ClaimsGenerator {
     private static final String ROLES_KEY = "rolesKey";
 
     private final TokenConfiguration tokenConfiguration;
+    @Nullable
     private final JtiGenerator jtiGenerator;
+    @Nullable
     private final ClaimsAudienceProvider claimsAudienceProvider;
     private final String appName;
 

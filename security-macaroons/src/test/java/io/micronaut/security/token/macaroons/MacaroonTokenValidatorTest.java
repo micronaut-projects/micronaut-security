@@ -24,10 +24,13 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
+import io.micronaut.security.token.claims.ClaimsGenerator;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MacaroonTokenValidatorTest {
@@ -67,6 +71,17 @@ class MacaroonTokenValidatorTest {
     }
 
     @Test
+    void generatorAndValidatorCanBeDisabledSeparately() {
+        try (ApplicationContext generatorDisabled = ApplicationContext.run(properties("micronaut.security.token.macaroons.generator-enabled", false));
+             ApplicationContext validatorDisabled = ApplicationContext.run(properties("micronaut.security.token.macaroons.validator-enabled", false))) {
+            assertFalse(generatorDisabled.containsBean(MacaroonTokenGenerator.class));
+            assertTrue(generatorDisabled.containsBean(MacaroonTokenValidator.class));
+            assertTrue(validatorDisabled.containsBean(MacaroonTokenGenerator.class));
+            assertFalse(validatorDisabled.containsBean(MacaroonTokenValidator.class));
+        }
+    }
+
+    @Test
     void generatedTokenCanBeValidated() {
         try (ApplicationContext context = ApplicationContext.run(properties())) {
             MacaroonTokenGenerator generator = context.getBean(MacaroonTokenGenerator.class);
@@ -89,6 +104,23 @@ class MacaroonTokenValidatorTest {
     }
 
     @Test
+    void v1SerializedTokenCanBeValidated() {
+        try (ApplicationContext context = ApplicationContext.run(properties(
+            "micronaut.security.token.macaroons.serialization", MacaroonSerialization.V1,
+            "micronaut.security.token.macaroons.accepted-serializations", List.of(MacaroonSerialization.V1)
+        ))) {
+            MacaroonTokenGenerator generator = context.getBean(MacaroonTokenGenerator.class);
+            MacaroonTokenValidator validator = context.getBean(MacaroonTokenValidator.class);
+            String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
+
+            Authentication result = Mono.from(validator.validateToken(token, HttpRequest.GET("/secure"))).block();
+
+            assertNotNull(result);
+            assertEquals("sherlock", result.getName());
+        }
+    }
+
+    @Test
     void invalidTokensReturnEmptyPublisher() {
         try (ApplicationContext context = ApplicationContext.run(properties());
              ApplicationContext wrongSecretContext = ApplicationContext.run(properties("micronaut.security.token.macaroons.secret", "wrong-secret"))) {
@@ -104,6 +136,20 @@ class MacaroonTokenValidatorTest {
             assertNull(Mono.from(validator.validateToken(expired, HttpRequest.GET("/secure"))).block());
             assertNull(Mono.from(validator.validateToken(addCaveat(token, "unknown = true"), HttpRequest.GET("/secure"))).block());
             assertNull(Mono.from(validator.validateToken(addThirdPartyCaveat(token), HttpRequest.GET("/secure"))).block());
+        }
+    }
+
+    @Test
+    void duplicateClaimCaveatsAreRejected() {
+        try (ApplicationContext context = ApplicationContext.run(properties())) {
+            MacaroonTokenGenerator generator = context.getBean(MacaroonTokenGenerator.class);
+            MacaroonTokenValidator validator = context.getBean(MacaroonTokenValidator.class);
+            String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
+            String duplicateSubjectCaveat = MacaroonClaimsCodec.encodeClaims(Map.of(Claims.SUBJECT, "moriarty")).orElseThrow().get(0);
+
+            Authentication result = Mono.from(validator.validateToken(addCaveat(token, duplicateSubjectCaveat), HttpRequest.GET("/secure"))).block();
+
+            assertNull(result);
         }
     }
 
@@ -154,6 +200,88 @@ class MacaroonTokenValidatorTest {
 
             assertNull(result);
         }
+    }
+
+    @Test
+    void generatorReturnsEmptyWhenClaimsCannotBeEncoded() {
+        MacaroonConfigurationProperties configuration = new MacaroonConfigurationProperties();
+        configuration.setSecret(SECRET);
+        MacaroonTokenGenerator generator = new MacaroonTokenGenerator(configuration, claimsGenerator());
+
+        assertTrue(generator.generateToken(Map.of(Claims.SUBJECT, new Object())).isEmpty());
+        assertTrue(generator.generateToken(Map.of(Claims.SUBJECT, List.of("sherlock", 42))).isEmpty());
+    }
+
+    @Test
+    void generatorReturnsEmptyWithoutSecret() {
+        MacaroonTokenGenerator generator = new MacaroonTokenGenerator(new MacaroonConfigurationProperties(), claimsGenerator());
+
+        assertTrue(generator.generateToken(Map.of(Claims.SUBJECT, "sherlock")).isEmpty());
+    }
+
+    @Test
+    void configurationPropertiesKeepDefaultsAndApplyValidSetters() {
+        MacaroonConfigurationProperties configuration = new MacaroonConfigurationProperties();
+
+        assertTrue(configuration.isEnabled());
+        assertTrue(configuration.isGeneratorEnabled());
+        assertTrue(configuration.isValidatorEnabled());
+        assertNull(configuration.getSecret());
+        assertEquals(MacaroonConfigurationProperties.DEFAULT_LOCATION, configuration.getLocation());
+        assertEquals(MacaroonConfigurationProperties.DEFAULT_IDENTIFIER, configuration.getIdentifier());
+        assertEquals(MacaroonSerialization.V2, configuration.getSerialization());
+        assertEquals(List.of(MacaroonSerialization.V2, MacaroonSerialization.V1), configuration.getAcceptedSerializations());
+        assertTrue(configuration.getCaveats().isEmpty());
+
+        configuration.setEnabled(false);
+        configuration.setGeneratorEnabled(false);
+        configuration.setValidatorEnabled(false);
+        configuration.setSecret(SECRET);
+        configuration.setLocation("");
+        configuration.setIdentifier("");
+        configuration.setSerialization(MacaroonSerialization.V1);
+        configuration.setAcceptedSerializations(List.of());
+        configuration.setCaveats(List.of("request-path = /secure"));
+
+        assertFalse(configuration.isEnabled());
+        assertFalse(configuration.isGeneratorEnabled());
+        assertFalse(configuration.isValidatorEnabled());
+        assertEquals(SECRET, configuration.getSecret());
+        assertEquals(MacaroonConfigurationProperties.DEFAULT_LOCATION, configuration.getLocation());
+        assertEquals(MacaroonConfigurationProperties.DEFAULT_IDENTIFIER, configuration.getIdentifier());
+        assertEquals(MacaroonSerialization.V1, configuration.getSerialization());
+        assertEquals(List.of(MacaroonSerialization.V2, MacaroonSerialization.V1), configuration.getAcceptedSerializations());
+        assertEquals(List.of("request-path = /secure"), configuration.getCaveats());
+
+        configuration.setLocation("application");
+        configuration.setIdentifier("login");
+        configuration.setAcceptedSerializations(List.of(MacaroonSerialization.V1));
+
+        assertEquals("application", configuration.getLocation());
+        assertEquals("login", configuration.getIdentifier());
+        assertEquals(List.of(MacaroonSerialization.V1), configuration.getAcceptedSerializations());
+    }
+
+    @Test
+    void authenticationContextCopiesClaimsAndCaveats() {
+        Map<String, Object> claims = new LinkedHashMap<>();
+        claims.put(Claims.SUBJECT, "sherlock");
+        List<MacaroonCaveat> caveats = new ArrayList<>();
+        caveats.add(new MacaroonCaveat("first"));
+        MacaroonAuthenticationContext context = new MacaroonAuthenticationContext("loc", "id", MacaroonSerialization.V2, claims, caveats);
+
+        claims.put(Claims.SUBJECT, "moriarty");
+        caveats.add(new MacaroonCaveat("second"));
+
+        assertEquals("loc", context.getLocation());
+        assertEquals("id", context.getIdentifier());
+        assertEquals(MacaroonSerialization.V2, context.getSerialization());
+        assertEquals("sherlock", context.getClaims().get(Claims.SUBJECT));
+        assertEquals(List.of(new MacaroonCaveat("first")), context.getCaveats());
+        assertThrows(UnsupportedOperationException.class, () -> context.getClaims().put("other", "value"));
+        assertThrows(UnsupportedOperationException.class, () -> context.getCaveats().add(new MacaroonCaveat("third")));
+        assertEquals(new MacaroonCaveat("first").hashCode(), context.getCaveats().get(0).hashCode());
+        assertFalse(context.getCaveats().get(0).equals(new MacaroonCaveat("other")));
     }
 
     @Test
@@ -215,6 +343,23 @@ class MacaroonTokenValidatorTest {
     private static String tamper(String token) {
         char replacement = token.charAt(token.length() - 1) == 'a' ? 'b' : 'a';
         return token.substring(0, token.length() - 1) + replacement;
+    }
+
+    private static ClaimsGenerator claimsGenerator() {
+        return new ClaimsGenerator() {
+            @Override
+            public Map<String, Object> generateClaims(Authentication authentication, Integer expiration) {
+                Map<String, Object> claims = new LinkedHashMap<>();
+                claims.put(Claims.SUBJECT, authentication.getName());
+                claims.put(Claims.ISSUED_AT, new Date());
+                return claims;
+            }
+
+            @Override
+            public Map<String, Object> generateClaimsSet(Map<String, ?> oldClaims, Integer expiration) {
+                return Map.copyOf(oldClaims);
+            }
+        };
     }
 
     @Requires(property = "spec.name", value = "MacaroonTokenValidatorTest")
