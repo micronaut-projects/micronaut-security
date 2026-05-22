@@ -31,5 +31,6 @@ public interface PasetoBuilderGenerator {
      * @return a {@link PasetoBuilder} which will be used to sign a Paseto token.
      */
     @NonNull
-    PasetoBuilder<?> builder();
+    @SuppressWarnings("rawtypes")
+    PasetoBuilder builder();
 }

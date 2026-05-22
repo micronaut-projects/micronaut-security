@@ -42,10 +42,10 @@ public final class PasetoClaimsSet {
 
         if (value == null) {
             return null;
-        } else if (value instanceof Instant) {
-            return (Instant) value;
-        } else if (value instanceof Number) {
-            return Instant.ofEpochSecond(((Number) value).longValue());
+        } else if (value instanceof Instant instant) {
+            return instant;
+        } else if (value instanceof Number number) {
+            return Instant.ofEpochSecond(number.longValue());
         } else {
             return null;
         }
@@ -146,8 +146,6 @@ public final class PasetoClaimsSet {
             claim(Claims.TOKEN_ID, jti);
             return this;
         }
-
-        //TODO:  Add Support for footer in token
 
         /**
          * Set the specified claim.

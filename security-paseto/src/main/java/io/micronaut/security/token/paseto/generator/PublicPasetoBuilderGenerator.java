@@ -38,7 +38,8 @@ public class PublicPasetoBuilderGenerator implements PasetoBuilderGenerator {
 
     @Override
     @NonNull
-    public PasetoBuilder<?> builder() {
+    @SuppressWarnings("rawtypes")
+    public PasetoBuilder builder() {
         switch (configuration.getVersion()) {
             case V2:
                 return Pasetos.V2.PUBLIC.builder().setPrivateKey(configuration.getPrivateKey());

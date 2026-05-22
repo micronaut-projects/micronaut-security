@@ -26,6 +26,10 @@ import io.micronaut.security.token.paseto.config.RequiredConfiguration;
 import io.micronaut.security.token.paseto.config.SharedSecretConfiguration;
 import jakarta.inject.Singleton;
 
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+
 /**
  * {@link Factory} to generate beans of type {@link PasetoParser} for beans of type {@link PublicKeyConfiguration} or {@link SharedSecretConfiguration}.
  * @author Sergio del Amo
@@ -64,6 +68,15 @@ public class PasetoParserFactory {
     @NonNull
     private PasetoParserBuilder populateBuilder(@NonNull PasetoParserBuilder builder,
                                                 @NonNull RequiredConfiguration configuration) {
+        builder = populateRequiredStandardClaims(builder, configuration);
+        builder = populateRequiredClaimPredicates(builder, configuration.getRequiredClaimsPredicate(), PasetoParserFactory::require);
+        builder = populateRequiredClaimValues(builder, configuration.getRequiredClaimsValue());
+        return populateRequiredClaimPredicates(builder, configuration.getRequiredFooterPredicate(), PasetoParserFactory::requireFooter);
+    }
+
+    @NonNull
+    private PasetoParserBuilder populateRequiredStandardClaims(@NonNull PasetoParserBuilder builder,
+                                                               @NonNull RequiredConfiguration configuration) {
         if (configuration.getRequiredAudience() != null) {
             builder = builder.requireAudience(configuration.getRequiredAudience());
         }
@@ -88,21 +101,41 @@ public class PasetoParserFactory {
         if (configuration.getRequiredNotBefore() != null) {
             builder = builder.requireNotBefore(configuration.getRequiredNotBefore());
         }
-        if (configuration.getRequiredClaimsPredicate() != null) {
-            for (String claimName : configuration.getRequiredClaimsPredicate().keySet()) {
-                builder = builder.require(claimName, configuration.getRequiredClaimsPredicate().get(claimName));
-            }
-        }
-        if (configuration.getRequiredClaimsValue() != null) {
-            for (String claimName : configuration.getRequiredClaimsValue().keySet()) {
-                builder = builder.require(claimName, configuration.getRequiredClaimsValue().get(claimName));
-            }
-        }
-        if (configuration.getRequiredFooterPredicate() != null) {
-            for (String claimName : configuration.getRequiredFooterPredicate().keySet()) {
-                builder = builder.requireFooter(claimName, configuration.getRequiredFooterPredicate().get(claimName));
+        return builder;
+    }
+
+    @NonNull
+    private PasetoParserBuilder populateRequiredClaimValues(@NonNull PasetoParserBuilder builder,
+                                                            Map<String, Object> requiredClaims) {
+        if (requiredClaims != null) {
+            for (Map.Entry<String, Object> claim : requiredClaims.entrySet()) {
+                builder = builder.require(claim.getKey(), claim.getValue());
             }
         }
         return builder;
+    }
+
+    @NonNull
+    private PasetoParserBuilder populateRequiredClaimPredicates(@NonNull PasetoParserBuilder builder,
+                                                                Map<String, Predicate<Object>> requiredClaims,
+                                                                BiFunction<PasetoParserBuilder, Map.Entry<String, Predicate<Object>>, PasetoParserBuilder> require) {
+        if (requiredClaims != null) {
+            for (Map.Entry<String, Predicate<Object>> claim : requiredClaims.entrySet()) {
+                builder = require.apply(builder, claim);
+            }
+        }
+        return builder;
+    }
+
+    @NonNull
+    private static PasetoParserBuilder require(@NonNull PasetoParserBuilder builder,
+                                               @NonNull Map.Entry<String, Predicate<Object>> claim) {
+        return builder.require(claim.getKey(), claim.getValue());
+    }
+
+    @NonNull
+    private static PasetoParserBuilder requireFooter(@NonNull PasetoParserBuilder builder,
+                                                     @NonNull Map.Entry<String, Predicate<Object>> claim) {
+        return builder.requireFooter(claim.getKey(), claim.getValue());
     }
 }

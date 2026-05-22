@@ -15,11 +15,9 @@
  */
 package io.micronaut.security.token.paseto.validator;
 
-import dev.paseto.jpaseto.ClaimPasetoException;
 import dev.paseto.jpaseto.Paseto;
 import dev.paseto.jpaseto.PasetoException;
 import dev.paseto.jpaseto.PasetoParser;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.validator.TokenValidator;
@@ -47,7 +45,7 @@ public class PasetoTokenValidator implements TokenValidator<HttpRequest<?>> {
 
     @Override
     public Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
-        return parse(token, request)
+        return parse(token)
                 .flatMap(pasetoAuthenticationFactory::createAuthentication)
                 .map(Mono::just)
                 .orElse(Mono.empty());
@@ -56,17 +54,12 @@ public class PasetoTokenValidator implements TokenValidator<HttpRequest<?>> {
     /**
      * Validates the supplied token with any configurations and claim validators present.
      *
-     * @param token   The Paseto string
-     * @param request HTTP request
+     * @param token The Paseto string
      * @return An optional Paseto token if validation succeeds
      */
-    private Optional<Paseto> parse(String token, @Nullable HttpRequest<?> request) {
+    private Optional<Paseto> parse(String token) {
         try {
             return Optional.of(pasetoParser.parse(token));
-        } catch (ClaimPasetoException e) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Failed to parse Paseto token: {}", e.getMessage());
-            }
         } catch (PasetoException e) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Failed to parse Paseto token: {}", e.getMessage());

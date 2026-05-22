@@ -20,6 +20,28 @@ class LocalValidatorsSpec extends ApplicationContextSpecification {
         getBeansOfType(SharedSecretConfiguration).size() == 2
     }
 
+    void "local validator exposes shared secret and required claims"() {
+        given:
+        def sharedSecret = Keys.secretKey()
+        def configuration = new LocalValidators()
+
+        when:
+        configuration.base64SharedSecret = sharedSecret
+        configuration.requiredAudience = 'audience'
+        configuration.requiredKeyId = 'kid'
+        configuration.requiredIssuer = 'issuer'
+        configuration.requiredSubject = 'subject'
+        configuration.requiredTokenId = 'token-id'
+
+        then:
+        configuration.sharedSecret.is(sharedSecret)
+        configuration.requiredAudience == 'audience'
+        configuration.requiredKeyId == 'kid'
+        configuration.requiredIssuer == 'issuer'
+        configuration.requiredSubject == 'subject'
+        configuration.requiredTokenId == 'token-id'
+    }
+
     private static String generateSharedSecret() {
         new String(Keys.secretKey().getEncoded(), StandardCharsets.UTF_8)
     }

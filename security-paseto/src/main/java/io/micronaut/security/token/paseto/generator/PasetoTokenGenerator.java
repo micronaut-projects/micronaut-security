@@ -50,8 +50,9 @@ public class PasetoTokenGenerator implements TokenGenerator {
      * @param claims the map of claims
      * @return the created Paseto
      */
+    @SuppressWarnings("rawtypes")
     private String generate(final Map<String, Object> claims) {
-        final PasetoBuilder<?> builder = pasetoBuilderGenerator.builder();
+        final PasetoBuilder builder = pasetoBuilderGenerator.builder();
         for (final Map.Entry<String, Object> entry : claims.entrySet()) {
             builder.claim(entry.getKey(), entry.getValue());
         }

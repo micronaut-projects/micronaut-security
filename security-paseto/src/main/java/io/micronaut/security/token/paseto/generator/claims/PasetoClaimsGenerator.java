@@ -32,7 +32,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Utsav Varia
@@ -152,8 +151,6 @@ public class PasetoClaimsGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
 
-        //TODO:  Add Support for footer in token
-
         PasetoClaimsSet claimsSet = builder.build();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Generated claim set:");
@@ -172,7 +169,7 @@ public class PasetoClaimsGenerator implements ClaimsGenerator {
         for (String k : oldClaims.keySet()
                 .stream()
                 .filter(p -> !excludedClaims.contains(p))
-                .collect(Collectors.toList())) {
+                .toList()) {
             builder.claim(k, oldClaims.get(k));
         }
         populateExp(builder, expiration);
