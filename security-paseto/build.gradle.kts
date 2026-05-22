@@ -6,7 +6,11 @@ dependencies {
     api(mn.micronaut.http.server)
     api(projects.micronautSecurity)
     api(libs.managed.jpaseto.api)
-    implementation(libs.managed.jpaseto.bouncy.castle)
+    implementation(platform(libs.managed.jackson.bom))
+    implementation(libs.managed.bcprov.jdk18on)
+    implementation(libs.managed.jpaseto.bouncy.castle) {
+        exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
+    }
     implementation(libs.managed.jpaseto.impl)
     implementation(libs.managed.jpaseto.jackson)
     implementation(mnReactor.micronaut.reactor)
