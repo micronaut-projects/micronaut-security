@@ -41,7 +41,7 @@ class ClientCredentialsClientOfTest {
                 .clientSecret(clientSecret)
                 .token(tokenUrl)
                 .build());
-//tag::clientcredentialsof[]
+//end::clientcredentialsof[]
             // Request a token
             TokenResponse tokenResponse = Mono.from(clientCredentialsClient.requestToken()).block();
             assertNotNull(tokenResponse);
