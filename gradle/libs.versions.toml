@@ -1,5 +1,6 @@
 [versions]
 managed-nimbus-jose-jwt = "10.9"
+managed-biscuit = "4.0.1"
 managed-jjwt = "0.13.0"
 micronaut = "5.0.0"
 micronaut-platform = "5.0.0-RC1"
@@ -42,6 +43,7 @@ micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref 
 micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
+managed-biscuit = { module = "org.biscuitsec:biscuit", version.ref = "managed-biscuit" }
 managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed-jjwt" }
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
@@ -65,4 +67,3 @@ testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
-

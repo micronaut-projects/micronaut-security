@@ -82,6 +82,7 @@ authenticationStrategies:
     render:
       title: Token Render
     jwtGuides: Guides
+  biscuit: Biscuit
   ldap:
     title: LDAP Authentication
     configuration: Configuration
