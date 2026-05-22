@@ -69,7 +69,7 @@ public class HtmlSanitizerConfigurationProperties implements HtmlSanitizerConfig
 
     @Override
     public List<HtmlSanitizerPolicy> getPolicies() {
-        return policies;
+        return List.copyOf(policies);
     }
 
     /**

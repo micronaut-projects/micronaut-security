@@ -26,11 +26,13 @@ import org.junit.jupiter.api.Test;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OwaspHtmlSanitizerTest {
@@ -123,6 +125,16 @@ class OwaspHtmlSanitizerTest {
 
             assertTrue(sanitized.contains("<img"));
             assertTrue(sanitized.contains("src=\"https://example.com/a.png\""));
+        }
+    }
+
+    @Test
+    void configurationPoliciesCannotBeMutatedThroughGetter() {
+        try (ApplicationContext context = ApplicationContext.run()) {
+            HtmlSanitizerConfiguration configuration = context.getBean(HtmlSanitizerConfiguration.class);
+            List<HtmlSanitizerPolicy> policies = configuration.getPolicies();
+
+            assertThrows(UnsupportedOperationException.class, () -> policies.add(HtmlSanitizerPolicy.IMAGES));
         }
     }
 

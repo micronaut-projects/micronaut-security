@@ -48,4 +48,4 @@ class HtmlSanitizerPolicyFactory {
 
 To replace the module completely, provide your own api:micronaut.http.util.HtmlSanitizer[] bean. To disable the module without removing the dependency, set `micronaut.security.html-sanitizer.enabled=false`.
 
-Only trust the sanitized output returned by api:micronaut.http.util.HtmlSanitizer[]. Keep contextual output encoding and template escaping enabled, and do not treat removed tags or attributes as proof that the original input was safe.
+When rendering untrusted HTML, discard the original input and render only the sanitized output returned by api:micronaut.http.util.HtmlSanitizer[]. Keep contextual output encoding and template escaping enabled, and do not treat removed tags or attributes as proof that the original input was safe.
