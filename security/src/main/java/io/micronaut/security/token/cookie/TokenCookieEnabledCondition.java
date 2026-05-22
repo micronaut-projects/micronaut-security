@@ -32,8 +32,8 @@ final class TokenCookieEnabledCondition implements Condition {
     public boolean matches(ConditionContext context) {
         PropertyResolver propertyResolver = context.getBeanContext().getBean(PropertyResolver.class);
         String propertyName = TokenCookieConfigurationProperties.PREFIX + ".enabled";
-        return propertyResolver.containsProperty(propertyName)
-            && propertyResolver.get(propertyName, Boolean.class).orElse(false)
-            || cookieBasedAuthenticationModeCondition.matches(context);
+        boolean explicitCookieTokenReaderOptIn = propertyResolver.containsProperty(propertyName)
+            && propertyResolver.get(propertyName, Boolean.class).orElse(false);
+        return explicitCookieTokenReaderOptIn || cookieBasedAuthenticationModeCondition.matches(context);
     }
 }

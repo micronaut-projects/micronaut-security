@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Reads the token from the configured io.micronaut.security.token.jwt.cookie.
+ * Reads the token from the configured {@value TokenCookieConfigurationProperties#PREFIX}.
  *
  * @author Sergio del Amo
  * @since 1.0
