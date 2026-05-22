@@ -100,8 +100,8 @@ public class MacaroonTokenValidator implements TokenValidator<HttpRequest<?>> {
     private Optional<Authentication> validate(Macaroon macaroon,
                                               MacaroonSerialization serialization,
                                               @Nullable HttpRequest<?> request) {
-        String secret = configuration.getSecret();
-        if (StringUtils.isEmpty(secret)) {
+        @Nullable String configuredSecret = configuration.getSecret();
+        if (configuredSecret == null || configuredSecret.isEmpty()) {
             return Optional.empty();
         }
 
@@ -130,7 +130,7 @@ public class MacaroonTokenValidator implements TokenValidator<HttpRequest<?>> {
         }
 
         try {
-            if (!verifier.isValid(secret)) {
+            if (!verifier.isValid(configuredSecret)) {
                 debug(LOG, "Macaroon validation failed");
                 return Optional.empty();
             }
@@ -157,7 +157,6 @@ public class MacaroonTokenValidator implements TokenValidator<HttpRequest<?>> {
                 }
             } catch (RuntimeException e) {
                 debug(LOG, "Macaroon caveat verifier failed: {}", e.getClass().getSimpleName());
-                return false;
             }
         }
         return false;

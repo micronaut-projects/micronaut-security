@@ -26,9 +26,11 @@ import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -94,7 +96,7 @@ class MacaroonTokenValidatorTest {
             );
             String token = generator.generateToken(authentication, 60).orElseThrow();
 
-            Authentication result = Mono.from(validator.validateToken(token, HttpRequest.GET("/secure"))).block();
+            Authentication result = block(validator.validateToken(token, HttpRequest.GET("/secure")));
 
             assertNotNull(result);
             assertEquals("sherlock", result.getName());
@@ -113,7 +115,7 @@ class MacaroonTokenValidatorTest {
             MacaroonTokenValidator validator = context.getBean(MacaroonTokenValidator.class);
             String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
 
-            Authentication result = Mono.from(validator.validateToken(token, HttpRequest.GET("/secure"))).block();
+            Authentication result = block(validator.validateToken(token, HttpRequest.GET("/secure")));
 
             assertNotNull(result);
             assertEquals("sherlock", result.getName());
@@ -130,12 +132,12 @@ class MacaroonTokenValidatorTest {
             String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
             String expired = generator.generateToken(Authentication.build("watson"), -1).orElseThrow();
 
-            assertNull(Mono.from(validator.validateToken("not-a-macaroon", HttpRequest.GET("/secure"))).block());
-            assertNull(Mono.from(validator.validateToken(tamper(token), HttpRequest.GET("/secure"))).block());
-            assertNull(Mono.from(wrongSecretValidator.validateToken(token, HttpRequest.GET("/secure"))).block());
-            assertNull(Mono.from(validator.validateToken(expired, HttpRequest.GET("/secure"))).block());
-            assertNull(Mono.from(validator.validateToken(addCaveat(token, "unknown = true"), HttpRequest.GET("/secure"))).block());
-            assertNull(Mono.from(validator.validateToken(addThirdPartyCaveat(token), HttpRequest.GET("/secure"))).block());
+            assertNull(block(validator.validateToken("not-a-macaroon", HttpRequest.GET("/secure"))));
+            assertNull(block(validator.validateToken(tamper(token), HttpRequest.GET("/secure"))));
+            assertNull(block(wrongSecretValidator.validateToken(token, HttpRequest.GET("/secure"))));
+            assertNull(block(validator.validateToken(expired, HttpRequest.GET("/secure"))));
+            assertNull(block(validator.validateToken(addCaveat(token, "unknown = true"), HttpRequest.GET("/secure"))));
+            assertNull(block(validator.validateToken(addThirdPartyCaveat(token), HttpRequest.GET("/secure"))));
         }
     }
 
@@ -147,7 +149,7 @@ class MacaroonTokenValidatorTest {
             String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
             String duplicateSubjectCaveat = MacaroonClaimsCodec.encodeClaims(Map.of(Claims.SUBJECT, "moriarty")).orElseThrow().get(0);
 
-            Authentication result = Mono.from(validator.validateToken(addCaveat(token, duplicateSubjectCaveat), HttpRequest.GET("/secure"))).block();
+            Authentication result = block(validator.validateToken(addCaveat(token, duplicateSubjectCaveat), HttpRequest.GET("/secure")));
 
             assertNull(result);
         }
@@ -163,7 +165,7 @@ class MacaroonTokenValidatorTest {
             String token = wrongSecretGenerator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
             String caveated = addCaveat(token, "throws = malformed");
 
-            Authentication result = assertDoesNotThrow(() -> Mono.from(validator.validateToken(caveated, HttpRequest.GET("/secure"))).block());
+            Authentication result = assertDoesNotThrow(() -> block(validator.validateToken(caveated, HttpRequest.GET("/secure"))));
 
             assertNull(result);
             assertEquals(1, ThrowingCaveatVerifier.invocations.get());
@@ -180,7 +182,7 @@ class MacaroonTokenValidatorTest {
                 Claims.EXPIRATION_TIME, "1"
             )).orElseThrow();
 
-            Authentication result = Mono.from(validator.validateToken(token, HttpRequest.GET("/secure"))).block();
+            Authentication result = block(validator.validateToken(token, HttpRequest.GET("/secure")));
 
             assertNull(result);
         }
@@ -196,7 +198,7 @@ class MacaroonTokenValidatorTest {
                 Claims.NOT_BEFORE, Long.MAX_VALUE
             )).orElseThrow();
 
-            Authentication result = Mono.from(validator.validateToken(token, HttpRequest.GET("/secure"))).block();
+            Authentication result = block(validator.validateToken(token, HttpRequest.GET("/secure")));
 
             assertNull(result);
         }
@@ -292,8 +294,8 @@ class MacaroonTokenValidatorTest {
             String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
             String caveated = addCaveat(token, "request-path = /secure");
 
-            Authentication result = Mono.from(validator.validateToken(caveated, HttpRequest.GET("/secure"))).block();
-            Authentication rejected = Mono.from(validator.validateToken(caveated, HttpRequest.GET("/other"))).block();
+            Authentication result = block(validator.validateToken(caveated, HttpRequest.GET("/secure")));
+            Authentication rejected = block(validator.validateToken(caveated, HttpRequest.GET("/other")));
 
             assertNotNull(result);
             assertEquals("sherlock", result.getName());
@@ -309,7 +311,7 @@ class MacaroonTokenValidatorTest {
             TokenAuthenticationFetcher fetcher = context.getBean(TokenAuthenticationFetcher.class);
             String token = generator.generateToken(Authentication.build("sherlock"), 60).orElseThrow();
 
-            Authentication result = Mono.from(fetcher.fetchAuthentication(HttpRequest.GET("/secure").bearerAuth(token))).block();
+            Authentication result = block(fetcher.fetchAuthentication(HttpRequest.GET("/secure").bearerAuth(token)));
 
             assertNotNull(result);
             assertEquals("sherlock", result.getName());
@@ -343,6 +345,10 @@ class MacaroonTokenValidatorTest {
     private static String tamper(String token) {
         char replacement = token.charAt(token.length() - 1) == 'a' ? 'b' : 'a';
         return token.substring(0, token.length() - 1) + replacement;
+    }
+
+    private static Authentication block(Publisher<Authentication> publisher) {
+        return Mono.from(publisher).block(Duration.ofSeconds(5));
     }
 
     private static ClaimsGenerator claimsGenerator() {

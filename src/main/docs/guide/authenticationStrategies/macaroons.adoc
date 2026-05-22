@@ -1,3 +1,5 @@
+== Macaroons
+
 Macaroons are bearer tokens with signed, contextual caveats. Micronaut Security supports first-party Macaroon access tokens through the optional `micronaut-security-macaroons` module.
 
 Add the dependency to your application:

@@ -70,8 +70,8 @@ public class MacaroonTokenGenerator implements TokenGenerator {
 
     @Override
     public Optional<String> generateToken(Map<String, Object> claims) {
-        String secret = configuration.getSecret();
-        if (StringUtils.isEmpty(secret)) {
+        @Nullable String configuredSecret = configuration.getSecret();
+        if (configuredSecret == null || configuredSecret.isEmpty()) {
             debug(LOG, "Macaroon token generation skipped because no root secret is configured");
             return Optional.empty();
         }
@@ -81,7 +81,7 @@ public class MacaroonTokenGenerator implements TokenGenerator {
             return Optional.empty();
         }
         try {
-            MacaroonsBuilder builder = Macaroon.builder(configuration.getLocation(), secret, configuration.getIdentifier());
+            MacaroonsBuilder builder = Macaroon.builder(configuration.getLocation(), configuredSecret, configuration.getIdentifier());
             for (String caveat : claimCaveats.get()) {
                 builder.addCaveat(caveat);
             }
