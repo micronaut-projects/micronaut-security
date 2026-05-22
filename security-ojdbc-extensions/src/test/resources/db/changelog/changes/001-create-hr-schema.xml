@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="001-create-hr-schema" author="sdelamo">
+
+        <createTable tableName="DEPARTMENTS">
+            <column name="DEPARTMENT_ID" type="NUMBER">
+                <constraints primaryKey="true" primaryKeyName="PK_DEPARTMENTS" nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(128)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(256)"/>
+        </createTable>
+
+        <createTable tableName="JOB_DEFINITIONS">
+            <column name="JOB_CODE" type="VARCHAR2(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_JOB_DEFINITIONS" nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(128)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(256)"/>
+            <column name="TYPE" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="EMPLOYEES">
+            <column name="EMPLOYEE_ID" type="NUMBER">
+                <constraints primaryKey="true" primaryKeyName="PK_EMPLOYEES" nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR2(50)"/>
+            <column name="LAST_NAME" type="VARCHAR2(50)"/>
+            <column name="JOB_CODE" type="VARCHAR2(10)"/>
+            <column name="DEPARTMENT_ID" type="NUMBER"/>
+            <column name="SSN" type="VARCHAR2(20)"/>
+            <column name="PHOTO" type="BLOB"/>
+            <column name="SALARY" type="NUMBER(10,2)"/>
+            <column name="USER_NAME" type="VARCHAR2(128)"/>
+            <column name="MANAGER_ID" type="NUMBER"/>
+        </createTable>
+
+        <createTable tableName="MANAGERS">
+            <column name="MANAGER_ID" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ID" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MGR_USER_NAME" type="VARCHAR2(128)"/>
+            <column name="MGR_FIRST_NAME" type="VARCHAR2(50)"/>
+            <column name="MGR_LAST_NAME" type="VARCHAR2(50)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="MANAGERS"
+                       columnNames="MANAGER_ID, EMPLOYEE_ID"
+                       constraintName="PK_MANAGERS"/>
+
+        <createTable tableName="EMP_PAYSTUBS">
+            <column name="PAYSTUB_ID" type="NUMBER">
+                <constraints primaryKey="true" primaryKeyName="PK_EMP_PAYSTUBS" nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ID" type="NUMBER"/>
+            <column name="PAY_PERIOD_START" type="DATE"/>
+            <column name="PAY_PERIOD_END" type="DATE"/>
+            <column name="GROSS_PAY" type="NUMBER(8,2)"/>
+            <column name="NET_PAY" type="NUMBER(8,2)"/>
+            <column name="TAX_WITHHELD" type="NUMBER(8,2)"/>
+            <column name="DEDUCTIONS" type="NUMBER(8,2)"/>
+            <column name="PAY_DATE" type="DATE"/>
+            <column name="BANK_ACCOUNT" type="VARCHAR2(50)"/>
+        </createTable>
+
+        <createTable tableName="EMP_CONTACT_DETAILS">
+            <column name="EMPLOYEE_ID" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(128)"/>
+            <column name="PHONE" type="VARCHAR2(20)"/>
+            <column name="LOCATION" type="VARCHAR2(128)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="EMP_CONTACT_DETAILS"
+                       columnNames="EMPLOYEE_ID, TYPE"
+                       constraintName="PK_EMP_CONTACT_DETAILS"/>
+
+        <createTable tableName="EMP_BENEFICIARIES">
+            <column name="BENEFICIARY_ID" type="NUMBER">
+                <constraints primaryKey="true" primaryKeyName="PK_EMP_BENEFICIARIES" nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ID" type="NUMBER"/>
+            <column name="FIRST_NAME" type="VARCHAR2(50)"/>
+            <column name="LAST_NAME" type="VARCHAR2(50)"/>
+            <column name="RELATIONSHIP" type="VARCHAR2(50)"/>
+        </createTable>
+
+        <createTable tableName="PERFORMANCE_GOALS">
+            <column name="GOAL_ID" type="NUMBER">
+                <constraints primaryKey="true" primaryKeyName="PK_PERFORMANCE_GOALS" nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ID" type="NUMBER"/>
+            <column name="GOAL_NAME" type="VARCHAR2(128)"/>
+            <column name="YEAR" type="NUMBER(4)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(4000)"/>
+            <column name="EMP_COMMENTS" type="VARCHAR2(4000)"/>
+            <column name="MGR_FEEDBACK" type="VARCHAR2(4000)"/>
+            <column name="MGR_PRIVATE_NOTES" type="VARCHAR2(4000)"/>
+            <column name="EMP_OVERALL_RATING" type="NUMBER"/>
+            <column name="MGR_OVERALL_RATING" type="NUMBER"/>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="EMP_TIMECARDS">
+            <column name="WEEK_START_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ID" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MONDAY_HOURS" type="NUMBER(2)"/>
+            <column name="MONDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="TUESDAY_HOURS" type="NUMBER(2)"/>
+            <column name="TUESDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="WEDNESDAY_HOURS" type="NUMBER(2)"/>
+            <column name="WEDNESDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="THURSDAY_HOURS" type="NUMBER(2)"/>
+            <column name="THURSDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="FRIDAY_HOURS" type="NUMBER(2)"/>
+            <column name="FRIDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="SATURDAY_HOURS" type="NUMBER(2)"/>
+            <column name="SATURDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="SUNDAY_HOURS" type="NUMBER(2)"/>
+            <column name="SUNDAY_TYPE" type="VARCHAR2(20)"/>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="EMP_TIMECARDS"
+                       columnNames="WEEK_START_DATE, EMPLOYEE_ID"
+                       constraintName="PK_EMP_TIMECARDS"/>
+
+        <addForeignKeyConstraint baseTableName="EMPLOYEES"
+                                 baseColumnNames="JOB_CODE"
+                                 referencedTableName="JOB_DEFINITIONS"
+                                 referencedColumnNames="JOB_CODE"
+                                 constraintName="FK_EMPLOYEES_JOB_CODE"/>
+
+        <addForeignKeyConstraint baseTableName="EMPLOYEES"
+                                 baseColumnNames="DEPARTMENT_ID"
+                                 referencedTableName="DEPARTMENTS"
+                                 referencedColumnNames="DEPARTMENT_ID"
+                                 constraintName="FK_EMPLOYEES_DEPARTMENT"/>
+
+        <addForeignKeyConstraint baseTableName="EMPLOYEES"
+                                 baseColumnNames="MANAGER_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_EMPLOYEES_MANAGER"/>
+
+        <addForeignKeyConstraint baseTableName="MANAGERS"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_MANAGERS_EMPLOYEE"/>
+
+        <addForeignKeyConstraint baseTableName="MANAGERS"
+                                 baseColumnNames="MANAGER_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_MANAGERS_MANAGER"/>
+
+        <addForeignKeyConstraint baseTableName="EMP_PAYSTUBS"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_PAYSTUBS_EMPLOYEE"/>
+
+        <addForeignKeyConstraint baseTableName="EMP_CONTACT_DETAILS"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_CONTACT_DETAILS_EMPLOYEE"/>
+
+        <addForeignKeyConstraint baseTableName="EMP_BENEFICIARIES"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_BENEFICIARIES_EMPLOYEE"/>
+
+        <addForeignKeyConstraint baseTableName="PERFORMANCE_GOALS"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_GOALS_EMPLOYEE"/>
+
+        <addForeignKeyConstraint baseTableName="EMP_TIMECARDS"
+                                 baseColumnNames="EMPLOYEE_ID"
+                                 referencedTableName="EMPLOYEES"
+                                 referencedColumnNames="EMPLOYEE_ID"
+                                 constraintName="FK_TIMECARDS_EMPLOYEE"/>
+
+        <sql>
+            ALTER TABLE JOB_DEFINITIONS
+            ADD CONSTRAINT CHK_JOB_DEFINITIONS_TYPE
+            CHECK (TYPE IN ('IC', 'HR', 'MANAGER'))
+        </sql>
+
+        <sql>
+            ALTER TABLE EMP_CONTACT_DETAILS
+            ADD CONSTRAINT CHK_EMP_CONTACT_DETAILS_TYPE
+            CHECK (TYPE IN ('HOME', 'WORK'))
+        </sql>
+
+        <sql>
+            ALTER TABLE PERFORMANCE_GOALS
+            ADD CONSTRAINT CHK_PERFORMANCE_GOALS_STATUS
+            CHECK (STATUS IN ('Self Evaluation', 'Manager Evaluation', 'Completed'))
+        </sql>
+
+        <sql>
+            ALTER TABLE EMP_TIMECARDS
+            ADD CONSTRAINT CHK_EMP_TIMECARDS_STATUS
+            CHECK (STATUS IN ('Not submitted', 'Submitted', 'Approved', 'Rejected'))
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,5 @@
+Micronaut Security provides the `micronaut-security-ojdbc-extensions` module for integration with https://github.com/oracle/ojdbc-extensions[Oracle JDBC Driver Extensions].
+
+To use the module, add the following dependency:
+
+dependency:micronaut-security-ojdbc-extensions[groupId=io.micronaut.security]

@@ -10,6 +10,7 @@ system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.4"
 bouncycastle = "1.70"
 bcpkix = "1.70"
+micronaut-liquibase = "7.0.0"
 micronaut-hibernate-validator = "5.0.0"
 micronaut-multitenancy = "6.0.0"
 micronaut-cache = "6.0.0"
@@ -29,6 +30,7 @@ commons-codec = "1.20.0"
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+micronaut-liquibase = { module = 'io.micronaut.liquibase:micronaut-liquibase-bom', version.ref = 'micronaut-liquibase' }
 micronaut-cache = { module = "io.micronaut.cache:micronaut-cache-bom", version.ref = "micronaut-cache" }
 micronaut-hibernate-validator = { module = "io.micronaut.beanvalidation:micronaut-hibernate-validator-bom", version.ref = "micronaut-hibernate-validator" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
@@ -62,7 +64,7 @@ commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-
 testcontainers-selenium = { module = "org.testcontainers:testcontainers-selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter"}
 testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
+testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
-

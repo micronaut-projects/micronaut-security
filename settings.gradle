@@ -50,6 +50,7 @@ enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 micronautBuild {
     useStandardizedProjectNames = true
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-liquibase")
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")

@@ -170,4 +170,5 @@ aot:
   aotConfiguration: Micronaut Security AOT Configuration
   aotOpenidConfiguration: OpenID Configuration Optimization
   aotJwks: JWKS Optimization
+ojdbcExtensions: Oracle JDBC Extensions
 repository: Repository
