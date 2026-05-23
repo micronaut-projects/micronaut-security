@@ -4,7 +4,7 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata
-import io.micronaut.security.oauth2.configuration.OauthClientConfigurationBuilder
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import org.testcontainers.DockerClientFactory
@@ -34,12 +34,13 @@ class ClientCredentialsClientOfSpec extends Specification {
 
         when:
 //tag::clientcredentialsof[]
-        ClientCredentialsClient clientCredentialsClient = ClientCredentialsClient.of(httpClient, OauthClientConfigurationBuilder.builder()
-                .name("test")
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .token(tokenUrl)
-                .build())
+        ClientCredentialsClient clientCredentialsClient = ClientCredentialsClient.of(httpClient,
+                OauthClientConfiguration.builder()
+                        .name("test")
+                        .clientId(clientId)
+                        .clientSecret(clientSecret)
+                        .token(tokenUrl)
+                        .build())
 //end::clientcredentialsof[]
         TokenResponse tokenResponse = Mono.from(clientCredentialsClient.requestToken()).block()
 

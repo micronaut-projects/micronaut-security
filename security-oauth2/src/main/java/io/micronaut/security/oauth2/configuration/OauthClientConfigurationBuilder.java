@@ -58,14 +58,6 @@ public final class OauthClientConfigurationBuilder {
     private boolean proxyWellKnownOpenidConfiguration;
 
     /**
-     * @return A new OAuth client configuration builder.
-     */
-    @NonNull
-    public static OauthClientConfigurationBuilder builder() {
-        return new OauthClientConfigurationBuilder();
-    }
-
-    /**
      * Sets the OAuth client configuration name.
      *
      * @param name The OAuth client configuration name.

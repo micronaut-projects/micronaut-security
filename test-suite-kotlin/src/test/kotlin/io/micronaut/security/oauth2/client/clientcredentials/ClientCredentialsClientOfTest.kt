@@ -4,7 +4,7 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata
-import io.micronaut.security.oauth2.configuration.OauthClientConfigurationBuilder
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import org.junit.jupiter.api.AfterAll
@@ -29,7 +29,7 @@ internal class ClientCredentialsClientOfTest {
 //tag::clientcredentialsof[]
             val clientCredentialsClient = ClientCredentialsClient.of(
                 httpClient,
-                OauthClientConfigurationBuilder.builder()
+                OauthClientConfiguration.builder()
                     .name("test")
                     .clientId(clientId)
                     .clientSecret(clientSecret)

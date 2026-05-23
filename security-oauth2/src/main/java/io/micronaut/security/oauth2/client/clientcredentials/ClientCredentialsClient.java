@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
-
 /**
  * @author Sergio del Amo
  * @since 2.2.0
