@@ -498,22 +498,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @ConfigurationProperties("token")
     @Requires(classes = MediaType.class)
     public static class TokenEndpointConfigurationProperties extends AbstractTokenEndpointConfigurationProperties {
-        @Nullable
-        private ClientAssertionConfigurationProperties clientAssertion;
-
-        @NonNull
-        @Override
-        public Optional<ClientAssertionConfiguration> getClientAssertion() {
-            return Optional.ofNullable(clientAssertion);
-        }
-
         /**
          * JWT client assertion configuration for token endpoint authentication.
          *
          * @param clientAssertion JWT client assertion configuration
          */
         public void setClientAssertion(@Nullable ClientAssertionConfigurationProperties clientAssertion) {
-            this.clientAssertion = clientAssertion;
+            setClientAssertionConfiguration(clientAssertion);
         }
 
         /**
@@ -533,6 +524,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @NonNull
         private MediaType contentType = DEFAULT_CONTENT_TYPE;
 
+        @Nullable
+        private ClientAssertionConfiguration clientAssertion;
+
         @NonNull
         @Override
         public MediaType getContentType() {
@@ -546,6 +540,16 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setContentType(@NonNull MediaType contentType) {
             this.contentType = contentType;
+        }
+
+        @NonNull
+        @Override
+        public Optional<ClientAssertionConfiguration> getClientAssertion() {
+            return Optional.ofNullable(clientAssertion);
+        }
+
+        void setClientAssertionConfiguration(@Nullable ClientAssertionConfiguration clientAssertion) {
+            this.clientAssertion = clientAssertion;
         }
     }
 
@@ -984,22 +988,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @ConfigurationProperties("token")
         @Requires(classes = MediaType.class)
         public static class TokenEndpointConfigurationProperties extends AbstractTokenEndpointConfigurationProperties {
-            @Nullable
-            private ClientAssertionConfigurationProperties clientAssertion;
-
-            @NonNull
-            @Override
-            public Optional<ClientAssertionConfiguration> getClientAssertion() {
-                return Optional.ofNullable(clientAssertion);
-            }
-
             /**
              * JWT client assertion configuration for token endpoint authentication.
              *
              * @param clientAssertion JWT client assertion configuration
              */
             public void setClientAssertion(@Nullable ClientAssertionConfigurationProperties clientAssertion) {
-                this.clientAssertion = clientAssertion;
+                setClientAssertionConfiguration(clientAssertion);
             }
 
             /**
