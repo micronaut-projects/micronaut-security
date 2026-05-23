@@ -42,8 +42,8 @@ internal class ClientCredentialsClientOfTest {
             Assertions.assertNotNull(tokenResponse!!.accessToken)
 
             val newTokenResponse: TokenResponse? = Mono.from(clientCredentialsClient.requestToken()).block()
-            val assertedNewTokenResponse = Assertions.assertNotNull(newTokenResponse)
-            Assertions.assertNotNull(assertedNewTokenResponse.accessToken)
+            Assertions.assertNotNull(newTokenResponse)
+            Assertions.assertNotNull(newTokenResponse!!.accessToken)
             Assertions.assertEquals(tokenResponse, newTokenResponse)
         } finally {
             httpClient.close()
