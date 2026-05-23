@@ -6,12 +6,13 @@ unrelated company, workflow, or template-package policy.
 
 ## Repository Shape
 
-- Confirm the intended target branch before opening a pull request. This
-  repository currently uses `5.1.x` for active development.
-- The root project coordinates the build and documentation. Production modules
-  include `security`, `security-annotations`, `security-aot`, `security-csrf`,
-  `security-jwt`, `security-ldap`, `security-oauth2`, `security-processor`, and
-  `security-session`.
+- Confirm the intended target branch before opening a pull request. Use the
+  repository default branch and current release line unless the issue or
+  maintainer guidance names a different target.
+- The root project coordinates the build and documentation. Key published
+  modules include `security-bom`, `security`, `security-annotations`,
+  `security-aot`, `security-csrf`, `security-jwt`, `security-ldap`,
+  `security-oauth2`, `security-processor`, and `security-session`.
 - `test-suite*` projects provide cross-module and integration coverage,
   including AOT, GraalVM, JWT, JWKS, Keycloak, LDAP, servlet, and serialization
   scenarios. Prefer the closest suite before broadening to full repository
@@ -29,8 +30,8 @@ unrelated company, workflow, or template-package policy.
   Micronaut configuration patterns for configuration models.
 - Use existing JSpecify annotations from `org.jspecify.annotations` for new or
   changed nullability contracts.
-- Mark non-user-facing APIs with `@io.micronaut.core.annotation.Internal`. Mark
-  unstable user-facing APIs with `@Experimental`.
+- Mark non-user-facing APIs with `@Internal`. Mark unstable user-facing APIs
+  with `@Experimental`.
 - Preserve binary compatibility for public APIs. Prefer adding overloads or
   deprecating with replacement guidance over changing existing signatures.
 - Use the Gradle version catalogs for dependencies; do not hard-code dependency
