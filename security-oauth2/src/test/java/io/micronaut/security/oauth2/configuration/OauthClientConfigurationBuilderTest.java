@@ -17,6 +17,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,6 +26,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 class OauthClientConfigurationBuilderTest {
+
+    @Test
+    void builderCreatesOauthClientConfigurationBuilder() {
+        OauthClientConfigurationBuilder builder = OauthClientConfiguration.builder();
+
+        assertNotNull(builder);
+        assertNotSame(builder, OauthClientConfiguration.builder());
+    }
+
+    @Test
+    void builderMethodsReturnSameBuilder() {
+        OauthClientConfigurationBuilder builder = OauthClientConfiguration.builder();
+
+        assertSame(builder, builder.name("auth-server"));
+        assertSame(builder, builder.clientId("client-id"));
+        assertSame(builder, builder.clientSecret("client-secret"));
+        assertSame(builder, builder.scopes("openid"));
+        assertSame(builder, builder.enabled(false));
+        assertSame(builder, builder.grantType(GrantType.PASSWORD));
+        assertSame(builder, builder.token("https://auth.example.com/token"));
+        assertSame(builder, builder.authorization("https://auth.example.com/authorize"));
+        assertSame(builder, builder.clientCredentials());
+        assertSame(builder, builder.introspection("https://auth.example.com/introspect"));
+        assertSame(builder, builder.revocation("https://auth.example.com/revoke"));
+        assertSame(builder, builder.authorizationServer(AuthorizationServer.MICROSOFT));
+        assertSame(builder, builder.proxyWellKnownOauthAuthorizationServer(true));
+        assertSame(builder, builder.proxyWellKnownOpenidConfiguration(true));
+    }
 
     @Test
     void buildRequiresNameAndClientId() {
@@ -64,6 +94,29 @@ class OauthClientConfigurationBuilderTest {
         assertNull(configuration.getAuthorizationServer());
         assertFalse(configuration.isProxyWellKnownOauthAuthorizationServer());
         assertFalse(configuration.isProxyWellKnownOpenidConfiguration());
+    }
+
+    @Test
+    void buildCreatesImmutableSnapshot() {
+        OauthClientConfigurationBuilder builder = OauthClientConfiguration.builder()
+                .name("auth-server")
+                .clientId("client-id")
+                .scopes("openid");
+
+        OauthClientConfiguration configuration = builder.build();
+        builder.name("other-auth-server")
+                .clientId("other-client-id")
+                .scopes("email")
+                .enabled(false)
+                .grantType(GrantType.PASSWORD);
+
+        assertEquals("auth-server", configuration.getName());
+        assertEquals("client-id", configuration.getClientId());
+        assertEquals(List.of("openid"), configuration.getScopes());
+        assertTrue(configuration.isEnabled());
+        assertEquals(GrantType.AUTHORIZATION_CODE, configuration.getGrantType());
+        assertThrows(UnsupportedOperationException.class, () -> configuration.getScopes().add("email"));
+        assertNotSame(builder, configuration);
     }
 
     @Test

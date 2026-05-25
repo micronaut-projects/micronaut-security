@@ -63,27 +63,27 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @param beanContext The bean context
      * @param defaultClientConfiguration The default client configuration
      */
-    public DefaultTokenEndpointClient(BeanContext beanContext,
+    public DefaultTokenEndpointClient(@NonNull BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
-        this(SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration)), beanContext);
+        this(beanContext, () -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
     }
 
     /**
-     *
-     * @param defaultTokenClientSupplier Default Token Client Supplier
      * @param beanContext Bean Context
+     * @param defaultTokenClientSupplier Default Token Client Supplier
      */
-    public DefaultTokenEndpointClient(Supplier<HttpClient> defaultTokenClientSupplier,
-                                      BeanContext beanContext) {
-        this.defaultTokenClient = SupplierUtil.memoized(defaultTokenClientSupplier);
+    public DefaultTokenEndpointClient(@Nullable BeanContext beanContext,
+                                      Supplier<HttpClient> defaultTokenClientSupplier) {
         this.beanContext = beanContext;
+        this.defaultTokenClient = SupplierUtil.memoized(defaultTokenClientSupplier);
+
     }
 
     /**
      * @param client HttpClient
      */
     public DefaultTokenEndpointClient(HttpClient client) {
-        this(SupplierUtil.memoized(() -> client), null);
+        this(null, () -> client);
     }
 
     @NonNull

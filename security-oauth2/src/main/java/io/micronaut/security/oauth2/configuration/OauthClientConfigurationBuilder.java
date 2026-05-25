@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
+import io.micronaut.core.annotation.Experimental;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
-import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
@@ -32,13 +32,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * Builder for programmatic {@link OauthClientConfiguration} instances.
  *
  * @since 5.1.0
  */
+@Experimental
 public final class OauthClientConfigurationBuilder {
 
     private @Nullable String name;
@@ -56,6 +56,12 @@ public final class OauthClientConfigurationBuilder {
     private @Nullable AuthorizationServer authorizationServer;
     private boolean proxyWellKnownOauthAuthorizationServer;
     private boolean proxyWellKnownOpenidConfiguration;
+
+    /**
+     * Default constructor.
+     */
+    public OauthClientConfigurationBuilder() {
+    }
 
     /**
      * Sets the OAuth client configuration name.
@@ -186,9 +192,13 @@ public final class OauthClientConfigurationBuilder {
      */
     @NonNull
     public OauthClientConfigurationBuilder token(@NonNull String url,
-                                                 @Nullable String authenticationMethod,
-                                                 @NonNull MediaType contentType) {
-        this.token = new DefaultTokenEndpointConfiguration(url, authenticationMethod, contentType);
+                                                  @Nullable String authenticationMethod,
+                                                  @NonNull MediaType contentType) {
+        this.token = TokenEndpointConfiguration.builder()
+            .url(url)
+            .authenticationMethod(authenticationMethod)
+            .contentType(contentType)
+            .build();
         return this;
     }
 
@@ -224,7 +234,10 @@ public final class OauthClientConfigurationBuilder {
      */
     @NonNull
     public OauthClientConfigurationBuilder authorization(@NonNull String url, @Nullable String codeChallengeMethod) {
-        this.authorization = new DefaultAuthorizationEndpointConfiguration(url, codeChallengeMethod);
+        this.authorization = OauthAuthorizationEndpointConfiguration.builder()
+            .url(url)
+            .codeChallengeMethod(codeChallengeMethod)
+            .build();
         return this;
     }
 
@@ -286,15 +299,11 @@ public final class OauthClientConfigurationBuilder {
     public OauthClientConfigurationBuilder clientCredentials(@Nullable String scope,
                                                             @NonNull Duration advancedExpiration,
                                                             @NonNull Map<String, String> additionalRequestParams) {
-        return clientCredentialsConfiguration(new DefaultClientCredentialsConfiguration(
-            true,
-            scope,
-            advancedExpiration,
-            null,
-            additionalRequestParams,
-            null,
-            null
-        ));
+        return clientCredentialsConfiguration(ClientCredentialsConfiguration.builder()
+            .scope(scope)
+            .advancedExpiration(advancedExpiration)
+            .additionalRequestParams(additionalRequestParams)
+            .build());
     }
 
     /**
@@ -329,7 +338,10 @@ public final class OauthClientConfigurationBuilder {
      */
     @NonNull
     public OauthClientConfigurationBuilder introspection(@NonNull String url, @Nullable String authenticationMethod) {
-        this.introspection = new DefaultSecureEndpointConfiguration(url, authenticationMethod);
+        this.introspection = SecureEndpointConfiguration.builder()
+            .url(url)
+            .authenticationMethod(authenticationMethod)
+            .build();
         return this;
     }
 
@@ -365,7 +377,10 @@ public final class OauthClientConfigurationBuilder {
      */
     @NonNull
     public OauthClientConfigurationBuilder revocation(@NonNull String url, @Nullable String authenticationMethod) {
-        this.revocation = new DefaultSecureEndpointConfiguration(url, authenticationMethod);
+        this.revocation = SecureEndpointConfiguration.builder()
+            .url(url)
+            .authenticationMethod(authenticationMethod)
+            .build();
         return this;
     }
 
@@ -424,10 +439,10 @@ public final class OauthClientConfigurationBuilder {
      */
     @NonNull
     public OauthClientConfiguration build() {
-        return new DefaultOauthClientConfiguration(this);
+        return new BuiltOauthClientConfiguration(this);
     }
 
-    private static final class DefaultOauthClientConfiguration implements OauthClientConfiguration {
+    private static final class BuiltOauthClientConfiguration implements OauthClientConfiguration {
         private final String name;
         private final String clientId;
         private final @Nullable String clientSecret;
@@ -444,7 +459,7 @@ public final class OauthClientConfigurationBuilder {
         private final boolean proxyWellKnownOauthAuthorizationServer;
         private final boolean proxyWellKnownOpenidConfiguration;
 
-        private DefaultOauthClientConfiguration(OauthClientConfigurationBuilder builder) {
+        private BuiltOauthClientConfiguration(OauthClientConfigurationBuilder builder) {
             this.name = Objects.requireNonNull(builder.name, "name");
             this.clientId = Objects.requireNonNull(builder.clientId, "clientId");
             this.clientSecret = builder.clientSecret;
@@ -545,128 +560,4 @@ public final class OauthClientConfigurationBuilder {
         }
     }
 
-    private static class DefaultSecureEndpointConfiguration implements SecureEndpointConfiguration {
-        private final String url;
-        private final @Nullable String authenticationMethod;
-
-        private DefaultSecureEndpointConfiguration(String url, @Nullable String authenticationMethod) {
-            this.url = Objects.requireNonNull(url, "url");
-            this.authenticationMethod = authenticationMethod;
-        }
-
-        @Override
-        public Optional<String> getUrl() {
-            return Optional.of(url);
-        }
-
-        @Override
-        public Optional<String> getAuthenticationMethod() {
-            return Optional.ofNullable(authenticationMethod);
-        }
-    }
-
-    private static final class DefaultTokenEndpointConfiguration extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
-        private final MediaType contentType;
-
-        private DefaultTokenEndpointConfiguration(String url,
-                                                  @Nullable String authenticationMethod,
-                                                  MediaType contentType) {
-            super(url, authenticationMethod);
-            this.contentType = Objects.requireNonNull(contentType, "contentType");
-        }
-
-        @Override
-        @NonNull
-        public MediaType getContentType() {
-            return contentType;
-        }
-    }
-
-    private static final class DefaultAuthorizationEndpointConfiguration implements OauthAuthorizationEndpointConfiguration {
-        private final String url;
-        private final @Nullable String codeChallengeMethod;
-
-        private DefaultAuthorizationEndpointConfiguration(String url, @Nullable String codeChallengeMethod) {
-            this.url = Objects.requireNonNull(url, "url");
-            this.codeChallengeMethod = codeChallengeMethod;
-        }
-
-        @Override
-        public Optional<String> getUrl() {
-            return Optional.of(url);
-        }
-
-        @Override
-        @NonNull
-        public Optional<String> getCodeChallengeMethod() {
-            return Optional.ofNullable(codeChallengeMethod);
-        }
-    }
-
-    private static final class DefaultClientCredentialsConfiguration implements ClientCredentialsConfiguration {
-        private final boolean enabled;
-        private final @Nullable String scope;
-        private final Duration advancedExpiration;
-        private final @Nullable ClientCredentialsHeaderTokenPropagatorConfiguration headerPropagation;
-        private final Map<String, String> additionalRequestParams;
-        private final @Nullable Pattern serviceIdPattern;
-        private final @Nullable Pattern uriPattern;
-
-        private DefaultClientCredentialsConfiguration(boolean enabled,
-                                                      @Nullable String scope,
-                                                      Duration advancedExpiration,
-                                                      @Nullable ClientCredentialsHeaderTokenPropagatorConfiguration headerPropagation,
-                                                      Map<String, String> additionalRequestParams,
-                                                      @Nullable String serviceIdRegex,
-                                                      @Nullable String uriRegex) {
-            this.enabled = enabled;
-            this.scope = scope;
-            this.advancedExpiration = Objects.requireNonNull(advancedExpiration, "advancedExpiration");
-            this.headerPropagation = headerPropagation;
-            this.additionalRequestParams = Map.copyOf(Objects.requireNonNull(additionalRequestParams, "additionalRequestParams"));
-            this.serviceIdPattern = serviceIdRegex == null ? null : Pattern.compile(serviceIdRegex);
-            this.uriPattern = uriRegex == null ? null : Pattern.compile(uriRegex);
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return enabled;
-        }
-
-        @Override
-        @NonNull
-        public Optional<String> getScope() {
-            return Optional.ofNullable(scope);
-        }
-
-        @Override
-        @NonNull
-        public Duration getAdvancedExpiration() {
-            return advancedExpiration;
-        }
-
-        @Override
-        @NonNull
-        public Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation() {
-            return Optional.ofNullable(headerPropagation);
-        }
-
-        @Override
-        @NonNull
-        public Map<String, String> getAdditionalRequestParams() {
-            return additionalRequestParams;
-        }
-
-        @Override
-        @Nullable
-        public Pattern getServiceIdPattern() {
-            return serviceIdPattern;
-        }
-
-        @Override
-        @Nullable
-        public Pattern getUriPattern() {
-            return uriPattern;
-        }
-    }
 }

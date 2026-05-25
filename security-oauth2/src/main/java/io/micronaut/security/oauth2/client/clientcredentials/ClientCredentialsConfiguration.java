@@ -51,4 +51,13 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequ
 
     @NonNull
     Map<String, String> getAdditionalRequestParams();
+
+    /**
+     * @return A new client credentials configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static ClientCredentialsConfigurationBuilder builder() {
+        return new ClientCredentialsConfigurationBuilder();
+    }
 }
