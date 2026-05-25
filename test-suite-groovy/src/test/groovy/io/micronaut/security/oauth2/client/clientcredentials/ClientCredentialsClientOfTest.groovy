@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 import spock.lang.Requires
 import spock.lang.Specification
 
-class ClientCredentialsClientOfSpec extends Specification {
+class ClientCredentialsClientOfTest extends Specification {
 
     void cleanupSpec() {
         Keycloak.destroy()
