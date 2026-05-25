@@ -236,6 +236,10 @@ access token returned by the provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">AdditionalClaimsConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#additionalRequestParams(java.util.Map)" class="member-name-link">additionalRequestParams(Map)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets additional parameters included in the client credentials token request.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
 <dd>
 <div class="block">Representation of an Address Claim which represents a physical mailing address.</div>
@@ -245,6 +249,10 @@ access token returned by the provider.</div>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html#ADDRESS" class="member-name-link">ADDRESS</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdScope</a></dt>
 <dd>
 <div class="block">This scope value requests access to the address Claim.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#advancedExpiration(java.time.Duration)" class="member-name-link">advancedExpiration(Duration)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the duration before token expiry to consider the token expired.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#algorithm" class="member-name-link">algorithm</a> - Variable in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -408,6 +416,14 @@ the backing data source.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html#%3Cinit%3E(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">AuthenticationJWTClaimsSetAdapter(JWTClaimsSet)</a> - Constructor for class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator">AuthenticationJWTClaimsSetAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html#authenticationMethod(java.lang.String)" class="member-name-link">authenticationMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the endpoint authentication method.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html#authenticationMethod(java.lang.String)" class="member-name-link">authenticationMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint authentication method.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/AuthenticationMethods.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint">AuthenticationMethods</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/package-summary.html">io.micronaut.security.oauth2.endpoint</a></dt>
 <dd>
 <div class="block">Client Authentication methods constants that are used by Clients to authenticate to the Authorization Server when using the Token Endpoint.</div>
@@ -457,6 +473,18 @@ authenticated <a href="io/micronaut/security/authentication/AuthenticationRespon
 </dd>
 <dt><a href="io/micronaut/security/authentication/Authenticator.html#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.List,java.util.List,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">Authenticator(BeanContext, List, List, SecurityConfiguration)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#authorization(io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration)" class="member-name-link">authorization(OauthAuthorizationEndpointConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the authorization endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#authorization(java.lang.String)" class="member-name-link">authorization(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the authorization endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#authorization(java.lang.String,java.lang.String)" class="member-name-link">authorization(String, String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the authorization endpoint URL and PKCE code challenge method.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#AUTHORIZATION_CODE" class="member-name-link">AUTHORIZATION_CODE</a> - Enum constant in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>
 <div class="block">The Authorization Code grant type is used by confidential and public clients to exchange
@@ -532,6 +560,10 @@ for authentication.</div>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/response/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.response</a></dt>
 <dd>
 <div class="block">OAuth 2.0 Authentication Response.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#authorizationServer(io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer)" class="member-name-link">authorizationServer(AuthorizationServer)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the authorization server type.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.Builder.html#authorizationServer(java.lang.String)" class="member-name-link">authorizationServer(String)</a> - Method in class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.Builder.html" title="class in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -660,8 +692,28 @@ against any <a href="io/micronaut/security/authentication/provider/ReactiveAuthe
 <dd>
 <div class="block">Build the challenge instance.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Builds the client credentials configuration.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Builds the OAuth authorization endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Builds the secure endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Builds the token endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Builds the OAuth client configuration.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.Builder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.oauth2.endpoint.userinfo.<a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.Builder.html" title="class in io.micronaut.security.oauth2.endpoint.userinfo">UserInfoClientTokenValidatorConfiguration.Builder</a></dt>
 <dd>
 <div class="block">Builds the configuration instance.</div>
@@ -750,6 +802,16 @@ against any <a href="io/micronaut/security/authentication/provider/ReactiveAuthe
 <dd>
 <div class="block">Create a new builder.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in interface io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html#builder()" class="member-name-link">builder()</a> - Static method in record class io.micronaut.security.oauth2.endpoint.userinfo.<a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.userinfo">UserInfoClientTokenValidatorConfiguration</a></dt>
 <dd>
 <div class="block">Creates a new builder instance.</div>
@@ -967,14 +1029,40 @@ by clients that deserialize token information into an authentication.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#clientConfiguration" class="member-name-link">clientConfiguration</a> - Variable in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentials()" class="member-name-link">clientCredentials()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Enables client credentials support without requesting a scope.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentials(java.lang.String)" class="member-name-link">clientCredentials(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Enables client credentials support with the supplied scope.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentials(java.lang.String,java.time.Duration)" class="member-name-link">clientCredentials(String, Duration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Enables client credentials support with the supplied scope and advanced expiration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentials(java.lang.String,java.time.Duration,java.util.Map)" class="member-name-link">clientCredentials(String, Duration, Map)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Enables client credentials support with additional token request parameters.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsClient</a> - Interface in <a href="io/micronaut/security/oauth2/client/clientcredentials/package-summary.html">io.micronaut.security.oauth2.client.clientcredentials</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html#clientCredentialsClientsByName" class="member-name-link">clientCredentialsClientsByName</a> - Variable in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHttpClientFilter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentialsConfiguration(io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration)" class="member-name-link">clientCredentialsConfiguration(ClientCredentialsConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the client credentials configuration and selects the client credentials grant.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/client/clientcredentials/package-summary.html">io.micronaut.security.oauth2.client.clientcredentials</a></dt>
 <dd>
 <div class="block">Client credentials configuration.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" class="type-name-link" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a> - Class in <a href="io/micronaut/security/oauth2/client/clientcredentials/package-summary.html">io.micronaut.security.oauth2.client.clientcredentials</a></dt>
+<dd>
+<div class="block">Builder for programmatic <a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials"><code>ClientCredentialsConfiguration</code></a> instances.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#%3Cinit%3E()" class="member-name-link">ClientCredentialsConfigurationBuilder()</a> - Constructor for class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">ClientCredentialsConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsEnabled.html" class="type-name-link" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsEnabled</a> - Class in <a href="io/micronaut/security/oauth2/client/clientcredentials/package-summary.html">io.micronaut.security.oauth2.client.clientcredentials</a></dt>
@@ -1034,8 +1122,16 @@ for a given OAuth 2.0 client.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/AbstractClientSecureGrant.html#clientId" class="member-name-link">clientId</a> - Variable in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AbstractClientSecureGrant.html" title="class in io.micronaut.security.oauth2.grants">AbstractClientSecureGrant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientId(java.lang.String)" class="member-name-link">clientId(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the OAuth client identifier.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/AbstractClientSecureGrant.html#clientSecret" class="member-name-link">clientSecret</a> - Variable in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AbstractClientSecureGrant.html" title="class in io.micronaut.security.oauth2.grants">AbstractClientSecureGrant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientSecret(java.lang.String)" class="member-name-link">clientSecret(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the OAuth client secret.</div>
+</dd>
 <dt><a href="io/micronaut/security/ldap/LdapAuthenticationProvider.html#close()" class="member-name-link">close()</a> - Method in class io.micronaut.security.ldap.<a href="io/micronaut/security/ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.security.ldap">LdapAuthenticationProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/context/ContextBuilder.html#close(javax.naming.directory.DirContext)" class="member-name-link">close(DirContext)</a> - Method in interface io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/ContextBuilder.html" title="interface in io.micronaut.security.ldap.context">ContextBuilder</a></dt>
@@ -1050,6 +1146,10 @@ for a given OAuth 2.0 client.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#CODE_CHALLENGE_METHOD_S256" class="member-name-link">CODE_CHALLENGE_METHOD_S256</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html#codeChallengeMethod(java.lang.String)" class="member-name-link">codeChallengeMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the PKCE code challenge method.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#codeChallengeMethodsSupported(java.util.List)" class="member-name-link">codeChallengeMethodsSupported(List)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">CodeVerifierGenerator</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
@@ -1092,6 +1192,10 @@ comparing if any of the granted roles is in the required roles list.</div>
 <dt><a href="io/micronaut/security/aot/AOTContextUtils.html#containsBean(java.lang.Class,io.micronaut.context.Qualifier,io.micronaut.aot.core.AOTContext)" class="member-name-link">containsBean(Class, Qualifier, AOTContext)</a> - Static method in class io.micronaut.security.aot.<a href="io/micronaut/security/aot/AOTContextUtils.html" title="class in io.micronaut.security.aot">AOTContextUtils</a></dt>
 <dd>
 <div class="block">Return whether the bean of the given type is contained within this context.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html#contentType(io.micronaut.http.MediaType)" class="member-name-link">contentType(MediaType)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint request content type.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/ContextAuthenticationMapper.html" class="type-name-link" title="interface in io.micronaut.security.ldap">ContextAuthenticationMapper</a> - Interface in <a href="io/micronaut/security/ldap/package-summary.html">io.micronaut.security.ldap</a></dt>
 <dd>
@@ -1957,6 +2061,10 @@ request URI to redirect back to after authentication.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html#%3Cinit%3E(io.micronaut.context.BeanContext,io.micronaut.http.client.HttpClientConfiguration)" class="member-name-link">DefaultTokenEndpointClient(BeanContext, HttpClientConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.<a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html" title="class in io.micronaut.security.oauth2.endpoint.token.request">DefaultTokenEndpointClient</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html#%3Cinit%3E(io.micronaut.context.BeanContext,java.util.function.Supplier)" class="member-name-link">DefaultTokenEndpointClient(BeanContext, Supplier)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.<a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html" title="class in io.micronaut.security.oauth2.endpoint.token.request">DefaultTokenEndpointClient</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html#%3Cinit%3E(io.micronaut.http.client.HttpClient)" class="member-name-link">DefaultTokenEndpointClient(HttpClient)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.<a href="io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html" title="class in io.micronaut.security.oauth2.endpoint.token.request">DefaultTokenEndpointClient</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/reader/DefaultTokenResolver.html" class="type-name-link" title="class in io.micronaut.security.token.reader">DefaultTokenResolver</a> - Class in <a href="io/micronaut/security/token/reader/package-summary.html">io.micronaut.security.token.reader</a></dt>
 <dd>
 <div class="block">Default implementation of <a href="io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader"><code>TokenResolver</code></a>.</div>
@@ -2059,6 +2167,14 @@ request URI to redirect back to after authentication.</div>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#emptyIntrospectionResponse(java.lang.String)" class="member-name-link">emptyIntrospectionResponse(String)</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>
 <div class="block">Empty response for introspection response.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#enabled(boolean)" class="member-name-link">enabled(boolean)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets whether the client credentials configuration is enabled.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#enabled(boolean)" class="member-name-link">enabled(boolean)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets whether the OAuth client configuration is enabled.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#encrypt(com.nimbusds.jwt.JWT)" class="member-name-link">encrypt(JWT)</a> - Method in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -4092,6 +4208,10 @@ OPTIONAL.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/TokenRefreshRequest.html#GRANT_TYPE_REFRESH_TOKEN" class="member-name-link">GRANT_TYPE_REFRESH_TOKEN</a> - Static variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.endpoints">TokenRefreshRequest</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#grantType(io.micronaut.security.oauth2.grants.GrantType)" class="member-name-link">grantType(GrantType)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the OAuth grant type.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html" class="type-name-link" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a> - Enum Class in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
 <dd>
 <div class="block">The OAuth 2.0 grant types.</div>
@@ -4173,6 +4293,10 @@ returns the authentication response.</div>
 <dt><a href="io/micronaut/security/utils/SecurityService.html#hasRole(java.lang.String)" class="member-name-link">hasRole(String)</a> - Method in interface io.micronaut.security.utils.<a href="io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils">SecurityService</a></dt>
 <dd>
 <div class="block">If the current user has a specific role.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#headerPropagation(io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration)" class="member-name-link">headerPropagation(ClientCredentialsHeaderTokenPropagatorConfiguration)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the HTTP header token propagation configuration.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">HeaderTokenPropagatorConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -4343,6 +4467,18 @@ as JavaScript.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionProcessor.html#introspect(io.micronaut.security.endpoints.introspection.IntrospectionRequest,T)" class="member-name-link">introspect(IntrospectionRequest, T)</a> - Method in interface io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionProcessor.html" title="interface in io.micronaut.security.endpoints.introspection">IntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#introspection(io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration)" class="member-name-link">introspection(SecureEndpointConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token introspection endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#introspection(java.lang.String)" class="member-name-link">introspection(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token introspection endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#introspection(java.lang.String,java.lang.String)" class="member-name-link">introspection(String, String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token introspection endpoint URL and authentication method.</div>
+</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.endpoints.introspection">IntrospectionConfiguration</a> - Interface in <a href="io/micronaut/security/endpoints/introspection/package-summary.html">io.micronaut.security.endpoints.introspection</a></dt>
 <dd>
 <div class="block">Encapsulates the configuration of <a href="io/micronaut/security/endpoints/introspection/IntrospectionController.html" title="class in io.micronaut.security.endpoints.introspection"><code>IntrospectionController</code></a>.</div>
@@ -5658,6 +5794,10 @@ an appropriate response.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html#param-name"><code>name</code></a> record component.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#name(java.lang.String)" class="member-name-link">name(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the OAuth client configuration name.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.Builder.html#name(java.lang.String)" class="member-name-link">name(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.userinfo.<a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.Builder.html" title="class in io.micronaut.security.oauth2.endpoint.userinfo">UserInfoClientTokenValidatorConfiguration.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/utils/QualifierUtils.html#nameQualifier(io.micronaut.core.annotation.AnnotationMetadataProvider)" class="member-name-link">nameQualifier(AnnotationMetadataProvider)</a> - Static method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/QualifierUtils.html" title="class in io.micronaut.security.utils">QualifierUtils</a></dt>
@@ -5729,6 +5869,12 @@ an appropriate response.</div>
 <dd>
 <div class="block">Configuration for Authorization Endpoint Configuration.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfigurationBuilder</a> - Class in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
+<dd>
+<div class="block">Builder for programmatic <a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><code>OauthAuthorizationEndpointConfiguration</code></a> instances.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html#%3Cinit%3E()" class="member-name-link">OauthAuthorizationEndpointConfigurationBuilder()</a> - Constructor for class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfigurationBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OauthAuthorizationRequest.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OauthAuthorizationRequest</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/request/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.request</a></dt>
 <dd>
 <div class="block">A marker contract to denote a given authorization request is
@@ -5759,6 +5905,12 @@ from an OAuth 2.0 provider.</div>
 <dd>
 <div class="block">OAuth 2.0 client configuration.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a> - Class in <a href="io/micronaut/security/oauth2/configuration/package-summary.html">io.micronaut.security.oauth2.configuration</a></dt>
+<dd>
+<div class="block">Builder for programmatic <a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration"><code>OauthClientConfiguration</code></a> instances.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#%3Cinit%3E()" class="member-name-link">OauthClientConfigurationBuilder()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html#oauthClientConfigurationCollection" class="member-name-link">oauthClientConfigurationCollection</a> - Variable in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHttpClientFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties</a> - Class in <a href="io/micronaut/security/oauth2/configuration/package-summary.html">io.micronaut.security.oauth2.configuration</a></dt>
@@ -5912,6 +6064,10 @@ request to an OAuth 2.0 provider.</div>
 <dd>
 <div class="block">A single ASCII error code as described in Obtaining Authorization - Error Response seciton of OAuth 2.0 spec.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html#of(io.micronaut.http.client.HttpClient,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">of(HttpClient, OauthClientConfiguration)</a> - Static method in interface io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsClient</a></dt>
+<dd>
+<div class="block">Instantiate a Client Credentials Client to be used in a scenario where you don't have/want or need a Micronaut Bean Context.</div>
+</dd>
 <dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html#of(java.util.List,java.util.List)" class="member-name-link">of(List, List)</a> - Static method in interface io.micronaut.security.csrf.resolver.<a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#OKTA" class="member-name-link">OKTA</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
@@ -5935,6 +6091,10 @@ an authentication response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/PriorToLoginPersistence.html#onUnauthorized(I,O)" class="member-name-link">onUnauthorized(I, O)</a> - Method in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#openid(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)" class="member-name-link">openid(OpenIdClientConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the OpenID client configuration.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html#OPENID" class="member-name-link">OPENID</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html#OPENID_TOKEN_KEY" class="member-name-link">OPENID_TOKEN_KEY</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a></dt>
@@ -6515,6 +6675,14 @@ provider authenticated the user.</div>
 <dd>
 <div class="block">Resolves the OAuth 2.0 provider that authenticated the logged in user.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#proxyWellKnownOauthAuthorizationServer(boolean)" class="member-name-link">proxyWellKnownOauthAuthorizationServer(boolean)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets whether the OAuth authorization server metadata endpoint is proxied.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#proxyWellKnownOpenidConfiguration(boolean)" class="member-name-link">proxyWellKnownOpenidConfiguration(boolean)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets whether the OpenID provider metadata endpoint is proxied.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:Q">Q</h2>
 <dl class="index">
@@ -6919,6 +7087,18 @@ following order:
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#retrieveValue(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveValue(HttpRequest)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#revocation(io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration)" class="member-name-link">revocation(SecureEndpointConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token revocation endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#revocation(java.lang.String)" class="member-name-link">revocation(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token revocation endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#revocation(java.lang.String,java.lang.String)" class="member-name-link">revocation(String, String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token revocation endpoint URL and authentication method.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#revocationEndpoint(java.lang.String)" class="member-name-link">revocationEndpoint(String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#revocationEndpointAuthMethodsSupported(java.util.List)" class="member-name-link">revocationEndpointAuthMethodsSupported(List)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
@@ -6998,8 +7178,20 @@ following order:
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#save(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.lang.String)" class="member-name-link">save(HttpRequest, MutableHttpResponse, String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#scope(java.lang.String)" class="member-name-link">scope(String)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the scope requested in the client credentials request.</div>
+</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#SCOPE" class="member-name-link">SCOPE</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#scopes(java.lang.String...)" class="member-name-link">scopes(String...)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the requested scopes for the OAuth client.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#scopes(java.util.List)" class="member-name-link">scopes(List)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the requested scopes for the OAuth client.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html#scopesSupported()" class="member-name-link">scopesSupported()</a> - Method in record class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html" title="class in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadata</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html#param-scopesSupported"><code>scopesSupported</code></a> record component.</div>
@@ -7100,6 +7292,12 @@ results from LDAP.</div>
 <dd>
 <div class="block">Configuration extension of <a href="io/micronaut/security/oauth2/configuration/endpoints/EndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><code>EndpointConfiguration</code></a> for endpoints which require authentication.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a> - Class in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
+<dd>
+<div class="block">Builder for programmatic <a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><code>SecureEndpointConfiguration</code></a> instances.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html#%3Cinit%3E()" class="member-name-link">SecureEndpointConfigurationBuilder()</a> - Constructor for class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SecureGrant.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.grants">SecureGrant</a> - Interface in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
 <dd>
 <div class="block">A contract for a grant that requires authentication.</div>
@@ -7255,6 +7453,10 @@ user data found through any means.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/propagation/AbstractOutgoingRequestProcessorMatcher.html#serviceIdRegex" class="member-name-link">serviceIdRegex</a> - Variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/AbstractOutgoingRequestProcessorMatcher.html" title="class in io.micronaut.security.token.propagation">AbstractOutgoingRequestProcessorMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#serviceIdRegex(java.lang.String)" class="member-name-link">serviceIdRegex(String)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the service ID regular expression used to match outgoing requests.</div>
+</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationMode.html#SESSION" class="member-name-link">SESSION</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationMode.html" title="enum class in io.micronaut.security.authentication">AuthenticationMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionAuthenticationFetcher.html" class="type-name-link" title="class in io.micronaut.security.session">SessionAuthenticationFetcher</a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
@@ -8518,6 +8720,22 @@ authorization endpoint.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/ServerAuthentication.html#toJson()" class="member-name-link">toJson()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication">ServerAuthentication</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#token(io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration)" class="member-name-link">token(SecureEndpointConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#token(java.lang.String)" class="member-name-link">token(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#token(java.lang.String,java.lang.String)" class="member-name-link">token(String, String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint URL and authentication method.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#token(java.lang.String,java.lang.String,io.micronaut.http.MediaType)" class="member-name-link">token(String, String, MediaType)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint URL, authentication method, and content type.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/ResponseType.html#TOKEN" class="member-name-link">TOKEN</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/ResponseType.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">ResponseType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilter.html#TOKEN" class="member-name-link">TOKEN</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
@@ -8604,6 +8822,12 @@ authorization endpoint.</div>
 <dd>
 <div class="block">TokenEndpoint Configuration.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a> - Class in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
+<dd>
+<div class="block">Builder for programmatic <a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><code>TokenEndpointConfiguration</code></a> instances.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html#%3Cinit%3E()" class="member-name-link">TokenEndpointConfigurationBuilder()</a> - Constructor for class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">TokenEndpointConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.TokenEndpointConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">TokenEndpointConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.TokenEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.TokenEndpointConfigurationProperties</a></dt>
@@ -8805,6 +9029,22 @@ populated on both save and update with the identity of the currently authenticat
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/propagation/AbstractOutgoingRequestProcessorMatcher.html#uriRegex" class="member-name-link">uriRegex</a> - Variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/AbstractOutgoingRequestProcessorMatcher.html" title="class in io.micronaut.security.token.propagation">AbstractOutgoingRequestProcessorMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html#uriRegex(java.lang.String)" class="member-name-link">uriRegex(String)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the URI regular expression used to match outgoing requests.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html#url(java.lang.String)" class="member-name-link">url(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the authorization endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html#url(java.lang.String)" class="member-name-link">url(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the endpoint URL.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html#url(java.lang.String)" class="member-name-link">url(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/TokenEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">TokenEndpointConfigurationBuilder</a></dt>
+<dd>
+<div class="block">Sets the token endpoint URL.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html#USER_CANCELLED_AUTHORIZE" class="member-name-link">USER_CANCELLED_AUTHORIZE</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailureReason.html#USER_DISABLED" class="member-name-link">USER_DISABLED</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum class in io.micronaut.security.authentication">AuthenticationFailureReason</a></dt>

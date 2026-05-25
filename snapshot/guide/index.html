@@ -349,7 +349,9 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>19.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
         
-        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>19.3.2.2</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentailsClientOf"><a href="#clientCredentailsClientOf"><strong>19.3.2.2</strong><span>Static ClientCredentialsClient</span></a></div>
+        
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientCredentialGuides"><a href="#clientCredentialGuides"><strong>19.3.2.3</strong><span>Guides</span></a></div>
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>19.3.3</strong><span>Password</span></a></div>
         
@@ -10690,7 +10692,54 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </tbody>
 </table>
 
-<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>19.3.2.2 Guides</h2>
+<h2 id="clientCredentailsClientOf"><a class="anchor" href="#clientCredentailsClientOf"></a>19.3.2.2 Static ClientCredentialsClient</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/oauth/flows/clientcredentials/clientCredentailsClientOf.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>If you have a scenario where you don’t have a Micronaut Application context, you can obtain a static <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a></p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ClientCredentialsClient clientCredentialsClient = ClientCredentialsClient.of(httpClient,
+    OauthClientConfiguration.builder().name("test")
+        .clientId(clientId)
+        .clientSecret(clientSecret)
+        .token(tokenUrl)
+        .build());</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">val clientCredentialsClient = ClientCredentialsClient.of(
+    httpClient,
+    OauthClientConfiguration.builder()
+        .name("test")
+        .clientId(clientId)
+        .clientSecret(clientSecret)
+        .token(tokenUrl)
+        .build()
+)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">ClientCredentialsClient clientCredentialsClient = ClientCredentialsClient.of(httpClient,
+        OauthClientConfiguration.builder()
+                .name("test")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .token(tokenUrl)
+                .build())</code></pre>
+</div>
+</div>
+
+<h2 id="clientCredentialGuides"><a class="anchor" href="#clientCredentialGuides"></a>19.3.2.3 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/oauth/flows/clientcredentials/clientCredentialGuides.adoc"'>
