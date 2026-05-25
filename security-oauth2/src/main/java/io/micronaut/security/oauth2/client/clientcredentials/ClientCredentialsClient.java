@@ -66,7 +66,7 @@ public interface ClientCredentialsClient {
 
     /**
      * Instantiate a Client Credentials Client to be used in a scenario where you don't have/want or need a Micronaut Bean Context.
-     * @param client HTTP Client. The caller is responsible for closing the provided client.
+     * @param client HTTP Client. The caller owns the provided client lifecycle and is responsible for closing it.
      * @param oauthClientConfiguration OAuth Client Configuration
      * @return A Client Credentials Client
      * @since 5.1.0
