@@ -30,6 +30,8 @@ public interface TokenConfiguration extends Toggleable {
 
     String DEFAULT_NAME_KEY = "sub";
 
+    String DEFAULT_ROLES_NAME_SEPARATOR = null;
+
     String DEFAULT_ROLES_SEPARATOR = null;
 
     /**
@@ -50,6 +52,11 @@ public interface TokenConfiguration extends Toggleable {
     @NonNull
     default String getNameKey() {
         return DEFAULT_NAME_KEY;
+    }
+
+    @Nullable
+    default String getRolesNameSeparator() {
+        return DEFAULT_ROLES_NAME_SEPARATOR;
     }
 
     /**

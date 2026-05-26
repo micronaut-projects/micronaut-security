@@ -46,6 +46,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     private String nameKey = TokenConfiguration.DEFAULT_NAME_KEY;
 
     @Nullable
+    private String rolesNameSeparator = TokenConfiguration.DEFAULT_ROLES_NAME_SEPARATOR;
+
+    @Nullable
     private String rolesSeparator = TokenConfiguration.DEFAULT_ROLES_SEPARATOR;
 
     @Override
@@ -99,6 +102,20 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      */
     public void setNameKey(@NonNull String nameKey) {
         this.nameKey = nameKey;
+    }
+
+    @Override
+    @Nullable
+    public String getRolesNameSeparator() {
+        return rolesNameSeparator;
+    }
+
+    /**
+     * If the entry used for the roles in the {@link io.micronaut.security.authentication.Authentication} is nested in the attributes map, you can use the separator to split its value into multiple nested name keys to look up. Default value {@link io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME_SEPARATOR}.
+     * @param rolesNameSeparator separator to split roles name key by
+     */
+    public void setRolesNameSeparator(@Nullable String rolesNameSeparator) {
+        this.rolesNameSeparator = rolesNameSeparator;
     }
 
     @Override

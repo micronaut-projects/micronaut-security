@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,7 +183,17 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
             builder.claim(ROLES_KEY, rolesKey);
         }
-        builder.claim(rolesKey, authentication.getRoles());
+        String rolesNameSeparator = tokenConfiguration.getRolesNameSeparator();
+        if (rolesNameSeparator == null) {
+            builder.claim(rolesKey, authentication.getRoles());
+        } else {
+            String[] rolesNameKeys = tokenConfiguration.getRolesName().split(Pattern.quote(rolesNameSeparator));
+            Object claim = authentication.getRoles();
+            for (int i = rolesNameKeys.length - 1; i > 0; i--) {
+                claim = Map.of(rolesNameKeys[i], claim);
+            }
+            builder.claim(rolesNameKeys[0], claim);
+        }
     }
 
     /**

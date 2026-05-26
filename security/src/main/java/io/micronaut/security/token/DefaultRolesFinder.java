@@ -26,6 +26,7 @@ import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Default implementation of {@link RolesFinder}.
@@ -47,7 +48,6 @@ public class DefaultRolesFinder implements RolesFinder {
     }
 
     /**
-     *
      * @param rolesObject Object containing the roles
      * @return if the supplied object is {@literal null} it returns an empty list,<br />
      *         if it is a String and the {@link io.micronaut.security.token.config.TokenConfiguration#getRolesSeparator()} is not null then it will be split by the separator and returned as a list,<br />
@@ -56,28 +56,40 @@ public class DefaultRolesFinder implements RolesFinder {
      */
     @NonNull
     private List<String> rolesAtObject(@Nullable Object rolesObject) {
-        if (rolesObject == null) {
-            return emptyList();
-        }
-
-        if (rolesObject instanceof CharSequence && tokenConfiguration.getRolesSeparator() != null) {
-            return asList(rolesObject.toString().split(tokenConfiguration.getRolesSeparator()));
-        }
-
-        if (rolesObject instanceof Iterable) {
-            List<String> roles = new ArrayList<>();
-            for (Object o : ((Iterable<?>) rolesObject)) {
-                roles.add(o.toString());
+        return switch (rolesObject) {
+            case null -> emptyList();
+            case CharSequence _ when tokenConfiguration.getRolesSeparator() != null ->
+                asList(rolesObject.toString().split(Pattern.quote(tokenConfiguration.getRolesSeparator())));
+            case Iterable<?> iterable -> {
+                List<String> roles = new ArrayList<>();
+                for (Object o : iterable) {
+                    roles.add(o.toString());
+                }
+                yield roles;
             }
-            return roles;
-        }
+            default -> singletonList(rolesObject.toString());
+        };
+    }
 
-        return singletonList(rolesObject.toString());
+    @Nullable
+    private Object findRolesObject(@NonNull Map<String, Object> attributes) {
+        if (tokenConfiguration.getRolesNameSeparator() == null) {
+            return attributes.get(tokenConfiguration.getRolesName());
+        }
+        String[] rolesNameKeys = tokenConfiguration.getRolesName().split(Pattern.quote(tokenConfiguration.getRolesNameSeparator()));
+        Object rolesObject = attributes;
+        for (String rolesNameKey : rolesNameKeys) {
+            rolesObject = switch (rolesObject) {
+                case Map<?, ?> map -> map.get(rolesNameKey);
+                case null, default -> null;
+            };
+        }
+        return rolesObject;
     }
 
     @Override
     @NonNull
     public List<String> resolveRoles(@Nullable Map<String, Object> attributes) {
-        return rolesAtObject(attributes != null ? attributes.get(tokenConfiguration.getRolesName()) : null);
+        return rolesAtObject(attributes != null ? findRolesObject(attributes) : null);
     }
 }
