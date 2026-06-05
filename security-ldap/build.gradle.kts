@@ -13,5 +13,8 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testImplementation(projects.testSuiteUtils)
     testImplementation(libs.unboundid.ldapsdk)
 }

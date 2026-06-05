@@ -16,10 +16,11 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
@@ -65,6 +66,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * Enables {@link SecurityFilter}. Default value {@value #DEFAULT_ENABLED}
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -73,6 +75,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
      * @param pattern The pattern
      */
+    @Bindable(defaultValue = "/**")
     public void setPath(@NonNull String pattern) {
         if (StringUtils.isNotEmpty(pattern)) {
             this.pattern = pattern;

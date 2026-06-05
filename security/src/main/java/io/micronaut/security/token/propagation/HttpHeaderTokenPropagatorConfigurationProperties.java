@@ -17,6 +17,7 @@ package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
@@ -53,6 +54,7 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
      * Enable {@link io.micronaut.security.token.propagation.HttpHeaderTokenPropagator}. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -61,6 +63,7 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
      * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
      * @param headerPrefix preffix before the header value
      */
+    @Bindable(defaultValue = DEFAULT_PREFIX)
     public void setPrefix(String headerPrefix) {
         this.headerPrefix = headerPrefix;
     }
@@ -78,6 +81,7 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
      * Http Header to be used to propagate the token. Default value ({@value #DEFAULT_HEADER_NAME})
      * @param headerName HTTP header name
      */
+    @Bindable(defaultValue = DEFAULT_HEADER_NAME)
     public void setHeaderName(String headerName) {
         this.headerName = headerName;
     }

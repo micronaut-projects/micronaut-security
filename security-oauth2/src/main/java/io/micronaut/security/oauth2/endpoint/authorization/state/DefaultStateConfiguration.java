@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidationConfiguration;
 
@@ -53,6 +54,7 @@ public class DefaultStateConfiguration implements StateValidationConfiguration {
      *
      * @param persistence The persistence mechanism
      */
+    @Bindable(defaultValue = DEFAULT_PERSISTENCE)
     public void setPersistence(String persistence) {
         this.persistence = persistence;
     }
@@ -67,6 +69,7 @@ public class DefaultStateConfiguration implements StateValidationConfiguration {
      *
      * @param enabled The enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

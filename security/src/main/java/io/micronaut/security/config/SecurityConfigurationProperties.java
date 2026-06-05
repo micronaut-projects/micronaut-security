@@ -16,9 +16,10 @@
 package io.micronaut.security.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.AuthenticationMode;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -105,6 +106,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      *
      * @param enabled True if security is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -118,6 +120,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      * Whether the intercept URL patterns should be prepended with context path if defined. Defaults to {@value #DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH}.
      * @param interceptUrlMapPrependPatternWithContextPath Prepend Intercept URL Map pattern with context path
      */
+    @Bindable(defaultValue = "" + DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH)
     public void setInterceptUrlMapPrependPatternWithContextPath(boolean interceptUrlMapPrependPatternWithContextPath) {
         this.interceptUrlMapPrependPatternWithContextPath = interceptUrlMapPrependPatternWithContextPath;
     }
@@ -138,6 +141,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      *
      * @param ipPatterns The IP patterns
      */
+    @Bindable(defaultValue = ANYWHERE)
     public void setIpPatterns(List<String> ipPatterns) {
         this.ipPatterns = ipPatterns;
     }
@@ -151,6 +155,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      * Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.
      * @param authenticationProviderStrategy authentication strategy.
      */
+    @Bindable(defaultValue = "ANY")
     public void setAuthenticationProviderStrategy(AuthenticationStrategy authenticationProviderStrategy) {
         this.authenticationProviderStrategy = authenticationProviderStrategy;
     }
@@ -163,6 +168,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     /**
      * @param rejectNotFound Whether the server should respond with 401 for requests that do not match any routes on the server, if you set it to false, it will return 404 for requests that do not match any routes on the server. Default value ({@value #DEFAULT_REJECT_NOT_FOUND}).
      */
+    @Bindable(defaultValue = "" + DEFAULT_REJECT_NOT_FOUND)
     public void setRejectNotFound(boolean rejectNotFound) {
         this.rejectNotFound = rejectNotFound;
     }

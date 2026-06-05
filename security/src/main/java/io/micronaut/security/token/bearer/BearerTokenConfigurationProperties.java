@@ -17,6 +17,7 @@ package io.micronaut.security.token.bearer;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
@@ -58,6 +59,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
      *
      * @param enabled True if enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -67,6 +69,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
      *
      * @param headerName The header name to use
      */
+    @Bindable(defaultValue = "Authorization")
     public void setHeaderName(String headerName) {
         this.headerName = headerName;
     }
@@ -75,6 +78,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
      * Sets the prefix to use for the auth token. Default value Bearer.
      * @param headerPrefix The prefix to use
      */
+    @Bindable(defaultValue = "Bearer")
     public void setPrefix(String headerPrefix) {
         this.headerPrefix = headerPrefix;
     }

@@ -16,10 +16,11 @@
 package io.micronaut.security.token.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines Security Token Configuration.
@@ -69,6 +70,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      *
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -77,6 +79,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
      * @param rolesName The roles name
      */
+    @Bindable(defaultValue = TokenConfiguration.DEFAULT_ROLES_NAME)
     public void setRolesName(@NonNull String rolesName) {
         if (StringUtils.isNotEmpty(rolesName)) {
             this.rolesName = rolesName;
@@ -97,6 +100,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
      * @param nameKey key for name
      */
+    @Bindable(defaultValue = TokenConfiguration.DEFAULT_NAME_KEY)
     public void setNameKey(@NonNull String nameKey) {
         this.nameKey = nameKey;
     }

@@ -15,9 +15,10 @@
  */
 package io.micronaut.security.token.cookie;
 
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.TokenCookieConfiguration;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -61,6 +62,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0
      */
+    @Bindable(defaultValue = "false")
     public void setSessionCookie(boolean sessionCookie) {
         this.sessionCookie = sessionCookie;
     }
@@ -119,6 +121,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
+    @Bindable(defaultValue = "" + DEFAULT_HTTPONLY)
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
         this.cookieHttpOnly = cookieHttpOnly;
     }

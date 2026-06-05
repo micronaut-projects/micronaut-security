@@ -18,11 +18,12 @@ package io.micronaut.security.token.jwt.signature.jwks;
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * JSON Web Key Set (JWKS) Signature Configuration properties holder.
@@ -84,6 +85,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      */
     @Deprecated(forRemoval = true, since = "4.11.0")
+    @Bindable(defaultValue = "" + DEFAULT_CACHE_EXPIRATION)
     public void setCacheExpiration(Integer cacheExpiration) {
         ArgumentUtils.requireNonNull("cacheExpiration", cacheExpiration);
         this.cacheExpiration = cacheExpiration;
@@ -122,6 +124,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      * Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
+    @Bindable(defaultValue = "RSA")
     public void setKeyType(KeyType keyType) {
         this.keyType = keyType;
     }

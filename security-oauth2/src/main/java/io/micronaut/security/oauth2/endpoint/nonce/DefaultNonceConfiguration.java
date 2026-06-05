@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties;
 
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
      *
      * @param persistence The persistence mechanism
      */
+    @Bindable(defaultValue = DEFAULT_PERSISTENCE)
     public void setPersistence(String persistence) {
         this.persistence = persistence;
     }
@@ -68,6 +70,7 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
      *
      * @param enabled The enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

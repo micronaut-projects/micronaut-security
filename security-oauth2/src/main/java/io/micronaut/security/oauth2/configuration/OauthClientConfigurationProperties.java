@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
@@ -109,6 +110,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server. Default to false.
      * @param proxyWellKnownOauthAuthorizationServer Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
      */
+    @Bindable(defaultValue = "false")
     public void setProxyWellKnownOauthAuthorizationServer(boolean proxyWellKnownOauthAuthorizationServer) {
         this.proxyWellKnownOauthAuthorizationServer = proxyWellKnownOauthAuthorizationServer;
     }
@@ -122,6 +124,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * Whether a request to /.well-known/openid-configuration should be proxied to the authorization server. Default to false.
      * @param proxyWellKnownOpenidConfiguration Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
      */
+    @Bindable(defaultValue = "false")
     public void setProxyWellKnownOpenidConfiguration(boolean proxyWellKnownOpenidConfiguration) {
         this.proxyWellKnownOpenidConfiguration = proxyWellKnownOpenidConfiguration;
     }
@@ -181,6 +184,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      *
      * @param enabled The enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -217,6 +221,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      *
      * @param grantType The grant type
      */
+    @Bindable(defaultValue = "authorization_code")
     public void setGrantType(@NonNull GrantType grantType) {
         this.grantType = grantType;
     }
@@ -357,6 +362,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * @param advancedExpiration Number of seconds for a token obtained via client credentials grant to be considered expired
          *                           prior to its expiration date. Default value (30 seconds).
          */
+        @Bindable(defaultValue = "30")
         public void setAdvancedExpiration(@NonNull Duration advancedExpiration) {
             this.advancedExpiration = advancedExpiration;
         }
@@ -384,6 +390,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Enables {@link io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClient}. Default value {@value #DEFAULT_ENABLED}
          * @param enabled enabled flag
          */
+        @Bindable(defaultValue = "" + DEFAULT_ENABLED)
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
@@ -426,6 +433,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              * Enable {@link ClientCredentialsHeaderTokenPropagatorConfiguration}. Default value ({@value #DEFAULT_ENABLED}).
              * @param enabled enabled flag
              */
+            @Bindable(defaultValue = "" + DEFAULT_ENABLED)
             public void setEnabled(boolean enabled) {
                 this.enabled = enabled;
             }
@@ -434,6 +442,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
              * @param prefix preffix before the header value
              */
+            @Bindable(defaultValue = "Bearer")
             public void setPrefix(String prefix) {
                 this.prefix = prefix;
             }
@@ -451,6 +460,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              * Http Header to be used to propagate the token. Default value ({@value #DEFAULT_HEADER_NAME})
              * @param headerName HTTP header name
              */
+            @Bindable(defaultValue = "Authorization")
             public void setHeaderName(String headerName) {
                 this.headerName = headerName;
             }
@@ -552,6 +562,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.
          * @param protectedResourceMetadata Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
          */
+        @Bindable(defaultValue = "true")
         public void setProtectedResourceMetadata(boolean protectedResourceMetadata) {
             this.protectedResourceMetadata = protectedResourceMetadata;
         }
@@ -582,6 +593,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          *
          * @param configurationPath The configuration path
          */
+        @Bindable(defaultValue = DEFAULT_CONFIG_PATH)
         public void setConfigurationPath(@NonNull String configurationPath) {
             this.configurationPath = configurationPath;
         }
@@ -710,6 +722,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              *
              * @param responseType The response type
              */
+            @Bindable(defaultValue = "code")
             public void setResponseType(@NonNull ResponseType responseType) {
                 this.responseType = responseType;
             }
@@ -835,6 +848,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              *
              * @param contentType The content type
              */
+            @Bindable(defaultValue = "application/x-www-form-urlencoded")
             public void setContentType(@NonNull MediaType contentType) {
                 this.contentType = contentType;
             }
@@ -859,6 +873,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              *
              * @param enabled The enabled flag
              */
+            @Bindable(defaultValue = "" + DEFAULT_ENABLED)
             public void setEnabled(boolean enabled) {
                 this.enabled = enabled;
             }
