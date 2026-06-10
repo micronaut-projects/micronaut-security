@@ -6,11 +6,12 @@ dependency:micronaut-security-html-sanitizer[groupId=io.micronaut.security]
 
 When this module is present, it contributes an api:micronaut.http.util.HtmlSanitizer[] bean backed by OWASP Java HTML Sanitizer. The bean replaces the Core entity-encoding fallback and is secondary to an application-provided api:micronaut.http.util.HtmlSanitizer[] bean.
 
-By default, the module combines the OWASP block, formatting, and link policies. It does not allow scripts, event-handler attributes, `javascript:` URLs, CSS style handling, images, or tables by default.
+The configured policies define the allowlist for sanitized output: only HTML elements and attributes allowed by those OWASP policies are preserved.
+By default, the module combines the https://www.javadoc.io/doc/com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer/20240325.1/org/owasp/html/Sanitizers.html[OWASP `BLOCKS`, `FORMATTING`, and `LINKS` policies], so sanitized output can include common block elements, formatting elements, and safe links. It does not allow scripts, event-handler attributes, `javascript:` URLs, CSS style handling, images, or tables by default.
 
 include::{includedir}configurationProperties/io.micronaut.security.html.HtmlSanitizerConfigurationProperties.adoc[]
 
-You can opt into additional OWASP policies with configuration:
+You can opt into additional OWASP policies with configuration. For example, adding `IMAGES` allows the image elements and attributes defined by the OWASP image policy:
 
 [configuration]
 ----
@@ -22,28 +23,6 @@ micronaut:
         - FORMATTING
         - LINKS
         - IMAGES
-----
-
-To replace only the OWASP policy while keeping the Micronaut api:micronaut.http.util.HtmlSanitizer[] integration, provide a named `org.owasp.html.PolicyFactory` bean:
-
-[source,java]
-----
-import io.micronaut.security.html.OwaspHtmlSanitizer;
-import io.micronaut.context.annotation.Factory;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
-
-@Factory
-class HtmlSanitizerPolicyFactory {
-
-    @Singleton
-    @Named(OwaspHtmlSanitizer.POLICY_FACTORY)
-    PolicyFactory sanitizerPolicy() {
-        return Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-    }
-}
 ----
 
 To replace the module completely, provide your own api:micronaut.http.util.HtmlSanitizer[] bean. To disable the module without removing the dependency, set `micronaut.security.html-sanitizer.enabled=false`.

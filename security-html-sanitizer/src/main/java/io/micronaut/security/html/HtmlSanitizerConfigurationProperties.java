@@ -67,7 +67,7 @@ public class HtmlSanitizerConfigurationProperties implements HtmlSanitizerConfig
     }
 
     /**
-     * Sets the OWASP sanitizer policies to combine.
+     * Sets the OWASP sanitizer policies to combine. By default {@code BLOCKS, FORMATTING and LINKS}.
      *
      * @param policies The sanitizer policies
      */

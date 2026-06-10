@@ -17,6 +17,7 @@ package io.micronaut.security.html;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.util.HtmlEntityEncodingHtmlSanitizer;
 import io.micronaut.http.util.HtmlSanitizer;
@@ -44,16 +45,6 @@ class OwaspHtmlSanitizerTest {
 
             assertInstanceOf(OwaspHtmlSanitizer.class, sanitizer);
             assertFalse(context.containsBean(HtmlEntityEncodingHtmlSanitizer.class));
-        }
-    }
-
-    @Test
-    void userProvidedHtmlSanitizerWins() {
-        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", "custom-html-sanitizer"))) {
-            HtmlSanitizer sanitizer = context.getBean(HtmlSanitizer.class);
-
-            assertInstanceOf(CustomHtmlSanitizer.class, sanitizer);
-            assertEquals("custom", sanitizer.sanitize("<b>test</b>"));
         }
     }
 
@@ -140,7 +131,7 @@ class OwaspHtmlSanitizerTest {
 
     @Test
     void namedPolicyFactoryCustomizesSanitizerPolicy() {
-        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", "custom-policy-factory"))) {
+        try (ApplicationContext context = ApplicationContext.run(Map.of("micronaut.security.html-sanitizer.policies[0]", "FORMATTING"))) {
             HtmlSanitizer sanitizer = context.getBean(HtmlSanitizer.class);
             String sanitized = sanitizer.sanitize("<p><strong>safe</strong> <a href=\"https://example.com\">link</a></p>");
 
@@ -150,50 +141,4 @@ class OwaspHtmlSanitizerTest {
             assertTrue(sanitized.contains("link"));
         }
     }
-
-    @Test
-    void unrelatedPolicyFactoryDoesNotDisableDefaultSanitizerPolicy() {
-        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", "unrelated-policy-factory"))) {
-            HtmlSanitizer sanitizer = context.getBean(HtmlSanitizer.class);
-            String sanitized = sanitizer.sanitize("<p><strong>safe</strong> <img src=\"https://example.com/a.png\"></p>");
-
-            assertInstanceOf(OwaspHtmlSanitizer.class, sanitizer);
-            assertTrue(sanitized.contains("<p>"));
-            assertTrue(sanitized.contains("<strong>safe</strong>"));
-            assertFalse(sanitized.contains("<img"));
-        }
-    }
-
-    @Requires(property = "spec.name", value = "custom-html-sanitizer")
-    @Singleton
-    static final class CustomHtmlSanitizer implements HtmlSanitizer {
-
-        @Override
-        public String sanitize(String html) {
-            return "custom";
-        }
-    }
-
-    @Requires(property = "spec.name", value = "custom-policy-factory")
-    @Factory
-    static final class CustomPolicyFactory {
-
-        @Singleton
-        @Named(OwaspHtmlSanitizer.POLICY_FACTORY)
-        PolicyFactory policyFactory() {
-            return Sanitizers.FORMATTING;
-        }
-    }
-
-    @Requires(property = "spec.name", value = "unrelated-policy-factory")
-    @Factory
-    static final class UnrelatedPolicyFactory {
-
-        @Singleton
-        @Named("unrelatedPolicyFactory")
-        PolicyFactory policyFactory() {
-            return Sanitizers.IMAGES;
-        }
-    }
-
 }

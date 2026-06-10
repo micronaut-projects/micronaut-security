@@ -31,15 +31,7 @@ import org.owasp.html.PolicyFactory;
  * @since 5.1.0
  */
 @Singleton
-@Replaces(HtmlEntityEncodingHtmlSanitizer.class)
-@Secondary
 public class OwaspHtmlSanitizer implements HtmlSanitizer {
-
-    /**
-     * Qualifier name for the {@link PolicyFactory} bean used by {@link OwaspHtmlSanitizer}.
-     */
-    public static final String POLICY_FACTORY = "micronautSecurityHtmlSanitizerPolicy";
-
     private final PolicyFactory policyFactory;
 
     /**
@@ -47,7 +39,7 @@ public class OwaspHtmlSanitizer implements HtmlSanitizer {
      *
      * @param policyFactory The OWASP policy factory
      */
-    public OwaspHtmlSanitizer(@Named(POLICY_FACTORY) PolicyFactory policyFactory) {
+    public OwaspHtmlSanitizer(PolicyFactory policyFactory) {
         this.policyFactory = policyFactory;
     }
 

@@ -17,6 +17,7 @@ package io.micronaut.security.html;
 
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Secondary;
+import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.owasp.html.HtmlPolicyBuilder;
@@ -29,12 +30,11 @@ import org.owasp.html.PolicyFactory;
  * @since 5.1.0
  */
 @Factory
+@Internal
 final class OwaspHtmlSanitizerFactory {
 
     @Singleton
-    @Named(OwaspHtmlSanitizer.POLICY_FACTORY)
-    @Secondary
-    PolicyFactory htmlSanitizerPolicyFactory(HtmlSanitizerConfiguration configuration) {
+    PolicyFactory createPolicyFactory(HtmlSanitizerConfiguration configuration) {
         return configuration.getPolicies()
             .stream()
             .map(HtmlSanitizerPolicy::policyFactory)
