@@ -8,10 +8,11 @@ import jakarta.inject.Singleton
 //tag::clazz[]
 @Singleton
 class CustomClaimsAudienceProvider implements ClaimsAudienceProvider {
+    private static final ArrayList<String> AUDIENCE = ["https://api.example.com"]
 
     @Override
     List<String> audience() {
-        ["https://api.example.com"]
+        AUDIENCE
     }
 }
 //end::clazz[]

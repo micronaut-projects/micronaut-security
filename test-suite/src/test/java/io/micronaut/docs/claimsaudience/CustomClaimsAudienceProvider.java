@@ -10,10 +10,11 @@ import java.util.List;
 //tag::clazz[]
 @Singleton
 class CustomClaimsAudienceProvider implements ClaimsAudienceProvider {
+    private static final List<String> AUDIENCE = List.of("https://api.example.com");
 
     @Override
     public List<String> audience() {
-        return List.of("https://api.example.com");
+        return AUDIENCE;
     }
 }
 //end::clazz[]
