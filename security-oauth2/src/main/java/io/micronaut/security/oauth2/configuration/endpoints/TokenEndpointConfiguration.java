@@ -33,4 +33,13 @@ public interface TokenEndpointConfiguration extends SecureEndpointConfiguration 
      */
     @NonNull
     MediaType getContentType();
+
+    /**
+     * @return A new token endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static TokenEndpointConfigurationBuilder builder() {
+        return new TokenEndpointConfigurationBuilder();
+    }
 }
