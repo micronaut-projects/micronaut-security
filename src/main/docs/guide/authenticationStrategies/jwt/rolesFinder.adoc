@@ -10,7 +10,7 @@ The default implementation supports the following role attribute values:
 * `String`: the string is treated as a single role, unless `micronaut.security.token.roles-separator` is configured.
 * Any other value: the value is converted to a single role with `toString()`.
 
-If `micronaut.security.token.roles-separator` is configured and the role attribute is a `String`, api:security.token.DefaultRolesFinder[] splits the value with that separator.
+If `micronaut.security.token.roles-separator` is configured and the role attribute is a `String`, api:security.token.DefaultRolesFinder[] splits the value using Java's `String#split`, so the separator is treated as a regular expression.
 For example, this configuration resolves a JWT `scope` claim such as `profile;email;admin` into three granted roles:
 
 [configuration]
