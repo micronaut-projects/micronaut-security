@@ -98,7 +98,7 @@ csrf:
   csrfMitigations:
     title: CSRF Mitigations
     syncronizerTokenPattern:
-      title: Syncronizer Token Pattern
+      title: Synchronizer Token Pattern
       csrfAndSession: CSRF and Session
     doubleSubmitCookiePattern: Double Submit Cookie Pattern
     signedDoubleSubmitCookiePattern: Signed Double Submit Cookie Pattern
