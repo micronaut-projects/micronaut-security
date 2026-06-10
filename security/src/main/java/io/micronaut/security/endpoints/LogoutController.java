@@ -175,13 +175,7 @@ public class LogoutController {
     private Publisher<MutableHttpResponse<?>> handleLogoutReactive(@NonNull HttpRequest<?> request, @Nullable Authentication authentication) {
         return Mono.defer(() -> {
             if (authentication != null) {
-                logoutEventPublisher.publishEvent(
-                    new LogoutEvent(
-                        authentication,
-                        httpHostResolver.resolve(request),
-                        httpLocaleResolver.resolveOrDefault(request)
-                    )
-                );
+                publishEvent(request, authentication);
             }
             return Mono.from(reactiveLogoutHandler.logout(request));
         });
@@ -244,14 +238,18 @@ public class LogoutController {
     @Deprecated(forRemoval = true, since = "5.1")
     protected MutableHttpResponse<?> handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (authentication != null) {
-            logoutEventPublisher.publishEvent(
-                new LogoutEvent(
-                    authentication,
-                    httpHostResolver.resolve(request),
-                    httpLocaleResolver.resolveOrDefault(request)
-                )
-            );
+            publishEvent(request, authentication);
         }
         return logoutHandler.logout(request);
+    }
+
+    private void publishEvent(@NonNull HttpRequest<?> request, @NonNull Authentication authentication) {
+        logoutEventPublisher.publishEvent(
+            new LogoutEvent(
+                authentication,
+                httpHostResolver.resolve(request),
+                httpLocaleResolver.resolveOrDefault(request)
+            )
+        );
     }
 }
