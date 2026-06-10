@@ -15,11 +15,7 @@
  */
 package io.micronaut.security.html;
 
-import io.micronaut.context.annotation.Replaces;
-import io.micronaut.context.annotation.Secondary;
-import io.micronaut.http.util.HtmlEntityEncodingHtmlSanitizer;
 import io.micronaut.http.util.HtmlSanitizer;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 import org.owasp.html.PolicyFactory;

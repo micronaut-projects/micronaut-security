@@ -16,9 +16,7 @@
 package io.micronaut.security.html;
 
 import io.micronaut.context.annotation.Factory;
-import io.micronaut.context.annotation.Secondary;
 import io.micronaut.core.annotation.Internal;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
