@@ -17,7 +17,11 @@ dependencies {
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.junit.jupiter)
 
     testAnnotationProcessor(projects.micronautSecurityProcessor)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)

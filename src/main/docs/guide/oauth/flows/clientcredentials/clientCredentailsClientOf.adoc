@@ -1,0 +1,3 @@
+If you have a scenario where you don’t have a Micronaut Application context, you can obtain a static api:io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClient[]
+
+snippet::io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClientOfTest[tags="clientcredentialsof",indent=0]
