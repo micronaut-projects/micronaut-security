@@ -2,4 +2,4 @@ The api:security.handlers.LogoutHandler[] API defines how to respond to a logout
 
 For non-blocking logout work, implement api:security.handlers.ReactiveLogoutHandler[] instead. Its `logout` method returns a cold publisher that emits zero or one response. This is useful when logout needs to call reactive persistence APIs, token revocation APIs, or other non-blocking services before the response is created.
 
-When both handler types are available, the logout endpoint uses api:security.handlers.ReactiveLogoutHandler[]. To reuse an existing synchronous handler, inject api:security.handlers.LogoutHandler[] into the reactive handler and delegate to it after the reactive work completes.
+When both handler types are available, the logout endpoint uses api:security.handlers.ReactiveLogoutHandler[]. 
