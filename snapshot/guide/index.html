@@ -265,7 +265,7 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-csrfMitigations"><a href="#csrfMitigations"><strong>13.3</strong><span>CSRF Mitigations</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-syncronizerTokenPattern"><a href="#syncronizerTokenPattern"><strong>13.3.1</strong><span>Syncronizer Token Pattern</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-syncronizerTokenPattern"><a href="#syncronizerTokenPattern"><strong>13.3.1</strong><span>Synchronizer Token Pattern</span></a></div>
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-csrfAndSession"><a href="#csrfAndSession"><strong>13.3.1.1</strong><span>CSRF and Session</span></a></div>
         
@@ -3844,7 +3844,7 @@ The parser decrypts the token if encrypted.</p>
 <div class="paragraph">
 <p>The easiest way is to create a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html">SignatureConfiguration</a> is to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html">RSASignatureConfiguration</a>,
 <a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>, or
-<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> which must be <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">qualified</a> with <code>@Named</code> since the configuration beans are used by factories (<a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html/.html">html</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> which must be <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">qualified</a> with <code>@Named</code> since the configuration beans are used by factories (<a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html">RSASignatureFactory</a>,
 <a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>) or other beans (<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html">SecretSignature</a>)  which use
 <a href="https://docs.micronaut.io/latest/guide/index.html#eachBean">@EachBean</a> to drive configuration.</p>
 </div>
@@ -6436,7 +6436,7 @@ Ensure your application does not perform state-changing actions via the GET requ
 </table>
 </div>
 
-<h2 id="syncronizerTokenPattern"><a class="anchor" href="#syncronizerTokenPattern"></a>13.3.1 Syncronizer Token Pattern</h2>
+<h2 id="syncronizerTokenPattern"><a class="anchor" href="#syncronizerTokenPattern"></a>13.3.1 Synchronizer Token Pattern</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/csrf/csrfMitigations/syncronizerTokenPattern.adoc"'>
@@ -6446,7 +6446,7 @@ Ensure your application does not perform state-changing actions via the GET requ
 
 
 <div class="paragraph">
-<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">Syncronizer Token Pattern</a>.</p>
+<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern">Synchronizer Token Pattern</a>.</p>
 </div>
 <div class="quoteblock">
 <blockquote>
