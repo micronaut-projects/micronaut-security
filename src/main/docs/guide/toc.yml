@@ -79,6 +79,7 @@ authenticationStrategies:
       jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
     claimsValidation: Claims Validation
+    rolesFinder: Roles Finder
     render:
       title: Token Render
     jwtGuides: Guides
