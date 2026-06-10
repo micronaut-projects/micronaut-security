@@ -1,0 +1,9 @@
+You can use `jakarta.annotation.security.RunAs` with a JSON representation of an authentication.
+
+snippet::io.micronaut.security.docs.authentication.RunAsAuthService[tags="clazz"]
+
+Annotating a Micronaut bean class with `@RunAs` applies the run-as authentication to intercepted method invocations on that bean.
+Micronaut Security maps the annotation value to an api:security.authentication.Authentication[], sets it in the current security context for the invocation, and restores the previous authentication when the method completes.
+The annotation does not authenticate the incoming request or permanently replace the caller's identity.
+
+One good use case is a bean with api:scheduling.annotation.Scheduled[] methods. Because https://docs.micronaut.io/latest/guide/#scheduling[scheduled tasks] do not run as part of an incoming authenticated request, `@RunAs` lets the scheduled job delegate to services that expect an authenticated user.

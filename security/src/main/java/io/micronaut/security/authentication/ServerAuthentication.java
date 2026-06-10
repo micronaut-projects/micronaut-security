@@ -16,10 +16,10 @@
 package io.micronaut.security.authentication;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.serde.annotation.Serdeable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -83,6 +83,24 @@ public class ServerAuthentication implements Authentication {
     @NonNull
     public Collection<String> getRoles() {
         return Collections.unmodifiableCollection(roles);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ServerAuthentication that = (ServerAuthentication) o;
+        return name.equals(that.name) && roles.equals(that.roles) && attributes.equals(that.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + roles.hashCode();
+        result = 31 * result + attributes.hashCode();
+        return result;
     }
 
     /**

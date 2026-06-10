@@ -29,6 +29,7 @@ import io.micronaut.http.context.ServerRequestContext;
  */
 @Internal
 public final class ServerRequestContextSecurityContextSupplier implements SecurityContextSupplier {
+    private static final ThreadLocal<SecurityContext> THREAD_LOCAL_SECURITY_CONTEXT = new ThreadLocal<>();
 
     @NonNull
     public SecurityContext get(@Nullable HttpRequest<?> request) {
@@ -38,7 +39,12 @@ public final class ServerRequestContextSecurityContextSupplier implements Securi
     @NonNull
     @Override
     public SecurityContext getSecurityContext() {
-        return get(ServerRequestContext.currentRequest().orElse(null));
+        HttpRequest<?> currentRequest = currentRequest();
+        if (currentRequest != null) {
+            return get(currentRequest);
+        }
+        SecurityContext securityContext = THREAD_LOCAL_SECURITY_CONTEXT.get();
+        return securityContext == null ? new MutableSecurityContext() : securityContext;
     }
 
     /**
@@ -52,5 +58,68 @@ public final class ServerRequestContextSecurityContextSupplier implements Securi
             return supplier.get(httpRequest);
         }
         return SecurityContextHolder.getSecurityContext();
+    }
+
+    /**
+     * Opens a security context scope for code that does not run with a server request.
+     *
+     * @return The scoped security context
+     */
+    @Internal
+    @NonNull
+    public static ScopedSecurityContext openSecurityContext() {
+        if (SecurityContextHolder.INSTANCE instanceof ServerRequestContextSecurityContextSupplier supplier) {
+            return supplier.open();
+        }
+        return new ScopedSecurityContext(SecurityContextHolder.getSecurityContext(), false);
+    }
+
+    @Nullable
+    private HttpRequest<?> currentRequest() {
+        return ServerRequestContext.currentRequest().orElse(null);
+    }
+
+    @NonNull
+    private ScopedSecurityContext open() {
+        HttpRequest<?> currentRequest = currentRequest();
+        if (currentRequest != null) {
+            return new ScopedSecurityContext(get(currentRequest), false);
+        }
+        SecurityContext securityContext = THREAD_LOCAL_SECURITY_CONTEXT.get();
+        if (securityContext != null) {
+            return new ScopedSecurityContext(securityContext, false);
+        }
+        securityContext = new MutableSecurityContext();
+        THREAD_LOCAL_SECURITY_CONTEXT.set(securityContext);
+        return new ScopedSecurityContext(securityContext, true);
+    }
+
+    /**
+     * A security context scope.
+     */
+    @Internal
+    public static final class ScopedSecurityContext implements AutoCloseable {
+        private final SecurityContext securityContext;
+        private final boolean removeThreadLocal;
+
+        private ScopedSecurityContext(SecurityContext securityContext, boolean removeThreadLocal) {
+            this.securityContext = securityContext;
+            this.removeThreadLocal = removeThreadLocal;
+        }
+
+        /**
+         * @return The security context for this scope
+         */
+        @NonNull
+        public SecurityContext getSecurityContext() {
+            return securityContext;
+        }
+
+        @Override
+        public void close() {
+            if (removeThreadLocal) {
+                THREAD_LOCAL_SECURITY_CONTEXT.remove();
+            }
+        }
     }
 }

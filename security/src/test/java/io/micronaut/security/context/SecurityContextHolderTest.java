@@ -23,6 +23,26 @@ class SecurityContextHolderTest {
     }
 
     @Test
+    void doesNotRetainSecurityContextWhenNoRequestOrScopeIsBound() {
+        SecurityContextHolder.getSecurityContext().withAuthentication(Authentication.build("watson"));
+
+        assertNull(SecurityContextHolder.getSecurityContext().getAuthentication());
+    }
+
+    @Test
+    void removesScopedSecurityContextWhenNoRequestIsBound() {
+        Authentication authentication = Authentication.build("watson");
+
+        try (ServerRequestContextSecurityContextSupplier.ScopedSecurityContext scopedContext = ServerRequestContextSecurityContextSupplier.openSecurityContext()) {
+            scopedContext.getSecurityContext().withAuthentication(authentication);
+
+            assertSame(authentication, SecurityContextHolder.getSecurityContext().getAuthentication());
+        }
+
+        assertNull(SecurityContextHolder.getSecurityContext().getAuthentication());
+    }
+
+    @Test
     void resolvesSecurityContextFromCurrentRequest() {
         MutableHttpRequest<?> request = HttpRequest.GET("/context-holder");
         Authentication authentication = Authentication.build("watson");

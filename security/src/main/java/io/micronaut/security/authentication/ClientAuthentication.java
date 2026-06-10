@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * An implementation of the Authentication interface intended to be used
@@ -63,6 +64,22 @@ public class ClientAuthentication implements Authentication {
     @NonNull
     public Map<String, Object> getAttributes() {
         return new HashMap<>(attributes);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof ClientAuthentication that)) {
+            return false;
+        }
+
+        return Objects.equals(name, that.name) && Objects.equals(attributes, that.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(attributes);
+        return result;
     }
 
     /**

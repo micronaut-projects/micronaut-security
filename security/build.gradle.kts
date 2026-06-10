@@ -44,5 +44,6 @@ dependencies {
     testImplementation(mnTest.mockito.core)
     testImplementation(mnTest.junit.jupiter.params)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testImplementation(libs.jsonassert)
+    testImplementation(libs.awaitility)
 }
-
