@@ -17,7 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -36,8 +36,14 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.handlers.ReactiveLogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+
 import java.util.Optional;
 
 /**
@@ -47,13 +53,13 @@ import java.util.Optional;
 @Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Requires(classes = Controller.class)
 @Requires(beans = { LogoutHandler.class, HttpHostResolver.class, HttpLocaleResolver.class })
-@Requires(missingBeans = ReactiveLogoutHandler.class)
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {
     private static final Logger LOG = LoggerFactory.getLogger(LogoutController.class);
 
     private final LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler;
+    private final ReactiveLogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> reactiveLogoutHandler;
     private final ApplicationEventPublisher<LogoutEvent> logoutEventPublisher;
     private final boolean getAllowed;
     private final HttpHostResolver httpHostResolver;
@@ -66,15 +72,19 @@ public class LogoutController {
      * @param logoutControllerConfiguration Configuration for the Logout controller
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
-     * @since 4.11.0
+     * @param reactiveLogoutHandler         A reactive collaborator which helps to build HTTP response if user logout.
+     * @since 5.1.0
      */
+    @Inject
     public LogoutController(
         LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
         ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
         LogoutControllerConfiguration logoutControllerConfiguration,
         HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver) {
+        HttpLocaleResolver httpLocaleResolver,
+        @Nullable ReactiveLogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> reactiveLogoutHandler) {
         this.logoutHandler = logoutHandler;
+        this.reactiveLogoutHandler = reactiveLogoutHandler == null ? new ReactiveLogoutHandlerAdapter<>(logoutHandler) : reactiveLogoutHandler;
         this.logoutEventPublisher = logoutEventPublisher;
         this.getAllowed = logoutControllerConfiguration.isGetAllowed();
         this.httpHostResolver = httpHostResolver;
@@ -88,9 +98,29 @@ public class LogoutController {
      * @param logoutControllerConfiguration Configuration for the Logout controller
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
+     * @since 4.11.0
+     * @deprecated Use {@link #LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration, HttpHostResolver, HttpLocaleResolver, ReactiveLogoutHandler)} instead
+     */
+    @Deprecated(forRemoval = true, since = "5.1.0")
+    public LogoutController(
+        LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> logoutHandler,
+        ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
+        LogoutControllerConfiguration logoutControllerConfiguration,
+        HttpHostResolver httpHostResolver,
+        HttpLocaleResolver httpLocaleResolver) {
+        this(logoutHandler, logoutEventPublisher, logoutControllerConfiguration, httpHostResolver, httpLocaleResolver,
+            (ReactiveLogoutHandler<HttpRequest<?>, MutableHttpResponse<?>>) null);
+    }
+
+    /**
+     * @param logoutHandler                 A collaborator which helps to build HTTP response if user logout.
+     * @param logoutEventPublisher          The application event publisher
+     * @param logoutControllerConfiguration Configuration for the Logout controller
+     * @param httpHostResolver              The http host resolver
+     * @param httpLocaleResolver            The http locale resolver
      * @param logoutControllerConfigurationProperties  Configuration for the Logout Controller.
      * @since 4.7.0
-     * @deprecated Use {@link #LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration, HttpHostResolver, HttpLocaleResolver)} instead
+     * @deprecated Use {@link #LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration, HttpHostResolver, HttpLocaleResolver, ReactiveLogoutHandler)} instead
      */
     @Deprecated(forRemoval = true, since = "4.11.0")
     public LogoutController(
@@ -112,17 +142,12 @@ public class LogoutController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
-        Optional<MediaType> contentTypeOptional = request.getContentType();
-        if (!(contentTypeOptional.isPresent() && logoutControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Unsupported content type {}. Logout Controller supports: {}",
-                    contentTypeOptional.map(MediaType::getName).orElse(""),
-                    String.join(",", logoutControllerConfiguration.getPostContentTypes()));
-            }
-            return HttpResponse.status(HttpStatus.valueOf(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus()));
+    public Publisher<MutableHttpResponse<?>> logoutPost(HttpRequest<?> request, @Nullable Authentication authentication) {
+        MutableHttpResponse<?> rsp = shouldHandleLogout(request);
+        if (rsp != null) {
+            return Publishers.just(rsp);
         }
-        return handleLogout(request, authentication);
+        return handleLogoutReactive(request, authentication);
     }
 
     /**
@@ -133,6 +158,75 @@ public class LogoutController {
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
     @Get
+    public Publisher<MutableHttpResponse<?>> logoutGet(HttpRequest<?> request, @Nullable Authentication authentication) {
+        if (!getAllowed) {
+            return Publishers.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
+        }
+
+        return handleLogoutReactive(request, authentication);
+    }
+
+    /**
+     * @param request        The {@link HttpRequest} being executed
+     * @param authentication {@link Authentication} instance for current user
+     * @return An HTTP response or a failure indicated by the HTTP status
+     */
+    @NonNull
+    private Publisher<MutableHttpResponse<?>> handleLogoutReactive(@NonNull HttpRequest<?> request, @Nullable Authentication authentication) {
+        return Mono.defer(() -> {
+            if (authentication != null) {
+                logoutEventPublisher.publishEvent(
+                    new LogoutEvent(
+                        authentication,
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                    )
+                );
+            }
+            return Mono.from(reactiveLogoutHandler.logout(request));
+        });
+    }
+
+    @Nullable
+    private MutableHttpResponse<?> shouldHandleLogout(HttpRequest<?> request) {
+        Optional<MediaType> contentTypeOptional = request.getContentType();
+        if (!(contentTypeOptional.isPresent() && logoutControllerConfiguration.getPostContentTypes().contains(contentTypeOptional.get().getName()))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Unsupported content type {}. Logout Controller supports: {}",
+                    contentTypeOptional.map(MediaType::getName).orElse(""),
+                    String.join(",", logoutControllerConfiguration.getPostContentTypes()));
+            }
+            return HttpResponse.status(HttpStatus.valueOf(logoutControllerConfiguration.getUnsupportedPostContentTypeStatus()));
+        }
+        return null;
+    }
+
+    /**
+     * POST endpoint for Logout Controller.
+     *
+     * @param request        The {@link HttpRequest} being executed
+     * @param authentication {@link Authentication} instance for current user
+     * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
+     * @deprecated No longer used
+     */
+    @Deprecated(forRemoval = true, since = "5.1")
+    public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
+        MutableHttpResponse<?> rsp = shouldHandleLogout(request);
+        if (rsp != null) {
+            return rsp;
+        }
+        return handleLogout(request, authentication);
+    }
+
+    /**
+     * GET endpoint for Logout Controller.
+     *
+     * @param request        The {@link HttpRequest} being executed
+     * @param authentication {@link Authentication} instance for current user
+     * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
+     * @deprecated No longer used
+     */
+    @Deprecated(forRemoval = true, since = "5.1")
     public MutableHttpResponse<?> indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (!getAllowed) {
             return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
@@ -145,7 +239,9 @@ public class LogoutController {
      * @param request        The {@link HttpRequest} being executed
      * @param authentication {@link Authentication} instance for current user
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
+     * @deprecated No longer used
      */
+    @Deprecated(forRemoval = true, since = "5.1")
     protected MutableHttpResponse<?> handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (authentication != null) {
             logoutEventPublisher.publishEvent(

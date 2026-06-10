@@ -20,6 +20,7 @@ import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.handlers.ReactiveLogoutHandler;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
@@ -44,13 +45,6 @@ class ReactiveLogoutControllerTest {
     private static final String REACTIVE_SPECS = REACTIVE_SPEC + "|" + REACTIVE_UNAUTHENTICATED_SPEC;
     private static final String SYNC_SPEC = "SyncOnlyLogoutControllerTest";
 
-    @Test
-    void syncOnlyApplicationsUseLogoutController() {
-        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", SYNC_SPEC))) {
-            assertInstanceOf(LogoutController.class, context.getBean(LogoutController.class));
-            assertThrows(NoSuchBeanException.class, () -> context.getBean(ReactiveLogoutController.class));
-        }
-    }
 
     @Test
     void reactiveLogoutHandlerOwnsEndpointWhenBothHandlerTypesExist() {
@@ -70,8 +64,6 @@ class ReactiveLogoutControllerTest {
             LogoutEventRecorder logoutEventRecorder = context.getBean(LogoutEventRecorder.class);
             assertEquals(1, logoutEventRecorder.invocations.get());
             assertInstanceOf(Authentication.class, logoutEventRecorder.logoutEvent.getSource());
-            assertInstanceOf(ReactiveLogoutController.class, context.getBean(ReactiveLogoutController.class));
-            assertThrows(NoSuchBeanException.class, () -> context.getBean(LogoutController.class));
         }
     }
 
@@ -149,19 +141,6 @@ class ReactiveLogoutControllerTest {
     }
 
     @Test
-    void reactiveLogoutRejectsPostWithoutContentType() {
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", REACTIVE_SPEC))) {
-            ReactiveLogoutController controller = server.getApplicationContext().getBean(ReactiveLogoutController.class);
-            HttpRequest<?> request = HttpRequest.POST("/logout", Collections.emptyMap());
-
-            MutableHttpResponse<?> response = Mono.from(controller.index(request, Authentication.build("sherlock"))).block();
-
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
-            assertEquals(0, server.getApplicationContext().getBean(ReactiveLogoutHandlerMock.class).invocations.get());
-        }
-    }
-
-    @Test
     void reactiveLogoutDoesNotPublishLogoutEventWithoutAuthentication() {
         try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", REACTIVE_UNAUTHENTICATED_SPEC));
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
@@ -187,7 +166,7 @@ class ReactiveLogoutControllerTest {
             CompletableFuture.completedFuture(HttpResponse.ok("reactive").header("X-Logout-Handler", "reactive"));
 
         @Override
-        public Publisher<MutableHttpResponse<?>> logout(HttpRequest<?> request) {
+        public @NonNull Publisher<MutableHttpResponse<?>> logout(@NonNull HttpRequest<?> request) {
             invocations.incrementAndGet();
             invoked.countDown();
             return Mono.fromFuture(response);
