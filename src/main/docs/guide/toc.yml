@@ -98,7 +98,7 @@ csrf:
   csrfMitigations:
     title: CSRF Mitigations
     syncronizerTokenPattern:
-      title: Syncronizer Token Pattern
+      title: Synchronizer Token Pattern
       csrfAndSession: CSRF and Session
     doubleSubmitCookiePattern: Double Submit Cookie Pattern
     signedDoubleSubmitCookiePattern: Signed Double Submit Cookie Pattern
@@ -154,6 +154,7 @@ oauth:
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
+      clientCredentailsClientOf: Static ClientCredentialsClient
       clientCredentialGuides: Guides
     password: Password
   oauth-endpoints:

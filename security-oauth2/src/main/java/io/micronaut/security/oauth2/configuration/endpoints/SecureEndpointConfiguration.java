@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Optional;
 
 /**
@@ -29,4 +31,13 @@ public interface SecureEndpointConfiguration extends EndpointConfiguration {
      * @return An optional Authentication Method.
      */
     Optional<String> getAuthenticationMethod();
+
+    /**
+     * @return A new secure endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static SecureEndpointConfigurationBuilder builder() {
+        return new SecureEndpointConfigurationBuilder();
+    }
 }
