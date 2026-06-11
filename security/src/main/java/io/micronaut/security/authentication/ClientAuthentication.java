@@ -52,7 +52,7 @@ public class ClientAuthentication implements Authentication {
     public ClientAuthentication(@JsonProperty("name") String name,
                                 @JsonProperty("attributes") Map<String, Object> attributes) {
         this.name = name;
-        this.attributes = attributes == null ? Collections.emptyMap() : attributes;
+        this.attributes = attributes == null ? Collections.emptyMap() : Collections.unmodifiableMap(new HashMap<>(attributes));
     }
 
     @Override
