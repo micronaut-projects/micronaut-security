@@ -106,24 +106,25 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     private CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
                                                        Authentication runAsAuthentication) {
         RunAsSecurityContext runAsSecurityContext = new RunAsSecurityContext(runAsAuthentication);
-        CompletionStage<?> completionStage;
+        boolean closeOnExit = true;
         try {
-            completionStage = interceptedMethod.interceptResultAsCompletionStage();
-        } catch (RuntimeException | Error e) {
-            runAsSecurityContext.close();
-            throw e;
-        }
-
-        CompletableFuture<Object> result = new CompletableFuture<>();
-        completionStage.whenComplete((value, throwable) -> {
-            runAsSecurityContext.close();
-            if (throwable == null) {
-                result.complete(value);
-            } else {
-                result.completeExceptionally(throwable);
+            CompletionStage<?> completionStage = interceptedMethod.interceptResultAsCompletionStage();
+            CompletableFuture<Object> result = new CompletableFuture<>();
+            completionStage.whenComplete((value, throwable) -> {
+                runAsSecurityContext.close();
+                if (throwable == null) {
+                    result.complete(value);
+                } else {
+                    result.completeExceptionally(throwable);
+                }
+            });
+            closeOnExit = false;
+            return result;
+        } finally {
+            if (closeOnExit) {
+                runAsSecurityContext.close();
             }
-        });
-        return result;
+        }
     }
 
     private static final class RunAsSecurityContext implements AutoCloseable {
