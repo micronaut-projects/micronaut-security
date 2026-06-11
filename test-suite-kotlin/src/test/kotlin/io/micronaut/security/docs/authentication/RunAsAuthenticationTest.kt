@@ -20,12 +20,12 @@ import jakarta.inject.Singleton
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-@Property(name = "spec.name", value = "RunAsTest")
+@Property(name = "spec.name", value = "RunAsAuthenticationTest")
 @MicronautTest
-internal class RunAsTest {
+internal class RunAsAuthenticationTest {
 
     @Test
-    fun verifyYouCanUseTheRunAsAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") httpClient: HttpClient) {
+    fun verifyYouCanUseTheRunAsAuthenticationAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") httpClient: HttpClient) {
         val client = httpClient.toBlocking()
         val authentications = client.retrieve(
             HttpRequest.GET<Any>("/runAs").basicAuth("john", "ilikedaenerys"),
@@ -52,7 +52,7 @@ internal class RunAsTest {
         Assertions.assertEquals(expected.attributes, authentication.attributes)
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     internal class RunAsAuthenticationProvider : HttpRequestAuthenticationProvider<Any> {
         override fun authenticate(
@@ -67,10 +67,10 @@ internal class RunAsTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Controller("/runAs")
     internal class RunAsController(
-        private val runAuthService: RunAsAuthService,
+        private val runAuthService: RunAsAuthenticationService,
         private val authService: AuthService
     ) {
 
@@ -81,7 +81,7 @@ internal class RunAsTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     internal class AuthService {
         fun auth(): Authentication? {

@@ -21,15 +21,15 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import spock.lang.Specification
 
-@Property(name = "spec.name", value = "RunAsTest")
+@Property(name = "spec.name", value = "RunAsAuthenticationTest")
 @MicronautTest
-class RunAsTest extends Specification {
+class RunAsAuthenticationTest extends Specification {
 
     @Inject
     @Client("/")
     HttpClient httpClient
 
-    void "verify you can use the RunAs annotation to change the SecurityContextHolder for the scope of a class"() {
+    void "verify you can use the RunAsAuthentication annotation to change the SecurityContextHolder for the scope of a class"() {
         given:
         BlockingHttpClient client = httpClient.toBlocking()
 
@@ -62,7 +62,7 @@ class RunAsTest extends Specification {
         expected.attributes == authentication.attributes
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     static class RunAsAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
         @Override
@@ -76,13 +76,13 @@ class RunAsTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Controller("/runAs")
     static class RunAsController {
-        private final RunAsAuthService runAuthService
+        private final RunAsAuthenticationService runAuthService
         private final AuthService authService
 
-        RunAsController(RunAsAuthService runAuthService,
+        RunAsController(RunAsAuthenticationService runAuthService,
                         AuthService authService) {
             this.runAuthService = runAuthService
             this.authService = authService
@@ -95,7 +95,7 @@ class RunAsTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     static class AuthService {
         Authentication auth() {

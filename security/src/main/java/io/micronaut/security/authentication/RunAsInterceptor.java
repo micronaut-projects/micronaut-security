@@ -23,9 +23,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.security.annotation.RunAsAuthentication;
 import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
-import jakarta.annotation.security.RunAs;
 import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
@@ -35,12 +35,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 /**
- * Intercepts {@link RunAs} and temporarily replaces the current security context
+ * Intercepts {@link RunAsAuthentication} and temporarily replaces the current security context
  * authentication for the intercepted invocation.
  */
 @Requires(beans = AuthenticationMapper.class)
 @Internal
-@InterceptorBean(RunAs.class)
+@InterceptorBean(RunAsAuthentication.class)
 final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     private final AuthenticationMapper authenticationMapper;
 
@@ -51,7 +51,7 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     @Override
     @Nullable
     public Object intercept(MethodInvocationContext<Object, Object> context) {
-        String value = context.stringValue(RunAs.class).orElse(null);
+        String value = context.stringValue(RunAsAuthentication.class).orElse(null);
         if (value == null || value.isBlank()) {
             return context.proceed();
         }
@@ -60,7 +60,7 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
         try {
             runAsAuthentication = authenticationMapper.read(value);
         } catch (IOException e) {
-            throw new ConfigurationException("Invalid @RunAs authentication value", e);
+            throw new ConfigurationException("Invalid @RunAsAuthentication value", e);
         }
         return intercept(context, runAsAuthentication);
     }

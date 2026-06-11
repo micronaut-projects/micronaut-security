@@ -24,6 +24,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.security.annotation.RunAsAuthentication;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -43,21 +44,21 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Property(name = "spec.name", value = "RunAsTest")
+@Property(name = "spec.name", value = "RunAsAuthenticationTest")
 @MicronautTest
-class RunAsTest {
+class RunAsAuthenticationTest {
 
     @Test
-    void verifyYouCanUseTheRunAsAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") HttpClient httpClient) {
+    void verifyYouCanUseTheRunAsAuthenticationAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         List<ClientAuthentication> authentications = client.retrieve(
-            HttpRequest.GET("/runAs").basicAuth("john", "ilikedaenerys"),
-            Argument.listOf(ClientAuthentication.class)
+                HttpRequest.GET("/runAs").basicAuth("john", "ilikedaenerys"),
+                Argument.listOf(ClientAuthentication.class)
         );
         Authentication runAsExpected = Authentication.build(
-            "aegon",
-            List.of("ROLE_KING"),
-            Map.of("family_name", "Targaryen", "roles", List.of("ROLE_KING"))
+                "aegon",
+                List.of("ROLE_KING"),
+                Map.of("family_name", "Targaryen", "roles", List.of("ROLE_KING"))
         );
         Authentication authentication = authentications.get(0);
         assertNotNull(authentication);
@@ -66,9 +67,9 @@ class RunAsTest {
         assertEquals(runAsExpected.getAttributes(), authentication.getAttributes());
 
         Authentication expected = Authentication.build(
-            "john",
-            List.of("ROLE_STARK"),
-            Map.of("family_name", "Snow", "given_name", "John", "roles", List.of("ROLE_STARK"))
+                "john",
+                List.of("ROLE_STARK"),
+                Map.of("family_name", "Snow", "given_name", "John", "roles", List.of("ROLE_STARK"))
         );
         authentication = authentications.get(1);
         assertNotNull(authentication);
@@ -77,27 +78,27 @@ class RunAsTest {
         assertEquals(expected.getAttributes(), authentication.getAttributes());
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     static class RunAsAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
         @Override
         public @NonNull AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext,
                                                             @NonNull AuthenticationRequest<String, String> authRequest) {
             return AuthenticationResponse.success(
-                "john",
-                List.of("ROLE_STARK"),
-                Map.of("family_name", "Snow", "given_name", "John")
+                    "john",
+                    List.of("ROLE_STARK"),
+                    Map.of("family_name", "Snow", "given_name", "John")
             );
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Controller("/runAs")
     static class RunAsController {
-        private final RunAsAuthService runAuthService;
+        private final RunAsAuthenticationService runAuthService;
         private final AuthService authService;
 
-        RunAsController(RunAsAuthService runAuthService,
+        RunAsController(RunAsAuthenticationService runAuthService,
                         AuthService authService) {
             this.runAuthService = runAuthService;
             this.authService = authService;
@@ -105,15 +106,24 @@ class RunAsTest {
 
         @Secured("ROLE_STARK")
         @Get
-        List<Authentication> index(Authentication authentication) {
+        List<Authentication> index() {
             return List.of(runAuthService.changeAuth(), authService.auth());
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsTest")
+    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
     @Singleton
     static class AuthService {
         Authentication auth() {
+            return SecurityContextHolder.getSecurityContext().getAuthentication();
+        }
+    }
+
+    @RunAsAuthentication("""
+            {"name":"aegon","attributes":{"family_name":"Targaryen","roles":["ROLE_KING"]}}""")
+    @Singleton
+    static class RunAsAuthenticationService {
+        Authentication changeAuth() {
             return SecurityContextHolder.getSecurityContext().getAuthentication();
         }
     }

@@ -26,10 +26,10 @@ import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.annotation.RunAsAuthentication;
 import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider;
 import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.annotation.security.RunAs;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -120,7 +120,7 @@ class RunAsAsyncTest {
         }
     }
 
-    @RunAs("""
+    @RunAsAuthentication("""
             {"name":"aegon","attributes":{"family_name":"Targaryen","roles":["ROLE_KING"]}}""")
     @Requires(property = "spec.name", value = "RunAsAsyncTest")
     @Singleton

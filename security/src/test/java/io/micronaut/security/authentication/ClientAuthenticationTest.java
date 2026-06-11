@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @MicronautTest(startApplication = false)
 class ClientAuthenticationTest {
@@ -44,5 +45,22 @@ class ClientAuthenticationTest {
     void deserializeAsJson(JsonMapper jsonMapper) throws IOException {
         Authentication result = jsonMapper.readValue(JSON, ClientAuthentication.class);
         assertEquals(AUTH, result);
+    }
+
+    @Test
+    void equalsAndHashCodeTest() {
+        ClientAuthentication authentication = new ClientAuthentication("sergio",
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"));
+        ClientAuthentication same = new ClientAuthentication("sergio",
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"));
+
+        assertEquals(authentication, same);
+        assertEquals(authentication.hashCode(), same.hashCode());
+        assertNotEquals(authentication, new ClientAuthentication("aegon",
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio")));
+        assertNotEquals(authentication, new ClientAuthentication("sergio",
+            Map.of("roles", List.of("ROLE_KING"), "family_name", "del Amo", "given_name", "Sergio")));
+        assertNotEquals(authentication, null);
+        assertNotEquals(authentication, new Object());
     }
 }

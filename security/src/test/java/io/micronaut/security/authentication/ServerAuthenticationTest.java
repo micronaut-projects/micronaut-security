@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @MicronautTest(startApplication = false)
 class ServerAuthenticationTest {
@@ -40,11 +41,26 @@ class ServerAuthenticationTest {
     }
 
     @Test
-    void equalsAndHashCodeTest() throws IOException {
-        assertEquals(new ServerAuthentication("sergio",
+    void equalsAndHashCodeTest() {
+        ServerAuthentication authentication = new ServerAuthentication("sergio",
             List.of("ROLE_USER"),
-            Map.of("family_name", "del Amo", "given_name", "Sergio")), new ServerAuthentication("sergio",
+            Map.of("family_name", "del Amo", "given_name", "Sergio"));
+        ServerAuthentication same = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo", "given_name", "Sergio"));
+
+        assertEquals(authentication, same);
+        assertEquals(authentication.hashCode(), same.hashCode());
+        assertNotEquals(authentication, new ServerAuthentication("aegon",
             List.of("ROLE_USER"),
             Map.of("family_name", "del Amo", "given_name", "Sergio")));
+        assertNotEquals(authentication, new ServerAuthentication("sergio",
+            List.of("ROLE_ADMIN"),
+            Map.of("family_name", "del Amo", "given_name", "Sergio")));
+        assertNotEquals(authentication, new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "Targaryen", "given_name", "Sergio")));
+        assertNotEquals(authentication, null);
+        assertNotEquals(authentication, new Object());
     }
 }
