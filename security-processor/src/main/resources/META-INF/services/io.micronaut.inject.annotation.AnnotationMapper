@@ -1,3 +1,4 @@
 io.micronaut.security.processor.JakartaPermitAllAnnotationMapper
 io.micronaut.security.processor.JakartaRolesAllowedAnnotationMapper
 io.micronaut.security.processor.JakartaDenyAllAnnotationMapper
+io.micronaut.security.processor.RunAsUserAnnotationMapper

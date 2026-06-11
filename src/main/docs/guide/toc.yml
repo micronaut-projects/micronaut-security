@@ -24,7 +24,8 @@ securityFilter:
       securedExpression: Secured with expressions
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
-runAsAuthentication: Run As Authentication
+runAsAuthentication: Run As Authentication Annotation
+runAsUser: Run As User Annotation
 exceptionHandlers: 'Exception Handlers'
 endpoints:
   title: Endpoints
