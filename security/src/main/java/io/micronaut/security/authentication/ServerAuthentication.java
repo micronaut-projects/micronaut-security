@@ -64,8 +64,8 @@ public class ServerAuthentication implements Authentication {
                                 @Nullable Collection<String> roles,
                                 @Nullable Map<String, Object> attributes) {
         this.name = name;
-        this.roles = (roles == null || roles.isEmpty()) ? new ArrayList<>() : roles;
-        this.attributes = attributes == null ? Collections.emptyMap() : attributes;
+        this.roles = (roles == null || roles.isEmpty()) ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(roles));
+        this.attributes = attributes == null ? Collections.emptyMap() : Collections.unmodifiableMap(new HashMap<>(attributes));
     }
 
     @Override
