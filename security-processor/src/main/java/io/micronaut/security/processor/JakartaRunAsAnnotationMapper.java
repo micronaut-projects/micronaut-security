@@ -40,7 +40,7 @@ public class JakartaRunAsAnnotationMapper implements NamedAnnotationMapper {
 
     @Override
     public List<AnnotationValue<?>> map(AnnotationValue<Annotation> annotation, VisitorContext visitorContext) {
-        List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
+        List<AnnotationValue<?>> annotationValues = new ArrayList<>(2);
         annotationValues.add(
             AnnotationValue.builder(Around.class)
                 .build()
