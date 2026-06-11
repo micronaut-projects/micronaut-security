@@ -16,17 +16,23 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.aop.InterceptorBean;
+import io.micronaut.aop.InterceptedMethod;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import jakarta.annotation.security.RunAs;
 import org.jspecify.annotations.Nullable;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 /**
  * Intercepts {@link RunAs} and temporarily replaces the current security context
@@ -56,16 +62,88 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
         } catch (IOException e) {
             throw new ConfigurationException("Invalid @RunAs authentication value", e);
         }
+        return intercept(context, runAsAuthentication);
+    }
 
-        ServerRequestContextSecurityContextSupplier.ScopedSecurityContext scopedContext = ServerRequestContextSecurityContextSupplier.openSecurityContext();
-        SecurityContext securityContext = scopedContext.getSecurityContext();
-        Authentication previousAuthentication = securityContext.getAuthentication();
-        String previousToken = securityContext.getToken();
-        Integer previousRejectionStatus = securityContext.getRejectionStatus();
+    public Object intercept(MethodInvocationContext<Object, Object> context, Authentication runAsAuthentication) {
+        InterceptedMethod interceptedMethod = InterceptedMethod.of(context, ConversionService.SHARED);
         try {
-            securityContext.withAuthentication(runAsAuthentication);
+            return switch (interceptedMethod.resultType()) {
+                case PUBLISHER -> interceptedMethod.handleResult(
+                    interceptPublisher(interceptedMethod, runAsAuthentication)
+                );
+                case COMPLETION_STAGE -> interceptedMethod.handleResult(
+                    interceptCompletionStage(interceptedMethod, runAsAuthentication)
+                );
+                case SYNCHRONOUS -> interceptSynchronous(context, runAsAuthentication);
+            };
+        } catch (Exception e) {
+            return interceptedMethod.handleException(e);
+        }
+    }
+
+    @Nullable
+    private Object interceptSynchronous(MethodInvocationContext<Object, Object> context,
+                                        Authentication runAsAuthentication) {
+        try (RunAsSecurityContext ignored = new RunAsSecurityContext(runAsAuthentication)) {
             return context.proceed();
-        } finally {
+        }
+    }
+
+    private Publisher<?> interceptPublisher(InterceptedMethod interceptedMethod,
+                                            Authentication runAsAuthentication) {
+        Publisher<?> publisher;
+        try (RunAsSecurityContext ignored = new RunAsSecurityContext(runAsAuthentication)) {
+            publisher = interceptedMethod.interceptResultAsPublisher();
+        }
+        return Flux.using(
+            () -> new RunAsSecurityContext(runAsAuthentication),
+            ignored -> Flux.from(publisher),
+            RunAsSecurityContext::close
+        );
+    }
+
+    private CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
+                                                       Authentication runAsAuthentication) {
+        RunAsSecurityContext runAsSecurityContext = new RunAsSecurityContext(runAsAuthentication);
+        CompletionStage<?> completionStage;
+        try {
+            completionStage = interceptedMethod.interceptResultAsCompletionStage();
+        } catch (RuntimeException | Error e) {
+            runAsSecurityContext.close();
+            throw e;
+        }
+
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        completionStage.whenComplete((value, throwable) -> {
+            runAsSecurityContext.close();
+            if (throwable == null) {
+                result.complete(value);
+            } else {
+                result.completeExceptionally(throwable);
+            }
+        });
+        return result;
+    }
+
+    private static final class RunAsSecurityContext implements AutoCloseable {
+        private final ServerRequestContextSecurityContextSupplier.ScopedSecurityContext scopedContext;
+        private final SecurityContext securityContext;
+        private final @Nullable Authentication previousAuthentication;
+        private final @Nullable String previousToken;
+        private final @Nullable Integer previousRejectionStatus;
+
+        private RunAsSecurityContext(Authentication runAsAuthentication) {
+            scopedContext = ServerRequestContextSecurityContextSupplier.openSecurityContext();
+            securityContext = scopedContext.getSecurityContext();
+            previousAuthentication = securityContext.getAuthentication();
+            previousToken = securityContext.getToken();
+            previousRejectionStatus = securityContext.getRejectionStatus();
+            securityContext.withAuthentication(runAsAuthentication);
+        }
+
+        @Override
+        public void close() {
             securityContext.withAuthentication(previousAuthentication)
                 .withToken(previousToken)
                 .withRejectionStatus(previousRejectionStatus);
