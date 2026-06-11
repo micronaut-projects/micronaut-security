@@ -85,7 +85,7 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     @Nullable
     private Object interceptSynchronous(MethodInvocationContext<Object, Object> context,
                                         Authentication runAsAuthentication) {
-        try (RunAsSecurityContext ignored = new RunAsSecurityContext(runAsAuthentication)) {
+        try (RunAsSecurityContext _ = new RunAsSecurityContext(runAsAuthentication)) {
             return context.proceed();
         }
     }
@@ -93,12 +93,12 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     private Publisher<?> interceptPublisher(InterceptedMethod interceptedMethod,
                                             Authentication runAsAuthentication) {
         Publisher<?> publisher;
-        try (RunAsSecurityContext ignored = new RunAsSecurityContext(runAsAuthentication)) {
+        try (RunAsSecurityContext _ = new RunAsSecurityContext(runAsAuthentication)) {
             publisher = interceptedMethod.interceptResultAsPublisher();
         }
         return Flux.using(
             () -> new RunAsSecurityContext(runAsAuthentication),
-            ignored -> Flux.from(publisher),
+            _ -> Flux.from(publisher),
             RunAsSecurityContext::close
         );
     }
