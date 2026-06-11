@@ -37,7 +37,7 @@ public interface AuthenticationMapper {
      *
      * @param input The serialized authentication representation
      * @return The authentication representation
-     * @throws IOException if the input cannot be serialized to {@link Authentication}.
+     * @throws IOException if the input cannot be deserialized to {@link Authentication}.
      */
     @NonNull Authentication read(@NonNull String input) throws IOException;
 }
