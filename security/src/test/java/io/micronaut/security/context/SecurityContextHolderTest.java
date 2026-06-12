@@ -30,14 +30,16 @@ class SecurityContextHolderTest {
     }
 
     @Test
-    void removesScopedSecurityContextWhenNoRequestIsBound() {
+    void resolvesPropagatedSecurityContextWhenNoRequestIsBound() {
         Authentication authentication = Authentication.build("watson");
 
-        try (ServerRequestContextSecurityContextSupplier.ScopedSecurityContext scopedContext = ServerRequestContextSecurityContextSupplier.openSecurityContext()) {
-            scopedContext.getSecurityContext().withAuthentication(authentication);
-
-            assertSame(authentication, SecurityContextHolder.getSecurityContext().getAuthentication());
-        }
+        ServerRequestContextSecurityContextSupplier.withSecurityContext(
+            ServerRequestContextSecurityContextSupplier.withAuthentication(authentication),
+            () -> {
+                assertSame(authentication, SecurityContextHolder.getSecurityContext().getAuthentication());
+                return null;
+            }
+        );
 
         assertNull(SecurityContextHolder.getSecurityContext().getAuthentication());
     }

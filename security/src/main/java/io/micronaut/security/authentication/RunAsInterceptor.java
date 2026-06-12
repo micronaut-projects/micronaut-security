@@ -22,17 +22,20 @@ import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.async.propagation.ReactivePropagation;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.security.annotation.RunAsAuthentication;
 import io.micronaut.security.context.SecurityContext;
+import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Supplier;
 
 /**
  * Intercepts {@link RunAsAuthentication} and temporarily replaces the current security context
@@ -85,70 +88,78 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     @Nullable
     private Object interceptSynchronous(MethodInvocationContext<Object, Object> context,
                                         Authentication runAsAuthentication) {
-        try (RunAsSecurityContext _ = new RunAsSecurityContext(runAsAuthentication)) {
-            return context.proceed();
-        }
+        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
+        return ServerRequestContextSecurityContextSupplier.withSecurityContext(
+            propagatedContext,
+            context::proceed
+        );
     }
 
     private Publisher<?> interceptPublisher(InterceptedMethod interceptedMethod,
                                             Authentication runAsAuthentication) {
-        Publisher<?> publisher;
-        try (RunAsSecurityContext _ = new RunAsSecurityContext(runAsAuthentication)) {
-            publisher = interceptedMethod.interceptResultAsPublisher();
-        }
-        return Flux.using(
-            () -> new RunAsSecurityContext(runAsAuthentication),
-            _ -> Flux.from(publisher),
-            RunAsSecurityContext::close
+        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
+        Publisher<?> publisher = ServerRequestContextSecurityContextSupplier.withSecurityContext(
+            propagatedContext,
+            (Supplier<Publisher<?>>) interceptedMethod::interceptResultAsPublisher
         );
+        return ReactivePropagation.propagate(propagatedContext, publisher);
     }
 
     private CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
                                                        Authentication runAsAuthentication) {
-        RunAsSecurityContext runAsSecurityContext = new RunAsSecurityContext(runAsAuthentication);
-        boolean closeOnExit = true;
+        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
+        SecurityContextState state = replaceCurrentAuthentication(runAsAuthentication);
+        boolean restoreOnExit = true;
         try {
-            CompletionStage<?> completionStage = interceptedMethod.interceptResultAsCompletionStage();
+            CompletionStage<?> completionStage = ServerRequestContextSecurityContextSupplier.withSecurityContext(
+                propagatedContext,
+                interceptedMethod::interceptResultAsCompletionStage
+            );
             CompletableFuture<Object> result = new CompletableFuture<>();
             completionStage.whenComplete((value, throwable) -> {
-                runAsSecurityContext.close();
+                state.restore();
                 if (throwable == null) {
                     result.complete(value);
                 } else {
                     result.completeExceptionally(throwable);
                 }
             });
-            closeOnExit = false;
+            restoreOnExit = false;
             return result;
         } finally {
-            if (closeOnExit) {
-                runAsSecurityContext.close();
+            if (restoreOnExit) {
+                state.restore();
             }
         }
     }
 
-    private static final class RunAsSecurityContext implements AutoCloseable {
-        private final ServerRequestContextSecurityContextSupplier.ScopedSecurityContext scopedContext;
-        private final SecurityContext securityContext;
-        private final @Nullable Authentication previousAuthentication;
-        private final @Nullable String previousToken;
-        private final @Nullable Integer previousRejectionStatus;
+    private static SecurityContextState replaceCurrentAuthentication(Authentication authentication) {
+        SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
+        SecurityContextState state = new SecurityContextState(
+            securityContext,
+            securityContext.getAuthentication(),
+            securityContext.getToken(),
+            securityContext.getRejectionStatus()
+        );
+        securityContext.withAuthentication(authentication);
+        return state;
+    }
 
-        private RunAsSecurityContext(Authentication runAsAuthentication) {
-            scopedContext = ServerRequestContextSecurityContextSupplier.openSecurityContext();
-            securityContext = scopedContext.getSecurityContext();
-            previousAuthentication = securityContext.getAuthentication();
-            previousToken = securityContext.getToken();
-            previousRejectionStatus = securityContext.getRejectionStatus();
-            securityContext.withAuthentication(runAsAuthentication);
-        }
+    private static PropagatedContext withRunAsAuthentication(Authentication runAsAuthentication) {
+        return ServerRequestContextSecurityContextSupplier.withAuthentication(runAsAuthentication);
+    }
 
-        @Override
-        public void close() {
-            securityContext.withAuthentication(previousAuthentication)
-                .withToken(previousToken)
-                .withRejectionStatus(previousRejectionStatus);
-            scopedContext.close();
+    private record SecurityContextState(
+        SecurityContext securityContext,
+        @Nullable Authentication authentication,
+        @Nullable String token,
+        @Nullable Integer rejectionStatus
+    ) {
+
+        void restore() {
+            securityContext.withAuthentication(authentication)
+                .withToken(token)
+                .withRejectionStatus(rejectionStatus);
         }
     }
 }
