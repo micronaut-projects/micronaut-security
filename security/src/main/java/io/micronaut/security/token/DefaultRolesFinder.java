@@ -29,6 +29,11 @@ import java.util.Map;
 
 /**
  * Default implementation of {@link RolesFinder}.
+ * <p>
+ * The implementation reads roles from the attribute configured by
+ * {@link TokenConfiguration#getRolesName()}. If the value is a string and
+ * {@link TokenConfiguration#getRolesSeparator()} is configured, the value is
+ * split with that separator. Iterable values are converted to a list of strings.
  *
  * @author Sergio del Amo
  * @since 1.1.0
@@ -39,8 +44,9 @@ public class DefaultRolesFinder implements RolesFinder {
     private final TokenConfiguration tokenConfiguration;
 
     /**
-     * Constructs a Roles Parser.
-     * @param tokenConfiguration General Token Configuration
+     * Constructs a default roles finder.
+     *
+     * @param tokenConfiguration General token configuration
      */
     public DefaultRolesFinder(TokenConfiguration tokenConfiguration) {
         this.tokenConfiguration = tokenConfiguration;

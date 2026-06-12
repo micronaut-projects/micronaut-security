@@ -1,0 +1,31 @@
+The api:security.token.RolesFinder[] API is responsible for resolving granted roles from authentication attributes and for comparing granted roles with roles required by security rules.
+
+Micronaut Security provides api:security.token.DefaultRolesFinder[] by default.
+It reads roles from the authentication attribute named by `micronaut.security.token.roles-name`, which defaults to `roles`.
+
+The default implementation supports the following role attribute values:
+
+* `null` or a missing attribute: no roles are granted.
+* `Iterable`: each element is converted to a role with `toString()`.
+* `String`: the string is treated as a single role, unless `micronaut.security.token.roles-separator` is configured.
+* Any other value: the value is converted to a single role with `toString()`.
+
+If `micronaut.security.token.roles-separator` is configured and the role attribute is a `String`, api:security.token.DefaultRolesFinder[] splits the value using Java's `String#split`, so the separator is treated as a regular expression.
+For example, this configuration resolves a JWT `scope` claim such as `profile;email;admin` into three granted roles:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      roles-name: scope
+      roles-separator: ';'
+----
+
+Security rules grant access when the authenticated user has any of the required roles.
+The same comparison is available through api:security.token.RolesFinder[] `hasAnyRequiredRoles` methods for custom rules.
+
+If the default implementation is not enough, use https://docs.micronaut.io/latest/guide/#replaces[Bean Replacement] to provide a bean that replaces api:security.token.DefaultRolesFinder[] and implements api:security.token.RolesFinder[].
+For example, replace the default implementation when roles are stored in a nested claim or in a provider-specific structure.
+Only `resolveRoles(@Nullable Map<String, Object> attributes)` needs to be implemented.
+Return an empty list when the attributes are `null` or no roles can be resolved.
