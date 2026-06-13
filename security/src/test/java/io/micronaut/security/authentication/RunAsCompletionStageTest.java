@@ -76,6 +76,12 @@ class RunAsCompletionStageTest {
         assertEquals(expected.getName(), authentication.getName());
         assertEquals(expected.getRoles().stream().toList(), authentication.getRoles().stream().toList());
         assertEquals(expected.getAttributes(), authentication.getAttributes());
+
+        authentication = authentications.get(2);
+        assertNotNull(authentication);
+        assertEquals(expected.getName(), authentication.getName());
+        assertEquals(expected.getRoles().stream().toList(), authentication.getRoles().stream().toList());
+        assertEquals(expected.getAttributes(), authentication.getAttributes());
     }
 
     @Requires(property = "spec.name", value = "RunAsCompletionStageTest")
@@ -117,9 +123,13 @@ class RunAsCompletionStageTest {
         @Get
         @SingleResult
         CompletionStage<List<Authentication>> index() {
-            CompletionStage<Authentication> runAs = runAuthService.changeAuth();
+            CompletionStage<Authentication> runAs = runAuthService.changeAuth()
+                .thenApply(ignored -> SecurityContextHolder.getSecurityContext().getAuthentication());
+            Authentication pendingAuthentication = SecurityContextHolder.getSecurityContext().getAuthentication();
             state.trigger.complete(null);
-            return runAs.thenCombine(authService.auth(), List::of);
+            return runAs.thenCombine(authService.auth(), (runAsAuthentication, originalAuthentication) ->
+                List.of(runAsAuthentication, pendingAuthentication, originalAuthentication)
+            );
         }
     }
 
@@ -139,11 +149,6 @@ class RunAsCompletionStageTest {
     @Requires(property = "spec.name", value = "RunAsCompletionStageTest")
     @Singleton
     static class RunAsCompletionStageAuthService {
-        /**
-         * Shared state lets the test complete the returned stage after this intercepted method has returned.
-         * That proves the run-as authentication remains available during asynchronous completion, not just
-         * while the annotated method creates the {@link CompletionStage}.
-         */
         private final CompletionStageState state;
 
         RunAsCompletionStageAuthService(CompletionStageState state) {
@@ -151,7 +156,7 @@ class RunAsCompletionStageTest {
         }
 
         CompletionStage<Authentication> changeAuth() {
-            return state.trigger.thenApply(ignored -> SecurityContextHolder.getSecurityContext().getAuthentication());
+            return state.trigger.thenApply(ignored -> Authentication.build("ignored"));
         }
     }
 }

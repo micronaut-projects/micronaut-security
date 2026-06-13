@@ -26,7 +26,6 @@ import io.micronaut.core.async.propagation.ReactivePropagation;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.security.annotation.RunAs;
-import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import org.jspecify.annotations.Nullable;
@@ -134,58 +133,32 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
     private static CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
                                                               Authentication runAs) {
         PropagatedContext propagatedContext = withRunAs(runAs);
-        SecurityContextState state = replaceCurrentAuthentication(runAs);
-        boolean restoreOnExit = true;
-        try {
-            CompletionStage<?> completionStage = ServerRequestContextSecurityContextSupplier.withSecurityContext(
+        CompletionStage<?> completionStage = ServerRequestContextSecurityContextSupplier.withSecurityContext(
+            propagatedContext,
+            interceptedMethod::interceptResultAsCompletionStage
+        );
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        completionStage.whenComplete((value, throwable) ->
+            ServerRequestContextSecurityContextSupplier.withSecurityContext(
                 propagatedContext,
-                interceptedMethod::interceptResultAsCompletionStage
-            );
-            CompletableFuture<Object> result = new CompletableFuture<>();
-            completionStage.whenComplete((value, throwable) -> {
-                state.restore();
-                if (throwable == null) {
-                    result.complete(value);
-                } else {
-                    result.completeExceptionally(throwable);
+                () -> {
+                    complete(result, value, throwable);
+                    return null;
                 }
-            });
-            restoreOnExit = false;
-            return result;
-        } finally {
-            if (restoreOnExit) {
-                state.restore();
-            }
-        }
+            )
+        );
+        return result;
     }
 
-    private static SecurityContextState replaceCurrentAuthentication(Authentication authentication) {
-        SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
-        SecurityContextState state = new SecurityContextState(
-            securityContext,
-            securityContext.getAuthentication(),
-            securityContext.getToken(),
-            securityContext.getRejectionStatus()
-        );
-        securityContext.withAuthentication(authentication);
-        return state;
+    private static void complete(CompletableFuture<Object> result, @Nullable Object value, @Nullable Throwable throwable) {
+        if (throwable == null) {
+            result.complete(value);
+        } else {
+            result.completeExceptionally(throwable);
+        }
     }
 
     private static PropagatedContext withRunAs(Authentication runAs) {
         return ServerRequestContextSecurityContextSupplier.withAuthentication(runAs);
-    }
-
-    private record SecurityContextState(
-        SecurityContext securityContext,
-        @Nullable Authentication authentication,
-        @Nullable String token,
-        @Nullable Integer rejectionStatus
-    ) {
-
-        void restore() {
-            securityContext.withAuthentication(authentication)
-                .withToken(token)
-                .withRejectionStatus(rejectionStatus);
-        }
     }
 }
