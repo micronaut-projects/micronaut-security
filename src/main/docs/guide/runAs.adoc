@@ -2,7 +2,9 @@ You can use ann:security.annotation.RunAs[] to apply an authentication to interc
 
 snippet::io.micronaut.security.docs.authentication.RunAsService[tags="clazz"]
 
-Micronaut Security builds an api:security.authentication.Authentication[] from ann:security.annotation.RunAs[], sets it in the current security context for the invocation, and restores the previous authentication when the method completes.
+Micronaut Security builds an api:security.authentication.Authentication[] from ann:security.annotation.RunAs[] and sets it in the current security context for the invocation.
+For synchronous methods, Micronaut Security restores the previous authentication when the method returns.
+For asynchronous methods (for example, `CompletionStage` and reactive return types), Micronaut Security restores the previous authentication when the asynchronous result completes.
 The annotation does not authenticate the incoming request or permanently replace the caller's identity.
 
 By default, ann:security.annotation.RunAs[] appends the supplied roles and attributes to the current authentication.
