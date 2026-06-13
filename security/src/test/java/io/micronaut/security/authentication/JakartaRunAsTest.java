@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JakartaRunAsTest {
 
     @Test
-    void verifyYouCanUserTheJakartaRunAsToAddARole(@Client("/") HttpClient httpClient) {
+    void verifyYouCanUseTheJakartaRunAsToAddARole(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         SalaryAggregates aggregates = client.retrieve(
             HttpRequest.GET("/salary").basicAuth("sdelamo", "ilikepotatoes"),
