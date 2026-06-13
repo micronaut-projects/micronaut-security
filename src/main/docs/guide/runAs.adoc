@@ -1,0 +1,16 @@
+You can use ann:security.annotation.RunAs[] to apply an authentication to intercepted method invocations.
+
+snippet::io.micronaut.security.docs.authentication.RunAsService[tags="clazz"]
+
+Micronaut Security builds an api:security.authentication.Authentication[] from ann:security.annotation.RunAs[], sets it in the current security context for the invocation, and restores the previous authentication when the method completes.
+The annotation does not authenticate the incoming request or permanently replace the caller's identity.
+
+By default, ann:security.annotation.RunAs[] appends the supplied roles and attributes to the current authentication.
+The annotation value is an alias for `roles`, so `@RunAs("ROLE_ADMIN")` is equivalent to `@RunAs(roles = "ROLE_ADMIN")`.
+Set `appendRoles` or `appendAttributes` to `false` to replace the current values instead.
+If `name` is omitted or blank and an authentication already exists, Micronaut Security keeps the current user name.
+You can also use `jakarta.annotation.security.RunAs`; Micronaut Security maps it to ann:security.annotation.RunAs[] and uses the Jakarta annotation value as the run-as role.
+
+NOTE: The use of `jakarta.annotation.security.RunAs` requires `io.micronaut.security:micronaut-security-processor` to be in the annotation processor classpath (`annotationProcessor`, `kapt`, `compileOnly`) respectively for Java, Kotlin, Groovy.
+
+One good use case is a bean with api:scheduling.annotation.Scheduled[] methods. Because https://docs.micronaut.io/latest/guide/#scheduling[scheduled tasks] do not run as part of an incoming authenticated request, ann:security.annotation.RunAs[] lets the scheduled job delegate to services that expect an authenticated user.

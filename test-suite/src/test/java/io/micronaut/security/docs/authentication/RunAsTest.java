@@ -43,12 +43,12 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Property(name = "spec.name", value = "RunAsAuthenticationTest")
+@Property(name = "spec.name", value = "RunAsTest")
 @MicronautTest
-class RunAsAuthenticationTest {
+class RunAsTest {
 
     @Test
-    void verifyYouCanUseTheRunAsAuthenticationAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") HttpClient httpClient) {
+    void verifyYouCanUseTheRunAsAnnotationToChangeTheSecurityContextHolderForTheScopeOfAClass(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         List<ClientAuthentication> authentications = client.retrieve(
             HttpRequest.GET("/runAs").basicAuth("john", "ilikedaenerys"),
@@ -56,8 +56,8 @@ class RunAsAuthenticationTest {
         );
         Authentication runAsExpected = Authentication.build(
             "aegon",
-            List.of("ROLE_KING"),
-            Map.of("family_name", "Targaryen", "roles", List.of("ROLE_KING"))
+            List.of("ROLE_STARK", "TARGARYEN"),
+            Map.of("family_name", "Targaryen", "given_name", "Aegon", "roles", List.of("ROLE_STARK", "TARGARYEN"))
         );
         Authentication authentication = authentications.get(0);
         assertNotNull(authentication);
@@ -77,9 +77,9 @@ class RunAsAuthenticationTest {
         assertEquals(expected.getAttributes(), authentication.getAttributes());
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Singleton
-    static class RunAsAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+    static class RunAsProvider<B> implements HttpRequestAuthenticationProvider<B> {
         @Override
         public @NonNull AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext,
                                                             @NonNull AuthenticationRequest<String, String> authRequest) {
@@ -91,13 +91,13 @@ class RunAsAuthenticationTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Controller("/runAs")
     static class RunAsController {
-        private final RunAsAuthenticationService runAuthService;
+        private final RunAsService runAuthService;
         private final AuthService authService;
 
-        RunAsController(RunAsAuthenticationService runAuthService,
+        RunAsController(RunAsService runAuthService,
                         AuthService authService) {
             this.runAuthService = runAuthService;
             this.authService = authService;
@@ -110,7 +110,7 @@ class RunAsAuthenticationTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Singleton
     static class AuthService {
         Authentication auth() {

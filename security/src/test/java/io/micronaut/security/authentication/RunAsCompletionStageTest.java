@@ -25,8 +25,9 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.security.annotation.Attribute;
+import io.micronaut.security.annotation.RunAs;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.annotation.RunAsAuthentication;
 import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider;
 import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -48,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class RunAsCompletionStageTest {
 
     @Test
-    void runAsAuthenticationIsAvailableForCompletionStageExecution(@Client("/") HttpClient httpClient) {
+    void runAsIsAvailableForCompletionStageExecution(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         List<ClientAuthentication> authentications = client.retrieve(
             HttpRequest.GET("/runAsCompletionStage").basicAuth("john", "ilikedaenerys"),
@@ -56,8 +57,8 @@ class RunAsCompletionStageTest {
         );
         Authentication runAsExpected = Authentication.build(
             "aegon",
-            List.of("ROLE_KING"),
-            Map.of("family_name", "Targaryen", "roles", List.of("ROLE_KING"))
+            List.of("ROLE_STARK", "ROLE_KING"),
+            Map.of("family_name", "Targaryen", "given_name", "John", "roles", List.of("ROLE_STARK", "ROLE_KING"))
         );
         Authentication authentication = authentications.get(0);
         assertNotNull(authentication);
@@ -79,7 +80,7 @@ class RunAsCompletionStageTest {
 
     @Requires(property = "spec.name", value = "RunAsCompletionStageTest")
     @Singleton
-    static class RunAsAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+    static class RunAsProvider<B> implements HttpRequestAuthenticationProvider<B> {
         @Override
         public @NonNull AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext,
                                                             @NonNull AuthenticationRequest<String, String> authRequest) {
@@ -116,9 +117,9 @@ class RunAsCompletionStageTest {
         @Get
         @SingleResult
         CompletionStage<List<Authentication>> index() {
-            CompletionStage<Authentication> runAsAuthentication = runAuthService.changeAuth();
+            CompletionStage<Authentication> runAs = runAuthService.changeAuth();
             state.trigger.complete(null);
-            return runAsAuthentication.thenCombine(authService.auth(), List::of);
+            return runAs.thenCombine(authService.auth(), List::of);
         }
     }
 
@@ -130,8 +131,11 @@ class RunAsCompletionStageTest {
         }
     }
 
-    @RunAsAuthentication("""
-            {"name":"aegon","attributes":{"family_name":"Targaryen","roles":["ROLE_KING"]}}""")
+    @RunAs(
+        name = "aegon",
+        roles = {"ROLE_KING"},
+        attributes = @Attribute(key = "family_name", value = "Targaryen")
+    )
     @Requires(property = "spec.name", value = "RunAsCompletionStageTest")
     @Singleton
     static class RunAsCompletionStageAuthService {

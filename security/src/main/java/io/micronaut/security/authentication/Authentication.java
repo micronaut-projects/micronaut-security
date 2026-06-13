@@ -20,8 +20,10 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -103,4 +105,70 @@ public interface Authentication extends Principal, Serializable {
         return new ServerAuthentication(username, roles, attributes);
     }
 
+    /**
+     * Creates an authentication with the supplied attributes, optionally appending them to the current attributes.
+     *
+     * @param attributes User's attributes
+     * @param append Whether to append the attributes to the current attributes
+     * @return An {@link Authentication} with the supplied attributes
+     * @since 5.1.0
+     */
+    default @NonNull Authentication withAttributes(@NonNull Map<String, Object> attributes, boolean append) {
+        if (!append) {
+            return withAttributes(attributes);
+        }
+        Map<String, Object> newAttributes = new LinkedHashMap<>(getAttributes());
+        newAttributes.putAll(attributes);
+        return withAttributes(newAttributes);
+    }
+
+    /**
+     * Creates an authentication with the supplied attributes.
+     *
+     * @param attributes User's attributes
+     * @return An {@link Authentication} with the supplied attributes
+     * @since 5.1.0
+     */
+    default @NonNull Authentication withAttributes(@NonNull Map<String, Object> attributes) {
+        return Authentication.build(getName(), getRoles(), attributes);
+    }
+
+    /**
+     * Creates an authentication with the supplied roles, optionally appending them to the current roles.
+     *
+     * @param roles User's roles
+     * @param append Whether to append the roles to the current roles
+     * @return An {@link Authentication} with the supplied roles
+     * @since 5.1.0
+     */
+    default @NonNull Authentication withRoles(@NonNull Collection<String> roles, boolean append) {
+        if (!append) {
+            return withRoles(roles);
+        }
+        Collection<String> newRoles = new ArrayList<>(getRoles());
+        newRoles.addAll(roles);
+        return withRoles(newRoles);
+    }
+
+    /**
+     * Creates an authentication with the supplied roles.
+     *
+     * @param roles User's roles
+     * @return An {@link Authentication} with the supplied roles
+     * @since 5.1.0
+     */
+    default @NonNull Authentication withRoles(@NonNull Collection<String> roles) {
+        return Authentication.build(getName(), roles, getAttributes());
+    }
+
+    /**
+     * Creates an authentication with the supplied user name.
+     *
+     * @param username User's name
+     * @return An {@link Authentication} with the supplied user name
+     * @since 5.1.0
+     */
+    default @NonNull Authentication withUsername(@NonNull String username) {
+        return Authentication.build(username, getRoles(), getAttributes());
+    }
 }

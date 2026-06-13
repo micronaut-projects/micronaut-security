@@ -24,8 +24,7 @@ securityFilter:
       securedExpression: Secured with expressions
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
-runAsAuthentication: Run As Authentication Annotation
-runAsUser: Run As User Annotation
+runAs: Run As Annotation
 exceptionHandlers: 'Exception Handlers'
 endpoints:
   title: Endpoints
@@ -121,7 +120,6 @@ retrievingAuthenticatedUser:
   websocket: WebSocket methods
   customAuthenticatedUser: Custom Binding
   securityService: User outside of a controller
-  authenticationMapper: Authentication Mapper
 dataAuditing:
   title: Data Change Auditing
   annotations: Auditing Annotations

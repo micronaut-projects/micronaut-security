@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 @MicronautTest(startApplication = false)
 class ServerAuthenticationTest {
@@ -62,5 +63,108 @@ class ServerAuthenticationTest {
             Map.of("family_name", "Targaryen", "given_name", "Sergio")));
         assertNotEquals(authentication, null);
         assertNotEquals(authentication, new Object());
+    }
+
+    @Test
+    void withAttributesReturnsAuthenticationWithDifferentAttributes() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo"));
+
+        Authentication result = authentication.withAttributes(Map.of("family_name", "Targaryen"));
+
+        assertNotSame(authentication, result);
+        assertEquals(authentication.getName(), result.getName());
+        assertEquals(authentication.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(Map.of("family_name", "Targaryen"), result.getAttributes());
+        assertEquals(Map.of("family_name", "del Amo"), authentication.getAttributes());
+    }
+
+    @Test
+    void withAttributesAppendsAttributes() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo", "given_name", "Sergio"));
+
+        Authentication result = authentication.withAttributes(
+            Map.of("family_name", "Targaryen", "nickname", "Aegon"),
+            true
+        );
+
+        assertNotSame(authentication, result);
+        assertEquals(authentication.getName(), result.getName());
+        assertEquals(authentication.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(
+            Map.of("family_name", "Targaryen", "given_name", "Sergio", "nickname", "Aegon"),
+            result.getAttributes()
+        );
+        assertEquals(Map.of("family_name", "del Amo", "given_name", "Sergio"), authentication.getAttributes());
+    }
+
+    @Test
+    void withAttributesDoesNotAppendWhenAppendIsFalse() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo", "given_name", "Sergio"));
+
+        Authentication result = authentication.withAttributes(Map.of("family_name", "Targaryen"), false);
+
+        assertEquals(Map.of("family_name", "Targaryen"), result.getAttributes());
+    }
+
+    @Test
+    void withRolesReturnsAuthenticationWithDifferentRoles() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo"));
+
+        Authentication result = authentication.withRoles(List.of("ROLE_ADMIN"));
+
+        assertNotSame(authentication, result);
+        assertEquals(authentication.getName(), result.getName());
+        assertEquals(List.of("ROLE_ADMIN"), result.getRoles().stream().toList());
+        assertEquals(authentication.getAttributes(), result.getAttributes());
+        assertEquals(List.of("ROLE_USER"), authentication.getRoles().stream().toList());
+    }
+
+    @Test
+    void withRolesAppendsRoles() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo"));
+
+        Authentication result = authentication.withRoles(List.of("ROLE_ADMIN", "ROLE_KING"), true);
+
+        assertNotSame(authentication, result);
+        assertEquals(authentication.getName(), result.getName());
+        assertEquals(List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_KING"), result.getRoles().stream().toList());
+        assertEquals(authentication.getAttributes(), result.getAttributes());
+        assertEquals(List.of("ROLE_USER"), authentication.getRoles().stream().toList());
+    }
+
+    @Test
+    void withRolesDoesNotAppendWhenAppendIsFalse() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo"));
+
+        Authentication result = authentication.withRoles(List.of("ROLE_ADMIN"), false);
+
+        assertEquals(List.of("ROLE_ADMIN"), result.getRoles().stream().toList());
+    }
+
+    @Test
+    void withUsernameReturnsAuthenticationWithDifferentUsername() {
+        Authentication authentication = new ServerAuthentication("sergio",
+            List.of("ROLE_USER"),
+            Map.of("family_name", "del Amo"));
+
+        Authentication result = authentication.withUsername("aegon");
+
+        assertNotSame(authentication, result);
+        assertEquals("aegon", result.getName());
+        assertEquals(authentication.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(authentication.getAttributes(), result.getAttributes());
+        assertEquals("sergio", authentication.getName());
     }
 }

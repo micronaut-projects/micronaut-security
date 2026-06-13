@@ -19,85 +19,111 @@ import io.micronaut.aop.InterceptorBean;
 import io.micronaut.aop.InterceptedMethod;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.async.propagation.ReactivePropagation;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.propagation.PropagatedContext;
-import io.micronaut.security.annotation.RunAsAuthentication;
+import io.micronaut.security.annotation.RunAs;
 import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.SecurityContextHolder;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 
-import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
 /**
- * Intercepts {@link RunAsAuthentication} and temporarily replaces the current security context
+ * Intercepts {@link RunAs} and temporarily replaces the current security context
  * authentication for the intercepted invocation.
  */
-@Requires(beans = AuthenticationMapper.class)
 @Internal
-@InterceptorBean(RunAsAuthentication.class)
+@InterceptorBean(RunAs.class)
 final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
-    private final AuthenticationMapper authenticationMapper;
-
-    RunAsInterceptor(AuthenticationMapper authenticationMapper) {
-        this.authenticationMapper = authenticationMapper;
-    }
+    private static final String MEMBER_ATTRIBUTES = "attributes";
+    private static final String MEMBER_APPEND_ATTRIBUTES = "appendAttributes";
+    private static final String MEMBER_APPEND_ROLES = "appendRoles";
+    private static final String MEMBER_KEY = "key";
+    private static final String MEMBER_NAME = "name";
+    private static final String MEMBER_ROLES = "roles";
+    private static final String MEMBER_VALUE = "value";
 
     @Override
     @Nullable
     public Object intercept(MethodInvocationContext<Object, Object> context) {
-        String value = context.stringValue(RunAsAuthentication.class).orElse(null);
-        if (value == null || value.isBlank()) {
-            return context.proceed();
-        }
-
-        Authentication runAsAuthentication;
-        try {
-            runAsAuthentication = authenticationMapper.read(value);
-        } catch (IOException e) {
-            throw new ConfigurationException("Invalid @RunAsAuthentication value", e);
-        }
-        return intercept(context, runAsAuthentication);
+        return intercept(context, authentication(context));
     }
 
-    public Object intercept(MethodInvocationContext<Object, Object> context, Authentication runAsAuthentication) {
+    private static Object intercept(MethodInvocationContext<Object, Object> context, Authentication runAs) {
         InterceptedMethod interceptedMethod = InterceptedMethod.of(context, ConversionService.SHARED);
         try {
             return switch (interceptedMethod.resultType()) {
                 case PUBLISHER -> interceptedMethod.handleResult(
-                    interceptPublisher(interceptedMethod, runAsAuthentication)
+                    interceptPublisher(interceptedMethod, runAs)
                 );
                 case COMPLETION_STAGE -> interceptedMethod.handleResult(
-                    interceptCompletionStage(interceptedMethod, runAsAuthentication)
+                    interceptCompletionStage(interceptedMethod, runAs)
                 );
-                case SYNCHRONOUS -> interceptSynchronous(context, runAsAuthentication);
+                case SYNCHRONOUS -> interceptSynchronous(context, runAs);
             };
         } catch (Exception e) {
             return interceptedMethod.handleException(e);
         }
     }
 
+    private static Authentication authentication(MethodInvocationContext<Object, Object> context) {
+        Authentication previousAuthentication = SecurityContextHolder.getSecurityContext().getAuthentication();
+        String name = context.stringValue(RunAs.class, MEMBER_NAME).orElse("");
+        if (name.isBlank() && previousAuthentication == null) {
+            throw new ConfigurationException("@RunAs name cannot be blank");
+        }
+        String[] roles = context.stringValues(RunAs.class, MEMBER_ROLES);
+        for (String role : roles) {
+            if (role.isBlank()) {
+                throw new ConfigurationException("@RunAs roles cannot contain blank values");
+            }
+        }
+        List<String> roleList = List.of(roles);
+        Map<String, Object> attributes = new LinkedHashMap<>();
+        boolean appendAttributes = context.booleanValue(RunAs.class, MEMBER_APPEND_ATTRIBUTES).orElse(true);
+        boolean appendRoles = context.booleanValue(RunAs.class, MEMBER_APPEND_ROLES).orElse(true);
+        context.findAnnotation(RunAs.class).ifPresent(annotation -> {
+            for (AnnotationValue<?> attribute : annotation.getAnnotations(MEMBER_ATTRIBUTES)) {
+                String key = attribute.stringValue(MEMBER_KEY).orElse("");
+                String value = attribute.stringValue(MEMBER_VALUE).orElse("");
+                if (key.isBlank()) {
+                    throw new ConfigurationException("@RunAs attribute keys cannot be blank");
+                }
+                attributes.put(key, value);
+            }
+        });
+        Authentication runAs = previousAuthentication == null ? Authentication.build(name) : previousAuthentication;
+        if (!name.isBlank()) {
+            runAs = runAs.withUsername(name);
+        }
+        runAs = runAs.withRoles(roleList, appendRoles);
+        return runAs.withAttributes(attributes, appendAttributes);
+    }
+
     @Nullable
-    private Object interceptSynchronous(MethodInvocationContext<Object, Object> context,
-                                        Authentication runAsAuthentication) {
-        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
+    private static Object interceptSynchronous(MethodInvocationContext<Object, Object> context,
+                                               Authentication runAs) {
+        PropagatedContext propagatedContext = withRunAs(runAs);
         return ServerRequestContextSecurityContextSupplier.withSecurityContext(
             propagatedContext,
             context::proceed
         );
     }
 
-    private Publisher<?> interceptPublisher(InterceptedMethod interceptedMethod,
-                                            Authentication runAsAuthentication) {
-        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
+    private static Publisher<?> interceptPublisher(InterceptedMethod interceptedMethod,
+                                                   Authentication runAs) {
+        PropagatedContext propagatedContext = withRunAs(runAs);
         Publisher<?> publisher = ServerRequestContextSecurityContextSupplier.withSecurityContext(
             propagatedContext,
             (Supplier<Publisher<?>>) interceptedMethod::interceptResultAsPublisher
@@ -105,10 +131,10 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
         return ReactivePropagation.propagate(propagatedContext, publisher);
     }
 
-    private CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
-                                                       Authentication runAsAuthentication) {
-        PropagatedContext propagatedContext = withRunAsAuthentication(runAsAuthentication);
-        SecurityContextState state = replaceCurrentAuthentication(runAsAuthentication);
+    private static CompletionStage<?> interceptCompletionStage(InterceptedMethod interceptedMethod,
+                                                              Authentication runAs) {
+        PropagatedContext propagatedContext = withRunAs(runAs);
+        SecurityContextState state = replaceCurrentAuthentication(runAs);
         boolean restoreOnExit = true;
         try {
             CompletionStage<?> completionStage = ServerRequestContextSecurityContextSupplier.withSecurityContext(
@@ -145,8 +171,8 @@ final class RunAsInterceptor implements MethodInterceptor<Object, Object> {
         return state;
     }
 
-    private static PropagatedContext withRunAsAuthentication(Authentication runAsAuthentication) {
-        return ServerRequestContextSecurityContextSupplier.withAuthentication(runAsAuthentication);
+    private static PropagatedContext withRunAs(Authentication runAs) {
+        return ServerRequestContextSecurityContextSupplier.withAuthentication(runAs);
     }
 
     private record SecurityContextState(

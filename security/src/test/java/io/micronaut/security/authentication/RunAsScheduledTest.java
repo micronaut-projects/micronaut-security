@@ -18,7 +18,8 @@ package io.micronaut.security.authentication;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.annotation.Scheduled;
-import io.micronaut.security.annotation.RunAsAuthentication;
+import io.micronaut.security.annotation.Attribute;
+import io.micronaut.security.annotation.RunAs;
 import io.micronaut.security.context.SecurityContextHolder;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class RunAsScheduledTest {
                 assertEquals("scheduler", authentication.getName());
                 assertEquals(List.of("SCHEDULED"), authentication.getRoles().stream().toList());
                 assertEquals(
-                    Map.of("given_name", "Scheduled", "roles", List.of("SCHEDULED")),
+                    Map.of("given_name", "Scheduled"),
                     authentication.getAttributes()
                 );
             });
@@ -65,8 +66,11 @@ class RunAsScheduledTest {
         final AtomicReference<Throwable> failure = new AtomicReference<>();
     }
 
-    @RunAsAuthentication("""
-            {"name":"scheduler","attributes":{"given_name":"Scheduled","roles":["SCHEDULED"]}}""")
+    @RunAs(
+        name = "scheduler",
+        roles = {"SCHEDULED"},
+        attributes = @Attribute(key = "given_name", value = "Scheduled")
+    )
     @Requires(property = "spec.name", value = "RunAsScheduledTest")
     @Singleton
     static class ScheduledRunAsJob {

@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 @MicronautTest(startApplication = false)
 class ClientAuthenticationTest {
@@ -62,5 +63,69 @@ class ClientAuthenticationTest {
             Map.of("roles", List.of("ROLE_KING"), "family_name", "del Amo", "given_name", "Sergio")));
         assertNotEquals(authentication, null);
         assertNotEquals(authentication, new Object());
+    }
+
+    @Test
+    void withAttributesReturnsAuthenticationWithDifferentAttributes() {
+        Authentication result = AUTH.withAttributes(Map.of("family_name", "Targaryen"));
+
+        assertNotSame(AUTH, result);
+        assertEquals(AUTH.getName(), result.getName());
+        assertEquals(AUTH.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(Map.of("family_name", "Targaryen"), result.getAttributes());
+        assertEquals(
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"),
+            AUTH.getAttributes()
+        );
+    }
+
+    @Test
+    void withAttributesAppendsAttributes() {
+        Authentication result = AUTH.withAttributes(Map.of("family_name", "Targaryen", "nickname", "Aegon"), true);
+
+        assertNotSame(AUTH, result);
+        assertEquals(AUTH.getName(), result.getName());
+        assertEquals(AUTH.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "Targaryen", "given_name", "Sergio", "nickname", "Aegon"),
+            result.getAttributes()
+        );
+        assertEquals(
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"),
+            AUTH.getAttributes()
+        );
+    }
+
+    @Test
+    void withRolesReturnsAuthenticationWithDifferentRoles() {
+        Authentication result = AUTH.withRoles(List.of("ROLE_ADMIN"));
+
+        assertNotSame(AUTH, result);
+        assertEquals(AUTH.getName(), result.getName());
+        assertEquals(List.of("ROLE_ADMIN"), result.getRoles().stream().toList());
+        assertEquals(AUTH.getAttributes(), result.getAttributes());
+        assertEquals(List.of("ROLE_USER"), AUTH.getRoles().stream().toList());
+    }
+
+    @Test
+    void withRolesAppendsRoles() {
+        Authentication result = AUTH.withRoles(List.of("ROLE_ADMIN", "ROLE_KING"), true);
+
+        assertNotSame(AUTH, result);
+        assertEquals(AUTH.getName(), result.getName());
+        assertEquals(List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_KING"), result.getRoles().stream().toList());
+        assertEquals(AUTH.getAttributes(), result.getAttributes());
+        assertEquals(List.of("ROLE_USER"), AUTH.getRoles().stream().toList());
+    }
+
+    @Test
+    void withUsernameReturnsAuthenticationWithDifferentUsername() {
+        Authentication result = AUTH.withUsername("aegon");
+
+        assertNotSame(AUTH, result);
+        assertEquals("aegon", result.getName());
+        assertEquals(AUTH.getRoles().stream().toList(), result.getRoles().stream().toList());
+        assertEquals(AUTH.getAttributes(), result.getAttributes());
+        assertEquals("sergio", AUTH.getName());
     }
 }

@@ -15,33 +15,29 @@
  */
 package io.micronaut.security.annotation;
 
-import io.micronaut.aop.Around;
-
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Applies a run-as authentication to intercepted method invocations.
- *
- * <p>The annotation value is a JSON representation of an authentication that
- * Micronaut Security maps with the {@code AuthenticationMapper} API.</p>
+ * An attribute entry for {@link RunAs}.
  *
  * @author Sergio del Amo
  * @since 5.1.0
  */
-@Around
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({})
 @Retention(RetentionPolicy.RUNTIME)
-@Inherited
 @Documented
-public @interface RunAsAuthentication {
+public @interface Attribute {
 
     /**
-     * @return JSON representation of the authentication to use for the intercepted invocation
+     * @return The authentication attribute key
+     */
+    String key();
+
+    /**
+     * @return The authentication attribute value
      */
     String value();
 }

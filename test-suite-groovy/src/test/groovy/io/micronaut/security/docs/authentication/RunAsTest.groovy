@@ -21,15 +21,15 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import spock.lang.Specification
 
-@Property(name = "spec.name", value = "RunAsAuthenticationTest")
+@Property(name = "spec.name", value = "RunAsTest")
 @MicronautTest
-class RunAsAuthenticationTest extends Specification {
+class RunAsTest extends Specification {
 
     @Inject
     @Client("/")
     HttpClient httpClient
 
-    void "verify you can use the RunAsAuthentication annotation to change the SecurityContextHolder for the scope of a class"() {
+    void "verify you can use the RunAs annotation to change the SecurityContextHolder for the scope of a class"() {
         given:
         BlockingHttpClient client = httpClient.toBlocking()
 
@@ -42,13 +42,13 @@ class RunAsAuthenticationTest extends Specification {
         then:
         Authentication runAsExpected = Authentication.build(
                 "aegon",
-                ["ROLE_KING"],
-                [family_name: "Targaryen", roles: ["ROLE_KING"]]
+                ["ROLE_STARK", "TARGARYEN"],
+                [family_name: "Targaryen", given_name: "Aegon", roles: ["ROLE_STARK", "TARGARYEN"]]
         )
-        ClientAuthentication runAsAuthentication = authentications[0]
-        runAsExpected.name == runAsAuthentication.name
-        runAsExpected.roles.toList() == runAsAuthentication.roles.toList()
-        runAsExpected.attributes == runAsAuthentication.attributes
+        ClientAuthentication runAs = authentications[0]
+        runAsExpected.name == runAs.name
+        runAsExpected.roles.toList() == runAs.roles.toList()
+        runAsExpected.attributes == runAs.attributes
 
         and:
         Authentication expected = Authentication.build(
@@ -62,9 +62,9 @@ class RunAsAuthenticationTest extends Specification {
         expected.attributes == authentication.attributes
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Singleton
-    static class RunAsAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+    static class RunAsProvider<B> implements HttpRequestAuthenticationProvider<B> {
         @Override
         AuthenticationResponse authenticate(HttpRequest<B> requestContext,
                                             AuthenticationRequest<String, String> authRequest) {
@@ -76,13 +76,13 @@ class RunAsAuthenticationTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Controller("/runAs")
     static class RunAsController {
-        private final RunAsAuthenticationService runAuthService
+        private final RunAsService runAuthService
         private final AuthService authService
 
-        RunAsController(RunAsAuthenticationService runAuthService,
+        RunAsController(RunAsService runAuthService,
                         AuthService authService) {
             this.runAuthService = runAuthService
             this.authService = authService
@@ -95,7 +95,7 @@ class RunAsAuthenticationTest extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "RunAsAuthenticationTest")
+    @Requires(property = "spec.name", value = "RunAsTest")
     @Singleton
     static class AuthService {
         Authentication auth() {

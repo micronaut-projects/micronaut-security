@@ -1,6 +1,0 @@
-You can deserialize a JSON string to an api:security.authentication.Authentication[] with the api:security.authentication.AuthenticationMapper[] API.
-
-[source, json]
-----
-{"name":"sergio","attributes":{"family_name":"del Amo","given_name":"Sergio","roles":["ROLE_USER"]}}
-----

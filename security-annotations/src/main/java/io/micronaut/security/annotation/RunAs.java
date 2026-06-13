@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.annotation;
 
+import io.micronaut.aop.Around;
+import io.micronaut.context.annotation.AliasFor;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -23,36 +26,52 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Applies a run-as authentication for the supplied user name and roles to
- * intercepted method invocations.
- *
- * <p>Micronaut Security maps this annotation at compilation time to
- * {@link RunAsAuthentication}. Use {@link RunAsAuthentication} directly when
- * the run-as authentication needs custom attributes.</p>
+ * Applies a run-as authentication to intercepted method invocations.
  *
  * @author Sergio del Amo
  * @since 5.1.0
  */
+@Around
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface RunAsUser {
+public @interface RunAs {
 
     /**
-     * Shortcut for {@link #name()}.
+     * Alias for {@link #roles()}.
      *
-     * @return The user name for the run-as authentication
+     * @return The roles for the run-as authentication
+     * @since 5.1.0
      */
-    String value() default "";
+    @AliasFor(member = "roles")
+    String[] value() default {};
 
     /**
-     * @return The user name for the run-as authentication
+     * @return The user name for the run-as authentication, or the current user name when blank
      */
     String name() default "";
 
     /**
      * @return The roles for the run-as authentication
      */
+    @AliasFor(member = "value")
     String[] roles() default {};
+
+    /**
+     * @return Whether the supplied roles should be appended to the current authentication roles.
+     * @since 5.1.0
+     */
+    boolean appendRoles() default true;
+
+    /**
+     * @return The attributes for the run-as authentication
+     */
+    Attribute[] attributes() default {};
+
+    /**
+     * @return Whether the supplied attributes should be appended to the current authentication attributes.
+     * @since 5.1.0
+     */
+    boolean appendAttributes() default true;
 }
