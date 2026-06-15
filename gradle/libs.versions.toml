@@ -66,7 +66,6 @@ commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-
 testcontainers-selenium = { module = "org.testcontainers:testcontainers-selenium"}
 testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter"}
 testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
-testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
