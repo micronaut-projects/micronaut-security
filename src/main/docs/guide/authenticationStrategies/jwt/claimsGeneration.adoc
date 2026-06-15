@@ -1,3 +1,20 @@
 If the built-in
 link:{api}/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html[JWTClaimsSetGenerator], does not
-fulfil your needs you can provide your own https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of link:{api}/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html[ClaimsGenerator].
+fulfil your needs, you can provide your own https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of api:io.micronaut.security.token.claims.ClaimsGenerator[].
+
+The built-in `JWTClaimsSetGenerator` adds the `aud` claim when the application provides a bean of type api:io.micronaut.security.token.claims.ClaimsAudienceProvider[].
+The value returned by `audience()` is used as the JWT audience:
+
+snippet::io.micronaut.docs.claimsaudience.CustomClaimsAudienceProvider[tags="clazz"]
+
+If another Micronaut application validates the generated JWT, configure the expected audience with `micronaut.security.token.jwt.claims-validators.audience`:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        claims-validators:
+          audience: https://api.example.com
+----

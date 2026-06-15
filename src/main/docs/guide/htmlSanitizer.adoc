@@ -1,0 +1,30 @@
+Micronaut Security includes an optional HTML sanitizer module that adapts https://github.com/OWASP/java-html-sanitizer[OWASP Java HTML Sanitizer] to the Micronaut Core api:micronaut.http.util.HtmlSanitizer[] API.
+
+Add the dependency to enable the OWASP-backed sanitizer:
+
+dependency:micronaut-security-html-sanitizer[groupId=io.micronaut.security]
+
+When this module is present, it contributes an api:micronaut.http.util.HtmlSanitizer[] bean backed by OWASP Java HTML Sanitizer. The bean replaces the Core entity-encoding fallback and is secondary to an application-provided api:micronaut.http.util.HtmlSanitizer[] bean.
+
+The configured policies define the allowlist for sanitized output: only HTML elements and attributes allowed by those OWASP policies are preserved.
+By default, the module combines the https://www.javadoc.io/doc/com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer/20240325.1/org/owasp/html/Sanitizers.html[OWASP `BLOCKS`, `FORMATTING`, and `LINKS` policies], so sanitized output can include common block elements, formatting elements, and safe links. It does not allow scripts, event-handler attributes, `javascript:` URLs, CSS style handling, images, or tables by default.
+
+include::{includedir}configurationProperties/io.micronaut.security.html.HtmlSanitizerConfigurationProperties.adoc[]
+
+You can opt into additional OWASP policies with configuration. For example, adding `IMAGES` allows the image elements and attributes defined by the OWASP image policy:
+
+[configuration]
+----
+micronaut:
+  security:
+    html-sanitizer:
+      policies:
+        - BLOCKS
+        - FORMATTING
+        - LINKS
+        - IMAGES
+----
+
+To replace the module completely, provide your own api:micronaut.http.util.HtmlSanitizer[] bean. To disable the module without removing the dependency, set `micronaut.security.html-sanitizer.enabled=false`.
+
+When rendering untrusted HTML, discard the original input and render only the sanitized output returned by api:micronaut.http.util.HtmlSanitizer[]. Keep contextual output encoding and template escaping enabled, and do not treat removed tags or attributes as proof that the original input was safe.

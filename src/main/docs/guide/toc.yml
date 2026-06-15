@@ -24,6 +24,7 @@ securityFilter:
       securedExpression: Secured with expressions
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
+    runAs: Run As Annotation
 exceptionHandlers: 'Exception Handlers'
 endpoints:
   title: Endpoints
@@ -98,7 +99,7 @@ csrf:
   csrfMitigations:
     title: CSRF Mitigations
     syncronizerTokenPattern:
-      title: Syncronizer Token Pattern
+      title: Synchronizer Token Pattern
       csrfAndSession: CSRF and Session
     doubleSubmitCookiePattern: Double Submit Cookie Pattern
     signedDoubleSubmitCookiePattern: Signed Double Submit Cookie Pattern
@@ -108,6 +109,7 @@ csrf:
     httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
     fieldCsrfTokenResolver: Field CSRF Token Resolution
   csrfApis: CSRF APIs
+htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers
@@ -153,6 +155,7 @@ oauth:
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
+      clientCredentailsClientOf: Static ClientCredentialsClient
       clientCredentialGuides: Guides
     password: Password
   oauth-endpoints:

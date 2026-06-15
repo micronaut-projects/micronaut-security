@@ -8,7 +8,7 @@ api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] or api:io
 
 The easiest way is to create a bean of type api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] is to have in your app a bean of type api:io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration[],
 api:io.micronaut.security.token.jwt.signature.ec.ECSignatureConfiguration[], or
-api:io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration[] which must be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (api:io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory.html[],
+api:io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration[] which must be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (api:io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory[],
 api:io.micronaut.security.token.jwt.signature.ec.ECSignatureConfiguration[]) or other beans (api:io.micronaut.security.token.jwt.signature.secret.SecretSignature[])  which use
 https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
 

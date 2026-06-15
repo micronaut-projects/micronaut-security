@@ -37,6 +37,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
-    private final BeanContext beanContext;
+    private final @Nullable BeanContext beanContext;
     private final Supplier<HttpClient> defaultTokenClient;
     private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
 
@@ -61,10 +63,27 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @param beanContext The bean context
      * @param defaultClientConfiguration The default client configuration
      */
-    public DefaultTokenEndpointClient(BeanContext beanContext,
+    public DefaultTokenEndpointClient(@NonNull BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
+        this(beanContext, () -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+    }
+
+    /**
+     * @param beanContext Bean Context
+     * @param defaultTokenClientSupplier Default Token Client Supplier
+     */
+    public DefaultTokenEndpointClient(@Nullable BeanContext beanContext,
+                                      Supplier<HttpClient> defaultTokenClientSupplier) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultTokenClient = SupplierUtil.memoized(defaultTokenClientSupplier);
+
+    }
+
+    /**
+     * @param client HttpClient
+     */
+    public DefaultTokenEndpointClient(HttpClient client) {
+        this(null, () -> client);
     }
 
     @NonNull
@@ -142,7 +161,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     protected HttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, provider -> {
-            Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
+            Optional<HttpClient> client = beanContext == null ? Optional.empty() : beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
             return client.orElseGet(defaultTokenClient);
         });
     }
