@@ -10,7 +10,7 @@ import org.owasp.html.PolicyFactory;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest(startApplication = false)
-public class PolicyFactoryTest {
+class PolicyFactoryTest {
     @Inject
     BeanContext beanContext;
 
