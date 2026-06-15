@@ -80,8 +80,6 @@ class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAcces
             String clientSecret = requiredParameter(parameters, CLIENT_SECRET_PARAMETER);
             String scope = optionalParameter(parameters, SCOPE_PARAMETER);
             return fetchDatabaseAccessToken(tokenUrl, clientId, clientSecret, scope);
-        } catch (DatabaseAccessTokenFetcherException e) {
-            throw e;
         } catch (IllegalStateException e) {
             throw new DatabaseAccessTokenFetcherException(e.getMessage(), e);
         }
