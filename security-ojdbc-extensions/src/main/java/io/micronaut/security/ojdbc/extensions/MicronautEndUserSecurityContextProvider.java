@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 original authors
+ * Copyright 2017-2026 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,19 @@
  */
 package io.micronaut.security.ojdbc.extensions;
 
+import io.micronaut.core.annotation.Experimental;
+import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.context.SecurityContext;
 import io.micronaut.security.context.SecurityContextHolder;
 import oracle.jdbc.EndUserSecurityContext;
+
+import oracle.jdbc.provider.resource.AbstractResourceProvider;
+import oracle.jdbc.provider.resource.ResourceParameter;
 import oracle.jdbc.spi.EndUserSecurityContextProvider;
+import oracle.sql.json.OracleJsonFactory;
 import oracle.sql.json.OracleJsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,76 +35,158 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
- * Oracle JDBC {@link EndUserSecurityContextProvider} backed by the current
- * Micronaut Security {@link SecurityContext}.
- *
- * <p>The Oracle JDBC driver discovers this provider through {@link java.util.ServiceLoader}
- * and calls it before database operations that require an {@link EndUserSecurityContext}.
- * The provider reads the authentication and token associated with the current Micronaut
- * server request and adapts them to Oracle JDBC's end-user security context model.</p>
- *
- * <p>If no server request or authenticated user is associated with the current execution,
- * the provider returns {@code null}.</p>
+ * OJDBC end user security context provider backed by Micronaut Security.
  *
  * @since 5.1.0
  */
-public class MicronautEndUserSecurityContextProvider implements EndUserSecurityContextProvider {
-    private static final Logger LOG = LoggerFactory.getLogger(MicronautEndUserSecurityContextProvider.class);
-    private static final String SYSTEM = "micronaut";
-    private static final String VALUE_TYPE = "end-user-security-context";
+@Experimental
+@Internal
+public final class MicronautEndUserSecurityContextProvider extends AbstractResourceProvider implements EndUserSecurityContextProvider {
+    /**
+     * Comma separated list of data roles for an end user.
+     */
+    static final ResourceParameter DATA_ROLES_PARAMETER = new ResourceParameter("dataRoles", null, false, false,
+            (value, parameterSetBuilder) -> { });
 
     /**
-     * Builds an Oracle JDBC end-user security context from the current Micronaut Security context.
-     *
-     * @param map provider parameters supplied by Oracle JDBC
-     * @return an {@link EndUserSecurityContext} for the current authenticated user, or {@code null}
-     * when no request or authentication is available
+     * JSON object containing a fixed set of end user context attributes.
      */
+    static final ResourceParameter END_USER_CONTEXT_ATTRIBUTE_PARAMETER = new ResourceParameter("endUserContextAttributes", null, false, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Authority prefix used to map Micronaut roles to Oracle Database data roles.
+     */
+    static final ResourceParameter AUTHORITY_ROLE_PREFIX_PARAMETER = new ResourceParameter("authorityRolePrefix", "ORACLE_DATA_ROLE_", false, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Authority prefix used to map Micronaut roles to Oracle Database END USER CONTEXT attributes.
+     */
+    static final ResourceParameter AUTHORITY_ATTRIBUTE_PREFIX_PARAMETER = new ResourceParameter("authorityAttributesPrefix", null, false, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Token endpoint URL used to fetch the database access token.
+     */
+    static final ResourceParameter TOKEN_URL_PARAMETER = new ResourceParameter("tokenUrl", null, true, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Optional OAuth 2.0 scope used to fetch the database access token.
+     */
+    static final ResourceParameter SCOPE_PARAMETER = new ResourceParameter("scope", null, false, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Client identifier used to fetch the database access token.
+     */
+    static final ResourceParameter CLIENT_ID_PARAMETER = new ResourceParameter("clientId", null, true, false,
+            (value, parameterSetBuilder) -> { });
+
+    /**
+     * Client secret used to fetch the database access token.
+     */
+    static final ResourceParameter CLIENT_SECRET_PARAMETER = new ResourceParameter("clientSecret", null, true, true,
+            (value, parameterSetBuilder) -> { });
+
+    static final String DEFAULT_AUTHORITY_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
+
+    private static final Logger LOG = LoggerFactory.getLogger(MicronautEndUserSecurityContextProvider.class);
+
+    /**
+     * Factory for creating Oracle JSON passed to
+     * {@link EndUserSecurityContext#withAttributes(Map)}.
+     */
+    private static final OracleJsonFactory JSON_FACTORY = new OracleJsonFactory();
+
+    private static final ResourceParameter[] PARAMETERS = {
+            TOKEN_URL_PARAMETER,
+            CLIENT_ID_PARAMETER,
+            CLIENT_SECRET_PARAMETER,
+            SCOPE_PARAMETER,
+            DATA_ROLES_PARAMETER,
+            END_USER_CONTEXT_ATTRIBUTE_PARAMETER,
+            AUTHORITY_ROLE_PREFIX_PARAMETER,
+            AUTHORITY_ATTRIBUTE_PREFIX_PARAMETER,
+    };
+
+    private final DatabaseAccessTokenFetcher databaseAccessTokenFetcher;
+    private final DataRolesFetcher dataRolesFetcher;
+    private final AttributesFetcher attributesFetcher;
+
+    /**
+     * This public no-arg constructor is required by {@link java.util.ServiceLoader}.
+     *
+     * @since 5.1.0
+     */
+    public MicronautEndUserSecurityContextProvider() {
+        this(new ClientCredentialsClientDatabaseAccessTokenFetcher(), new DefaultDataRolesFetcher(), new DefaultAttributesFetcher(JSON_FACTORY));
+    }
+
+    /**
+     * Creates a Micronaut-backed OJDBC end user security context provider.
+     *
+     * @param databaseAccessTokenFetcher database access token fetcher
+     * @param dataRolesFetcher data roles fetcher
+     * @param attributesFetcher END USER CONTEXT attributes fetcher
+     * @since 5.1.0
+     */
+    MicronautEndUserSecurityContextProvider(DatabaseAccessTokenFetcher databaseAccessTokenFetcher,
+                                                   DataRolesFetcher dataRolesFetcher,
+                                                   AttributesFetcher attributesFetcher) {
+        super("micronaut", "end-user-security-context", PARAMETERS);
+        this.databaseAccessTokenFetcher = databaseAccessTokenFetcher;
+        this.dataRolesFetcher = dataRolesFetcher;
+        this.attributesFetcher = attributesFetcher;
+    }
+
     @Override
-    public EndUserSecurityContext getEndUserSecurityContext(Map<Parameter, CharSequence> map) {
-        if (ServerRequestContext.currentRequest().isEmpty()) {
-            LOG.trace("no request returning null for EndUserSecurityContextProvider");
-            return null;
+    public EndUserSecurityContext getEndUserSecurityContext(Map<Parameter, CharSequence> parameters) {
+        Supplier<String> requestInfo = SupplierUtil.memoized(() -> ServerRequestContext.currentRequest().map(req -> req.getMethod() + " " + req.getPath()).orElse("No Request"));
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(requestInfo.get() + "- resolving end user security context");
         }
         SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication == null) {
-            LOG.trace("Authentication object is null");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(requestInfo.get() + "- end user security context is null because authentication is null");
+            }
             return null;
         }
-        CharSequence databaseAccessToken = ""; //TODO
-        CharSequence endUserToken = securityContext.getToken();
-        Collection<String> dataRoles = Collections.emptyList();
-        Map<String, OracleJsonObject> attributes = Collections.emptyMap();
-        return endUserSecurityContext(databaseAccessToken, endUserToken, dataRoles, attributes);
-    }
-
-    /**
-     * @return the provider name used by Oracle JDBC resource-provider configuration
-     */
-    @Override
-    public String getName() {
-        return "ojdbc-provider-" + SYSTEM + "-" + VALUE_TYPE;
-    }
-
-    /**
-     * Creates an Oracle JDBC end-user security context with token, data roles, and namespace attributes.
-     *
-     * @param databaseAccessToken database access token used by Oracle JDBC
-     * @param endUserToken token representing the authenticated Micronaut user
-     * @param dataRoles Oracle data roles to activate for the end user
-     * @param namespaceAttributes Oracle JSON namespace attributes to attach to the context
-     * @return an immutable {@link EndUserSecurityContext}
-     */
-    private static EndUserSecurityContext endUserSecurityContext(
-            CharSequence databaseAccessToken,
-            CharSequence endUserToken,
-            Collection<String> dataRoles,
-            Map<String, OracleJsonObject> namespaceAttributes) {
-        return EndUserSecurityContext.createWithToken(databaseAccessToken, endUserToken)
-                .withDataRoles(dataRoles)
-                .withAttributes(namespaceAttributes);
+        String databaseAccessToken = databaseAccessTokenFetcher.fetchDatabaseAccessToken(parameters);
+        if (authentication != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the database access token");
+            }
+        }
+        EndUserSecurityContext endUserSecurityContext = EndUserSecurityContext.createWithToken(
+                databaseAccessToken,
+                Objects.requireNonNull(securityContext.getToken()));
+        Collection<String> dataRoles = dataRolesFetcher.fetchDataRoles(parameters, authentication);
+        if (dataRoles != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the data roles {}", dataRoles);
+            }
+            endUserSecurityContext = endUserSecurityContext.withDataRoles(dataRoles);
+        }
+        Map<String, OracleJsonObject> attributes = attributesFetcher.fetchAttributes(parameters, authentication);
+        if (attributes != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the attributes {}", attributes);
+            }
+            endUserSecurityContext = endUserSecurityContext.withAttributes(attributes);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(requestInfo.get() + "- end user security context resolved with data roles {} and attributes {}",
+                    dataRoles != null ? dataRoles : Collections.emptyList(),
+                    attributes != null ? attributes : Collections.emptyMap());
+        }
+        return endUserSecurityContext;
     }
 }

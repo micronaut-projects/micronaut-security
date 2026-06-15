@@ -2,6 +2,7 @@
 managed-nimbus-jose-jwt = "10.9.1"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
+managed-ojdbc-extensions = "1.0.7" # https://github.com/oracle/ojdbc-extensions/releases
 micronaut = "5.0.2"
 micronaut-platform = "5.0.2"
 awaitility = "4.3.0"
@@ -49,6 +50,7 @@ managed-owasp-java-html-sanitizer = { module = "com.googlecode.owasp-java-html-s
 managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed-jjwt" }
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
+managed-ojdbc-provider-common = { module = "com.oracle.database.jdbc:ojdbc-provider-common", version.ref = "managed-ojdbc-extensions" }
 
 geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
