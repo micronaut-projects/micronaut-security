@@ -16,16 +16,9 @@
 package io.micronaut.security.html;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.annotation.Factory;
-import io.micronaut.context.annotation.Primary;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.util.HtmlEntityEncodingHtmlSanitizer;
 import io.micronaut.http.util.HtmlSanitizer;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 
 import java.util.List;
 import java.util.Map;
