@@ -74,4 +74,27 @@ public @interface RunAs {
      * @since 5.1.0
      */
     boolean appendAttributes() default true;
+
+    /**
+     * An attribute entry for {@link RunAs}.
+     *
+     * @since 5.1.0
+     */
+    @Target({})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface Attribute {
+
+        /**
+         * @return The authentication attribute key
+         * @since 5.1.0
+         */
+        String key();
+
+        /**
+         * @return The authentication attribute value
+         * @since 5.1.0
+         */
+        String value();
+    }
 }

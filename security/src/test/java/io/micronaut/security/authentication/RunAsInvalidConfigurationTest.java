@@ -18,8 +18,8 @@ package io.micronaut.security.authentication;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.security.annotation.Attribute;
 import io.micronaut.security.annotation.RunAs;
+import io.micronaut.security.annotation.RunAs.Attribute;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 

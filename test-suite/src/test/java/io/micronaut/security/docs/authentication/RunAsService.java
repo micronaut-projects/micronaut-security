@@ -1,8 +1,8 @@
 package io.micronaut.security.docs.authentication;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.annotation.Attribute;
 import io.micronaut.security.annotation.RunAs;
+import io.micronaut.security.annotation.RunAs.Attribute;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.context.SecurityContextHolder;
 import jakarta.inject.Singleton;
