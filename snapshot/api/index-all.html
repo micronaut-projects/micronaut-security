@@ -688,6 +688,10 @@ against any <a href="io/micronaut/security/authentication/provider/ReactiveAuthe
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html#bind(io.micronaut.core.convert.ArgumentConversionContext,io.micronaut.websocket.bind.WebSocketState)" class="member-name-link">bind(ArgumentConversionContext, WebSocketState)</a> - Method in class io.micronaut.security.websockets.<a href="io/micronaut/security/websockets/AuthenticationWebSocketStateBinder.html" title="class in io.micronaut.security.websockets">AuthenticationWebSocketStateBinder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#BLOCKS" class="member-name-link">BLOCKS</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Common block elements.</div>
+</dd>
 <dt><a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html#build()" class="member-name-link">build()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html" title="class in io.micronaut.security.authentication">WwwAuthenticateChallenge.Builder</a></dt>
 <dd>
 <div class="block">Build the challenge instance.</div>
@@ -1547,6 +1551,10 @@ populated on save with the identity of the currently authenticated user.</div>
 <dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a> - Static variable in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enabled value.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a> - Static variable in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration</a></dt>
 <dd>
@@ -2428,6 +2436,10 @@ provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectService.html#forbiddenUrl()" class="member-name-link">forbiddenUrl()</a> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#FORMATTING" class="member-name-link">FORMATTING</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Common formatting elements.</div>
+</dd>
 <dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" class="type-name-link" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver&lt;T&gt;</a> - Interface in <a href="io/micronaut/security/csrf/resolver/package-summary.html">io.micronaut.security.csrf.resolver</a></dt>
 <dd>
 <div class="block">Attempts to resolve a CSRF token from the provided request.</div>
@@ -3624,6 +3636,12 @@ OPTIONAL.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#getPkceChallenge(io.micronaut.http.MutableHttpResponse)" class="member-name-link">getPkceChallenge(MutableHttpResponse)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfiguration.html#getPolicies()" class="member-name-link">getPolicies()</a> - Method in interface io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfiguration.html" title="interface in io.micronaut.security.html">HtmlSanitizerConfiguration</a></dt>
+<dd>
+<div class="block">The configured OWASP sanitizer policies.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#getPolicies()" class="member-name-link">getPolicies()</a> - Method in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/context/ContextConfigurationContextSettings.html#getPooled()" class="member-name-link">getPooled()</a> - Method in class io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/ContextConfigurationContextSettings.html" title="class in io.micronaut.security.ldap.context">ContextConfigurationContextSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/context/ContextSettings.html#getPooled()" class="member-name-link">getPooled()</a> - Method in interface io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/ContextSettings.html" title="interface in io.micronaut.security.ldap.context">ContextSettings</a></dt>
@@ -4318,6 +4336,20 @@ returns the authentication response.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/keycloak/docker/Keycloak.html#HOST_TESTCONTAINERS_INTERNAL" class="member-name-link">HOST_TESTCONTAINERS_INTERNAL</a> - Static variable in class io.micronaut.security.oauth2.keycloak.docker.<a href="io/micronaut/security/oauth2/keycloak/docker/Keycloak.html" title="class in io.micronaut.security.oauth2.keycloak.docker">Keycloak</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.html">HtmlSanitizerConfiguration</a> - Interface in <a href="io/micronaut/security/html/package-summary.html">io.micronaut.security.html</a></dt>
+<dd>
+<div class="block">Configuration for the OWASP-backed HTML sanitizer.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a> - Class in <a href="io/micronaut/security/html/package-summary.html">io.micronaut.security.html</a></dt>
+<dd>
+<div class="block"><a href="io/micronaut/security/html/HtmlSanitizerConfiguration.html" title="interface in io.micronaut.security.html"><code>HtmlSanitizerConfiguration</code></a> implementation.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">HtmlSanitizerConfigurationProperties()</a> - Constructor for class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" class="type-name-link" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a> - Enum Class in <a href="io/micronaut/security/html/package-summary.html">io.micronaut.security.html</a></dt>
+<dd>
+<div class="block">Supported OWASP HTML sanitizer policies.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/HttpClientJwksClient.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.signature.jwks">HttpClientJwksClient</a> - Class in <a href="io/micronaut/security/token/jwt/signature/jwks/package-summary.html">io.micronaut.security.token.jwt.signature.jwks</a></dt>
 <dd>
 <div class="block">Implementation of <a href="io/micronaut/security/token/jwt/signature/jwks/JwksClient.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksClient</code></a> that uses the Micronaut <code>HttpClient</code>.</div>
@@ -4415,6 +4447,10 @@ returns the authentication response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#idTokenSigningAlgValuesSupported(java.util.List)" class="member-name-link">idTokenSigningAlgValuesSupported(List)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#IMAGES" class="member-name-link">IMAGES</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Image elements and attributes.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#IMPLICIT" class="member-name-link">IMPLICIT</a> - Enum constant in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>
 <div class="block">The implicit grant is a simplified authorization code flow optimized
@@ -4629,6 +4665,10 @@ additional context that is known by the protected resource to aid the authorizat
 <dt><a href="io/micronaut/security/handlers/package-summary.html">io.micronaut.security.handlers</a> - package io.micronaut.security.handlers</dt>
 <dd>
 <div class="block">Security handlers.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/package-summary.html">io.micronaut.security.html</a> - package io.micronaut.security.html</dt>
+<dd>
+<div class="block">OWASP-backed HTML sanitization support.</div>
 </dd>
 <dt><a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a> - package io.micronaut.security.info</dt>
 <dd>&nbsp;</dd>
@@ -5005,6 +5045,8 @@ a non empty optional.</div>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.GroupConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -5513,6 +5555,10 @@ and appended to from other sources.</div>
 <dd>
 <div class="block">Contract for searching LDAP using an existing context.</div>
 </dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#LINKS" class="member-name-link">LINKS</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Safe link elements and attributes.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/HttpClientJwksClient.html#load(java.lang.String,java.lang.String)" class="member-name-link">load(String, String)</a> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/HttpClientJwksClient.html" title="class in io.micronaut.security.token.jwt.signature.jwks">HttpClientJwksClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/JwksClient.html#load(java.lang.String,java.lang.String)" class="member-name-link">load(String, String)</a> - Method in interface io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksClient.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksClient</a></dt>
@@ -5744,6 +5790,10 @@ an appropriate response.</div>
 <dt><a href="io/micronaut/security/info/MicronautSecurityCsrfModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityCsrfModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityCsrfModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityCsrfModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityCsrfModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityCsrfModuleInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityHtmlSanitizerModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityHtmlSanitizerModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityHtmlSanitizerModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityHtmlSanitizerModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityHtmlSanitizerModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityHtmlSanitizerModuleInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityJwtModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityJwtModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
@@ -6263,6 +6313,14 @@ request to an OpenID provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#outgoingHttpRequestProcessor" class="member-name-link">outgoingHttpRequestProcessor</a> - Variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation">TokenPropagationHttpClientFilter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/OwaspHtmlSanitizer.html" class="type-name-link" title="class in io.micronaut.security.html">OwaspHtmlSanitizer</a> - Class in <a href="io/micronaut/security/html/package-summary.html">io.micronaut.security.html</a></dt>
+<dd>
+<div class="block">OWASP-backed implementation of <code>HtmlSanitizer</code>.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/OwaspHtmlSanitizer.html#%3Cinit%3E(org.owasp.html.PolicyFactory)" class="member-name-link">OwaspHtmlSanitizer(PolicyFactory)</a> - Constructor for class io.micronaut.security.html.<a href="io/micronaut/security/html/OwaspHtmlSanitizer.html" title="class in io.micronaut.security.html">OwaspHtmlSanitizer</a></dt>
+<dd>
+<div class="block">Constructs an OWASP-backed HTML sanitizer.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
@@ -6438,6 +6496,10 @@ request to an OpenID provider.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator)" class="member-name-link">PlainPkceGenerator(CodeVerifierGenerator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#policyFactory()" class="member-name-link">policyFactory()</a> - Method in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">The OWASP policy factory for this policy.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populateAcrValues(io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest,java.util.Map)" class="member-name-link">populateAcrValues(OpenIdAuthorizationRequest, Map)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateAud(com.nimbusds.jwt.JWTClaimsSet.Builder)" class="member-name-link">populateAud(JWTClaimsSet.Builder)</a> - Method in class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
@@ -6528,6 +6590,10 @@ request to an OpenID provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>
+<div class="block">The configuration prefix.</div>
+</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.ContextConfiguration</a></dt>
 <dd>
 <div class="block">The configuration prefix.</div>
@@ -7175,6 +7241,8 @@ following order:
 <div class="block">SAML 2.0 bearer assertion grant.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html#%3Cinit%3E()" class="member-name-link">SamlBearerAssertionGrant()</a> - Constructor for class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html" title="class in io.micronaut.security.oauth2.grants">SamlBearerAssertionGrant</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/OwaspHtmlSanitizer.html#sanitize(java.lang.String)" class="member-name-link">sanitize(String)</a> - Method in class io.micronaut.security.html.<a href="io/micronaut/security/html/OwaspHtmlSanitizer.html" title="class in io.micronaut.security.html">OwaspHtmlSanitizer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#save(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.lang.String)" class="member-name-link">save(HttpRequest, MutableHttpResponse, String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
 <dd>&nbsp;</dd>
@@ -7834,6 +7902,10 @@ submit an authorization callback request.</div>
 <dd>
 <div class="block">Enables <a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a>.</div>
 </dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets whether the OWASP-backed HTML sanitizer is enabled.</div>
+</dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.GroupConfiguration</a></dt>
 <dd>
 <div class="block">Sets if group search is enabled.</div>
@@ -8202,6 +8274,10 @@ authorization code grant flow.</div>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html#setPersistence(java.lang.String)" class="member-name-link">setPersistence(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.<a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce">DefaultNonceConfiguration</a></dt>
 <dd>
 <div class="block">Sets the mechanism to persist the nonce for later retrieval for validation.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html#setPolicies(java.util.List)" class="member-name-link">setPolicies(List)</a> - Method in class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerConfigurationProperties.html" title="class in io.micronaut.security.html">HtmlSanitizerConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the OWASP sanitizer policies to combine.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#setPostalCode(java.lang.String)" class="member-name-link">setPostalCode(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>
@@ -8597,6 +8673,10 @@ authorization endpoint.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#STREET_ADDRESS" class="member-name-link">STREET_ADDRESS</a> - Static variable in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#STYLES" class="member-name-link">STYLES</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Inline style attributes.</div>
+</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#SUBJECT" class="member-name-link">SUBJECT</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/Claims.html#SUBJECT" class="member-name-link">SUBJECT</a> - Static variable in interface io.micronaut.security.token.<a href="io/micronaut/security/token/Claims.html" title="interface in io.micronaut.security.token">Claims</a></dt>
@@ -8698,6 +8778,10 @@ authorization endpoint.</div>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#TABLES" class="member-name-link">TABLES</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Table elements.</div>
+</dd>
 <dt><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html#TEMPORARILY_UNAVAILABLE" class="member-name-link">TEMPORARILY_UNAVAILABLE</a> - Enum constant in enum class io.micronaut.security.errors.<a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum class in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html#TEMPORARILY_UNAVAILABLE" class="member-name-link">TEMPORARILY_UNAVAILABLE</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorCode.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorCode</a></dt>
@@ -9200,6 +9284,10 @@ populated on both save and update with the identity of the currently authenticat
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/Display.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/Display.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">Display</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -9257,6 +9345,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html#values()" class="member-name-link">values()</a> - Static method in enum class io.micronaut.security.errors.<a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum class in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#values()" class="member-name-link">values()</a> - Static method in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>

@@ -20,6 +20,7 @@ io.micronaut.security.event
 io.micronaut.security.expressions
 io.micronaut.security.filters
 io.micronaut.security.handlers
+io.micronaut.security.html
 io.micronaut.security.info
 io.micronaut.security.ldap
 io.micronaut.security.ldap.configuration
