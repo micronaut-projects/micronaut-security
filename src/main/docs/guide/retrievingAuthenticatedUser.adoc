@@ -1,6 +1,6 @@
-Often you may want to retrieve the authenticated user.
+Often, you may want to retrieve the authenticated user.
 
-You can bind `java.security.Principal` as a method's parameter in a controller.
+You can bind `java.security.Principal` as a method parameter in a controller.
 
 [source, groovy]
 ----
@@ -9,7 +9,7 @@ include::{testssecurity}/security/principalparam/UserController.groovy[tag=impor
 include::{testssecurity}/security/principalparam/UserController.groovy[tag=clazz,indent=0]
 ----
 
-If you need a greater level of detail, you can bind api:security.authentication.Authentication[]  as a method's parameter in a controller.
+If you need more detail, you can bind api:security.authentication.Authentication[] as a method parameter in a controller.
 
 [source, groovy]
 ----
@@ -17,3 +17,4 @@ include::{testssecurity}/security/authentication/UserController.groovy[tag=impor
 
 include::{testssecurity}/security/authentication/UserController.groovy[tag=clazz,indent=0]
 ----
+
