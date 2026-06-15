@@ -279,6 +279,10 @@ for authentication to succeed.</div>
 <dd>
 <div class="block">Utility to retrieve beans from the Application Context associated to the AOT Context.</div>
 </dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html#appendAttributes()" class="member-name-link">appendAttributes()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html#appendRoles()" class="member-name-link">appendRoles()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/DefaultProtectedResourceMetadataProvider.html#applicationConfiguration" class="member-name-link">applicationConfiguration</a> - Variable in class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/DefaultProtectedResourceMetadataProvider.html" title="class in io.micronaut.security.oauth2.metadata">DefaultProtectedResourceMetadataProvider</a></dt>
 <dd>
 <div class="block">Application configuration.</div>
@@ -291,6 +295,8 @@ for authentication to succeed.</div>
 <dd>
 <div class="block">A contract for a class convertible to a map.</div>
 </dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html#attributes()" class="member-name-link">attributes()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/context/AttributesConvertibleValues.html" class="type-name-link" title="class in io.micronaut.security.ldap.context">AttributesConvertibleValues</a> - Class in <a href="io/micronaut/security/ldap/context/package-summary.html">io.micronaut.security.ldap.context</a></dt>
 <dd>
 <div class="block">A <code>ConvertibleValues</code> implementation that uses <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.naming/javax/naming/directory/Attributes.html" title="class or interface in javax.naming.directory" class="external-link"><code>Attributes</code></a> as
@@ -2283,6 +2289,10 @@ provider.</div>
 </dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/ClientAuthentication.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ClientAuthentication.html" title="class in io.micronaut.security.authentication">ClientAuthentication</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/ServerAuthentication.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication">ServerAuthentication</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.html" title="class in io.micronaut.security.authentication">WwwAuthenticateChallenge</a></dt>
@@ -3479,6 +3489,8 @@ REQUIRED.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRolesAllowedAnnotationMapper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRunAsAnnotationMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.token.jwt.encryption.secret.<a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption.secret">SecretEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfigurationProperties</a></dt>
@@ -3967,7 +3979,8 @@ that stores the key where the roles are stored.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html#getSecurityContext(io.micronaut.http.HttpRequest)" class="member-name-link">getSecurityContext(HttpRequest)</a> - Static method in class io.micronaut.security.context.<a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html" title="class in io.micronaut.security.context">ServerRequestContextSecurityContextSupplier</a></dt>
 <dd>
-<div class="block">Convenience method to get a <a href="io/micronaut/security/context/SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking <code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
+<div class="block">Convenience method to get a <a href="io/micronaut/security/context/SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking
+<code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#getServer()" class="member-name-link">getServer()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.ContextConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -4283,6 +4296,10 @@ returns the authentication response.</div>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#hash(java.lang.String)" class="member-name-link">hash(String)</a> - Static method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/ClientAuthentication.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ClientAuthentication.html" title="class in io.micronaut.security.authentication">ClientAuthentication</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/ServerAuthentication.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication">ServerAuthentication</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>
 <dd>&nbsp;</dd>
@@ -5273,6 +5290,12 @@ should be to reject the request or allow the not found response to be returned.<
 </dd>
 <dt><a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html#%3Cinit%3E()" class="member-name-link">JakartaRolesAllowedAnnotationMapper()</a> - Constructor for class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRolesAllowedAnnotationMapper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html" class="type-name-link" title="class in io.micronaut.security.processor">JakartaRunAsAnnotationMapper</a> - Class in <a href="io/micronaut/security/processor/package-summary.html">io.micronaut.security.processor</a></dt>
+<dd>
+<div class="block">Allows using the <code>RunAs</code> annotation in Micronaut.</div>
+</dd>
+<dt><a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html#%3Cinit%3E()" class="member-name-link">JakartaRunAsAnnotationMapper()</a> - Constructor for class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRunAsAnnotationMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/ErrorResponse.html#JSON_KEY_ERROR" class="member-name-link">JSON_KEY_ERROR</a> - Static variable in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/ErrorResponse.html#JSON_KEY_ERROR_DESCRIPTION" class="member-name-link">JSON_KEY_ERROR_DESCRIPTION</a> - Static variable in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></dt>
@@ -5450,6 +5473,8 @@ should be to reject the request or allow the not found response to be returned.<
 </dl>
 <h2 class="title" id="I:K">K</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/annotation/RunAs.Attribute.html#key()" class="member-name-link">key()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.Attribute.html" title="annotation interface in io.micronaut.security.annotation">RunAs.Attribute</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilter.html#KEY" class="member-name-link">KEY</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SecureGrant.html#KEY_CLIENT_ID" class="member-name-link">KEY_CLIENT_ID</a> - Static variable in interface io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/SecureGrant.html" title="interface in io.micronaut.security.oauth2.grants">SecureGrant</a></dt>
@@ -5739,6 +5764,8 @@ an appropriate response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html#map(io.micronaut.core.annotation.AnnotationValue,io.micronaut.inject.visitor.VisitorContext)" class="member-name-link">map(AnnotationValue, VisitorContext)</a> - Method in class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRolesAllowedAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRolesAllowedAnnotationMapper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html#map(io.micronaut.core.annotation.AnnotationValue,io.micronaut.inject.visitor.VisitorContext)" class="member-name-link">map(AnnotationValue, VisitorContext)</a> - Method in class io.micronaut.security.processor.<a href="io/micronaut/security/processor/JakartaRunAsAnnotationMapper.html" title="class in io.micronaut.security.processor">JakartaRunAsAnnotationMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/ContextAuthenticationMapper.html#map(io.micronaut.core.convert.value.ConvertibleValues,java.lang.String,java.util.Set)" class="member-name-link">map(ConvertibleValues, String, Set)</a> - Method in interface io.micronaut.security.ldap.<a href="io/micronaut/security/ldap/ContextAuthenticationMapper.html" title="interface in io.micronaut.security.ldap">ContextAuthenticationMapper</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html#map(io.micronaut.core.convert.value.ConvertibleValues,java.lang.String,java.util.Set)" class="member-name-link">map(ConvertibleValues, String, Set)</a> - Method in class io.micronaut.security.ldap.<a href="io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html" title="class in io.micronaut.security.ldap">DefaultContextAuthenticationMapper</a></dt>
@@ -5840,6 +5867,8 @@ an appropriate response.</div>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/annotation/RunAs.html#name()" class="member-name-link">name()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html#name()" class="member-name-link">name()</a> - Method in record class io.micronaut.security.oauth2.endpoint.userinfo.<a href="io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.userinfo">UserInfoClientTokenValidatorConfiguration</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./io/micronaut/security/oauth2/endpoint/userinfo/UserInfoClientTokenValidatorConfiguration.html#param-name"><code>name</code></a> record component.</div>
@@ -7175,6 +7204,8 @@ following order:
 </dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">RevocationEndpointConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html#roles()" class="member-name-link">roles()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/RolesFinder.html" class="type-name-link" title="interface in io.micronaut.security.token">RolesFinder</a> - Interface in <a href="io/micronaut/security/token/package-summary.html">io.micronaut.security.token</a></dt>
 <dd>
 <div class="block">Retrieves roles from token claims.</div>
@@ -7225,6 +7256,14 @@ following order:
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorFactory.html#%3Cinit%3E()" class="member-name-link">RSASignatureGeneratorFactory()</a> - Constructor for class io.micronaut.security.token.jwt.signature.rsa.<a href="io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorFactory.html" title="class in io.micronaut.security.token.jwt.signature.rsa">RSASignatureGeneratorFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html" class="type-name-link" title="annotation interface in io.micronaut.security.annotation">RunAs</a> - Annotation Interface in <a href="io/micronaut/security/annotation/package-summary.html">io.micronaut.security.annotation</a></dt>
+<dd>
+<div class="block">Applies a run-as authentication to intercepted method invocations.</div>
+</dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.Attribute.html" class="type-name-link" title="annotation interface in io.micronaut.security.annotation">RunAs.Attribute</a> - Annotation Interface in <a href="io/micronaut/security/annotation/package-summary.html">io.micronaut.security.annotation</a></dt>
+<dd>
+<div class="block">An attribute entry for <a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation"><code>RunAs</code></a>.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -9260,6 +9299,12 @@ populated on both save and update with the identity of the currently authenticat
 <dd>
 <div class="block">Validates the provided token and returns the authentication state.</div>
 </dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.Attribute.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.Attribute.html" title="annotation interface in io.micronaut.security.annotation">RunAs.Attribute</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/annotation/RunAs.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.html" title="annotation interface in io.micronaut.security.annotation">RunAs</a></dt>
+<dd>
+<div class="block">Alias for <a href="io/micronaut/security/annotation/RunAs.html#roles()"><code>RunAs.roles()</code></a>.</div>
+</dd>
 <dt><a href="io/micronaut/security/annotation/Secured.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/Secured.html" title="annotation interface in io.micronaut.security.annotation">Secured</a></dt>
 <dd>
 <div class="block">The values supplied will be used to secure the target.</div>
@@ -9438,6 +9483,18 @@ the order they are declared.</div>
 <dd>
 <div class="block">The Authorization Server SHOULD display the authentication and consent UI consistent with a "feature phone" type display.</div>
 </dd>
+<dt><a href="io/micronaut/security/authentication/Authentication.html#withAttributes(java.util.Map)" class="member-name-link">withAttributes(Map)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
+<dd>
+<div class="block">Creates an authentication with the supplied attributes.</div>
+</dd>
+<dt><a href="io/micronaut/security/authentication/Authentication.html#withAttributes(java.util.Map,boolean)" class="member-name-link">withAttributes(Map, boolean)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
+<dd>
+<div class="block">Creates an authentication with the supplied attributes, optionally appending them to the current attributes.</div>
+</dd>
+<dt><a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html#withAuthentication(io.micronaut.security.authentication.Authentication)" class="member-name-link">withAuthentication(Authentication)</a> - Static method in class io.micronaut.security.context.<a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html" title="class in io.micronaut.security.context">ServerRequestContextSecurityContextSupplier</a></dt>
+<dd>
+<div class="block">Creates a propagated context with a mutable security context that overrides the current authentication.</div>
+</dd>
 <dt><a href="io/micronaut/security/context/SecurityContext.html#withAuthentication(io.micronaut.security.authentication.Authentication)" class="member-name-link">withAuthentication(Authentication)</a> - Method in interface io.micronaut.security.context.<a href="io/micronaut/security/context/SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></dt>
 <dd>
 <div class="block">Sets the authentication associated with the current security context.</div>
@@ -9446,9 +9503,29 @@ the order they are declared.</div>
 <dd>
 <div class="block">Sets the rejection code associated with the current security context.</div>
 </dd>
+<dt><a href="io/micronaut/security/authentication/Authentication.html#withRoles(java.util.Collection)" class="member-name-link">withRoles(Collection)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
+<dd>
+<div class="block">Creates an authentication with the supplied roles.</div>
+</dd>
+<dt><a href="io/micronaut/security/authentication/Authentication.html#withRoles(java.util.Collection,boolean)" class="member-name-link">withRoles(Collection, boolean)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
+<dd>
+<div class="block">Creates an authentication with the supplied roles, optionally appending them to the current roles.</div>
+</dd>
+<dt><a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html#withSecurityContext(io.micronaut.core.propagation.PropagatedContext,java.util.function.Supplier)" class="member-name-link">withSecurityContext(PropagatedContext, Supplier)</a> - Static method in class io.micronaut.security.context.<a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html" title="class in io.micronaut.security.context">ServerRequestContextSecurityContextSupplier</a></dt>
+<dd>
+<div class="block">Executes the supplier with the supplied propagated context.</div>
+</dd>
+<dt><a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html#withSecurityContext(io.micronaut.security.context.SecurityContext)" class="member-name-link">withSecurityContext(SecurityContext)</a> - Static method in class io.micronaut.security.context.<a href="io/micronaut/security/context/ServerRequestContextSecurityContextSupplier.html" title="class in io.micronaut.security.context">ServerRequestContextSecurityContextSupplier</a></dt>
+<dd>
+<div class="block">Creates a propagated context with the supplied security context.</div>
+</dd>
 <dt><a href="io/micronaut/security/context/SecurityContext.html#withToken(java.lang.String)" class="member-name-link">withToken(String)</a> - Method in interface io.micronaut.security.context.<a href="io/micronaut/security/context/SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></dt>
 <dd>
 <div class="block">Sets the token associated with the current security context.</div>
+</dd>
+<dt><a href="io/micronaut/security/authentication/Authentication.html#withUsername(java.lang.String)" class="member-name-link">withUsername(String)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
+<dd>
+<div class="block">Creates an authentication with the supplied user name.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html#writeToken(io.micronaut.http.MutableHttpRequest,java.lang.String)" class="member-name-link">writeToken(MutableHttpRequest, String)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagator</a></dt>
 <dd>

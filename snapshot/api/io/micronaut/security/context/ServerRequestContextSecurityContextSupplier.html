@@ -66,6 +66,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#get(io.micronaut.http.HttpRequest)" tabindex="0">get(HttpRequest)</a></li>
 <li><a href="#getSecurityContext()" tabindex="0">getSecurityContext()</a></li>
 <li><a href="#getSecurityContext(io.micronaut.http.HttpRequest)" tabindex="0">getSecurityContext(HttpRequest)</a></li>
+<li><a href="#withSecurityContext(io.micronaut.security.context.SecurityContext)" tabindex="0">withSecurityContext(SecurityContext)</a></li>
+<li><a href="#withAuthentication(io.micronaut.security.authentication.Authentication)" tabindex="0">withAuthentication(Authentication)</a></li>
+<li><a href="#withSecurityContext(io.micronaut.core.propagation.PropagatedContext,java.util.function.Supplier)" tabindex="0">withSecurityContext(PropagatedContext, Supplier)</a></li>
 </ol>
 </li>
 </ol>
@@ -134,7 +137,24 @@ implements <a href="SecurityContextSupplier.html" title="interface in io.microna
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSecurityContext(io.micronaut.http.HttpRequest)" class="member-name-link">getSecurityContext</a><wbr>(@Nullable io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Convenience method to get a <a href="SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking <code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
+<div class="block">Convenience method to get a <a href="SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking
+<code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NonNull io.micronaut.core.propagation.PropagatedContext</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withAuthentication(io.micronaut.security.authentication.Authentication)" class="member-name-link">withAuthentication</a><wbr>(@NonNull <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a propagated context with a mutable security context that overrides the current authentication.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;@Nullable T</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSecurityContext(io.micronaut.core.propagation.PropagatedContext,java.util.function.Supplier)" class="member-name-link">withSecurityContext</a><wbr>(@NonNull io.micronaut.core.propagation.PropagatedContext&nbsp;propagatedContext,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Executes the supplier with the supplied propagated context.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NonNull io.micronaut.core.propagation.PropagatedContext</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSecurityContext(io.micronaut.security.context.SecurityContext)" class="member-name-link">withSecurityContext</a><wbr>(@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a>&nbsp;securityContext)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a propagated context with the supplied security context.</div>
 </div>
 </div>
 </div>
@@ -198,12 +218,65 @@ implements <a href="SecurityContextSupplier.html" title="interface in io.microna
 <h3>getSecurityContext</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></span>&nbsp;<span class="element-name">getSecurityContext</span><wbr><span class="parameters">(@Nullable io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;httpRequest)</span></div>
-<div class="block">Convenience method to get a <a href="SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking <code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
+<div class="block">Convenience method to get a <a href="SecurityContext.html" title="interface in io.micronaut.security.context"><code>SecurityContext</code></a> without the need of invoking
+<code>ServerRequestContext.currentRequest()</code> when you already have the HTTP Request available.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>httpRequest</code> - HTTP Request</dd>
 <dt>Returns:</dt>
 <dd>The current Security Context</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withSecurityContext(io.micronaut.security.context.SecurityContext)">
+<h3>withSecurityContext</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NonNull io.micronaut.core.propagation.PropagatedContext</span>&nbsp;<span class="element-name">withSecurityContext</span><wbr><span class="parameters">(@NonNull <a href="SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a>&nbsp;securityContext)</span></div>
+<div class="block">Creates a propagated context with the supplied security context.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>securityContext</code> - The security context to propagate</dd>
+<dt>Returns:</dt>
+<dd>The propagated context</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withAuthentication(io.micronaut.security.authentication.Authentication)">
+<h3>withAuthentication</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NonNull io.micronaut.core.propagation.PropagatedContext</span>&nbsp;<span class="element-name">withAuthentication</span><wbr><span class="parameters">(@NonNull <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+<div class="block">Creates a propagated context with a mutable security context that overrides the current authentication.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>authentication</code> - The authentication to propagate</dd>
+<dt>Returns:</dt>
+<dd>The propagated context</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withSecurityContext(io.micronaut.core.propagation.PropagatedContext,java.util.function.Supplier)">
+<h3>withSecurityContext</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">withSecurityContext</span><wbr><span class="parameters">(@NonNull io.micronaut.core.propagation.PropagatedContext&nbsp;propagatedContext,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</span></div>
+<div class="block">Executes the supplier with the supplied propagated context.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><span id="withSecurityContext(io.micronaut.core.propagation.PropagatedContext,java.util.function.Supplier)-type-param-T"><code>T</code> - The result type</span></dd>
+<dt>Parameters:</dt>
+<dd><code>propagatedContext</code> - The propagated context</dd>
+<dd><code>supplier</code> - The supplier</dd>
+<dt>Returns:</dt>
+<dd>The supplier result</dd>
 </dl>
 </div>
 </section>

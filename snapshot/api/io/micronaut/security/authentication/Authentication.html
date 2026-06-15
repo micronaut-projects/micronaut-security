@@ -63,6 +63,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#build(java.lang.String,java.util.Collection)" tabindex="0">build(String, Collection)</a></li>
 <li><a href="#build(java.lang.String,java.util.Map)" tabindex="0">build(String, Map)</a></li>
 <li><a href="#build(java.lang.String,java.util.Collection,java.util.Map)" tabindex="0">build(String, Collection, Map)</a></li>
+<li><a href="#withAttributes(java.util.Map,boolean)" tabindex="0">withAttributes(Map, boolean)</a></li>
+<li><a href="#withAttributes(java.util.Map)" tabindex="0">withAttributes(Map)</a></li>
+<li><a href="#withRoles(java.util.Collection,boolean)" tabindex="0">withRoles(Collection, boolean)</a></li>
+<li><a href="#withRoles(java.util.Collection)" tabindex="0">withRoles(Collection)</a></li>
+<li><a href="#withUsername(java.lang.String)" tabindex="0">withUsername(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -141,6 +146,33 @@ those not requiring serialization, forcing their values to conform to that spec.
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getRoles()" class="member-name-link">getRoles</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#withAttributes(java.util.Map)" class="member-name-link">withAttributes</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;attributes)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Creates an authentication with the supplied attributes.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#withAttributes(java.util.Map,boolean)" class="member-name-link">withAttributes</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;attributes,
+ boolean&nbsp;append)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Creates an authentication with the supplied attributes, optionally appending them to the current attributes.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#withRoles(java.util.Collection)" class="member-name-link">withRoles</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;roles)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Creates an authentication with the supplied roles.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#withRoles(java.util.Collection,boolean)" class="member-name-link">withRoles</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;roles,
+ boolean&nbsp;append)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Creates an authentication with the supplied roles, optionally appending them to the current roles.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default @NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#withUsername(java.lang.String)" class="member-name-link">withUsername</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;username)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Creates an authentication with the supplied user name.</div>
+</div>
 </div>
 </div>
 </div>
@@ -252,6 +284,95 @@ requiring serialization must ensure all values in the map implement <a href="htt
 <dd><code>attributes</code> - User's attributes</dd>
 <dt>Returns:</dt>
 <dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> for the User</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withAttributes(java.util.Map,boolean)">
+<h3>withAttributes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">@NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></span>&nbsp;<span class="element-name">withAttributes</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;attributes,
+ boolean&nbsp;append)</span></div>
+<div class="block">Creates an authentication with the supplied attributes, optionally appending them to the current attributes.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>attributes</code> - User's attributes</dd>
+<dd><code>append</code> - Whether to append the attributes to the current attributes</dd>
+<dt>Returns:</dt>
+<dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> with the supplied attributes</dd>
+<dt>Since:</dt>
+<dd>5.1.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withAttributes(java.util.Map)">
+<h3>withAttributes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">@NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></span>&nbsp;<span class="element-name">withAttributes</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;attributes)</span></div>
+<div class="block">Creates an authentication with the supplied attributes.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>attributes</code> - User's attributes</dd>
+<dt>Returns:</dt>
+<dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> with the supplied attributes</dd>
+<dt>Since:</dt>
+<dd>5.1.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withRoles(java.util.Collection,boolean)">
+<h3>withRoles</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">@NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></span>&nbsp;<span class="element-name">withRoles</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;roles,
+ boolean&nbsp;append)</span></div>
+<div class="block">Creates an authentication with the supplied roles, optionally appending them to the current roles.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>roles</code> - User's roles</dd>
+<dd><code>append</code> - Whether to append the roles to the current roles</dd>
+<dt>Returns:</dt>
+<dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> with the supplied roles</dd>
+<dt>Since:</dt>
+<dd>5.1.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withRoles(java.util.Collection)">
+<h3>withRoles</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">@NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></span>&nbsp;<span class="element-name">withRoles</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;roles)</span></div>
+<div class="block">Creates an authentication with the supplied roles.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>roles</code> - User's roles</dd>
+<dt>Returns:</dt>
+<dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> with the supplied roles</dd>
+<dt>Since:</dt>
+<dd>5.1.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withUsername(java.lang.String)">
+<h3>withUsername</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">@NonNull <a href="Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></span>&nbsp;<span class="element-name">withUsername</span><wbr><span class="parameters">(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;username)</span></div>
+<div class="block">Creates an authentication with the supplied user name.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>username</code> - User's name</dd>
+<dt>Returns:</dt>
+<dd>An <a href="Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> with the supplied user name</dd>
+<dt>Since:</dt>
+<dd>5.1.0</dd>
 </dl>
 </div>
 </section>

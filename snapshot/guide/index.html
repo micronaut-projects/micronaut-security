@@ -157,6 +157,8 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-builtInEndpointsAccess"><a href="#builtInEndpointsAccess"><strong>6.2.4</strong><span>Built-In Endpoints Security</span></a></div>
         
+        <div class="toc-item" style="margin-left:20px" id="toc-item-runAs"><a href="#runAs"><strong>6.2.5</strong><span>Run As Annotation</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-exceptionHandlers"><a href="#exceptionHandlers"><strong>7</strong><span>Exception Handlers</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-endpoints"><a href="#endpoints"><strong>8</strong><span>Endpoints</span></a></div>
@@ -2394,6 +2396,99 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     }
 }</code></pre>
 </div>
+</div>
+
+<h2 id="runAs"><a class="anchor" href="#runAs"></a>6.2.5 Run As Annotation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/securityFilter/securityRule/runAs.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can use <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> to apply an authentication to intercepted method invocations.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RunAs(
+    name = "aegon",
+    roles = {"TARGARYEN"},
+    attributes = {
+        @Attribute(key = "family_name", value = "Targaryen"),
+        @Attribute(key = "given_name", value = "Aegon")
+    }
+)
+@Singleton
+public class RunAsService {
+    public Authentication changeAuth() {
+        return SecurityContextHolder.getSecurityContext().getAuthentication();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@RunAs(
+    name = "aegon",
+    roles = ["TARGARYEN"],
+    attributes = [
+        Attribute(key = "family_name", value = "Targaryen"),
+        Attribute(key = "given_name", value = "Aegon")
+    ]
+)
+@Singleton
+open class RunAsService {
+    open fun changeAuth(): Authentication? = SecurityContextHolder.getSecurityContext().authentication
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@RunAs(
+        name = "aegon",
+        roles = ["TARGARYEN"],
+        attributes = [
+                @Attribute(key = "family_name", value = "Targaryen"),
+                @Attribute(key = "given_name", value = "Aegon")
+        ]
+)
+@Singleton
+class RunAsService {
+    Authentication changeAuth() {
+        SecurityContextHolder.securityContext.authentication
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Micronaut Security builds an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> from <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> and sets it in the current security context for the invocation.
+For synchronous methods, Micronaut Security restores the previous authentication when the method returns.
+For asynchronous methods (for example, <code>CompletionStage</code> and reactive return types), Micronaut Security restores the previous authentication when the asynchronous result completes.
+The annotation does not authenticate the incoming request or permanently replace the caller&#8217;s identity.</p>
+</div>
+<div class="paragraph">
+<p>By default, <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> appends the supplied roles and attributes to the current authentication.
+The annotation value is an alias for <code>roles</code>, so <code>@RunAs("ROLE_ADMIN")</code> is equivalent to <code>@RunAs(roles = "ROLE_ADMIN")</code>.
+Set <code>appendRoles</code> or <code>appendAttributes</code> to <code>false</code> to replace the current values instead.
+If <code>name</code> is omitted or blank and an authentication already exists, Micronaut Security keeps the current user name.
+You can also use <code>jakarta.annotation.security.RunAs</code>; Micronaut Security maps it to <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> and uses the Jakarta annotation value as the run-as role.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The use of <code>jakarta.annotation.security.RunAs</code> requires <code>io.micronaut.security:micronaut-security-processor</code> to be in the annotation processor classpath (<code>annotationProcessor</code>, <code>kapt</code>, <code>compileOnly</code>) respectively for Java, Kotlin, Groovy.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>One good use case is a bean with <a href="../api/io/micronaut/scheduling/annotation/Scheduled.html">Scheduled</a> methods. Because <a href="https://docs.micronaut.io/latest/guide/#scheduling">scheduled tasks</a> do not run as part of an incoming authenticated request, <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> lets the scheduled job delegate to services that expect an authenticated user.</p>
 </div>
 
 <h1 id="exceptionHandlers"><a class="anchor" href="#exceptionHandlers"></a>7 Exception Handlers</h1>
@@ -7828,10 +7923,10 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 
 
 <div class="paragraph">
-<p>Often you may want to retrieve the authenticated user.</p>
+<p>Often, you may want to retrieve the authenticated user.</p>
 </div>
 <div class="paragraph">
-<p>You can bind <code>java.security.Principal</code> as a method&#8217;s parameter in a controller.</p>
+<p>You can bind <code>java.security.Principal</code> as a method parameter in a controller.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7859,7 +7954,7 @@ public class UserController {
 </div>
 </div>
 <div class="paragraph">
-<p>If you need a greater level of detail, you can bind <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>  as a method&#8217;s parameter in a controller.</p>
+<p>If you need more detail, you can bind <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> as a method parameter in a controller.</p>
 </div>
 <div class="listingblock">
 <div class="content">
