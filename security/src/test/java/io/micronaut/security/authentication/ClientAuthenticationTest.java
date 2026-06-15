@@ -103,8 +103,12 @@ class ClientAuthenticationTest {
         assertNotSame(AUTH, result);
         assertEquals(AUTH.getName(), result.getName());
         assertEquals(List.of("ROLE_ADMIN"), result.getRoles().stream().toList());
-        assertEquals(AUTH.getAttributes(), result.getAttributes());
+        assertEquals(Map.of("family_name", "del Amo", "given_name", "Sergio"), result.getAttributes());
         assertEquals(List.of("ROLE_USER"), AUTH.getRoles().stream().toList());
+        assertEquals(
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"),
+            AUTH.getAttributes()
+        );
     }
 
     @Test
@@ -114,8 +118,12 @@ class ClientAuthenticationTest {
         assertNotSame(AUTH, result);
         assertEquals(AUTH.getName(), result.getName());
         assertEquals(List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_KING"), result.getRoles().stream().toList());
-        assertEquals(AUTH.getAttributes(), result.getAttributes());
+        assertEquals(Map.of("family_name", "del Amo", "given_name", "Sergio"), result.getAttributes());
         assertEquals(List.of("ROLE_USER"), AUTH.getRoles().stream().toList());
+        assertEquals(
+            Map.of("roles", List.of("ROLE_USER"), "family_name", "del Amo", "given_name", "Sergio"),
+            AUTH.getAttributes()
+        );
     }
 
     @Test
