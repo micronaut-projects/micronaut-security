@@ -157,9 +157,12 @@ public interface Authentication extends Principal, Serializable {
      * @return An {@link Authentication} with the supplied roles
      * @since 5.1.0
      */
-    default @NonNull Authentication withRoles(@NonNull Collection<String> roles) {
-        return Authentication.build(getName(), roles, getAttributes());
-    }
+default @NonNull Authentication withRoles(@NonNull Collection<String> roles) {
+    Map<String, Object> attributes = new LinkedHashMap<>(getAttributes());
+    attributes.remove("roles");
+    attributes.remove("rolesKey");
+    return Authentication.build(getName(), roles, attributes);
+}
 
     /**
      * Creates an authentication with the supplied user name.
