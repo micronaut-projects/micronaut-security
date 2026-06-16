@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.generator;
-
-import org.jspecify.annotations.NonNull;
-
 /**
- * Configuration for access tokens.
+ * Contains classes specific to Platform-Agnostic Security Tokens (PASETO) Authentication within Micronaut.
  *
- * @author Sergio del Amo
- * @since 3.2.0
+ * @author Utsav Varia
+ * @since 3.0
  */
-@FunctionalInterface
-public interface AccessTokenConfiguration {
 
-    /**
-     * @return The number of seconds until the access token expires.
-     */
-    @NonNull
-    Integer getExpiration();
-}
+@Configuration
+@Requires(property = PasetoConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+package io.micronaut.security.token.paseto;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;

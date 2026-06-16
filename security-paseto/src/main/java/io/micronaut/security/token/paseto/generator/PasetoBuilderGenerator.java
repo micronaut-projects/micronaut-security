@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.generator;
+package io.micronaut.security.token.paseto.generator;
 
-import org.jspecify.annotations.NonNull;
+import dev.paseto.jpaseto.PasetoBuilder;
+import io.micronaut.core.annotation.NonNull;
 
 /**
- * Configuration for access tokens.
- *
+ * Returns a {@link PasetoBuilder} which will be used to sign a Paseto token.
  * @author Sergio del Amo
  * @since 3.2.0
  */
 @FunctionalInterface
-public interface AccessTokenConfiguration {
+public interface PasetoBuilderGenerator {
 
     /**
-     * @return The number of seconds until the access token expires.
+     *
+     * @return a {@link PasetoBuilder} which will be used to sign a Paseto token.
      */
     @NonNull
-    Integer getExpiration();
+    @SuppressWarnings("rawtypes")
+    PasetoBuilder builder();
 }

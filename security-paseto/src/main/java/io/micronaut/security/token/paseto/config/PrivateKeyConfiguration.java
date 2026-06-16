@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.generator;
+package io.micronaut.security.token.paseto.config;
 
-import org.jspecify.annotations.NonNull;
+import dev.paseto.jpaseto.Version;
+import io.micronaut.core.annotation.NonNull;
+import java.security.PrivateKey;
 
 /**
- * Configuration for access tokens.
- *
+ * Private Key Configuration used to sign a Paseto token.
  * @author Sergio del Amo
  * @since 3.2.0
  */
-@FunctionalInterface
-public interface AccessTokenConfiguration {
+public interface PrivateKeyConfiguration {
 
     /**
-     * @return The number of seconds until the access token expires.
+     *
+     * @return The Paseto Version
      */
     @NonNull
-    Integer getExpiration();
+    Version getVersion();
+
+    /**
+     *
+     * @return Private Key used to sign the Paseto token
+     */
+    @NonNull
+    PrivateKey getPrivateKey();
 }

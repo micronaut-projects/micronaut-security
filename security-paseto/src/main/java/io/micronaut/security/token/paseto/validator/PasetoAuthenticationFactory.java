@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.generator;
+package io.micronaut.security.token.paseto.validator;
 
-import org.jspecify.annotations.NonNull;
+import dev.paseto.jpaseto.Paseto;
+import io.micronaut.security.token.TokenAuthenticationFactory;
 
 /**
- * Configuration for access tokens.
+ * Marker interface for implementations of {@link TokenAuthenticationFactory}, which handle {@link Paseto} tokens.
  *
- * @author Sergio del Amo
- * @since 3.2.0
+ * @author Utsav Varia
+ * @since 3.0
  */
-@FunctionalInterface
-public interface AccessTokenConfiguration {
-
-    /**
-     * @return The number of seconds until the access token expires.
-     */
-    @NonNull
-    Integer getExpiration();
+public interface PasetoAuthenticationFactory extends TokenAuthenticationFactory<Paseto> {
 }
