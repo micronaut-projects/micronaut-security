@@ -89,6 +89,35 @@ class MicronautEndUserSecurityContextProviderTest {
     }
 
     @Test
+    void getEndUserSecurityContextCreatesContextWithNameWhenSecurityTokenIsMissing() {
+        RecordingDatabaseAccessTokenFetcher databaseAccessTokenFetcher = new RecordingDatabaseAccessTokenFetcher();
+        RecordingDataRolesFetcher dataRolesFetcher = new RecordingDataRolesFetcher();
+        RecordingAttributesFetcher attributesFetcher = new RecordingAttributesFetcher();
+        MicronautEndUserSecurityContextProvider provider = new MicronautEndUserSecurityContextProvider(
+                databaseAccessTokenFetcher,
+                dataRolesFetcher,
+                attributesFetcher);
+        Authentication authentication = Authentication.build("sherlock", List.of("ROLE_DETECTIVE"));
+        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
+                TOKEN_URL_PARAMETER, "https://example.com/token");
+
+        EndUserSecurityContext context = withSecurityContext(authentication, null,
+                () -> provider.getEndUserSecurityContext(parameters));
+
+        assertSame(parameters, databaseAccessTokenFetcher.parameters);
+        assertSame(parameters, dataRolesFetcher.parameters);
+        assertSame(parameters, attributesFetcher.parameters);
+        assertSame(authentication, dataRolesFetcher.authentication);
+        assertSame(authentication, attributesFetcher.authentication);
+        assertArrayEquals(DATABASE_ACCESS_TOKEN.toCharArray(), context.databaseAccessToken());
+        assertTrue(context.endUserToken().isEmpty());
+        assertTrue(context.endUserName().isPresent());
+        assertEquals("sherlock", context.endUserName().get());
+        assertTrue(context.dataRoles().isEmpty());
+        assertTrue(context.attributes().isEmpty());
+    }
+
+    @Test
     void getEndUserSecurityContextAddsDataRolesAndAttributesWhenPresent() {
         RecordingDatabaseAccessTokenFetcher databaseAccessTokenFetcher = new RecordingDatabaseAccessTokenFetcher();
         RecordingDataRolesFetcher dataRolesFetcher = new RecordingDataRolesFetcher();
@@ -120,8 +149,11 @@ class MicronautEndUserSecurityContextProviderTest {
         HttpRequest<?> request = HttpRequest.GET("/employees");
         return ServerRequestContext.with(request, (Supplier<EndUserSecurityContext>) () -> {
             SecurityContextHolder.getSecurityContext()
-                    .withAuthentication(authentication)
-                    .withToken(token);
+                    .withAuthentication(authentication);
+            if (token != null) {
+                SecurityContextHolder.getSecurityContext()
+                        .withToken(token);
+            }
             return supplier.get();
         });
     }

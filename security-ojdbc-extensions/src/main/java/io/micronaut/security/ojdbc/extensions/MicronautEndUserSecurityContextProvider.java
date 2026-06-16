@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -165,9 +164,11 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
                 LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the database access token");
             }
         }
-        EndUserSecurityContext endUserSecurityContext = EndUserSecurityContext.createWithToken(
-                databaseAccessToken,
-                Objects.requireNonNull(securityContext.getToken()));
+        String token = securityContext.getToken();
+        EndUserSecurityContext endUserSecurityContext =
+            token != null
+            ? EndUserSecurityContext.createWithToken(databaseAccessToken, token)
+            : EndUserSecurityContext.createWithName(databaseAccessToken, authentication.getName());
         Collection<String> dataRoles = dataRolesFetcher.fetchDataRoles(parameters, authentication);
         if (dataRoles != null) {
             if (LOG.isTraceEnabled()) {
