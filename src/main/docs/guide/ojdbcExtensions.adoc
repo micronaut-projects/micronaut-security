@@ -1,3 +1,3 @@
 Micronaut Security provides the `micronaut-security-ojdbc-extensions` module for integration with https://github.com/oracle/ojdbc-extensions[Oracle JDBC Driver Extensions].
-The module registers an https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/EndUserSecurityContextProvider.html[Oracle JDBC `EndUserSecurityContextProvider`] that adapts the current Micronaut Security authentication to an Oracle JDBC https://docs.oracle.com/en/database/oracle/oracle-database/26/ddscg/end-user-security-context.html[End-User Security Context].
+The module registers an https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/EndUserSecurityContextProvider.html[Oracle JDBC `EndUserSecurityContextProvider`].
 
