@@ -1,0 +1,43 @@
+### Configuration
+
+The parameter names in the table below should be prefixed by
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.`
+
+|===
+| Parameter Name | Description | Default Value
+
+| `tokenUrl`
+| OAuth 2.0 token endpoint URL.
+| No default value. A value must be configured for this parameter.
+
+| `clientId`
+| OAuth 2.0 client identifier.
+| No default value. A value must be configured for this parameter.
+
+| `clientSecret`
+| OAuth 2.0 client secret. This parameter is marked as a sensitive OJDBC provider parameter.
+| No default value. A value must be configured for this parameter.
+
+| `scope`
+| Optional OAuth 2.0 scope sent with the Client Credentials request.
+| No default value. This parameter is optional.
+
+| `dataRoles`
+| A fixed set of `DATA ROLE` names to enable for all end users. This should be one or more `DATA ROLE` names, separated by commas: `common_user_role, common_app_role, read_only_role`
+| No default value. This parameter is optional.
+
+| `rolePrefix`
+| The prefix used to match the user's roles that the provider should recognize as a `DATA ROLE`. The name of the `DATA ROLE` should appear after the prefix. For example, this parameter might be set to `ORACLE_DATA_ROLE_`. For a role `ORACLE_DATA_ROLE_ADMIN`, the provider will recognize as a `DATA ROLE` named `ADMIN`, and will enable that `DATA ROLE` for the end user. This should be a unique string that is unlikely to collide with an application role that is not intended to be recognized as a `DATA ROLE`.
+| `ORACLE_DATA_ROLE_`
+
+
+| `endUserContextAttributes`
+| Optional JSON object containing fixed Oracle Database END USER CONTEXT attributes. The object keys are END USER CONTEXT names, and each value must be a JSON object containing the attributes for that context.
+| No default value. This parameter is optional.
+
+| `attributeNames`
+| A comma-separated list of Micronaut Security authentication attribute names whose values are used to derive END USER CONTEXT attributes from the current authentication. Each named authentication attribute value must be a JSON object value, or a string containing a JSON object. The object keys are END USER CONTEXT names, and each value must be a JSON object containing the attributes for that context.
+| `ORACLE_CONTEXT_ATTRIBUTES`
+
+|===

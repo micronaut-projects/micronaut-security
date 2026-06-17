@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.AUTHORITY_ROLE_PREFIX_PARAMETER;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.ATTRIBUTE_NAMES_PARAMETER;
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.CLIENT_ID_PARAMETER;
-import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.DEFAULT_AUTHORITY_ROLE_PREFIX;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.DEFAULT_ATTRIBUTE_NAMES;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.DEFAULT_ROLE_PREFIX;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.ROLE_PREFIX_PARAMETER;
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.TOKEN_URL_PARAMETER;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,8 +42,13 @@ class MicronautEndUserSecurityContextProviderTest {
     }
 
     @Test
-    void authorityRolePrefixDefaultsToOracleDataRolePrefix() {
-        assertEquals(DEFAULT_AUTHORITY_ROLE_PREFIX, AUTHORITY_ROLE_PREFIX_PARAMETER.defaultValue());
+    void rolePrefixDefaultsToOracleDataRolePrefix() {
+        assertEquals(DEFAULT_ROLE_PREFIX, ROLE_PREFIX_PARAMETER.defaultValue());
+    }
+
+    @Test
+    void attributeNamesDefaultsToOracleContextAttributes() {
+        assertEquals(DEFAULT_ATTRIBUTE_NAMES, ATTRIBUTE_NAMES_PARAMETER.defaultValue());
     }
 
     @Test

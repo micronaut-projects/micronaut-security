@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.AUTHORITY_ROLE_PREFIX_PARAMETER;
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.DATA_ROLES_PARAMETER;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.ROLE_PREFIX_PARAMETER;
 
 /**
  * Default {@link DataRolesFetcher} implementation.
@@ -53,21 +53,20 @@ class DefaultDataRolesFetcher implements DataRolesFetcher {
     @Override
     public @Nullable Collection<String> fetchDataRoles(@NonNull Map<OracleResourceProvider.Parameter, CharSequence> parameters,
                                                        @NonNull Authentication authentication) {
-        return mergeDataRoles(getFixedDataRoles(parameters), getAuthorityPrefixDataRoles(parameters, authentication));
+        return mergeDataRoles(getFixedDataRoles(parameters), getRolePrefixDataRoles(parameters, authentication));
     }
 
     /**
-     * Returns DATA ROLE names derived from granted authority
-     * objects having a String representation that begins with a prefix
-     * configured by {@link #AUTHORITY_ROLE_PREFIX_PARAMETER}.
+     * Returns DATA ROLE names derived from roles that begin with the prefix
+     * configured by {@link MicronautEndUserSecurityContextProvider#ROLE_PREFIX_PARAMETER}.
      *
      * @param parameters Parameters that configure this provider. Not null, may
      * not contain null.
      *
      * @return Set of DATA ROLEs to enable. Not null, may not contain null.
      */
-    private static Set<String> getAuthorityPrefixDataRoles(Map<OracleResourceProvider.Parameter, CharSequence> parameters, Authentication authentication) {
-        CharSequence prefix = parameters.get(AUTHORITY_ROLE_PREFIX_PARAMETER);
+    private static Set<String> getRolePrefixDataRoles(Map<OracleResourceProvider.Parameter, CharSequence> parameters, Authentication authentication) {
+        CharSequence prefix = parameters.get(ROLE_PREFIX_PARAMETER);
         if (prefix == null) {
             return Collections.emptySet();
         }
@@ -98,7 +97,7 @@ class DefaultDataRolesFetcher implements DataRolesFetcher {
     }
 
     /**
-     * Returns DATA ROLE names configured by the {@link #DATA_ROLES_PARAMETER}.
+     * Returns DATA ROLE names configured by the {@link MicronautEndUserSecurityContextProvider#DATA_ROLES_PARAMETER}.
      *
      * @param parameters Parameters that configure this provider. Not null, may
      * not contain null.

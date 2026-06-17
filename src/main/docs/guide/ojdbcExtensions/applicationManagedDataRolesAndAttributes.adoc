@@ -1,0 +1,3 @@
+The `EndUserSecurityContext` provided to Oracle JDBC may include application managed `DATA ROLE` names or `END USER CONTEXT` attributes
+that are derived from an api:security.authentication.Authentication[]  present in Micronaut's api:security.context.SecurityContextHolder[]
+

@@ -1,0 +1,29 @@
+The provider can read `END USER CONTEXT` attributes from one or more named attributes of the api:security.authentication.Authentication[].
+The attribute names are specified as a comma-separated list by the parameter:
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.attributeNames`
+
+The parameter default value is `ORACLE_CONTEXT_ATTRIBUTES`.
+
+A JSON object containing the attributes of one or more `END USER CONTEXT` objects could appear as the value of one of the configured authentication attributes. For example, an authentication attribute named `ORACLE_CONTEXT_ATTRIBUTES` might have the following value:
+
+[source, json]
+----
+{
+  "app_schema.user_details" : {
+    "first_name" : "George",
+    "last_name" : "Washington"
+  },
+  "app_schema.location_info" : {
+    "City" : "Mount Vernon",
+    "State" : "Virginia",
+    "Country" : "United States"
+  }
+}
+----
+
+The provider will recognize that attribute value as the attributes of two `END USER CONTEXT` objects named `user_details` and `location_info`, each declared within a database schema named `app_schema`.
+
+In addition to authentication attributes, the provider can also be configured with a fixed set of attributes using the parameter:
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.endUserContextAttributes`

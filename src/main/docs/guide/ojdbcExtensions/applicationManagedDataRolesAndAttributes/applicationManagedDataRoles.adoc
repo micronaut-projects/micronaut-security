@@ -1,0 +1,14 @@
+If one or more `roles` in api:security.authentication.Authentication[] begin with a specified prefix, then the provider will
+recognize them as application managed `DATA ROLE` names that should be enabled for the end user.
+The prefix is specified by the parameter:
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.rolePrefix`
+
+The parameter default value is `ORACLE_DATA_ROLE_`.
+
+The name of a `DATA ROLE` should appear after the specified prefix. For example: With the default prefix, if the authenticated user has a role with value `ORACLE_DATA_ROLE_ADMIN`. The
+provider recognizes is a `DATA ROLE` named `ADMIN`.
+
+In addition to the role prefix, the provider can also be configured with a fixed set of data role names using the parameter:
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.dataRoles`

@@ -58,15 +58,15 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
             (value, parameterSetBuilder) -> { });
 
     /**
-     * Authority prefix used to map Micronaut roles to Oracle Database data roles.
+     * Role prefix used to map Micronaut roles to Oracle Database data roles.
      */
-    static final ResourceParameter AUTHORITY_ROLE_PREFIX_PARAMETER = new ResourceParameter("authorityRolePrefix", "ORACLE_DATA_ROLE_", false, false,
+    static final ResourceParameter ROLE_PREFIX_PARAMETER = new ResourceParameter("rolePrefix", "ORACLE_DATA_ROLE_", false, false,
             (value, parameterSetBuilder) -> { });
 
     /**
-     * Authority prefix used to map Micronaut roles to Oracle Database END USER CONTEXT attributes.
+     * Authentication attribute names used to map Micronaut authentication attributes to Oracle Database END USER CONTEXT attributes.
      */
-    static final ResourceParameter AUTHORITY_ATTRIBUTE_PREFIX_PARAMETER = new ResourceParameter("authorityAttributesPrefix", null, false, false,
+    static final ResourceParameter ATTRIBUTE_NAMES_PARAMETER = new ResourceParameter("attributeNames", "ORACLE_CONTEXT_ATTRIBUTES", false, false,
             (value, parameterSetBuilder) -> { });
 
     /**
@@ -93,7 +93,8 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
     static final ResourceParameter CLIENT_SECRET_PARAMETER = new ResourceParameter("clientSecret", null, true, true,
             (value, parameterSetBuilder) -> { });
 
-    static final String DEFAULT_AUTHORITY_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
+    static final String DEFAULT_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
+    static final String DEFAULT_ATTRIBUTE_NAMES = "ORACLE_CONTEXT_ATTRIBUTES";
 
     private static final Logger LOG = LoggerFactory.getLogger(MicronautEndUserSecurityContextProvider.class);
 
@@ -110,8 +111,8 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
             SCOPE_PARAMETER,
             DATA_ROLES_PARAMETER,
             END_USER_CONTEXT_ATTRIBUTE_PARAMETER,
-            AUTHORITY_ROLE_PREFIX_PARAMETER,
-            AUTHORITY_ATTRIBUTE_PREFIX_PARAMETER,
+            ROLE_PREFIX_PARAMETER,
+            ATTRIBUTE_NAMES_PARAMETER,
     };
 
     private final DatabaseAccessTokenFetcher databaseAccessTokenFetcher;

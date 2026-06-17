@@ -168,10 +168,20 @@ oauth:
   custom-client: Custom Clients
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
+ojdbcExtensions:
+  title: Oracle JDBC Extensions
+  ojdbcExtensionsInstallation: Oracle JDBC Extensions Installation
+  endUserSecurityContextProvider: End User Security Context Provider
+  applicationAuthorizationAndUserIdentity: Application Authorization and User Identity
+  applicationManagedDataRolesAndAttributes:
+    title: Application Managed Data Roles and Attributes
+    applicationManagedDataRoles: Application Managed Data Roles
+    privilegeEscalation: Privilege Scalation
+    endUserContextAttributes: End User Context Attributes
+  endUserSecurityContextConfiguration: End User Security Context Configuration
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration
   aotOpenidConfiguration: OpenID Configuration Optimization
   aotJwks: JWKS Optimization
-ojdbcExtensions: Oracle JDBC Extensions
 repository: Repository

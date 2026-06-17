@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.AUTHORITY_ROLE_PREFIX_PARAMETER;
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.DATA_ROLES_PARAMETER;
+import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.ROLE_PREFIX_PARAMETER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -23,7 +23,7 @@ class DefaultDataRolesFetcherTest {
     void fetchDataRolesMergesFixedAndPrefixedAuthenticationRoles() {
         Map<OracleResourceProvider.Parameter, CharSequence> parameters = new HashMap<>();
         parameters.put(DATA_ROLES_PARAMETER, "FIXED_REPORTING, FIXED_DBA, , FIXED_DBA");
-        parameters.put(AUTHORITY_ROLE_PREFIX_PARAMETER, "ORA_");
+        parameters.put(ROLE_PREFIX_PARAMETER, "ORA_");
 
         Authentication authentication = Authentication.build("sherlock", Arrays.asList(
                 "ORA_ANALYST",
@@ -43,7 +43,7 @@ class DefaultDataRolesFetcherTest {
     @Test
     void fetchDataRolesReturnsNullWhenNoRolesAreConfiguredOrMatched() {
         Map<OracleResourceProvider.Parameter, CharSequence> parameters = new HashMap<>();
-        parameters.put(AUTHORITY_ROLE_PREFIX_PARAMETER, "ORA_");
+        parameters.put(ROLE_PREFIX_PARAMETER, "ORA_");
 
         Authentication authentication = Authentication.build("sherlock", Set.of("ROLE_ADMIN", "ORA_", "ORA_   "));
 
