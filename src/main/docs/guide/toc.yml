@@ -176,7 +176,7 @@ ojdbcExtensions:
   applicationManagedDataRolesAndAttributes:
     title: Application Managed Data Roles and Attributes
     applicationManagedDataRoles: Application Managed Data Roles
-    privilegeEscalation: Privilege Scalation
+    privilegeEscalation: Privilege Escalation
     endUserContextAttributes: End User Context Attributes
   endUserSecurityContextConfiguration: End User Security Context Configuration
 aot:

@@ -1,4 +1,4 @@
-You can use the <<runAs, RunAs annotation>> to grant a Data Role for a method execution:
+You can use the <<runAs, RunAs annotation>> to grant a `DATA ROLE` for a method execution:
 
 [source, java]
 ----

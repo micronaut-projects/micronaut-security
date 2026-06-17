@@ -1,6 +1,6 @@
 ### Configuration
 
-The parameter names in the table below should be prefixed by
+The parameter names in the table below should be prefixed with
 
 `datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.`
 
@@ -28,7 +28,7 @@ The parameter names in the table below should be prefixed by
 | No default value. This parameter is optional.
 
 | `rolePrefix`
-| The prefix used to match the user's roles that the provider should recognize as a `DATA ROLE`. The name of the `DATA ROLE` should appear after the prefix. For example, this parameter might be set to `ORACLE_DATA_ROLE_`. For a role `ORACLE_DATA_ROLE_ADMIN`, the provider will recognize as a `DATA ROLE` named `ADMIN`, and will enable that `DATA ROLE` for the end user. This should be a unique string that is unlikely to collide with an application role that is not intended to be recognized as a `DATA ROLE`.
+| The prefix used to match the user's roles that the provider should recognize as a `DATA ROLE`. The name of the `DATA ROLE` should appear after the prefix. For example, this parameter might be set to `ORACLE_DATA_ROLE_`. For a role named `ORACLE_DATA_ROLE_ADMIN`, the provider will recognize a `DATA ROLE` named `ADMIN` and enable that `DATA ROLE` for the end user. This should be a unique string that is unlikely to collide with an application role that is not intended to be recognized as a `DATA ROLE`.
 | `ORACLE_DATA_ROLE_`
 
 

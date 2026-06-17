@@ -3,9 +3,9 @@ The attribute names are specified as a comma-separated list by the parameter:
 
 `datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.attributeNames`
 
-The parameter default value is `ORACLE_CONTEXT_ATTRIBUTES`.
+The default value for this parameter is `ORACLE_CONTEXT_ATTRIBUTES`.
 
-A JSON object containing the attributes of one or more `END USER CONTEXT` objects could appear as the value of one of the configured authentication attributes. For example, an authentication attribute named `ORACLE_CONTEXT_ATTRIBUTES` might have the following value:
+A JSON object containing the attributes of one or more `END USER CONTEXT` objects can appear as the value of one of the configured authentication attributes. For example, an authentication attribute named `ORACLE_CONTEXT_ATTRIBUTES` might have the following value:
 
 [source, json]
 ----
