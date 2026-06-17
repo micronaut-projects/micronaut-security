@@ -65,9 +65,9 @@ class OauthErrorResponseExceptionHandlerSpec extends EmbeddedServerSpecification
         String error
 
         @JsonProperty("error_description")
-        String errorDescription
+        public String errorDescription
 
         @JsonProperty("error_uri")
-        String errorUri
+        public String errorUri
     }
 }
