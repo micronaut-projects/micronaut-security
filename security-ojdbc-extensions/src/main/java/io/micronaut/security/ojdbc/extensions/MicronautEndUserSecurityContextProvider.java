@@ -160,10 +160,8 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
             return null;
         }
         String databaseAccessToken = databaseAccessTokenFetcher.fetchDatabaseAccessToken(parameters);
-        if (authentication != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the database access token");
-            }
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(requestInfo.get() + " - end user security context resolution - resolved the database access token");
         }
         String token = securityContext.getToken();
         EndUserSecurityContext endUserSecurityContext =
