@@ -94,7 +94,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
      */
     private Map<String, OracleJsonObject> getFixedAttributes(Map<OracleResourceProvider.Parameter, CharSequence> parameters) {
         CharSequence fixedAttributes = parameters.get(END_USER_CONTEXT_ATTRIBUTE_PARAMETER);
-        if (fixedAttributes == null || fixedAttributes.isEmpty()) {
+        if (fixedAttributes == null || fixedAttributes.length() == 0) {
             return Collections.emptyMap();
         }
         return parseAttributes("attributes configured by the " + END_USER_CONTEXT_ATTRIBUTE_PARAMETER.name() + " parameter",
