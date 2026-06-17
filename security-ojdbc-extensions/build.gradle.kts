@@ -5,23 +5,6 @@ micronautBuild {
     binaryCompatibility.enabledAfter("5.1.0")
     testFramework = io.micronaut.build.TestFramework.JUNIT6
 }
-repositories {
-    exclusiveContent {
-        forRepository {
-            mavenLocal()
-        }
-        filter {
-            includeModule(
-                "com.oracle.database.jdbc",
-                "ojdbc-extensions"
-            )
-            includeModule(
-                "com.oracle.database.jdbc",
-                "ojdbc-provider-common"
-            )
-        }
-    }
-}
 dependencies {
     implementation(mnSql.ojdbc11)
     implementation(libs.managed.ojdbc.provider.common)
