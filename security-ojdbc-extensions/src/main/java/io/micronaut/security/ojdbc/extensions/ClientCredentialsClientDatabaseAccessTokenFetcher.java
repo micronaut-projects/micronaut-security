@@ -50,7 +50,7 @@ import static io.micronaut.security.ojdbc.extensions.OracleResourceProviderParam
  */
 @Experimental
 @Internal
-class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAccessTokenFetcher {
+public class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAccessTokenFetcher {
     private final Map<String, HttpClient> httpClientMap = new ConcurrentHashMap<>();
     private final Map<ClientCredentialsClientConfiguration, ClientCredentialsClient> clientCredentialsClientMap = new ConcurrentHashMap<>();
 

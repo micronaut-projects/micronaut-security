@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Experimental
 @Internal
-interface AttributesFetcher {
+public interface AttributesFetcher {
 
     /**
      * Resolves the END USER CONTEXT attributes to apply to the Oracle JDBC

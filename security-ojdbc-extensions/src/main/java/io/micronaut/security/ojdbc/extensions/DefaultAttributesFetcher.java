@@ -49,7 +49,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
  */
 @Experimental
 @Internal
-class DefaultAttributesFetcher implements AttributesFetcher {
+public class DefaultAttributesFetcher implements AttributesFetcher {
     private final OracleJsonFactory oracleJsonFactory;
 
     /**

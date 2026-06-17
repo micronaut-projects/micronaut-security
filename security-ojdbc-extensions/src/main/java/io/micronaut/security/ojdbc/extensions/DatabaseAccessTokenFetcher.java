@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Experimental
 @Internal
-interface DatabaseAccessTokenFetcher {
+public interface DatabaseAccessTokenFetcher {
 
     /**
      * Requests an OAuth 2.0 access token that authorizes the application to

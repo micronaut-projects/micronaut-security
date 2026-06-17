@@ -29,7 +29,7 @@ import java.util.Set;
  */
 @Experimental
 @Internal
-final class RolesUtils {
+public final class RolesUtils {
     private RolesUtils() {
 
     }

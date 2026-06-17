@@ -28,7 +28,7 @@ import org.jspecify.annotations.NonNull;
  */
 @Experimental
 @Internal
-class DatabaseAccessTokenFetcherException extends RuntimeException {
+public class DatabaseAccessTokenFetcherException extends RuntimeException {
 
     /**
      * @param message failure message

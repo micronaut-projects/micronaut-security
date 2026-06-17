@@ -40,7 +40,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
  */
 @Experimental
 @Internal
-class DefaultDataRolesFetcher implements DataRolesFetcher {
+public class DefaultDataRolesFetcher implements DataRolesFetcher {
 
     /**
      * Creates a default data roles fetcher.

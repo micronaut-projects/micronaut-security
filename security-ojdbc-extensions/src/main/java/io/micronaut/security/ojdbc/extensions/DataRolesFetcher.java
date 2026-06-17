@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Experimental
 @Internal
-interface DataRolesFetcher {
+public interface DataRolesFetcher {
 
     /**
      * Resolves the Oracle Database data roles to apply to the end user security context.

@@ -26,7 +26,7 @@ import oracle.sql.json.OracleJsonValue;
  */
 @Experimental
 @Internal
-final class JsonUtils {
+public final class JsonUtils {
 
     private JsonUtils() {
     }

@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Experimental
 @Internal
-final class OracleResourceProviderParameterUtils {
+public final class OracleResourceProviderParameterUtils {
     private OracleResourceProviderParameterUtils() {
     }
 
