@@ -216,7 +216,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             Authentication authentication) {
 
         CharSequence authenticationAttributeNames = parameters.get(ATTRIBUTE_NAMES_PARAMETER);
-        if (authenticationAttributeNames == null || authenticationAttributeNames.isEmpty()) {
+        if (authenticationAttributeNames == null || authenticationAttributeNames.length() == 0) {
             return Collections.emptyMap();
         }
         Map<String, Object> authenticationAttributes = authentication.getAttributes();
