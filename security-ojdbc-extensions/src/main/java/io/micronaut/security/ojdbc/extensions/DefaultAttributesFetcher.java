@@ -52,6 +52,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
 @Experimental
 @Internal
 public class DefaultAttributesFetcher implements AttributesFetcher {
+    public static final String WITHIN = " within ";
     private final OracleJsonFactory oracleJsonFactory;
 
     /**
@@ -139,7 +140,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
         HashMap<String, OracleJsonObject> attributes = new HashMap<>(jsonObject.size());
         for (Map.Entry<String, OracleJsonValue> entry : jsonObject.entrySet()) {
             String contextName = entry.getKey();
-            OracleJsonObject attributeValues = JsonUtils.requireJsonObject(contextName + " within " + name, entry.getValue());
+            OracleJsonObject attributeValues = JsonUtils.requireJsonObject(contextName + WITHIN + name, entry.getValue());
             attributes.put(contextName, attributeValues);
         }
         return attributes;
@@ -266,7 +267,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             if (!(key instanceof String contextName)) {
                 throw new IllegalArgumentException("Key of " + name + " is a " + key.getClass().getName() + ". A String is required.");
             }
-            attributes.put(contextName, toAttributeValues(contextName + " within " + name, entry.getValue()));
+            attributes.put(contextName, toAttributeValues(contextName + WITHIN + name, entry.getValue()));
         }
         return attributes;
     }
@@ -300,7 +301,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             if (!(key instanceof String attributeName)) {
                 throw new IllegalArgumentException("Key of " + name + " is a " + key.getClass().getName() + ". A String is required.");
             }
-            jsonObject.put(attributeName, toJsonValue(attributeName + " within " + name, entry.getValue()));
+            jsonObject.put(attributeName, toJsonValue(attributeName + WITHIN + name, entry.getValue()));
         }
         return jsonObject;
     }
