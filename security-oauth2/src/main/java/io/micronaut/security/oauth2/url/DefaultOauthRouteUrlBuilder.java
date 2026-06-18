@@ -105,7 +105,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpReq
      * @return The URL path
      */
     protected String getPath(String uriTemplate, String providerName) {
-        Map<String, Object> uriParams = new HashMap<>(1);
+        Map<String, Object> uriParams = HashMap.newHashMap(1);
         uriParams.put("provider", providerName);
         return UriTemplate.of(uriTemplate).expand(uriParams);
     }

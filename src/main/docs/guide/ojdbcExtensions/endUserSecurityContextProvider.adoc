@@ -1,0 +1,29 @@
+The End User Security Context Provider provides a security context that enables
+https://docs.oracle.com/en/database/oracle/oracle-database/26/ddscg/understand-oracle-deep-data-security.html[Deep Data Security features in Oracle Database].
+This is a https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/OracleResourceProvider.html[Resource Provider]
+identified by the name `ojdbc-provider-micronaut-end-user-security-context`.
+
+This provider must be configured to authenticate as an OAuth 2.0 client. The client should be mapped to a `DATA ROLE` or `APPLICATION IDENTITY` defined in
+an Oracle Database.
+
+In the example below, the provider is configured to authenticate via a Client Credentials request against an Azure Entra ID authorization server.
+
+[source, properties]
+----
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext=ojdbc-provider-micronaut-end-user-security-context
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.clientId=${HRAPP_CLIENT_ID}
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.clientSecret=${HRAPP_CLIENT_SECRET}
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.tokenUrl=https://login.microsoftonline.com/${HRAPP_TENANT_ID}/oauth2/v2.0/token
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.scope=${HRAPP_SCOPE}
+----
+
+The previous example configures Oracle JDBC to load an https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/EndUserSecurityContextProvider.html[EndUserSecurityContextProvider]
+with the name of this provider: `ojdbc-provider-micronaut-end-user-security-context`. With this configuration, Oracle JDBC receives an https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/EndUserSecurityContext.html[oracle.jdbc.EndUserSecurityContext] each time it executes a database operation.
+
+Almost every network request Oracle JDBC sends to the database is considered a database operation. This includes SQL execution, row fetching, commit/rollback,
+and LOB data access. When an `EndUserSecurityContext` is provided to Oracle JDBC, all of these operations become subject to `DATA GRANT` policies defined in
+Oracle Database.
+
+A `DATA GRANT` policy can apply controls based on which user is accessing the database and which application they are using.
+This offers a more granular approach to data security when compared to the traditional model, in which all application users access the database as the
+same database user.

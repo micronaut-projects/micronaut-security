@@ -1,0 +1,5 @@
+To use the module, add the following dependency:
+
+dependency:micronaut-security-ojdbc-extensions[groupId=io.micronaut.security]
+
+Additionally, you must add an HTTP client implementation: either the https://docs.micronaut.io/latest/guide/#nettyHttpClient[Netty-based HTTP Client] or the https://docs.micronaut.io/latest/guide/#jdkHttpClient[JDK HTTP Client].

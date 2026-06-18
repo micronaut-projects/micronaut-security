@@ -1,0 +1,22 @@
+You can use the <<runAs, RunAs annotation>> to grant a `DATA ROLE` for a method execution:
+
+[source, java]
+----
+package example.micronaut.repository;
+
+import example.micronaut.domain.EmployeeEntity;
+import example.micronaut.dto.SalaryAggregates;
+import io.micronaut.data.annotation.Query;
+import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.model.query.builder.sql.Dialect;
+import io.micronaut.data.repository.CrudRepository;
+import io.micronaut.security.annotation.RunAs;
+
+@JdbcRepository(dialect = Dialect.ORACLE)
+public interface EmployeeRepository extends CrudRepository<EmployeeEntity, Long> {
+
+    @RunAs("ORACLE_DATA_ROLE_COMPENSATION_ANALYST")
+    @Query("SELECT MIN(salary) AS min, MAX(salary) AS max, SUM(salary) AS sum, COUNT(*) AS count FROM hr.employees")
+    SalaryAggregates getSalaryAggregates();
+}
+----
