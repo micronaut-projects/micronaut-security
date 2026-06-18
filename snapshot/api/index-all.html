@@ -304,6 +304,11 @@ the backing data source.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/context/AttributesConvertibleValues.html#%3Cinit%3E(javax.naming.directory.Attributes)" class="member-name-link">AttributesConvertibleValues(Attributes)</a> - Constructor for class io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/AttributesConvertibleValues.html" title="class in io.micronaut.security.ldap.context">AttributesConvertibleValues</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/AttributesFetcher.html" class="type-name-link" title="interface in io.micronaut.security.ojdbc.extensions">AttributesFetcher</a> - Interface in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Resolves Oracle Database END USER CONTEXT attributes for the current
+Micronaut Security authentication.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/claims/ClaimsAudienceProvider.html#audience()" class="member-name-link">audience()</a> - Method in interface io.micronaut.security.token.claims.<a href="io/micronaut/security/token/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.claims">ClaimsAudienceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#AUDIENCE" class="member-name-link">AUDIENCE</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
@@ -1057,6 +1062,10 @@ by clients that deserialize token information into an authentication.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsClient</a> - Interface in <a href="io/micronaut/security/oauth2/client/clientcredentials/package-summary.html">io.micronaut.security.oauth2.client.clientcredentials</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/ClientCredentialsClientDatabaseAccessTokenFetcher.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">ClientCredentialsClientDatabaseAccessTokenFetcher</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Fetches Oracle Database access tokens with the OAuth 2.0 Client Credentials flow.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html#clientCredentialsClientsByName" class="member-name-link">clientCredentialsClientsByName</a> - Variable in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHttpClientFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html#clientCredentialsConfiguration(io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration)" class="member-name-link">clientCredentialsConfiguration(ClientCredentialsConfiguration)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationBuilder</a></dt>
@@ -1450,6 +1459,19 @@ populated on save with the identity of the currently authenticated user.</div>
 </dl>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/ojdbc/extensions/DatabaseAccessTokenFetcher.html" class="type-name-link" title="interface in io.micronaut.security.ojdbc.extensions">DatabaseAccessTokenFetcher</a> - Interface in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Fetches OAuth 2.0 access tokens used by Oracle JDBC to access Oracle Database
+on behalf of an authenticated Micronaut Security user.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DatabaseAccessTokenFetcherException.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">DatabaseAccessTokenFetcherException</a> - Exception Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Exception thrown when a <a href="io/micronaut/security/ojdbc/extensions/DatabaseAccessTokenFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions"><code>DatabaseAccessTokenFetcher</code></a> cannot obtain a database access token.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DataRolesFetcher.html" class="type-name-link" title="interface in io.micronaut.security.ojdbc.extensions">DataRolesFetcher</a> - Interface in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Resolves Oracle Database data roles for the current Micronaut Security authentication.</div>
+</dd>
 <dt><a href="io/micronaut/security/utils/LoggingUtils.html#debug(org.slf4j.Logger,java.lang.String,java.lang.Object...)" class="member-name-link">debug(Logger, String, Object...)</a> - Static method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/LoggingUtils.html" title="class in io.micronaut.security.utils">LoggingUtils</a></dt>
 <dd>
 <div class="block">Logs a message at the DEBUG level (only if it's enabled) according to the specified format and arguments.</div>
@@ -1768,6 +1790,10 @@ populated on save with the identity of the currently authenticated user.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/generator/DefaultAccessRefreshTokenGenerator.html#%3Cinit%3E(io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, BeanContext, RefreshTokenGenerator, ClaimsGenerator, ApplicationEventPublisher, ApplicationEventPublisher)</a> - Constructor for class io.micronaut.security.token.generator.<a href="io/micronaut/security/token/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultAttributesFetcher.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">DefaultAttributesFetcher</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Default <a href="io/micronaut/security/ojdbc/extensions/AttributesFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions"><code>AttributesFetcher</code></a> implementation.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultAuthorizationErrorResponse.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultAuthorizationErrorResponse</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/response/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.response</a></dt>
 <dd>
 <div class="block">Default implementation of <a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><code>AuthorizationErrorResponse</code></a>.</div>
@@ -1839,6 +1865,10 @@ ldap authentication result.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#defaultCookieName()" class="member-name-link">defaultCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">DefaultDataRolesFetcher</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Default <a href="io/micronaut/security/ojdbc/extensions/DataRolesFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions"><code>DataRolesFetcher</code></a> implementation.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration.endpoints">DefaultEndpointConfiguration</a> - Class in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
 <dd>
 <div class="block">Default implementation of <a href="io/micronaut/security/oauth2/configuration/endpoints/EndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><code>EndpointConfiguration</code></a>.</div>
@@ -2380,6 +2410,13 @@ provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/JwkSetFetcher.html#fetch(java.lang.String,java.lang.String)" class="member-name-link">fetch(String, String)</a> - Method in interface io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwkSetFetcher.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkSetFetcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/AttributesFetcher.html#fetchAttributes(java.util.Map,io.micronaut.security.authentication.Authentication)" class="member-name-link">fetchAttributes(Map, Authentication)</a> - Method in interface io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/AttributesFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions">AttributesFetcher</a></dt>
+<dd>
+<div class="block">Resolves the END USER CONTEXT attributes to apply to the Oracle JDBC
+end user security context.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultAttributesFetcher.html#fetchAttributes(java.util.Map,io.micronaut.security.authentication.Authentication)" class="member-name-link">fetchAttributes(Map, Authentication)</a> - Method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DefaultAttributesFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">DefaultAttributesFetcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionAuthenticationFetcher.html#fetchAuthentication(io.micronaut.http.HttpRequest)" class="member-name-link">fetchAuthentication(HttpRequest)</a> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthenticationFetcher.html" title="class in io.micronaut.security.session">SessionAuthenticationFetcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#fetchAuthentication(io.micronaut.http.HttpRequest)" class="member-name-link">fetchAuthentication(HttpRequest)</a> - Method in class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
@@ -2392,6 +2429,23 @@ provider.</div>
 <dd>
 <div class="block">Attempts to read an <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from an HTTP Request being executed.</div>
 </dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/ClientCredentialsClientDatabaseAccessTokenFetcher.html#fetchDatabaseAccessToken(java.util.Map)" class="member-name-link">fetchDatabaseAccessToken(Map)</a> - Method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/ClientCredentialsClientDatabaseAccessTokenFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">ClientCredentialsClientDatabaseAccessTokenFetcher</a></dt>
+<dd>
+<div class="block">This implementation reads the OAuth 2.0 client credentials parameters
+supplied by OJDBC and requests a database access token from the configured
+token endpoint.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DatabaseAccessTokenFetcher.html#fetchDatabaseAccessToken(java.util.Map)" class="member-name-link">fetchDatabaseAccessToken(Map)</a> - Method in interface io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DatabaseAccessTokenFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions">DatabaseAccessTokenFetcher</a></dt>
+<dd>
+<div class="block">Requests an OAuth 2.0 access token that authorizes the application to
+access Oracle Database.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DataRolesFetcher.html#fetchDataRoles(java.util.Map,io.micronaut.security.authentication.Authentication)" class="member-name-link">fetchDataRoles(Map, Authentication)</a> - Method in interface io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DataRolesFetcher.html" title="interface in io.micronaut.security.ojdbc.extensions">DataRolesFetcher</a></dt>
+<dd>
+<div class="block">Resolves the Oracle Database data roles to apply to the end user security context.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html#fetchDataRoles(java.util.Map,io.micronaut.security.authentication.Authentication)" class="member-name-link">fetchDataRoles(Map, Authentication)</a> - Method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">DefaultDataRolesFetcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#FIELDS_ATTRIBUTE_NAMES" class="member-name-link">FIELDS_ATTRIBUTE_NAMES</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html#findCsrfToken(T)" class="member-name-link">findCsrfToken(T)</a> - Method in interface io.micronaut.security.csrf.repository.<a href="io/micronaut/security/csrf/repository/CsrfTokenRepository.html" title="interface in io.micronaut.security.csrf.repository">CsrfTokenRepository</a></dt>
@@ -3057,6 +3111,8 @@ OPTIONAL.</div>
 <dd>
 <div class="block">end_session_endpoint.</div>
 </dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/MicronautEndUserSecurityContextProvider.html#getEndUserSecurityContext(java.util.Map)" class="member-name-link">getEndUserSecurityContext(Map)</a> - Method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/MicronautEndUserSecurityContextProvider.html" title="class in io.micronaut.security.ojdbc.extensions">MicronautEndUserSecurityContextProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html#getEntropy()" class="member-name-link">getEntropy()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#getEntropy()" class="member-name-link">getEntropy()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
@@ -4838,6 +4894,10 @@ additional context that is known by the protected resource to aid the authorizat
 <div class="block">Classes related to the generation of URLs to be
 used as routes in the application.</div>
 </dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a> - package io.micronaut.security.ojdbc.extensions</dt>
+<dd>
+<div class="block">Micronaut Security OJDBC Extensions.</div>
+</dd>
 <dt><a href="io/micronaut/security/processor/package-summary.html">io.micronaut.security.processor</a> - package io.micronaut.security.processor</dt>
 <dd>
 <div class="block">Annotation processors for security.</div>
@@ -5304,6 +5364,10 @@ should be to reject the request or allow the not found response to be returned.<
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/ErrorResponse.html#JSON_KEY_STATE" class="member-name-link">JSON_KEY_STATE</a> - Static variable in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/JsonUtils.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">JsonUtils</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Utility methods for validating Oracle JSON values used by OJDBC provider configuration.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenEncryption.html" class="type-name-link" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenEncryption&lt;E,<wbr>T&gt;</a> - Interface in <a href="io/micronaut/security/token/jwt/validator/package-summary.html">io.micronaut.security.token.jwt.validator</a></dt>
 <dd>
 <div class="block">Decrypts an encrypted token.</div>
@@ -5804,8 +5868,20 @@ an appropriate response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#mediaType" class="member-name-link">mediaType</a> - Variable in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html#mergeDataRoles(java.util.Set...)" class="member-name-link">mergeDataRoles(Set...)</a> - Static method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">DefaultDataRolesFetcher</a></dt>
+<dd>
+<div class="block">Merges data role sets into a single set.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#method" class="member-name-link">method</a> - Variable in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/MicronautEndUserSecurityContextProvider.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">MicronautEndUserSecurityContextProvider</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">OJDBC end user security context provider backed by Micronaut Security.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/MicronautEndUserSecurityContextProvider.html#%3Cinit%3E()" class="member-name-link">MicronautEndUserSecurityContextProvider()</a> - Constructor for class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/MicronautEndUserSecurityContextProvider.html" title="class in io.micronaut.security.ojdbc.extensions">MicronautEndUserSecurityContextProvider</a></dt>
+<dd>
+<div class="block">This public no-arg constructor is required by <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a>.</div>
+</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityAnnotationsModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityAnnotationsModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityAnnotationsModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityAnnotationsModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityAnnotationsModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityAnnotationsModuleInfo</a></dt>
@@ -5837,6 +5913,10 @@ an appropriate response.</div>
 <dt><a href="io/micronaut/security/info/MicronautSecurityOauth2ModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityOauth2ModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityOauth2ModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityOauth2ModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityOauth2ModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityOauth2ModuleInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityOjdbcExtensionsModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityOjdbcExtensionsModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityOjdbcExtensionsModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityOjdbcExtensionsModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityOjdbcExtensionsModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityOjdbcExtensionsModuleInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityProcessorModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityProcessorModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
@@ -6294,10 +6374,18 @@ request to an OpenID provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.html#OPTIMIZATIONS" class="member-name-link">OPTIMIZATIONS</a> - Static variable in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.html" title="class in io.micronaut.security.token.jwt.signature.jwks">DefaultJwkSetFetcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/OracleResourceProviderParameterUtils.html#optionalParameter(java.util.Map,oracle.jdbc.spi.OracleResourceProvider.Parameter)" class="member-name-link">optionalParameter(Map, OracleResourceProvider.Parameter)</a> - Static method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/OracleResourceProviderParameterUtils.html" title="class in io.micronaut.security.ojdbc.extensions">OracleResourceProviderParameterUtils</a></dt>
+<dd>
+<div class="block">Returns the configured string value for an optional provider parameter.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#opTosUri(java.lang.String)" class="member-name-link">opTosUri(String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#ORACLE_CLOUD" class="member-name-link">ORACLE_CLOUD</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/OracleResourceProviderParameterUtils.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">OracleResourceProviderParameterUtils</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Utility methods for reading parameters supplied to an <code>OracleResourceProvider</code>.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
@@ -7000,6 +7088,10 @@ is in a valid format.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#requestUriParameterSupported(java.lang.Boolean)" class="member-name-link">requestUriParameterSupported(Boolean)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/OracleResourceProviderParameterUtils.html#requiredParameter(java.util.Map,oracle.jdbc.spi.OracleResourceProvider.Parameter)" class="member-name-link">requiredParameter(Map, OracleResourceProvider.Parameter)</a> - Static method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/OracleResourceProviderParameterUtils.html" title="class in io.micronaut.security.ojdbc.extensions">OracleResourceProviderParameterUtils</a></dt>
+<dd>
+<div class="block">Returns the configured string value for a required provider parameter.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html#requireRequestUriRegistration(java.lang.Boolean)" class="member-name-link">requireRequestUriRegistration(Boolean)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.Builder.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html#resolve(io.micronaut.http.HttpRequest)" class="member-name-link">resolve(HttpRequest)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">IdTokenHintResolver</a></dt>
@@ -7209,6 +7301,10 @@ following order:
 <dt><a href="io/micronaut/security/token/RolesFinder.html" class="type-name-link" title="interface in io.micronaut.security.token">RolesFinder</a> - Interface in <a href="io/micronaut/security/token/package-summary.html">io.micronaut.security.token</a></dt>
 <dd>
 <div class="block">Retrieves roles from token claims.</div>
+</dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/RolesUtils.html" class="type-name-link" title="class in io.micronaut.security.ojdbc.extensions">RolesUtils</a> - Class in <a href="io/micronaut/security/ojdbc/extensions/package-summary.html">io.micronaut.security.ojdbc.extensions</a></dt>
+<dd>
+<div class="block">Utility methods for deriving OJDBC provider values from Micronaut Security roles.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/rsa/RSAEncryption.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.encryption.rsa">RSAEncryption</a> - Class in <a href="io/micronaut/security/token/jwt/encryption/rsa/package-summary.html">io.micronaut.security.token.jwt.encryption.rsa</a></dt>
 <dd>
@@ -9499,6 +9595,8 @@ the order they are declared.</div>
 <dd>
 <div class="block">Sets the authentication associated with the current security context.</div>
 </dd>
+<dt><a href="io/micronaut/security/ojdbc/extensions/DefaultAttributesFetcher.html#WITHIN" class="member-name-link">WITHIN</a> - Static variable in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DefaultAttributesFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">DefaultAttributesFetcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/context/SecurityContext.html#withRejectionStatus(java.lang.Integer)" class="member-name-link">withRejectionStatus(Integer)</a> - Method in interface io.micronaut.security.context.<a href="io/micronaut/security/context/SecurityContext.html" title="interface in io.micronaut.security.context">SecurityContext</a></dt>
 <dd>
 <div class="block">Sets the rejection code associated with the current security context.</div>

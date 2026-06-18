@@ -86,9 +86,11 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>20</strong><span>OAuth 2.0</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>21</strong><span>Ahead-of-time optimizations</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#ojdbcExtensions"><strong>21</strong><span>Oracle JDBC Extensions</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>22</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#aot"><strong>22</strong><span>Ahead-of-time optimizations</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>23</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -379,15 +381,33 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>20.7</strong><span>Guides</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>21</strong><span>Ahead-of-time optimizations</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-ojdbcExtensions"><a href="#ojdbcExtensions"><strong>21</strong><span>Oracle JDBC Extensions</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>21.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-ojdbcExtensionsInstallation"><a href="#ojdbcExtensionsInstallation"><strong>21.1</strong><span>Oracle JDBC Extensions Installation</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>21.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-endUserSecurityContextProvider"><a href="#endUserSecurityContextProvider"><strong>21.2</strong><span>End User Security Context Provider</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>21.3</strong><span>JWKS Optimization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-applicationAuthorizationAndUserIdentity"><a href="#applicationAuthorizationAndUserIdentity"><strong>21.3</strong><span>Application Authorization and User Identity</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>22</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-applicationManagedDataRolesAndAttributes"><a href="#applicationManagedDataRolesAndAttributes"><strong>21.4</strong><span>Application Managed Data Roles and Attributes</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-applicationManagedDataRoles"><a href="#applicationManagedDataRoles"><strong>21.4.1</strong><span>Application Managed Data Roles</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-privilegeEscalation"><a href="#privilegeEscalation"><strong>21.4.2</strong><span>Privilege Escalation</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-endUserContextAttributes"><a href="#endUserContextAttributes"><strong>21.4.3</strong><span>End User Context Attributes</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-endUserSecurityContextConfiguration"><a href="#endUserSecurityContextConfiguration"><strong>21.5</strong><span>End User Security Context Configuration</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-aot"><a href="#aot"><strong>22</strong><span>Ahead-of-time optimizations</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotConfiguration"><a href="#aotConfiguration"><strong>22.1</strong><span>Micronaut Security AOT Configuration</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotOpenidConfiguration"><a href="#aotOpenidConfiguration"><strong>22.2</strong><span>OpenID Configuration Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-aotJwks"><a href="#aotJwks"><strong>22.3</strong><span>JWKS Optimization</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>23</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -11744,7 +11764,327 @@ and <code>/.well-known/openid-configuration</code> <a href="https://openid.net/s
 </ul>
 </div>
 
-<h1 id="aot"><a class="anchor" href="#aot"></a>21 Ahead-of-time optimizations</h1>
+<h1 id="ojdbcExtensions"><a class="anchor" href="#ojdbcExtensions"></a>21 Oracle JDBC Extensions</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security provides the <code>micronaut-security-ojdbc-extensions</code> module for integration with <a href="https://github.com/oracle/ojdbc-extensions">Oracle JDBC Driver Extensions</a>.
+The module registers an <a href="https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/EndUserSecurityContextProvider.html">Oracle JDBC <code>EndUserSecurityContextProvider</code></a>.</p>
+</div>
+
+<h2 id="ojdbcExtensionsInstallation"><a class="anchor" href="#ojdbcExtensionsInstallation"></a>21.1 Oracle JDBC Extensions Installation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/ojdbcExtensionsInstallation.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>To use the module, add the following dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-ojdbc-extensions")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-ojdbc-extensions&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Additionally, you must add an HTTP client implementation: either the <a href="https://docs.micronaut.io/latest/guide/#nettyHttpClient">Netty-based HTTP Client</a> or the <a href="https://docs.micronaut.io/latest/guide/#jdkHttpClient">JDK HTTP Client</a>.</p>
+</div>
+
+<h2 id="endUserSecurityContextProvider"><a class="anchor" href="#endUserSecurityContextProvider"></a>21.2 End User Security Context Provider</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/endUserSecurityContextProvider.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The End User Security Context Provider provides a security context that enables
+<a href="https://docs.oracle.com/en/database/oracle/oracle-database/26/ddscg/understand-oracle-deep-data-security.html">Deep Data Security features in Oracle Database</a>.
+This is a <a href="https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/OracleResourceProvider.html">Resource Provider</a>
+identified by the name <code>ojdbc-provider-micronaut-end-user-security-context</code>.</p>
+</div>
+<div class="paragraph">
+<p>This provider must be configured to authenticate as an OAuth 2.0 client. The client should be mapped to a <code>DATA ROLE</code> or <code>APPLICATION IDENTITY</code> defined in
+an Oracle Database.</p>
+</div>
+<div class="paragraph">
+<p>In the example below, the provider is configured to authenticate via a Client Credentials request against an Azure Entra ID authorization server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext=ojdbc-provider-micronaut-end-user-security-context
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.clientId=${HRAPP_CLIENT_ID}
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.clientSecret=${HRAPP_CLIENT_SECRET}
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.tokenUrl=https://login.microsoftonline.com/${HRAPP_TENANT_ID}/oauth2/v2.0/token
+datasources.default.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.scope=${HRAPP_SCOPE}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The previous example configures Oracle JDBC to load an <a href="https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/spi/EndUserSecurityContextProvider.html">EndUserSecurityContextProvider</a>
+with the name of this provider: <code>ojdbc-provider-micronaut-end-user-security-context</code>. With this configuration, Oracle JDBC receives an <a href="https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/EndUserSecurityContext.html">oracle.jdbc.EndUserSecurityContext</a> each time it executes a database operation.</p>
+</div>
+<div class="paragraph">
+<p>Almost every network request Oracle JDBC sends to the database is considered a database operation. This includes SQL execution, row fetching, commit/rollback,
+and LOB data access. When an <code>EndUserSecurityContext</code> is provided to Oracle JDBC, all of these operations become subject to <code>DATA GRANT</code> policies defined in
+Oracle Database.</p>
+</div>
+<div class="paragraph">
+<p>A <code>DATA GRANT</code> policy can apply controls based on which user is accessing the database and which application they are using.
+This offers a more granular approach to data security when compared to the traditional model, in which all application users access the database as the
+same database user.</p>
+</div>
+
+<h2 id="applicationAuthorizationAndUserIdentity"><a class="anchor" href="#applicationAuthorizationAndUserIdentity"></a>21.3 Application Authorization and User Identity</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/applicationAuthorizationAndUserIdentity.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>An <code>EndUserSecurityContext</code> provided to Oracle JDBC encapsulates two security tokens:</p>
+</div>
+<div class="paragraph">
+<p><strong>Database Access Token</strong> This token authorizes a Micronaut application to access the database. The provider requests this token by sending an OAuth 2.0 Client Credentials request to the server token endpoint defined by the parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.tokenUrl</code></p>
+</div>
+<div class="paragraph">
+<p><strong>End User Token</strong> This token identifies the end user of a Micronaut application. It is typically received in the <code>Authorization</code> header of an incoming HTTP
+request. Micronaut Security resolves the token with the <a href="../api/io/micronaut/security/token/reader/TokenResolver.html">TokenResolver</a> API. The provider retrieves this token using Micronaut&#8217;s <a href="../api/io/micronaut/security/context/SecurityContextHolder.html">SecurityContextHolder</a>.</p>
+</div>
+<div class="paragraph">
+<p>These two tokens allow Oracle Database to make authorization decisions based on the application user who is accessing data and the application they are using.</p>
+</div>
+
+<h2 id="applicationManagedDataRolesAndAttributes"><a class="anchor" href="#applicationManagedDataRolesAndAttributes"></a>21.4 Application Managed Data Roles and Attributes</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/applicationManagedDataRolesAndAttributes.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <code>EndUserSecurityContext</code> provided to Oracle JDBC may include application-managed <code>DATA ROLE</code> names or <code>END USER CONTEXT</code> attributes
+that are derived from an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> present in Micronaut&#8217;s <a href="../api/io/micronaut/security/context/SecurityContextHolder.html">SecurityContextHolder</a>.</p>
+</div>
+
+<h2 id="applicationManagedDataRoles"><a class="anchor" href="#applicationManagedDataRoles"></a>21.4.1 Application Managed Data Roles</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/applicationManagedDataRolesAndAttributes/applicationManagedDataRoles.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>If one or more roles in <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> begin with a specified prefix, then the provider will
+recognize them as application-managed <code>DATA ROLE</code> names that should be enabled for the end user.
+The prefix is specified by the parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.rolePrefix</code></p>
+</div>
+<div class="paragraph">
+<p>The default value for this parameter is <code>ORACLE_DATA_ROLE_</code>.</p>
+</div>
+<div class="paragraph">
+<p>The name of a <code>DATA ROLE</code> should appear after the specified prefix. For example, with the default prefix, if the authenticated user has a role with the value <code>ORACLE_DATA_ROLE_ADMIN</code>, the
+provider recognizes a <code>DATA ROLE</code> named <code>ADMIN</code>.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the role prefix, the provider can also be configured with a fixed set of data role names using the parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.dataRoles</code></p>
+</div>
+
+<h2 id="privilegeEscalation"><a class="anchor" href="#privilegeEscalation"></a>21.4.2 Privilege Escalation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/applicationManagedDataRolesAndAttributes/privilegeEscalation.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can use the <a href="#runAs">RunAs annotation</a> to grant a <code>DATA ROLE</code> for a method execution:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example.micronaut.repository;
+
+import example.micronaut.domain.EmployeeEntity;
+import example.micronaut.dto.SalaryAggregates;
+import io.micronaut.data.annotation.Query;
+import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.model.query.builder.sql.Dialect;
+import io.micronaut.data.repository.CrudRepository;
+import io.micronaut.security.annotation.RunAs;
+
+@JdbcRepository(dialect = Dialect.ORACLE)
+public interface EmployeeRepository extends CrudRepository&lt;EmployeeEntity, Long&gt; {
+
+    @RunAs("ORACLE_DATA_ROLE_COMPENSATION_ANALYST")
+    @Query("SELECT MIN(salary) AS min, MAX(salary) AS max, SUM(salary) AS sum, COUNT(*) AS count FROM hr.employees")
+    SalaryAggregates getSalaryAggregates();
+}</code></pre>
+</div>
+</div>
+
+<h2 id="endUserContextAttributes"><a class="anchor" href="#endUserContextAttributes"></a>21.4.3 End User Context Attributes</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/applicationManagedDataRolesAndAttributes/endUserContextAttributes.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The provider can read <code>END USER CONTEXT</code> attributes from one or more named attributes of the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.
+The attribute names are specified as a comma-separated list by the parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.attributeNames</code></p>
+</div>
+<div class="paragraph">
+<p>The default value for this parameter is <code>ORACLE_CONTEXT_ATTRIBUTES</code>.</p>
+</div>
+<div class="paragraph">
+<p>A JSON object containing the attributes of one or more <code>END USER CONTEXT</code> objects can appear as the value of one of the configured authentication attributes. For example, an authentication attribute named <code>ORACLE_CONTEXT_ATTRIBUTES</code> might have the following value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "app_schema.user_details" : {
+    "first_name" : "George",
+    "last_name" : "Washington"
+  },
+  "app_schema.location_info" : {
+    "City" : "Mount Vernon",
+    "State" : "Virginia",
+    "Country" : "United States"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The provider will recognize that attribute value as the attributes of two <code>END USER CONTEXT</code> objects named <code>user_details</code> and <code>location_info</code>, each declared within a database schema named <code>app_schema</code>.</p>
+</div>
+<div class="paragraph">
+<p>In addition to authentication attributes, the provider can also be configured with a fixed set of attributes using the parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.endUserContextAttributes</code></p>
+</div>
+
+<h2 id="endUserSecurityContextConfiguration"><a class="anchor" href="#endUserSecurityContextConfiguration"></a>21.5 End User Security Context Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/ojdbcExtensions/endUserSecurityContextConfiguration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph">
+<p>The parameter names in the table below should be prefixed with</p>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.</code></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tokenUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth 2.0 token endpoint URL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. A value must be configured for this parameter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth 2.0 client identifier.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. A value must be configured for this parameter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientSecret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth 2.0 client secret. This parameter is marked as a sensitive OJDBC provider parameter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. A value must be configured for this parameter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional OAuth 2.0 scope sent with the Client Credentials request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. This parameter is optional.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dataRoles</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A fixed set of <code>DATA ROLE</code> names to enable for all end users. This should be one or more <code>DATA ROLE</code> names, separated by commas: <code>common_user_role, common_app_role, read_only_role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. This parameter is optional.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rolePrefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The prefix used to match the user&#8217;s roles that the provider should recognize as a <code>DATA ROLE</code>. The name of the <code>DATA ROLE</code> should appear after the prefix. For example, this parameter might be set to <code>ORACLE_DATA_ROLE_</code>. For a role named <code>ORACLE_DATA_ROLE_ADMIN</code>, the provider will recognize a <code>DATA ROLE</code> named <code>ADMIN</code> and enable that <code>DATA ROLE</code> for the end user. This should be a unique string that is unlikely to collide with an application role that is not intended to be recognized as a <code>DATA ROLE</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ORACLE_DATA_ROLE_</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endUserContextAttributes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional JSON object containing fixed Oracle Database END USER CONTEXT attributes. The object keys are END USER CONTEXT names, and each value must be a JSON object containing the attributes for that context.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default value. This parameter is optional.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attributeNames</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of Micronaut Security authentication attribute names whose values are used to derive END USER CONTEXT attributes from the current authentication. Each named authentication attribute value must be a JSON object value, or a string containing a JSON object. The object keys are END USER CONTEXT names, and each value must be a JSON object containing the attributes for that context.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ORACLE_CONTEXT_ATTRIBUTES</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h1 id="aot"><a class="anchor" href="#aot"></a>22 Ahead-of-time optimizations</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/aot.adoc"'>
@@ -11764,7 +12104,7 @@ and <code>/.well-known/openid-configuration</code> <a href="https://openid.net/s
 <p>Micronaut Security offers several ahead-of-time optimizations.</p>
 </div>
 
-<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>21.1 Micronaut Security AOT Configuration</h2>
+<h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>22.1 Micronaut Security AOT Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/aot/aotConfiguration.adoc"'>
@@ -11812,7 +12152,7 @@ aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
 </div>
 </div>
 
-<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>21.2 OpenID Configuration Optimization</h2>
+<h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>22.2 OpenID Configuration Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/aot/aotOpenidConfiguration.adoc"'>
@@ -11851,7 +12191,7 @@ The application uses the configuration present at the authorization server at bu
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>21.3 JWKS Optimization</h2>
+<h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>22.3 JWKS Optimization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/aot/aotJwks.adoc"'>
@@ -11886,7 +12226,7 @@ The application uses the JWKS exposed by the authorization server at build time.
 <p>Learn about <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration">Micronaut Maven Plugin AOT configuration</a> and <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration">Micronaut Gradle Plugin AOT Configuration</a>.</p>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>22 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>23 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.1.x/src/main/docs/guide/repository.adoc"'>
