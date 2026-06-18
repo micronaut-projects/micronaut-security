@@ -137,7 +137,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
     }
 
     private Map<String, OracleJsonObject> parseAttributes(String name, OracleJsonObject jsonObject) {
-        HashMap<String, OracleJsonObject> attributes = new HashMap<>(jsonObject.size());
+        HashMap<String, OracleJsonObject> attributes = HashMap.newHashMap(jsonObject.size());
         for (Map.Entry<String, OracleJsonValue> entry : jsonObject.entrySet()) {
             String contextName = entry.getKey();
             OracleJsonObject attributeValues = JsonUtils.requireJsonObject(contextName + WITHIN + name, entry.getValue());
@@ -258,7 +258,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
     }
 
     private Map<String, OracleJsonObject> toAttributes(String name, Map<?, ?> map) {
-        Map<String, OracleJsonObject> attributes = new HashMap<>(map.size());
+        Map<String, OracleJsonObject> attributes = HashMap.newHashMap(map.size());
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             Object key = entry.getKey();
             if (key == null) {
