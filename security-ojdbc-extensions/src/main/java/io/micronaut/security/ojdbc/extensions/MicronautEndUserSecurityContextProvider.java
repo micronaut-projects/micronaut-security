@@ -45,6 +45,9 @@ import java.util.function.Supplier;
 @Experimental
 @Internal
 public final class MicronautEndUserSecurityContextProvider extends AbstractResourceProvider implements EndUserSecurityContextProvider {
+    static final String DEFAULT_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
+    static final String DEFAULT_ATTRIBUTE_NAMES = "ORACLE_CONTEXT_ATTRIBUTES";
+
     /**
      * Comma separated list of data roles for an end user.
      */
@@ -60,13 +63,13 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
     /**
      * Role prefix used to map Micronaut roles to Oracle Database data roles.
      */
-    static final ResourceParameter ROLE_PREFIX_PARAMETER = new ResourceParameter("rolePrefix", "ORACLE_DATA_ROLE_", false, false,
+    static final ResourceParameter ROLE_PREFIX_PARAMETER = new ResourceParameter("rolePrefix", DEFAULT_ROLE_PREFIX, false, false,
             (value, parameterSetBuilder) -> { });
 
     /**
      * Authentication attribute names used to map Micronaut authentication attributes to Oracle Database END USER CONTEXT attributes.
      */
-    static final ResourceParameter ATTRIBUTE_NAMES_PARAMETER = new ResourceParameter("attributeNames", "ORACLE_CONTEXT_ATTRIBUTES", false, false,
+    static final ResourceParameter ATTRIBUTE_NAMES_PARAMETER = new ResourceParameter("attributeNames", DEFAULT_ATTRIBUTE_NAMES, false, false,
             (value, parameterSetBuilder) -> { });
 
     /**
@@ -92,9 +95,6 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
      */
     static final ResourceParameter CLIENT_SECRET_PARAMETER = new ResourceParameter("clientSecret", null, true, true,
             (value, parameterSetBuilder) -> { });
-
-    static final String DEFAULT_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
-    static final String DEFAULT_ATTRIBUTE_NAMES = "ORACLE_CONTEXT_ATTRIBUTES";
 
     private static final Logger LOG = LoggerFactory.getLogger(MicronautEndUserSecurityContextProvider.class);
 
