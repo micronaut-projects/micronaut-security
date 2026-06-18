@@ -17,6 +17,7 @@ package io.micronaut.security.ojdbc.extensions;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import oracle.jdbc.spi.OracleResourceProvider;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -56,7 +57,7 @@ public final class OracleResourceProviderParameterUtils {
             OracleResourceProvider.@NonNull Parameter parameter) {
 
         String value = optionalParameter(parameters, parameter);
-        if (value == null || value.isBlank()) {
+        if (StringUtils.isEmpty(value)) {
             throw new IllegalStateException("Missing required provider parameter: " + parameter.name());
         }
         return value;

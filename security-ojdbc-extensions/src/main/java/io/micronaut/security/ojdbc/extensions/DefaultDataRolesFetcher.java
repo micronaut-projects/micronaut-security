@@ -17,6 +17,7 @@ package io.micronaut.security.ojdbc.extensions;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.Authentication;
 import oracle.jdbc.spi.OracleResourceProvider;
 import org.jspecify.annotations.NonNull;
@@ -84,7 +85,7 @@ public class DefaultDataRolesFetcher implements DataRolesFetcher {
     public static @Nullable Set<String> mergeDataRoles(Set<String>... dataRoleSets) {
         HashSet<String> merged = null;
         for (Set<String> dataRoles : dataRoleSets) {
-            if (dataRoles == null || dataRoles.isEmpty()) {
+            if (CollectionUtils.isEmpty(dataRoles)) {
                 continue;
             }
             if (merged == null) {

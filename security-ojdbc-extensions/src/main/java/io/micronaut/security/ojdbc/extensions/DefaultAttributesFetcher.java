@@ -17,6 +17,8 @@ package io.micronaut.security.ojdbc.extensions;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.Authentication;
 import oracle.jdbc.EndUserSecurityContext;
 import oracle.jdbc.spi.OracleResourceProvider;
@@ -94,7 +96,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
      */
     private Map<String, OracleJsonObject> getFixedAttributes(Map<OracleResourceProvider.Parameter, CharSequence> parameters) {
         CharSequence fixedAttributes = parameters.get(END_USER_CONTEXT_ATTRIBUTE_PARAMETER);
-        if (fixedAttributes == null || fixedAttributes.length() == 0) {
+        if (StringUtils.isEmpty(fixedAttributes)) {
             return Collections.emptyMap();
         }
         return parseAttributes("attributes configured by the " + END_USER_CONTEXT_ATTRIBUTE_PARAMETER.name() + " parameter",
@@ -127,7 +129,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
      * @return Map of END USER CONTEXT attributes, not null.
      */
     private Map<String, OracleJsonObject> parseAttributes(String name, String jsonString) {
-        if (jsonString == null || jsonString.isEmpty()) {
+        if (StringUtils.isEmpty(jsonString)) {
             return Collections.emptyMap();
         }
         return parseAttributes(name, parseJsonObject(name, jsonString));
@@ -178,12 +180,12 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             Map<String, OracleJsonObject> existing,
             Map<String, OracleJsonObject> current) {
 
-        if (existing == null || existing.isEmpty()) {
+        if (CollectionUtils.isEmpty(existing)) {
             return current == null
                     ? Collections.emptyMap()
                     : current;
         }
-        if (current == null || current.isEmpty()) {
+        if (CollectionUtils.isEmpty(current)) {
             return existing;
         }
 
@@ -216,7 +218,7 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             Authentication authentication) {
 
         CharSequence authenticationAttributeNames = parameters.get(ATTRIBUTE_NAMES_PARAMETER);
-        if (authenticationAttributeNames == null || authenticationAttributeNames.length() == 0) {
+        if (StringUtils.isEmpty(authenticationAttributeNames)) {
             return Collections.emptyMap();
         }
         Map<String, Object> authenticationAttributes = authentication.getAttributes();

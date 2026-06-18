@@ -158,7 +158,7 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
 
     @Nullable
     private static String normalizeScope(@Nullable String scope) {
-        return scope == null || scope.isBlank() ? null : scope;
+        return StringUtils.isEmpty(scope) ? null : scope;
     }
 
     record ClientCredentialsClientConfiguration(@NonNull String tokenUrl,
