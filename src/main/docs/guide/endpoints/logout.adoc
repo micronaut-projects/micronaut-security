@@ -1,9 +1,10 @@
-To enable the logout controller you need a bean of type api:security.handlers.LogoutHandler[]. The behaviour of the controller is delegated to it.
+To enable the logout controller you need a bean of type api:security.handlers.LogoutHandler[] or api:security.handlers.ReactiveLogoutHandler[]. The behaviour of the controller is delegated to it.
 A custom implementation can, of course, be provided. However, several <<logoutHandler, Logout Handler>>s implementations are available out of the box.
+
+If a bean of type api:security.handlers.ReactiveLogoutHandler[] is present, the logout endpoint uses the reactive handler and waits for its publisher to complete before returning the response. If both a synchronous api:security.handlers.LogoutHandler[] and a reactive handler are present, the reactive handler owns the endpoint. The synchronous handler is not invoked automatically, but a reactive handler can inject and delegate to it when existing cookie or session clearing behaviour should be preserved.
 
 You can configure the logout endpoint with:
 
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.LogoutControllerConfigurationProperties.adoc[]
 
 TIP: If you are using JWT authentication not stored in a cookie, you may not need to invoke the `/logout` endpoint. Since logging out normally means simply deleting the JWT token in the client.
-
