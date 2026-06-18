@@ -42,15 +42,15 @@ public final class OracleResourceProviderParameterUtils {
      * Returns the configured string value for a required provider parameter.
      *
      * <p>A parameter is considered missing when it is absent from the map or when its string
-     * value is blank according to {@link String#isBlank()}. Non-blank values are returned
-     * unchanged; this method does not trim or otherwise normalize the configured value.
+     * value is empty. Non-empty values are returned unchanged; this method does not trim
+     * or otherwise normalize the configured value.
      *
      * @param parameters parameters supplied by OJDBC
      * @param parameter parameter whose configured value is required
      *
      * @return the configured value converted to a string
      *
-     * @throws IllegalStateException if the parameter is absent or blank
+     * @throws IllegalStateException if the parameter is absent or empty
      */
     public static @NonNull String requiredParameter(
             @NonNull Map<OracleResourceProvider.Parameter, CharSequence> parameters,

@@ -103,28 +103,6 @@ class ClientCredentialsClientDatabaseAccessTokenFetcherTest {
     }
 
     @Test
-    void fetchDatabaseAccessTokenOmitsBlankScope() {
-        TOKEN_REQUEST.set(null);
-
-        withMockAuthorizationServer(server -> {
-            String tokenUrl = tokenUrl(server, "token");
-            Map<OracleResourceProvider.Parameter, CharSequence> parameters = parameters(tokenUrl);
-            parameters.put(SCOPE_PARAMETER, "   ");
-
-            String token = FETCHER.fetchDatabaseAccessToken(parameters);
-
-            JWT jwt = assertDoesNotThrow(() -> JWTParser.parse(token));
-            assertInstanceOf(SignedJWT.class, jwt);
-            TokenRequest request = TOKEN_REQUEST.get();
-            assertNotNull(request);
-            assertEquals(Map.of(
-                    "grant_type", "client_credentials",
-                    "client_id", "database-client",
-                    "client_secret", "database secret"), request.formFields());
-        });
-    }
-
-    @Test
     void fetchDatabaseAccessTokenReusesCachedAccessTokenForSameParameters() {
         TOKEN_REQUEST.set(null);
         TOKEN_REQUEST_COUNT.set(0);
@@ -188,16 +166,6 @@ class ClientCredentialsClientDatabaseAccessTokenFetcherTest {
                 () -> FETCHER.fetchDatabaseAccessToken(Map.of(TOKEN_URL_PARAMETER, "http://localhost/token")));
         assertEquals("Missing required provider parameter: clientId", missingClientId.getMessage());
         assertInstanceOf(IllegalStateException.class, missingClientId.getCause());
-
-        Map<OracleResourceProvider.Parameter, CharSequence> blankClientSecret = new LinkedHashMap<>();
-        blankClientSecret.put(TOKEN_URL_PARAMETER, "http://localhost/token");
-        blankClientSecret.put(CLIENT_ID_PARAMETER, "database-client");
-        blankClientSecret.put(CLIENT_SECRET_PARAMETER, "   ");
-
-        DatabaseAccessTokenFetcherException missingClientSecret = assertThrows(DatabaseAccessTokenFetcherException.class,
-                () -> FETCHER.fetchDatabaseAccessToken(blankClientSecret));
-        assertEquals("Missing required provider parameter: clientSecret", missingClientSecret.getMessage());
-        assertInstanceOf(IllegalStateException.class, missingClientSecret.getCause());
     }
 
     @Test

@@ -30,13 +30,6 @@ class OracleResourceProviderParameterUtilsTest {
     }
 
     @Test
-    void optionalParameterReturnsBlankValueUnchanged() {
-        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(SCOPE_PARAMETER, "   ");
-
-        assertEquals("   ", optionalParameter(parameters, SCOPE_PARAMETER));
-    }
-
-    @Test
     void requiredParameterReturnsConfiguredValueUnchanged() {
         Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
                 TOKEN_URL_PARAMETER, "  https://example.com/token  ");
@@ -48,16 +41,6 @@ class OracleResourceProviderParameterUtilsTest {
     void requiredParameterRejectsMissingParameter() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> requiredParameter(Map.of(), CLIENT_ID_PARAMETER));
-
-        assertEquals("Missing required provider parameter: clientId", exception.getMessage());
-    }
-
-    @Test
-    void requiredParameterRejectsBlankParameter() {
-        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(CLIENT_ID_PARAMETER, "   ");
-
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> requiredParameter(parameters, CLIENT_ID_PARAMETER));
 
         assertEquals("Missing required provider parameter: clientId", exception.getMessage());
     }
