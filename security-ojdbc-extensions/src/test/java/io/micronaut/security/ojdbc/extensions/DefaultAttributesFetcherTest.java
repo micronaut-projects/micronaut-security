@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -101,7 +102,7 @@ class DefaultAttributesFetcherTest {
     void fetchAttributesConvertsSupportedMapValuesToOracleJsonValues() {
         Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
                 ATTRIBUTE_NAMES_PARAMETER, "APP_ATTRIBUTES");
-        LocalDateTime localDateTime = LocalDateTime.of(2026, 6, 18, 10, 15, 30);
+        LocalDateTime localDateTime = LocalDateTime.of(2026, Month.JUNE, 18, 10, 15, 30);
         OffsetDateTime offsetDateTime = OffsetDateTime.parse("2026-06-18T10:15:30+02:00");
         byte[] binaryValue = {1, 2, 3};
         Map<String, Object> contextAttributes = new LinkedHashMap<>();
