@@ -149,13 +149,13 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
     public EndUserSecurityContext getEndUserSecurityContext(Map<Parameter, CharSequence> parameters) {
         Supplier<String> requestInfo = SupplierUtil.memoized(() -> ServerRequestContext.currentRequest().map(req -> req.getMethod() + " " + req.getPath()).orElse("No Request"));
         if (LOG.isTraceEnabled()) {
-            LOG.trace(requestInfo.get() + "- resolving end user security context");
+            LOG.trace(requestInfo.get() + " - resolving end user security context");
         }
         SecurityContext securityContext = SecurityContextHolder.getSecurityContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication == null) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug(requestInfo.get() + "- end user security context is null because authentication is null");
+                LOG.debug(requestInfo.get() + " - end user security context is null because authentication is null");
             }
             return null;
         }
@@ -171,19 +171,19 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
         Collection<String> dataRoles = dataRolesFetcher.fetchDataRoles(parameters, authentication);
         if (dataRoles != null) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the data roles {}", dataRoles);
+                LOG.trace(requestInfo.get() + " - end user security context resolution - resolved the data roles {}", dataRoles);
             }
             endUserSecurityContext = endUserSecurityContext.withDataRoles(dataRoles);
         }
         Map<String, OracleJsonObject> attributes = attributesFetcher.fetchAttributes(parameters, authentication);
         if (attributes != null) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace(requestInfo.get() + "- end user security context resolution - resolved the attributes {}", attributes);
+                LOG.trace(requestInfo.get() + " - end user security context resolution - resolved the attributes {}", attributes);
             }
             endUserSecurityContext = endUserSecurityContext.withAttributes(attributes);
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(requestInfo.get() + "- end user security context resolved with data roles {} and attributes {}",
+            LOG.debug(requestInfo.get() + " - end user security context resolved with data roles {} and attributes {}",
                     dataRoles != null ? dataRoles : Collections.emptyList(),
                     attributes != null ? attributes : Collections.emptyMap());
         }
