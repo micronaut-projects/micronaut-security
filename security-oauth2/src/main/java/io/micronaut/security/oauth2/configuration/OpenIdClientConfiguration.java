@@ -35,7 +35,7 @@ public interface OpenIdClientConfiguration extends Named {
 
     /**
      * @since 5.3.0
-     * @return Whether the OpenID configuration should be fetched by visiting the value returned by {{@link #getIssuer()}} plus {@code /.well-known/openid-configuration}.
+     * @return Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}.
      */
     default boolean isFetchConfiguration() {
         return true;
