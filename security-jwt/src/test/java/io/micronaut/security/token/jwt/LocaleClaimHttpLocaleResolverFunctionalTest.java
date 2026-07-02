@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Property(name = "micronaut.server.locale-resolution.cookie-name", value = "locale")
@@ -48,8 +48,8 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
         Collection<HttpLocaleResolver> resolvers = new ArrayList<>(beanContext.getBeansOfType(HttpLocaleResolver.class));
         int cookieLocaleResolverIndex = indexOf(resolvers, CookieLocaleResolver.class);
         int localeClaimHttpLocaleResolverIndex = indexOf(resolvers, LocaleClaimHttpLocaleResolver.class);
-        assertTrue(cookieLocaleResolverIndex != -1);
-        assertTrue(localeClaimHttpLocaleResolverIndex != -1);
+        assertNotEquals(-1, cookieLocaleResolverIndex);
+        assertNotEquals(-1, localeClaimHttpLocaleResolverIndex);
         assertTrue(cookieLocaleResolverIndex < localeClaimHttpLocaleResolverIndex);
     }
 
