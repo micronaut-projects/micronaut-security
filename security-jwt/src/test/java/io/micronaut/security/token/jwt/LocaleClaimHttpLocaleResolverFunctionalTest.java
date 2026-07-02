@@ -83,7 +83,7 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
 
         @Secured(SecurityRule.IS_AUTHENTICATED)
         @Produces(MediaType.TEXT_PLAIN)
-        @Get ("/hola")
+        @Get("/hola")
         String index(HttpRequest<?> request) {
             Locale locale = resolver.resolveOrDefault(request);
             if (locale.equals(Locale.of("es", "ES"))) {
