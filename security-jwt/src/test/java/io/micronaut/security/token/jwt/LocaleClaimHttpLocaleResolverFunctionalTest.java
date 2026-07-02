@@ -73,11 +73,11 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
 
     @Requires(property = "spec.name", value = "LocaleClaimHttpLocaleResolverTest")
     @Controller
-    static class HellWorldController {
+    static class HelloWorldController {
 
         private final HttpLocaleResolver resolver;
 
-        HellWorldController(HttpLocaleResolver resolver) {
+        HelloWorldController(HttpLocaleResolver resolver) {
             this.resolver = resolver;
         }
 
