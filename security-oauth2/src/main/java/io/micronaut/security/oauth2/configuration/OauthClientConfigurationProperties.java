@@ -545,7 +545,8 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * Whether the OpenID configuration should be fetched by visiting the value returned by issuer value plus {@code /.well-known/openid-configuration}. Default value: true.
+         * Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}. Default value: true.
+         *
          * @param fetchConfiguration Whether the OpenID configuration should be fetched
          */
         public void setFetchConfiguration(boolean fetchConfiguration) {
