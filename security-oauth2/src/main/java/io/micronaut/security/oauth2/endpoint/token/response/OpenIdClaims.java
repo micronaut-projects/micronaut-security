@@ -37,22 +37,22 @@ public interface OpenIdClaims extends Claims {
      * @deprecated Use {@link ProfileClaims#CLAIM_NAME} instead.
      */
     @Deprecated(forRemoval = true, since = "5.3.0")
-    String CLAIMS_NAME = "name";
+    String CLAIMS_NAME = ProfileClaims.CLAIM_NAME;
     /**
      * @deprecated Use {@link ProfileClaims#CLAIM_GIVEN_NAME} instead.
      */
     @Deprecated(forRemoval = true, since = "5.3.0")
-    String CLAIMS_GIVEN_NAME = "given_name";
+    String CLAIMS_GIVEN_NAME = ProfileClaims.CLAIM_GIVEN_NAME;
     /**
      * @deprecated Use {@link ProfileClaims#CLAIM_FAMILY_NAME} instead.
      */
     @Deprecated(forRemoval = true, since = "5.3.0")
-    String CLAIMS_FAMILY_NAME = "family_name";
+    String CLAIMS_FAMILY_NAME = ProfileClaims.CLAIM_FAMILY_NAME;
     /**
      * @deprecated Use {@link ProfileClaims#CLAIM_MIDDLE_NAME} instead.
      */
     @Deprecated(forRemoval = true, since = "5.3.0")
-    String CLAIMS_MIDDLE_NAME = "middle_name";
+    String CLAIMS_MIDDLE_NAME = ProfileClaims.CLAIM_MIDDLE_NAME;
     /**
      * @deprecated Use {@link ProfileClaims#CLAIM_NICKNAME} instead.
      */

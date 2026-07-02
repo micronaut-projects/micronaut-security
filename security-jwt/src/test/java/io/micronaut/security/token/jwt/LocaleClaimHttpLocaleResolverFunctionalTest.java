@@ -73,17 +73,17 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
 
     @Requires(property = "spec.name", value = "LocaleClaimHttpLocaleResolverTest")
     @Controller
-    static class HellWorldController {
+    static class HelloWorldController {
 
         private final HttpLocaleResolver resolver;
 
-        HellWorldController(HttpLocaleResolver resolver) {
+        HelloWorldController(HttpLocaleResolver resolver) {
             this.resolver = resolver;
         }
 
         @Secured(SecurityRule.IS_AUTHENTICATED)
         @Produces(MediaType.TEXT_PLAIN)
-        @Get ("/hola")
+        @Get("/hola")
         String index(HttpRequest<?> request) {
             Locale locale = resolver.resolveOrDefault(request);
             if (locale.equals(Locale.of("es", "ES"))) {
