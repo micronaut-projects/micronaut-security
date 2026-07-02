@@ -26,6 +26,7 @@ class OpenIdProviderMetadataFetcherFactoryDisableTest {
     @Test
     void youCanDisableABeanOfTypeOpenIdProviderMetadataFetcher() {
         assertTrue(beanContext.containsBean(OpenIdClientConfiguration.class, Qualifiers.byName("chesscom")));
+        assertTrue(!beanContext.containsBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName("chesscom")));
         assertTrue(beanContext.containsBean(DefaultOpenIdProviderMetadata.class, Qualifiers.byName("chesscom")));
         DefaultOpenIdProviderMetadata metadata = beanContext.getBean(DefaultOpenIdProviderMetadata.class, Qualifiers.byName("chesscom"));
         assertEquals("https://oauth.chess.com/authorize", metadata.getAuthorizationEndpoint());
