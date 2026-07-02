@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.ProfileClaims;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,24 +33,100 @@ import java.util.Map;
  */
 public interface OpenIdClaims extends Claims {
 
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_NAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_NAME = "name";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_GIVEN_NAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_GIVEN_NAME = "given_name";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_FAMILY_NAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_FAMILY_NAME = "family_name";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_MIDDLE_NAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_MIDDLE_NAME = "middle_name";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_NICKNAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_NICKNAME = "nickname";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_PREFERRED_USERNAME} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_PREFERRED_USERNAME = "preferred_username";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_PROFILE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_PROFILE = "profile";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_PICTURE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_PICTURE = "picture";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_WEBSITE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_WEBSITE = "website";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_EMAIL} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_EMAIL = "email";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_EMAIL_VERIFIED} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_EMAIL_VERIFIED = "email_verified";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_GENDER} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_GENDER = "gender";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_BIRTHDATE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_BIRTHDATE = "birthdate";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_ZONEINFO} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_ZONEINFO = "zoneinfo";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_LOCALE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_LOCALE = "locale";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_PHONE_NUMBER} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_PHONE_NUMBER = "phone_number";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_PHONE_NUMBER_VERIFIED} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_PHONE_NUMBER_VERIFIED = "phone_number_verified";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_ADDRESS} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_ADDRESS = "address";
+    /**
+     * @deprecated Use {@link ProfileClaims#CLAIM_UPDATED_AT} instead.
+     */
+    @Deprecated(forRemoval = true, since = "5.3.0")
     String CLAIMS_UPDATED_AT = "updated_at";
     String CLAIMS_AUTH_TIME = "auth_time";
     String CLAIMS_NONCE = "nonce";
@@ -255,4 +332,3 @@ public interface OpenIdClaims extends Claims {
      */
     Map<String, Object> getClaims();
 }
-

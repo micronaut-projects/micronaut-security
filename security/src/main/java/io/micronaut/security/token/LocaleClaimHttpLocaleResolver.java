@@ -16,6 +16,7 @@
 package io.micronaut.security.token;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.locale.HttpAbstractLocaleResolver;
@@ -40,7 +41,8 @@ import java.util.Optional;
 @Requires(classes = HttpRequest.class)
 @Requires(beans = HttpLocaleResolutionConfiguration.class)
 @Singleton
-public class LocaleClaimHttpLocaleResolver extends HttpAbstractLocaleResolver {
+@Internal
+final class LocaleClaimHttpLocaleResolver extends HttpAbstractLocaleResolver {
     private static final int ORDER = HttpAbstractLocaleResolver.ORDER + 10;
 
     private final ConversionService conversionService;
@@ -51,8 +53,8 @@ public class LocaleClaimHttpLocaleResolver extends HttpAbstractLocaleResolver {
      * @param httpLocaleResolutionConfiguration Locale resolution configuration
      * @param conversionService ConversionService
      */
-    public LocaleClaimHttpLocaleResolver(HttpLocaleResolutionConfiguration httpLocaleResolutionConfiguration,
-                                         ConversionService conversionService) {
+    LocaleClaimHttpLocaleResolver(HttpLocaleResolutionConfiguration httpLocaleResolutionConfiguration,
+                                  ConversionService conversionService) {
         super(httpLocaleResolutionConfiguration);
         this.conversionService = conversionService;
     }

@@ -19,7 +19,9 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -69,4 +71,18 @@ public interface Claims {
      * @return {@code false} if the claim does not exist.
      */
     boolean contains(String name);
+
+    /**
+     * @since 5.3.0
+     * @return a map representation of the claims
+     */
+    default @NonNull Map<@NonNull String, @Nullable Object> toMap() {
+        Set<String> names = names();
+        Map<String, Object> attributes = HashMap.newHashMap(names.size());
+        for (String claim : names) {
+            Object claimValue = get(claim);
+            attributes.put(claim, claimValue);
+        }
+        return  attributes;
+    }
 }

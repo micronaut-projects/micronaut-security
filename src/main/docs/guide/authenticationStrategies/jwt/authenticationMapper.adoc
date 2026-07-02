@@ -1,0 +1,10 @@
+The api:security.authentication.AuthenticationMapper[] API maps a token value to an api:security.authentication.Authentication[].
+
+Micronaut Security registers a primary https://guides.micronaut.io/latest/micronaut-patterns-composite.html[composite mapper] that delegates to every available `AuthenticationMapper` bean.
+The first mapper that returns a non-null `Authentication` wins.
+If a mapper cannot map the token, it should return `null` so that another mapper can try.
+
+`AuthenticationMapper` extends api:io.micronaut.core.order.Ordered[], so you can control mapper precedence by overriding `getOrder()` or using Micronaut ordering annotations.
+
+The `micronaut-security-jwt` module provides a mapper for JWT tokens parsed with Nimbus JOSE + JWT.
+It maps the token subject claim to the authentication name, resolves roles with api:security.token.RolesFinder[], and copies the OpenID Connect profile claims exposed by api:security.token.ProfileClaims[] into the authentication attributes.
