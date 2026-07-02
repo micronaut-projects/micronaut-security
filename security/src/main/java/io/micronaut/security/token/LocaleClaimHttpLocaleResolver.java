@@ -35,7 +35,7 @@ import java.util.Optional;
  * current {@link Authentication}.
  *
  * @author Sergio del Amo
- * @since 5.2.1
+ * @since 5.3.0
  */
 @Requires(classes = HttpRequest.class)
 @Requires(beans = HttpLocaleResolutionConfiguration.class)
