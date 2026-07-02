@@ -17,7 +17,6 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.security.token.LocaleClaimHttpLocaleResolver;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
@@ -40,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Property(name = "spec.name", value = "LocaleClaimHttpLocaleResolverTest")
 @MicronautTest
 class LocaleClaimHttpLocaleResolverFunctionalTest {
+    private static final String LOCALE_CLAIM_HTTP_LOCALE_RESOLVER = "io.micronaut.security.token.LocaleClaimHttpLocaleResolver";
+
     @Inject
     BeanContext beanContext;
 
@@ -47,7 +48,7 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
     void localeClaimHttpLocaleResolverLowPrecedence() {
         Collection<HttpLocaleResolver> resolvers = new ArrayList<>(beanContext.getBeansOfType(HttpLocaleResolver.class));
         int cookieLocaleResolverIndex = indexOf(resolvers, CookieLocaleResolver.class);
-        int localeClaimHttpLocaleResolverIndex = indexOf(resolvers, LocaleClaimHttpLocaleResolver.class);
+        int localeClaimHttpLocaleResolverIndex = indexOf(resolvers, LOCALE_CLAIM_HTTP_LOCALE_RESOLVER);
         assertNotEquals(-1, cookieLocaleResolverIndex);
         assertNotEquals(-1, localeClaimHttpLocaleResolverIndex);
         assertTrue(cookieLocaleResolverIndex < localeClaimHttpLocaleResolverIndex);
@@ -97,6 +98,17 @@ class LocaleClaimHttpLocaleResolverFunctionalTest {
         int index = 0;
         for (HttpLocaleResolver resolver : resolvers) {
             if (type.isInstance(resolver)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private static int indexOf(Collection<HttpLocaleResolver> resolvers, String className) {
+        int index = 0;
+        for (HttpLocaleResolver resolver : resolvers) {
+            if (resolver.getClass().getName().equals(className)) {
                 return index;
             }
             index++;
