@@ -7,4 +7,5 @@ If a mapper cannot map the token, it should return `null` so that another mapper
 `AuthenticationMapper` extends api:io.micronaut.core.order.Ordered[], so you can control mapper precedence by overriding `getOrder()` or using Micronaut ordering annotations.
 
 The `micronaut-security-jwt` module provides a mapper for JWT tokens parsed with Nimbus JOSE + JWT.
+NOTE: This mapper only parses the token to extract claims; it does not validate signatures or claims. Validate tokens first (for example with api:io.micronaut.security.token.jwt.validator.JsonWebTokenValidator[]).
 It maps the token subject claim to the authentication name, resolves roles with api:security.token.RolesFinder[], and copies the OpenID Connect profile claims exposed by api:security.token.ProfileClaims[] into the authentication attributes.
