@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AbstractAuthenticationMapper;
 import io.micronaut.security.authentication.Authentication;
@@ -24,6 +23,7 @@ import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
+import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -32,33 +32,25 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Internal
 @Singleton
 class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
     private static final Logger LOG = LoggerFactory.getLogger(NimbusAuthenticationMapper.class);
-
-    NimbusAuthenticationMapper(RolesFinder rolesFinder) {
+    private final JsonWebTokenParser<JWT> jwtJsonWebTokenParser;
+    NimbusAuthenticationMapper(RolesFinder rolesFinder,
+                               JsonWebTokenParser<JWT> jwtJsonWebTokenParser) {
         super(rolesFinder);
+        this.jwtJsonWebTokenParser = jwtJsonWebTokenParser;
     }
 
     @Override
     public @Nullable Authentication of(@NonNull String token) {
-        // A JWT must have at least two dots (JWS) or four dots (JWE)
-        if (!(token.contains(".") && token.indexOf('.', token.indexOf('.') + 1) != -1)) {
+        Optional<Claims> claims = jwtJsonWebTokenParser.parseClaims(token);
+        if (claims.isEmpty()) {
             return null;
         }
-        try {
-            JWT jwt = JWTParser.parse(token);
-            Claims claims = jwt.getJWTClaimsSet() == null
-                ? new MapClaims(Collections.emptyMap())
-                : new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
-            return of(claims);
-        } catch (ParseException e) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Failed to parse JWT: {}", e.getMessage());
-            }
-            return null;
-        }
+        return of(claims.get());
     }
 }
