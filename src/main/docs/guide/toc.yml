@@ -62,6 +62,7 @@ authenticationStrategies:
       bearerToken: Bearer Token Reader
       cookieToken: Cookie Token Reader
     jwtParser: JWT Parser
+    authenticationMapper: Authentication Mapper
     localeClaimHttpLocaleResolver: Locale Claim HTTP Locale Resolver
     jwtValidation:
       title: JWT Signature Validation
