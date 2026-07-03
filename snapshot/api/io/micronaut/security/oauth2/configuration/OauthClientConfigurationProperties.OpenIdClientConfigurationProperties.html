@@ -60,6 +60,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#isFetchConfiguration()" tabindex="0">isFetchConfiguration()</a></li>
+<li><a href="#setFetchConfiguration(boolean)" tabindex="0">setFetchConfiguration(boolean)</a></li>
 <li><a href="#getName()" tabindex="0">getName()</a></li>
 <li><a href="#isProtectedResourceMetadata()" tabindex="0">isProtectedResourceMetadata()</a></li>
 <li><a href="#setProtectedResourceMetadata(boolean)" tabindex="0">setProtectedResourceMetadata(boolean)</a></li>
@@ -202,22 +204,30 @@ implements <a href="OpenIdClientConfiguration.html" title="interface in io.micro
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUserInfo()" class="member-name-link">getUserInfo</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isFetchConfiguration()" class="member-name-link">isFetchConfiguration</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthorization(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties)" class="member-name-link">setAuthorization</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a>&nbsp;authorization)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthorization(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties)" class="member-name-link">setAuthorization</a><wbr>(<a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a>&nbsp;authorization)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the authorization endpoint configuration.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setConfigurationPath(java.lang.String)" class="member-name-link">setConfigurationPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configurationPath)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setConfigurationPath(java.lang.String)" class="member-name-link">setConfigurationPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configurationPath)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The configuration path to discover openid configuration.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndSession(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties)" class="member-name-link">setEndSession</a><wbr>(@NonNull <a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a>&nbsp;endSession)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEndSession(io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties)" class="member-name-link">setEndSession</a><wbr>(@NonNull <a href="OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a>&nbsp;endSession)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the end session endpoint configuration.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFetchConfiguration(boolean)" class="member-name-link">setFetchConfiguration</a><wbr>(boolean&nbsp;fetchConfiguration)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the OpenID configuration should be fetched from the discovery endpoint derived from <a href="#getIssuer()"><code>getIssuer()</code></a> and <a href="#getConfigurationPath()"><code>getConfigurationPath()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIssuer(java.net.URL)" class="member-name-link">setIssuer</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;issuer)</code></div>
@@ -267,6 +277,33 @@ Open ID provider asserts as its issuer identifier.</div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="isFetchConfiguration()">
+<h3>isFetchConfiguration</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFetchConfiguration</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="OpenIdClientConfiguration.html#isFetchConfiguration()">isFetchConfiguration</a></code>&nbsp;in interface&nbsp;<code><a href="OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Whether the OpenID configuration should be fetched from the discovery endpoint derived from <a href="OpenIdClientConfiguration.html#getIssuer()"><code>OpenIdClientConfiguration.getIssuer()</code></a> and <a href="OpenIdClientConfiguration.html#getConfigurationPath()"><code>OpenIdClientConfiguration.getConfigurationPath()</code></a>.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setFetchConfiguration(boolean)">
+<h3>setFetchConfiguration</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFetchConfiguration</span><wbr><span class="parameters">(boolean&nbsp;fetchConfiguration)</span></div>
+<div class="block">Whether the OpenID configuration should be fetched from the discovery endpoint derived from <a href="#getIssuer()"><code>getIssuer()</code></a> and <a href="#getConfigurationPath()"><code>getConfigurationPath()</code></a>. Default value: true.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fetchConfiguration</code> - Whether the OpenID configuration should be fetched</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getName()">
 <h3>getName</h3>

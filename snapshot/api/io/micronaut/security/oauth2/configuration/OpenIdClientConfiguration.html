@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#isFetchConfiguration()" tabindex="0">isFetchConfiguration()</a></li>
 <li><a href="#getIssuer()" tabindex="0">getIssuer()</a></li>
 <li><a href="#getConfigurationPath()" tabindex="0">getConfigurationPath()</a></li>
 <li><a href="#getJwksUri()" tabindex="0">getJwksUri()</a></li>
@@ -156,8 +157,11 @@ extends io.micronaut.core.naming.Named</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getUserInfo()" class="member-name-link">getUserInfo</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isFetchConfiguration()" class="member-name-link">isFetchConfiguration</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isProtectedResourceMetadata()" class="member-name-link">isProtectedResourceMetadata</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -191,6 +195,20 @@ extends io.micronaut.core.naming.Named</span></div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="isFetchConfiguration()">
+<h3>isFetchConfiguration</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFetchConfiguration</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Whether the OpenID configuration should be fetched from the discovery endpoint derived from <a href="#getIssuer()"><code>getIssuer()</code></a> and <a href="#getConfigurationPath()"><code>getConfigurationPath()</code></a>.</dd>
+<dt>Since:</dt>
+<dd>5.3.0</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getIssuer()">
 <h3>getIssuer</h3>

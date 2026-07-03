@@ -9667,6 +9667,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.fetch-configuration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}. Default value: true.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.protected-resource-metadata</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.</p></td>
