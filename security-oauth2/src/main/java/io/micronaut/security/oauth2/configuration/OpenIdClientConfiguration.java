@@ -34,6 +34,14 @@ public interface OpenIdClientConfiguration extends Named {
     Boolean DEFAULT_PROTECTED_RESOURCE_METADATA = true;
 
     /**
+     * @since 5.3.0
+     * @return Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}.
+     */
+    default boolean isFetchConfiguration() {
+        return true;
+    }
+
+    /**
      * @return URL that the OpenID provider asserts as its issuer identifier.
      */
     Optional<URL> getIssuer();
@@ -42,7 +50,7 @@ public interface OpenIdClientConfiguration extends Named {
      * @return The OpenID configuration path
      */
     String getConfigurationPath();
-    
+
     /**
      * @return The JWKS configuration
      */

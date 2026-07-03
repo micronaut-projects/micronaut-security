@@ -518,8 +518,10 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     public static class OpenIdClientConfigurationProperties implements OpenIdClientConfiguration {
 
         private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
+        private static final boolean DEFAULT_FETCH_CONFIGURATION = true;
         private final String name;
 
+        private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
         private URL issuer;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
@@ -535,6 +537,20 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         OpenIdClientConfigurationProperties(@Parameter String name) {
             this.name = name;
+        }
+
+        @Override
+        public boolean isFetchConfiguration() {
+            return fetchConfiguration;
+        }
+
+        /**
+         * Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}. Default value: true.
+         *
+         * @param fetchConfiguration Whether the OpenID configuration should be fetched
+         */
+        public void setFetchConfiguration(boolean fetchConfiguration) {
+            this.fetchConfiguration = fetchConfiguration;
         }
 
         @NonNull
