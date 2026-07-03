@@ -63,6 +63,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">AbstractAccessTokenCookieConfigurationProperties()</a> - Constructor for class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/AbstractAuthenticationMapper.html" class="type-name-link" title="class in io.micronaut.security.authentication">AbstractAuthenticationMapper</a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
+<dd>
+<div class="block">Base <a href="io/micronaut/security/authentication/AuthenticationMapper.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationMapper</code></a> implementation that maps token claims to an
+<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
+</dd>
+<dt><a href="io/micronaut/security/authentication/AbstractAuthenticationMapper.html#%3Cinit%3E(io.micronaut.security.token.RolesFinder)" class="member-name-link">AbstractAuthenticationMapper(RolesFinder)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AbstractAuthenticationMapper.html" title="class in io.micronaut.security.authentication">AbstractAuthenticationMapper</a></dt>
+<dd>
+<div class="block">Creates an authentication mapper.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AbstractAuthorizationResponse.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AbstractAuthorizationResponse</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/response/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.response</a></dt>
 <dd>
 <div class="block">A base class for authorization responses to extend from.</div>
@@ -429,6 +438,10 @@ Micronaut Security authentication.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html#%3Cinit%3E(com.nimbusds.jwt.JWTClaimsSet)" class="member-name-link">AuthenticationJWTClaimsSetAdapter(JWTClaimsSet)</a> - Constructor for class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator">AuthenticationJWTClaimsSetAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/AuthenticationMapper.html" class="type-name-link" title="interface in io.micronaut.security.authentication">AuthenticationMapper</a> - Interface in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
+<dd>
+<div class="block">Maps a token value to an <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html#authenticationMethod(java.lang.String)" class="member-name-link">authenticationMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfigurationBuilder.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfigurationBuilder</a></dt>
 <dd>
 <div class="block">Sets the endpoint authentication method.</div>
@@ -2048,7 +2061,7 @@ ldap authentication result.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/DefaultInterceptUrlPatternModifier.html" class="type-name-link" title="class in io.micronaut.security.config">DefaultInterceptUrlPatternModifier</a> - Class in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
 <dd>
-<div class="block">Decorates a <span class="invalid-tag">invalid input: '{@link /*missing*/}'</span>InterceptUrlPattern}.</div>
+<div class="block">Decorates a <a href="io/micronaut/security/config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config"><code>InterceptUrlMapPattern</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/config/DefaultInterceptUrlPatternModifier.html#%3Cinit%3E(io.micronaut.security.config.SecurityConfiguration,io.micronaut.http.context.ServerContextPathProvider)" class="member-name-link">DefaultInterceptUrlPatternModifier(SecurityConfiguration, ServerContextPathProvider)</a> - Constructor for class io.micronaut.security.config.<a href="io/micronaut/security/config/DefaultInterceptUrlPatternModifier.html" title="class in io.micronaut.security.config">DefaultInterceptUrlPatternModifier</a></dt>
 <dd>&nbsp;</dd>
@@ -6390,6 +6403,14 @@ request to an OAuth 2.0 provider.</div>
 <dd>
 <div class="block">Instantiate a Client Credentials Client to be used in a scenario where you don't have/want or need a Micronaut Bean Context.</div>
 </dd>
+<dt><a href="io/micronaut/security/authentication/AbstractAuthenticationMapper.html#of(io.micronaut.security.token.Claims)" class="member-name-link">of(Claims)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AbstractAuthenticationMapper.html" title="class in io.micronaut.security.authentication">AbstractAuthenticationMapper</a></dt>
+<dd>
+<div class="block">Creates an authentication from claims when a subject claim is present.</div>
+</dd>
+<dt><a href="io/micronaut/security/authentication/AuthenticationMapper.html#of(java.lang.String)" class="member-name-link">of(String)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationMapper.html" title="interface in io.micronaut.security.authentication">AuthenticationMapper</a></dt>
+<dd>
+<div class="block">Attempts to create an <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from the token.</div>
+</dd>
 <dt><a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html#of(java.util.List,java.util.List)" class="member-name-link">of(List, List)</a> - Static method in interface io.micronaut.security.csrf.resolver.<a href="io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html" title="interface in io.micronaut.security.csrf.resolver">FutureCsrfTokenResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#OKTA" class="member-name-link">OKTA</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
@@ -9326,6 +9347,8 @@ of propagation between services.</div>
 <dt><a href="io/micronaut/security/oauth2/grants/ClientCredentialsGrant.html#toMap()" class="member-name-link">toMap()</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/ClientCredentialsGrant.html" title="class in io.micronaut.security.oauth2.grants">ClientCredentialsGrant</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#toMap()" class="member-name-link">toMap()</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/Claims.html#toMap()" class="member-name-link">toMap()</a> - Method in interface io.micronaut.security.token.<a href="io/micronaut/security/token/Claims.html" title="interface in io.micronaut.security.token">Claims</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#toSecondsSinceEpoch(java.util.Date)" class="member-name-link">toSecondsSinceEpoch(Date)</a> - Static method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
