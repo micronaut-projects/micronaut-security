@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.annotation.Internal;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.client.HttpClient;
@@ -46,6 +47,10 @@ public class OpenIdProviderMetadataFetcherFactory {
     @NonNull
     public OpenIdProviderMetadataFetcher createOpenIdProviderMetadataFetcher(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                                                              @Client HttpClient issuerClient) {
+        if (!openIdClientConfiguration.isFetchConfiguration()) {
+            throw new DisabledBeanException("OpenID provider metadata fetching is disabled for provider [" +
+                openIdClientConfiguration.getName() + "]");
+        }
         return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient);
     }
 }

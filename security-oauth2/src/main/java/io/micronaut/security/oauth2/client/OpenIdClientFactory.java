@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClientRegistry;
@@ -78,8 +79,10 @@ class OpenIdClientFactory {
     @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                      @Parameter OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher) {
-        DefaultOpenIdProviderMetadata providerMetadata = openIdProviderMetadataFetcher.fetch();
+                                                      @Parameter @Nullable OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher) {
+        DefaultOpenIdProviderMetadata providerMetadata = openIdProviderMetadataFetcher == null
+            ? new DefaultOpenIdProviderMetadata(openIdClientConfiguration.getName())
+            : openIdProviderMetadataFetcher.fetch();
         overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
         return providerMetadata;
     }
@@ -125,6 +128,10 @@ class OpenIdClientFactory {
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
                                     OpenIdClientConfiguration openIdClientConfiguration,
                                     OauthClientConfiguration oauthClientConfiguration) {
+        if (StringUtils.isEmpty(configuration.getIssuer())) {
+            openIdClientConfiguration.getIssuer().ifPresent(url -> configuration.setIssuer(url.toString()));
+        }
+
         openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
 
         oauthClientConfiguration.getIntrospection().ifPresent(introspection -> {
