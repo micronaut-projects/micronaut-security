@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
     private final JsonWebTokenParser<JWT> jwtJsonWebTokenParser;
-    
+
     NimbusAuthenticationMapper(RolesFinder rolesFinder,
                                JsonWebTokenParser<JWT> jwtJsonWebTokenParser) {
         super(rolesFinder);
