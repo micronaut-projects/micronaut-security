@@ -24,14 +24,12 @@ import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Internal
 @Singleton
 class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
-    private static final Logger LOG = LoggerFactory.getLogger(NimbusAuthenticationMapper.class);
     private final JsonWebTokenParser<JWT> jwtJsonWebTokenParser;
+    
     NimbusAuthenticationMapper(RolesFinder rolesFinder,
                                JsonWebTokenParser<JWT> jwtJsonWebTokenParser) {
         super(rolesFinder);
