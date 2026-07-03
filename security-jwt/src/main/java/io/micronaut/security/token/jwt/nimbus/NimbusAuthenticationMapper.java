@@ -44,6 +44,10 @@ class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
 
     @Override
     public @Nullable Authentication of(@NonNull String token) {
+        // A JWT must have at least two dots (JWS) or four dots (JWE)
+        if (!(token.contains(".") && token.indexOf('.', token.indexOf('.') + 1) != -1)) {
+            return null;
+        }
         try {
             JWT jwt = JWTParser.parse(token);
             Claims claims = jwt.getJWTClaimsSet() == null
@@ -51,8 +55,8 @@ class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
                 : new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
             return of(claims);
         } catch (ParseException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unable to parse JWT token", e);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Failed to parse JWT: {}", e.getMessage());
             }
             return null;
         }
