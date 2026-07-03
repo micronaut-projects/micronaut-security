@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * Maps a token value to an {@link Authentication}.
  *
  * @author Sergio del Amo
- * @since 5.2.1
+ * @since 5.3.0
  */
 public interface AuthenticationMapper extends Ordered {
 
