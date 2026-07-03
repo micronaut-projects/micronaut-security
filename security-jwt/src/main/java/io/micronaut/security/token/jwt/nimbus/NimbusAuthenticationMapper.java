@@ -19,20 +19,13 @@ import com.nimbusds.jwt.JWT;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AbstractAuthenticationMapper;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.Claims;
-import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.ParseException;
-import java.util.Collections;
-import java.util.Optional;
 
 @Internal
 @Singleton
@@ -47,10 +40,8 @@ class NimbusAuthenticationMapper extends AbstractAuthenticationMapper {
 
     @Override
     public @Nullable Authentication of(@NonNull String token) {
-        Optional<Claims> claims = jwtJsonWebTokenParser.parseClaims(token);
-        if (claims.isEmpty()) {
-            return null;
-        }
-        return of(claims.get());
+        return jwtJsonWebTokenParser.parseClaims(token)
+            .map(this::of)
+            .orElse(null);
     }
 }
