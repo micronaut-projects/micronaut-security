@@ -1,5 +1,7 @@
 api:io.micronaut.security.token.cookie.CookieTokenReader[] attempts to read token from a request cookie.
 
+Set `micronaut.security.token.cookie.enabled=true` to enable cookie token reading without enabling the Cookie Authentication login and logout handlers.
+
 The following configuration properties are available to customize how the token will be read from a cookie:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.cookie.TokenCookieConfigurationProperties.adoc[]
