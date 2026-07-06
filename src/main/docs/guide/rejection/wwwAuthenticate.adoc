@@ -6,4 +6,5 @@ If any bean of type api:security.authentication.WwwAuthenticateChallengeProvider
 
 If you have <<basicAuth, basic auth> enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting `micronaut.security.basic-auth.www-authenticate` to `false`.
 
-If you have <<protectedResourceMetadata, Resource Metadata> enabled, an entry as defined in the https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response[WWW-Authenticate Response] section of RFC9728 is added
+If you have <<protectedResourceMetadata, Resource Metadata> enabled, an entry as defined in the https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response[WWW-Authenticate Response] section of RFC9728 is added.
+When the api:security.oauth2.metadata.ProtectedResourceMetadataProvider[] returns non-empty `scopes_supported` values for the current request, Micronaut Security also includes those values in the Bearer challenge `scope` parameter.
