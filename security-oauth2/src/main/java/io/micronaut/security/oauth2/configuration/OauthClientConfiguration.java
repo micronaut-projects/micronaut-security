@@ -27,6 +27,8 @@ import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -117,8 +119,27 @@ public interface OauthClientConfiguration extends Toggleable {
      * @throws ConfigurationException if token endpoint url is not set in configuration
      */
     default SecureEndpoint getTokenEndpoint() throws ConfigurationException {
-        return getToken().map(secureEndpointConfiguration -> new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD))
+        return getToken().map(secureEndpointConfiguration -> {
+            secureEndpointConfiguration.getUrl().ifPresent(this::validateTokenEndpointUrl);
+            return new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD);
+        })
                 .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
+    }
+
+    private void validateTokenEndpointUrl(String url) {
+        try {
+            URI uri = new URI(url);
+            String scheme = uri.getScheme();
+            if (scheme == null || !(scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https")) || uri.getHost() == null) {
+                throw invalidTokenEndpointUrl(url);
+            }
+        } catch (URISyntaxException e) {
+            throw invalidTokenEndpointUrl(url);
+        }
+    }
+
+    private ConfigurationException invalidTokenEndpointUrl(String url) {
+        return new ConfigurationException("Oauth client " + getName() + " has an invalid token endpoint URL configured for property [micronaut.security.oauth2.clients." + getName() + ".token.url]. The value must be an absolute http or https URL. Configured value: [" + url + "]");
     }
 
     /**
