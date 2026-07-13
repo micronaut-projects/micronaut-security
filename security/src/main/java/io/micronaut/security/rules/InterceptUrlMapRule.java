@@ -74,7 +74,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
-        final String path = trimTrailingSlashExceptRoot(request.getUri().getPath());
+        final String path = StringUtils.trimTrailingSlashExceptRoot(request.getUri().getPath());
         final HttpMethod httpMethod = request.getMethod();
 
         Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() != null && httpMethod.equals(p.getHttpMethod());
@@ -107,25 +107,5 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
         return Mono.from(matchedPattern
                 .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
                 .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
-    }
-
-    @Nullable
-    private static String trimTrailingCharacter(@Nullable String str, char c) {
-        if (StringUtils.isEmpty(str)) {
-            return str;
-        }
-        int length = str.length();
-        if (str.charAt(length - 1) == c) {
-            return str.substring(0, length - 1);
-        }
-        return str;
-    }
-
-    @Nullable
-    private static String trimTrailingSlashExceptRoot(@Nullable String str) {
-        if (StringUtils.isEmpty(str)) {
-            return str;
-        }
-        return str.length() > 1 ? trimTrailingCharacter(str, '/') : str;
     }
 }
