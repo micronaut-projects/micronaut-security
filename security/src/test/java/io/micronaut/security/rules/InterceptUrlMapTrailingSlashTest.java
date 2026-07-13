@@ -101,14 +101,14 @@ class InterceptUrlMapTrailingSlashTest {
     }
 
     @Requires(property = "spec.name", value = "InterceptUrlMapTrailingSlashTest")
-        @Controller("/admin")
-        static class AdminController {
-            @Produces(MediaType.TEXT_PLAIN)
-            @Get("/secret")
-            String secret() {
-                return "secret";
-            }
+    @Controller("/admin")
+    static class AdminController {
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/secret")
+        String secret() {
+            return "secret";
         }
+    }
 
     @Requires(property = "spec.name", value = "InterceptUrlMapTrailingSlashTest")
     @Singleton
