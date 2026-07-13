@@ -81,6 +81,7 @@ class InterceptUrlMapTrailingSlashTest {
 
     private static Stream<Arguments> requestPaths() {
         return Stream.of(
+            Arguments.of("/", HttpStatus.NOT_FOUND),
             Arguments.of("/admin/secret", HttpStatus.UNAUTHORIZED),
             Arguments.of("/admin/secret/", HttpStatus.UNAUTHORIZED)
         );
