@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
@@ -73,7 +74,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
-        final String path = request.getUri().getPath();
+        final String path = StringUtils.trimTrailingSlashExceptRoot(request.getUri().getPath());
         final HttpMethod httpMethod = request.getMethod();
 
         Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() != null && httpMethod.equals(p.getHttpMethod());
