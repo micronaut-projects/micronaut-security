@@ -56,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Property(name = "micronaut.security.intercept-url-map[1].access[0]", value = "isAnonymous()")
 @MicronautTest
 class InterceptUrlMapTrailingSlashTest {
+    private static final String TEST_TOKEN = "XXX";
 
     @Inject
     @Client("/")
@@ -75,7 +76,7 @@ class InterceptUrlMapTrailingSlashTest {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpRequest<?> request = HttpRequest.GET(path)
             .accept(MediaType.TEXT_PLAIN)
-            .bearerAuth("XXX");
+            .bearerAuth(TEST_TOKEN);
         assertDoesNotThrow(() -> client.exchange(request));
     }
 
@@ -115,7 +116,7 @@ class InterceptUrlMapTrailingSlashTest {
         @Override
         public @NonNull Publisher<Authentication> validateToken(@NonNull String token,
                                                                 @Nullable HttpRequest<?> request) {
-            if (token.equals("XXX")) {
+            if (token.equals(TEST_TOKEN)) {
                 return Publishers.just(Authentication.build("john"));
             }
             return Publishers.empty();
