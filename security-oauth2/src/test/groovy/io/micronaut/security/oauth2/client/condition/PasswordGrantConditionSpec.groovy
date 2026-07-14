@@ -74,7 +74,7 @@ class PasswordGrantConditionSpec extends Specification {
 
         where:
         properties | description
-        ['micronaut.security.oauth2.clients.foo.openid.token.url': 'https:/foo.com/auth/token'] | "PasswordGrantCondition evaluates to true for openId grant-type=password configuration"
+        ['micronaut.security.oauth2.clients.foo.openid.token.url': 'https://foo.com/auth/token'] | "PasswordGrantCondition evaluates to true for openId grant-type=password configuration"
         ['micronaut.security.oauth2.clients.foo.token.url': 'https://foo.com/auth/token', 'spec.name': 'FooNamedPasswordAuthenticationProviderSpec'] | "PasswordGrantCondition to true for oauth2 grant-type=password configuration"
     }
 
