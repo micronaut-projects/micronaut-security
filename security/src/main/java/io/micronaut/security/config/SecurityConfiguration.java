@@ -55,6 +55,14 @@ public interface SecurityConfiguration extends Toggleable, AuthenticationModeCon
     }
 
     /**
+     * @since 5.1.0
+     * @return Whether role comparison is case-sensitive.
+     */
+    default boolean isRolesCaseSensitive() {
+        return true;
+    }
+
+    /**
      * @since 3.7.2
      * @return Whether the intercept URL patterns should be prepended with context path if defined.
      */
