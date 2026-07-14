@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration.HTTP_OR_HTTPS_URL_REGEX;
+import static io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration.HTTP_OR_HTTPS_URL_REGEX;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
