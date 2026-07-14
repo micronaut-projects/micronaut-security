@@ -99,10 +99,14 @@ class OauthClientConfigurationTest {
     }
 
     private void assertInvalidOauthClientProperty(String property, String value) {
-        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> ApplicationContext.run(Map.of(
-                "micronaut.security.oauth2.clients.invalid." + property, value,
-                "micronaut.security.oauth2.clients.invalid.client-id", "xxx",
-                "micronaut.security.oauth2.clients.invalid.client-secret", "yyy")));
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> {
+            try (ApplicationContext context = ApplicationContext.run(Map.of(
+                    "micronaut.security.oauth2.clients.invalid." + property, value,
+                    "micronaut.security.oauth2.clients.invalid.client-id", "xxx",
+                    "micronaut.security.oauth2.clients.invalid.client-secret", "yyy"))) {
+                context.getBean(OauthClientConfiguration.class);
+            }
+        });
 
         assertTrue(exception.getMessage().contains("must be a valid URL"));
     }
