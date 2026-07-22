@@ -52,7 +52,18 @@ The persistence model intentionally has no password column. A SCIM password is a
 
 == JDBC repositories
 
-The `micronaut-security-scim-data-jdbc` module provides repositories compiled with the Micronaut Data ANSI SQL dialect:
+The `micronaut-security-scim-data-jdbc` module provides shared repository interfaces plus concrete repositories compiled for each Micronaut Data JDBC dialect. Select the dialect that matches the configured data source:
+
+[configuration]
+----
+micronaut:
+  security:
+    scim:
+      data:
+        dialect: H2
+----
+
+Supported values are `ANSI`, `H2`, `MYSQL`, `ORACLE`, `POSTGRES`, `SQL_SERVER`, and `SQLITE`. The module enables only the repository package for the selected value. Configure `datasources.<name>.dialect` with the same dialect so that the data source and compiled queries agree. If `micronaut.security.scim.data.dialect` is absent, none of the concrete SCIM JDBC repositories is registered.
 
 [cols="2,3"]
 |===
@@ -80,7 +91,9 @@ The `micronaut-security-scim-data-jdbc` module provides repositories compiled wi
 |Lookup and aggregate deletion by resource type, resource identifier, and schema URI
 |===
 
-The repositories intentionally expose blocking Micronaut Data APIs. An implementation of the reactive SCIM HTTP service contracts must schedule repository work on an appropriate blocking executor and wrap multi-table writes in a transaction. Applications requiring vendor-specific SQL can define additional repositories with their database dialect while reusing the same entities.
+The shared interfaces above remain the injection API regardless of the selected dialect. Their concrete implementations live in the `ansi`, `h2`, `mysql`, `oracle`, `postgres`, `sqlserver`, and `sqlite` subpackages and extend the corresponding shared interface.
+
+The repositories intentionally expose blocking Micronaut Data APIs. An implementation of the reactive SCIM HTTP service contracts must schedule repository work on an appropriate blocking executor and wrap multi-table writes in a transaction. Applications requiring additional vendor-specific SQL can extend the shared interfaces or define repositories that reuse the same entities.
 
 == Queries and filters
 

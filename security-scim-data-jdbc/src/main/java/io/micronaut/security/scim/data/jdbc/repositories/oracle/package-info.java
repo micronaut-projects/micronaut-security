@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.scim.data.jdbc.configuration;
+/**
+ * Oracle Micronaut Data JDBC repositories for SCIM persistence entities.
+ *
+ * @since 5.4.0
+ */
+@NullMarked
+package io.micronaut.security.scim.data.jdbc.repositories.oracle;
 
-import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.data.model.query.builder.sql.Dialect;
-import org.jspecify.annotations.Nullable;
-
-@ConfigurationProperties("micronaut.security.scim.data")
-class ScimDataConfigurationProperties implements ScimDataConfiguration {
-    @Nullable
-    private Dialect dialect;
-
-    public @Nullable Dialect getDialect() {
-        return dialect;
-    }
-
-    public void setDialect(@Nullable Dialect dialect) {
-        this.dialect = dialect;
-    }
-}
+import org.jspecify.annotations.NullMarked;

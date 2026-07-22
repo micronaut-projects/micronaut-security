@@ -18,4 +18,4 @@ Applications using Micronaut Data JDBC can add the repository module instead. It
 
 dependency:micronaut-security-scim-data-jdbc[groupId=io.micronaut.security]
 
-The JDBC module supplies ANSI-dialect repositories, but deliberately does not supply database migrations or api:security.scim.server.service.ScimResourceService[] implementations. The application remains responsible for its schema-management tool, transaction boundaries, tenant model, database-specific column definitions, and conversion between the persistence entities and the RFC 7643 core types.
+The JDBC module supplies conditional repositories for every Micronaut Data JDBC dialect. Set `micronaut.security.scim.data.dialect` to the dialect used by the application's data source; no repository implementation is enabled when the property is absent. The module deliberately does not supply database migrations or api:security.scim.server.service.ScimResourceService[] implementations. The application remains responsible for its schema-management tool, transaction boundaries, tenant model, database-specific column definitions, and conversion between the persistence entities and the RFC 7643 core types.

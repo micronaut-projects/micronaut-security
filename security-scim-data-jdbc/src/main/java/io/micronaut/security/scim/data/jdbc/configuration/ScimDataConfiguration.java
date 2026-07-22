@@ -15,11 +15,24 @@
  */
 package io.micronaut.security.scim.data.jdbc.configuration;
 
+import io.micronaut.core.annotation.Experimental;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * Configuration for the SCIM Micronaut Data JDBC repositories.
+ *
+ * @since 5.4.0
+ */
+@Experimental
 public interface ScimDataConfiguration {
 
+    /**
+     * The SQL dialect used to select the matching JDBC repository implementations.
+     *
+     * @return The configured dialect, or {@code null} when the repositories are disabled
+     * @since 5.4.0
+     */
     @Nullable
     Dialect getDialect();
 }

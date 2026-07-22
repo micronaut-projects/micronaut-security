@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.scim.data.jdbc.repositories.h2;
+package io.micronaut.security.scim.data.jdbc.repositories.postgres;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
-import io.micronaut.security.scim.data.jdbc.repositories.ScimEnterpriseUserJdbcRepository;
+import io.micronaut.security.scim.data.jdbc.repositories.ScimUserAddressJdbcRepository;
 
 /**
- * H2 JDBC repository for RFC 7643 Enterprise User extension rows.
+ * PostgreSQL JDBC repository for SCIM User address rows.
  *
  * @since 5.4.0
  */
-@Requires(property = "micronaut.security.scim.data.dialect", value = "H2")
-@JdbcRepository(dialect = Dialect.H2)
+@Requires(property = "micronaut.security.scim.data.dialect", value = "POSTGRES")
+@JdbcRepository(dialect = Dialect.POSTGRES)
 @Experimental
-public interface H2ScimEnterpriseUserJdbcRepository extends ScimEnterpriseUserJdbcRepository {
+public interface PostgresScimUserAddressJdbcRepository extends ScimUserAddressJdbcRepository {
 }

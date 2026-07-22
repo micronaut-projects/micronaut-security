@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.scim.data.jdbc.repositories.h2;
+package io.micronaut.security.scim.data.jdbc.repositories.sqlite;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
-import io.micronaut.security.scim.data.jdbc.repositories.ScimEnterpriseUserJdbcRepository;
+import io.micronaut.security.scim.data.jdbc.repositories.ScimUserAttributeJdbcRepository;
 
 /**
- * H2 JDBC repository for RFC 7643 Enterprise User extension rows.
+ * SQLite JDBC repository for SCIM multi-valued User attribute rows.
  *
  * @since 5.4.0
  */
-@Requires(property = "micronaut.security.scim.data.dialect", value = "H2")
-@JdbcRepository(dialect = Dialect.H2)
+@Requires(property = "micronaut.security.scim.data.dialect", value = "SQLITE")
+@JdbcRepository(dialect = Dialect.SQLITE)
 @Experimental
-public interface H2ScimEnterpriseUserJdbcRepository extends ScimEnterpriseUserJdbcRepository {
+public interface SQLiteScimUserAttributeJdbcRepository extends ScimUserAttributeJdbcRepository {
 }
