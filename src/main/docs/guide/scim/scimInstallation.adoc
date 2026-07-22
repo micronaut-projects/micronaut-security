@@ -1,0 +1,5 @@
+To use the RFC 7643 Java model, add the following dependency:
+
+dependency:micronaut-security-scim-core[groupId=io.micronaut.security]
+
+The types are annotated for https://micronaut-projects.github.io/micronaut-serialization/latest/guide/[Micronaut Serialization] and Jakarta Validation. A Micronaut application that reads or writes JSON must also have a Micronaut Serialization implementation available, as is normally the case for an HTTP application created with Micronaut Launch.
