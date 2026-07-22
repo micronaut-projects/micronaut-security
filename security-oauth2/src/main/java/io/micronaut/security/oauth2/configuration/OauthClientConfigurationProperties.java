@@ -30,6 +30,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEn
 import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
+import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
@@ -53,6 +54,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration.HTTP_OR_HTTPS_URL_REGEX;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
@@ -83,11 +86,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private List<String> scopes;
     private boolean enabled = DEFAULT_ENABLED;
     private GrantType grantType = GrantType.AUTHORIZATION_CODE;
-    private AuthorizationEndpointConfigurationProperties authorization;
-    private TokenEndpointConfigurationProperties token;
-    private IntrospectionEndpointConfigurationProperties introspection;
-    private RevocationEndpointConfigurationProperties revocation;
-    private OpenIdClientConfigurationProperties openid;
+    private @Valid AuthorizationEndpointConfigurationProperties authorization;
+    private @Valid TokenEndpointConfigurationProperties token;
+    private @Valid IntrospectionEndpointConfigurationProperties introspection;
+    private @Valid RevocationEndpointConfigurationProperties revocation;
+    private @Valid OpenIdClientConfigurationProperties openid;
     private ClientCredentialsConfigurationProperties clientCredentials;
     private AuthorizationServer authorizationServer;
     private boolean proxyWellKnownOauthAuthorizationServer;
@@ -524,12 +527,14 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
         private URL issuer;
         private String configurationPath = DEFAULT_CONFIG_PATH;
+
+        @io.micronaut.validation.annotation.URL(regexp = HTTP_OR_HTTPS_URL_REGEX)
         private String jwksUri;
-        private RegistrationEndpointConfigurationProperties registration;
-        private UserInfoEndpointConfigurationProperties userInfo;
-        private AuthorizationEndpointConfigurationProperties authorization;
-        private TokenEndpointConfigurationProperties token;
-        private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+        private @Valid RegistrationEndpointConfigurationProperties registration;
+        private @Valid UserInfoEndpointConfigurationProperties userInfo;
+        private @Valid AuthorizationEndpointConfigurationProperties authorization;
+        private @Valid TokenEndpointConfigurationProperties token;
+        private @Valid EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
         private boolean protectedResourceMetadata = DEFAULT_PROTECTED_RESOURCE_METADATA;
 
         /**
@@ -603,7 +608,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         @Override
-        public Optional<String> getJwksUri() {
+        public Optional<@io.micronaut.validation.annotation.URL(regexp = HTTP_OR_HTTPS_URL_REGEX) String> getJwksUri() {
             return Optional.ofNullable(jwksUri);
         }
 

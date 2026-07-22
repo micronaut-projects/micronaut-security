@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
+import io.micronaut.validation.annotation.URL;
 
 /**
  * JSON Web Key Set (JWKS) Signature Configuration properties holder.
@@ -53,6 +54,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @NonNull
     private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
 
+    @URL
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
