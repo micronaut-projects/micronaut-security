@@ -79,4 +79,16 @@ class AddressTest {
         assertNotNull(address.primary());
         assertTrue(address.primary());
     }
+
+    @Test
+    void deserializesCaseInsensitiveStringPrimaryValue() throws IOException {
+        Address address = jsonMapper.readValue("""
+            {
+              "type": "work",
+              "primary": "True"
+            }
+            """, Address.class);
+
+        assertEquals(true, address.primary());
+    }
 }

@@ -1,4 +1,4 @@
-api:security.scim.server.service.ScimResourceService[] is the persistence-neutral contract shared by api:security.scim.server.service.ScimUserService[] and api:security.scim.server.service.ScimGroupService[]. Its methods return Reactive Streams `Publisher` values, so an implementation can use blocking persistence scheduled on an appropriate executor, Reactor, Micronaut Data, or another asynchronous data source.
+The `micronaut-security-scim-http-services` module publishes api:security.scim.server.service.ScimResourceService[], the persistence-neutral contract shared by api:security.scim.server.service.ScimUserService[] and api:security.scim.server.service.ScimGroupService[]. Its methods are synchronous. Retrieve, replace, and PATCH operations return `Optional` to represent an absent resource; create and search return their result directly, and delete returns after completion. The HTTP controllers execute these calls on `TaskExecutors.BLOCKING`, so implementations can use blocking persistence APIs such as Micronaut Data JDBC.
 
 The application owns all behavior that depends on its storage and schema policy:
 
@@ -12,7 +12,7 @@ The application owns all behavior that depends on its storage and schema policy:
 * apply every PATCH operation atomically; and
 * map absent resources and storage failures to suitable api:security.scim.server.exception.ScimException[] values.
 
-Create, get, replace, and PATCH return api:security.scim.server.model.ScimResourceResponse[]. This value carries the resource, its permanent location, and an optional entity tag. Get, replace, and PATCH may complete without a value to indicate that the resource does not exist; the HTTP layer converts that result to `404 Not Found`. Delete returns a completion publisher and should fail with api:security.scim.server.exception.ScimException[] when its target does not exist.
+Create, get, replace, and PATCH use api:security.scim.server.model.ScimResourceResponse[]. This value carries the resource, its permanent location, and an optional entity tag. Get, replace, and PATCH return `Optional.empty()` to indicate that the resource does not exist; the HTTP layer converts that result to `404 Not Found`. Delete returns normally after completion and should throw api:security.scim.server.exception.ScimException[] when its target does not exist.
 
 == Data entity model
 
@@ -93,7 +93,7 @@ Supported values are `ANSI`, `H2`, `MYSQL`, `ORACLE`, `POSTGRES`, `SQL_SERVER`, 
 
 The shared interfaces above remain the injection API regardless of the selected dialect. Their concrete implementations live in the `ansi`, `h2`, `mysql`, `oracle`, `postgres`, `sqlserver`, and `sqlite` subpackages and extend the corresponding shared interface.
 
-The repositories intentionally expose blocking Micronaut Data APIs. An implementation of the reactive SCIM HTTP service contracts must schedule repository work on an appropriate blocking executor and wrap multi-table writes in a transaction. Applications requiring additional vendor-specific SQL can extend the shared interfaces or define repositories that reuse the same entities.
+The repositories intentionally expose blocking Micronaut Data APIs, matching the synchronous SCIM HTTP service contracts. The HTTP controllers dispatch service calls to the blocking executor. The separate `micronaut-security-scim-data-jdbc-http-services` adapter joins these layers without making the repository module depend on HTTP APIs. Adding that adapter provides transactional, replaceable User and Group service beans. The default adapter enforces case-insensitive uniqueness for User `userName` and Group `displayName` values, returning `409 Conflict` with the `uniqueness` SCIM error type when a duplicate is created. Applications requiring additional vendor-specific SQL can extend the shared interfaces or define repositories that reuse the same entities.
 
 == Queries and filters
 
@@ -104,5 +104,9 @@ The application returns one api:security.scim.server.model.ScimPage[] containing
 == PATCH and Bulk atomicity
 
 The HTTP layer validates the PatchOp message but deliberately does not mutate resources. The api:security.scim.server.service.ScimResourceService[] implementation must resolve paths according to its supported schemas, apply `add`, `remove`, and `replace` in request order, and roll back the complete request if any operation fails.
+
+The JDBC adapter supports value-selection filters for complex multi-valued attributes, including paths such as `emails[type eq "work"].value` and `members[value eq "id"]`. A filtered operation applies to every matching value. A filtered `replace` that matches no value returns `noTarget`; a filtered `remove` with no match is a successful no-op. When a filtered `add` has no match, the adapter can create a complex value from equality conditions in the filter before applying the requested sub-attribute.
+
+For interoperability with the Microsoft SCIM Validator, pathless object values may use flattened paths such as `name.givenName` and schema-qualified Enterprise User paths. The adapter also accepts a scalar Enterprise User `manager` PATCH value as its `value` sub-attribute and treats an empty scalar manager value as removal. Resource serialization remains the RFC 7643 complex manager representation.
 
 Likewise, api:security.scim.server.service.ScimBulkService[] receives a structurally valid BulkRequest, but the application must enforce the limits advertised by api:security.scim.core.ServiceProviderConfig[], resolve request-local `bulkId` references, detect circular references, observe `failOnErrors`, and construct the per-operation results. This boundary lets the application use the transaction semantics provided by its own persistence technology.

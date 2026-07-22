@@ -35,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 public record MultiValuedAttribute(
     @Nullable String value,
     @Nullable String type,
-    @Nullable Boolean primary,
+    @Serdeable.Deserializable(using = ScimBooleanDeserializer.class) @Nullable Boolean primary,
     @Nullable String display,
     @JsonProperty("$ref") @Nullable String ref
 ) {

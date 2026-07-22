@@ -33,8 +33,6 @@ import io.micronaut.security.scim.server.protocol.ScimSearchRequest;
 import io.micronaut.security.scim.server.protocol.ScimSortOrder;
 import io.micronaut.security.scim.server.service.ScimResourceService;
 import org.jspecify.annotations.Nullable;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
 
 @Internal
 final class ScimResourceEndpoint<T extends ScimResource> {
@@ -46,35 +44,34 @@ final class ScimResourceEndpoint<T extends ScimResource> {
         this.requestParser = requestParser;
     }
 
-    Publisher<MutableHttpResponse<?>> create(
+    MutableHttpResponse<?> create(
         T resource,
         @Nullable String attributes,
         @Nullable String excludedAttributes,
         HttpRequest<?> request
     ) {
         ScimAttributeSelection selection = requestParser.selection(attributes, excludedAttributes);
-        return one(service.create(resource, requestParser.context(request, selection)), "create")
-            .map(result -> resourceResponse(HttpResponse.created(result.resource(), result.location()), result));
+        ScimResourceResponse<T> result = required(
+            service.create(resource, requestParser.context(request, selection)), "create");
+        return resourceResponse(HttpResponse.status(HttpStatus.CREATED).body(result.resource()), result);
     }
 
-    Publisher<MutableHttpResponse<?>> get(
+    MutableHttpResponse<?> get(
         String id,
         @Nullable String attributes,
         @Nullable String excludedAttributes,
         HttpRequest<?> request
     ) {
         ScimAttributeSelection selection = requestParser.selection(attributes, excludedAttributes);
-        return Mono.from(service.get(id, requestParser.context(request, selection)))
-            .switchIfEmpty(Mono.error(notFound(id)))
-            .map(result -> {
-                if (matchesIfNoneMatch(request.getHeaders().get(HttpHeaders.IF_NONE_MATCH), result.version())) {
-                    return HttpResponse.notModified();
-                }
-                return resourceResponse(HttpResponse.ok(result.resource()), result);
-            });
+        ScimResourceResponse<T> result = service.get(id, requestParser.context(request, selection))
+            .orElseThrow(() -> notFound(id));
+        if (matchesIfNoneMatch(request.getHeaders().get(HttpHeaders.IF_NONE_MATCH), result.version())) {
+            return HttpResponse.notModified();
+        }
+        return resourceResponse(HttpResponse.ok(result.resource()), result);
     }
 
-    Publisher<MutableHttpResponse<?>> search(
+    MutableHttpResponse<?> search(
         @Nullable String attributes,
         @Nullable String excludedAttributes,
         @Nullable String filter,
@@ -89,11 +86,11 @@ final class ScimResourceEndpoint<T extends ScimResource> {
         return search(query, request);
     }
 
-    Publisher<MutableHttpResponse<?>> search(ScimSearchRequest searchRequest, HttpRequest<?> request) {
+    MutableHttpResponse<?> search(ScimSearchRequest searchRequest, HttpRequest<?> request) {
         return search(requestParser.query(searchRequest), request);
     }
 
-    Publisher<MutableHttpResponse<?>> replace(
+    MutableHttpResponse<?> replace(
         String id,
         T resource,
         @Nullable String attributes,
@@ -101,12 +98,12 @@ final class ScimResourceEndpoint<T extends ScimResource> {
         HttpRequest<?> request
     ) {
         ScimAttributeSelection selection = requestParser.selection(attributes, excludedAttributes);
-        return Mono.from(service.replace(id, resource, requestParser.context(request, selection)))
-            .switchIfEmpty(Mono.error(notFound(id)))
-            .map(result -> resourceResponse(HttpResponse.ok(result.resource()), result));
+        ScimResourceResponse<T> result = service.replace(id, resource, requestParser.context(request, selection))
+            .orElseThrow(() -> notFound(id));
+        return resourceResponse(HttpResponse.ok(result.resource()), result);
     }
 
-    Publisher<MutableHttpResponse<?>> patch(
+    MutableHttpResponse<?> patch(
         String id,
         ScimPatchRequest patch,
         @Nullable String attributes,
@@ -115,26 +112,28 @@ final class ScimResourceEndpoint<T extends ScimResource> {
     ) {
         requestParser.validate(patch);
         ScimAttributeSelection selection = requestParser.selection(attributes, excludedAttributes);
-        return Mono.from(service.patch(id, patch, requestParser.context(request, selection)))
-            .switchIfEmpty(Mono.error(notFound(id)))
-            .map(result -> resourceResponse(HttpResponse.ok(result.resource()), result));
+        ScimResourceResponse<T> result = service.patch(id, patch, requestParser.context(request, selection))
+            .orElseThrow(() -> notFound(id));
+        return resourceResponse(HttpResponse.ok(result.resource()), result);
     }
 
-    Publisher<MutableHttpResponse<?>> delete(String id, HttpRequest<?> request) {
-        return Mono.from(service.delete(id, requestParser.context(request, ScimAttributeSelection.ALL)))
-            .then(Mono.fromSupplier(HttpResponse::noContent));
+    MutableHttpResponse<?> delete(String id, HttpRequest<?> request) {
+        service.delete(id, requestParser.context(request, ScimAttributeSelection.ALL));
+        return HttpResponse.noContent();
     }
 
-    private Publisher<MutableHttpResponse<?>> search(ScimQuery query, HttpRequest<?> request) {
-        return one(service.search(query, requestParser.context(request, query.attributes())), "search")
-            .map(page -> HttpResponse.ok(ScimListResponse.fromPage(page))
-                .contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE));
+    private MutableHttpResponse<?> search(ScimQuery query, HttpRequest<?> request) {
+        var page = required(service.search(query, requestParser.context(request, query.attributes())), "search");
+        return HttpResponse.ok(ScimListResponse.fromPage(page))
+            .contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE);
     }
 
-    private static <R> Mono<R> one(Publisher<R> publisher, String operation) {
-        return Mono.from(publisher)
-            .switchIfEmpty(Mono.error(new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
-                "The application SCIM " + operation + " service returned no result")));
+    private static <R> R required(@Nullable R result, String operation) {
+        if (result == null) {
+            throw new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "The application SCIM " + operation + " service returned no result");
+        }
+        return result;
     }
 
     private static MutableHttpResponse<?> resourceResponse(
@@ -142,7 +141,8 @@ final class ScimResourceEndpoint<T extends ScimResource> {
         ScimResourceResponse<?> result
     ) {
         response.contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE)
-            .header(HttpHeaders.LOCATION, result.location().toString());
+            .header(HttpHeaders.LOCATION, result.location().toString())
+            .header(HttpHeaders.CONTENT_LOCATION, result.location().toString());
         if (result.version() != null) {
             response.header(HttpHeaders.ETAG, result.version());
         }

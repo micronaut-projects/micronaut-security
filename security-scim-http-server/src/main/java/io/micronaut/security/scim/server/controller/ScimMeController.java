@@ -17,7 +17,6 @@ package io.micronaut.security.scim.server.controller;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -38,8 +37,8 @@ import io.micronaut.security.scim.server.exception.ScimException;
 import io.micronaut.security.scim.server.model.ScimAttributeSelection;
 import io.micronaut.security.scim.server.protocol.ScimMediaType;
 import io.micronaut.security.scim.server.service.ScimMeService;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 
 import java.net.URI;
 
@@ -59,45 +58,45 @@ final class ScimMeController {
     }
 
     @Get("/Me")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> get(HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> get(HttpRequest<?> request) {
         return redirect(request);
     }
 
     @Post("/Me")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> post(HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> post(HttpRequest<?> request) {
         return redirect(request);
     }
 
     @Put("/Me")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> put(HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> put(HttpRequest<?> request) {
         return redirect(request);
     }
 
     @Patch("/Me")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> patch(HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> patch(HttpRequest<?> request) {
         return redirect(request);
     }
 
     @Delete("/Me")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> delete(HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> delete(HttpRequest<?> request) {
         return redirect(request);
     }
 
-    private Publisher<MutableHttpResponse<?>> redirect(HttpRequest<?> request) {
+    private MutableHttpResponse<?> redirect(HttpRequest<?> request) {
         ScimAttributeSelection selection = requestParser.selection(
             request.getParameters().get("attributes"), request.getParameters().get("excludedAttributes"));
-        return Mono.from(service.resolve(requestParser.context(request, selection)))
-            .switchIfEmpty(Mono.error(new ScimException(HttpStatus.NOT_FOUND,
-                "No SCIM resource is associated with the authenticated subject")))
-            .map(ScimMeController::permanentRedirect);
+        URI location = service.resolve(requestParser.context(request, selection))
+            .orElseThrow(() -> new ScimException(HttpStatus.NOT_FOUND,
+                "No SCIM resource is associated with the authenticated subject"));
+        return permanentRedirect(location);
     }
 
     private static MutableHttpResponse<?> permanentRedirect(URI location) {

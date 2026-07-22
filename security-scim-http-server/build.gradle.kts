@@ -4,16 +4,16 @@ plugins {
     id("io.micronaut.build.internal.security-module")
 }
 dependencies {
-    annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
 
-    api(projects.micronautSecurityScimCore)
+    api(projects.micronautSecurityScimHttpServices)
     api(mn.micronaut.http.server)
-    api(mnValidation.validation)
-    implementation(mnReactor.micronaut.reactor)
 
     compileOnly(mnValidation.micronaut.validation)
 
+    testRuntimeOnly(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(projects.micronautSecurityScimDataJdbcHttpServices)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
     testAnnotationProcessor(mn.micronaut.inject.java)

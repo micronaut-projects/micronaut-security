@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017-2026 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.micronaut.security.scim.server.controller;
 
 import io.micronaut.context.annotation.Bean;
@@ -10,6 +25,11 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Patch;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -42,16 +62,18 @@ import io.micronaut.security.scim.server.service.ScimGroupService;
 import io.micronaut.security.scim.server.service.ScimMeService;
 import io.micronaut.security.scim.server.service.ScimRootSearchService;
 import io.micronaut.security.scim.server.service.ScimUserService;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -93,6 +115,8 @@ class ScimHttpServerTest {
 
         assertEquals(HttpStatus.CREATED, created.getStatus());
         assertEquals("https://example.com/scim/v2/Users/2819c223", created.getHeaders().get(HttpHeaders.LOCATION));
+        assertEquals("https://example.com/scim/v2/Users/2819c223",
+            created.getHeaders().get(HttpHeaders.CONTENT_LOCATION));
         assertEquals("W/\"1\"", created.getHeaders().get(HttpHeaders.ETAG));
         assertEquals(SCIM_JSON, created.getContentType().orElseThrow());
         assertEquals("2819c223", created.body().getId());
@@ -101,6 +125,8 @@ class ScimHttpServerTest {
             .accept(MediaType.APPLICATION_JSON_TYPE), User.class);
         assertEquals(HttpStatus.OK, found.getStatus());
         assertEquals(SCIM_JSON, found.getContentType().orElseThrow());
+        assertEquals("https://example.com/scim/v2/Users/2819c223",
+            found.getHeaders().get(HttpHeaders.CONTENT_LOCATION));
 
         HttpResponse<?> notModified = client.exchange(HttpRequest.GET("/scim/v2/Users/2819c223")
             .header(HttpHeaders.IF_NONE_MATCH, "\"1\"")
@@ -127,6 +153,17 @@ class ScimHttpServerTest {
 
         client.exchange(HttpRequest.GET("/scim/v2/Users?count=-1").accept(SCIM_JSON));
         assertEquals(0, userService.lastQuery.get().count());
+    }
+
+    @Test
+    void userListResponseIncludesResourcesWhenTheCurrentPageIsEmpty() {
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/scim/v2/Users?count=0")
+            .accept(SCIM_JSON), String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertTrue(response.body().contains("\"Resources\":[]"));
     }
 
     @Test
@@ -237,10 +274,31 @@ class ScimHttpServerTest {
             .contentType(SCIM_JSON).accept(SCIM_JSON));
         assertTrue(rootResponse.contains("bjensen@example.com"));
 
-        MutableHttpResponse<?> me = Mono.from(meController.get(HttpRequest.GET("/scim/v2/Me"))).block();
-        assertNotNull(me);
+        MutableHttpResponse<?> me = meController.get(HttpRequest.GET("/scim/v2/Me"));
         assertEquals(HttpStatus.PERMANENT_REDIRECT, me.getStatus());
         assertEquals("https://example.com/scim/v2/Users/2819c223", me.getHeaders().get(HttpHeaders.LOCATION));
+    }
+
+    @Test
+    void controllerMethodsExecuteOnBlockingExecutor() {
+        List<Method> routeMethods = List.of(
+                ScimBulkController.class,
+                ScimDiscoveryController.class,
+                ScimGroupController.class,
+                ScimMeController.class,
+                ScimRootSearchController.class,
+                ScimUserController.class)
+            .stream()
+            .flatMap(type -> Arrays.stream(type.getDeclaredMethods()))
+            .filter(ScimHttpServerTest::isRouteMethod)
+            .toList();
+
+        assertEquals(26, routeMethods.size());
+        for (Method method : routeMethods) {
+            ExecuteOn executeOn = method.getAnnotation(ExecuteOn.class);
+            assertNotNull(executeOn, () -> method + " is not annotated with @ExecuteOn");
+            assertEquals(TaskExecutors.BLOCKING, executeOn.value());
+        }
     }
 
     @Factory
@@ -267,22 +325,22 @@ class ScimHttpServerTest {
         @Bean
         @Singleton
         ScimBulkService bulkService() {
-            return (request, context) -> Mono.just(ScimBulkResponse.of(List.of(
+            return (request, context) -> ScimBulkResponse.of(List.of(
                 new ScimBulkResponseOperation(ScimBulkMethod.POST, "qwerty", "W/\"1\"",
-                    "https://example.com/scim/v2/Users/2819c223", null, "201"))));
+                    "https://example.com/scim/v2/Users/2819c223", null, "201")));
         }
 
         @Bean
         @Singleton
         ScimRootSearchService rootSearchService(TestUserService userService) {
-            return (query, context) -> Mono.just(new ScimPage<ScimResource>(
-                List.of(userService.user), 1, query.startIndex()));
+            return (query, context) -> new ScimPage<ScimResource>(
+                List.of(userService.user), 1, query.startIndex());
         }
 
         @Bean
         @Singleton
         ScimMeService meService() {
-            return context -> Mono.just(URI.create("https://example.com/scim/v2/Users/2819c223"));
+            return context -> Optional.of(URI.create("https://example.com/scim/v2/Users/2819c223"));
         }
     }
 
@@ -292,7 +350,7 @@ class ScimHttpServerTest {
         private User user = user();
 
         @Override
-        public Publisher<ScimResourceResponse<User>> create(User resource, ScimRequestContext context) {
+        public ScimResourceResponse<User> create(User resource, ScimRequestContext context) {
             resource.setId("2819c223");
             resource.setMeta(new Meta("User", "2010-01-23T04:56:22Z", "2011-05-13T04:42:34Z",
                 "https://example.com/scim/v2/Users/2819c223", "W/\"1\""));
@@ -301,43 +359,46 @@ class ScimHttpServerTest {
         }
 
         @Override
-        public Publisher<ScimResourceResponse<User>> get(String id, ScimRequestContext context) {
-            return id.equals("2819c223") ? response(user) : Mono.empty();
+        public Optional<ScimResourceResponse<User>> get(String id, ScimRequestContext context) {
+            return id.equals("2819c223") ? Optional.of(response(user)) : Optional.empty();
         }
 
         @Override
-        public Publisher<ScimPage<User>> search(ScimQuery query, ScimRequestContext context) {
+        public ScimPage<User> search(ScimQuery query, ScimRequestContext context) {
             lastQuery.set(query);
-            return Mono.just(new ScimPage<>(query.count() == 0 ? List.of() : List.of(user), 1, query.startIndex()));
+            return new ScimPage<>(query.count() == 0 ? List.of() : List.of(user), 1, query.startIndex());
         }
 
         @Override
-        public Publisher<ScimResourceResponse<User>> replace(String id, User resource, ScimRequestContext context) {
+        public Optional<ScimResourceResponse<User>> replace(String id, User resource, ScimRequestContext context) {
             if (!id.equals("2819c223")) {
-                return Mono.empty();
+                return Optional.empty();
             }
             user = resource;
             user.setId(id);
-            return response(user);
+            return Optional.of(response(user));
         }
 
         @Override
-        public Publisher<ScimResourceResponse<User>> patch(String id, ScimPatchRequest patch, ScimRequestContext context) {
+        public Optional<ScimResourceResponse<User>> patch(
+            String id,
+            ScimPatchRequest patch,
+            ScimRequestContext context
+        ) {
             lastPatch.set(patch);
-            return id.equals("2819c223") ? response(user) : Mono.empty();
+            return id.equals("2819c223") ? Optional.of(response(user)) : Optional.empty();
         }
 
         @Override
-        public Publisher<Void> delete(String id, ScimRequestContext context) {
+        public void delete(String id, ScimRequestContext context) {
             if (!id.equals("2819c223")) {
-                return Mono.error(new ScimException(HttpStatus.NOT_FOUND, "User does not exist"));
+                throw new ScimException(HttpStatus.NOT_FOUND, "User does not exist");
             }
-            return Mono.empty();
         }
 
-        private static Mono<ScimResourceResponse<User>> response(User user) {
-            return Mono.just(new ScimResourceResponse<>(user,
-                URI.create("https://example.com/scim/v2/Users/2819c223"), "W/\"1\""));
+        private static ScimResourceResponse<User> response(User user) {
+            return new ScimResourceResponse<>(user,
+                URI.create("https://example.com/scim/v2/Users/2819c223"), "W/\"1\"");
         }
 
         private static User user() {
@@ -350,62 +411,73 @@ class ScimHttpServerTest {
 
     private static final class EmptyGroupService implements ScimGroupService {
         @Override
-        public Publisher<ScimResourceResponse<Group>> create(Group resource, ScimRequestContext context) {
-            return Mono.error(new UnsupportedOperationException());
+        public ScimResourceResponse<Group> create(Group resource, ScimRequestContext context) {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public Publisher<ScimResourceResponse<Group>> get(String id, ScimRequestContext context) {
-            return Mono.empty();
+        public Optional<ScimResourceResponse<Group>> get(String id, ScimRequestContext context) {
+            return Optional.empty();
         }
 
         @Override
-        public Publisher<ScimPage<Group>> search(ScimQuery query, ScimRequestContext context) {
-            return Mono.just(new ScimPage<>(List.of(), 0, query.startIndex()));
+        public ScimPage<Group> search(ScimQuery query, ScimRequestContext context) {
+            return new ScimPage<>(List.of(), 0, query.startIndex());
         }
 
         @Override
-        public Publisher<ScimResourceResponse<Group>> replace(String id, Group resource, ScimRequestContext context) {
-            return Mono.empty();
+        public Optional<ScimResourceResponse<Group>> replace(String id, Group resource, ScimRequestContext context) {
+            return Optional.empty();
         }
 
         @Override
-        public Publisher<ScimResourceResponse<Group>> patch(String id, ScimPatchRequest patch, ScimRequestContext context) {
-            return Mono.empty();
+        public Optional<ScimResourceResponse<Group>> patch(
+            String id,
+            ScimPatchRequest patch,
+            ScimRequestContext context
+        ) {
+            return Optional.empty();
         }
 
         @Override
-        public Publisher<Void> delete(String id, ScimRequestContext context) {
-            return Mono.empty();
+        public void delete(String id, ScimRequestContext context) {
         }
     }
 
     private static final class TestDiscoveryService implements ScimDiscoveryService {
         @Override
-        public Publisher<ScimResourceResponse<ServiceProviderConfig>> getServiceProviderConfiguration(
+        public ScimResourceResponse<ServiceProviderConfig> getServiceProviderConfiguration(
             ScimRequestContext context
         ) {
             ServiceProviderConfig configuration = new ServiceProviderConfig();
-            return Mono.just(new ScimResourceResponse<>(configuration,
-                URI.create("https://example.com/scim/v2/ServiceProviderConfig"), null));
+            return new ScimResourceResponse<>(configuration,
+                URI.create("https://example.com/scim/v2/ServiceProviderConfig"), null);
         }
 
         @Override
-        public Publisher<Schema> getSchemas(ScimRequestContext context) {
+        public List<Schema> getSchemas(ScimRequestContext context) {
             Schema schema = new Schema();
             schema.setId("urn:ietf:params:scim:schemas:core:2.0:User");
             schema.setName("User");
-            return Flux.just(schema);
+            return List.of(schema);
         }
 
         @Override
-        public Publisher<ResourceType> getResourceTypes(ScimRequestContext context) {
+        public List<ResourceType> getResourceTypes(ScimRequestContext context) {
             ResourceType resourceType = new ResourceType();
             resourceType.setId("User");
             resourceType.setName("User");
             resourceType.setEndpoint("/Users");
             resourceType.setSchema("urn:ietf:params:scim:schemas:core:2.0:User");
-            return Flux.just(resourceType);
+            return List.of(resourceType);
         }
+    }
+
+    private static boolean isRouteMethod(Method method) {
+        return method.isAnnotationPresent(Get.class)
+            || method.isAnnotationPresent(Post.class)
+            || method.isAnnotationPresent(Put.class)
+            || method.isAnnotationPresent(Patch.class)
+            || method.isAnnotationPresent(Delete.class);
     }
 }

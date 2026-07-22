@@ -23,7 +23,8 @@ import io.micronaut.security.scim.server.model.ScimQuery;
 import io.micronaut.security.scim.server.model.ScimRequestContext;
 import io.micronaut.security.scim.server.model.ScimResourceResponse;
 import io.micronaut.security.scim.server.protocol.ScimPatchRequest;
-import org.reactivestreams.Publisher;
+
+import java.util.Optional;
 
 /**
  * Persistence and policy operations that a SCIM application implements for a resource type.
@@ -40,30 +41,30 @@ public interface ScimResourceService<T extends ScimResource> {
      *
      * @param resource Client representation
      * @param context Request context
-     * @return The persisted representation; must emit exactly one result
+     * @return The persisted representation
      * @since 5.4.0
      */
-    Publisher<ScimResourceResponse<T>> create(T resource, ScimRequestContext context);
+    ScimResourceResponse<T> create(T resource, ScimRequestContext context);
 
     /**
      * Retrieves a resource by its service-provider identifier.
      *
      * @param id Resource identifier
      * @param context Request context
-     * @return Zero results when absent, otherwise exactly one result
+     * @return The resource response, or empty when absent
      * @since 5.4.0
      */
-    Publisher<ScimResourceResponse<T>> get(String id, ScimRequestContext context);
+    Optional<ScimResourceResponse<T>> get(String id, ScimRequestContext context);
 
     /**
      * Applies filtering, sorting, pagination, and attribute selection to a resource query.
      *
      * @param query Parsed query
      * @param context Request context
-     * @return A single result page
+     * @return The result page
      * @since 5.4.0
      */
-    Publisher<ScimPage<T>> search(ScimQuery query, ScimRequestContext context);
+    ScimPage<T> search(ScimQuery query, ScimRequestContext context);
 
     /**
      * Replaces writable attributes of an existing resource.
@@ -71,10 +72,10 @@ public interface ScimResourceService<T extends ScimResource> {
      * @param id Resource identifier
      * @param resource Replacement representation
      * @param context Request context, including any {@code If-Match} value
-     * @return Zero results when absent, otherwise the persisted representation
+     * @return The persisted representation, or empty when absent
      * @since 5.4.0
      */
-    Publisher<ScimResourceResponse<T>> replace(String id, T resource, ScimRequestContext context);
+    Optional<ScimResourceResponse<T>> replace(String id, T resource, ScimRequestContext context);
 
     /**
      * Atomically applies all PATCH operations to an existing resource.
@@ -82,18 +83,18 @@ public interface ScimResourceService<T extends ScimResource> {
      * @param id Resource identifier
      * @param patch PATCH message
      * @param context Request context, including any {@code If-Match} value
-     * @return Zero results when absent, otherwise the persisted representation
+     * @return The persisted representation, or empty when absent
      * @since 5.4.0
      */
-    Publisher<ScimResourceResponse<T>> patch(String id, ScimPatchRequest patch, ScimRequestContext context);
+    Optional<ScimResourceResponse<T>> patch(String id, ScimPatchRequest patch, ScimRequestContext context);
 
     /**
      * Deletes an existing resource.
      *
      * @param id Resource identifier
      * @param context Request context, including any {@code If-Match} value
-     * @return A completion publisher; an absent resource should fail with {@link ScimException}
+     * @throws ScimException When the resource is absent or cannot be deleted
      * @since 5.4.0
      */
-    Publisher<Void> delete(String id, ScimRequestContext context);
+    void delete(String id, ScimRequestContext context);
 }

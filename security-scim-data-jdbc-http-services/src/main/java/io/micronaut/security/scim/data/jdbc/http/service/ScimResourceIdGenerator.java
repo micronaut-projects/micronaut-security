@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.scim.server.service;
+package io.micronaut.security.scim.data.jdbc.http.service;
 
 import io.micronaut.core.annotation.Experimental;
-import io.micronaut.security.scim.core.ScimResource;
-import io.micronaut.security.scim.server.model.ScimPage;
-import io.micronaut.security.scim.server.model.ScimQuery;
-import io.micronaut.security.scim.server.model.ScimRequestContext;
-import org.reactivestreams.Publisher;
+import io.micronaut.security.scim.data.entities.ScimResourceType;
 
 /**
- * Optional application contract for searches across every resource type at the SCIM service root.
+ * Generates service-provider identifiers for new SCIM resources.
  *
  * @since 5.4.0
  */
+@FunctionalInterface
 @Experimental
-public interface ScimRootSearchService {
+public interface ScimResourceIdGenerator {
+
     /**
-     * @param query Parsed search request
-     * @param context Request context
-     * @return A single result page
+     * @param resourceType The type of resource being created
+     * @return A new, globally unique and non-reassignable SCIM identifier
      * @since 5.4.0
      */
-    Publisher<ScimPage<ScimResource>> search(ScimQuery query, ScimRequestContext context);
+    String generateId(ScimResourceType resourceType);
 }

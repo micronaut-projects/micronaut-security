@@ -17,7 +17,6 @@ package io.micronaut.security.scim.server.controller;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -36,8 +35,8 @@ import io.micronaut.security.scim.server.protocol.ScimBulkRequest;
 import io.micronaut.security.scim.server.protocol.ScimBulkResponse;
 import io.micronaut.security.scim.server.protocol.ScimMediaType;
 import io.micronaut.security.scim.server.service.ScimBulkService;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 
 @Internal
 @Requires(classes = Controller.class)
@@ -56,12 +55,15 @@ final class ScimBulkController {
     }
 
     @Post("/Bulk")
-    @SingleResult
-    Publisher<MutableHttpResponse<ScimBulkResponse>> bulk(@Body ScimBulkRequest bulk, HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<ScimBulkResponse> bulk(@Body ScimBulkRequest bulk, HttpRequest<?> request) {
         requestParser.validate(bulk);
-        return Mono.from(service.execute(bulk, requestParser.context(request, ScimAttributeSelection.ALL)))
-            .switchIfEmpty(Mono.error(new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
-                "The application SCIM bulk service returned no response")))
-            .map(response -> HttpResponse.ok(response).contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE));
+        ScimBulkResponse response = service.execute(
+            bulk, requestParser.context(request, ScimAttributeSelection.ALL));
+        if (response == null) {
+            throw new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "The application SCIM bulk service returned no response");
+        }
+        return HttpResponse.ok(response).contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE);
     }
 }

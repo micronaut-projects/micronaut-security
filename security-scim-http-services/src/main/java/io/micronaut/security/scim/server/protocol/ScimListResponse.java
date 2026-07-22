@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.scim.server.protocol;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
@@ -38,6 +39,7 @@ import java.util.List;
 public record ScimListResponse<T>(
     List<String> schemas,
     long totalResults,
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     @JsonProperty("Resources") List<T> resources,
     int startIndex,
     int itemsPerPage

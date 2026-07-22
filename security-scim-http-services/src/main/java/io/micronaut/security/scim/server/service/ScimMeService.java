@@ -17,25 +17,24 @@ package io.micronaut.security.scim.server.service;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.security.scim.server.model.ScimRequestContext;
-import io.micronaut.security.scim.server.protocol.ScimBulkRequest;
-import io.micronaut.security.scim.server.protocol.ScimBulkResponse;
-import org.reactivestreams.Publisher;
+
+import java.net.URI;
+import java.util.Optional;
 
 /**
- * Optional application contract for RFC 7644 bulk operations. The implementation owns transaction
- * boundaries, {@code bulkId} resolution, circular-reference detection, and fail-on-error behavior.
+ * Optional application contract for the RFC 7644 {@code /Me} authenticated-subject alias.
+ * The server responds with a 308 redirect to the permanent resource URI returned by the application.
  *
  * @since 5.4.0
  */
 @Experimental
-public interface ScimBulkService {
+public interface ScimMeService {
     /**
-     * Executes the validated operations in a bulk request.
+     * Resolves the current authenticated subject to its permanent SCIM resource URI.
      *
-     * @param request Bulk request
      * @param context Request context
-     * @return The bulk response; must emit exactly one result
+     * @return The permanent resource URI, or empty when no resource is associated with the subject
      * @since 5.4.0
      */
-    Publisher<ScimBulkResponse> execute(ScimBulkRequest request, ScimRequestContext context);
+    Optional<URI> resolve(ScimRequestContext context);
 }

@@ -21,7 +21,8 @@ import io.micronaut.security.scim.core.Schema;
 import io.micronaut.security.scim.core.ServiceProviderConfig;
 import io.micronaut.security.scim.server.model.ScimRequestContext;
 import io.micronaut.security.scim.server.model.ScimResourceResponse;
-import org.reactivestreams.Publisher;
+
+import java.util.List;
 
 /**
  * Application contract for RFC 7644 discovery endpoints.
@@ -32,22 +33,22 @@ import org.reactivestreams.Publisher;
 public interface ScimDiscoveryService {
     /**
      * @param context Request context
-     * @return The service-provider configuration; must emit exactly one result
+     * @return The service-provider configuration
      * @since 5.4.0
      */
-    Publisher<ScimResourceResponse<ServiceProviderConfig>> getServiceProviderConfiguration(ScimRequestContext context);
+    ScimResourceResponse<ServiceProviderConfig> getServiceProviderConfiguration(ScimRequestContext context);
 
     /**
      * @param context Request context
      * @return All supported schemas
      * @since 5.4.0
      */
-    Publisher<Schema> getSchemas(ScimRequestContext context);
+    List<Schema> getSchemas(ScimRequestContext context);
 
     /**
      * @param context Request context
      * @return All supported resource types
      * @since 5.4.0
      */
-    Publisher<ResourceType> getResourceTypes(ScimRequestContext context);
+    List<ResourceType> getResourceTypes(ScimRequestContext context);
 }

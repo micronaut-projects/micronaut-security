@@ -17,7 +17,6 @@ package io.micronaut.security.scim.server.controller;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -36,8 +35,8 @@ import io.micronaut.security.scim.server.protocol.ScimListResponse;
 import io.micronaut.security.scim.server.protocol.ScimMediaType;
 import io.micronaut.security.scim.server.protocol.ScimSearchRequest;
 import io.micronaut.security.scim.server.service.ScimRootSearchService;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 
 @Internal
 @Requires(classes = Controller.class)
@@ -56,13 +55,15 @@ final class ScimRootSearchController {
     }
 
     @Post("/.search")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> search(@Body ScimSearchRequest search, HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> search(@Body ScimSearchRequest search, HttpRequest<?> request) {
         ScimQuery query = requestParser.query(search);
-        return Mono.from(service.search(query, requestParser.context(request, query.attributes())))
-            .switchIfEmpty(Mono.error(new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
-                "The application SCIM root search service returned no page")))
-            .map(page -> HttpResponse.ok(ScimListResponse.fromPage(page))
-                .contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE));
+        var page = service.search(query, requestParser.context(request, query.attributes()));
+        if (page == null) {
+            throw new ScimException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "The application SCIM root search service returned no page");
+        }
+        return HttpResponse.ok(ScimListResponse.fromPage(page))
+            .contentType(ScimMediaType.APPLICATION_SCIM_JSON_TYPE);
     }
 }

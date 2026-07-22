@@ -4,6 +4,7 @@ plugins {
     id("io.micronaut.build.internal.security-module")
 }
 dependencies {
+    annotationProcessor(mn.micronaut.inject.java)
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnSerde.micronaut.serde.api)

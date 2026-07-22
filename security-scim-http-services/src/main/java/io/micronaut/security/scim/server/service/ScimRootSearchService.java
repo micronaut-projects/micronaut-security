@@ -16,25 +16,23 @@
 package io.micronaut.security.scim.server.service;
 
 import io.micronaut.core.annotation.Experimental;
+import io.micronaut.security.scim.core.ScimResource;
+import io.micronaut.security.scim.server.model.ScimPage;
+import io.micronaut.security.scim.server.model.ScimQuery;
 import io.micronaut.security.scim.server.model.ScimRequestContext;
-import org.reactivestreams.Publisher;
-
-import java.net.URI;
 
 /**
- * Optional application contract for the RFC 7644 {@code /Me} authenticated-subject alias.
- * The server responds with a 308 redirect to the permanent resource URI returned by the application.
+ * Optional application contract for searches across every resource type at the SCIM service root.
  *
  * @since 5.4.0
  */
 @Experimental
-public interface ScimMeService {
+public interface ScimRootSearchService {
     /**
-     * Resolves the current authenticated subject to its permanent SCIM resource URI.
-     *
+     * @param query Parsed search request
      * @param context Request context
-     * @return The permanent resource URI; must emit exactly one result
+     * @return The result page
      * @since 5.4.0
      */
-    Publisher<URI> resolve(ScimRequestContext context);
+    ScimPage<ScimResource> search(ScimQuery query, ScimRequestContext context);
 }

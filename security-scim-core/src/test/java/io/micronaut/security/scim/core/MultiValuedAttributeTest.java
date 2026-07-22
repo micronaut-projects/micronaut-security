@@ -66,6 +66,19 @@ class MultiValuedAttributeTest {
         assertEquals(true, email.primary());
     }
 
+    @Test
+    void deserializesMicrosoftScimValidatorPrimaryValue() throws IOException {
+        MultiValuedAttribute role = jsonMapper.readValue("""
+            {
+              "value": "KCKMIRBDHVNQ",
+              "type": "HQDTFSMLXNPX",
+              "primary": "True"
+            }
+            """, MultiValuedAttribute.class);
+
+        assertEquals(true, role.primary());
+    }
+
 
     @Test
     void isDeserializable() {

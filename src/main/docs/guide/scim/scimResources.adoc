@@ -28,4 +28,6 @@ snippet::io.micronaut.security.scim.core.docs.ScimCoreExample[tags="user",indent
 
 The `password` attribute on api:security.scim.core.User[] is write-only: Micronaut Serialization accepts it from an inbound representation but does not include it in serialized output.
 
+RFC 7643 defines the `primary` sub-attribute as a Boolean. For interoperability with clients that send Boolean text, including the Microsoft SCIM Validator, api:security.scim.core.Address[] and api:security.scim.core.MultiValuedAttribute[] also accept case-insensitive `"true"` and `"false"` JSON string values. Serialization always writes a JSON Boolean.
+
 The model includes Jakarta Validation constraints for structural requirements such as non-blank User names and required discovery fields. Invoke validation at your application boundary. The RFC's mutability, returned, uniqueness, and request-context rules are not an object-model policy engine; a SCIM service provider must enforce the applicable rules for each operation.

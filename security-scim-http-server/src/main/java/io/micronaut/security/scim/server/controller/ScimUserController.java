@@ -17,7 +17,6 @@ package io.micronaut.security.scim.server.controller;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
@@ -39,9 +38,10 @@ import io.micronaut.security.scim.server.protocol.ScimPatchRequest;
 import io.micronaut.security.scim.server.protocol.ScimSearchRequest;
 import io.micronaut.security.scim.server.protocol.ScimSortOrder;
 import io.micronaut.security.scim.server.service.ScimUserService;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.Nullable;
-import org.reactivestreams.Publisher;
 
 @Internal
 @Requires(classes = Controller.class)
@@ -58,8 +58,8 @@ class ScimUserController {
 
     @Post("/Users{?attributes,excludedAttributes}")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> create(
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> create(
         @Body @Valid User user,
         @Nullable @QueryValue String attributes,
         @Nullable @QueryValue String excludedAttributes,
@@ -69,8 +69,8 @@ class ScimUserController {
     }
 
     @Get("/Users/{id}{?attributes,excludedAttributes}")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> get(
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> get(
         String id,
         @Nullable @QueryValue String attributes,
         @Nullable @QueryValue String excludedAttributes,
@@ -80,8 +80,8 @@ class ScimUserController {
     }
 
     @Get("/Users{?attributes,excludedAttributes,filter,sortBy,sortOrder,startIndex,count}")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> search(
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> search(
         @Nullable @QueryValue String attributes,
         @Nullable @QueryValue String excludedAttributes,
         @Nullable @QueryValue String filter,
@@ -96,15 +96,15 @@ class ScimUserController {
 
     @Post("/Users/.search")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> search(@Body ScimSearchRequest search, HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> search(@Body ScimSearchRequest search, HttpRequest<?> request) {
         return endpoint.search(search, request);
     }
 
     @Put("/Users/{id}{?attributes,excludedAttributes}")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> replace(
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> replace(
         String id,
         @Body @Valid User user,
         @Nullable @QueryValue String attributes,
@@ -116,8 +116,8 @@ class ScimUserController {
 
     @Patch("/Users/{id}{?attributes,excludedAttributes}")
     @Consumes({ScimMediaType.APPLICATION_SCIM_JSON, MediaType.APPLICATION_JSON})
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> patch(
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> patch(
         String id,
         @Body ScimPatchRequest patch,
         @Nullable @QueryValue String attributes,
@@ -128,8 +128,8 @@ class ScimUserController {
     }
 
     @Delete("/Users/{id}")
-    @SingleResult
-    Publisher<MutableHttpResponse<?>> delete(String id, HttpRequest<?> request) {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    MutableHttpResponse<?> delete(String id, HttpRequest<?> request) {
         return endpoint.delete(id, request);
     }
 }

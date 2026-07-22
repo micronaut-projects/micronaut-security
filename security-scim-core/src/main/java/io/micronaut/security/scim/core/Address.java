@@ -42,6 +42,6 @@ public record Address(
     @Nullable String postalCode,
     @Nullable String country,
     @Nullable String type,
-    @Nullable Boolean primary
+    @Serdeable.Deserializable(using = ScimBooleanDeserializer.class) @Nullable Boolean primary
 ) {
 }

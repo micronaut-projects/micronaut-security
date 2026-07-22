@@ -1,4 +1,4 @@
-The `micronaut-security-scim-http-server` module implements the HTTP-facing parts of https://www.rfc-editor.org/rfc/rfc7644[RFC 7644]. The default service root is `/scim/v2`.
+The `micronaut-security-scim-http-server` module implements the HTTP-facing parts of https://www.rfc-editor.org/rfc/rfc7644[RFC 7644]. The default service root is `/scim/v2`. Its persistence-neutral API is published separately in `micronaut-security-scim-http-services`; the server module includes it transitively.
 
 The following application beans activate route groups:
 
@@ -31,7 +31,9 @@ The following application beans activate route groups:
 |Map the authenticated subject to a permanent resource URI; the server returns a `308 Permanent Redirect`
 |===
 
-For Users and Groups the module supplies create, retrieve, query, POST search, replace, PATCH, and delete routes. Requests and responses use `application/scim+json`; `Accept: application/json` is also supported. Successful create responses include `Location` and, when supplied by the application, `ETag`. A matching `If-None-Match` on a retrieval produces `304 Not Modified`. `If-Match` is available to the application through api:security.scim.server.model.ScimRequestContext[].
+The application service APIs are synchronous. Every SCIM controller method is dispatched with `@ExecuteOn(TaskExecutors.BLOCKING)` before it invokes an application service, allowing implementations to call blocking persistence APIs without using Reactive Streams types.
+
+For Users and Groups the module supplies create, retrieve, query, POST search, replace, PATCH, and delete routes. Requests and responses use `application/scim+json`; `Accept: application/json` is also supported. Resource responses include `Content-Location`; create responses also include `Location`. When supplied by the application, the response includes `ETag`. The values correspond to `meta.location` and `meta.version` in the resource representation. A matching `If-None-Match` on a retrieval produces `304 Not Modified`. `If-Match` is available to the application through api:security.scim.server.model.ScimRequestContext[].
 
 The module validates the fixed schema URIs and structural rules for SearchRequest, PatchOp, and BulkRequest messages. It also returns errors raised as api:security.scim.server.exception.ScimException[] using the RFC 7644 Error representation. Applications can select an HTTP status and an optional api:security.scim.server.protocol.ScimErrorType[] such as `uniqueness`, `mutability`, `invalidPath`, or `noTarget`.
 

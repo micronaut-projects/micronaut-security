@@ -73,6 +73,17 @@ class ScimListResponseTest {
     }
 
     @Test
+    void serializesEmptyResources() throws IOException {
+        ScimListResponse<?> response = new ScimListResponse<>(
+            List.of(ScimMessageSchemas.LIST_RESPONSE), 0, List.of(), 1, 0);
+
+        Map<?, ?> json = jsonMapper.readValue(jsonMapper.writeValueAsBytes(response), Map.class);
+
+        assertTrue(json.containsKey("Resources"));
+        assertEquals(List.of(), json.get("Resources"));
+    }
+
+    @Test
     void isDeserializable() {
         SerdeIntrospections introspections = assertDoesNotThrow(() -> beanContext.getBean(SerdeIntrospections.class));
         assertDoesNotThrow(() -> introspections.getDeserializableIntrospection(Argument.of(ScimListResponse.class)));
