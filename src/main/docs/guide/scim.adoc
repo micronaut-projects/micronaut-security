@@ -1,5 +1,10 @@
-https://www.rfc-editor.org/rfc/rfc7643[RFC 7643] defines the core schemas and data model for the System for Cross-domain Identity Management (SCIM) 2.0 protocol.
+https://www.rfc-editor.org/rfc/rfc7643[RFC 7643] defines the core schemas and data model for the System for Cross-domain Identity Management (SCIM) 2.0 protocol. https://www.rfc-editor.org/rfc/rfc7644[RFC 7644] defines the HTTP protocol used to provision and manage those resources.
 
-Micronaut Security provides the `micronaut-security-scim-core` module with Micronaut Serialization-compatible Java types for the standard User, Group, enterprise User extension, and discovery resources. You can use these types as controller request and response bodies when building a SCIM client or service provider.
+Micronaut Security provides four SCIM modules:
 
-NOTE: This module implements the RFC 7643 data model. It does not register SCIM HTTP routes or implement the operations, filtering, patching, bulk processing, or error responses specified by https://www.rfc-editor.org/rfc/rfc7644[RFC 7644]. Applications remain responsible for those protocol concerns, persistence, authorization, and operation-specific validation.
+* `micronaut-security-scim-core` contains Micronaut Serialization-compatible Java types for Users, Groups, schema extensions, and discovery resources.
+* `micronaut-security-scim-http-server` registers RFC 7644 server routes and defines persistence-neutral service contracts for applications to implement.
+* `micronaut-security-scim-data` contains normalized Micronaut Data entities for Users, Groups, memberships, multi-valued attributes, and extensions.
+* `micronaut-security-scim-data-jdbc` contains JDBC repositories for those entities.
+
+The HTTP server separates protocol processing from application policy. Micronaut Security handles routing, request and response messages, SCIM media types, filter parsing, status codes, conditional GET, and SCIM error bodies. The application remains responsible for persistence, authorization, tenant isolation, schema policy, uniqueness, mutability, and transactional updates.

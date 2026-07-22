@@ -1,0 +1,95 @@
+api:security.scim.server.service.ScimResourceService[] is the persistence-neutral contract shared by api:security.scim.server.service.ScimUserService[] and api:security.scim.server.service.ScimGroupService[]. Its methods return Reactive Streams `Publisher` values, so an implementation can use blocking persistence scheduled on an appropriate executor, Reactor, Micronaut Data, or another asynchronous data source.
+
+The application owns all behavior that depends on its storage and schema policy:
+
+* assign `id` and `meta`, ignore client-supplied read-only attributes, and return the stored representation;
+* enforce case-insensitive uniqueness and the applicable internationalized-string comparison rules;
+* apply tenant isolation and per-attribute authorization;
+* honor the requested attribute selection, including attributes whose `returned` characteristic is `always`, `default`, `request`, or `never`;
+* translate filters and sorting to the persistence technology;
+* preserve immutable attributes and enforce read-only, read-write, immutable, and write-only mutability;
+* evaluate `If-Match` and fail stale PUT, PATCH, or DELETE requests with the appropriate status;
+* apply every PATCH operation atomically; and
+* map absent resources and storage failures to suitable api:security.scim.server.exception.ScimException[] values.
+
+Create, get, replace, and PATCH return api:security.scim.server.model.ScimResourceResponse[]. This value carries the resource, its permanent location, and an optional entity tag. Get, replace, and PATCH may complete without a value to indicate that the resource does not exist; the HTTP layer converts that result to `404 Not Found`. Delete returns a completion publisher and should fail with api:security.scim.server.exception.ScimException[] when its target does not exist.
+
+== Data entity model
+
+The optional `micronaut-security-scim-data` module provides a portable, normalized starting point for persistence. The entities use compile-time Micronaut Data mapping and Jakarta Validation, but have no database-specific column definitions.
+
+[cols="2,3"]
+|===
+|Entity |Stored data
+
+|api:security.scim.data.entities.ScimUserEntity[]
+|The User's scalar core attributes, flattened name components, external identifier, timestamps, and optimistic-lock version
+
+|api:security.scim.data.entities.ScimGroupEntity[]
+|The Group's scalar core attributes, external identifier, timestamps, and optimistic-lock version
+
+|api:security.scim.data.entities.ScimGroupMemberEntity[]
+|User and nested-Group membership, with optional `$ref` and display snapshots
+
+|api:security.scim.data.entities.ScimUserAddressEntity[]
+|Entries in the User's multi-valued `addresses` attribute
+
+|api:security.scim.data.entities.ScimUserAttributeEntity[]
+|Email, phone number, instant messaging, photo, entitlement, role, and X.509 certificate entries
+
+|api:security.scim.data.entities.ScimEnterpriseUserEntity[]
+|The RFC 7643 Enterprise User extension and manager reference
+
+|api:security.scim.data.entities.ScimResourceExtensionEntity[]
+|Arbitrary User or Group extension objects, stored as portable JSON text and keyed by schema URI
+|===
+
+The application assigns the string identifiers on User and Group rows before insertion. Child-row identifiers are database generated. api:security.scim.data.entities.ScimUserEntity[] and api:security.scim.data.entities.ScimGroupEntity[] use `@DateCreated`, `@DateUpdated`, and `@Version`; applications can use those values to construct `meta.created`, `meta.lastModified`, and an entity tag. Resource locations are derived from the configured SCIM service root rather than persisted.
+
+The core User schema is implied by a User row. A api:security.scim.data.entities.ScimEnterpriseUserEntity[] row implies the Enterprise User schema, and each custom extension row contributes its schema URI to the resource's `schemas` array. The read-only User `groups` attribute is derived from Group membership rows, avoiding duplicate membership state.
+
+The persistence model intentionally has no password column. A SCIM password is a write-only provisioning input and should be passed to the application's credential subsystem, which applies its password hashing or external identity-provider policy. Database migrations should add the foreign keys, column sizes, CLOB or native JSON type for extension text, and tenant-aware or case-insensitive unique indexes required by the application.
+
+== JDBC repositories
+
+The `micronaut-security-scim-data-jdbc` module provides repositories compiled with the Micronaut Data ANSI SQL dialect:
+
+[cols="2,3"]
+|===
+|Repository |Operations in addition to inherited CRUD
+
+|api:security.scim.data.jdbc.repositories.ScimUserJdbcRepository[]
+|Pagination, case-insensitive `userName` lookup and existence checks, and `externalId` lookup
+
+|api:security.scim.data.jdbc.repositories.ScimGroupJdbcRepository[]
+|Pagination and lookup by `externalId` or case-insensitive `displayName`
+
+|api:security.scim.data.jdbc.repositories.ScimGroupMemberJdbcRepository[]
+|Membership lookup by owning Group or referenced resource, plus aggregate and targeted deletes
+
+|api:security.scim.data.jdbc.repositories.ScimUserAddressJdbcRepository[]
+|Ordered lookup and aggregate deletion by User
+
+|api:security.scim.data.jdbc.repositories.ScimUserAttributeJdbcRepository[]
+|Ordered lookup and aggregate deletion by User and attribute kind
+
+|api:security.scim.data.jdbc.repositories.ScimEnterpriseUserJdbcRepository[]
+|CRUD for the Enterprise User extension
+
+|api:security.scim.data.jdbc.repositories.ScimResourceExtensionJdbcRepository[]
+|Lookup and aggregate deletion by resource type, resource identifier, and schema URI
+|===
+
+The repositories intentionally expose blocking Micronaut Data APIs. An implementation of the reactive SCIM HTTP service contracts must schedule repository work on an appropriate blocking executor and wrap multi-table writes in a transaction. Applications requiring vendor-specific SQL can define additional repositories with their database dialect while reusing the same entities.
+
+== Queries and filters
+
+api:security.scim.server.model.ScimQuery[] contains normalized pagination, sorting, attribute selection, the original filter text, and a parsed api:security.scim.server.filter.ScimFilter[] tree. The filter tree represents comparisons, presence checks, logical operations, negation, and filters over multi-valued attribute values. An application translates this tree to its database query language while validating that each referenced attribute can be filtered or sorted.
+
+The application returns one api:security.scim.server.model.ScimPage[] containing the current resources, the total number of matching resources before pagination, and the one-based start index. The server converts it to an RFC ListResponse.
+
+== PATCH and Bulk atomicity
+
+The HTTP layer validates the PatchOp message but deliberately does not mutate resources. The api:security.scim.server.service.ScimResourceService[] implementation must resolve paths according to its supported schemas, apply `add`, `remove`, and `replace` in request order, and roll back the complete request if any operation fails.
+
+Likewise, api:security.scim.server.service.ScimBulkService[] receives a structurally valid BulkRequest, but the application must enforce the limits advertised by api:security.scim.core.ServiceProviderConfig[], resolve request-local `bulkId` references, detect circular references, observe `failOnErrors`, and construct the per-operation results. This boundary lets the application use the transaction semantics provided by its own persistence technology.

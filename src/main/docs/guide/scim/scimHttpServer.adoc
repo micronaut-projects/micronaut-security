@@ -1,0 +1,42 @@
+The `micronaut-security-scim-http-server` module implements the HTTP-facing parts of https://www.rfc-editor.org/rfc/rfc7644[RFC 7644]. The default service root is `/scim/v2`.
+
+The following application beans activate route groups:
+
+[cols="1,2,3"]
+|===
+|Application API |Routes |Application responsibility
+
+|api:security.scim.server.service.ScimUserService[]
+|`/Users`
+|Persist and query api:security.scim.core.User[] resources
+
+|api:security.scim.server.service.ScimGroupService[]
+|`/Groups`
+|Persist and query api:security.scim.core.Group[] resources
+
+|api:security.scim.server.service.ScimDiscoveryService[]
+|`/ServiceProviderConfig`, `/Schemas`, and `/ResourceTypes`
+|Describe the features, schemas, and resource types actually supported by the application
+
+|api:security.scim.server.service.ScimBulkService[]
+|`/Bulk`
+|Execute optional Bulk operations, including `bulkId` resolution and fail-on-error behavior
+
+|api:security.scim.server.service.ScimRootSearchService[]
+|`/.search`
+|Search across every supported resource type
+
+|api:security.scim.server.service.ScimMeService[]
+|`/Me`
+|Map the authenticated subject to a permanent resource URI; the server returns a `308 Permanent Redirect`
+|===
+
+For Users and Groups the module supplies create, retrieve, query, POST search, replace, PATCH, and delete routes. Requests and responses use `application/scim+json`; `Accept: application/json` is also supported. Successful create responses include `Location` and, when supplied by the application, `ETag`. A matching `If-None-Match` on a retrieval produces `304 Not Modified`. `If-Match` is available to the application through api:security.scim.server.model.ScimRequestContext[].
+
+The module validates the fixed schema URIs and structural rules for SearchRequest, PatchOp, and BulkRequest messages. It also returns errors raised as api:security.scim.server.exception.ScimException[] using the RFC 7644 Error representation. Applications can select an HTTP status and an optional api:security.scim.server.protocol.ScimErrorType[] such as `uniqueness`, `mutability`, `invalidPath`, or `noTarget`.
+
+== Configuration
+
+include::{includedir}configurationProperties/io.micronaut.security.scim.server.configuration.ScimServerConfiguration.adoc[]
+
+Setting `micronaut.security.scim.enabled` to `false` disables every SCIM route. The configured `path` is the complete versioned service root; it must not contain a query string. The default and maximum page sizes are applied before api:security.scim.server.model.ScimQuery[] reaches the application service.

@@ -1,5 +1,21 @@
-To use the RFC 7643 Java model, add the following dependency:
+To use only the RFC 7643 Java model, add the following dependency:
 
 dependency:micronaut-security-scim-core[groupId=io.micronaut.security]
 
 The types are annotated for https://micronaut-projects.github.io/micronaut-serialization/latest/guide/[Micronaut Serialization] and Jakarta Validation. A Micronaut application that reads or writes JSON must also have a Micronaut Serialization implementation available, as is normally the case for an HTTP application created with Micronaut Launch.
+
+To expose an RFC 7644 service provider, add the HTTP server module instead. It transitively includes the core model:
+
+dependency:micronaut-security-scim-http-server[groupId=io.micronaut.security]
+
+The HTTP routes are enabled by default, but each route group is registered only when the corresponding application service bean exists. Consequently, adding the dependency alone does not expose User, Group, discovery, Bulk, root search, or `/Me` operations.
+
+Applications that want only the optional Micronaut Data persistence model can add:
+
+dependency:micronaut-security-scim-data[groupId=io.micronaut.security]
+
+Applications using Micronaut Data JDBC can add the repository module instead. It transitively includes the persistence entities:
+
+dependency:micronaut-security-scim-data-jdbc[groupId=io.micronaut.security]
+
+The JDBC module supplies ANSI-dialect repositories, but deliberately does not supply database migrations or api:security.scim.server.service.ScimResourceService[] implementations. The application remains responsible for its schema-management tool, transaction boundaries, tenant model, database-specific column definitions, and conversion between the persistence entities and the RFC 7643 core types.
