@@ -1,0 +1,11 @@
+RFC 7643 represents schema extensions as top-level JSON attributes whose names are schema URIs. api:security.scim.core.User[] provides typed support for the standard api:security.scim.core.EnterpriseUser[] extension:
+
+snippet::io.micronaut.security.scim.core.docs.ScimCoreExample[tags="enterpriseUser",indent=0]
+
+Calling `setEnterpriseUser` adds or removes `SchemaUris.ENTERPRISE_USER` in the resource's `schemas` attribute so the schema list and extension value remain synchronized.
+
+For other extension schemas, use `setExtension` on api:security.scim.core.ScimResource[]:
+
+snippet::io.micronaut.security.scim.core.docs.ScimCoreExample[tags="customExtension",indent=0]
+
+Custom extension values are flattened into the resource JSON object under their schema URI. Adding or removing an extension also updates `schemas`. When a custom extension is deserialized without application-specific type information, retrieve it with `getExtension` and treat the value as its decoded representation, typically a `Map`.

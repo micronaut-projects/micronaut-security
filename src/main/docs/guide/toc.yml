@@ -170,6 +170,15 @@ oauth:
   custom-client: Custom Clients
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
+scim:
+  title: SCIM
+  scimInstallation: Installation
+  scimResources: Resources and Attributes
+  scimExtensions: Schema Extensions
+  scimDiscovery: Discovery Resources
+  scimHttpServer: RFC 7644 HTTP Server
+  scimPersistence: Persistence and Protocol Policy
+  scimSecurity: Security
 ojdbcExtensions:
   title: Oracle JDBC Extensions
   ojdbcExtensionsInstallation: Oracle JDBC Extensions Installation

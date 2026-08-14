@@ -1,0 +1,35 @@
+To use only the RFC 7643 Java model, add the following dependency:
+
+dependency:micronaut-security-scim-core[groupId=io.micronaut.security]
+
+The types are annotated for https://micronaut-projects.github.io/micronaut-serialization/latest/guide/[Micronaut Serialization] and Jakarta Validation. A Micronaut application that reads or writes JSON must also have a Micronaut Serialization implementation available, as is normally the case for an HTTP application created with Micronaut Launch.
+
+To implement the RFC 7644 service contracts without registering HTTP routes, add:
+
+dependency:micronaut-security-scim-http-services[groupId=io.micronaut.security]
+
+This module contains the service interfaces and the service-facing protocol, query, filter, model, and exception types. To expose an RFC 7644 service provider, add the HTTP server module instead. It transitively includes the services module and core model:
+
+dependency:micronaut-security-scim-http-server[groupId=io.micronaut.security]
+
+The HTTP routes are enabled by default, but each route group is registered only when the corresponding application service bean exists. Consequently, adding the dependency alone does not expose User, Group, discovery, Bulk, root search, or `/Me` operations.
+
+Applications that want only the optional Micronaut Data persistence model can add:
+
+dependency:micronaut-security-scim-data[groupId=io.micronaut.security]
+
+Applications using Micronaut Data JDBC can add the repository module instead. It transitively includes the persistence entities:
+
+dependency:micronaut-security-scim-data-jdbc[groupId=io.micronaut.security]
+
+The JDBC module supplies conditional repositories for every Micronaut Data JDBC dialect. Set `micronaut.security.scim.data.dialect` to the dialect used by the application's data source; no repository implementation is enabled when the property is absent. The repository module deliberately does not depend on the HTTP service API.
+
+For JDBC-backed User and Group services, add the adapter module in addition to the HTTP server:
+
+dependency:micronaut-security-scim-data-jdbc-http-services[groupId=io.micronaut.security]
+
+Adding the adapter dependency supplies api:security.scim.server.service.ScimUserService[] and api:security.scim.server.service.ScimGroupService[] when an application bean of the corresponding type is absent. Applications can also replace api:security.scim.data.jdbc.http.service.ScimResourceIdGenerator[]. The default adapter stores all RFC 7643 User and Group attributes represented by the entities, derives User group membership, enforces optimistic `If-Match` checks, and performs multi-table mutations transactionally.
+
+The adapter is a portable baseline. It evaluates filters and sorting in memory after loading resources, does not apply `attributes` or `excludedAttributes` projection, and supports attribute, sub-attribute, and value-selection PATCH paths. It rejects password input because credentials require an application-specific subsystem. Applications with large data sets, tenant isolation, response projection, credential provisioning, schema-specific PATCH policy, or database-specific query requirements should replace the relevant service bean.
+
+Neither JDBC module supplies database migrations. The application remains responsible for its schema-management tool, tenant model, and database-specific column definitions and indexes.
