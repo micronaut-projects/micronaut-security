@@ -20,7 +20,6 @@ import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
-import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
@@ -74,7 +73,6 @@ class OpenIdClientFactory {
      * @param openIdProviderMetadataFetcher OpenID Provider metadata Fetcher
      * @return The OpenID configuration
      */
-    @Parallel
     @Context
     @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
