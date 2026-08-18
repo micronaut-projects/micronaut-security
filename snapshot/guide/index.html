@@ -6433,10 +6433,10 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 <p>If any bean of type <a href="../api/io/micronaut/security/authentication/WwwAuthenticateChallengeProvider.html">WwwAuthenticateChallengeProvider</a> is available, Micronaut Security uses them to populate the <code>WWW-Authenticate</code> header when a 401 Unauthorized response is returned.</p>
 </div>
 <div class="paragraph">
-<p>If you have &lt;&lt;basicAuth, basic auth&gt; enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting <code>micronaut.security.basic-auth.www-authenticate</code> to <code>false</code>.</p>
+<p>If you have <a href="#basicAuth">basic auth</a> enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting <code>micronaut.security.basic-auth.www-authenticate</code> to <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>If you have &lt;&lt;protectedResourceMetadata, Resource Metadata&gt; enabled, an entry as defined in the <a href="https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response">WWW-Authenticate Response</a> section of RFC9728 is added</p>
+<p>If you have <a href="#protectedResourceMetadata">Resource Metadata</a> enabled, an entry as defined in the <a href="https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response">WWW-Authenticate Response</a> section of RFC9728 is added</p>
 </div>
 
 <h1 id="csrf"><a class="anchor" href="#csrf"></a>13 Cross-Site Request Forgery (CSRF)</h1>
