@@ -1,11 +1,16 @@
 package io.micronaut.security.oauth2.configuration;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Property;
+import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,6 +48,32 @@ class OauthClientConfigurationTest {
         SecureEndpointConfiguration tokenNewEndpoint = stravaNewConfiguration.getToken().get();
         assertTrue(tokenNewEndpoint.getAuthenticationMethod().isPresent());
         assertEquals("client_secret_post", tokenNewEndpoint.getAuthenticationMethod().get());
+    }
+
+    @Test
+    void validTokenEndpointUrlIsAccepted() {
+        assertEquals("https://www.strava.com/oauth/token", stravaNewConfiguration.getTokenEndpoint().getUrl());
+    }
+
+    @Test
+    void tokenEndpointUrlMustBeAbsoluteHttpUrl() {
+        assertInvalidTokenEndpointUrl("example.com/oauth/token");
+        assertInvalidTokenEndpointUrl("https:/example.com/oauth/token");
+        assertInvalidTokenEndpointUrl("/oauth/token");
+        assertInvalidTokenEndpointUrl("ftp://example.com/oauth/token");
+    }
+
+    private void assertInvalidTokenEndpointUrl(String url) {
+        try (ApplicationContext context = ApplicationContext.run(Map.of(
+                "micronaut.security.oauth2.clients.invalid.token.url", url,
+                "micronaut.security.oauth2.clients.invalid.client-id", "xxx",
+                "micronaut.security.oauth2.clients.invalid.client-secret", "yyy"))) {
+            OauthClientConfiguration configuration = context.getBean(OauthClientConfiguration.class, Qualifiers.byName("invalid"));
+
+            ConfigurationException exception = assertThrows(ConfigurationException.class, configuration::getTokenEndpoint);
+
+            assertEquals("Oauth client invalid has an invalid token endpoint URL configured for property [micronaut.security.oauth2.clients.invalid.token.url]. The value must be an absolute http or https URL. Configured value: [" + url + "]", exception.getMessage());
+        }
     }
 
 }
