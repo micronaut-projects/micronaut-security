@@ -20,6 +20,10 @@ import io.micronaut.http.HttpRequest;
 /**
  * Generates unpredictable values for CSP nonce source expressions.
  *
+ * <p>The filter generates one nonce per request, exposes it through {@link #CSP_NONCE_ATTRIBUTE},
+ * and uses the same value in the {@code script-src} response directive. Views can use that request
+ * attribute as the {@code nonce} attribute of trusted script elements.</p>
+ *
  * @since 5.4.0
  */
 public interface CspNonceGenerator {
@@ -30,7 +34,7 @@ public interface CspNonceGenerator {
 
     /**
      * @param request the request for which the nonce is generated
-     * @return a newly generated nonce value
+     * @return an unpredictable nonce value, unique to the request
      */
     String generateNonce(HttpRequest<?> request);
 }

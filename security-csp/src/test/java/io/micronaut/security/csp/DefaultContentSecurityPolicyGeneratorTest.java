@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultContentSecurityPolicyGeneratorTest {
 
@@ -52,9 +53,11 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setBaseUriEnabled(false);
         configuration.setConnectSrcEnabled(false);
+        configuration.setFencedFrameSrcEnabled(false);
         configuration.setFontSrcEnabled(false);
         configuration.setObjectSrcEnabled(false);
         configuration.setPrefetchSrcEnabled(false);
+        configuration.setReportUriEnabled(false);
         configuration.setRequireTrustedTypesForEnabled(false);
         configuration.setFrameAncestorsEnabled(false);
         configuration.setFrameSrcEnabled(false);
@@ -82,6 +85,20 @@ class DefaultContentSecurityPolicyGeneratorTest {
     }
 
     @Test
+    void invokesOverriddenDirectiveMethod() {
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
+                new ContentSecurityPolicyConfigurationProperties(), request -> "unused") {
+            @Override
+            protected CspDirective connectSrc() {
+                return new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com");
+            }
+        };
+
+        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com"),
+                generator.contentSecurityPolicy().get(1));
+    }
+
+    @Test
     void addsRequestNonceToScriptSource() {
         HttpRequest<?> request = HttpRequest.GET("/");
         ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
@@ -104,5 +121,44 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'strict-dynamic'"),
                 directives.get(directives.size() - 1));
+    }
+
+    @Test
+    void addsUnsafeEvalToScriptSourceWhenEnabled() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setScriptSrcUnsafeEval(true);
+        HttpRequest<?> request = HttpRequest.GET("/");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+
+        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+
+        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'unsafe-eval'"),
+                directives.get(directives.size() - 1));
+    }
+
+    @Test
+    void addsUnquotedHttpAndHttpsSchemeSourcesWhenEnabled() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setScriptSrcHttp(true);
+        configuration.setScriptSrcHttps(true);
+        HttpRequest<?> request = HttpRequest.GET("/");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+
+        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+
+        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' http: https:"),
+                directives.get(directives.size() - 1));
+    }
+
+    @Test
+    void addsReportUriWhenEnabled() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setReportUriEnabled(true);
+        configuration.setReportUri(List.of("https://example.com/csp-reports"));
+
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, request -> "unused");
+
+        assertTrue(generator.contentSecurityPolicy().contains(
+                new CspDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
     }
 }

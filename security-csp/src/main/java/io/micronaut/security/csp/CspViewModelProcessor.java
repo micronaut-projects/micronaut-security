@@ -27,6 +27,10 @@ import java.util.Map;
 
 /**
  * Adds the request's CSP nonce to map-backed view models.
+ *
+ * <p>When a nonce is available, it is exposed as {@code cspNonce} so a view can apply it to
+ * trusted {@code script} elements. The processor copies the model before adding the value, so it
+ * also supports immutable input maps.</p>
  */
 @Requires(classes = ViewModelProcessor.class)
 @Singleton

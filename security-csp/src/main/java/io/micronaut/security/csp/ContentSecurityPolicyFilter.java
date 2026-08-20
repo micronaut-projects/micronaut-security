@@ -28,14 +28,16 @@ import java.util.StringJoiner;
 /**
  * Adds the Content Security Policy generated for a request to its response.
  *
+ * <p>A request filter first creates the nonce used by nonce-based script policies. The response
+ * filter then writes the generated policy only when the application has not already supplied the
+ * selected CSP response header.</p>
+ *
  * @author Sergio del Amo
  */
 @Requires(classes = ServerFilter.class)
 @Internal
 @ServerFilter(ServerFilter.MATCH_ALL_PATTERN)
 final class ContentSecurityPolicyFilter {
-    private static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
-    private static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final CspNonceGenerator cspNonceGenerator;
@@ -53,6 +55,11 @@ final class ContentSecurityPolicyFilter {
         this.cspNonceGenerator = cspNonceGenerator;
     }
 
+    /**
+     * Generates and stores the nonce before view rendering and response policy generation.
+     *
+     * @param request the current request
+     */
     @RequestFilter
     void generateNonce(HttpRequest<?> request) {
         if (cspConfiguration.isScriptSrcNonceEnabled()) {
@@ -60,10 +67,16 @@ final class ContentSecurityPolicyFilter {
         }
     }
 
+    /**
+     * Writes the enforcing or report-only CSP header unless application code already set it.
+     *
+     * @param request the current request
+     * @param response the response to which the header may be added
+     */
     @ResponseFilter
     void filter(HttpRequest<?> request, MutableHttpResponse<?> response) {
         String headerName = cspConfiguration.isReportOnly()
-            ? CONTENT_SECURITY_POLICY_REPORT_ONLY : CONTENT_SECURITY_POLICY;
+            ? CspHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : CspHeaders.CONTENT_SECURITY_POLICY;
         boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
         if (!responseSetsAlreadyCspHeader) {
             response.header(headerName, cspValue(request));
@@ -71,6 +84,8 @@ final class ContentSecurityPolicyFilter {
     }
 
     private String cspValue(HttpRequest<?> request) {
+        // CSP directives are separated with semicolons; source expressions within each directive
+        // have already been serialized by the generator.
         StringJoiner directives = new StringJoiner("; ");
         for (CspDirective directive : cspGenerator.contentSecurityPolicy(request)) {
             directives.add(directive.toString());

@@ -15,25 +15,25 @@
  */
 package io.micronaut.security.csp;
 
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.http.HttpRequest;
-import jakarta.inject.Singleton;
-
-import java.util.UUID;
 
 /**
- * Default nonce generator backed by a randomly generated UUID.
+ * HTTP header names used to send enforcing and report-only Content Security Policies.
  *
- * <p>This bean is used only when an application does not provide its own
- * {@link CspNonceGenerator} implementation.</p>
+ * <p>This class is internal because applications should normally let
+ * {@link ContentSecurityPolicyFilter} select and write the appropriate header.</p>
  */
-@Requires(missingBeans =  CspNonceGenerator.class)
-@Singleton
 @Internal
-final class UUIDCspNonceGenerator implements CspNonceGenerator {
-    @Override
-    public String generateNonce(HttpRequest<?> request) {
-        return UUID.randomUUID().toString();
+public final class CspHeaders {
+    /**
+     * Header that causes user agents to enforce the supplied policy.
+     */
+    public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
+    /**
+     * Header that reports policy violations without enforcing the supplied policy.
+     */
+    public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
+
+    private CspHeaders() {
     }
 }

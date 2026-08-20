@@ -18,8 +18,19 @@ package io.micronaut.security.csp;
 import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
+
 /**
  * A directive in a Content Security Policy.
+ *
+ * <p>Values are stored in their header representation. Use {@link #values()} to obtain the
+ * individual whitespace-separated CSP tokens.</p>
  *
  * @param name the directive name
  * @param value the directive value, or {@code null} for directives without a value
@@ -32,5 +43,28 @@ public record CspDirective(String name, @Nullable String value) {
         return StringUtils.isEmpty(value())
                     ? name()
                     : name() + " " + value();
+    }
+
+    /**
+     * Returns the whitespace-separated values of this directive.
+     *
+     * @return an immutable list of values, or an empty list if this directive has no value
+     */
+    public List<String> values() {
+        return StringUtils.isEmpty(value()) ? List.of() : List.of(value().trim().split("\\s+"));
+    }
+
+    public boolean isNone() {
+        if (StringUtils.isEmpty(value())) {
+            return false;
+        }
+        return NONE.equals(value()) || QUOTED_NONE.equals(value) ;
+    }
+
+    public boolean isSelf() {
+        if (StringUtils.isEmpty(value())) {
+            return false;
+        }
+        return SELF.equals(value()) || QUOTED_SELF.equals(value) ;
     }
 }

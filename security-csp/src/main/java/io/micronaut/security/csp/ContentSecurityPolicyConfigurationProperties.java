@@ -18,58 +18,85 @@ package io.micronaut.security.csp;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
 
+import java.util.Collections;
 import java.util.List;
 
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SCRIPT;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
+import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
+
+/**
+ * Binds the {@code micronaut.security.csp} configuration namespace to the default CSP policy.
+ *
+ * <p>Defaults deny source-list directives unless a directive deliberately needs a narrower
+ * application-compatible default, such as {@code form-action 'self'}.</p>
+ */
 @ConfigurationProperties("micronaut.security.csp")
 @Internal
 final class ContentSecurityPolicyConfigurationProperties implements ContentSecurityPolicyConfiguration {
-    private static final List<String> SELF = List.of("'self'");
-    private static final List<String> NONE = List.of("'none'");
-    private static final String SCRIPT = "'script'";
+    private static final List<String> SELF_VALUES = List.of(SINGLE_QUOTE + SELF + SINGLE_QUOTE);
+    private static final List<String> NONE_VALUES = List.of(SINGLE_QUOTE + NONE + SINGLE_QUOTE);
+    private static final String SCRIPT_VALUE = SINGLE_QUOTE + SCRIPT + SINGLE_QUOTE;
     private static final boolean DEFAULT_ENABLED = true;
     private static final boolean DEFAULT_REPORT_ONLY = false;
     private static final boolean DEFAULT_BASE_URI_ENABLED = true;
-    private static final List<String> DEFAULT_BASE_URI_VALUE = NONE;
+    private static final List<String> DEFAULT_BASE_URI_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_CONNECT_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_CONNECT_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_CONNECT_SRC_VALUE = NONE_VALUES;
+    private static final boolean DEFAULT_FENCED_FRAME_SRC_ENABLED = false;
+    private static final List<String> DEFAULT_FENCED_FRAME_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_FONT_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_FONT_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_FONT_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_OBJECT_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_OBJECT_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_OBJECT_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_PREFETCH_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_PREFETCH_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_PREFETCH_SRC_VALUE = NONE_VALUES;
+    private static final boolean DEFAULT_REPORT_URI_ENABLED = false;
+    private static final List<String> DEFAULT_REPORT_URI_VALUE = Collections.emptyList();
     private static final boolean DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED = true;
-    private static final String DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE = SCRIPT;
+    private static final String DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE = SCRIPT_VALUE;
     private static final boolean DEFAULT_FRAME_ANCESTORS_ENABLED = true;
-    private static final List<String> DEFAULT_FRAME_ANCESTORS_VALUE = NONE;
+    private static final List<String> DEFAULT_FRAME_ANCESTORS_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_FRAME_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_FRAME_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_FRAME_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_IMG_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_IMG_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_IMG_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_MANIFEST_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_MANIFEST_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_MANIFEST_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_MEDIA_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_MEDIA_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_MEDIA_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_FORM_ACTION_ENABLED = true;
-    private static final List<String> DEFAULT_FORM_ACTION_VALUE = SELF;
+    private static final List<String> DEFAULT_FORM_ACTION_VALUE = SELF_VALUES;
     private static final boolean DEFAULT_SCRIPT_SRC_NONCE_ENABLED = true;
     private static final boolean DEFAULT_SCRIPT_SRC_STRICT_DYNAMIC = false;
+    private static final boolean DEFAULT_SCRIPT_SRC_SELF = false;
+    private static final List<String> DEFAULT_SCRIPT_SRC_HASHES = Collections.emptyList();
+    private static final List<String> DEFAULT_SCRIPT_SRC_URLS = Collections.emptyList();
+    private static final boolean DEFAULT_SCRIPT_SRC_UNSAFE_INLINE = false;
+    private static final boolean DEFAULT_SCRIPT_SRC_UNSAFE_EVAL = false;
+    private static final boolean DEFAULT_SCRIPT_SRC_HTTP = false;
+    private static final boolean DEFAULT_SCRIPT_SRC_HTTPS = false;
     private static final boolean DEFAULT_STYLE_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_STYLE_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_STYLE_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_WORKER_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_WORKER_SRC_VALUE = NONE;
+    private static final List<String> DEFAULT_WORKER_SRC_VALUE = NONE_VALUES;
     private boolean enabled = DEFAULT_ENABLED;
     private boolean reportOnly = DEFAULT_REPORT_ONLY;
     private boolean baseUriEnabled = DEFAULT_BASE_URI_ENABLED;
     private List<String> baseUri = DEFAULT_BASE_URI_VALUE;
     private boolean connectSrcEnabled = DEFAULT_CONNECT_SRC_ENABLED;
     private List<String> connectSrc = DEFAULT_CONNECT_SRC_VALUE;
+    private boolean fencedFrameSrcEnabled = DEFAULT_FENCED_FRAME_SRC_ENABLED;
+    private List<String> fencedFrameSrc = DEFAULT_FENCED_FRAME_SRC_VALUE;
     private boolean fontSrcEnabled = DEFAULT_FONT_SRC_ENABLED;
     private List<String> fontSrc = DEFAULT_FONT_SRC_VALUE;
     private boolean objectSrcEnabled = DEFAULT_OBJECT_SRC_ENABLED;
     private List<String> objectSrc = DEFAULT_OBJECT_SRC_VALUE;
     private boolean prefetchSrcEnabled = DEFAULT_PREFETCH_SRC_ENABLED;
     private List<String> prefetchSrc = DEFAULT_PREFETCH_SRC_VALUE;
+    private boolean reportUriEnabled = DEFAULT_REPORT_URI_ENABLED;
+    private List<String> reportUri = DEFAULT_REPORT_URI_VALUE;
     private boolean requireTrustedTypesForEnabled = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED;
     private String requireTrustedTypesFor = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE;
     private boolean frameAncestorsEnabled = DEFAULT_FRAME_ANCESTORS_ENABLED;
@@ -86,6 +113,13 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private List<String> formAction = DEFAULT_FORM_ACTION_VALUE;
     private boolean scriptSrcNonceEnabled = DEFAULT_SCRIPT_SRC_NONCE_ENABLED;
     private boolean scriptSrcStrictDynamic = DEFAULT_SCRIPT_SRC_STRICT_DYNAMIC;
+    private boolean scriptSrcSelf = DEFAULT_SCRIPT_SRC_SELF;
+    private List<String> scriptSrcHashes = DEFAULT_SCRIPT_SRC_HASHES;
+    private List<String> scriptSrcUrls = DEFAULT_SCRIPT_SRC_URLS;
+    private boolean scriptSrcUnsafeInline = DEFAULT_SCRIPT_SRC_UNSAFE_INLINE;
+    private boolean scriptSrcUnsafeEval = DEFAULT_SCRIPT_SRC_UNSAFE_EVAL;
+    private boolean scriptSrcHttp = DEFAULT_SCRIPT_SRC_HTTP;
+    private boolean scriptSrcHttps = DEFAULT_SCRIPT_SRC_HTTPS;
     private boolean styleSrcEnabled = DEFAULT_STYLE_SRC_ENABLED;
     private List<String> styleSrc = DEFAULT_STYLE_SRC_VALUE;
     private boolean workerSrcEnabled = DEFAULT_WORKER_SRC_ENABLED;
@@ -133,6 +167,30 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     /** @param connectSrc the source expressions used as the value of the {@code connect-src} directive */
     public void setConnectSrc(List<String> connectSrc) {
         this.connectSrc = connectSrc;
+    }
+
+    @Override
+    public boolean isFencedFrameSrcEnabled() {
+        return fencedFrameSrcEnabled;
+    }
+
+    /**
+     * @param fencedFrameSrcEnabled whether the {@code fenced-frame-src} directive is included in the policy
+     */
+    public void setFencedFrameSrcEnabled(boolean fencedFrameSrcEnabled) {
+        this.fencedFrameSrcEnabled = fencedFrameSrcEnabled;
+    }
+
+    @Override
+    public List<String> getFencedFrameSrc() {
+        return fencedFrameSrc;
+    }
+
+    /**
+     * @param fencedFrameSrc the source expressions used as the value of the {@code fenced-frame-src} directive
+     */
+    public void setFencedFrameSrc(List<String> fencedFrameSrc) {
+        this.fencedFrameSrc = fencedFrameSrc;
     }
 
     @Override
@@ -197,6 +255,30 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     /** @param prefetchSrc the source expressions used as the value of the {@code prefetch-src} directive */
     public void setPrefetchSrc(List<String> prefetchSrc) {
         this.prefetchSrc = prefetchSrc;
+    }
+
+    @Override
+    public boolean isReportUriEnabled() {
+        return reportUriEnabled;
+    }
+
+    /**
+     * @param reportUriEnabled whether the deprecated {@code report-uri} directive is included in the policy
+     */
+    public void setReportUriEnabled(boolean reportUriEnabled) {
+        this.reportUriEnabled = reportUriEnabled;
+    }
+
+    @Override
+    public List<String> getReportUri() {
+        return reportUri;
+    }
+
+    /**
+     * @param reportUri the endpoint URLs used as the value of the deprecated {@code report-uri} directive
+     */
+    public void setReportUri(List<String> reportUri) {
+        this.reportUri = reportUri;
     }
 
     @Override
@@ -373,6 +455,90 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
      */
     public void setScriptSrcStrictDynamic(boolean scriptSrcStrictDynamic) {
         this.scriptSrcStrictDynamic = scriptSrcStrictDynamic;
+    }
+
+    @Override
+    public boolean isScriptSrcSelf() {
+        return scriptSrcSelf;
+    }
+
+    /**
+     * @param scriptSrcSelf whether {@code 'self'} is added to the {@code script-src} directive
+     */
+    public void setScriptSrcSelf(boolean scriptSrcSelf) {
+        this.scriptSrcSelf = scriptSrcSelf;
+    }
+
+    @Override
+    public List<String> getScriptSrcHashes() {
+        return scriptSrcHashes;
+    }
+
+    /**
+     * @param scriptSrcHashes hash source expressions, such as {@code sha256-...}, to add to {@code script-src}
+     */
+    public void setScriptSrcHashes(List<String> scriptSrcHashes) {
+        this.scriptSrcHashes = scriptSrcHashes;
+    }
+
+    @Override
+    public List<String> getScriptSrcUrls() {
+        return scriptSrcUrls;
+    }
+
+    /**
+     * @param scriptSrcUrls URL source expressions to add to the {@code script-src} directive
+     */
+    public void setScriptSrcUrls(List<String> scriptSrcUrls) {
+        this.scriptSrcUrls = scriptSrcUrls;
+    }
+
+    @Override
+    public boolean isScriptSrcUnsafeInline() {
+        return scriptSrcUnsafeInline;
+    }
+
+    /**
+     * @param scriptSrcUnsafeInline whether {@code 'unsafe-inline'} is added to the {@code script-src} directive
+     */
+    public void setScriptSrcUnsafeInline(boolean scriptSrcUnsafeInline) {
+        this.scriptSrcUnsafeInline = scriptSrcUnsafeInline;
+    }
+
+    @Override
+    public boolean isScriptSrcUnsafeEval() {
+        return scriptSrcUnsafeEval;
+    }
+
+    /**
+     * @param scriptSrcUnsafeEval whether {@code 'unsafe-eval'} is added to the {@code script-src} directive
+     */
+    public void setScriptSrcUnsafeEval(boolean scriptSrcUnsafeEval) {
+        this.scriptSrcUnsafeEval = scriptSrcUnsafeEval;
+    }
+
+    @Override
+    public boolean isScriptSrcHttp() {
+        return scriptSrcHttp;
+    }
+
+    /**
+     * @param scriptSrcHttp whether the unquoted {@code http:} scheme source is added to {@code script-src}
+     */
+    public void setScriptSrcHttp(boolean scriptSrcHttp) {
+        this.scriptSrcHttp = scriptSrcHttp;
+    }
+
+    @Override
+    public boolean isScriptSrcHttps() {
+        return scriptSrcHttps;
+    }
+
+    /**
+     * @param scriptSrcHttps whether the unquoted {@code https:} scheme source is added to {@code script-src}
+     */
+    public void setScriptSrcHttps(boolean scriptSrcHttps) {
+        this.scriptSrcHttps = scriptSrcHttps;
     }
 
     @Override
