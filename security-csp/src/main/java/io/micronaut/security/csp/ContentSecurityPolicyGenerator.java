@@ -99,6 +99,36 @@ public interface ContentSecurityPolicyGenerator {
     String HTTPS = "https:";
 
     /**
+     * The data URL scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String DATA = "data:";
+
+    /**
+     * The blob URL scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String BLOB = "blob:";
+
+    /**
+     * The filesystem URL scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String FILESYSTEM = "filesystem:";
+
+    /**
+     * The media stream URL scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String MEDIASTREAM = "mediastream:";
+
+    /**
+     * The WebSocket scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String WS = "ws:";
+
+    /**
+     * The secure WebSocket scheme source expression. Scheme sources are not enclosed in single quotes.
+     */
+    String WSS = "wss:";
+
+    /**
      * The {@code base-uri} directive, which restricts the URLs that a document's {@code base} element
      * may use. This prevents injected markup from changing how relative URLs resolve.
      */

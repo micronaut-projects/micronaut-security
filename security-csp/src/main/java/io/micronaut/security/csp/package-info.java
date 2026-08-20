@@ -16,7 +16,18 @@
 /**
  * Content Security Policy support for Micronaut applications.
  *
+ * <p>The module adds an opt-out server filter that writes a restrictive response header and makes
+ * a per-request script nonce available to supported view models. Configure the policy under
+ * {@code micronaut.security.csp}. Directive-specific configuration lives in
+ * {@code io.micronaut.security.csp.conf}, with each source-list directive owning a dedicated
+ * configuration namespace such as {@code micronaut.security.csp.img-src}.</p>
+ *
+ * <p>The default policy is intentionally restrictive. Applications should begin with report-only
+ * mode when adopting CSP, then explicitly enable only the sources and keyword expressions required
+ * by their pages. Nonce- and hash-based script or style policies are preferred over URL allowlists.</p>
+ *
  * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">Content Security Policy (CSP)</a>
+ * @since 5.4.0
  */
 @NullMarked
 @Configuration

@@ -16,9 +16,31 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.baseUri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfiguration;
+import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formAction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.imgSrc.ImgSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,8 +50,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void generatesSecureDefaultPolicy() {
         ContentSecurityPolicyConfiguration cfg = new ContentSecurityPolicyConfigurationProperties();
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
-            cfg, new DefaultScriptSrcGenerator(cfg, request -> "unused"));
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(cfg);
 
         assertEquals(List.of(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
@@ -45,43 +66,18 @@ class DefaultContentSecurityPolicyGeneratorTest {
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MANIFEST_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MEDIA_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FORM_ACTION, "'self'"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.STYLE_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.WORKER_SRC, "'none'")
         ), generator.contentSecurityPolicy());
     }
 
     @Test
-    void excludesDisabledDirectives() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setBaseUriEnabled(false);
-        configuration.setDefaultSrcEnabled(false);
-        configuration.setConnectSrcEnabled(false);
-        configuration.setFencedFrameSrcEnabled(false);
-        configuration.setFontSrcEnabled(false);
-        configuration.setObjectSrcEnabled(false);
-        configuration.setPrefetchSrcEnabled(false);
-        configuration.setReportUriEnabled(false);
-        configuration.setRequireTrustedTypesForEnabled(false);
-        configuration.setFrameAncestorsEnabled(false);
-        configuration.setFrameSrcEnabled(false);
-        configuration.setImgSrcEnabled(false);
-        configuration.setManifestSrcEnabled(false);
-        configuration.setMediaSrcEnabled(false);
-        configuration.setFormActionEnabled(false);
-        configuration.setStyleSrcEnabled(false);
-        configuration.setWorkerSrcEnabled(false);
-
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused"));
-
-        assertEquals(List.of(), generator.contentSecurityPolicy());
-    }
-
-    @Test
     void joinsConfiguredSourceExpressions() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setConnectSrc(List.of("'self'", "https://api.example.com"));
+        ConnectSrcConfigurationProperties connectSrcConfiguration = new ConnectSrcConfigurationProperties();
+        connectSrcConfiguration.setValues(new LinkedHashSet<>(List.of("'self'", "https://api.example.com")));
 
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused"));
+        ContentSecurityPolicyGenerator generator = generator(configuration, request -> "unused",
+            new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
 
         assertTrue(generator.contentSecurityPolicy().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com")));
@@ -90,7 +86,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void invokesOverriddenDirectiveMethod() {
         ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused")) {
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration) {
             @Override
             protected ContentSecurityPolicyDirective connectSrc() {
                 return new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com");
@@ -105,7 +101,8 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void addsRequestNonceToScriptSource() {
         HttpRequest<?> request = HttpRequest.GET("/");
         ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, req -> "nonce"));
+        ContentSecurityPolicyGenerator generator = generator(configuration, req -> "nonce",
+            new ScriptSrcConfigurationProperties(), new ConnectSrcConfigurationProperties());
 
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
@@ -116,9 +113,11 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void addsStrictDynamicToScriptSourceWhenEnabled() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setScriptSrcStrictDynamic(true);
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setStrictDynamic(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
+        ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
+            scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
@@ -129,9 +128,11 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void addsUnsafeEvalToScriptSourceWhenEnabled() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setScriptSrcUnsafeEval(true);
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setUnsafeEval(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
+        ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
+            scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
@@ -142,10 +143,12 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void addsUnquotedHttpAndHttpsSchemeSourcesWhenEnabled() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setScriptSrcHttp(true);
-        configuration.setScriptSrcHttps(true);
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setHttp(true);
+        scriptSrcConfiguration.setHttps(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
+        ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
+            scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' http: https:"),
@@ -157,9 +160,33 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setReportUriEnabled(true);
         configuration.setReportUri(List.of("https://example.com/csp-reports"));
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration);
 
         assertTrue(generator.contentSecurityPolicy().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
+    }
+
+    private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyConfiguration configuration,
+                                                            Function<HttpRequest<?>, String> nonceProvider,
+                                                            ScriptSrcConfigurationProperties scriptSrcConfiguration,
+                                                            ConnectSrcConfiguration connectSrcConfiguration) {
+        return new DefaultContentSecurityPolicyGenerator(configuration,
+            nonceProvider,
+            new BaseUriConfigurationProperties(),
+            new DefaultSrcConfigurationProperties(),
+            connectSrcConfiguration,
+            new FencedFrameSrcConfigurationProperties(),
+            new FontSrcConfigurationProperties(),
+            new ObjectSrcConfigurationProperties(),
+            new PrefetchSrcConfigurationProperties(),
+            scriptSrcConfiguration,
+            new FrameAncestorsConfigurationProperties(),
+            new FrameSrcConfigurationProperties(),
+            new ImgSrcConfigurationProperties(),
+            new ManifestSrcConfigurationProperties(),
+            new MediaSrcConfigurationProperties(),
+            new FormActionConfigurationProperties(),
+            new StyleSrcConfigurationProperties(),
+            new WorkerSrcConfigurationProperties());
     }
 }

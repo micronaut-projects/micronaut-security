@@ -31,6 +31,8 @@ public interface ContentSecurityPolicyNonceGenerator {
      * Request attribute and map-backed view-model key under which the CSP nonce is stored.
      * The value is safe to expose only to trusted template code that applies it to a script nonce
      * attribute.
+     *
+     * @since 5.4.0
      */
     String CSP_NONCE_ATTRIBUTE = "cspNonce";
 

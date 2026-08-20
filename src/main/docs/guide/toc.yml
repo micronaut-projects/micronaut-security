@@ -114,10 +114,14 @@ csrf:
 contentSecurityPolicy:
   title: Content Security Policy (CSP)
   cspDependency: CSP Dependency
-  cspReportOnly: Report Only
   cspDefaults: CSP Defaults
+  cspReportOnly: Report Only
   cspScriptSrc:
     title: CSP script-src
+    cspNonceGeneration: script-src Nonce
+    scriptDynamic: script-dynamic
+    scriptSrcHashes: script-scr Hashes
+    scriptSrcUrls: script-scr URLs
   contentSecurityPolicyGenerator: CSP Generator
   cspConfiguration: CSP Configuration
 htmlSanitizer: HTML Sanitizer

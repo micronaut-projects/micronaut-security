@@ -1,1 +1,3 @@
-The default posture for `script-src` is to add a cryptographically random nonce to `script-src` for every response and enable https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/script-src#strict-dynamic[strict-dynamic].
+The default posture for `script-src` is to add a cryptographically random nonce to `script-src` for every response and enable
+
+The `script-src` directive is populated via api:security.csp.ScriptSrcGenerator[] with its default implementation of api:security.csp.DefaultScriptSrcGenerator[].

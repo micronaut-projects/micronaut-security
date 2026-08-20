@@ -1,0 +1,14 @@
+A random https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#nonces[nonce] is generated for every HTTP Response via the API api:security.csp.ContentSecurityPolicyNonceGenerator[] with its default implementation of api:security.csp.UUIDContentSecurityPolicyNonceGenerator[].
+
+CSP nonce is saved as a HTTP request attribute named `cspNonce` in case you want to access it for example in the view layer.
+
+You can disable nonce generation via:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        nonce: false
+----

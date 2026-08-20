@@ -29,7 +29,8 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
  * A directive in a Content Security Policy.
  *
  * <p>Values are stored in their header representation. Use {@link #values()} to obtain the
- * individual whitespace-separated CSP tokens.</p>
+ * individual whitespace-separated CSP tokens. This type does not validate directive names or
+ * source expressions; validation remains the responsibility of the browser applying the policy.</p>
  *
  * @param name the directive name
  * @param value the directive value, or {@code null} for directives without a value
@@ -47,7 +48,8 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
     /**
      * Returns the whitespace-separated values of this directive.
      *
-     * @return an immutable list of values, or an empty list if this directive has no value
+     * @return an immutable list of source-expression tokens, or an empty list if this directive has no value
+     * @since 5.4.0
      */
     public List<String> values() {
         return StringUtils.isEmpty(value()) ? List.of() : List.of(value().trim().split("\\s+"));
@@ -61,7 +63,7 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
         if (StringUtils.isEmpty(value())) {
             return false;
         }
-        return NONE.equals(value()) || QUOTED_NONE.equals(value) ;
+        return NONE.equals(value()) || QUOTED_NONE.equals(value);
     }
 
     /**
@@ -72,6 +74,6 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
         if (StringUtils.isEmpty(value())) {
             return false;
         }
-        return SELF.equals(value()) || QUOTED_SELF.equals(value) ;
+        return SELF.equals(value()) || QUOTED_SELF.equals(value);
     }
 }

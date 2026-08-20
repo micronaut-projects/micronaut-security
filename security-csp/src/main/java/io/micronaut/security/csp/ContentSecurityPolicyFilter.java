@@ -22,6 +22,8 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ResponseFilter;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
+import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 
 import java.util.StringJoiner;
 
@@ -40,18 +42,22 @@ import java.util.StringJoiner;
 final class ContentSecurityPolicyFilter {
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
+    private final ScriptSrcConfiguration scriptSrcConfiguration;
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
      * @param cspGenerator generates the directives to write to the response
      * @param cspConfiguration configures how the policy is written
+     * @param scriptSrcConfiguration configures nonce generation for {@code script-src}
      * @param cspNonceGenerator generates per-response CSP nonces
      */
     ContentSecurityPolicyFilter(ContentSecurityPolicyGenerator cspGenerator,
                                 ContentSecurityPolicyConfiguration cspConfiguration,
+                                ScriptSrcConfiguration scriptSrcConfiguration,
                                 ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
         this.cspGenerator = cspGenerator;
         this.cspConfiguration = cspConfiguration;
+        this.scriptSrcConfiguration = scriptSrcConfiguration;
         this.cspNonceGenerator = cspNonceGenerator;
     }
 
@@ -62,7 +68,7 @@ final class ContentSecurityPolicyFilter {
      */
     @RequestFilter
     void generateNonce(HttpRequest<?> request) {
-        if (cspConfiguration.isScriptSrcNonceEnabled()) {
+        if (scriptSrcConfiguration.isEnabled() && scriptSrcConfiguration.isNonce()) {
             request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
         }
     }

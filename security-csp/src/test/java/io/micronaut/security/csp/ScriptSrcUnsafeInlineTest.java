@@ -18,10 +18,11 @@ import org.junit.jupiter.api.Test;
 import static io.micronaut.security.csp.ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisableCspDefaults
-@Property(name = "micronaut.security.csp.script-src-unsafe-inline", value = StringUtils.TRUE)
+@Property(name = "micronaut.security.csp.script-src.unsafe-inline", value = StringUtils.TRUE)
+@Property(name = "micronaut.security.csp.script-src.nonce", value = StringUtils.FALSE)
 @Property(name = "spec.name", value = "ScriptSrcUnsafeInlineTest")
 @MicronautTest
 class ScriptSrcUnsafeInlineTest {
@@ -29,9 +30,11 @@ class ScriptSrcUnsafeInlineTest {
     void scriptSelf(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
-        assertTrue(response.getHeaders().contains(CONTENT_SECURITY_POLICY));
-        String csp = response.getHeaders().get(CONTENT_SECURITY_POLICY);
-        assertEquals("script-src 'unsafe-inline'", csp);
+        ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
+        assertNotNull(csp);
+        ContentSecurityPolicyDirective directive = csp.scriptSrc();
+        assertNotNull(directive);
+        assertEquals("'unsafe-inline'", directive.value());
     }
 
     @Requires(property = "spec.name", value = "ScriptSrcUnsafeInlineTest")

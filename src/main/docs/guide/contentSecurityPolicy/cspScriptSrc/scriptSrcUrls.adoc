@@ -1,0 +1,16 @@
+The least recommend approach is to provide urls as one of the values of the `script-src` directive via configuration
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        self: true
+        urls:
+          - https://cdn.jsdelivr.net
+        hashes:
+          - sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE=
+----
+
+The `script-src` value for the above configuration will be `'self' 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE=' https://cdn.jsdelivr.net`

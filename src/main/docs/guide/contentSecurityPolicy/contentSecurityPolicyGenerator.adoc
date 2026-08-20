@@ -1,4 +1,2 @@
-The main API to generate a Content Security Policy implementation api:security.csp.ContentSecurityPolicyGenerator[].
-
-Micronaut Security provides a default implementation of api:security.csp.DefaultContentSecurityPolicyGenerator[].
+The main API to generate a Content Security Policy implementation api:security.csp.ContentSecurityPolicyGenerator[] with its default implementation of api:security.csp.DefaultContentSecurityPolicyGenerator[].
 

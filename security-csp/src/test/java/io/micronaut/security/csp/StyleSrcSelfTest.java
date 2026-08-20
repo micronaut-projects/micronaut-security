@@ -2,6 +2,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -17,11 +18,12 @@ import org.junit.jupiter.api.Test;
 import static io.micronaut.security.csp.ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisableCspDefaultsExceptStyle
-@Property(name = "micronaut.security.csp.style-src[0]", value = "'self'")
-@Property(name = "micronaut.security.csp.style-src[1]", value = "https://cdn.jsdelivr.net")
+@Property(name = "micronaut.security.csp.style-src.nonce", value = StringUtils.FALSE)
+@Property(name = "micronaut.security.csp.style-src.self", value = StringUtils.TRUE)
+@Property(name = "micronaut.security.csp.style-src.values[0]", value = "https://cdn.jsdelivr.net")
 @Property(name = "spec.name", value = "StyleSrcSelfTest")
 @MicronautTest
 class StyleSrcSelfTest {
@@ -29,9 +31,11 @@ class StyleSrcSelfTest {
     void styleSelf(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
-        assertTrue(response.getHeaders().contains(CONTENT_SECURITY_POLICY));
-        String csp = response.getHeaders().get(CONTENT_SECURITY_POLICY);
-        assertEquals("style-src 'self' https://cdn.jsdelivr.net", csp);
+        ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
+        assertNotNull(csp);
+        ContentSecurityPolicyDirective directive = csp.styleSrc();
+        assertNotNull(directive);
+        assertEquals("'self' https://cdn.jsdelivr.net", directive.value());
     }
 
     @Requires(property = "spec.name", value = "StyleSrcSelfTest")

@@ -99,8 +99,9 @@ class DefaultDirectiveDefaultsToTest {
     }
 
     @Test
-    void styleSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
-        assertTrue(contentSecurityPolicy(httpClient).styleSrc().isNone());
+    void styleSrcUsesANonceByDefault(@Client("/") HttpClient httpClient) {
+        assertTrue(contentSecurityPolicy(httpClient).styleSrc().values().stream()
+            .anyMatch(value -> value.startsWith("'nonce-") && value.endsWith("'")));
     }
 
     @Test

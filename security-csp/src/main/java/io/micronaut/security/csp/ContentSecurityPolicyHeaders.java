@@ -22,15 +22,21 @@ import io.micronaut.core.annotation.Internal;
  *
  * <p>This class is internal because applications should normally let
  * {@link ContentSecurityPolicyFilter} select and write the appropriate header.</p>
+ *
+ * @since 5.4.0
  */
 @Internal
 public final class ContentSecurityPolicyHeaders {
     /**
      * Header that causes user agents to enforce the supplied policy.
+     *
+     * @since 5.4.0
      */
     public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
     /**
      * Header that reports policy violations without enforcing the supplied policy.
+     *
+     * @since 5.4.0
      */
     public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
 

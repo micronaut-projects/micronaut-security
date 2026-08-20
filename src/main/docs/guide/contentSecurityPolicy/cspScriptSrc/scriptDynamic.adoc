@@ -1,0 +1,13 @@
+You can enable https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/script-src#strict-dynamic[strict-dynamic] for the `script-src` directive via configuration with:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        strict-dynamic: true
+----
+
+
+

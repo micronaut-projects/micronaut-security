@@ -28,7 +28,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>The policy preserves the directive order from the header. Each directive has a name and an
  * optional value; value-less directives, such as {@code upgrade-insecure-requests}, are represented
- * with a {@code null} value.</p>
+ * with a {@code null} value. This type parses the header for inspection; it does not validate CSP
+ * directive names, source expressions, or the policy behavior implemented by a user agent.</p>
  *
  * @param directives the ordered directives in the policy
  * @since 5.4.0
@@ -288,7 +289,8 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      *
      * <p>Empty directive components, such as those introduced by consecutive semicolons, are ignored.
      * Whitespace between a directive name and its value is normalized, but a directive value is otherwise
-     * preserved.</p>
+     * preserved. The parser deliberately does not reject unknown or malformed directives so callers can
+     * inspect the header as it was received.</p>
      *
      * @param headerValue the serialized CSP header value
      * @return the parsed policy, or {@code null} if the value is {@code null} or empty

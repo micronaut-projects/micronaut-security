@@ -18,6 +18,8 @@ package io.micronaut.security.csp;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -35,6 +37,7 @@ class ContentSecurityPolicyFilterTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
                 ),
                 new ContentSecurityPolicyConfigurationProperties(),
+                new ScriptSrcConfigurationProperties(),
                 request -> "unused"
         );
         HttpRequest<?> request = HttpRequest.GET("/");

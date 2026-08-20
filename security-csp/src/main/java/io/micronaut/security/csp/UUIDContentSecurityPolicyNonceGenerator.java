@@ -26,7 +26,8 @@ import java.util.UUID;
  * Default nonce generator backed by a randomly generated UUID.
  *
  * <p>This bean is used only when an application does not provide its own
- * {@link ContentSecurityPolicyNonceGenerator} implementation.</p>
+ * {@link ContentSecurityPolicyNonceGenerator} implementation. A replacement generator must return
+ * a fresh, unpredictable value for each request; reusing a nonce weakens nonce-based script policies.</p>
  */
 @Requires(missingBeans =  ContentSecurityPolicyNonceGenerator.class)
 @Singleton
