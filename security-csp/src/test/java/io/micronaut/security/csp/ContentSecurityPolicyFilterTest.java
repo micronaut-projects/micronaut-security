@@ -30,9 +30,9 @@ class ContentSecurityPolicyFilterTest {
     void addsContentSecurityPolicyHeader() {
         ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(
                 () -> List.of(
-                        new CspDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
-                        new CspDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self' images.example.com"),
-                        new CspDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self' images.example.com"),
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
                 ),
                 new ContentSecurityPolicyConfigurationProperties(),
                 request -> "unused"

@@ -36,12 +36,18 @@ import java.util.Map;
 @Singleton
 @Internal
 final class CspViewModelProcessor implements ViewModelProcessor<Map<String, Object>, HttpRequest<?>> {
+    /**
+     * Copies a map-backed model and adds the request nonce when one has been generated.
+     *
+     * @param request the request carrying the nonce attribute
+     * @param modelAndView the view model to enrich
+     */
     @Override
     public void process(HttpRequest<?> request, ModelAndView<Map<String, Object>> modelAndView) {
-        request.getAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).ifPresent(nonce -> {
+        request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).ifPresent(nonce -> {
             modelAndView.getModel().ifPresent(model -> {
                 Map<String, Object> mutableModel = new HashMap<>(model);
-                mutableModel.put(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
+                mutableModel.put(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
                 modelAndView.setModel(mutableModel);
             });
         });

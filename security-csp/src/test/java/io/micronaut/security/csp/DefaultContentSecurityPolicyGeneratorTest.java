@@ -27,25 +27,26 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
     @Test
     void generatesSecureDefaultPolicy() {
+        ContentSecurityPolicyConfiguration cfg = new ContentSecurityPolicyConfigurationProperties();
         ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
-                new ContentSecurityPolicyConfigurationProperties(), request -> "unused");
+            cfg, new DefaultScriptSrcGenerator(cfg, request -> "unused"));
 
         assertEquals(List.of(
-                new CspDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.FONT_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.PREFETCH_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
-                new CspDirective(ContentSecurityPolicyGenerator.FRAME_ANCESTORS, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.FRAME_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.MANIFEST_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.MEDIA_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.FORM_ACTION, "'self'"),
-                new CspDirective(ContentSecurityPolicyGenerator.STYLE_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.WORKER_SRC, "'none'")
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FONT_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.PREFETCH_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FRAME_ANCESTORS, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FRAME_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MANIFEST_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MEDIA_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FORM_ACTION, "'self'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.STYLE_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.WORKER_SRC, "'none'")
         ), generator.contentSecurityPolicy());
     }
 
@@ -70,7 +71,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         configuration.setStyleSrcEnabled(false);
         configuration.setWorkerSrcEnabled(false);
 
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, request -> "unused");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused"));
 
         assertEquals(List.of(), generator.contentSecurityPolicy());
     }
@@ -80,35 +81,35 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setConnectSrc(List.of("'self'", "https://api.example.com"));
 
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, request -> "unused");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused"));
 
         assertTrue(generator.contentSecurityPolicy().contains(
-                new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com")));
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com")));
     }
 
     @Test
     void invokesOverriddenDirectiveMethod() {
-        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
-                new ContentSecurityPolicyConfigurationProperties(), request -> "unused") {
+        ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, request -> "unused")) {
             @Override
-            protected CspDirective connectSrc() {
-                return new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com");
+            protected ContentSecurityPolicyDirective connectSrc() {
+                return new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com");
             }
         };
 
         assertTrue(generator.contentSecurityPolicy().contains(
-                new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com")));
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com")));
     }
 
     @Test
     void addsRequestNonceToScriptSource() {
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(
-                new ContentSecurityPolicyConfigurationProperties(), currentRequest -> "nonce");
+        ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, req -> "nonce"));
 
-        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce'"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce'"),
                 directives.get(directives.size() - 1));
     }
 
@@ -117,11 +118,11 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setScriptSrcStrictDynamic(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
 
-        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'strict-dynamic'"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'strict-dynamic'"),
                 directives.get(directives.size() - 1));
     }
 
@@ -130,11 +131,11 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setScriptSrcUnsafeEval(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
 
-        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'unsafe-eval'"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'unsafe-eval'"),
                 directives.get(directives.size() - 1));
     }
 
@@ -144,11 +145,10 @@ class DefaultContentSecurityPolicyGeneratorTest {
         configuration.setScriptSrcHttp(true);
         configuration.setScriptSrcHttps(true);
         HttpRequest<?> request = HttpRequest.GET("/");
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
+        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        List<CspDirective> directives = generator.contentSecurityPolicy(request);
-
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' http: https:"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' http: https:"),
                 directives.get(directives.size() - 1));
     }
 
@@ -157,10 +157,9 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setReportUriEnabled(true);
         configuration.setReportUri(List.of("https://example.com/csp-reports"));
-
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, request -> "unused");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, new DefaultScriptSrcGenerator(configuration, currentRequest -> "nonce"));
 
         assertTrue(generator.contentSecurityPolicy().contains(
-                new CspDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
     }
 }

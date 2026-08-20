@@ -1,0 +1,22 @@
+The module is enabled by default and writes an enforcing `Content-Security-Policy` header in every HTTP Response. It starts from a deny-by-default policy:
+
+* `default-src 'none'`
+* `base-uri 'none'`
+* `connect-src 'none'`
+* `font-src 'none'`
+* `object-src 'none'`
+* `prefetch-src 'none'`
+* `frame-ancestors 'none'`
+* `frame-src 'none'`
+* `script-src 'nonce-*'`
+* `img-src 'none'`
+* `manifest-src 'none'`
+* `media-src 'none'`
+* `style-src 'none'`
+* `worker-src 'none'`
+* `form-action 'self'`
+* `require-trusted-types-for 'script'`
+
+It does not emit `fenced-frame-src` or `report-uri` unless you enable them explicitly.
+
+This baseline intentionally blocks most existing resource loading. Configure only the directives and source expressions required by your application. URL-based allowlists do not provide a primary defense against cross-site scripting: prefer nonces or hashes for scripts, and keep host allowlists as narrow as possible.

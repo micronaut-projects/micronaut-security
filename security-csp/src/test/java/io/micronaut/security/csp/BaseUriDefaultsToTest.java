@@ -27,7 +27,7 @@ class BaseUriDefaultsToTest {
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
         assertNotNull(csp);
-        CspDirective directive = csp.baseUri();
+        ContentSecurityPolicyDirective directive = csp.baseUri();
         assertNotNull(directive);
         assertTrue(directive.isNone());
     }

@@ -35,9 +35,9 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QU
 @ConfigurationProperties("micronaut.security.csp")
 @Internal
 final class ContentSecurityPolicyConfigurationProperties implements ContentSecurityPolicyConfiguration {
-    private static final List<String> SELF_VALUES = List.of(SINGLE_QUOTE + SELF + SINGLE_QUOTE);
-    private static final List<String> NONE_VALUES = List.of(SINGLE_QUOTE + NONE + SINGLE_QUOTE);
-    private static final String SCRIPT_VALUE = SINGLE_QUOTE + SCRIPT + SINGLE_QUOTE;
+    private static final List<String> SELF_VALUES = List.of(ContentSecurityPolicyUtils.wrapInSingleQuotes(SELF));
+    private static final List<String> NONE_VALUES = List.of(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONE));
+    private static final String SCRIPT_VALUE = ContentSecurityPolicyUtils.wrapInSingleQuotes(SCRIPT);
     private static final boolean DEFAULT_ENABLED = true;
     private static final boolean DEFAULT_REPORT_ONLY = false;
     private static final boolean DEFAULT_BASE_URI_ENABLED = true;

@@ -33,9 +33,9 @@ class ContentSecurityPolicyTest {
                 "default-src 'self'; ; img-src https://images.example.com; upgrade-insecure-requests");
 
         assertEquals(List.of(
-                new CspDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
-                new CspDirective(ContentSecurityPolicyGenerator.IMG_SRC, "https://images.example.com"),
-                new CspDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "https://images.example.com"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
         ), policy.directives());
     }
 
@@ -56,33 +56,33 @@ class ContentSecurityPolicyTest {
                 upgrade-insecure-requests; worker-src worker
                 """);
 
-        assertEquals(new CspDirective("base-uri", "base"), policy.baseUri());
-        assertEquals(new CspDirective("child-src", "child"), policy.childSrc());
-        assertEquals(new CspDirective("connect-src", "connect"), policy.connectSrc());
-        assertEquals(new CspDirective("default-src", "default"), policy.defaultSrc());
-        assertEquals(new CspDirective("fenced-frame-src", "fenced"), policy.fencedFrameSrc());
-        assertEquals(new CspDirective("font-src", "font"), policy.fontSrc());
-        assertEquals(new CspDirective("form-action", "form"), policy.formAction());
-        assertEquals(new CspDirective("frame-ancestors", "ancestors"), policy.frameAncestors());
-        assertEquals(new CspDirective("frame-src", "frame"), policy.frameSrc());
-        assertEquals(new CspDirective("img-src", "image"), policy.imgSrc());
-        assertEquals(new CspDirective("manifest-src", "manifest"), policy.manifestSrc());
-        assertEquals(new CspDirective("media-src", "media"), policy.mediaSrc());
-        assertEquals(new CspDirective("object-src", "object"), policy.objectSrc());
-        assertEquals(new CspDirective("prefetch-src", "prefetch"), policy.prefetchSrc());
-        assertEquals(new CspDirective("report-to", "report"), policy.reportTo());
-        assertEquals(new CspDirective("report-uri", "https://example.com/csp-reports"), policy.reportUri());
-        assertEquals(new CspDirective("require-trusted-types-for", "'script'"), policy.requireTrustedTypesFor());
-        assertEquals(new CspDirective("sandbox", "allow-scripts"), policy.sandbox());
-        assertEquals(new CspDirective("script-src", "script"), policy.scriptSrc());
-        assertEquals(new CspDirective("script-src-attr", "script-attr"), policy.scriptSrcAttr());
-        assertEquals(new CspDirective("script-src-elem", "script-elem"), policy.scriptSrcElem());
-        assertEquals(new CspDirective("style-src", "style"), policy.styleSrc());
-        assertEquals(new CspDirective("style-src-attr", "style-attr"), policy.styleSrcAttr());
-        assertEquals(new CspDirective("style-src-elem", "style-elem"), policy.styleSrcElem());
-        assertEquals(new CspDirective("trusted-types", "trusted"), policy.trustedTypes());
-        assertEquals(new CspDirective("upgrade-insecure-requests", null), policy.upgradeInsecureRequests());
-        assertEquals(new CspDirective("worker-src", "worker"), policy.workerSrc());
+        assertEquals(new ContentSecurityPolicyDirective("base-uri", "base"), policy.baseUri());
+        assertEquals(new ContentSecurityPolicyDirective("child-src", "child"), policy.childSrc());
+        assertEquals(new ContentSecurityPolicyDirective("connect-src", "connect"), policy.connectSrc());
+        assertEquals(new ContentSecurityPolicyDirective("default-src", "default"), policy.defaultSrc());
+        assertEquals(new ContentSecurityPolicyDirective("fenced-frame-src", "fenced"), policy.fencedFrameSrc());
+        assertEquals(new ContentSecurityPolicyDirective("font-src", "font"), policy.fontSrc());
+        assertEquals(new ContentSecurityPolicyDirective("form-action", "form"), policy.formAction());
+        assertEquals(new ContentSecurityPolicyDirective("frame-ancestors", "ancestors"), policy.frameAncestors());
+        assertEquals(new ContentSecurityPolicyDirective("frame-src", "frame"), policy.frameSrc());
+        assertEquals(new ContentSecurityPolicyDirective("img-src", "image"), policy.imgSrc());
+        assertEquals(new ContentSecurityPolicyDirective("manifest-src", "manifest"), policy.manifestSrc());
+        assertEquals(new ContentSecurityPolicyDirective("media-src", "media"), policy.mediaSrc());
+        assertEquals(new ContentSecurityPolicyDirective("object-src", "object"), policy.objectSrc());
+        assertEquals(new ContentSecurityPolicyDirective("prefetch-src", "prefetch"), policy.prefetchSrc());
+        assertEquals(new ContentSecurityPolicyDirective("report-to", "report"), policy.reportTo());
+        assertEquals(new ContentSecurityPolicyDirective("report-uri", "https://example.com/csp-reports"), policy.reportUri());
+        assertEquals(new ContentSecurityPolicyDirective("require-trusted-types-for", "'script'"), policy.requireTrustedTypesFor());
+        assertEquals(new ContentSecurityPolicyDirective("sandbox", "allow-scripts"), policy.sandbox());
+        assertEquals(new ContentSecurityPolicyDirective("script-src", "script"), policy.scriptSrc());
+        assertEquals(new ContentSecurityPolicyDirective("script-src-attr", "script-attr"), policy.scriptSrcAttr());
+        assertEquals(new ContentSecurityPolicyDirective("script-src-elem", "script-elem"), policy.scriptSrcElem());
+        assertEquals(new ContentSecurityPolicyDirective("style-src", "style"), policy.styleSrc());
+        assertEquals(new ContentSecurityPolicyDirective("style-src-attr", "style-attr"), policy.styleSrcAttr());
+        assertEquals(new ContentSecurityPolicyDirective("style-src-elem", "style-elem"), policy.styleSrcElem());
+        assertEquals(new ContentSecurityPolicyDirective("trusted-types", "trusted"), policy.trustedTypes());
+        assertEquals(new ContentSecurityPolicyDirective("upgrade-insecure-requests", null), policy.upgradeInsecureRequests());
+        assertEquals(new ContentSecurityPolicyDirective("worker-src", "worker"), policy.workerSrc());
         assertNull(ContentSecurityPolicy.of("object-src 'none'").styleSrc());
     }
 

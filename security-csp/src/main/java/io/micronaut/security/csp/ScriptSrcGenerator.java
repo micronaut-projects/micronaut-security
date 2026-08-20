@@ -16,25 +16,24 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.http.HttpRequest;
+import org.jspecify.annotations.Nullable;
 
+@FunctionalInterface
 /**
- * Generates unpredictable values for CSP nonce source expressions.
+ * Generates the request-specific {@code script-src} directive.
  *
- * <p>The filter generates one nonce per request, exposes it through {@link #CSP_NONCE_ATTRIBUTE},
- * and uses the same value in the {@code script-src} response directive. Views can use that request
- * attribute as the {@code nonce} attribute of trusted script elements.</p>
+ * <p>Implementations commonly use a request nonce, but may instead generate hash- or
+ * host-based policies. Return {@code null} when no {@code script-src} directive should be sent.</p>
  *
  * @since 5.4.0
  */
-public interface CspNonceGenerator {
+public interface ScriptSrcGenerator {
     /**
-     * Request attribute and view-model key under which the CSP nonce is stored.
+     * Generates the {@code script-src} directive for a request.
+     *
+     * @param request the request associated with the response policy
+     * @return the directive to add, or {@code null} when omitted
+     * @since 5.4.0
      */
-    String CSP_NONCE_ATTRIBUTE = "cspNonce";
-
-    /**
-     * @param request the request for which the nonce is generated
-     * @return an unpredictable nonce value, unique to the request
-     */
-    String generateNonce(HttpRequest<?> request);
+    @Nullable ContentSecurityPolicyDirective generateScriptSrcDirective(HttpRequest<?> request);
 }

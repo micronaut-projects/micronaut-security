@@ -28,7 +28,7 @@ class ObjectSrcDefaultsToNoneTest {
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
         assertNotNull(csp);
-        CspDirective directive = csp.objectSrc();
+        ContentSecurityPolicyDirective directive = csp.objectSrc();
         assertNotNull(directive);
         assertTrue(directive.isNone());
     }

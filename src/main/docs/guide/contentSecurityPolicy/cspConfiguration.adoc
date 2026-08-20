@@ -1,0 +1,1 @@
+include::{includedir}configurationProperties/io.micronaut.security.csp.ContentSecurityPolicyConfigurationProperties.adoc[]

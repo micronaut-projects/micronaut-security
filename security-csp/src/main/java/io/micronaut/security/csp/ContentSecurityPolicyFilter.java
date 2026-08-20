@@ -40,7 +40,7 @@ import java.util.StringJoiner;
 final class ContentSecurityPolicyFilter {
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
-    private final CspNonceGenerator cspNonceGenerator;
+    private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
      * @param cspGenerator generates the directives to write to the response
@@ -49,7 +49,7 @@ final class ContentSecurityPolicyFilter {
      */
     ContentSecurityPolicyFilter(ContentSecurityPolicyGenerator cspGenerator,
                                 ContentSecurityPolicyConfiguration cspConfiguration,
-                                CspNonceGenerator cspNonceGenerator) {
+                                ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
         this.cspGenerator = cspGenerator;
         this.cspConfiguration = cspConfiguration;
         this.cspNonceGenerator = cspNonceGenerator;
@@ -63,7 +63,7 @@ final class ContentSecurityPolicyFilter {
     @RequestFilter
     void generateNonce(HttpRequest<?> request) {
         if (cspConfiguration.isScriptSrcNonceEnabled()) {
-            request.setAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
+            request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
         }
     }
 
@@ -76,18 +76,24 @@ final class ContentSecurityPolicyFilter {
     @ResponseFilter
     void filter(HttpRequest<?> request, MutableHttpResponse<?> response) {
         String headerName = cspConfiguration.isReportOnly()
-            ? CspHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : CspHeaders.CONTENT_SECURITY_POLICY;
+            ? ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY;
         boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
         if (!responseSetsAlreadyCspHeader) {
             response.header(headerName, cspValue(request));
         }
     }
 
+    /**
+     * Serializes the ordered request policy as one HTTP header value.
+     *
+     * @param request the request for which to generate the policy
+     * @return the semicolon-separated CSP header value
+     */
     private String cspValue(HttpRequest<?> request) {
         // CSP directives are separated with semicolons; source expressions within each directive
         // have already been serialized by the generator.
         StringJoiner directives = new StringJoiner("; ");
-        for (CspDirective directive : cspGenerator.contentSecurityPolicy(request)) {
+        for (ContentSecurityPolicyDirective directive : cspGenerator.contentSecurityPolicy(request)) {
             directives.add(directive.toString());
         }
         return directives.toString();

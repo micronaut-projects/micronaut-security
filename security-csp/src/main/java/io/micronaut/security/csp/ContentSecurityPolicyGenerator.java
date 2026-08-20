@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csp;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.List;
  * @since 5.4.0
  */
 @FunctionalInterface
+@DefaultImplementation(DefaultContentSecurityPolicyGenerator.class)
 public interface ContentSecurityPolicyGenerator {
     /**
      * The space used between directive values in a serialized CSP header.
@@ -51,17 +53,17 @@ public interface ContentSecurityPolicyGenerator {
      */
     String SELF = "self";
     /**
-     * //TODO
+     * The {@code 'self'} keyword source expression, including the required single quotes.
      */
-    String QUOTED_SELF = SINGLE_QUOTE + SELF + SINGLE_QUOTE;
+    String QUOTED_SELF = ContentSecurityPolicyUtils.wrapInSingleQuotes(SELF);
     /**
      * The {@code none} keyword source expression, without its surrounding quotes.
      */
     String NONE = "none";
     /**
-     * //TODO
+     * The {@code 'none'} keyword source expression, including the required single quotes.
      */
-    String QUOTED_NONE = SINGLE_QUOTE + NONE + SINGLE_QUOTE;
+    String QUOTED_NONE = ContentSecurityPolicyUtils.wrapInSingleQuotes(NONE);
     /**
      * The {@code script} Trusted Types sink group, without its surrounding quotes.
      */
@@ -235,7 +237,7 @@ public interface ContentSecurityPolicyGenerator {
     /**
      * @return the policy directives, in the order in which they should appear in the response header
      */
-    List<CspDirective> contentSecurityPolicy();
+    List<ContentSecurityPolicyDirective> contentSecurityPolicy();
 
     /**
      * Generates the policy directives for a request.
@@ -248,7 +250,7 @@ public interface ContentSecurityPolicyGenerator {
      * @return the policy directives, in the order in which they should appear in the response header
      * @since 5.4.0
      */
-    default List<CspDirective> contentSecurityPolicy(HttpRequest<?> request) {
+    default List<ContentSecurityPolicyDirective> contentSecurityPolicy(HttpRequest<?> request) {
         return contentSecurityPolicy();
     }
 }

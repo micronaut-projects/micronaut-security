@@ -28,7 +28,7 @@ class ScriptSrcDefaultsToTest {
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
         assertNotNull(csp);
-        CspDirective directive = csp.scriptSrc();
+        ContentSecurityPolicyDirective directive = csp.scriptSrc();
         assertNotNull(directive);
         boolean unsafeEvalNotPresentByDefault = directive.values().stream().noneMatch(v -> v.contains("unsafe-eval"));
         assertTrue(unsafeEvalNotPresentByDefault);

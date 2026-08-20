@@ -1,0 +1,2 @@
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP[Content Security Policy (CSP)] is an additional security guard that provides an extra layer of protection to catch and block potential XSS attacks.
+

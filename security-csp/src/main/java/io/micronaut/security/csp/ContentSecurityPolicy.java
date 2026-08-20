@@ -33,12 +33,12 @@ import org.jspecify.annotations.Nullable;
  * @param directives the ordered directives in the policy
  * @since 5.4.0
  */
-public record ContentSecurityPolicy(List<CspDirective> directives) {
+public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directives) {
     /**
      * @return the {@code base-uri} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective baseUri() {
+    public @Nullable ContentSecurityPolicyDirective baseUri() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.BASE_URI);
     }
 
@@ -46,7 +46,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code child-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective childSrc() {
+    public @Nullable ContentSecurityPolicyDirective childSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.CHILD_SRC);
     }
 
@@ -54,7 +54,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code connect-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective connectSrc() {
+    public @Nullable ContentSecurityPolicyDirective connectSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.CONNECT_SRC);
     }
 
@@ -62,7 +62,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code default-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective defaultSrc() {
+    public @Nullable ContentSecurityPolicyDirective defaultSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.DEFAULT_SRC);
     }
 
@@ -70,7 +70,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code fenced-frame-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective fencedFrameSrc() {
+    public @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FENCED_FRAME_SRC);
     }
 
@@ -78,7 +78,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code font-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective fontSrc() {
+    public @Nullable ContentSecurityPolicyDirective fontSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FONT_SRC);
     }
 
@@ -86,7 +86,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code form-action} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective formAction() {
+    public @Nullable ContentSecurityPolicyDirective formAction() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FORM_ACTION);
     }
 
@@ -94,7 +94,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code frame-ancestors} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective frameAncestors() {
+    public @Nullable ContentSecurityPolicyDirective frameAncestors() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_ANCESTORS);
     }
 
@@ -102,7 +102,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code frame-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective frameSrc() {
+    public @Nullable ContentSecurityPolicyDirective frameSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_SRC);
     }
 
@@ -110,7 +110,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code img-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective imgSrc() {
+    public @Nullable ContentSecurityPolicyDirective imgSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.IMG_SRC);
     }
 
@@ -118,7 +118,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code manifest-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective manifestSrc() {
+    public @Nullable ContentSecurityPolicyDirective manifestSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.MANIFEST_SRC);
     }
 
@@ -126,7 +126,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code media-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective mediaSrc() {
+    public @Nullable ContentSecurityPolicyDirective mediaSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.MEDIA_SRC);
     }
 
@@ -134,7 +134,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code object-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective objectSrc() {
+    public @Nullable ContentSecurityPolicyDirective objectSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.OBJECT_SRC);
     }
 
@@ -142,7 +142,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code prefetch-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective prefetchSrc() {
+    public @Nullable ContentSecurityPolicyDirective prefetchSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.PREFETCH_SRC);
     }
 
@@ -150,7 +150,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code report-to} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective reportTo() {
+    public @Nullable ContentSecurityPolicyDirective reportTo() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_TO);
     }
 
@@ -158,7 +158,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the deprecated {@code report-uri} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective reportUri() {
+    public @Nullable ContentSecurityPolicyDirective reportUri() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_URI);
     }
 
@@ -166,7 +166,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code require-trusted-types-for} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective requireTrustedTypesFor() {
+    public @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR);
     }
 
@@ -174,7 +174,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code sandbox} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective sandbox() {
+    public @Nullable ContentSecurityPolicyDirective sandbox() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SANDBOX);
     }
 
@@ -182,7 +182,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code script-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective scriptSrc() {
+    public @Nullable ContentSecurityPolicyDirective scriptSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC);
     }
 
@@ -190,7 +190,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code script-src-attr} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective scriptSrcAttr() {
+    public @Nullable ContentSecurityPolicyDirective scriptSrcAttr() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ATTR);
     }
 
@@ -198,7 +198,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code script-src-elem} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective scriptSrcElem() {
+    public @Nullable ContentSecurityPolicyDirective scriptSrcElem() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ELEM);
     }
 
@@ -206,7 +206,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code style-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective styleSrc() {
+    public @Nullable ContentSecurityPolicyDirective styleSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC);
     }
 
@@ -214,7 +214,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code style-src-attr} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective styleSrcAttr() {
+    public @Nullable ContentSecurityPolicyDirective styleSrcAttr() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ATTR);
     }
 
@@ -222,7 +222,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code style-src-elem} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective styleSrcElem() {
+    public @Nullable ContentSecurityPolicyDirective styleSrcElem() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ELEM);
     }
 
@@ -230,7 +230,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code trusted-types} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective trustedTypes() {
+    public @Nullable ContentSecurityPolicyDirective trustedTypes() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.TRUSTED_TYPES);
     }
 
@@ -238,7 +238,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code upgrade-insecure-requests} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective upgradeInsecureRequests() {
+    public @Nullable ContentSecurityPolicyDirective upgradeInsecureRequests() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS);
     }
 
@@ -246,7 +246,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the {@code worker-src} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
-    public @Nullable CspDirective workerSrc() {
+    public @Nullable ContentSecurityPolicyDirective workerSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.WORKER_SRC);
     }
 
@@ -267,13 +267,13 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @return the parsed policy, or {@code null} if the headers have no enforcing CSP header
      */
     public static @Nullable ContentSecurityPolicy of(HttpHeaders headers) {
-        return of(headers, CspHeaders.CONTENT_SECURITY_POLICY);
+        return of(headers, ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY);
     }
 
     /**
      * Parses a named Content Security Policy header from HTTP headers.
      *
-     * <p>Use {@link CspHeaders#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
+     * <p>Use {@link ContentSecurityPolicyHeaders#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
      *
      * @param headers the HTTP headers
      * @param headerName the CSP header name to parse
@@ -297,7 +297,7 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
         if (StringUtils.isEmpty(headerValue)) {
             return null;
         }
-        List<CspDirective> directives = List.of(headerValue.split(";", -1)).stream()
+        List<ContentSecurityPolicyDirective> directives = List.of(headerValue.split(";", -1)).stream()
                 .map(String::trim)
                 .filter(StringUtils::isNotEmpty)
                 .map(ContentSecurityPolicy::directive)
@@ -311,12 +311,12 @@ public record ContentSecurityPolicy(List<CspDirective> directives) {
      * @param component the trimmed component from the CSP header
      * @return the parsed directive
      */
-    private static CspDirective directive(String component) {
+    private static ContentSecurityPolicyDirective directive(String component) {
         String[] parts = component.split("\\s+", 2);
-        return new CspDirective(parts[0], parts.length == 1 ? null : parts[1]);
+        return new ContentSecurityPolicyDirective(parts[0], parts.length == 1 ? null : parts[1]);
     }
 
-    private @Nullable CspDirective findByDirectiveName(String directiveName) {
+    private @Nullable ContentSecurityPolicyDirective findByDirectiveName(String directiveName) {
         return directives.stream()
                 .filter(directive -> directive.name().equals(directiveName))
                 .findFirst()

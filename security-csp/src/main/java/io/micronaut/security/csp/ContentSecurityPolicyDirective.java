@@ -24,7 +24,6 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
 
 /**
  * A directive in a Content Security Policy.
@@ -36,7 +35,7 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QU
  * @param value the directive value, or {@code null} for directives without a value
  * @since 5.4.0
  */
-public record CspDirective(String name, @Nullable String value) {
+public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
 
     @Override
     public String toString() {
@@ -54,6 +53,10 @@ public record CspDirective(String name, @Nullable String value) {
         return StringUtils.isEmpty(value()) ? List.of() : List.of(value().trim().split("\\s+"));
     }
 
+    /**
+     * @return whether this directive has exactly the {@code none} or {@code 'none'} value
+     * @since 5.4.0
+     */
     public boolean isNone() {
         if (StringUtils.isEmpty(value())) {
             return false;
@@ -61,6 +64,10 @@ public record CspDirective(String name, @Nullable String value) {
         return NONE.equals(value()) || QUOTED_NONE.equals(value) ;
     }
 
+    /**
+     * @return whether this directive has exactly the {@code self} or {@code 'self'} value
+     * @since 5.4.0
+     */
     public boolean isSelf() {
         if (StringUtils.isEmpty(value())) {
             return false;

@@ -23,25 +23,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CspDirectiveTest {
+class ContentSecurityPolicyDirectiveTest {
 
     @Test
     void toStringIncludesDirectiveValue() {
-        CspDirective directive = new CspDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'");
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'");
 
         assertEquals("default-src 'self'", directive.toString());
     }
 
     @Test
     void toStringOmitsMissingDirectiveValue() {
-        CspDirective directive = new CspDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null);
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null);
 
         assertEquals("upgrade-insecure-requests", directive.toString());
     }
 
     @Test
     void valuesSplitsDirectiveValue() {
-        CspDirective directive = new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
                 "'self'  https://api.example.com");
 
         assertEquals(List.of("'self'", "https://api.example.com"), directive.values());
@@ -49,17 +49,17 @@ class CspDirectiveTest {
 
     @Test
     void isNoneRecognizesQuotedAndUnquotedNoneValues() {
-        assertTrue(new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'").isNone());
-        assertTrue(new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "none").isNone());
-        assertFalse(new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'self'").isNone());
-        assertFalse(new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, null).isNone());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'").isNone());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "none").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'self'").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, null).isNone());
     }
 
     @Test
     void isSelfRecognizesQuotedAndUnquotedSelfValues() {
-        assertTrue(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'").isSelf());
-        assertTrue(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
-        assertFalse(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'").isSelf());
-        assertFalse(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, null).isSelf());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'").isSelf());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, null).isSelf());
     }
 }
