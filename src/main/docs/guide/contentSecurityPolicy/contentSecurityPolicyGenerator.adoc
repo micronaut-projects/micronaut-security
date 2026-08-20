@@ -1,2 +1,7 @@
-The main API to generate a Content Security Policy implementation api:security.csp.ContentSecurityPolicyGenerator[] with its default implementation of api:security.csp.DefaultContentSecurityPolicyGenerator[].
+api:security.csp.ContentSecurityPolicyGenerator[] is the main policy-generation API. Its default implementation, api:security.csp.DefaultContentSecurityPolicyGenerator[], builds directives from the `micronaut.security.csp` configuration.
 
+The no-argument `contentSecurityPolicy()` method returns directives that do not depend on request state. The request-aware overload adds directives such as `script-src` and `style-src` that can contain the current request's nonce. The server filter preserves the returned order and joins directives with semicolons.
+
+To customize one part of the default policy, subclass api:security.csp.DefaultContentSecurityPolicyGenerator[] and override the corresponding protected directive method. To take complete control, provide a bean implementing api:security.csp.ContentSecurityPolicyGenerator[]; the default implementation is only loaded when no other generator bean exists.
+
+NOTE: A custom generator is also the escape hatch for directives or source expressions that the directive-specific configuration properties do not expose. api:security.csp.ContentSecurityPolicyDirective[] accepts a directive name and its already serialized value.

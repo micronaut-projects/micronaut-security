@@ -1,4 +1,4 @@
-You can provide https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#hashes[hashes] as one of the values of the `script-src` directive via configuration
+You can provide https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#hashes[hash source expressions] as values of the `script-src` directive. The digest must match the script content exactly:
 
 [configuration]
 ----
@@ -6,9 +6,17 @@ micronaut:
   security:
     csp:
       script-src:
+        nonce: false
         self: true
-        hashes:
-          - sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE=
+        values:
+          - 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='
 ----
 
-The `script-src` value for the above configuration will be `'self' 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='`
+The configuration generates:
+
+[source,text]
+----
+script-src 'self' 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='
+----
+
+The module adds the required single quotes around configured hashes. This example disables nonce generation only to make the resulting hash-based policy deterministic; nonces and hashes may be used together.

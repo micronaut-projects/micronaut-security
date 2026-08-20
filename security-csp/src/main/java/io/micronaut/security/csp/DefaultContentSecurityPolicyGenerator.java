@@ -52,8 +52,9 @@ import java.util.function.Function;
 /**
  * Generates the default, opt-out CSP directive set from the root and directive-specific configuration.
  *
- * <p>Each source-list directive is supplied by its own configuration contract. Per-request script
- * directives are generated separately because their nonce is request-specific.</p>
+ * <p>Each source-list directive is supplied by its own configuration contract. Directives that
+ * may contain a nonce are generated from the request-specific policy method because a nonce is
+ * valid for only one request.</p>
  *
  * <p>Subclasses can override the protected directive methods to replace or omit an individual
  * directive without reimplementing policy assembly.</p>
@@ -105,7 +106,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Creates a default policy generator with a separate request-aware script directive generator.
+     * Creates a default policy generator from the root and directive-specific configuration.
      *
      * @param cspConfiguration configures the static policy directives
      * @param baseUriConfiguration configures {@code base-uri}
@@ -167,7 +168,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Creates a default policy generator with a separate request-aware script directive generator.
+     * Creates a default policy generator with a request-aware nonce provider.
      *
      * @param cspConfiguration configures the static policy directives
      * @param cspNonceProvider CSP Nonce Provider
@@ -256,10 +257,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Adds the request-specific {@code script-src} directive to the configured baseline policy.
+     * Adds request-specific nonce-capable directives to the configured baseline policy.
      *
-     * <p>The script generator is separate because a nonce must be created and used within the
-     * lifetime of a single request.</p>
+     * <p>A nonce must be created and used within the lifetime of a single request. The same nonce
+     * may therefore be added to the request's {@code style-src} and {@code script-src} directives.</p>
      *
      * @param request the request whose nonce is used to build the policy
      * @return the complete policy for the request

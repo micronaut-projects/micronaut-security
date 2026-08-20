@@ -1,4 +1,4 @@
-The module is enabled by default and writes an enforcing `Content-Security-Policy` header in every HTTP Response. It starts from a deny-by-default policy:
+The module is enabled by default and writes an enforcing `Content-Security-Policy` header on every HTTP response. It starts from a deny-by-default policy:
 
 * `default-src 'none'`
 * `base-uri 'none'`
@@ -8,29 +8,17 @@ The module is enabled by default and writes an enforcing `Content-Security-Polic
 * `prefetch-src 'none'`
 * `frame-ancestors 'none'`
 * `frame-src 'none'`
-* `script-src 'nonce-*'`
+* `script-src 'nonce-<random>'`
 * `img-src 'none'`
 * `manifest-src 'none'`
 * `media-src 'none'`
-* `style-src 'none'`
+* `style-src 'nonce-<random>'`
 * `worker-src 'none'`
 * `form-action 'self'`
 * `require-trusted-types-for 'script'`
 
 It does not emit `fenced-frame-src` or `report-uri` unless you enable them explicitly.
 
+The same request-specific nonce is used by the default `script-src` and `style-src` directives. The literal value changes for every request; `<random>` above is only a placeholder used to describe the generated header.
+
 This baseline intentionally blocks most existing resource loading. Configure only the directives and source expressions required by your application.
-
-Scheme source expressions can be enabled for each source-list directive. They are serialized without single quotes. For example:
-
-[configuration]
-----
-micronaut:
-  security:
-    csp:
-      img-src:
-        data: true
-        https: true
-----
-
-This configuration generates `img-src https: data:`. The available scheme flags are `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, and `wss`; all default to `false`.

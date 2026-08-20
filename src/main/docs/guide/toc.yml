@@ -115,15 +115,16 @@ contentSecurityPolicy:
   title: Content Security Policy (CSP)
   cspDependency: CSP Dependency
   cspDefaults: CSP Defaults
+  cspSchemeSources: Scheme Sources
   cspReportOnly: Report Only
   cspScriptSrc:
     title: CSP script-src
     cspNonceGeneration: script-src Nonce
-    scriptDynamic: script-dynamic
-    scriptSrcHashes: script-scr Hashes
-    scriptSrcUrls: script-scr URLs
+    scriptDynamic: script-src strict-dynamic
+    scriptSrcHashes: script-src Hashes
+    scriptSrcSelf: script-src self
+    scriptSrcUrls: script-src URLs
   contentSecurityPolicyGenerator: CSP Generator
-  cspConfiguration: CSP Configuration
 htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:

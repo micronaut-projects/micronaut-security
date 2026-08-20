@@ -21,15 +21,16 @@ import io.micronaut.http.HttpRequest;
  * Generates unpredictable values for CSP nonce source expressions.
  *
  * <p>The filter generates one nonce per request, exposes it through {@link #CSP_NONCE_ATTRIBUTE},
- * and uses the same value in the {@code script-src} response directive. Views can use that request
- * attribute as the {@code nonce} attribute of trusted script elements.</p>
+ * and uses the same value in nonce-capable response directives such as {@code script-src} and
+ * {@code style-src}. Views can use that request attribute as the {@code nonce} attribute of trusted
+ * script or style elements.</p>
  *
  * @since 5.4.0
  */
 public interface ContentSecurityPolicyNonceGenerator {
     /**
      * Request attribute and map-backed view-model key under which the CSP nonce is stored.
-     * The value is safe to expose only to trusted template code that applies it to a script nonce
+     * The value is safe to expose only to trusted template code that applies it to a nonce
      * attribute.
      *
      * @since 5.4.0
@@ -37,7 +38,7 @@ public interface ContentSecurityPolicyNonceGenerator {
     String CSP_NONCE_ATTRIBUTE = "cspNonce";
 
     /**
-     * Generates the nonce used by both the response header and trusted view scripts.
+     * Generates the nonce used by both the response header and trusted view elements.
      *
      * @param request the request for which the nonce is generated
      * @return an unpredictable nonce value, unique to the request
