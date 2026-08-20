@@ -17,27 +17,44 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.logging.LogLevel;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @Requires(missingBeans = ContentSecurityPolicyGenerator.class)
 @Singleton
 @Internal
 final class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
     private final ContentSecurityPolicyConfiguration cspConfiguration;
-    private final CspNonceGenerator cspNonceGenerator;
+    private final Function<HttpRequest<?>, String> cspNonceProvider;
 
     /**
      * @param cspConfiguration configures the generated default policy
-     * @param cspNonceGenerator generates and stores the request CSP nonce
+     */
+    @Inject
+    DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
+        this(cspConfiguration, req -> req.getAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null));
+    }
+    /**
+     * @param cspConfiguration configures the generated default policy
+     * @param cspNonceProvider generates and stores the request CSP nonce
      */
     DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
-                                          CspNonceGenerator cspNonceGenerator) {
+                                          Function<HttpRequest<?>, @Nullable String> cspNonceProvider) {
         this.cspConfiguration = cspConfiguration;
-        this.cspNonceGenerator = cspNonceGenerator;
+        this.cspNonceProvider = cspNonceProvider;
     }
 
     @Override
@@ -48,9 +65,6 @@ final class DefaultContentSecurityPolicyGenerator implements ContentSecurityPoli
         }
         if (cspConfiguration.isConnectSrcEnabled()) {
             directives.add(directive(CONNECT_SRC, cspConfiguration.getConnectSrc()));
-        }
-        if (cspConfiguration.isFencedFrameSrcEnabled()) {
-            directives.add(directive(FENCED_FRAME_SRC, cspConfiguration.getFencedFrameSrc()));
         }
         if (cspConfiguration.isFontSrcEnabled()) {
             directives.add(directive(FONT_SRC, cspConfiguration.getFontSrc()));
@@ -94,13 +108,31 @@ final class DefaultContentSecurityPolicyGenerator implements ContentSecurityPoli
     @Override
     public List<CspDirective> contentSecurityPolicy(HttpRequest<?> request) {
         List<CspDirective> directives = new ArrayList<>(contentSecurityPolicy());
-        if (cspConfiguration.isScriptSrcNonceEnabled()) {
-            String nonce = request.getAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class)
-                    .orElseGet(() -> cspNonceGenerator.generateNonce(request));
-            request.setAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
-            directives.add(new CspDirective(SCRIPT_SRC, "'nonce-" + nonce + "'"));
+        CspDirective scriptSrc = scriptSrc(request);
+        if (scriptSrc != null) {
+            directives.add(scriptSrc);
         }
         return directives;
+    }
+
+    protected @Nullable CspDirective scriptSrc(HttpRequest<?> request) {
+        List<String> values = new ArrayList<>();
+        if (cspConfiguration.isScriptSrcNonceEnabled()) {
+            String nonce = cspNonceProvider.apply(request);
+            if (StringUtils.isNotEmpty(nonce)) {
+                values.add("'nonce-" + nonce + "'");
+            } else {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("CSP nonce not found in request attribute {}", CspNonceGenerator.CSP_NONCE_ATTRIBUTE);
+                }
+            }
+        }
+        if (cspConfiguration.isScriptSrcStrictDynamic()) {
+            values.add("'" + STRICT_DYNAMIC + "'");
+        }
+        return values.isEmpty()
+                ? null
+                : new CspDirective(SCRIPT_SRC, String.join(" ", values));
     }
 
     private static CspDirective directive(String name, List<String> values) {

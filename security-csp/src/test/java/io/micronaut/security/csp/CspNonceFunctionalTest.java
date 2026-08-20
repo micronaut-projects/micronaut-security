@@ -53,6 +53,35 @@ class CspNonceFunctionalTest {
     }
 
     @Test
+    void addsStrictDynamicToScriptSrcWhenEnabled() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.script-src-strict-dynamic", true))) {
+            try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+                BlockingHttpClient client = httpClient.toBlocking();
+                HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
+                Matcher matcher = SCRIPT_NONCE.matcher(response.body());
+
+                assertTrue(matcher.find());
+                assertTrue(response.header("Content-Security-Policy")
+                        .contains("script-src 'nonce-" + matcher.group(1) + "' 'strict-dynamic'"));
+            }
+        }
+    }
+
+    @Test
+    void doesNotAddStrictDynamicByDefault() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", SPEC_NAME))) {
+            try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+                BlockingHttpClient client = httpClient.toBlocking();
+                HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
+
+                assertFalse(response.header("Content-Security-Policy").contains("strict-dynamic"));
+            }
+        }
+    }
+
+    @Test
     void doesNotAddNonceWhenDisabled() {
         try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
                 "spec.name", SPEC_NAME,

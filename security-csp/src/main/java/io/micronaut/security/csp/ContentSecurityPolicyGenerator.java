@@ -26,6 +26,8 @@ import java.util.List;
  */
 @FunctionalInterface
 public interface ContentSecurityPolicyGenerator {
+    String STRICT_DYNAMIC = "strict-dynamic";
+
     /**
      * The {@code base-uri} directive, which restricts the URLs that a document's {@code base} element
      * may use. This prevents injected markup from changing how relative URLs resolve.
@@ -46,11 +48,6 @@ public interface ContentSecurityPolicyGenerator {
      * that are not explicitly configured.
      */
     String DEFAULT_SRC = "default-src";
-    /**
-     * The {@code fenced-frame-src} directive, which restricts documents loaded by {@code fencedframe}
-     * elements.
-     */
-    String FENCED_FRAME_SRC = "fenced-frame-src";
     /**
      * The {@code font-src} directive, which restricts fonts loaded through {@code @font-face}.
      */

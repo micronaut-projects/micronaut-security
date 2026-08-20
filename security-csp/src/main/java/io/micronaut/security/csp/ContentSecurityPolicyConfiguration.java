@@ -51,16 +51,6 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
     List<String> getConnectSrc();
 
     /**
-     * @return whether the {@code fenced-frame-src} directive is included in the policy
-     */
-    boolean isFencedFrameSrcEnabled();
-
-    /**
-     * @return the source expression used as the value of the {@code fenced-frame-src} directive
-     */
-    List<String> getFencedFrameSrc();
-
-    /**
      * @return whether the {@code font-src} directive is included in the policy
      */
     boolean isFontSrcEnabled();
@@ -164,6 +154,15 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
      * @return whether a per-response nonce is added to the {@code script-src} directive
      */
     boolean isScriptSrcNonceEnabled();
+
+    /**
+     * @return whether {@code 'strict-dynamic'} is added to the {@code script-src} directive.
+     * When enabled, a script trusted via the nonce may load further scripts regardless of any
+     * source expression, which lets libraries that re-insert {@code <script>} elements at
+     * runtime (e.g. Turbo Drive) keep working under a nonce-based policy.
+     * @see <a href="https://content-security-policy.com/strict-dynamic/">strict-dynamic</a>
+     */
+    boolean isScriptSrcStrictDynamic();
 
     /**
      * @return whether the {@code style-src} directive is included in the policy

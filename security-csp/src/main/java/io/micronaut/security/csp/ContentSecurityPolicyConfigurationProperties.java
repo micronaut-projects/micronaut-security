@@ -32,8 +32,6 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private static final List<String> DEFAULT_BASE_URI_VALUE = NONE;
     private static final boolean DEFAULT_CONNECT_SRC_ENABLED = true;
     private static final List<String> DEFAULT_CONNECT_SRC_VALUE = NONE;
-    private static final boolean DEFAULT_FENCED_FRAME_SRC_ENABLED = true;
-    private static final List<String> DEFAULT_FENCED_FRAME_SRC_VALUE = NONE;
     private static final boolean DEFAULT_FONT_SRC_ENABLED = true;
     private static final List<String> DEFAULT_FONT_SRC_VALUE = NONE;
     private static final boolean DEFAULT_OBJECT_SRC_ENABLED = true;
@@ -55,6 +53,7 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private static final boolean DEFAULT_FORM_ACTION_ENABLED = true;
     private static final List<String> DEFAULT_FORM_ACTION_VALUE = SELF;
     private static final boolean DEFAULT_SCRIPT_SRC_NONCE_ENABLED = true;
+    private static final boolean DEFAULT_SCRIPT_SRC_STRICT_DYNAMIC = false;
     private static final boolean DEFAULT_STYLE_SRC_ENABLED = true;
     private static final List<String> DEFAULT_STYLE_SRC_VALUE = NONE;
     private static final boolean DEFAULT_WORKER_SRC_ENABLED = true;
@@ -65,8 +64,6 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private List<String> baseUri = DEFAULT_BASE_URI_VALUE;
     private boolean connectSrcEnabled = DEFAULT_CONNECT_SRC_ENABLED;
     private List<String> connectSrc = DEFAULT_CONNECT_SRC_VALUE;
-    private boolean fencedFrameSrcEnabled = DEFAULT_FENCED_FRAME_SRC_ENABLED;
-    private List<String> fencedFrameSrc = DEFAULT_FENCED_FRAME_SRC_VALUE;
     private boolean fontSrcEnabled = DEFAULT_FONT_SRC_ENABLED;
     private List<String> fontSrc = DEFAULT_FONT_SRC_VALUE;
     private boolean objectSrcEnabled = DEFAULT_OBJECT_SRC_ENABLED;
@@ -88,6 +85,7 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private boolean formActionEnabled = DEFAULT_FORM_ACTION_ENABLED;
     private List<String> formAction = DEFAULT_FORM_ACTION_VALUE;
     private boolean scriptSrcNonceEnabled = DEFAULT_SCRIPT_SRC_NONCE_ENABLED;
+    private boolean scriptSrcStrictDynamic = DEFAULT_SCRIPT_SRC_STRICT_DYNAMIC;
     private boolean styleSrcEnabled = DEFAULT_STYLE_SRC_ENABLED;
     private List<String> styleSrc = DEFAULT_STYLE_SRC_VALUE;
     private boolean workerSrcEnabled = DEFAULT_WORKER_SRC_ENABLED;
@@ -135,26 +133,6 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     /** @param connectSrc the source expressions used as the value of the {@code connect-src} directive */
     public void setConnectSrc(List<String> connectSrc) {
         this.connectSrc = connectSrc;
-    }
-
-    @Override
-    public boolean isFencedFrameSrcEnabled() {
-        return fencedFrameSrcEnabled;
-    }
-
-    /** @param fencedFrameSrcEnabled whether the {@code fenced-frame-src} directive is included in the policy */
-    public void setFencedFrameSrcEnabled(boolean fencedFrameSrcEnabled) {
-        this.fencedFrameSrcEnabled = fencedFrameSrcEnabled;
-    }
-
-    @Override
-    public List<String> getFencedFrameSrc() {
-        return fencedFrameSrc;
-    }
-
-    /** @param fencedFrameSrc the source expressions used as the value of the {@code fenced-frame-src} directive */
-    public void setFencedFrameSrc(List<String> fencedFrameSrc) {
-        this.fencedFrameSrc = fencedFrameSrc;
     }
 
     @Override
@@ -383,6 +361,18 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
      */
     public void setScriptSrcNonceEnabled(boolean scriptSrcNonceEnabled) {
         this.scriptSrcNonceEnabled = scriptSrcNonceEnabled;
+    }
+
+    @Override
+    public boolean isScriptSrcStrictDynamic() {
+        return scriptSrcStrictDynamic;
+    }
+
+    /**
+     * @param scriptSrcStrictDynamic whether {@code 'strict-dynamic'} is added to the {@code script-src} directive
+     */
+    public void setScriptSrcStrictDynamic(boolean scriptSrcStrictDynamic) {
+        this.scriptSrcStrictDynamic = scriptSrcStrictDynamic;
     }
 
     @Override

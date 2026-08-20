@@ -32,13 +32,14 @@ import java.util.Map;
 @Singleton
 @Internal
 final class CspViewModelProcessor implements ViewModelProcessor<Map<String, Object>, HttpRequest<?>> {
-
     @Override
     public void process(HttpRequest<?> request, ModelAndView<Map<String, Object>> modelAndView) {
         request.getAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).ifPresent(nonce -> {
-            Map<String, Object> model = new HashMap<>(modelAndView.getModel().orElseGet(Map::of));
-            model.put(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
-            modelAndView.setModel(model);
+            modelAndView.getModel().ifPresent(model -> {
+                Map<String, Object> mutableModel = new HashMap<>(model);
+                mutableModel.put(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
+                modelAndView.setModel(mutableModel);
+            });
         });
     }
 }

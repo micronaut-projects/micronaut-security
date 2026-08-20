@@ -32,7 +32,6 @@ class DefaultContentSecurityPolicyGeneratorTest {
         assertEquals(List.of(
                 new CspDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
-                new CspDirective(ContentSecurityPolicyGenerator.FENCED_FRAME_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.FONT_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.PREFETCH_SRC, "'none'"),
@@ -53,7 +52,6 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setBaseUriEnabled(false);
         configuration.setConnectSrcEnabled(false);
-        configuration.setFencedFrameSrcEnabled(false);
         configuration.setFontSrcEnabled(false);
         configuration.setObjectSrcEnabled(false);
         configuration.setPrefetchSrcEnabled(false);
@@ -93,6 +91,18 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce'"),
                 directives.get(directives.size() - 1));
-        assertEquals("nonce", request.getAttribute(CspNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElseThrow());
+    }
+
+    @Test
+    void addsStrictDynamicToScriptSourceWhenEnabled() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setScriptSrcStrictDynamic(true);
+        HttpRequest<?> request = HttpRequest.GET("/");
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, currentRequest -> "nonce");
+
+        List<CspDirective> directives = generator.contentSecurityPolicy(request);
+
+        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'strict-dynamic'"),
+                directives.get(directives.size() - 1));
     }
 }
