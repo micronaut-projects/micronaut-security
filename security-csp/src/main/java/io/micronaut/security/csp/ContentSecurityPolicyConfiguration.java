@@ -51,6 +51,18 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
     List<String> getBaseUri();
 
     /**
+     * @return whether to use a fallback policy for fetch directives that are not explicitly configured
+     * @since 5.4.0
+     */
+    boolean isDefaultSrcEnabled();
+
+    /**
+     * @return the fallback source expressions for fetch directives that are not explicitly configured
+     * @since 5.4.0
+     */
+    List<String> getDefaultSrc();
+
+    /**
      * @return whether to restrict the endpoints scripts may connect to
      */
     boolean isConnectSrcEnabled();

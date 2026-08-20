@@ -42,6 +42,8 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private static final boolean DEFAULT_REPORT_ONLY = false;
     private static final boolean DEFAULT_BASE_URI_ENABLED = true;
     private static final List<String> DEFAULT_BASE_URI_VALUE = NONE_VALUES;
+    private static final boolean DEFAULT_DEFAULT_SRC_ENABLED = true;
+    private static final List<String> DEFAULT_DEFAULT_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_CONNECT_SRC_ENABLED = true;
     private static final List<String> DEFAULT_CONNECT_SRC_VALUE = NONE_VALUES;
     private static final boolean DEFAULT_FENCED_FRAME_SRC_ENABLED = false;
@@ -85,6 +87,8 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
     private boolean reportOnly = DEFAULT_REPORT_ONLY;
     private boolean baseUriEnabled = DEFAULT_BASE_URI_ENABLED;
     private List<String> baseUri = DEFAULT_BASE_URI_VALUE;
+    private boolean defaultSrcEnabled = DEFAULT_DEFAULT_SRC_ENABLED;
+    private List<String> defaultSrc = DEFAULT_DEFAULT_SRC_VALUE;
     private boolean connectSrcEnabled = DEFAULT_CONNECT_SRC_ENABLED;
     private List<String> connectSrc = DEFAULT_CONNECT_SRC_VALUE;
     private boolean fencedFrameSrcEnabled = DEFAULT_FENCED_FRAME_SRC_ENABLED;
@@ -147,6 +151,30 @@ final class ContentSecurityPolicyConfigurationProperties implements ContentSecur
      */
     public void setBaseUri(List<String> baseUri) {
         this.baseUri = baseUri;
+    }
+
+    @Override
+    public boolean isDefaultSrcEnabled() {
+        return defaultSrcEnabled;
+    }
+
+    /**
+     * @param defaultSrcEnabled whether the {@code default-src} directive is included in the policy
+     */
+    public void setDefaultSrcEnabled(boolean defaultSrcEnabled) {
+        this.defaultSrcEnabled = defaultSrcEnabled;
+    }
+
+    @Override
+    public List<String> getDefaultSrc() {
+        return defaultSrc;
+    }
+
+    /**
+     * @param defaultSrc the fallback source expressions for fetch directives not explicitly configured
+     */
+    public void setDefaultSrc(List<String> defaultSrc) {
+        this.defaultSrc = defaultSrc;
     }
 
     @Override

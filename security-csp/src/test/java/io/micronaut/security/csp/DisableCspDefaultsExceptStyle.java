@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Disables the default CSP directives so a test can assert a focused directive policy.
+ * Disables the default CSP directives except {@code style-src} so a test can configure and assert it.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -45,7 +45,6 @@ import java.lang.annotation.Target;
 @Property(name = "micronaut.security.csp.form-action-enabled", value = StringUtils.FALSE)
 @Property(name = "micronaut.security.csp.script-src-nonce-enabled", value = StringUtils.FALSE)
 @Property(name = "micronaut.security.csp.script-src-strict-dynamic", value = StringUtils.FALSE)
-@Property(name = "micronaut.security.csp.style-src-enabled", value = StringUtils.FALSE)
 @Property(name = "micronaut.security.csp.worker-src-enabled", value = StringUtils.FALSE)
-@interface DisableCspDefaults {
+@interface DisableCspDefaultsExceptStyle {
 }

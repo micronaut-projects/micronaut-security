@@ -32,6 +32,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertEquals(List.of(
                 new CspDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
+                new CspDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.FONT_SRC, "'none'"),
                 new CspDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'"),
@@ -52,6 +53,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void excludesDisabledDirectives() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setBaseUriEnabled(false);
+        configuration.setDefaultSrcEnabled(false);
         configuration.setConnectSrcEnabled(false);
         configuration.setFencedFrameSrcEnabled(false);
         configuration.setFontSrcEnabled(false);
@@ -80,8 +82,8 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, request -> "unused");
 
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com"),
-                generator.contentSecurityPolicy().get(1));
+        assertTrue(generator.contentSecurityPolicy().contains(
+                new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com")));
     }
 
     @Test
@@ -94,8 +96,8 @@ class DefaultContentSecurityPolicyGeneratorTest {
             }
         };
 
-        assertEquals(new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com"),
-                generator.contentSecurityPolicy().get(1));
+        assertTrue(generator.contentSecurityPolicy().contains(
+                new CspDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com")));
     }
 
     @Test

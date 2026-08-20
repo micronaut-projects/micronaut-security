@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisableCspDefaults
+@DisableCspDefaultsExceptStyle
 @Property(name = "micronaut.security.csp.style-src[0]", value = "'self'")
 @Property(name = "micronaut.security.csp.style-src[1]", value = "https://cdn.jsdelivr.net")
 @Property(name = "spec.name", value = "StyleSrcSelfTest")

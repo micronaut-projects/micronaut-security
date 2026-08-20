@@ -72,6 +72,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     public List<CspDirective> contentSecurityPolicy() {
         List<@Nullable CspDirective> directives = new ArrayList<>();
         directives.add(baseUri());
+        directives.add(defaultSrc());
         directives.add(connectSrc());
         directives.add(fencedFrameSrc());
         directives.add(fontSrc());
@@ -163,6 +164,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             return directive(BASE_URI, cspConfiguration.getBaseUri());
         }
         return null;
+    }
+
+    /**
+     * @return the configured {@code default-src} directive, or {@code null} when disabled
+     * @since 5.4.0
+     */
+    protected @Nullable CspDirective defaultSrc() {
+        return cspConfiguration.isDefaultSrcEnabled() ? directive(DEFAULT_SRC, cspConfiguration.getDefaultSrc()) : null;
     }
 
     /**

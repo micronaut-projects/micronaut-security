@@ -39,6 +39,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 class DefaultDirectiveDefaultsToTest {
     @Test
+    void defaultSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
+        assertTrue(contentSecurityPolicy(httpClient).defaultSrc().isNone());
+    }
+
+    @Test
     void connectSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
         assertTrue(contentSecurityPolicy(httpClient).connectSrc().isNone());
     }
