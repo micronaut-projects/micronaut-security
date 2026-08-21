@@ -6,6 +6,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldif.LDIFReader;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
@@ -77,7 +78,8 @@ public class LdapTest implements TestPropertyProvider {
     @Test
     void foo() {
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("riemann", "password"));
-        HttpResponse<Boolean> response = httpClient.toBlocking().exchange(request, Boolean.class);
+        BlockingHttpClient client = httpClient.toBlocking();
+        HttpResponse<Boolean> response = client.exchange(request, Boolean.class);
         Optional<Boolean> isAuthenticated = response.getBody();
         assertTrue(isAuthenticated.isPresent());
         assertTrue(isAuthenticated.get());

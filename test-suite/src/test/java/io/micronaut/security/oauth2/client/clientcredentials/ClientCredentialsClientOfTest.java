@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -57,7 +58,8 @@ class ClientCredentialsClientOfTest {
     }
 
     private static @NonNull String tokenUrl(HttpClient httpClient, String issuer) {
-        DefaultOpenIdProviderMetadata openIdProviderMetadata = httpClient.toBlocking().retrieve(
+        BlockingHttpClient client = httpClient.toBlocking();
+        DefaultOpenIdProviderMetadata openIdProviderMetadata = client.retrieve(
             HttpRequest.GET(issuer + "/.well-known/openid-configuration"),
             Argument.of(DefaultOpenIdProviderMetadata.class));
         return openIdProviderMetadata.getTokenEndpoint();
