@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -36,14 +37,11 @@ class FetchMetadataFilterDisabledTest {
     @Inject
     BeanContext beanContext;
 
-    @Inject
-    @Client("/")
-    HttpClient httpClient;
-
     @Test
-    void disablingFilterAllowsRequestsWithoutFetchMetadata() {
+    void disablingFilterAllowsRequestsWithoutFetchMetadata(@Client("/") HttpClient httpClient) {
+        BlockingHttpClient client = httpClient.toBlocking();
         assertFalse(beanContext.containsBean(FetchMetadataFilter.class));
         assertEquals(HttpStatus.OK,
-            httpClient.toBlocking().exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
+            client.exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
     }
 }

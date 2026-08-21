@@ -26,6 +26,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.Mode;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.Site;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -45,6 +46,8 @@ class FetchMetadataFilterFunctionalTest {
     @Inject
     @Client("/")
     HttpClient httpClient;
+
+    BlockingHttpClient client;
 
     @Test
     void allowsSameOriginRequests() {
@@ -159,7 +162,10 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     private HttpResponse<String> exchange(HttpRequest<?> request) {
-        return httpClient.toBlocking().exchange(request, String.class);
+        if (client == null) {
+            client = httpClient.toBlocking();
+        }
+        return client.exchange(request, String.class);
     }
 
     private void assertForbidden(HttpRequest<?> request) {

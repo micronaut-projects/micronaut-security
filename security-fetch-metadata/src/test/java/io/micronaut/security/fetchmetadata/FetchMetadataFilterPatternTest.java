@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -36,18 +37,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
     value = StringUtils.FALSE)
 @MicronautTest
 class FetchMetadataFilterPatternTest {
-
-    @Inject
-    @Client("/")
-    HttpClient httpClient;
-
     @Test
-    void filtersOnlyMatchingPaths() {
+    void filtersOnlyMatchingPaths(@Client("/") HttpClient httpClient) {
+        BlockingHttpClient client = httpClient.toBlocking();
         assertEquals(HttpStatus.OK,
-            httpClient.toBlocking().exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
+            client.exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-            () -> httpClient.toBlocking().exchange(
+            () -> client.exchange(
                 HttpRequest.GET("/fetch-metadata/filtered/test")));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
