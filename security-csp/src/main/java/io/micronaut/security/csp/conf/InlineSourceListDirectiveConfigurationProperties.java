@@ -26,12 +26,18 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     private boolean unsafeHashes;
     private boolean reportSample;
 
+    /** Creates an inline-capable source-list configuration with secure defaults. */
+    public InlineSourceListDirectiveConfigurationProperties() {
+    }
+
     @Override
     public boolean isUnsafeInline() {
         return unsafeInline;
     }
 
     /**
+     * Controls the {@code 'unsafe-inline'} keyword source expression.
+     *
      * @param unsafeInline whether to allow inline content without a nonce or hash
      */
     public void setUnsafeInline(boolean unsafeInline) {
@@ -44,6 +50,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     }
 
     /**
+     * Controls the {@code 'unsafe-hashes'} keyword source expression.
+     *
      * @param unsafeHashes whether hashes may authorize event handlers and style attributes
      */
     public void setUnsafeHashes(boolean unsafeHashes) {
@@ -56,6 +64,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     }
 
     /**
+     * Controls the {@code 'report-sample'} keyword source expression.
+     *
      * @param reportSample whether violation reports include a sample of blocked inline content
      */
     public void setReportSample(boolean reportSample) {

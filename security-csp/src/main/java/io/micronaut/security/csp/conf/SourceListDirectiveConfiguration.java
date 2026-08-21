@@ -23,5 +23,13 @@ import java.util.Set;
  * @since 5.4.0
  */
 public interface SourceListDirectiveConfiguration extends DirectiveConfiguration {
+    /**
+     * Returns additional source expressions in their serialized CSP form.
+     *
+     * <p>Keyword and hash source expressions must include any quotes required by CSP. Host and
+     * scheme source expressions are not quoted.</p>
+     *
+     * @return the additional source expressions, in response-header order
+     */
     Set<String> getValues();
 }

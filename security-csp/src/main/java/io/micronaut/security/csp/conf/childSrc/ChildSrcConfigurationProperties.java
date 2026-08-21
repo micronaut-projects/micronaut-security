@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link ChildSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link ChildSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".child-src")
 public class ChildSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ChildSrcConfiguration {
+    /** Creates the {@code child-src} configuration with its secure defaults. */
+    public ChildSrcConfigurationProperties() {
+    }
 }

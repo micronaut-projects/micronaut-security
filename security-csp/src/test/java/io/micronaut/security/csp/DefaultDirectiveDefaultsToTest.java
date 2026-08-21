@@ -94,6 +94,11 @@ class DefaultDirectiveDefaultsToTest {
     }
 
     @Test
+    void reportToIsNotIncludedByDefault(@Client("/") HttpClient httpClient) {
+        assertNull(contentSecurityPolicy(httpClient).reportTo());
+    }
+
+    @Test
     void requireTrustedTypesForDefaultsToScript(@Client("/") HttpClient httpClient) {
         assertEquals("'script'", contentSecurityPolicy(httpClient).requireTrustedTypesFor().value());
     }

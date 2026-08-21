@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link ManifestSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link ManifestSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".manifest-src")
 public class ManifestSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ManifestSrcConfiguration {
+    /** Creates the {@code manifest-src} configuration with its secure defaults. */
+    public ManifestSrcConfigurationProperties() {
+    }
 }

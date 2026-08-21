@@ -17,6 +17,10 @@ package io.micronaut.security.csp.conf.objectSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code object-src} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code object-src} source list.
+ *
+ * @since 5.4.0
+ */
 public interface ObjectSrcConfiguration extends SourceListDirectiveConfiguration {
 }

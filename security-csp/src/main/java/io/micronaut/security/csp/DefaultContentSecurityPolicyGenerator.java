@@ -16,6 +16,7 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.NonceConfiguration;
@@ -35,6 +36,8 @@ import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfiguration;
 import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfiguration;
 import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfiguration;
 import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfiguration;
+import io.micronaut.security.csp.conf.reportTo.ReportToConfiguration;
+import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfiguration;
 import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfiguration;
@@ -74,6 +77,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private final FontSrcConfiguration fontSrcConfiguration;
     private final ObjectSrcConfiguration objectSrcConfiguration;
     private final PrefetchSrcConfiguration prefetchSrcConfiguration;
+    private final ReportToConfiguration reportToConfiguration;
     private final ScriptSrcConfiguration scriptSrcConfiguration;
     private final FrameAncestorsConfiguration frameAncestorsConfiguration;
     private final FrameSrcConfiguration frameSrcConfiguration;
@@ -85,6 +89,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private final WorkerSrcConfiguration workerSrcConfiguration;
     private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
 
+    /**
+     * Creates a generator with the default configuration for each directive.
+     *
+     * <p>This convenience constructor is intended for subclasses and tests. The injected
+     * constructor receives the application-bound directive configurations.</p>
+     *
+     * @param cspConfiguration root CSP configuration
+     */
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
         this(cspConfiguration,
             req -> req.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null),
@@ -95,6 +107,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             new io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties(),
             new io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties(),
             new io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties(),
+            new ReportToConfigurationProperties(),
             new io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties(),
             new io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties(),
             new io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties(),
@@ -117,6 +130,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param fontSrcConfiguration configures {@code font-src}
      * @param objectSrcConfiguration configures {@code object-src}
      * @param prefetchSrcConfiguration configures {@code prefetch-src}
+     * @param reportToConfiguration configures {@code report-to}
      * @param scriptSrcConfiguration configures {@code script-src}
      * @param frameAncestorsConfiguration configures {@code frame-ancestors}
      * @param frameSrcConfiguration configures {@code frame-src}
@@ -138,6 +152,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                                                     FontSrcConfiguration fontSrcConfiguration,
                                                     ObjectSrcConfiguration objectSrcConfiguration,
                                                     PrefetchSrcConfiguration prefetchSrcConfiguration,
+                                                    ReportToConfiguration reportToConfiguration,
                                                     ScriptSrcConfiguration scriptSrcConfiguration,
                                                     FrameAncestorsConfiguration frameAncestorsConfiguration,
                                                     FrameSrcConfiguration frameSrcConfiguration,
@@ -157,6 +172,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             fontSrcConfiguration,
             objectSrcConfiguration,
             prefetchSrcConfiguration,
+            reportToConfiguration,
             scriptSrcConfiguration,
             frameAncestorsConfiguration,
             frameSrcConfiguration,
@@ -180,6 +196,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param fontSrcConfiguration configures {@code font-src}
      * @param objectSrcConfiguration configures {@code object-src}
      * @param prefetchSrcConfiguration configures {@code prefetch-src}
+     * @param reportToConfiguration configures {@code report-to}
      * @param scriptSrcConfiguration configures {@code script-src}
      * @param frameAncestorsConfiguration configures {@code frame-ancestors}
      * @param frameSrcConfiguration configures {@code frame-src}
@@ -201,6 +218,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                                                     FontSrcConfiguration fontSrcConfiguration,
                                                     ObjectSrcConfiguration objectSrcConfiguration,
                                                     PrefetchSrcConfiguration prefetchSrcConfiguration,
+                                                    ReportToConfiguration reportToConfiguration,
                                                     ScriptSrcConfiguration scriptSrcConfiguration,
                                                     FrameAncestorsConfiguration frameAncestorsConfiguration,
                                                     FrameSrcConfiguration frameSrcConfiguration,
@@ -219,6 +237,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         this.fontSrcConfiguration = fontSrcConfiguration;
         this.objectSrcConfiguration = objectSrcConfiguration;
         this.prefetchSrcConfiguration = prefetchSrcConfiguration;
+        this.reportToConfiguration = reportToConfiguration;
         this.scriptSrcConfiguration = scriptSrcConfiguration;
         this.frameAncestorsConfiguration = frameAncestorsConfiguration;
         this.frameSrcConfiguration = frameSrcConfiguration;
@@ -231,12 +250,26 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the complete policy for a request.
+     *
+     * @param request the request whose state may contribute nonce source expressions
+     * @return the configured policy, or {@code null} when every directive is disabled
+     */
+    @Override
+    public @Nullable ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request) {
+        List<ContentSecurityPolicyDirective> directives = directives(request);
+        if (CollectionUtils.isEmpty(directives)) {
+            return null;
+        }
+        return new ContentSecurityPolicy(directives);
+    }
+
+    /**
      * Generates the configured directives that do not depend on request state.
      *
      * @return the static policy directives in response-header order
      */
-    @Override
-    public List<ContentSecurityPolicyDirective> contentSecurityPolicy() {
+    protected List<ContentSecurityPolicyDirective> directives() {
         List<@Nullable ContentSecurityPolicyDirective> directives = new ArrayList<>();
         directives.add(baseUri());
         directives.add(defaultSrc());
@@ -245,6 +278,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         directives.add(fontSrc());
         directives.add(objectSrc());
         directives.add(prefetchSrc());
+        directives.add(reportTo());
         directives.add(reportUri());
         directives.add(requireTrustedTypesFor());
         directives.add(frameAncestors());
@@ -266,9 +300,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param request the request whose nonce is used to build the policy
      * @return the complete policy for the request
      */
-    @Override
-    public List<ContentSecurityPolicyDirective> contentSecurityPolicy(HttpRequest<?> request) {
-        List<@Nullable ContentSecurityPolicyDirective> directives = new ArrayList<>(contentSecurityPolicy());
+    protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
+        List<@Nullable ContentSecurityPolicyDirective> directives = new ArrayList<>(directives());
         directives.add(styleSrc(request));
         directives.add(scriptSrc(request));
         return directives.stream().filter(Objects::nonNull).toList();
@@ -285,6 +318,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code default-src} directive.
+     *
      * @return the configured {@code default-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -293,6 +328,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code connect-src} directive.
+     *
      * @return the configured {@code connect-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -301,6 +338,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code fenced-frame-src} directive.
+     *
      * @return the configured {@code fenced-frame-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -309,6 +348,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code font-src} directive.
+     *
      * @return the configured {@code font-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -317,6 +358,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code object-src} directive.
+     *
      * @return the configured {@code object-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -325,6 +368,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code prefetch-src} directive.
+     *
      * @return the configured {@code prefetch-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -333,6 +378,20 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code report-to} directive.
+     *
+     * @return the report-to directive, or {@code null} when disabled
+     * @since 5.4.0
+     */
+    protected @Nullable ContentSecurityPolicyDirective reportTo() {
+        return reportToConfiguration.isEnabled()
+            ? new ContentSecurityPolicyDirective(REPORT_TO, reportToConfiguration.getGroup())
+            : null;
+    }
+
+    /**
+     * Builds the configured deprecated {@code report-uri} directive.
+     *
      * @return the configured deprecated {@code report-uri} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -341,6 +400,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code require-trusted-types-for} directive.
+     *
      * @return the configured {@code require-trusted-types-for} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -350,6 +411,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code frame-ancestors} directive.
+     *
      * @return the configured {@code frame-ancestors} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -358,6 +421,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code frame-src} directive.
+     *
      * @return the configured {@code frame-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -366,6 +431,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code img-src} directive.
+     *
      * @return the configured {@code img-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -374,6 +441,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code manifest-src} directive.
+     *
      * @return the configured {@code manifest-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -382,6 +451,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code media-src} directive.
+     *
      * @return the configured {@code media-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -390,6 +461,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code form-action} directive.
+     *
      * @return the configured {@code form-action} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -420,6 +493,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the configured {@code worker-src} directive.
+     *
      * @return the configured {@code worker-src} directive, or {@code null} when disabled
      * @since 5.4.0
      */
@@ -444,7 +519,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Converts source expressions to CSP's space-separated directive representation.
      *
      * @param name the CSP directive name
-     * @param config
+     * @param config configuration that supplies the directive values
      * @return the serialized directive
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name,
@@ -456,7 +531,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Converts source expressions to CSP's space-separated directive representation.
      *
      * @param name the CSP directive name
-     * @param config
+     * @param config configuration that supplies the directive values
      * @return the serialized directive
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name,

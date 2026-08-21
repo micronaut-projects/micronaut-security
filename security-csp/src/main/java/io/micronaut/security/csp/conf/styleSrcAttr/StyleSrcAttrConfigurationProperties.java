@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link StyleSrcAttrConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link StyleSrcAttrConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-attr")
 public class StyleSrcAttrConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcAttrConfiguration {
+    /** Creates the {@code style-src-attr} configuration with its secure defaults. */
+    public StyleSrcAttrConfigurationProperties() {
+    }
 }

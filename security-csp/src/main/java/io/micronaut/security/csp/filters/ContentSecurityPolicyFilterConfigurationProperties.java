@@ -16,20 +16,22 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
-import io.micronaut.core.util.StringUtils;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link ContentSecurityPolicyFilterConfiguration}.
  *
  * @author Sergio del Amo
- * @since 3.1.0
+ * @since 5.4.0
  */
 @ConfigurationProperties(ContentSecurityPolicyFilterConfigurationProperties.PREFIX)
 public class ContentSecurityPolicyFilterConfigurationProperties implements ContentSecurityPolicyFilterConfiguration {
+    /** Configuration prefix for the CSP response filter. */
     public static final String PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".filter";
+    /** Property that enables or disables the CSP response filter. */
     public static final String PROPERTY_ENABLED = ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".enabled";
     /**
      * The default enable value.
@@ -38,7 +40,6 @@ public class ContentSecurityPolicyFilterConfigurationProperties implements Conte
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
-     *
      * The pattern the {@link ContentSecurityPolicyFilter} should match.
      */
     @NonNull
@@ -47,8 +48,14 @@ public class ContentSecurityPolicyFilterConfigurationProperties implements Conte
 
     private boolean enabled = DEFAULT_ENABLED;
 
+    /** Creates the filter configuration with its default URL pattern. */
+    public ContentSecurityPolicyFilterConfigurationProperties() {
+    }
+
     /**
-     * @return true if you want to enable the {@link ContentSecurityPolicyFilter}
+     * Reports whether the CSP response filter is enabled.
+     *
+     * @return whether the {@link ContentSecurityPolicyFilter} is enabled
      */
     @Override
     public boolean isEnabled() {
@@ -62,18 +69,22 @@ public class ContentSecurityPolicyFilterConfigurationProperties implements Conte
     }
 
     /**
-     * Enables {@link ContentSecurityPolicyFilter}. Default value {@value #DEFAULT_ENABLED}
-     * @param enabled True if it is enabled
+     * Enables or disables the {@link ContentSecurityPolicyFilter}.
+     *
+     * @param enabled whether the filter is enabled; defaults to {@value #DEFAULT_ENABLED}
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     /**
-     * Pattern the {@link ContentSecurityPolicyFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
-     * @param pattern The pattern
+     * Sets the URL pattern matched by the {@link ContentSecurityPolicyFilter}.
+     *
+     * <p>Responses for URLs outside this pattern do not receive the module's CSP header.</p>
+     *
+     * @param pattern the server-filter pattern; defaults to {@code /**}
      */
-    public void setPath(@NonNull String pattern) {
+    public void setPattern(@NonNull String pattern) {
         if (StringUtils.isNotEmpty(pattern)) {
             this.pattern = pattern;
         }

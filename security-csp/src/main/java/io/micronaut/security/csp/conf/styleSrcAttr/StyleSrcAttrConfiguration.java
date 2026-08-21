@@ -17,6 +17,10 @@ package io.micronaut.security.csp.conf.styleSrcAttr;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code style-src-attr} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code style-src-attr} source list.
+ *
+ * @since 5.4.0
+ */
 public interface StyleSrcAttrConfiguration extends SourceListDirectiveConfiguration {
 }

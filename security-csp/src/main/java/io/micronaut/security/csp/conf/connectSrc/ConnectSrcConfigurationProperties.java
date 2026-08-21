@@ -20,10 +20,18 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link ConnectSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link ConnectSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".connect-src")
 public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ConnectSrcConfiguration {
     private boolean unsafeWebtransportHashes;
+
+    /** Creates the {@code connect-src} configuration with its secure defaults. */
+    public ConnectSrcConfigurationProperties() {
+    }
 
     @Override
     public boolean isUnsafeWebtransportHashes() {
@@ -31,6 +39,8 @@ public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfig
     }
 
     /**
+     * Controls the {@code 'unsafe-webtransport-hashes'} keyword source expression.
+     *
      * @param unsafeWebtransportHashes whether WebTransport hashes may authorize connections
      */
     public void setUnsafeWebtransportHashes(boolean unsafeWebtransportHashes) {

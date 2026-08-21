@@ -27,8 +27,9 @@ import java.util.List;
  */
 public interface ScriptSrcConfiguration extends SourceListDirectiveConfiguration, NonceConfiguration {
     /**
+     * Returns additional host or URL source expressions.
+     *
      * @return URL source expressions to add to the directive
      */
     List<String> getUrls();
-
 }

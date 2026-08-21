@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link FontSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link FontSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".font-src")
 public class FontSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FontSrcConfiguration {
+    /** Creates the {@code font-src} configuration with its secure defaults. */
+    public FontSrcConfigurationProperties() {
+    }
 }

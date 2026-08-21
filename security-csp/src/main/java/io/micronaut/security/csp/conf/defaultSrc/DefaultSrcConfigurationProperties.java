@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link DefaultSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link DefaultSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".default-src")
 public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {
+    /** Creates the {@code default-src} configuration with its secure defaults. */
+    public DefaultSrcConfigurationProperties() {
+    }
 }

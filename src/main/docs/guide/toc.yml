@@ -117,6 +117,7 @@ contentSecurityPolicy:
   cspDefaults: CSP Defaults
   cspSchemeSources: Scheme Sources
   cspReportOnly: Report Only
+  cspReportingApi: Reporting API
   cspScriptSrc:
     title: CSP script-src
     cspNonceGeneration: script-src Nonce

@@ -17,6 +17,10 @@ package io.micronaut.security.csp.conf.mediaSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code media-src} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code media-src} source list.
+ *
+ * @since 5.4.0
+ */
 public interface MediaSrcConfiguration extends SourceListDirectiveConfiguration {
 }

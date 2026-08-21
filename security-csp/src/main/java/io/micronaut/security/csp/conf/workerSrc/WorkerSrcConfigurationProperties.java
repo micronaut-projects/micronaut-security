@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link WorkerSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link WorkerSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src")
 public class WorkerSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements WorkerSrcConfiguration {
+    /** Creates the {@code worker-src} configuration with its secure defaults. */
+    public WorkerSrcConfigurationProperties() {
+    }
 }

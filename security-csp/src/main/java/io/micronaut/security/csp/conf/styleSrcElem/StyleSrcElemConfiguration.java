@@ -17,9 +17,15 @@ package io.micronaut.security.csp.conf.styleSrcElem;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code style-src-elem} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code style-src-elem} source list.
+ *
+ * @since 5.4.0
+ */
 public interface StyleSrcElemConfiguration extends SourceListDirectiveConfiguration {
     /**
+     * Determines whether the generated directive contains the current request's nonce.
+     *
      * @return whether this directive uses nonce source expressions
      */
     boolean isNonce();

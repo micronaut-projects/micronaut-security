@@ -22,6 +22,8 @@ package io.micronaut.security.csp.conf;
  */
 public interface NonceConfiguration {
     /**
+     * Determines whether the generated directive contains the current request's nonce.
+     *
      * @return whether a request nonce is added to this directive
      * @since 5.4.0
      */

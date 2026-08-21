@@ -17,6 +17,10 @@ package io.micronaut.security.csp.conf.formAction;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code form-action} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code form-action} source list.
+ *
+ * @since 5.4.0
+ */
 public interface FormActionConfiguration extends SourceListDirectiveConfiguration {
 }

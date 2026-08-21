@@ -56,6 +56,8 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
     }
 
     /**
+     * Tests whether this directive disables its controlled resource or behavior.
+     *
      * @return whether this directive has exactly the {@code none} or {@code 'none'} value
      * @since 5.4.0
      */
@@ -67,6 +69,8 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
     }
 
     /**
+     * Tests whether this directive permits only the protected resource's origin.
+     *
      * @return whether this directive has exactly the {@code self} or {@code 'self'} value
      * @since 5.4.0
      */

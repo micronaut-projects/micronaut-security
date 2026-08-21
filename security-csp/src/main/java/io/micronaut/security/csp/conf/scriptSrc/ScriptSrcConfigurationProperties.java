@@ -39,12 +39,18 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     private boolean wasmUnsafeEval;
     private boolean trustedTypesEval;
 
+    /** Creates the {@code script-src} configuration with its secure defaults. */
+    public ScriptSrcConfigurationProperties() {
+    }
+
     @Override
     public boolean isNonce() {
         return nonce;
     }
 
     /**
+     * Enables or disables a request-specific nonce source expression.
+     *
      * @param nonce whether a nonce source expression is generated for this directive; defaults to {@code false}
      */
     public void setNonce(boolean nonce) {
@@ -57,6 +63,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
+     * Sets additional host or URL source expressions.
+     *
      * @param urls URL source expressions to add to the directive
      */
     public void setUrls(List<String> urls) {
@@ -69,6 +77,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
+     * Controls the {@code 'unsafe-eval'} keyword source expression.
+     *
      * @param unsafeEval whether JavaScript string-to-code APIs are allowed
      */
     public void setUnsafeEval(boolean unsafeEval) {
@@ -81,6 +91,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
+     * Controls the {@code 'strict-dynamic'} keyword source expression.
+     *
      * @param strictDynamic whether trusted scripts may load further scripts dynamically
      */
     public void setStrictDynamic(boolean strictDynamic) {
@@ -93,6 +105,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
+     * Controls the {@code 'wasm-unsafe-eval'} keyword source expression.
+     *
      * @param wasmUnsafeEval whether WebAssembly compilation is allowed
      */
     public void setWasmUnsafeEval(boolean wasmUnsafeEval) {
@@ -105,6 +119,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
+     * Controls the {@code 'trusted-types-eval'} keyword source expression.
+     *
      * @param trustedTypesEval whether Trusted Types values may be evaluated as JavaScript
      */
     public void setTrustedTypesEval(boolean trustedTypesEval) {

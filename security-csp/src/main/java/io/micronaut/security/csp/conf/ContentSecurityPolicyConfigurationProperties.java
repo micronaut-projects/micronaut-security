@@ -36,6 +36,7 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QU
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX)
 @Internal
 public final class ContentSecurityPolicyConfigurationProperties implements ContentSecurityPolicyConfiguration {
+    /** Configuration prefix for all CSP settings. */
     public static final String PREFIX = "micronaut.security.csp";
     private static final String SCRIPT_VALUE = SINGLE_QUOTE + SCRIPT + SINGLE_QUOTE;
     private static final boolean DEFAULT_ENABLED = true;
@@ -51,12 +52,18 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     private boolean requireTrustedTypesForEnabled = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED;
     private String requireTrustedTypesFor = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE;
 
+    /** Creates the root CSP configuration with its secure defaults. */
+    public ContentSecurityPolicyConfigurationProperties() {
+    }
+
     @Override
     public boolean isReportUriEnabled() {
         return reportUriEnabled;
     }
 
     /**
+     * Enables or disables the deprecated {@code report-uri} directive.
+     *
      * @param reportUriEnabled whether the deprecated {@code report-uri} directive is included in the policy
      */
     public void setReportUriEnabled(boolean reportUriEnabled) {
@@ -69,6 +76,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
+     * Sets the endpoints used by the deprecated {@code report-uri} directive.
+     *
      * @param reportUri the endpoint URLs used as the value of the deprecated {@code report-uri} directive
      */
     public void setReportUri(List<String> reportUri) {
@@ -81,6 +90,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
+     * Enables or disables the {@code require-trusted-types-for} directive.
+     *
      * @param requireTrustedTypesForEnabled whether the {@code require-trusted-types-for} directive is included in the policy
      */
     public void setRequireTrustedTypesForEnabled(boolean requireTrustedTypesForEnabled) {
@@ -93,6 +104,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
+     * Sets the sink group protected by Trusted Types enforcement.
+     *
      * @param requireTrustedTypesFor the sink group required to use Trusted Types
      */
     public void setRequireTrustedTypesFor(String requireTrustedTypesFor) {
@@ -110,6 +123,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
+     * Selects report-only or enforcing response-header behavior.
+     *
      * @param reportOnly whether to send the policy using the {@code Content-Security-Policy-Report-Only} header
      */
     public void setReportOnly(boolean reportOnly) {
@@ -117,6 +132,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
+     * Enables or disables the CSP module.
+     *
      * @param enabled whether the CSP module is enabled
      */
     public void setEnabled(boolean enabled) {

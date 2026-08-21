@@ -38,12 +38,18 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     private boolean wss;
     private Set<String> values = Collections.emptySet();
 
+    /** Creates a source-list configuration with secure defaults. */
+    public SourceListDirectiveConfigurationProperties() {
+    }
+
     @Override
     public Set<String> getValues() {
         return values;
     }
 
     /**
+     * Sets additional source expressions in their serialized CSP form.
+     *
      * @param values additional source expressions to include in the directive
      */
     public void setValues(Set<String> values) {
@@ -56,6 +62,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Enables or disables generation of this directive.
+     *
      * @param enabled whether the directive is emitted in the generated policy
      */
     public void setEnabled(boolean enabled) {
@@ -68,6 +76,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code http:} scheme source expression.
+     *
      * Sets whether the source list contains {@code 'none'}.
      *
      * @param none whether no sources are allowed
@@ -82,6 +92,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code https:} scheme source expression.
+     *
      * Sets whether the source list contains {@code 'self'}.
      *
      * @param self whether the protected origin is allowed
@@ -96,6 +108,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code data:} scheme source expression.
+     *
      * @param http whether the directive includes the unquoted {@code http:} scheme source
      */
     public void setHttp(boolean http) {
@@ -108,6 +122,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code blob:} scheme source expression.
+     *
      * @param https whether the directive includes the unquoted {@code https:} scheme source
      */
     public void setHttps(boolean https) {
@@ -120,6 +136,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code filesystem:} scheme source expression.
+     *
      * @param data whether the directive includes the unquoted {@code data:} scheme source
      */
     public void setData(boolean data) {
@@ -132,6 +150,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code mediastream:} scheme source expression.
+     *
      * @param blob whether the directive includes the unquoted {@code blob:} scheme source
      */
     public void setBlob(boolean blob) {
@@ -144,6 +164,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code ws:} scheme source expression.
+     *
      * @param filesystem whether the directive includes the unquoted {@code filesystem:} scheme source
      */
     public void setFilesystem(boolean filesystem) {
@@ -156,6 +178,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code wss:} scheme source expression.
+     *
      * @param mediastream whether the directive includes the unquoted {@code mediastream:} scheme source
      */
     public void setMediastream(boolean mediastream) {
@@ -168,6 +192,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code ws:} scheme source expression.
+     *
      * @param ws whether the directive includes the unquoted {@code ws:} scheme source
      */
     public void setWs(boolean ws) {
@@ -180,6 +206,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
+     * Controls the {@code wss:} scheme source expression.
+     *
      * @param wss whether the directive includes the unquoted {@code wss:} scheme source
      */
     public void setWss(boolean wss) {

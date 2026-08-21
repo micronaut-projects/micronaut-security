@@ -32,6 +32,7 @@ import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProper
 import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties;
@@ -42,6 +43,7 @@ import java.util.LinkedHashSet;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultContentSecurityPolicyGeneratorTest {
@@ -64,8 +66,10 @@ class DefaultContentSecurityPolicyGeneratorTest {
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MANIFEST_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.MEDIA_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FORM_ACTION, "'self'"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.WORKER_SRC, "'none'")
-        ), generator.contentSecurityPolicy());
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.WORKER_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.STYLE_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'")
+        ), policy(generator).directives());
     }
 
     @Test
@@ -77,7 +81,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyGenerator generator = generator(configuration, request -> "unused",
             new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
 
-        assertTrue(generator.contentSecurityPolicy().contains(
+        assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'self' https://api.example.com")));
     }
 
@@ -91,7 +95,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
             }
         };
 
-        assertTrue(generator.contentSecurityPolicy().contains(
+        assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com")));
     }
 
@@ -104,7 +108,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyGenerator generator = generator(configuration, req -> "nonce",
             scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
-        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = policy(generator, request).directives();
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce'"),
                 directives.get(directives.size() - 1));
@@ -120,7 +124,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
             scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
-        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = policy(generator, request).directives();
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'strict-dynamic'"),
                 directives.get(directives.size() - 1));
@@ -135,7 +139,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
             scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
-        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = policy(generator, request).directives();
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'unsafe-eval'"),
                 directives.get(directives.size() - 1));
@@ -150,7 +154,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         HttpRequest<?> request = HttpRequest.GET("/");
         ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
             scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
-        List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
+        List<ContentSecurityPolicyDirective> directives = policy(generator, request).directives();
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "http: https:"),
                 directives.get(directives.size() - 1));
@@ -163,8 +167,18 @@ class DefaultContentSecurityPolicyGeneratorTest {
         configuration.setReportUri(List.of("https://example.com/csp-reports"));
         ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration);
 
-        assertTrue(generator.contentSecurityPolicy().contains(
+        assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
+    }
+
+    private static ContentSecurityPolicy policy(ContentSecurityPolicyGenerator generator) {
+        return policy(generator, HttpRequest.GET("/"));
+    }
+
+    private static ContentSecurityPolicy policy(ContentSecurityPolicyGenerator generator, HttpRequest<?> request) {
+        ContentSecurityPolicy policy = generator.contentSecurityPolicy(request);
+        assertNotNull(policy);
+        return policy;
     }
 
     private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyConfiguration configuration,
@@ -180,6 +194,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
             new FontSrcConfigurationProperties(),
             new ObjectSrcConfigurationProperties(),
             new PrefetchSrcConfigurationProperties(),
+            new ReportToConfigurationProperties(),
             scriptSrcConfiguration,
             new FrameAncestorsConfigurationProperties(),
             new FrameSrcConfigurationProperties(),

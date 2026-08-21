@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link ScriptSrcAttrConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link ScriptSrcAttrConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-attr")
 public class ScriptSrcAttrConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcAttrConfiguration {
+    /** Creates the {@code script-src-attr} configuration with its secure defaults. */
+    public ScriptSrcAttrConfigurationProperties() {
+    }
 }

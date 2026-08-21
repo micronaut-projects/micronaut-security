@@ -28,6 +28,8 @@ import io.micronaut.core.util.Toggleable;
  */
 public interface DirectiveConfiguration extends Toggleable {
     /**
+     * Controls the {@code 'none'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'none'}
      */
     default boolean isNone() {
@@ -35,6 +37,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'self'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'self'}
      */
     default boolean isSelf() {
@@ -42,6 +46,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'unsafe-inline'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'unsafe-inline'}
      */
     default boolean isUnsafeInline() {
@@ -49,6 +55,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'unsafe-eval'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'unsafe-eval'}
      */
     default boolean isUnsafeEval() {
@@ -56,6 +64,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'strict-dynamic'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'strict-dynamic'}
      */
     default boolean isStrictDynamic() {
@@ -63,6 +73,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'unsafe-hashes'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'unsafe-hashes'}
      */
     default boolean isUnsafeHashes() {
@@ -70,6 +82,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'report-sample'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'report-sample'}
      */
     default boolean isReportSample() {
@@ -77,6 +91,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'unsafe-allow-redirects'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'unsafe-allow-redirects'}
      */
     default boolean isUnsafeAllowRedirects() {
@@ -84,6 +100,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'wasm-unsafe-eval'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'wasm-unsafe-eval'}
      */
     default boolean isWasmUnsafeEval() {
@@ -91,6 +109,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'trusted-types-eval'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'trusted-types-eval'}
      */
     default boolean isTrustedTypesEval() {
@@ -98,6 +118,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'report-sha256'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'report-sha256'}
      */
     default boolean isReportSha256() {
@@ -105,6 +127,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'report-sha384'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'report-sha384'}
      */
     default boolean isReportSha384() {
@@ -112,6 +136,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'report-sha512'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'report-sha512'}
      */
     default boolean isReportSha512() {
@@ -119,6 +145,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code 'unsafe-webtransport-hashes'} keyword source expression.
+     *
      * @return whether the directive includes {@code 'unsafe-webtransport-hashes'}
      */
     default boolean isUnsafeWebtransportHashes() {
@@ -126,6 +154,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code http:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code http:} scheme source
      * @since 5.4.0
      */
@@ -134,6 +164,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code https:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code https:} scheme source
      * @since 5.4.0
      */
@@ -142,6 +174,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code data:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code data:} scheme source
      * @since 5.4.0
      */
@@ -150,6 +184,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code blob:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code blob:} scheme source
      * @since 5.4.0
      */
@@ -158,6 +194,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code filesystem:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code filesystem:} scheme source
      * @since 5.4.0
      */
@@ -166,6 +204,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code mediastream:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code mediastream:} scheme source
      * @since 5.4.0
      */
@@ -174,6 +214,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code ws:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code ws:} scheme source
      * @since 5.4.0
      */
@@ -182,6 +224,8 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
+     * Controls the {@code wss:} scheme source expression.
+     *
      * @return whether the directive includes the unquoted {@code wss:} scheme source
      * @since 5.4.0
      */

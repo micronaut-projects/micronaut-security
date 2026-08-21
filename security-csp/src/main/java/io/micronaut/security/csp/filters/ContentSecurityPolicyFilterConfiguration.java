@@ -25,8 +25,9 @@ import org.jspecify.annotations.NonNull;
  */
 public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
     /**
+     * Returns the URL pattern to which the CSP filter applies.
      *
-     * @return The pattern the {@link ContentSecurityPolicyFilter} should match.
+     * @return the pattern the {@link ContentSecurityPolicyFilter} should match
      */
     @NonNull String getPattern();
 }

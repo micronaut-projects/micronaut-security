@@ -20,9 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link FormActionConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link FormActionConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".form-action")
 public class FormActionConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FormActionConfiguration {
+    /** Creates the {@code form-action} configuration, defaulting to {@code 'self'}. */
     public FormActionConfigurationProperties() {
         setNone(false);
         setSelf(true);

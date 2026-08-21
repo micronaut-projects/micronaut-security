@@ -22,13 +22,10 @@ import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ResponseFilter;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.security.csp.ContentSecurityPolicy;
-import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
-
-import java.util.StringJoiner;
 
 /**
  * Adds the Content Security Policy generated for a request to its response.
@@ -48,6 +45,8 @@ final class ContentSecurityPolicyFilter {
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
+     * Creates the server filter that generates request nonces and CSP response headers.
+     *
      * @param cspGenerator generates the directives to write to the response
      * @param cspConfiguration configures how the policy is written
      * @param scriptSrcConfiguration configures nonce generation for {@code script-src}
@@ -88,23 +87,10 @@ final class ContentSecurityPolicyFilter {
             ? ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY : ContentSecurityPolicy.CONTENT_SECURITY_POLICY;
         boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
         if (!responseSetsAlreadyCspHeader) {
-            response.header(headerName, cspValue(request));
+            ContentSecurityPolicy csp = cspGenerator.contentSecurityPolicy(request);
+            if (csp != null) {
+                response.header(headerName, csp.toString());
+            }
         }
-    }
-
-    /**
-     * Serializes the ordered request policy as one HTTP header value.
-     *
-     * @param request the request for which to generate the policy
-     * @return the semicolon-separated CSP header value
-     */
-    private String cspValue(HttpRequest<?> request) {
-        // CSP directives are separated with semicolons; source expressions within each directive
-        // have already been serialized by the generator.
-        StringJoiner directives = new StringJoiner("; ");
-        for (ContentSecurityPolicyDirective directive : cspGenerator.contentSecurityPolicy(request)) {
-            directives.add(directive.toString());
-        }
-        return directives.toString();
     }
 }

@@ -17,15 +17,15 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
-
-import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Generates the directives for a Content Security Policy response header.
+ * Generates a Content Security Policy for an HTTP request.
  *
- * <p>Implementations return directives rather than a pre-serialized header so callers can add
- * request-specific values, such as nonce source expressions, before writing the header. Directive
- * order is preserved and source expressions within each directive use CSP's space-separated syntax.</p>
+ * <p>Implementations return a structured {@link ContentSecurityPolicy} rather than a serialized
+ * header value. This allows a generator to use request-specific state, such as a nonce, while
+ * preserving directive order. The CSP server filter serializes a non-null policy and omits its
+ * response header when this generator returns {@code null}.</p>
  *
  * <p>The constants in this interface identify standard CSP directives and keywords. A directive
  * explicitly present in a policy takes precedence over {@link #DEFAULT_SRC}; {@code default-src}
@@ -265,22 +265,15 @@ public interface ContentSecurityPolicyGenerator {
     String WORKER_SRC = "worker-src";
 
     /**
-     * @return the policy directives, in the order in which they should appear in the response header
-     */
-    List<ContentSecurityPolicyDirective> contentSecurityPolicy();
-
-    /**
-     * Generates the policy directives for a request.
+     * Generates the policy applicable to an HTTP request.
      *
-     * <p>Override this method when the policy contains request-specific values. The default
-     * implementation preserves compatibility with static generators by delegating to
-     * {@link #contentSecurityPolicy()}.</p>
+     * <p>The request can supply policy inputs that must vary for every response, including nonce
+     * source expressions. Returning {@code null} suppresses the CSP response header for this
+     * request.</p>
      *
      * @param request the request for which the policy is generated
-     * @return the policy directives, in the order in which they should appear in the response header
+     * @return the ordered policy, or {@code null} when no CSP header should be written
      * @since 5.4.0
      */
-    default List<ContentSecurityPolicyDirective> contentSecurityPolicy(HttpRequest<?> request) {
-        return contentSecurityPolicy();
-    }
+    @Nullable ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request);
 }

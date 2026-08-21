@@ -17,6 +17,10 @@ package io.micronaut.security.csp.conf.baseUri;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-/** Configuration for the {@code base-uri} source list. @since 5.4.0 */
+/**
+ * Configuration for the {@code base-uri} source list.
+ *
+ * @since 5.4.0
+ */
 public interface BaseUriConfiguration extends SourceListDirectiveConfiguration {
 }

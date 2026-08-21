@@ -20,7 +20,14 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-/** Mutable properties for {@link FrameSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link FrameSrcConfiguration}.
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".frame-src")
 public class FrameSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FrameSrcConfiguration {
+    /** Creates the {@code frame-src} configuration with its secure defaults. */
+    public FrameSrcConfigurationProperties() {
+    }
 }

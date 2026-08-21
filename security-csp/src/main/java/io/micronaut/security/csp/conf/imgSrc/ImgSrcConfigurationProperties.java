@@ -27,4 +27,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".img-src")
 public class ImgSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ImgSrcConfiguration {
+    /** Creates the {@code img-src} configuration with its secure defaults. */
+    public ImgSrcConfigurationProperties() {
+    }
 }
