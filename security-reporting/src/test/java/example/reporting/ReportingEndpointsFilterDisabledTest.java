@@ -26,7 +26,6 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.security.reporting.ReportingEndpointConfiguration;
 import io.micronaut.security.reporting.ReportingEndpoints;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Property(name = "spec.name", value = ReportingEndpointsFilterDisabledTest.SPEC_NAME)
-@Property(name = ReportingEndpointConfiguration.PREFIX + ".csp.url", value = "/csp/report")
+@Property(name = "micronaut.security.reporting-endpoints.csp.url", value = "/csp/report")
 @Property(name = "micronaut.security.reporting.filter.enabled", value = StringUtils.FALSE)
 @MicronautTest
 class ReportingEndpointsFilterDisabledTest {

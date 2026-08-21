@@ -16,10 +16,6 @@
 package io.micronaut.security.reporting;
 
 import io.micronaut.core.annotation.Introspected;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
 import java.net.URI;
 
 /**
@@ -33,8 +29,7 @@ import java.net.URI;
  * @since 5.4.0
  */
 @Introspected
-record ReportingEndpointRecord(@NotBlank @Pattern(regexp = "[a-z*][a-z0-9_.*-]*") String name,
-                                      @NotNull URI url) implements ReportingEndpoint {
+record ReportingEndpointRecord(String name, URI url) implements ReportingEndpoint {
     @Override
     public String getName() {
         return name;

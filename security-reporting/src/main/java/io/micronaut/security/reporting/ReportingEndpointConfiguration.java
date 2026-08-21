@@ -17,12 +17,9 @@ package io.micronaut.security.reporting;
 
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import io.micronaut.core.annotation.Internal;
 
 import java.net.URI;
-import java.util.Objects;
 
 /**
  * Binds one named entry under {@value #PREFIX}.
@@ -33,15 +30,14 @@ import java.util.Objects;
  * @since 5.4.0
  */
 @EachProperty(ReportingEndpointConfiguration.PREFIX)
-public final class ReportingEndpointConfiguration implements ReportingEndpoint {
+@Internal
+final class ReportingEndpointConfiguration implements ReportingEndpoint {
     /** Configuration prefix for named Reporting API endpoints. */
     public static final String PREFIX = "micronaut.security.reporting-endpoints";
 
-    @Pattern(regexp = "[a-z*][a-z0-9_.*-]*")
-    @NotBlank
     private final String name;
 
-    private @NotNull URI url;
+    private URI url;
 
     /**
      * Creates a named endpoint configuration.
@@ -68,9 +64,6 @@ public final class ReportingEndpointConfiguration implements ReportingEndpoint {
      */
     @Override
     public URI getUrl() {
-        if (url == null) {
-            throw new IllegalStateException("Missing reporting endpoint URL for group: " + name);
-        }
         return url;
     }
 
@@ -81,6 +74,6 @@ public final class ReportingEndpointConfiguration implements ReportingEndpoint {
      * @since 5.4.0
      */
     public void setUrl(URI url) {
-        this.url = Objects.requireNonNull(url, "url");
+        this.url = url;
     }
 }
