@@ -1,24 +1,3 @@
-Configuration is appropriate when every response advertises the same destination. To calculate an endpoint for each request, provide a api:security.reporting.ReportingEndpointProvider[] bean:
-
-[source,java]
-----
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.reporting.ReportingEndpoint;
-import io.micronaut.security.reporting.ReportingEndpointProvider;
-import io.micronaut.security.reporting.ReportingEndpointRecord;
-import jakarta.inject.Singleton;
-
-import java.net.URI;
-
-@Singleton
-final class ApplicationReportingEndpointProvider implements ReportingEndpointProvider {
-    @Override
-    public ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
-        return new ReportingEndpointRecord("application", URI.create("/reports/application"));
-    }
-}
-----
+You can provide a bean of type api:security.reporting.ReportingEndpointProvider[] for dynamic registering reporting endpoints.
 
 The filter combines provider results with endpoints declared in configuration. A provider can return `null` when it does not contribute an endpoint for a particular request. Endpoint group names must remain unique after all configured and provider-generated endpoints are combined.
-
-Use only trusted data when constructing an endpoint URI. Although browsers reject endpoints that are not potentially trustworthy, applications should not generate reporting destinations directly from unvalidated host headers, route values, or tenant identifiers.

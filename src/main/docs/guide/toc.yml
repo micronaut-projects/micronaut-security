@@ -113,9 +113,8 @@ csrf:
   csrfApis: CSRF APIs
 reporting:
   title: Reporting API
-  reportingDependency: Dependency
-  reportingEndpoints: Reporting Endpoints
-  reportingEndpointProviders: Dynamic Endpoints
+  reportingEndpoints: Configuration Reporting Endpoints
+  reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:

@@ -1,3 +1,0 @@
-Add the dependency:
-
-dependency:micronaut-security-reporting[groupId=io.micronaut.security]

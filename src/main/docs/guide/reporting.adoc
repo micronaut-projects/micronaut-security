@@ -3,3 +3,7 @@ The https://www.w3.org/TR/reporting-1/[Reporting API] provides a common browser 
 The `micronaut-security-reporting` module advertises named report destinations in the `Reporting-Endpoints` response header. It does not receive or persist reports. Applications are responsible for implementing the advertised endpoints and safely processing the report formats produced by the browser feature that uses each endpoint.
 
 Reporting is a best-effort mechanism. Browsers can delay, discard, or decline to deliver reports, so an application must not rely on reporting for security enforcement, auditing completeness, or other critical communication.
+
+To use it, add the dependency:
+
+dependency:micronaut-security-reporting[groupId=io.micronaut.security]

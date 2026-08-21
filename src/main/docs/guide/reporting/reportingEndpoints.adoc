@@ -25,17 +25,3 @@ The Reporting API specification defines an endpoint value as a URI-reference. Th
 The module sorts entries by group name to produce a deterministic header. It does not add the header when no endpoints are available, and it does not overwrite a `Reporting-Endpoints` header already supplied by application code.
 
 include::{includedir}configurationProperties/io.micronaut.security.reporting.ReportingEndpointConfiguration.adoc[]
-
-The response filter is enabled by default and applies to every request path. It can be disabled or restricted to a path pattern:
-
-[configuration]
-----
-micronaut:
-  security:
-    reporting:
-      filter:
-        enabled: true
-        pattern: /documents/**
-----
-
-include::{includedir}configurationProperties/io.micronaut.security.reporting.ReportingEndpointsFilterConfigurationProperties.adoc[]
