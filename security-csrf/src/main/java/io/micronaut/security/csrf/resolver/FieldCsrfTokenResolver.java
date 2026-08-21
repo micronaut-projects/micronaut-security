@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @since 2.0.0
  */
+@Requires(beans = FilterBodyParser.class)
 @Requires(classes = HttpRequest.class)
 @Requires(property = CsrfConfiguration.PREFIX + ".token-resolvers.field.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
