@@ -1,0 +1,50 @@
+The module evaluates its built-in rules in the same sequence as the https://web.dev/articles/fetch-metadata#enforcing_a_resource_isolation_policy[recommended resource isolation policy]:
+
+. Requests without parsed Fetch Metadata
+. Same-origin requests
+. Same-site requests
+. Requests initiated directly through browser UI
+. Simple `GET` navigations
+. Requests to https://docs.micronaut.io/latest/guide/#annotationBasedCors[CORS-enabled routes]
+
+The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule returns `UNKNOWN` when it does not apply, allowing evaluation to continue. If every rule returns `UNKNOWN`, the filter responds with `403 Forbidden`.
+
+[cols="1,2,1"]
+|===
+|Rule |Behavior |Default
+
+|No Fetch Metadata
+|Allows clients for which Micronaut cannot parse a complete, recognized set of Fetch Metadata headers.
+|Enabled
+
+|Same origin
+|Allows `Sec-Fetch-Site: same-origin`.
+|Enabled
+
+|Same site
+|Allows `Sec-Fetch-Site: same-site`. Enable this only when every same-site origin is trusted.
+|Disabled
+
+|Browser initiated
+|Allows `Sec-Fetch-Site: none`, which represents requests explicitly initiated through browser UI, such as the address bar or a bookmark.
+|Enabled
+
+|Simple navigation
+|Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object` and `embed` destinations.
+|Enabled
+
+|CORS endpoint
+|Allows a request when the matched route declares CORS and its configuration accepts the request origin and method.
+|Enabled
+|===
+
+The compatibility rule treats absent, incomplete, and unrecognized Fetch Metadata as unavailable. To reject those requests, disable `micronaut.security.fetch-metadata.rules.allow-no-fetch-metadata`. Verify that every supported browser, API client, webhook, monitoring probe, and other caller sends valid Fetch Metadata or is otherwise exempted before enabling this stricter behavior.
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        allow-no-fetch-metadata: false
+----

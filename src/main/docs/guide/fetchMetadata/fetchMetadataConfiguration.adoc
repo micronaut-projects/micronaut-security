@@ -1,0 +1,19 @@
+The filter is enabled by default and applies to every request path. You can disable it or restrict it to a https://docs.micronaut.io/latest/api/io/micronaut/http/uri/UriMatchTemplate.html[URI pattern]:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      filter:
+        enabled: true
+        pattern: /api/**
+----
+
+The following filter configuration options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.fetchmetadata.FetchMetadataFilterConfigurationProperties.adoc[]
+
+The following built-in rule options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.adoc[]
