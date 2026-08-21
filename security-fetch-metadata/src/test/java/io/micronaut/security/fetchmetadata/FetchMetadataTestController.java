@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -46,4 +47,10 @@ final class FetchMetadataTestController {
         return "ok";
     }
     // end::cors[]
+
+    @CrossOrigin(value = "https://allowed.example", allowedMethods = HttpMethod.POST)
+    @Post(uri = "/cors-post", produces = MediaType.TEXT_PLAIN)
+    String corsPost() {
+        return "ok";
+    }
 }

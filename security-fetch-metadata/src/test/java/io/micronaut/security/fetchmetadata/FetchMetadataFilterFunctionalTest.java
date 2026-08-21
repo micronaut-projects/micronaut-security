@@ -84,6 +84,22 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     @Test
+    void allowsCorsPreflightWhenTheRequestedMethodIsAllowed() {
+        MutableHttpRequest<?> request = request(HttpMethod.OPTIONS, "/fetch-metadata/cors-post",
+            Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)
+            .header(HttpHeaders.ORIGIN, "https://allowed.example")
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.POST.name());
+
+        HttpResponse<String> response = exchange(request);
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertEquals("https://allowed.example",
+            response.getHeaders().get(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN));
+        assertEquals(HttpMethod.POST.name(),
+            response.getHeaders().get(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS));
+    }
+
+    @Test
     void rejectsCrossSiteRequestsWhenTheRouteCorsConfigurationRejectsTheOrigin() {
         MutableHttpRequest<?> request = request(HttpMethod.GET, "/fetch-metadata/cors",
             Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)

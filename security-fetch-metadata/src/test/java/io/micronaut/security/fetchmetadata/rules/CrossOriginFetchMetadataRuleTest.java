@@ -16,6 +16,8 @@
 package io.micronaut.security.fetchmetadata.rules;
 
 import io.micronaut.http.HttpMethod;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.server.cors.CorsOriginConfiguration;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +25,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
+import static io.micronaut.http.HttpHeaders.ORIGIN;
 
 class CrossOriginFetchMetadataRuleTest {
 
@@ -65,10 +69,27 @@ class CrossOriginFetchMetadataRuleTest {
     void matchesOnlyAllowedMethodsWhenMethodsAreRestricted() {
         CorsOriginConfiguration configuration = new CorsOriginConfiguration();
 
-        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpMethod.POST));
+        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpRequest.POST("/", "")));
 
         configuration.setAllowedMethods(List.of(HttpMethod.GET));
-        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpMethod.GET));
-        assertFalse(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpMethod.POST));
+        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpRequest.GET("/")));
+        assertFalse(CrossOriginFetchMetadataRule.matchesMethod(configuration, HttpRequest.POST("/", "")));
+    }
+
+    @Test
+    void matchesTheRequestedMethodForPreflightRequests() {
+        CorsOriginConfiguration configuration = new CorsOriginConfiguration();
+        configuration.setAllowedMethods(List.of(HttpMethod.POST));
+
+        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration,
+            preflight(HttpMethod.POST)));
+        assertFalse(CrossOriginFetchMetadataRule.matchesMethod(configuration,
+            preflight(HttpMethod.GET)));
+    }
+
+    private static MutableHttpRequest<?> preflight(HttpMethod requestedMethod) {
+        return HttpRequest.OPTIONS("/")
+            .header(ORIGIN, "https://allowed.example")
+            .header(ACCESS_CONTROL_REQUEST_METHOD, requestedMethod.name());
     }
 }

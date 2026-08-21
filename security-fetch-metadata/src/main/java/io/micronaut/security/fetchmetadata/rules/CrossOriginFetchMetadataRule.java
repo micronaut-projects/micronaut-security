@@ -22,6 +22,7 @@ import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.SecFetch;
 import io.micronaut.http.server.cors.CorsOriginConfiguration;
+import io.micronaut.http.server.cors.CorsUtil;
 import io.micronaut.http.server.cors.CrossOriginUtil;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
@@ -34,6 +35,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_CROSS_ORIGIN;
+import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
 
 /**
  * Allows a cross-origin request when its matched route declares a CORS configuration that
@@ -43,7 +45,8 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
  * {@link io.micronaut.http.server.cors.CrossOrigin CrossOrigin} is insufficient. The request
  * must include an {@code Origin} header accepted by that route's CORS configuration. This keeps
  * the Fetch Metadata exemption aligned with the validation performed by Micronaut's CORS
- * filter.</p>
+ * filter. For a preflight request, the requested method is read from the
+ * {@code Access-Control-Request-Method} header.</p>
  */
 @Requires(classes = { HttpRequest.class, CorsOriginConfiguration.class, CrossOriginUtil.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
@@ -66,7 +69,7 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
             CrossOriginUtil.getCorsOriginConfigurationForRequest(request);
         if (originConfiguration
             .filter(configuration -> matchesOrigin(configuration, origin))
-            .filter(configuration -> matchesMethod(configuration, request.getMethod()))
+            .filter(configuration -> matchesMethod(configuration, request))
             .isPresent()) {
             return FetchMetadataRuleResult.ALLOWED;
         }
@@ -86,9 +89,13 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
                 allowedOrigins.contains(origin));
     }
 
-    static boolean matchesMethod(CorsOriginConfiguration configuration, HttpMethod method) {
+    static boolean matchesMethod(CorsOriginConfiguration configuration, HttpRequest<?> request) {
+        HttpMethod requestMethod = request.getMethod();
+        HttpMethod methodToMatch = CorsUtil.isPreflightRequest(request)
+            ? request.getHeaders().getFirst(ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.class).orElse(requestMethod)
+            : requestMethod;
         List<HttpMethod> allowedMethods = configuration.getAllowedMethods();
         return Objects.equals(allowedMethods, CorsOriginConfiguration.ANY_METHOD) ||
-            allowedMethods.contains(method);
+            allowedMethods.contains(methodToMatch);
     }
 }
