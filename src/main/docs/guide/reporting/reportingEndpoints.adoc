@@ -1,0 +1,41 @@
+Declare one or more named reporting endpoints under `micronaut.security.reporting-endpoints`:
+
+[configuration]
+----
+micronaut:
+  security:
+    reporting-endpoints:
+      csp:
+        url: /csp/report
+      network:
+        url: https://reports.example.com/network
+----
+
+The configuration above adds this response header:
+
+[source,http]
+----
+Reporting-Endpoints: csp="/csp/report", network="https://reports.example.com/network"
+----
+
+The name of each configuration entry is a reporting group. Browser features refer to that name when selecting a destination. Group names must be valid HTTP Structured Fields dictionary keys: they start with a lowercase ASCII letter or `*` and contain only lowercase letters, digits, `_`, `-`, `.`, or `*`.
+
+The Reporting API specification defines an endpoint value as a URI-reference. Therefore, it can be absolute or relative. The browser resolves a relative reference against the URL of the response that supplied the header. After resolution, the endpoint must be https://w3c.github.io/webappsec-secure-contexts/#is-origin-trustworthy[potentially trustworthy]; browsers ignore non-secure endpoints.
+
+The module sorts entries by group name to produce a deterministic header. It does not add the header when no endpoints are available, and it does not overwrite a `Reporting-Endpoints` header already supplied by application code.
+
+include::{includedir}configurationProperties/io.micronaut.security.reporting.ReportingEndpointConfiguration.adoc[]
+
+The response filter is enabled by default and applies to every request path. It can be disabled or restricted to a path pattern:
+
+[configuration]
+----
+micronaut:
+  security:
+    reporting:
+      filter:
+        enabled: true
+        pattern: /documents/**
+----
+
+include::{includedir}configurationProperties/io.micronaut.security.reporting.ReportingEndpointsFilterConfigurationProperties.adoc[]
