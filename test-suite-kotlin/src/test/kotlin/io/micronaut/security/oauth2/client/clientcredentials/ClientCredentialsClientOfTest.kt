@@ -58,7 +58,8 @@ internal class ClientCredentialsClientOfTest {
         }
 
         private fun tokenUrl(httpClient: HttpClient, issuer: String): String {
-            val openIdProviderMetadata = httpClient.toBlocking().retrieve(
+            val client = httpClient.toBlocking()
+            val openIdProviderMetadata = client.retrieve(
                 HttpRequest.GET<Any>("$issuer/.well-known/openid-configuration"),
                 Argument.of(DefaultOpenIdProviderMetadata::class.java)
             )

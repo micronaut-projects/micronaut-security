@@ -34,6 +34,7 @@ import java.util.List;
 /**
  * Default implementation of {@link ProtectedResourceMetadataProvider}.
  */
+@Requires(beans = HttpHostResolver.class)
 @Requires(classes = HttpRequest.class)
 @Experimental
 @Singleton
