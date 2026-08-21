@@ -67,6 +67,7 @@ class ReportingEndpointsFilterTest {
         @Get
         @Status(HttpStatus.OK)
         void index() {
+            // No response body is required; the test only exercises reporting header generation.
         }
 
         @Get("/custom")

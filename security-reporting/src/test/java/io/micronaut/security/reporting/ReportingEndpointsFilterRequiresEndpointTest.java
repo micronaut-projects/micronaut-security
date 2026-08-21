@@ -55,6 +55,7 @@ class ReportingEndpointsFilterRequiresEndpointTest {
         @Get
         @Status(HttpStatus.OK)
         void index() {
+            // No response body is required; the test only verifies conditional filter loading.
         }
     }
 }

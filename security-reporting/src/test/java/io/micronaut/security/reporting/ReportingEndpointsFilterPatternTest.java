@@ -56,11 +56,13 @@ class ReportingEndpointsFilterPatternTest {
         @Get("/included/resource")
         @Status(HttpStatus.OK)
         void included() {
+            // No response body is required; the test only exercises filter path matching.
         }
 
         @Get("/excluded/resource")
         @Status(HttpStatus.OK)
         void excluded() {
+            // No response body is required; the test only exercises filter path matching.
         }
     }
 }

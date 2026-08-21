@@ -53,6 +53,7 @@ class ReportingEndpointsFilterDisabledTest {
         @Get
         @Status(HttpStatus.OK)
         void index() {
+            // No response body is required; the test only verifies disabled filter behavior.
         }
     }
 }
