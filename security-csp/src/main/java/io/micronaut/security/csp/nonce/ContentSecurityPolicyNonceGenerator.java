@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp;
+package io.micronaut.security.csp.nonce;
 
 import io.micronaut.http.HttpRequest;
 
 /**
  * Generates unpredictable values for CSP nonce source expressions.
  *
- * <p>The filter generates one nonce per request, exposes it through {@link #CSP_NONCE_ATTRIBUTE},
- * and uses the same value in nonce-capable response directives such as {@code script-src} and
- * {@code style-src}. Views can use that request attribute as the {@code nonce} attribute of trusted
- * script or style elements.</p>
+ * <p>When nonce support is enabled, the filter generates one nonce per request, exposes it through
+ * {@link #CSP_NONCE_ATTRIBUTE}, and uses the same value in nonce-capable response directives such
+ * as {@code script-src} and {@code style-src}. Views can use that request attribute as the
+ * {@code nonce} attribute of trusted script or style elements.</p>
  *
  * @since 5.4.0
  */

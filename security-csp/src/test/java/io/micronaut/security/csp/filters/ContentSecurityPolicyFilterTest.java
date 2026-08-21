@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp;
+package io.micronaut.security.csp.filters;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.csp.ContentSecurityPolicyDirective;
+import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;

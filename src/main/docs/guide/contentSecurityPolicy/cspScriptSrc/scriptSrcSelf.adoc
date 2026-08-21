@@ -9,4 +9,4 @@ micronaut:
         self: true
 ----
 
-Nonce generation remains enabled by default, so this adds `'self'` alongside the request-specific nonce. Treat `'self'` as a broader permission than a nonce or hash because it permits every script served from the application origin.
+Nonce generation remains disabled unless explicitly enabled, so this configuration generates only `script-src 'self'`. Treat `'self'` as a broader permission than a nonce or hash because it permits every script served from the application origin.

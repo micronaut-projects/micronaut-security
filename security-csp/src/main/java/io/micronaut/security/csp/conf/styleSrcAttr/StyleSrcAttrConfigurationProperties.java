@@ -18,8 +18,6 @@ package io.micronaut.security.csp.conf.styleSrcAttr;
 import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /** Mutable properties for {@link StyleSrcAttrConfiguration}. @since 5.4.0 */

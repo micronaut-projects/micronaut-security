@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2026 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.filters;
+package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.config.SecurityConfigurationProperties;
-import jakarta.validation.constraints.NotBlank;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link ContentSecurityPolicyFilterConfiguration}.
  *
  * @author Sergio del Amo
  * @since 3.1.0
  */
-@ConfigurationProperties(SecurityFilterConfigurationProperties.PREFIX)
-public class SecurityFilterConfigurationProperties implements SecurityFilterConfiguration {
-    public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".filter";
+@ConfigurationProperties(ContentSecurityPolicyFilterConfigurationProperties.PREFIX)
+public class ContentSecurityPolicyFilterConfigurationProperties implements ContentSecurityPolicyFilterConfiguration {
+    public static final String PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".filter";
+    public static final String PROPERTY_ENABLED = ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".enabled";
     /**
      * The default enable value.
      */
@@ -38,7 +39,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
 
     /**
      *
-     * The pattern the {@link SecurityFilter} should match.
+     * The pattern the {@link ContentSecurityPolicyFilter} should match.
      */
     @NonNull
     @NotBlank
@@ -47,7 +48,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     private boolean enabled = DEFAULT_ENABLED;
 
     /**
-     * @return true if you want to enable the {@link SecurityFilter}
+     * @return true if you want to enable the {@link ContentSecurityPolicyFilter}
      */
     @Override
     public boolean isEnabled() {
@@ -61,7 +62,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     }
 
     /**
-     * Enables {@link SecurityFilter}. Default value {@value #DEFAULT_ENABLED}
+     * Enables {@link ContentSecurityPolicyFilter}. Default value {@value #DEFAULT_ENABLED}
      * @param enabled True if it is enabled
      */
     public void setEnabled(boolean enabled) {
@@ -69,7 +70,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     }
 
     /**
-     * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
+     * Pattern the {@link ContentSecurityPolicyFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
      * @param pattern The pattern
      */
     public void setPath(@NonNull String pattern) {

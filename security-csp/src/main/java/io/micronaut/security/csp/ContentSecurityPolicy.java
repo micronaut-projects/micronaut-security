@@ -36,6 +36,19 @@ import org.jspecify.annotations.Nullable;
  */
 public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directives) {
     /**
+     * Header that causes user agents to enforce the supplied policy.
+     *
+     * @since 5.4.0
+     */
+    public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
+    /**
+     * Header that reports policy violations without enforcing the supplied policy.
+     *
+     * @since 5.4.0
+     */
+    public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
+
+    /**
      * @return the {@code base-uri} directive, or {@code null} if it is absent
      * @since 5.4.0
      */
@@ -268,13 +281,13 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @return the parsed policy, or {@code null} if the headers have no enforcing CSP header
      */
     public static @Nullable ContentSecurityPolicy of(HttpHeaders headers) {
-        return of(headers, ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY);
+        return of(headers, ContentSecurityPolicy.CONTENT_SECURITY_POLICY);
     }
 
     /**
      * Parses a named Content Security Policy header from HTTP headers.
      *
-     * <p>Use {@link ContentSecurityPolicyHeaders#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
+     * <p>Use {@link ContentSecurityPolicy#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
      *
      * @param headers the HTTP headers
      * @param headerName the CSP header name to parse

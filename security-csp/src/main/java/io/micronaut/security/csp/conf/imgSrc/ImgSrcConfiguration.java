@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.imgSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /**
  * Configuration for the {@code img-src} source list.
  *

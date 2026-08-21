@@ -5,6 +5,7 @@ plugins {
 }
 dependencies {
     api(mn.micronaut.http)
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     compileOnly(mnViews.micronaut.views.core)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)

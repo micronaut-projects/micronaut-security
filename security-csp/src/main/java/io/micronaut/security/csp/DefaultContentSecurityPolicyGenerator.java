@@ -38,6 +38,7 @@ import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfiguration;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfiguration;
 import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfiguration;
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -511,11 +512,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         }
         if (config.isUnsafeWebtransportHashes()) {
             values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("unsafe-webtransport-hashes"));
-        }
-        if (config instanceof ScriptSrcConfiguration scriptSrcConfiguration) {
-            values.addAll(scriptSrcConfiguration.getHashes().stream()
-                .map(ContentSecurityPolicyUtils::wrapInSingleQuotes)
-                .toList());
         }
         ContentSecurityPolicyUtils.addSchemeSources(config, values);
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {

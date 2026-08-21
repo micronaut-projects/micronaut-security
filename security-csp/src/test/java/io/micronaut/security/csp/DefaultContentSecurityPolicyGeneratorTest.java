@@ -39,7 +39,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +57,6 @@ class DefaultContentSecurityPolicyGeneratorTest {
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FONT_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.PREFETCH_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FRAME_ANCESTORS, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.FRAME_SRC, "'none'"),
@@ -101,8 +99,10 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void addsRequestNonceToScriptSource() {
         HttpRequest<?> request = HttpRequest.GET("/");
         ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
         ContentSecurityPolicyGenerator generator = generator(configuration, req -> "nonce",
-            new ScriptSrcConfigurationProperties(), new ConnectSrcConfigurationProperties());
+            scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
 
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
@@ -114,6 +114,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void addsStrictDynamicToScriptSourceWhenEnabled() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
         scriptSrcConfiguration.setStrictDynamic(true);
         HttpRequest<?> request = HttpRequest.GET("/");
         ContentSecurityPolicyGenerator generator = generator(configuration, currentRequest -> "nonce",
@@ -136,7 +137,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' 'unsafe-eval'"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'unsafe-eval'"),
                 directives.get(directives.size() - 1));
     }
 
@@ -151,7 +152,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
             scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
         List<ContentSecurityPolicyDirective> directives = generator.contentSecurityPolicy(request);
 
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-nonce' http: https:"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "http: https:"),
                 directives.get(directives.size() - 1));
     }
 

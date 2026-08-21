@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp;
+package io.micronaut.security.csp.views;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import io.micronaut.views.ModelAndView;
 import io.micronaut.views.model.ViewModelProcessor;
 import jakarta.inject.Singleton;

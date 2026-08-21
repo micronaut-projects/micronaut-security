@@ -2,7 +2,6 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -23,15 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 class ScriptSrcDefaultsToTest {
     @Test
-    void scriptSelf(@Client("/") HttpClient httpClient) {
+    void scriptSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
         assertNotNull(csp);
         ContentSecurityPolicyDirective directive = csp.scriptSrc();
         assertNotNull(directive);
-        boolean unsafeEvalNotPresentByDefault = directive.values().stream().noneMatch(v -> v.contains("unsafe-eval"));
-        assertTrue(unsafeEvalNotPresentByDefault);
+        assertTrue(directive.isNone());
     }
 
     @Requires(property = "spec.name", value = "ScriptSrcDefaultsToTest")

@@ -1,6 +1,6 @@
 The https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/script-src[`script-src` directive] controls the JavaScript and WebAssembly sources that a page may execute. It is one of the most important CSP controls for reducing the impact of cross-site scripting.
 
-By default, the module adds a fresh nonce source expression to `script-src` for every request. A script executes only when its `nonce` attribute contains the same value:
+By default, the module generates `script-src 'none'`, which blocks JavaScript and WebAssembly execution. Nonce support is opt-in. When enabled, a script executes only when its `nonce` attribute contains the same request-specific value:
 
 [source,html]
 ----

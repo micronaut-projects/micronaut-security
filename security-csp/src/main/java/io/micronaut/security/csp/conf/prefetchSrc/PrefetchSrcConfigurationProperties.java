@@ -15,13 +15,23 @@
  */
 package io.micronaut.security.csp.conf.prefetchSrc;
 
-import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
 
-/** Mutable properties for {@link PrefetchSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link PrefetchSrcConfiguration}.
+ *
+ * <p>The directive is disabled by default because it is not recognized by Safari. Applications
+ * that require it can enable it explicitly.</p>
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".prefetch-src")
 public class PrefetchSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements PrefetchSrcConfiguration {
+    /**
+     * Creates a configuration with {@code prefetch-src} disabled.
+     */
     public PrefetchSrcConfigurationProperties() {
         setEnabled(false);
     }

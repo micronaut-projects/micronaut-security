@@ -84,8 +84,8 @@ class DefaultDirectiveDefaultsToTest {
     }
 
     @Test
-    void prefetchSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
-        assertTrue(contentSecurityPolicy(httpClient).prefetchSrc().isNone());
+    void prefetchSrcIsNotIncludedByDefault(@Client("/") HttpClient httpClient) {
+        assertNull(contentSecurityPolicy(httpClient).prefetchSrc());
     }
 
     @Test
@@ -99,9 +99,8 @@ class DefaultDirectiveDefaultsToTest {
     }
 
     @Test
-    void styleSrcUsesANonceByDefault(@Client("/") HttpClient httpClient) {
-        assertTrue(contentSecurityPolicy(httpClient).styleSrc().values().stream()
-            .anyMatch(value -> value.startsWith("'nonce-") && value.endsWith("'")));
+    void styleSrcDefaultsToNone(@Client("/") HttpClient httpClient) {
+        assertTrue(contentSecurityPolicy(httpClient).styleSrc().isNone());
     }
 
     @Test

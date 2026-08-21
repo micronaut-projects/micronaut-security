@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.defaultSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code default-src} source list. @since 5.4.0 */
 public interface DefaultSrcConfiguration extends SourceListDirectiveConfiguration {
 }

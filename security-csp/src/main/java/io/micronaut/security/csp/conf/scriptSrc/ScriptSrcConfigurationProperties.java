@@ -15,19 +15,24 @@
  */
 package io.micronaut.security.csp.conf.scriptSrc;
 
-import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 
 import java.util.Collections;
 import java.util.List;
 
-/** Mutable properties for {@link ScriptSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link ScriptSrcConfiguration}.
+ *
+ * <p>Nonce source expressions are disabled by default, leaving the inherited {@code 'none'} source
+ * expression as the secure default.</p>
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src")
 public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcConfiguration {
-    private boolean nonce = true;
-    private List<String> hashes = Collections.emptyList();
+    private boolean nonce;
     private List<String> urls = Collections.emptyList();
     private boolean unsafeEval;
     private boolean strictDynamic;
@@ -40,22 +45,10 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * @param nonce whether a nonce source expression is generated for this directive
+     * @param nonce whether a nonce source expression is generated for this directive; defaults to {@code false}
      */
     public void setNonce(boolean nonce) {
         this.nonce = nonce;
-    }
-
-    @Override
-    public List<String> getHashes() {
-        return hashes;
-    }
-
-    /**
-     * @param hashes hash source expressions to add to the directive
-     */
-    public void setHashes(List<String> hashes) {
-        this.hashes = hashes;
     }
 
     @Override

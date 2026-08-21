@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp.conf.defaultSrc;
+/**
+ * HTTP server filter support for Content Security Policy response headers.
+ */
+@NullMarked
+@Requires(classes = ServerFilter.class)
+@Requires(property = ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Configuration
+package io.micronaut.security.csp.filters;
 
-import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-
-import io.micronaut.context.annotation.ConfigurationProperties;
-
-/** Mutable properties for {@link DefaultSrcConfiguration}. @since 5.4.0 */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".default-src")
-public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {
-}
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.annotation.ServerFilter;
+import org.jspecify.annotations.NullMarked;

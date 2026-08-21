@@ -18,8 +18,6 @@ package io.micronaut.security.csp.conf.scriptSrcElem;
 import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /** Mutable properties for {@link ScriptSrcElemConfiguration}. @since 5.4.0 */

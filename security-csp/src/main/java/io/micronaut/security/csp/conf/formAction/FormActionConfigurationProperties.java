@@ -18,8 +18,6 @@ package io.micronaut.security.csp.conf.formAction;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /** Mutable properties for {@link FormActionConfiguration}. @since 5.4.0 */

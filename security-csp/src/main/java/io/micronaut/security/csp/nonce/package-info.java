@@ -13,14 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp.conf.defaultSrc;
-
-import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-
-import io.micronaut.context.annotation.ConfigurationProperties;
-
-/** Mutable properties for {@link DefaultSrcConfiguration}. @since 5.4.0 */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".default-src")
-public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {
-}
+/**
+ * Classes related to CSP Nonce generation.
+ */
+package io.micronaut.security.csp.nonce;

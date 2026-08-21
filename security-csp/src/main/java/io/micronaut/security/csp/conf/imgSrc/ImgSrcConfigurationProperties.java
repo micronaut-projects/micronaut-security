@@ -18,8 +18,6 @@ package io.micronaut.security.csp.conf.imgSrc;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /**

@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.frameAncestors;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code frame-ancestors} source list. @since 5.4.0 */
 public interface FrameAncestorsConfiguration extends SourceListDirectiveConfiguration {
 }

@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.styleSrcElem;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code style-src-elem} source list. @since 5.4.0 */
 public interface StyleSrcElemConfiguration extends SourceListDirectiveConfiguration {
     /**

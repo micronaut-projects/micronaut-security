@@ -6,7 +6,8 @@ micronaut:
   security:
     csp:
       script-src:
+        nonce: true
         strict-dynamic: true
 ----
 
-The default nonce remains enabled, so the generated directive contains both the request nonce and `'strict-dynamic'`.
+The generated directive contains both the request nonce and `'strict-dynamic'`. A nonce or hash provides the trust anchor required for `'strict-dynamic'` to be useful.

@@ -1,5 +1,5 @@
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP[Content Security Policy (CSP)] is a browser-enforced, defense-in-depth mechanism that restricts which resources a page may load and what actions it may perform. A carefully designed policy can reduce the impact of content injection vulnerabilities such as cross-site scripting (XSS), but it does not replace output encoding, input validation, or other secure coding practices.
 
-The `micronaut-security-csp` module generates a policy for each request and writes it to the HTTP response.
+The `micronaut-security-csp` module generates a policy for each request and writes it to the HTTP response. When nonce support and Micronaut Views are present, it also makes the request nonce available to map-backed view models.
 
 NOTE: Adding the module enables its restrictive default policy. Existing applications will normally need to allow the resources they intentionally use before deploying the policy in enforcing mode. Use <<cspReportOnly,report-only mode>> while evaluating violations.

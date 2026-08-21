@@ -15,17 +15,21 @@
  */
 package io.micronaut.security.csp.conf.styleSrc;
 
-import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 
-/** Mutable properties for {@link StyleSrcConfiguration}. @since 5.4.0 */
+/**
+ * Mutable properties for {@link StyleSrcConfiguration}.
+ *
+ * <p>Nonce source expressions are disabled by default, leaving the inherited {@code 'none'} source
+ * expression as the secure default.</p>
+ *
+ * @since 5.4.0
+ */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src")
 public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcConfiguration {
-    private boolean nonce = true;
+    private boolean nonce;
 
     @Override
     public boolean isNonce() {
@@ -33,7 +37,7 @@ public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveCo
     }
 
     /**
-     * @param nonce whether a nonce source expression is generated for this directive
+     * @param nonce whether a nonce source expression is generated for this directive; defaults to {@code false}
      */
     public void setNonce(boolean nonce) {
         this.nonce = nonce;

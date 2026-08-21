@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.connectSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code connect-src} source list. @since 5.4.0 */
 public interface ConnectSrcConfiguration extends SourceListDirectiveConfiguration {
 }

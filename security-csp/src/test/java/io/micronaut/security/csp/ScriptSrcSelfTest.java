@@ -15,11 +15,9 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyHeaders.CONTENT_SECURITY_POLICY;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Property(name = "micronaut.security.csp.script-src.nonce", value = StringUtils.FALSE)
 @Property(name = "micronaut.security.csp.script-src.self", value = StringUtils.TRUE)

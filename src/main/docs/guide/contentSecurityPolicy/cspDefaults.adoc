@@ -5,20 +5,17 @@ The module is enabled by default and writes an enforcing `Content-Security-Polic
 * `connect-src 'none'`
 * `font-src 'none'`
 * `object-src 'none'`
-* `prefetch-src 'none'`
 * `frame-ancestors 'none'`
 * `frame-src 'none'`
-* `script-src 'nonce-<random>'`
+* `script-src 'none'`
 * `img-src 'none'`
 * `manifest-src 'none'`
 * `media-src 'none'`
-* `style-src 'nonce-<random>'`
+* `style-src 'none'`
 * `worker-src 'none'`
 * `form-action 'self'`
 * `require-trusted-types-for 'script'`
 
-It does not emit `fenced-frame-src` or `report-uri` unless you enable them explicitly.
-
-The same request-specific nonce is used by the default `script-src` and `style-src` directives. The literal value changes for every request; `<random>` above is only a placeholder used to describe the generated header.
+It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive.
 
 This baseline intentionally blocks most existing resource loading. Configure only the directives and source expressions required by your application.

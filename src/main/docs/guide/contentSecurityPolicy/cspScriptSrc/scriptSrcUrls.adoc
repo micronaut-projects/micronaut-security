@@ -6,10 +6,9 @@ micronaut:
   security:
     csp:
       script-src:
-        nonce: false
         self: true
         values:
-          - 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='
+          - "'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='"
           - https://cdn.jsdelivr.net
 ----
 

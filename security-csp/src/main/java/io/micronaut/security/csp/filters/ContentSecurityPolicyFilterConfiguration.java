@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csp.conf.defaultSrc;
+package io.micronaut.security.csp.filters;
 
-import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.core.util.Toggleable;
+import org.jspecify.annotations.NonNull;
 
-import io.micronaut.context.annotation.ConfigurationProperties;
-
-/** Mutable properties for {@link DefaultSrcConfiguration}. @since 5.4.0 */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".default-src")
-public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {
+/**
+ * Configuration for {@link io.micronaut.security.csp.filters.ContentSecurityPolicyFilter}.
+ * @author Sergio del Amo
+ * @since 5.4.0
+ */
+public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
+    /**
+     *
+     * @return The pattern the {@link ContentSecurityPolicyFilter} should match.
+     */
+    @NonNull String getPattern();
 }

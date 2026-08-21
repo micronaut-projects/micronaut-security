@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.workerSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code worker-src} source list. @since 5.4.0 */
 public interface WorkerSrcConfiguration extends SourceListDirectiveConfiguration {
 }

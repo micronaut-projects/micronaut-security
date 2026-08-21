@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.fontSrc;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code font-src} source list. @since 5.4.0 */
 public interface FontSrcConfiguration extends SourceListDirectiveConfiguration {
 }

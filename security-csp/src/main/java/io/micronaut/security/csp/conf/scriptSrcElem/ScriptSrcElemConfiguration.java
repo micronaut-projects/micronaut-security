@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf.scriptSrcElem;
 
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 
-
-
 /** Configuration for the {@code script-src-elem} source list. @since 5.4.0 */
 public interface ScriptSrcElemConfiguration extends SourceListDirectiveConfiguration {
 }

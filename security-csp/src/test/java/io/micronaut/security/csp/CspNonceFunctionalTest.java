@@ -40,7 +40,9 @@ class CspNonceFunctionalTest {
 
     @Test
     void responseHeaderNonceMatchesViewModelNonce() {
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", SPEC_NAME))) {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.script-src.nonce", true))) {
             try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
                 BlockingHttpClient client = httpClient.toBlocking();
                 HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
@@ -56,6 +58,7 @@ class CspNonceFunctionalTest {
     void addsStrictDynamicToScriptSrcWhenEnabled() {
         try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
                 "spec.name", SPEC_NAME,
+                "micronaut.security.csp.script-src.nonce", true,
                 "micronaut.security.csp.script-src.strict-dynamic", true))) {
             try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
                 BlockingHttpClient client = httpClient.toBlocking();
@@ -82,10 +85,8 @@ class CspNonceFunctionalTest {
     }
 
     @Test
-    void doesNotAddNonceWhenDisabled() {
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
-                "spec.name", SPEC_NAME,
-                "micronaut.security.csp.script-src.nonce", false))) {
+    void doesNotAddNonceByDefault() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", SPEC_NAME))) {
             try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
                 BlockingHttpClient client = httpClient.toBlocking();
                 HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);

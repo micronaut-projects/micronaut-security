@@ -18,8 +18,6 @@ package io.micronaut.security.csp.conf.fontSrc;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /** Mutable properties for {@link FontSrcConfiguration}. @since 5.4.0 */
