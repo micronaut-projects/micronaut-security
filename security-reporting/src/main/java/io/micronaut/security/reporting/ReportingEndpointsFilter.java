@@ -33,6 +33,7 @@ import java.util.Objects;
  * {@link ReportingEndpoint} beans and request-specific {@link ReportingEndpointProvider} beans
  * contribute entries; when neither contributes an endpoint, the filter omits the header.</p>
  */
+@Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)
 @ServerFilter("${" + ReportingEndpointsFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
 @Internal
