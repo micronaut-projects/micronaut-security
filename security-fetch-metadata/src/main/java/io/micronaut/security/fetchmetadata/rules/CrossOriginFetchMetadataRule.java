@@ -45,7 +45,7 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
  * the Fetch Metadata exemption aligned with the validation performed by Micronaut's CORS
  * filter.</p>
  */
-@Requires(classes = HttpRequest.class)
+@Requires(classes = { HttpRequest.class, CorsOriginConfiguration.class, CrossOriginUtil.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
