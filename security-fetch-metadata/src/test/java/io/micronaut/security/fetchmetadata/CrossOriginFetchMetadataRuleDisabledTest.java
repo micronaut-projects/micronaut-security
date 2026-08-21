@@ -23,6 +23,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.Mode;
 import io.micronaut.http.Site;
+import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -41,12 +42,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @MicronautTest
 class CrossOriginFetchMetadataRuleDisabledTest {
 
-    @Inject
-    @Client("/")
-    HttpClient httpClient;
-
     @Test
-    void disablingCrossOriginRuleRejectsOtherwisePermittedCorsRequest() {
+    void disablingCrossOriginRuleRejectsOtherwisePermittedCorsRequest(@Client("/") HttpClient httpClient) {
+        BlockingHttpClient client = httpClient.toBlocking();
         HttpRequest<?> request = HttpRequest.GET("/fetch-metadata/cors")
             .header(HttpHeaders.SEC_FETCH_SITE, Site.CROSS_SITE.toString())
             .header(HttpHeaders.SEC_FETCH_MODE, Mode.CORS.toString())
@@ -54,7 +52,7 @@ class CrossOriginFetchMetadataRuleDisabledTest {
             .header(HttpHeaders.ORIGIN, "https://allowed.example");
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-            () -> httpClient.toBlocking().exchange(request));
+            () -> client.exchange(request));
 
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
