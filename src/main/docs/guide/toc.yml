@@ -111,6 +111,10 @@ csrf:
     httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
     fieldCsrfTokenResolver: Field CSRF Token Resolution
   csrfApis: CSRF APIs
+reporting:
+  title: Reporting API
+  reportingEndpoints: Configuration Reporting Endpoints
+  reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:
