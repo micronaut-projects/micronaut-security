@@ -14,6 +14,7 @@ dependencies {
 
     testImplementation(projects.micronautSecurity)
     testImplementation(projects.micronautSecurityFetchMetadata)
+    testImplementation(projects.micronautSecurityReporting)
     testImplementation(projects.micronautSecurityCsrf)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)

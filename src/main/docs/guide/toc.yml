@@ -118,6 +118,10 @@ fetchMetadata:
   fetchMetadataConfiguration: Configuration
   fetchMetadataCors: CORS Endpoints
   fetchMetadataCustomRules: Custom Rules
+reporting:
+  title: Reporting API
+  reportingEndpoints: Configuration Reporting Endpoints
+  reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:
