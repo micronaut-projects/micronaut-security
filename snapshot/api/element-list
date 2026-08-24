@@ -65,6 +65,7 @@ io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
 io.micronaut.security.ojdbc.extensions
 io.micronaut.security.processor
+io.micronaut.security.reporting
 io.micronaut.security.rules
 io.micronaut.security.session
 io.micronaut.security.testutils
