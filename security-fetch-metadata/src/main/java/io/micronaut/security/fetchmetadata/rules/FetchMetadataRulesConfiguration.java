@@ -22,47 +22,27 @@ package io.micronaut.security.fetchmetadata.rules;
  */
 public interface FetchMetadataRulesConfiguration {
     /**
-     * Whether requests to route-level CORS endpoints are allowed when the route's CORS
-     * configuration permits the request origin and HTTP method.
-     * Enabled by default.
-     *
-     * @return whether permitted cross-origin requests are allowed
+     * @return Whether to enable {@link CrossOriginFetchMetadataRule} bean which allows a cross-origin request when its matched route declares a CORS configuration that permits the request origin and HTTP method.
      */
     boolean isAllowCrossOrigin();
 
     /**
-     * Whether requests explicitly initiated by a user through browser UI are allowed.
-     * These requests carry a {@code Sec-Fetch-Site} value of {@code none}.
-     * Enabled by default.
-     *
-     * @return whether browser-initiated requests are allowed
+     * @return Whether to enable {@link BrowserInitiatedRequestFetchMetadataRule} bean which allows requests initiated directly by a user through browser UI, represented by site: none.
      */
     boolean isAllowBrowserInitiatedRequests();
 
     /**
-     * Whether requests from the same origin are allowed.
-     * Enabled by default.
-     *
-     * @return whether same-origin requests are allowed
+     * @return Whether to enable {@link SameOriginFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same origin.
      */
     boolean isAllowSameOrigin();
 
     /**
-     * Whether requests from another origin on the same site are allowed.
-     * Applications should enable this only when every same-site origin is trusted.
-     * Disabled by default.
-     *
-     * @return whether same-site requests are allowed
+     * @return Whether to enable {@link SameSiteFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same site.
      */
     boolean isAllowSameSite();
 
     /**
-     * Whether requests without a complete, valid set of Fetch Metadata headers are allowed.
-     * Enabling this option supports clients that do not send Fetch Metadata, but those requests
-     * must be protected by other controls such as CSRF protection and origin validation.
-     * Enabled by default for compatibility with clients that do not send Fetch Metadata.
-     *
-     * @return whether requests without parsed Fetch Metadata are allowed
+     * @return Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers.
      */
     boolean isAllowNoFetchMetadata();
 }

@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS;
 
 /**
- * Allows requests initiated directly by a user through browser UI, represented by
- * {@link Site#NONE}.
+ * Allows requests initiated directly by a user through browser UI, represented by {@link Site#NONE}.
  */
 @Requires(classes = HttpRequest.class)
 @Requires(property = PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)

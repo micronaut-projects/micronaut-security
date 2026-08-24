@@ -59,10 +59,7 @@ public final class FetchMetadataRulesConfigurationProperties implements FetchMet
     }
 
     /**
-     * Sets whether requests to route-level CORS endpoints are allowed when the route's CORS
-     * configuration permits the request origin and HTTP method.
-     * Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
-     *
+     * Whether to enable {@link CrossOriginFetchMetadataRule} bean which allows a cross-origin request when its matched route declares a CORS configuration that permits the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
      * @param allowCrossOrigin whether permitted cross-origin requests are allowed
      */
     public void setAllowCrossOrigin(boolean allowCrossOrigin) {
@@ -75,7 +72,7 @@ public final class FetchMetadataRulesConfigurationProperties implements FetchMet
     }
 
     /**
-     * Sets whether requests initiated directly through browser UI are allowed. Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
+     * Whether to enable {@link BrowserInitiatedRequestFetchMetadataRule} bean which allows requests initiated directly by a user through browser UI, represented by site: none. Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
      *
      * @param allowBrowserInitiatedRequests whether requests initiated through browser UI are allowed
      */
@@ -89,7 +86,7 @@ public final class FetchMetadataRulesConfigurationProperties implements FetchMet
     }
 
     /**
-     * Sets whether same-origin requests are allowed. Default value: {@value #DEFAULT_ALLOW_SAME_ORIGIN}
+     * Whether to enable {@link SameOriginFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same origin. Default value: {@value #DEFAULT_ALLOW_SAME_ORIGIN}
      *
      * @param allowSameOrigin whether same-origin requests are allowed
      */
@@ -103,7 +100,7 @@ public final class FetchMetadataRulesConfigurationProperties implements FetchMet
     }
 
     /**
-     * Sets whether same-site requests are allowed. Default value: {@value #DEFAULT_ALLOW_SAME_SITE}
+     * Whether to enable {@link SameSiteFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same site. Default value: {@value #DEFAULT_ALLOW_SAME_SITE}
      *
      * @param allowSameSite whether same-site requests are allowed
      */
@@ -117,7 +114,7 @@ public final class FetchMetadataRulesConfigurationProperties implements FetchMet
     }
 
     /**
-     * Sets whether requests without parsed Fetch Metadata are allowed. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers.. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
      * @param allowNoFetchMetadata whether requests without parsed Fetch Metadata are allowed
      */
