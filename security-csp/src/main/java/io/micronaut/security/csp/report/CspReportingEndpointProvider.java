@@ -21,8 +21,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.reportTo.ReportToConfiguration;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import io.micronaut.security.reporting.ReportingEndpointProvider;
-import io.micronaut.security.reporting.ReportingEndpointRecord;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 
@@ -55,13 +55,21 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
      * @return the CSP controller endpoint, or {@code null} when reporting is disabled
      */
     @Override
-    public ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
+    public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
         if (!reportToConfiguration.isEnabled() || !controllerConfiguration.isEnabled()) {
             return null;
         }
-        return new ReportingEndpointRecord(
-            reportToConfiguration.getGroup(),
-            URI.create(controllerConfiguration.getPath())
-        );
+        return new ReportingEndpoint() {
+
+            @Override
+            public String getName() {
+                return reportToConfiguration.getGroup();
+            }
+
+            @Override
+            public URI getUrl() {
+                return URI.create(controllerConfiguration.getPath());
+            }
+        };
     }
 }

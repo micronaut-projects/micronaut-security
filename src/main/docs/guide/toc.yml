@@ -126,6 +126,10 @@ contentSecurityPolicy:
     scriptSrcSelf: script-src self
     scriptSrcUrls: script-src URLs
   contentSecurityPolicyGenerator: CSP Generator
+reporting:
+  title: Reporting API
+  reportingEndpoints: Configuration Reporting Endpoints
+  reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
 tokenPropagation: Token Propagation
 tokenendpoints:
