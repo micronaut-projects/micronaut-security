@@ -41,10 +41,9 @@ class FetchMetadataFilterPatternTest {
         BlockingHttpClient client = httpClient.toBlocking();
         assertEquals(HttpStatus.OK,
             client.exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
-
+        HttpRequest<?> request = HttpRequest.GET("/fetch-metadata/filtered/test");
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-            () -> client.exchange(
-                HttpRequest.GET("/fetch-metadata/filtered/test")));
+            () -> client.exchange(request));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
 }
