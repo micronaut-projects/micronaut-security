@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 original authors
+ * Copyright 2017-2026 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,19 @@
  */
 package io.micronaut.security.filters;
 
-import org.jspecify.annotations.NonNull;
-import io.micronaut.core.util.Toggleable;
-
 /**
- * Configuration for {@link io.micronaut.security.filters.SecurityFilter}.
- * @author Sergio del Amo
- * @since 3.1.0
+ * Decides whether authentication resolution can be skipped for a request.
+ *
+ * @since 5.3.3
  */
-public interface SecurityFilterConfiguration extends Toggleable {
+public interface StaticResourceAuthenticationBypass<T> {
 
     /**
+     * Whether authentication resolution can be skipped for the request.
      *
-     * @return The pattern the {@link SecurityFilter} should match.
-     */
-    @NonNull
-    String getPattern();
-
-    /**
-     * @return Whether authentication resolution can be bypassed for anonymous static resources
+     * @param request The current request
+     * @return Whether authentication resolution can be skipped
      * @since 5.3.3
      */
-    default boolean isStaticResourceAuthenticationBypass() {
-        return false;
-    }
-
+    boolean shouldBypass(T request);
 }

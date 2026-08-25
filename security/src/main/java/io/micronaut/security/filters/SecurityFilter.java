@@ -35,6 +35,7 @@ import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
+import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,18 +86,45 @@ public class SecurityFilter implements HttpServerFilter {
     protected final Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
+    private final StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass;
+    private final boolean staticResourceAuthenticationBypassEnabled;
 
     /**
      * @param securityRules          The list of security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)}.
      */
+    @Deprecated(forRemoval = true, since = "5.3.3")
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
                           Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
+        this.staticResourceAuthenticationBypass = null;
+        this.staticResourceAuthenticationBypassEnabled = false;
+    }
+
+    /**
+     * @param securityRules The list of security rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context
+     * @param securityConfiguration The security configuration
+     * @param securityFilterConfiguration The security filter configuration
+     * @param staticResourceAuthenticationBypass Determines whether authentication can be skipped for static resources
+     * @since 5.3.3
+     */
+    @Inject
+    public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
+                          Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration,
+                          SecurityFilterConfiguration securityFilterConfiguration,
+                          @Nullable StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass) {
+        this.securityRules = securityRules;
+        this.authenticationFetchers = authenticationFetchers;
+        this.securityConfiguration = securityConfiguration;
+        this.staticResourceAuthenticationBypass = staticResourceAuthenticationBypass;
+        this.staticResourceAuthenticationBypassEnabled = securityFilterConfiguration.isStaticResourceAuthenticationBypass();
     }
 
     @Override
@@ -107,6 +135,12 @@ public class SecurityFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
+
+        if (staticResourceAuthenticationBypassEnabled
+            && staticResourceAuthenticationBypass != null
+            && staticResourceAuthenticationBypass.shouldBypass(request)) {
+            return createResponse(null, request, chain);
+        }
 
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))

@@ -16,13 +16,14 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.config.InterceptUrlPatternModifier;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import java.util.List;
-import io.micronaut.http.HttpRequest;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfiguration#getInterceptUrlMap()}.
@@ -65,5 +66,19 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
     @Override
     public int getOrder() {
         return ORDER;
+    }
+
+    /**
+     * Whether the first configured pattern that applies to the request allows anonymous access.
+     *
+     * @param request The current request
+     * @return Whether authentication resolution can be skipped for the request
+     * @since 5.3.3
+     */
+    @Internal
+    public boolean isAnonymous(HttpRequest<?> request) {
+        return findPattern(request)
+            .map(pattern -> pattern.getAccess().contains(SecurityRule.IS_ANONYMOUS))
+            .orElse(false);
     }
 }
