@@ -72,6 +72,13 @@ class StaticResourceAuthenticationBypassTest {
     }
 
     @Test
+    void skipsAuthenticationFetchersForAnonymousStaticResourcesForHeadRequests() {
+        httpClient.toBlocking().exchange(HttpRequest.HEAD("/assets/asset.txt"));
+
+        assertEquals(0, authenticationFetcher.invocations.get());
+    }
+
+    @Test
     void resolvesAuthenticationForRoutedRequests() {
         HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/routed"), String.class);
 
