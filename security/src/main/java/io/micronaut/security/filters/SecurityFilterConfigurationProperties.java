@@ -86,7 +86,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * Default value {@value #DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS}.
      *
      * @param staticResourceAuthenticationBypass Whether the bypass is enabled
-     * @since 5.3.3
+     * @since 5.4.0
      */
     public void setStaticResourceAuthenticationBypass(boolean staticResourceAuthenticationBypass) {
         this.staticResourceAuthenticationBypass = staticResourceAuthenticationBypass;
