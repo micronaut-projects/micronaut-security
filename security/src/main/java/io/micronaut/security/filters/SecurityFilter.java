@@ -95,7 +95,7 @@ public class SecurityFilter implements HttpServerFilter {
      * @param securityConfiguration  The security configuration
      * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)}.
      */
-    @Deprecated(forRemoval = true, since = "5.3.3")
+    @Deprecated(forRemoval = true, since = "5.4.0")
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
                           Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
@@ -112,7 +112,7 @@ public class SecurityFilter implements HttpServerFilter {
      * @param securityConfiguration The security configuration
      * @param securityFilterConfiguration The security filter configuration
      * @param staticResourceAuthenticationBypass Determines whether authentication can be skipped for static resources
-     * @since 5.3.3
+     * @since 5.4.0
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
