@@ -18,7 +18,7 @@ package io.micronaut.security.filters;
 /**
  * Decides whether authentication resolution can be skipped for a request.
  *
- * @since 5.3.3
+ * @since 5.4.0
  */
 public interface StaticResourceAuthenticationBypass<T> {
 
@@ -27,7 +27,7 @@ public interface StaticResourceAuthenticationBypass<T> {
      *
      * @param request The current request
      * @return Whether authentication resolution can be skipped
-     * @since 5.3.3
+     * @since 5.4.0
      */
     boolean shouldBypass(T request);
 }
