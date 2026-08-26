@@ -34,7 +34,7 @@ public interface SecurityFilterConfiguration extends Toggleable {
 
     /**
      * @return Whether authentication resolution can be bypassed for anonymous static resources
-     * @since 5.3.3
+     * @since 5.4.0
      */
     default boolean isStaticResourceAuthenticationBypass() {
         return false;
