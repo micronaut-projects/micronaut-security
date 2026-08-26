@@ -73,7 +73,7 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
      *
      * @param request The current request
      * @return Whether authentication resolution can be skipped for the request
-     * @since 5.3.3
+     * @since 5.4.0
      */
     @Internal
     public boolean isAnonymous(HttpRequest<?> request) {
