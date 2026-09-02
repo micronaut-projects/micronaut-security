@@ -21,7 +21,6 @@ import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.rules.ConfigurationInterceptUrlMapRule;
 import io.micronaut.web.router.RouteAttributes;
-import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.resource.StaticResourceResolver;
 import jakarta.inject.Singleton;
 
@@ -45,8 +44,8 @@ final class DefaultStaticResourceAuthenticationBypass implements StaticResourceA
     }
 
     /**
-     * A route always takes precedence over a static resource. For an unmatched GET request,
-     * resolve the resource before consulting the intercept URL map.
+     * A route always takes precedence over a static resource. For an unmatched GET or HEAD
+     * request, resolve the resource before consulting the intercept URL map.
      *
      * @param request The current request
      * @return Whether authentication resolution can be skipped
@@ -56,10 +55,8 @@ final class DefaultStaticResourceAuthenticationBypass implements StaticResourceA
         if (!(request.getMethod() == HttpMethod.GET || request.getMethod() == HttpMethod.HEAD)) {
             return false;
         }
-        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
-            if (routeMatch != null) {
-                return false;
-            }
+        if (RouteAttributes.getRouteMatch(request).isPresent()) {
+            return false;
         }
         return staticResourceResolver.resolve(request.getUri().getPath()).isPresent()
             && interceptUrlMapRule.isAnonymous(request);

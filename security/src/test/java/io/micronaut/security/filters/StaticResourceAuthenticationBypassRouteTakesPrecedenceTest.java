@@ -19,11 +19,11 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
@@ -35,17 +35,18 @@ import org.reactivestreams.Publisher;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Property(name = "spec.name", value = "StaticResourceAuthenticationBypassCustomImplementationTest")
+@Property(name = "spec.name", value = "StaticResourceAuthenticationBypassRouteTakesPrecedenceTest")
+@Property(name = "micronaut.router.static-resources.default.mapping", value = "/assets/**")
+@Property(name = "micronaut.router.static-resources.default.paths", value = "classpath:static-resource-authentication-bypass")
 @Property(name = "micronaut.security.filter.static-resource-authentication-bypass", value = "true")
-@Property(name = "micronaut.security.intercept-url-map[0].pattern", value = "/**")
-@Property(name = "micronaut.security.intercept-url-map[0].access[0]", value = "isAnonymous()")
+@Property(name = "micronaut.security.intercept-url-map[0].pattern", value = "/assets/asset.txt")
+@Property(name = "micronaut.security.intercept-url-map[0].access[0]", value = "isAuthenticated()")
+@Property(name = "micronaut.security.intercept-url-map[1].pattern", value = "/assets/**")
+@Property(name = "micronaut.security.intercept-url-map[1].access[0]", value = "isAnonymous()")
 @MicronautTest
-class StaticResourceAuthenticationBypassCustomImplementationTest {
-
-    @Inject
-    StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass;
+class StaticResourceAuthenticationBypassRouteTakesPrecedenceTest {
 
     @Inject
     @Client("/")
@@ -60,36 +61,15 @@ class StaticResourceAuthenticationBypassCustomImplementationTest {
     }
 
     @Test
-    void customImplementationReplacesTheDefault() {
-        assertInstanceOf(CustomStaticResourceAuthenticationBypass.class, staticResourceAuthenticationBypass);
-    }
+    void authenticationIsResolvedWhenARouteShadowsAStaticResource() {
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> httpClient.toBlocking().exchange(HttpRequest.GET("/assets/asset.txt"), String.class));
 
-    @Test
-    void theSecurityFilterUsesTheCustomImplementation() {
-        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/bypassed"), String.class);
-
-        assertEquals("bypassed", response.body());
-        assertEquals(0, authenticationFetcher.invocations.get());
-    }
-
-    @Test
-    void theSecurityFilterResolvesAuthenticationWhenTheCustomImplementationDoesNotBypass() {
-        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/not-bypassed"), String.class);
-
-        assertEquals("not bypassed", response.body());
+        assertEquals(401, exception.getStatus().getCode());
         assertEquals(1, authenticationFetcher.invocations.get());
     }
 
-    @Requires(property = "spec.name", value = "StaticResourceAuthenticationBypassCustomImplementationTest")
-    @Singleton
-    static class CustomStaticResourceAuthenticationBypass implements StaticResourceAuthenticationBypass<HttpRequest<?>> {
-        @Override
-        public boolean shouldBypass(HttpRequest<?> request) {
-            return request.getUri().getPath().equals("/bypassed");
-        }
-    }
-
-    @Requires(property = "spec.name", value = "StaticResourceAuthenticationBypassCustomImplementationTest")
+    @Requires(property = "spec.name", value = "StaticResourceAuthenticationBypassRouteTakesPrecedenceTest")
     @Singleton
     static class CountingAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
         private final AtomicInteger invocations = new AtomicInteger();
@@ -106,17 +86,12 @@ class StaticResourceAuthenticationBypassCustomImplementationTest {
         }
     }
 
-    @Requires(property = "spec.name", value = "StaticResourceAuthenticationBypassCustomImplementationTest")
+    @Requires(property = "spec.name", value = "StaticResourceAuthenticationBypassRouteTakesPrecedenceTest")
     @Controller
-    static class BypassController {
-        @Get("/bypassed")
-        String bypassed() {
-            return "bypassed";
-        }
-
-        @Get("/not-bypassed")
-        String notBypassed() {
-            return "not bypassed";
+    static class ShadowingController {
+        @Get("/assets/asset.txt")
+        String asset() {
+            return "from the controller";
         }
     }
 }

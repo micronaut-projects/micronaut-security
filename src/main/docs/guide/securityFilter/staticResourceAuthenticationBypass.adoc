@@ -1,0 +1,35 @@
+Resolving an api:security.authentication.Authentication[] can be expensive; for example, an api:security.filters.AuthenticationFetcher[] may hit a database on every request. For static resources served anonymously, that work is wasted.
+
+Set `micronaut.security.filter.static-resource-authentication-bypass` to `true` to skip every api:security.filters.AuthenticationFetcher[] for requests which are served as anonymous static resources:
+
+[configuration]
+----
+micronaut:
+  router:
+    static-resources:
+      default:
+        mapping: /assets/**
+        paths: classpath:assets
+  security:
+    filter:
+      static-resource-authentication-bypass: true
+    intercept-url-map:
+      - pattern: /assets/**
+        access:
+          - isAnonymous()
+----
+
+The bypass is disabled by default. When enabled, api:security.filters.SecurityFilter[] skips authentication resolution only if all of the following hold:
+
+* The request method is `GET` or `HEAD`.
+* The request did not match a route. A route always takes precedence over a static resource, and routed requests are never bypassed.
+* The request path resolves to a static resource.
+* The first `micronaut.security.intercept-url-map` entry which applies to the request grants `isAnonymous()` access.
+
+An explicit `isAnonymous()` intercept URL map entry is required. Without one, no request is bypassed.
+
+Bypassing only skips authentication resolution. Every bean of type api:security.rules.SecurityRule[] is still evaluated, so the request is authorized exactly as an anonymous request would be. Because the entry grants `isAnonymous()` access, the outcome cannot depend on who is making the request.
+
+WARNING: The rules are evaluated with a `null` authentication, and no api:security.authentication.Authentication[] is available for the rest of the filter chain. If your application defines a api:security.rules.SecurityRule[] ordered before api:security.rules.ConfigurationInterceptUrlMapRule[], or a filter which reads the authentication for bypassed paths, it observes an anonymous request.
+
+To decide which requests bypass authentication resolution yourself, replace the default implementation with your own bean of type api:security.filters.StaticResourceAuthenticationBypass[]. The configuration property must still be set to `true`.
