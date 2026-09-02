@@ -32,6 +32,8 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     public static final boolean DEFAULT_ALLOW_SAME_ORIGIN = true;
     /** Default behavior for requests without the {@code Sec-Fetch-Site} header. */
     public static final boolean DEFAULT_ALLOW_NO_FETCH_METADATA = true;
+    /** Default simple cross-site navigation and iframing behavior. */
+    public static final boolean DEFAULT_ALLOW_SIMPLE_NAVIGATION = true;
     /** Default permitted cross-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_CROSS_ORIGIN = true;
 
@@ -39,6 +41,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     private boolean allowBrowserInitiatedRequests = DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS;
     private boolean allowSameOrigin = DEFAULT_ALLOW_SAME_ORIGIN;
     private boolean allowSameSite = DEFAULT_ALLOW_SAME_SITE;
+    private boolean allowSimpleNavigation = DEFAULT_ALLOW_SIMPLE_NAVIGATION;
     private boolean allowCrossOrigin = DEFAULT_ALLOW_CROSS_ORIGIN;
 
     @Override
@@ -108,5 +111,19 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
      */
     public void setAllowNoFetchMetadata(boolean allowNoFetchMetadata) {
         this.allowNoFetchMetadata = allowNoFetchMetadata;
+    }
+
+    @Override
+    public boolean isAllowSimpleNavigation() {
+        return allowSimpleNavigation;
+    }
+
+    /**
+     * Whether to enable {@link SimpleTopLevelNavigationAndIframingFetchMetadataRule} bean which allows simple cross-site {@code GET} navigations and iframing. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
+     *
+     * @param allowSimpleNavigation whether simple cross-site navigations and iframing are allowed
+     */
+    public void setAllowSimpleNavigation(boolean allowSimpleNavigation) {
+        this.allowSimpleNavigation = allowSimpleNavigation;
     }
 }

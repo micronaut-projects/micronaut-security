@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.fetchmetadata.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.Destination;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
@@ -26,10 +28,14 @@ import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SIMPLE_NAVIGATION;
+
 /**
  * Allows simple {@code GET} navigations, including document and frame navigations, while
  * excluding requests whose destination is {@code object} or {@code embed}.
  */
+@Requires(classes = HttpRequest.class)
+@Requires(property = PROPERTY_ALLOW_SIMPLE_NAVIGATION, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
 final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements HttpRequestFetchMetadataRule {

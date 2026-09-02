@@ -31,6 +31,12 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_SAME_SITE = PREFIX + ".allow-same-site";
     /** Property that controls whether requests without the {@code Sec-Fetch-Site} header are allowed. */
     String PROPERTY_ALLOW_NO_FETCH_METADATA = PREFIX + ".allow-no-fetch-metadata";
+    /**
+     * Property that controls whether simple cross-site {@code GET} navigations and iframing are allowed.
+     *
+     * @since 5.4.0
+     */
+    String PROPERTY_ALLOW_SIMPLE_NAVIGATION = PREFIX + ".allow-simple-navigation";
     /** Property that controls whether permitted cross-origin requests are allowed. */
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
 
@@ -58,4 +64,12 @@ public interface FetchMetadataRulesConfiguration {
      * @return Whether to enable {@link NoFetchMetadataRule} bean which allows requests without the {@code Sec-Fetch-Site} header.
      */
     boolean isAllowNoFetchMetadata();
+
+    /**
+     * @return Whether to enable {@link SimpleTopLevelNavigationAndIframingFetchMetadataRule} bean which allows simple cross-site {@code GET} navigations and iframing.
+     * @since 5.4.0
+     */
+    default boolean isAllowSimpleNavigation() {
+        return true;
+    }
 }
