@@ -23,6 +23,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.SecFetch;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.ServerFilterPhase;
@@ -89,9 +90,17 @@ public final class FetchMetadataFilter implements Ordered {
                 return forbidden();
             }
         }
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("request {} {} rejected because no Fetch Metadata rule allowed it",
-                request.getMethod(), request.getPath());
+        if (LOG.isDebugEnabled()) {
+            SecFetch secFetch = request.getSecFetch();
+            String destination = secFetch != null ? secFetch.dest().toString() : "";
+            String mode = secFetch != null ? secFetch.mode().toString() : "";
+            String site = secFetch != null ? secFetch.site().toString() : "";
+            LOG.debug("request {} {} rejected because no Fetch Metadata rule allowed it. Fetch Metadata(dest: {}, mode: {}, site: {})",
+                request.getMethod(),
+                request.getPath(),
+                destination,
+                mode,
+                site);
         }
         return forbidden();
     }
