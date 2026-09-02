@@ -18,7 +18,6 @@ package io.micronaut.security.fetchmetadata;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
-import jakarta.validation.constraints.NotBlank;
 
 /**
  * Binds configuration for the Fetch Metadata request filter.
@@ -37,7 +36,6 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
     /** Default server-filter pattern. */
     public static final String DEFAULT_PATTERN = "/**";
 
-    @NotBlank
     private String pattern = DEFAULT_PATTERN;
 
     private boolean enabled = DEFAULT_ENABLED;

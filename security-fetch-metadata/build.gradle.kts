@@ -5,7 +5,6 @@ plugins {
 }
 dependencies {
     api(mn.micronaut.http)
-    api(mnValidation.validation)
     compileOnly(mn.micronaut.http.server)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
