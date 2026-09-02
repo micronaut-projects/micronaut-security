@@ -26,7 +26,7 @@ import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
-import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS;
+import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS;
 
 /**
  * Allows requests initiated directly by a user through browser UI, represented by {@link Site#NONE}.

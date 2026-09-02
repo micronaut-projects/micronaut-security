@@ -26,7 +26,7 @@ import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
-import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_SAME_SITE;
+import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_SITE;
 
 /**
  * Allows requests whose Fetch Metadata identifies their initiator as the same site.

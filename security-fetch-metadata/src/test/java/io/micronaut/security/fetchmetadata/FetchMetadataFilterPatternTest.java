@@ -23,7 +23,7 @@ import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties;
+import io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Property(name = FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern",
     value = "/fetch-metadata/filtered/**")
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_NO_FETCH_METADATA,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_NO_FETCH_METADATA,
     value = StringUtils.FALSE)
 @MicronautTest
 class FetchMetadataFilterPatternTest {

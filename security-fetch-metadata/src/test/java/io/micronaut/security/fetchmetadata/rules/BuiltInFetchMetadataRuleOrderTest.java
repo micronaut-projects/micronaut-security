@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_SAME_SITE,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_SITE,
     value = StringUtils.TRUE)
 @MicronautTest(startApplication = false)
 class BuiltInFetchMetadataRuleOrderTest {

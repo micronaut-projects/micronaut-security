@@ -21,6 +21,19 @@ package io.micronaut.security.fetchmetadata.rules;
  * @since 5.4.0
  */
 public interface FetchMetadataRulesConfiguration {
+    /** Configuration prefix for the built-in Fetch Metadata rules. */
+    String PREFIX = "micronaut.security.fetch-metadata.rules";
+    /** Property that controls whether browser-initiated requests are allowed. */
+    String PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS = PREFIX + ".allow-browser-initiated-requests";
+    /** Property that controls whether same-origin requests are allowed. */
+    String PROPERTY_ALLOW_SAME_ORIGIN = PREFIX + ".allow-same-origin";
+    /** Property that controls whether same-site requests are allowed. */
+    String PROPERTY_ALLOW_SAME_SITE = PREFIX + ".allow-same-site";
+    /** Property that controls whether requests without parsed Fetch Metadata are allowed. */
+    String PROPERTY_ALLOW_NO_FETCH_METADATA = PREFIX + ".allow-no-fetch-metadata";
+    /** Property that controls whether permitted cross-origin requests are allowed. */
+    String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
+
     /**
      * @return Whether to enable {@link CrossOriginFetchMetadataRule} bean which allows a cross-origin request when its matched route declares a CORS configuration that permits the request origin and HTTP method.
      */

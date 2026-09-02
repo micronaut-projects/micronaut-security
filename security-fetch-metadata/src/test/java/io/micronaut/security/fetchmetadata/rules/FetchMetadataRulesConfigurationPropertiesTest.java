@@ -25,15 +25,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_BROWSER_INITIATED_REQUESTS,
     value = StringUtils.FALSE)
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_SAME_ORIGIN,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_ORIGIN,
     value = StringUtils.FALSE)
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_SAME_SITE,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_SITE,
     value = StringUtils.TRUE)
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_NO_FETCH_METADATA,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_NO_FETCH_METADATA,
     value = StringUtils.FALSE)
-@Property(name = FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_CROSS_ORIGIN,
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_ORIGIN,
     value = StringUtils.FALSE)
 @MicronautTest(startApplication = false)
 class FetchMetadataRulesConfigurationPropertiesTest {

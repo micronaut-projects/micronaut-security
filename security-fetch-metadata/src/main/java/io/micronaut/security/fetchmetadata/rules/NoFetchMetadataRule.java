@@ -25,7 +25,7 @@ import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
-import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.PROPERTY_ALLOW_NO_FETCH_METADATA;
+import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_NO_FETCH_METADATA;
 
 /**
  * Allows clients for which Micronaut cannot parse a complete set of Fetch Metadata headers.
