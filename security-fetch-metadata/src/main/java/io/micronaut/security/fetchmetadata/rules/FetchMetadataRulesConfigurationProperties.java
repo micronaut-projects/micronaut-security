@@ -102,7 +102,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers.. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
      * @param allowNoFetchMetadata whether requests without parsed Fetch Metadata are allowed
      */
