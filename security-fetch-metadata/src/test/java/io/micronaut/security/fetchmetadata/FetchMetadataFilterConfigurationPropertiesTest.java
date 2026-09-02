@@ -16,12 +16,14 @@
 package io.micronaut.security.fetchmetadata;
 
 import io.micronaut.context.annotation.Property;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Property(name = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.FALSE)
@@ -36,14 +38,15 @@ class FetchMetadataFilterConfigurationPropertiesTest {
     }
 
     @Test
-    void usesDocumentedDefaultsAndIgnoresEmptyPatterns() {
+    void usesDocumentedDefaultsAndRejectsEmptyPatterns() {
         FetchMetadataFilterConfigurationProperties configuration =
             new FetchMetadataFilterConfigurationProperties();
 
         assertTrue(configuration.isEnabled());
         assertEquals("/**", configuration.getPattern());
 
-        configuration.setPattern("");
+        assertThrows(ConfigurationException.class, () -> configuration.setPattern(""));
+        assertThrows(ConfigurationException.class, () -> configuration.setPattern("   "));
         assertEquals("/**", configuration.getPattern());
     }
 }

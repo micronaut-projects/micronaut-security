@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 
@@ -24,6 +26,7 @@ import io.micronaut.core.util.StringUtils;
  *
  * @since 5.4.0
  */
+@Context
 @ConfigurationProperties(FetchMetadataFilterConfigurationProperties.PREFIX)
 @Internal
 final class FetchMetadataFilterConfigurationProperties implements FetchMetadataFilterConfiguration {
@@ -71,11 +74,13 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
      * Requests outside this pattern are not evaluated by this module.
      *
      * @param pattern the server-filter pattern; defaults to {@value #DEFAULT_PATTERN}
+     * @throws ConfigurationException if the pattern is empty or blank
      * @since 5.4.0
      */
     public void setPattern(String pattern) {
-        if (StringUtils.isNotEmpty(pattern)) {
-            this.pattern = pattern;
+        if (!StringUtils.hasText(pattern)) {
+            throw new ConfigurationException("Property [" + PREFIX + ".pattern] must not be empty or blank");
         }
+        this.pattern = pattern;
     }
 }
