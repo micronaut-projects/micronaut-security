@@ -18,6 +18,7 @@ package io.micronaut.security.fetchmetadata.rules;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.SecFetch;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
@@ -28,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_NO_FETCH_METADATA;
 
 /**
- * Allows clients for which Micronaut cannot parse a complete set of Fetch Metadata headers.
+ * Allows clients that do not send the {@code Sec-Fetch-Site} header.
  * This compatibility rule must be used together with other request-forgery protections.
  */
 @Requires(classes = HttpRequest.class)
@@ -43,7 +44,7 @@ final class NoFetchMetadataRule implements HttpRequestFetchMetadataRule {
 
     @Override
     public FetchMetadataRuleResult check(HttpRequest<?> request, @Nullable SecFetch secFetch) {
-        if (secFetch == null) {
+        if (!request.getHeaders().contains(HttpHeaders.SEC_FETCH_SITE)) {
             return FetchMetadataRuleResult.ALLOWED;
         }
         return FetchMetadataRuleResult.UNKNOWN;

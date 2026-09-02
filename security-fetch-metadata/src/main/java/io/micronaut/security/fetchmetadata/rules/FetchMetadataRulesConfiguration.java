@@ -29,7 +29,7 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_SAME_ORIGIN = PREFIX + ".allow-same-origin";
     /** Property that controls whether same-site requests are allowed. */
     String PROPERTY_ALLOW_SAME_SITE = PREFIX + ".allow-same-site";
-    /** Property that controls whether requests without parsed Fetch Metadata are allowed. */
+    /** Property that controls whether requests without the {@code Sec-Fetch-Site} header are allowed. */
     String PROPERTY_ALLOW_NO_FETCH_METADATA = PREFIX + ".allow-no-fetch-metadata";
     /** Property that controls whether permitted cross-origin requests are allowed. */
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
@@ -55,7 +55,7 @@ public interface FetchMetadataRulesConfiguration {
     boolean isAllowSameSite();
 
     /**
-     * @return Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers.
+     * @return Whether to enable {@link NoFetchMetadataRule} bean which allows requests without the {@code Sec-Fetch-Site} header.
      */
     boolean isAllowNoFetchMetadata();
 }

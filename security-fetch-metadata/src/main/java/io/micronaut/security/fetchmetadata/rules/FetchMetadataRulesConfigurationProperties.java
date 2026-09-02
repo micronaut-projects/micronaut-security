@@ -30,7 +30,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     public static final boolean DEFAULT_ALLOW_SAME_SITE = false;
     /** Default same-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_SAME_ORIGIN = true;
-    /** Default behavior for requests without parsed Fetch Metadata. */
+    /** Default behavior for requests without the {@code Sec-Fetch-Site} header. */
     public static final boolean DEFAULT_ALLOW_NO_FETCH_METADATA = true;
     /** Default permitted cross-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_CROSS_ORIGIN = true;
@@ -102,9 +102,9 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without a complete set of Fetch Metadata headers. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without the {@code Sec-Fetch-Site} header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
-     * @param allowNoFetchMetadata whether requests without parsed Fetch Metadata are allowed
+     * @param allowNoFetchMetadata whether requests without the {@code Sec-Fetch-Site} header are allowed
      */
     public void setAllowNoFetchMetadata(boolean allowNoFetchMetadata) {
         this.allowNoFetchMetadata = allowNoFetchMetadata;

@@ -1,6 +1,6 @@
 The module evaluates its built-in rules in the same sequence as the https://web.dev/articles/fetch-metadata#enforcing_a_resource_isolation_policy[recommended resource isolation policy]:
 
-. Requests without parsed Fetch Metadata
+. Requests without `Sec-Fetch-Site`
 . Same-origin requests
 . Same-site requests
 . Requests initiated directly through browser UI
@@ -14,7 +14,7 @@ The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule 
 |Rule |Behavior |Default
 
 |No Fetch Metadata
-|Allows clients for which Micronaut cannot parse a complete, recognized set of Fetch Metadata headers.
+|Allows clients that do not send `Sec-Fetch-Site`. Requests with `Sec-Fetch-Site` are evaluated by the remaining rules even when another Fetch Metadata header is incomplete or unrecognized.
 |Enabled
 
 |Same origin
@@ -38,7 +38,7 @@ The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule 
 |Enabled
 |===
 
-The compatibility rule treats absent, incomplete, and unrecognized Fetch Metadata as unavailable. To reject those requests, disable `micronaut.security.fetch-metadata.rules.allow-no-fetch-metadata`. Verify that every supported browser, API client, webhook, monitoring probe, and other caller sends valid Fetch Metadata or is otherwise exempted before enabling this stricter behavior.
+The compatibility rule treats requests without `Sec-Fetch-Site` as Fetch Metadata-unaware. A request that includes `Sec-Fetch-Site` but has an incomplete or unrecognized Fetch Metadata value is evaluated by the remaining rules and is rejected if none allows it. To reject requests without `Sec-Fetch-Site`, disable `micronaut.security.fetch-metadata.rules.allow-no-fetch-metadata`. Verify that every supported browser, API client, webhook, monitoring probe, and other caller sends `Sec-Fetch-Site` or is otherwise exempted before enabling this stricter behavior.
 
 [configuration]
 ----

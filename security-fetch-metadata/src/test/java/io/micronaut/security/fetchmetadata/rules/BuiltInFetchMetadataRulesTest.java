@@ -16,6 +16,7 @@
 package io.micronaut.security.fetchmetadata.rules;
 
 import io.micronaut.http.Destination;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.Mode;
 import io.micronaut.http.SecFetch;
@@ -65,12 +66,14 @@ class BuiltInFetchMetadataRulesTest {
     }
 
     @Test
-    void noMetadataRuleAllowsOnlyRequestsWithoutParsedMetadata() {
+    void noMetadataRuleAllowsOnlyRequestsWithoutSiteHeader() {
         NoFetchMetadataRule rule = new NoFetchMetadataRule();
+        HttpRequest<?> requestWithSite = HttpRequest.GET("/")
+            .header(HttpHeaders.SEC_FETCH_SITE, Site.CROSS_SITE.toString());
 
         assertEquals(FetchMetadataRuleResult.ALLOWED, rule.check(GET, null));
         assertEquals(FetchMetadataRuleResult.UNKNOWN,
-            rule.check(GET, secFetch(Site.SAME_ORIGIN)));
+            rule.check(requestWithSite, null));
     }
 
     @Test

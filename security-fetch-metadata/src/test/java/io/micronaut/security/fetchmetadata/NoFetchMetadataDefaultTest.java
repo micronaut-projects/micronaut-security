@@ -15,15 +15,20 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.Mode;
+import io.micronaut.http.Site;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MicronautTest
 class NoFetchMetadataDefaultTest {
@@ -33,5 +38,18 @@ class NoFetchMetadataDefaultTest {
         BlockingHttpClient client = httpClient.toBlocking();
         assertEquals(HttpStatus.OK,
             client.exchange(HttpRequest.GET("/fetch-metadata")).getStatus());
+    }
+
+    @Test
+    void rejectsUnknownFetchMetadataDestinationWhenSiteHeaderIsPresent(@Client("/") HttpClient httpClient) {
+        BlockingHttpClient client = httpClient.toBlocking();
+        HttpRequest<?> request = HttpRequest.GET("/fetch-metadata")
+            .header(HttpHeaders.SEC_FETCH_SITE, Site.CROSS_SITE.toString())
+            .header(HttpHeaders.SEC_FETCH_MODE, Mode.CORS.toString())
+            .header(HttpHeaders.SEC_FETCH_DEST, "webidentity");
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(request));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
 }
