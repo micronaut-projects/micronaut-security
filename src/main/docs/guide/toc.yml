@@ -25,6 +25,7 @@ securityFilter:
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
     runAs: Run As Annotation
+  staticResourceAuthenticationBypass: Static Resource Authentication Bypass
 exceptionHandlers: 'Exception Handlers'
 endpoints:
   title: Endpoints
