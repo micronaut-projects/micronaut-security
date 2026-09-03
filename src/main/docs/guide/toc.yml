@@ -111,6 +111,21 @@ csrf:
     httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
     fieldCsrfTokenResolver: Field CSRF Token Resolution
   csrfApis: CSRF APIs
+contentSecurityPolicy:
+  title: Content Security Policy (CSP)
+  cspDependency: CSP Dependency
+  cspDefaults: CSP Defaults
+  cspSchemeSources: Scheme Sources
+  cspReportOnly: Report Only
+  cspReportingApi: Reporting API
+  cspScriptSrc:
+    title: CSP script-src
+    cspNonceGeneration: script-src Nonce
+    scriptDynamic: script-src strict-dynamic
+    scriptSrcHashes: script-src Hashes
+    scriptSrcSelf: script-src self
+    scriptSrcUrls: script-src URLs
+  contentSecurityPolicyGenerator: CSP Generator
 reporting:
   title: Reporting API
   reportingEndpoints: Configuration Reporting Endpoints

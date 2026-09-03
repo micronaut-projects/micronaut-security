@@ -1,0 +1,13 @@
+You can enable https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/script-src#strict-dynamic[`'strict-dynamic'`] for the `script-src` directive. In supporting browsers, it propagates trust from a nonce- or hash-authorized script to scripts that it loads dynamically:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        nonce: true
+        strict-dynamic: true
+----
+
+The generated directive contains both the request nonce and `'strict-dynamic'`. A nonce or hash provides the trust anchor required for `'strict-dynamic'` to be useful.

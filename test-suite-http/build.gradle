@@ -13,6 +13,7 @@ dependencies {
     testRuntimeOnly(mnLogging.logback.classic)
 
     testImplementation(projects.micronautSecurity)
+    testImplementation(projects.micronautSecurityCsp)
     testImplementation(projects.micronautSecurityReporting)
     testImplementation(projects.micronautSecurityCsrf)
     testImplementation(projects.micronautSecurityJwt)

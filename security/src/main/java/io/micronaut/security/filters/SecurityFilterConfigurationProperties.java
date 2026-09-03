@@ -27,7 +27,6 @@ import jakarta.validation.constraints.NotBlank;
  * @author Sergio del Amo
  * @since 3.1.0
  */
-
 @ConfigurationProperties(SecurityFilterConfigurationProperties.PREFIX)
 public class SecurityFilterConfigurationProperties implements SecurityFilterConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".filter";
