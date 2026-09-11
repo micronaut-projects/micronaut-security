@@ -5,12 +5,18 @@ on:
       - master
       - '[1-9]+.[0-9]+.x'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - master
       - '[1-9]+.[0-9]+.x'
+# A new push to a pull request cancels its older run, freeing the shared runner
+# pool. Pushes to branches get a group of their own and are never cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 jobs:
   build:
-    if: github.repository != 'micronaut-projects/micronaut-project-template'
+    if: github.repository != 'micronaut-projects/micronaut-project-template' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     steps:
        # https://github.com/actions/virtual-environments/issues/709
