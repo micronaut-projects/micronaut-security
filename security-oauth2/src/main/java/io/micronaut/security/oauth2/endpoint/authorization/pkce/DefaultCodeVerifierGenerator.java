@@ -29,6 +29,7 @@ import java.util.Base64;
 public class DefaultCodeVerifierGenerator implements CodeVerifierGenerator {
 
     private final PkceConfiguration pkceConfiguration;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     public DefaultCodeVerifierGenerator(PkceConfiguration pkceConfiguration) {
         this.pkceConfiguration = pkceConfiguration;
@@ -41,14 +42,14 @@ public class DefaultCodeVerifierGenerator implements CodeVerifierGenerator {
     }
 
     /**
-     * Generates a random code verifier string using {@link SecureRandom} as the source of
-     * entropy, with the default entropy quantity as defined by {@link PkceConfiguration#getEntropy()}..
+     * Generates a random code verifier string using a shared {@link SecureRandom} instance as the source of
+     * entropy, with the entropy quantity as defined by {@link PkceConfiguration#getEntropy()}.
      *
      * @return String the generated code verifier
      */
     @NonNull
     private String generateRandomCodeVerifier() {
-        return generateRandomCodeVerifier(new SecureRandom(), pkceConfiguration.getEntropy());
+        return generateRandomCodeVerifier(secureRandom, pkceConfiguration.getEntropy());
     }
 
     /**
