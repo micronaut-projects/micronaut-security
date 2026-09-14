@@ -22,12 +22,11 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.server.util.locale.HttpLocaleResolver;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
@@ -42,6 +41,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Default implementation of {@link OauthController}.
@@ -52,6 +52,8 @@ import reactor.core.publisher.Flux;
 @Requires(beans = {RedirectingLoginHandler.class, HttpHostResolver.class, HttpLocaleResolver.class})
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
+
+    private static final String MESSAGE_NO_AUTHENTICATION_RESPONSE = "The OAuth 2.0 client did not produce an authentication response";
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
@@ -129,7 +131,7 @@ public class DefaultOauthController implements OauthController {
                 .map(response -> response.isAuthenticated() && response.getAuthentication().isPresent()
                         ? success(response.getAuthentication().get(), request)
                         : failure(response, request))
-                .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED))
+                .switchIfEmpty(Mono.fromSupplier(() -> failure(new AuthenticationFailed(MESSAGE_NO_AUTHENTICATION_RESPONSE), request)))
                 .map(response -> clearPersistedValues(request, response));
     }
 
