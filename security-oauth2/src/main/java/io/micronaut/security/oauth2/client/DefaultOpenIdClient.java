@@ -25,6 +25,7 @@ import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
@@ -35,6 +36,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import org.reactivestreams.Publisher;
@@ -66,6 +69,8 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final Supplier<SecureEndpoint> tokenEndpoint;
     private final BeanContext beanContext;
     private final EndSessionEndpoint endSessionEndpoint;
+    @Nullable
+    private final StateValidator stateValidator;
 
     /**
      * @param clientConfiguration The client configuration
@@ -75,7 +80,9 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
      * @param endSessionEndpoint The end session request
+     * @deprecated Use {@link #DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdAuthenticationMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint, StateValidator)} instead.
      */
+    @Deprecated(since = "5.4.0")
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                @Nullable OpenIdAuthenticationMapper authenticationMapper,
@@ -83,6 +90,36 @@ public class DefaultOpenIdClient implements OpenIdClient {
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
+        this(clientConfiguration,
+            openIdProviderMetadata,
+            authenticationMapper,
+            redirectUrlBuilder,
+            authorizationResponseHandler,
+            beanContext,
+            endSessionEndpoint,
+            beanContext.findBean(StateValidator.class).orElse(null));
+    }
+
+    /**
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param authenticationMapper The user details mapper
+     * @param redirectUrlBuilder The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     * @param endSessionEndpoint The end session request
+     * @param stateValidator The state validator, or null if state validation is disabled
+     * @since 5.4.0
+     */
+    @SuppressWarnings("java:S107")
+    public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
+                               Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
+                               @Nullable OpenIdAuthenticationMapper authenticationMapper,
+                               AuthorizationRedirectHandler redirectUrlBuilder,
+                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                               BeanContext beanContext,
+                               @Nullable EndSessionEndpoint endSessionEndpoint,
+                               @Nullable StateValidator stateValidator) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.authenticationMapper = authenticationMapper;
@@ -91,6 +128,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
         this.tokenEndpoint = SupplierUtil.memoized(() -> openIdProviderMetadata.get().tokenEndpoint());
+        this.stateValidator = stateValidator;
     }
 
     @Override
@@ -138,6 +176,18 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
         if (isErrorCallback(responseData)) {
             AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);
+            if (stateValidator != null) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Validating state found in the authorization error response from provider [{}]", getName());
+                }
+                try {
+                    stateValidator.validate(request, errorResponse.getState());
+                } catch (InvalidStateException e) {
+                    return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+                }
+            } else if (LOG.isTraceEnabled()) {
+                LOG.trace("Skipping state validation of the authorization error response, no state validator found");
+            }
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
             }
