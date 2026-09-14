@@ -143,7 +143,7 @@ public class SecurityFilter implements HttpServerFilter {
         }
 
         return Flux.fromIterable(authenticationFetchers)
-                .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
+                .concatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
                 .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
                 .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
