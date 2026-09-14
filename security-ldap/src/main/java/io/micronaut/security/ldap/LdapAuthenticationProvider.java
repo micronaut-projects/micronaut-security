@@ -28,8 +28,6 @@ import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
 import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.NamingException;
@@ -62,7 +60,6 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     private final ContextBuilder contextBuilder;
     private final ContextAuthenticationMapper contextAuthenticationMapper;
     private final LdapGroupProcessor ldapGroupProcessor;
-    private final Scheduler scheduler;
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -70,20 +67,38 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Executor Service
+     * @since 5.4.0
      */
+    public LdapAuthenticationProvider(LdapConfiguration configuration,
+                                      LdapSearchService ldapSearchService,
+                                      ContextBuilder contextBuilder,
+                                      ContextAuthenticationMapper contextAuthenticationMapper,
+                                      LdapGroupProcessor ldapGroupProcessor) {
+        this.configuration = configuration;
+        this.ldapSearchService = ldapSearchService;
+        this.contextBuilder = contextBuilder;
+        this.contextAuthenticationMapper = contextAuthenticationMapper;
+        this.ldapGroupProcessor = ldapGroupProcessor;
+    }
+
+    /**
+     * @param configuration               The configuration to use to authenticate
+     * @param ldapSearchService           The search service
+     * @param contextBuilder              The context builder
+     * @param contextAuthenticationMapper The authentication mapper
+     * @param ldapGroupProcessor          The group processor
+     * @param executorService             Ignored. LDAP authentication runs on the executor named by
+     *                                    {@link #getExecutorName()} ({@link TaskExecutors#BLOCKING}).
+     * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
                                       LdapGroupProcessor ldapGroupProcessor,
                                       @Named(TaskExecutors.IO) ExecutorService executorService) {
-        this.configuration = configuration;
-        this.ldapSearchService = ldapSearchService;
-        this.contextBuilder = contextBuilder;
-        this.contextAuthenticationMapper = contextAuthenticationMapper;
-        this.ldapGroupProcessor = ldapGroupProcessor;
-        this.scheduler = Schedulers.fromExecutorService(executorService);
+        this(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 
     @Override
@@ -180,8 +195,14 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         }
     }
 
+    /**
+     * No-op. The provider holds no resources that require closing; this method is retained for binary compatibility.
+     *
+     * @deprecated The provider holds no resources that require closing.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     @Override
     public void close() {
-        //No op
+        // No op
     }
 }
