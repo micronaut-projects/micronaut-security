@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-attr")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_STYLE_SRC_ATTR)
 public class StyleSrcAttrConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcAttrConfiguration {
     /** Creates the {@code style-src-attr} configuration with its secure defaults. */
     public StyleSrcAttrConfigurationProperties() {

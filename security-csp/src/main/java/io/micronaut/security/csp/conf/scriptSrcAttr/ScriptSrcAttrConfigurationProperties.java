@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-attr")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_SCRIPT_SRC_ATTR)
 public class ScriptSrcAttrConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcAttrConfiguration {
     /** Creates the {@code script-src-attr} configuration with its secure defaults. */
     public ScriptSrcAttrConfigurationProperties() {

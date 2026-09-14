@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".form-action")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FORM_ACTION)
 public class FormActionConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FormActionConfiguration {
     /** Creates the {@code form-action} configuration, defaulting to {@code 'self'}. */
     public FormActionConfigurationProperties() {

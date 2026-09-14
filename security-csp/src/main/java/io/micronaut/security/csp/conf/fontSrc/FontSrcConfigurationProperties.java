@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".font-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FONT_SRC)
 public class FontSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FontSrcConfiguration {
     /** Creates the {@code font-src} configuration with its secure defaults. */
     public FontSrcConfigurationProperties() {

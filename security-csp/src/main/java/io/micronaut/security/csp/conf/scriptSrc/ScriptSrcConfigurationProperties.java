@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_SCRIPT_SRC)
 public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcConfiguration {
     private boolean nonce;
     private List<String> urls = Collections.emptyList();

@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".child-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_CHILD_SRC)
 public class ChildSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ChildSrcConfiguration {
     /** Creates the {@code child-src} configuration with its secure defaults. */
     public ChildSrcConfigurationProperties() {

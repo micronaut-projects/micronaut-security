@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_WORKER_SRC)
 public class WorkerSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements WorkerSrcConfiguration {
     /** Creates the {@code worker-src} configuration with its secure defaults. */
     public WorkerSrcConfigurationProperties() {

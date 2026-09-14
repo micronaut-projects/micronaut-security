@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".fenced-frame-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FENCED_FRAME_SRC)
 public class FencedFrameSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FencedFrameSrcConfiguration {
     /** Creates the disabled-by-default {@code fenced-frame-src} configuration. */
     public FencedFrameSrcConfigurationProperties() {

@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".frame-ancestors")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_ANCESTORS)
 public class FrameAncestorsConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FrameAncestorsConfiguration {
     /** Creates the {@code frame-ancestors} configuration with its secure defaults. */
     public FrameAncestorsConfigurationProperties() {

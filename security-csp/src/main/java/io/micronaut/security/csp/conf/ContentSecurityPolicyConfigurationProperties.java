@@ -38,6 +38,49 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QU
 public final class ContentSecurityPolicyConfigurationProperties implements ContentSecurityPolicyConfiguration {
     /** Configuration prefix for all CSP settings. */
     public static final String PREFIX = "micronaut.security.csp";
+    /** Configuration prefix for the {@code base-uri} directive. */
+    public static final String PROPERTY_BASE_URI = ContentSecurityPolicyConfigurationProperties.PREFIX + ".base-uri";
+    /** Configuration prefix for the {@code child-src} directive. */
+    public static final String PROPERTY_CHILD_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".child-src";
+    /** Configuration prefix for the {@code connect-src} directive. */
+    public static final String PROPERTY_CONNECT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".connect-src";
+    /** Configuration prefix for the {@code default-src} directive. */
+    public static final String PROPERTY_DEFAULT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".default-src";
+    /** Configuration prefix for the {@code fenced-frame-src} directive. */
+    public static final String PROPERTY_FENCED_FRAME_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".fenced-frame-src";
+    /** Configuration prefix for the {@code font-src} directive. */
+    public static final String PROPERTY_FONT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".font-src";
+    /** Configuration prefix for the {@code form-action} directive. */
+    public static final String PROPERTY_FORM_ACTION = ContentSecurityPolicyConfigurationProperties.PREFIX + ".form-action";
+    /** Configuration prefix for the {@code frame-ancestors} directive. */
+    public static final String PROPERTY_FRAME_ANCESTORS = ContentSecurityPolicyConfigurationProperties.PREFIX + ".frame-ancestors";
+    /** Configuration prefix for the {@code frame-src} directive. */
+    public static final String PROPERTY_FRAME_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".frame-src";
+    /** Configuration prefix for the {@code img-src} directive. */
+    public static final String PROPERTY_IMG_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".img-src";
+    /** Configuration prefix for the {@code manifest-src} directive. */
+    public static final String PROPERTY_MANIFEST_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".manifest-src";
+    /** Configuration prefix for the {@code media-src} directive. */
+    public static final String PROPERTY_MEDIA_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".media-src";
+    /** Configuration prefix for the {@code object-src} directive. */
+    public static final String PROPERTY_OBJECT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".object-src";
+    /** Configuration prefix for the {@code prefetch-src} directive. */
+    public static final String PROPERTY_PREFETCH_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".prefetch-src";
+    /** Configuration prefix for the {@code script-src} directive. */
+    public static final String PROPERTY_SCRIPT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src";
+    /** Configuration prefix for the {@code script-src-attr} directive. */
+    public static final String PROPERTY_SCRIPT_SRC_ATTR = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-attr";
+    /** Configuration prefix for the {@code script-src-elem} directive. */
+    public static final String PROPERTY_SCRIPT_SRC_ELEM = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-elem";
+    /** Configuration prefix for the {@code style-src} directive. */
+    public static final String PROPERTY_STYLE_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src";
+    /** Configuration prefix for the {@code style-src-attr} directive. */
+    public static final String PROPERTY_STYLE_SRC_ATTR = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-attr";
+    /** Configuration prefix for the {@code style-src-elem} directive. */
+    public static final String PROPERTY_STYLE_SRC_ELEM = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-elem";
+    /** Configuration prefix for the {@code worker-src} directive. */
+    public static final String PROPERTY_WORKER_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src";
+
     private static final String SCRIPT_VALUE = SINGLE_QUOTE + SCRIPT + SINGLE_QUOTE;
     private static final boolean DEFAULT_ENABLED = true;
     private static final boolean DEFAULT_REPORT_ONLY = false;

@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".connect-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_CONNECT_SRC)
 public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ConnectSrcConfiguration {
     private boolean unsafeWebtransportHashes;
 

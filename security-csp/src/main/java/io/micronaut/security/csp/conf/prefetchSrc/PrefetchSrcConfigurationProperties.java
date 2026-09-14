@@ -27,7 +27,7 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
  *
  * @since 5.4.0
  */
-@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PREFIX + ".prefetch-src")
+@ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_PREFETCH_SRC)
 public class PrefetchSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements PrefetchSrcConfiguration {
     /**
      * Creates a configuration with {@code prefetch-src} disabled.
