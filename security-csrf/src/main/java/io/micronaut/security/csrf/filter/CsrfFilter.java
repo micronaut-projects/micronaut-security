@@ -124,14 +124,37 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(HttpRequest<?> request) {
-        List<CompletableFuture<@Nullable String>> futures = futureCsrfTokenResolvers.stream()
-                .map(resolver -> resolveTokenOrNull(resolver, request))
-                .toList();
-        CompletableFuture<?>[] futuresArray = futures.toArray(new CompletableFuture<?>[0]);
-        return CompletableFuture.allOf(futuresArray)
-                .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
-                .thenApply(csrfTokens -> validateCsrfTokens(request, csrfTokens));
+    /**
+     * Resolves CSRF tokens sequentially, in resolver order, and stops at the first token which validates.
+     * Resolvers which may be expensive, such as those which parse the request body, are therefore not invoked if a cheaper resolver which runs before them, such as the HTTP header resolver, already produced a valid token.
+     * @param request HTTP Request
+     * @return A future which completes with {@code null} if a valid token was found; an unauthorized response otherwise.
+     */
+    @NonNull
+    private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(@NonNull HttpRequest<?> request) {
+        return resolveAndValidate(request, 0, false);
+    }
+
+    @NonNull
+    private CompletableFuture<@Nullable HttpResponse<?>> resolveAndValidate(@NonNull HttpRequest<?> request,
+                                                                          int index,
+                                                                          boolean tokenFound) {
+        if (index >= futureCsrfTokenResolvers.size()) {
+            return CompletableFuture.completedFuture(rejectRequest(request, tokenFound));
+        }
+        FutureCsrfTokenResolver<HttpRequest<?>> resolver = futureCsrfTokenResolvers.get(index);
+        return resolveTokenOrNull(resolver, request).thenCompose(csrfToken -> {
+            if (!hasText(csrfToken)) {
+                return resolveAndValidate(request, index + 1, tokenFound);
+            }
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("CSRF Token resolved via {}", resolver.getClass().getSimpleName());
+            }
+            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+                return PROCEED;
+            }
+            return resolveAndValidate(request, index + 1, true);
+        });
     }
 
     /**
@@ -167,26 +190,13 @@ final class CsrfFilter implements Ordered {
     }
 
     /**
-     * Validates the resolved CSRF tokens. Null or blank tokens are skipped, so the {@link CsrfTokenValidator} is only invoked with a real token.
+     * Rejects the request once every resolver has been consulted without producing a valid token.
      * @param request HTTP Request
-     * @param csrfTokens Tokens resolved by every {@link FutureCsrfTokenResolver}. Entries may be {@code null}.
-     * @return {@code null} if any token is valid and the request should proceed; an unauthorized response otherwise.
+     * @param tokenFound Whether any resolver produced a non-blank token
+     * @return an unauthorized response
      */
-    @Nullable
-    private HttpResponse<?> validateCsrfTokens(@NonNull HttpRequest<?> request, @NonNull List<@Nullable String> csrfTokens) {
-        boolean tokenFound = false;
-        for (String csrfToken : csrfTokens) {
-            if (!hasText(csrfToken)) {
-                continue;
-            }
-            tokenFound = true;
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("CSRF Token resolved");
-            }
-            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
-                return null;
-            }
-        }
+    @NonNull
+    private HttpResponse<?> rejectRequest(@NonNull HttpRequest<?> request, boolean tokenFound) {
         if (!tokenFound) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
