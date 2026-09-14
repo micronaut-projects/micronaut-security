@@ -15,27 +15,34 @@
  */
 package io.micronaut.security.csp.report;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Body of a {@value ContentSecurityPolicyReport#TYPE_CSP_HASH} report.
  *
- * @param documentUrl URL of the document that loaded the subresource
- * @param subresourceUrl URL of the subresource for which a hash was requested
+ * <p>Fields use the camelCase names that Chromium sends ({@code subresourceURL}). The snake_case
+ * names used in the specification's example ({@code subresource_url}, {@code document_url}) are
+ * also accepted. Chromium does not include the document URL in the body; use
+ * {@link ContentSecurityPolicyReport#url()} instead. Only {@link #hash()} is required.</p>
+ *
+ * @param documentUrl URL of the document that loaded the subresource, or {@code null} when the user agent omits it
+ * @param subresourceUrl URL of the subresource for which a hash was requested, or {@code null}
  * @param hash cryptographic digest prefixed by its algorithm
- * @param destination request destination, such as {@code script}
- * @param type kind of resource that was hashed, currently {@code subresource}
+ * @param destination request destination, such as {@code script}, or {@code null}
+ * @param type kind of resource that was hashed, currently {@code subresource}, or {@code null}
  * @see <a href="https://w3c.github.io/webappsec-csp/#csp-hash-report">CSP hash reports</a>
  * @since 5.4.0
  */
 @Serdeable
 public record ContentSecurityPolicyHashReportBody(
-    @NotBlank @JsonProperty("document_url") String documentUrl,
-    @NotBlank @JsonProperty("subresource_url") String subresourceUrl,
+    @Nullable @JsonProperty("documentURL") @JsonAlias("document_url") String documentUrl,
+    @Nullable @JsonProperty("subresourceURL") @JsonAlias("subresource_url") String subresourceUrl,
     @NotBlank String hash,
-    @NotBlank String destination,
-    @NotBlank String type
+    @Nullable String destination,
+    @Nullable String type
 ) implements ContentSecurityPolicyReportBody {
 }

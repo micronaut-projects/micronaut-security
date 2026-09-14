@@ -36,6 +36,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Property(name = "spec.name", value = "ContentSecurityPolicyControllerTest")
@@ -72,11 +73,10 @@ class ContentSecurityPolicyControllerTest {
               "url": "https://example.com/worker.js",
               "user_agent": "Example Browser",
               "body": {
-                "document_url": "https://example.com/",
-                "subresource_url": "https://example.com/worker.js",
+                "subresourceURL": "https://example.com/worker.js",
                 "hash": "sha256-example",
-                "destination": "worker",
-                "type": "subresource"
+                "type": "subresource",
+                "destination": "worker"
               }
             }]
             """;
@@ -107,7 +107,66 @@ class ContentSecurityPolicyControllerTest {
         );
         assertEquals("sha256-example", hashBody.hash());
         assertEquals("https://example.com/worker.js", hashBody.subresourceUrl());
+        assertNull(hashBody.documentUrl());
         assertEquals(ContentSecurityPolicyControllerConfigurationProperties.DEFAULT_PATH, reportListener.requestPath);
+    }
+
+    @Test
+    void acceptsHashReportWithSpecificationExampleFieldNames(@Client("/") HttpClient httpClient,
+                                                             ReportListener reportListener) {
+        reportListener.reports.clear();
+        String json = """
+            [{
+              "type": "csp-hash",
+              "age": 12,
+              "url": "https://example.com/",
+              "user_agent": "Example Browser",
+              "body": {
+                "document_url": "https://example.com/",
+                "subresource_url": "https://example.com/main.js",
+                "hash": "sha256-example",
+                "type": "subresource",
+                "destination": "script"
+              }
+            }]
+            """;
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpResponse<?> response = client.exchange(reportRequest(json));
+
+        assertEquals(HttpStatus.NO_CONTENT, response.status());
+        ContentSecurityPolicyHashReportBody hashBody = assertInstanceOf(
+            ContentSecurityPolicyHashReportBody.class,
+            reportListener.reports.get(0).body()
+        );
+        assertEquals("https://example.com/", hashBody.documentUrl());
+        assertEquals("https://example.com/main.js", hashBody.subresourceUrl());
+    }
+
+    @Test
+    void rejectsHashReportWithoutHash(@Client("/") HttpClient httpClient,
+                                      ReportListener reportListener) {
+        reportListener.reports.clear();
+        String json = """
+            [{
+              "type": "csp-hash",
+              "age": 12,
+              "url": "https://example.com/",
+              "user_agent": "Example Browser",
+              "body": {
+                "subresourceURL": "https://example.com/main.js",
+                "type": "subresource",
+                "destination": "script"
+              }
+            }]
+            """;
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(reportRequest(json)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(0, reportListener.reports.size());
     }
 
     @Test
