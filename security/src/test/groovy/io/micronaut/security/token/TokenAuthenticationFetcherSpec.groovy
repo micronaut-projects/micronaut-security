@@ -2,6 +2,7 @@ package io.micronaut.security.token
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.order.Ordered
 import io.micronaut.http.HttpHeaders
@@ -9,6 +10,8 @@ import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.simple.SimpleHttpRequest
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.event.TokenValidatedEvent
+import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.security.token.reader.HttpHeaderTokenReader
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -16,20 +19,29 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
+import groovy.transform.Canonical
 import spock.lang.Specification
 
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+import java.time.Duration
+import java.util.concurrent.CopyOnWriteArrayList
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
 @MicronautTest
 class TokenAuthenticationFetcherSpec extends Specification {
 
-    private static final String LOW_PRECEDENCE_VALIDATOR_LATCH = "low-precedence-validator-latch"
-
     @Inject
     TokenAuthenticationFetcher tokenAuthenticationFetcher
+
+    @Inject
+    ValidatorInvocations validatorInvocations
+
+    @Inject
+    TokenValidatedEventListener tokenValidatedEventListener
+
+    void setup() {
+        validatorInvocations.clear()
+        tokenValidatedEventListener.events.clear()
+    }
 
     void "beans of type TokenReader are evaluated in order"() {
         when: 'no token no authentication'
@@ -69,16 +81,50 @@ class TokenAuthenticationFetcherSpec extends Specification {
         "bar" == authentication.name
     }
 
-    void "token validator order is preserved when multiple validators authenticate the same token"() {
-        when:
+    void "the first reader's token wins even when its validator is asynchronous and a later reader's token validates synchronously"() {
+        given: 'X-API-KEY (highest precedence reader) is validated asynchronously, Authorization (lower precedence reader) synchronously'
         SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
-        request.setAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, new CountDownLatch(1))
-        request.headers.add("X-API-KEY", "aaa")
+        request.headers.add("X-API-KEY", "async-first")
+        request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer sync-second")
+
+        when:
         Authentication authentication = fetchAuthentication(request)
 
-        then:
+        then: 'the token read by the highest precedence reader wins'
+        authentication
+        "async-first-user" == authentication.name
+
+        and: 'the token recorded on the request is the winning token'
+        request.getAttribute(SecurityFilter.TOKEN, String).get() == "async-first"
+
+        and: 'exactly one TokenValidatedEvent is published and it carries the winning token'
+        tokenValidatedEventListener.events.size() == 1
+        tokenValidatedEventListener.events[0].source == "async-first"
+
+        and: 'the second token is never validated'
+        validatorInvocations.tokens() == ["async-first"]
+        !validatorInvocations.tokens().contains("sync-second")
+    }
+
+    void "token validator order is preserved when multiple validators authenticate the same token"() {
+        given: 'the higher precedence validator succeeds asynchronously, the lower one synchronously'
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "aaa")
+
+        when:
+        Authentication authentication = fetchAuthentication(request)
+
+        then: 'the higher precedence validator result wins'
         authentication
         "high-precedence" == authentication.name
+
+        and: 'the lower precedence validator is never subscribed'
+        validatorInvocations.invocations == [new Invocation("high", "aaa")]
+
+        and: 'the token is recorded once'
+        request.getAttribute(SecurityFilter.TOKEN, String).get() == "aaa"
+        tokenValidatedEventListener.events.size() == 1
+        tokenValidatedEventListener.events[0].source == "aaa"
     }
 
     void "lower precedence validator is used when higher precedence validator returns empty"() {
@@ -90,6 +136,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         then:
         authentication
         "baz" == authentication.name
+        validatorInvocations.invocations == [new Invocation("high", "bbb"), new Invocation("low", "bbb")]
     }
 
     private Authentication fetchAuthentication(SimpleHttpRequest request) {
@@ -124,8 +171,15 @@ class TokenAuthenticationFetcherSpec extends Specification {
     @Singleton
     static class HighPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
 
+        private final ValidatorInvocations invocations
+
+        HighPrecedenceApiKeyTokenValidator(ValidatorInvocations invocations) {
+            this.invocations = invocations
+        }
+
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+            invocations.record("high", token)
             if (token.equals("xxx")) {
                 return Mono.just(Authentication.build("bar"))
             }
@@ -133,14 +187,13 @@ class TokenAuthenticationFetcherSpec extends Specification {
                 return Mono.just(Authentication.build("foo"))
             }
             if (token.equals("aaa")) {
-                return Mono.fromCallable {
-                    CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
-                        .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
-                    if (!latch.await(5, TimeUnit.SECONDS)) {
-                        throw new IllegalStateException("Timed out waiting for the lower precedence validator")
-                    }
-                    Authentication.build("high-precedence")
-                }.subscribeOn(Schedulers.boundedElastic())
+                return Mono.delay(Duration.ofMillis(200)).map { Authentication.build("high-precedence") }
+            }
+            if (token.equals("async-first")) {
+                return Mono.delay(Duration.ofMillis(200)).map { Authentication.build("async-first-user") }
+            }
+            if (token.equals("sync-second")) {
+                return Mono.just(Authentication.build("sync-second-user"))
             }
             Mono.empty()
         }
@@ -155,13 +208,17 @@ class TokenAuthenticationFetcherSpec extends Specification {
     @Singleton
     static class LowPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
 
+        private final ValidatorInvocations invocations
+
+        LowPrecedenceApiKeyTokenValidator(ValidatorInvocations invocations) {
+            this.invocations = invocations
+        }
+
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+            invocations.record("low", token)
             if (token.equals("aaa")) {
-                CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
-                    .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
                 return Mono.just(Authentication.build("low-precedence"))
-                    .doOnNext { latch.countDown() }
             }
             if (token.equals("bbb")) {
                 return Mono.just(Authentication.build("baz"))
@@ -172,6 +229,41 @@ class TokenAuthenticationFetcherSpec extends Specification {
         @Override
         int getOrder() {
             return LOWEST_PRECEDENCE
+        }
+    }
+
+    @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
+    @Singleton
+    static class ValidatorInvocations {
+        final List<Invocation> invocations = new CopyOnWriteArrayList<>()
+
+        void record(String validator, String token) {
+            invocations.add(new Invocation(validator, token))
+        }
+
+        List<String> tokens() {
+            invocations*.token
+        }
+
+        void clear() {
+            invocations.clear()
+        }
+    }
+
+    @Canonical
+    static class Invocation {
+        String validator
+        String token
+    }
+
+    @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
+    @Singleton
+    static class TokenValidatedEventListener implements ApplicationEventListener<TokenValidatedEvent> {
+        final List<TokenValidatedEvent> events = new CopyOnWriteArrayList<>()
+
+        @Override
+        void onApplicationEvent(TokenValidatedEvent event) {
+            events.add(event)
         }
     }
 }
