@@ -29,7 +29,10 @@ import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +47,11 @@ import java.util.List;
  * are never subscribed. Only the winning token is recorded on the request and only one {@link TokenValidatedEvent}
  * is published.</p>
  *
+ * <p>An error emitted by a {@link TokenValidator} is treated as a failed validation for that validator: it is logged
+ * and the next validator (or token) is tried. It is never propagated, so a transient validator failure results in
+ * an unauthenticated request rather than a server error, and the remaining {@link AuthenticationFetcher} beans
+ * still get a chance to authenticate the request.</p>
+ *
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
@@ -57,6 +65,8 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
      * The order of the fetcher.
      */
     public static final Integer ORDER = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TokenAuthenticationFetcher.class);
 
     protected final Collection<TokenValidator<HttpRequest<?>>> tokenValidators;
     protected final HttpHostResolver httpHostResolver;
@@ -100,7 +110,9 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
      * <p>Only the winning token is recorded on the request (see {@link io.micronaut.security.filters.SecurityFilter#TOKEN})
      * and only one {@link TokenValidatedEvent}, carrying the winning token, is published.</p>
      *
-     * <p>If a validator emits an error, the error is propagated and no further validation is attempted.</p>
+     * <p>If a validator emits an error, the error is treated as if that validator had completed empty: a warning
+     * is logged (the token value is never logged) and validation continues with the next validator or token.
+     * Errors are never propagated from this method.</p>
      *
      * @param request The request
      * @return A publisher emitting at most one {@link Authentication}
@@ -114,7 +126,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         }
         return Flux.fromIterable(tokens)
             .concatMap(tokenValue -> Flux.fromIterable(tokenValidators)
-                .concatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                .concatMap(tokenValidator -> validateOrEmpty(tokenValidator, tokenValue, request))
                 .next()
                 .map(authentication -> new ValidatedToken(tokenValue, authentication)))
             .next()
@@ -134,6 +146,32 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
     @Override
     public int getOrder() {
         return ORDER;
+    }
+
+    /**
+     * Validates the token with the given validator, mapping any error to an empty result.
+     *
+     * @param tokenValidator The validator
+     * @param tokenValue The token value
+     * @param request The request
+     * @return The authentication, or empty if the validator returned empty or failed
+     */
+    private Mono<Authentication> validateOrEmpty(TokenValidator<HttpRequest<?>> tokenValidator,
+                                                 String tokenValue,
+                                                 HttpRequest<?> request) {
+        return Mono.defer(() -> Mono.from(tokenValidator.validateToken(tokenValue, request)))
+            .onErrorResume(throwable -> {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Token validator {} failed with {}: {}. Treating the token as not validated by this validator.",
+                        tokenValidator.getClass().getName(),
+                        throwable.getClass().getName(),
+                        throwable.getMessage());
+                }
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Token validator {} failure", tokenValidator.getClass().getName(), throwable);
+                }
+                return Mono.empty();
+            });
     }
 
     /**
