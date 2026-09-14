@@ -31,6 +31,7 @@ import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     private final @Nullable BeanContext beanContext;
     private final Supplier<HttpClient> defaultTokenClient;
     private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
+    private volatile @Nullable HttpClient createdDefaultTokenClient;
 
     /**
      * @param beanContext The bean context
@@ -65,7 +67,12 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     public DefaultTokenEndpointClient(@NonNull BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
-        this(beanContext, () -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.beanContext = beanContext;
+        this.defaultTokenClient = SupplierUtil.memoized(() -> {
+            HttpClient client = beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
+            createdDefaultTokenClient = client;
+            return client;
+        });
     }
 
     /**
@@ -84,6 +91,19 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     public DefaultTokenEndpointClient(HttpClient client) {
         this(null, () -> client);
+    }
+
+    /**
+     * Closes the default HTTP client if it was created by this class. Clients supplied through the constructors are not closed.
+     * @since 5.4.0
+     */
+    @PreDestroy
+    public void close() {
+        HttpClient client = createdDefaultTokenClient;
+        if (client != null) {
+            createdDefaultTokenClient = null;
+            client.close();
+        }
     }
 
     @NonNull

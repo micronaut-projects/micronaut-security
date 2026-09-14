@@ -15,6 +15,7 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
@@ -25,8 +26,11 @@ import oracle.jdbc.spi.OracleResourceProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -42,6 +46,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.TOKEN_URL_PARAMETER;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -153,6 +158,55 @@ class ClientCredentialsClientDatabaseAccessTokenFetcherTest {
             assertEquals(token, cachedToken);
             assertEquals(2, TOKEN_REQUEST_COUNT.get());
         });
+    }
+
+    @Test
+    void closeClosesCachedHttpClientsAndFetcherRemainsUsable() {
+        withMockAuthorizationServer(server -> {
+            Map<OracleResourceProvider.Parameter, CharSequence> parameters = parameters(tokenUrl(server, "token"));
+            Map<OracleResourceProvider.Parameter, CharSequence> otherParameters = parameters(tokenUrl(server, "token/expired-once"));
+            ClientCredentialsClientDatabaseAccessTokenFetcher fetcher = new ClientCredentialsClientDatabaseAccessTokenFetcher();
+            fetcher.fetchDatabaseAccessToken(parameters);
+            fetcher.fetchDatabaseAccessToken(otherParameters);
+            List<HttpClient> cachedClients = new ArrayList<>(cachedHttpClients(fetcher).values());
+            assertEquals(2, cachedClients.size());
+            cachedClients.forEach(client -> assertTrue(client.isRunning()));
+
+            fetcher.close();
+
+            cachedClients.forEach(client -> assertFalse(client.isRunning()));
+            assertTrue(cachedHttpClients(fetcher).isEmpty());
+            String token = fetcher.fetchDatabaseAccessToken(parameters);
+            assertDoesNotThrow(() -> JWTParser.parse(token));
+            fetcher.close();
+        });
+    }
+
+    @Test
+    void providerCloseClosesTheDatabaseAccessTokenFetcher() {
+        withMockAuthorizationServer(server -> {
+            ClientCredentialsClientDatabaseAccessTokenFetcher fetcher = new ClientCredentialsClientDatabaseAccessTokenFetcher();
+            MicronautEndUserSecurityContextProvider provider = new MicronautEndUserSecurityContextProvider(
+                    fetcher, new DefaultDataRolesFetcher(), (parameters, authentication) -> null);
+            fetcher.fetchDatabaseAccessToken(parameters(tokenUrl(server, "token")));
+            HttpClient cachedClient = cachedHttpClients(fetcher).values().iterator().next();
+            assertTrue(cachedClient.isRunning());
+
+            assertDoesNotThrow(provider::close);
+
+            assertFalse(cachedClient.isRunning());
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, HttpClient> cachedHttpClients(ClientCredentialsClientDatabaseAccessTokenFetcher fetcher) {
+        try {
+            Field field = ClientCredentialsClientDatabaseAccessTokenFetcher.class.getDeclaredField("httpClientMap");
+            field.setAccessible(true);
+            return (Map<String, HttpClient>) field.get(fetcher);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     @Test

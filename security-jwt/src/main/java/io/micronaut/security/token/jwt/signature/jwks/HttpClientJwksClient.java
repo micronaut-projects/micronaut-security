@@ -32,13 +32,16 @@ import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.client.exceptions.ReadTimeoutException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
 /**
@@ -64,6 +67,7 @@ public class HttpClientJwksClient implements JwksClient {
     private final HttpClientRegistry<HttpClient> clientRegistry;
     private final Supplier<HttpClient> defaultJwkSetClient;
     private final ConcurrentHashMap<String, HttpClient> jwkSetClients = new ConcurrentHashMap<>();
+    private final Queue<HttpClient> createdClients = new ConcurrentLinkedQueue<>();
 
     /**
      *
@@ -74,7 +78,29 @@ public class HttpClientJwksClient implements JwksClient {
     public HttpClientJwksClient(BeanContext beanContext, HttpClientRegistry<HttpClient> clientRegistry, HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
         this.clientRegistry = clientRegistry;
-        this.defaultJwkSetClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultJwkSetClient = SupplierUtil.memoized(() -> {
+            HttpClient client = beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
+            createdClients.add(client);
+            return client;
+        });
+    }
+
+    /**
+     * Closes the HTTP clients created by this class. Clients obtained from the {@link HttpClientRegistry} are managed by the container and are not closed.
+     * @since 5.4.0
+     */
+    @PreDestroy
+    public void close() {
+        HttpClient client;
+        while ((client = createdClients.poll()) != null) {
+            try {
+                client.close();
+            } catch (Exception e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Error closing JWKS HTTP client", e);
+                }
+            }
+        }
     }
 
     @Override

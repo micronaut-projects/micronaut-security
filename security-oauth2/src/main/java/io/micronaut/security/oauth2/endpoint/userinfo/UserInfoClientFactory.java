@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.userinfo;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Prototype;
@@ -61,6 +62,7 @@ final class UserInfoClientFactory {
 
     @EachBean(UserInfoClientTokenValidatorConfiguration.class)
     @Singleton
+    @Bean(preDestroy = "close")
     UserInfoClientTokenValidator createUserInfoClient(UserInfoClientTokenValidatorConfiguration config) {
         try {
             HttpClient httpClient = beanContext.createBean(HttpClient.class, new URL(config.baseUrl()), httpClientConfiguration);
