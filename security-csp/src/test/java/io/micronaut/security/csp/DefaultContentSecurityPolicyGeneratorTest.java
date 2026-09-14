@@ -44,6 +44,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultContentSecurityPolicyGeneratorTest {
@@ -70,6 +71,26 @@ class DefaultContentSecurityPolicyGeneratorTest {
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.STYLE_SRC, "'none'"),
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'")
         ), policy(generator).directives());
+    }
+
+    @Test
+    void omitsReportUriWhenEnabledWithoutUris() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setReportUriEnabled(true);
+        ContentSecurityPolicy policy = policy(new DefaultContentSecurityPolicyGenerator(configuration));
+
+        assertNull(policy.reportUri());
+    }
+
+    @Test
+    void omitsBlankReportUris() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setReportUriEnabled(true);
+        configuration.setReportUri(List.of("", "https://example.com/csp"));
+        ContentSecurityPolicy policy = policy(new DefaultContentSecurityPolicyGenerator(configuration));
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp"),
+                policy.reportUri());
     }
 
     @Test

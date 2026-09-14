@@ -16,6 +16,6 @@ The module is enabled by default and writes an enforcing `Content-Security-Polic
 * `form-action 'self'`
 * `require-trusted-types-for 'script'`
 
-It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive.
+It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive. If `report-uri` is enabled but no report URIs are configured, the directive is omitted.
 
 This baseline intentionally blocks most existing resource loading. Configure only the directives and source expressions required by your application.

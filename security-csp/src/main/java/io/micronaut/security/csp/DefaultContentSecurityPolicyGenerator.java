@@ -229,6 +229,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                                                     StyleSrcConfiguration styleSrcConfiguration,
                                                     WorkerSrcConfiguration workerSrcConfiguration) {
         this.cspConfiguration = cspConfiguration;
+        if (cspConfiguration.isReportUriEnabled() && reportUris(cspConfiguration).isEmpty()) {
+            LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
+        }
         this.cspNonceProvider = cspNonceProvider;
         this.baseUriConfiguration = baseUriConfiguration;
         this.defaultSrcConfiguration = defaultSrcConfiguration;
@@ -396,7 +399,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.4.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportUri() {
-        return cspConfiguration.isReportUriEnabled() ? directive(REPORT_URI, cspConfiguration.getReportUri()) : null;
+        if (!cspConfiguration.isReportUriEnabled()) {
+            return null;
+        }
+        List<String> reportUris = reportUris(cspConfiguration);
+        return reportUris.isEmpty() ? null : new ContentSecurityPolicyDirective(REPORT_URI, String.join(SPACE, reportUris));
     }
 
     /**
@@ -503,16 +510,15 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Converts source expressions to CSP's space-separated directive representation.
+     * Returns the configured {@code report-uri} endpoints, without blank entries.
      *
-     * @param name the CSP directive name
-     * @param values the source expressions associated with the directive
-     * @return the serialized directive
+     * @param cspConfiguration root CSP configuration
+     * @return the non-blank report URIs
      */
-    private static ContentSecurityPolicyDirective directive(String name, List<String> values) {
-        return new ContentSecurityPolicyDirective(name, String.join(SPACE, values.stream()
+    private static List<String> reportUris(ContentSecurityPolicyConfiguration cspConfiguration) {
+        return cspConfiguration.getReportUri().stream()
             .filter(StringUtils::isNotEmpty)
-            .toList()));
+            .toList();
     }
 
     /**
