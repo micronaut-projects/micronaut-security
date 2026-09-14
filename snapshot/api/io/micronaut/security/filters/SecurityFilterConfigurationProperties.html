@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#PREFIX" tabindex="0">PREFIX</a></li>
 <li><a href="#DEFAULT_ENABLED" tabindex="0">DEFAULT_ENABLED</a></li>
+<li><a href="#DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS" tabindex="0">DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</a></li>
 </ol>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -71,8 +72,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
+<li><a href="#isStaticResourceAuthenticationBypass()" tabindex="0">isStaticResourceAuthenticationBypass()</a></li>
 <li><a href="#getPattern()" tabindex="0">getPattern()</a></li>
 <li><a href="#setEnabled(boolean)" tabindex="0">setEnabled(boolean)</a></li>
+<li><a href="#setStaticResourceAuthenticationBypass(boolean)" tabindex="0">setStaticResourceAuthenticationBypass(boolean)</a></li>
 <li><a href="#setPath(java.lang.String)" tabindex="0">setPath(String)</a></li>
 </ol>
 </li>
@@ -122,9 +125,14 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <div class="col-last even-row-color">
 <div class="block">The default enable value.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#PREFIX" class="member-name-link">PREFIX</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS" class="member-name-link">DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The default static resource authentication bypass enable value.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#PREFIX" class="member-name-link">PREFIX</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -158,15 +166,23 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnabled(boolean)" class="member-name-link">setEnabled</a><wbr>(boolean&nbsp;enabled)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStaticResourceAuthenticationBypass()" class="member-name-link">isStaticResourceAuthenticationBypass</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnabled(boolean)" class="member-name-link">setEnabled</a><wbr>(boolean&nbsp;enabled)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Enables <a href="SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPath(java.lang.String)" class="member-name-link">setPath</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Pattern the <a href="SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a> should match.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStaticResourceAuthenticationBypass(boolean)" class="member-name-link">setStaticResourceAuthenticationBypass</a><wbr>(boolean&nbsp;staticResourceAuthenticationBypass)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Enables bypassing authentication resolution for anonymous static resources.</div>
 </div>
 </div>
 </div>
@@ -218,6 +234,23 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 </div>
 </section>
 </li>
+<li>
+<section class="detail" id="DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS">
+<h3>DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</span></div>
+<div class="block">The default static resource authentication bypass enable value.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#io.micronaut.security.filters.SecurityFilterConfigurationProperties.DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -257,6 +290,20 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 </section>
 </li>
 <li>
+<section class="detail" id="isStaticResourceAuthenticationBypass()">
+<h3>isStaticResourceAuthenticationBypass</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStaticResourceAuthenticationBypass</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="SecurityFilterConfiguration.html#isStaticResourceAuthenticationBypass()">isStaticResourceAuthenticationBypass</a></code>&nbsp;in interface&nbsp;<code><a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Whether authentication resolution can be bypassed for anonymous static resources</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getPattern()">
 <h3>getPattern</h3>
 <div class="horizontal-scroll">
@@ -279,6 +326,22 @@ implements <a href="SecurityFilterConfiguration.html" title="interface in io.mic
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>enabled</code> - True if it is enabled</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setStaticResourceAuthenticationBypass(boolean)">
+<h3>setStaticResourceAuthenticationBypass</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStaticResourceAuthenticationBypass</span><wbr><span class="parameters">(boolean&nbsp;staticResourceAuthenticationBypass)</span></div>
+<div class="block">Enables bypassing authentication resolution for anonymous static resources.
+Default value <a href="#DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS">false</a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>staticResourceAuthenticationBypass</code> - Whether the bypass is enabled</dd>
+<dt>Since:</dt>
+<dd>5.4.0</dd>
 </dl>
 </div>
 </section>

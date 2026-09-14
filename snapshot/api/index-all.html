@@ -1944,6 +1944,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_SEPARATOR" class="member-name-link">DEFAULT_ROLES_SEPARATOR</a> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS" class="member-name-link">DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default static resource authentication bypass enable value.</div>
+</dd>
 <dt><a href="io/micronaut/security/x509/X509ConfigurationProperties.html#DEFAULT_SUBJECT_DN_REGEX" class="member-name-link">DEFAULT_SUBJECT_DN_REGEX</a> - Static variable in class io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509ConfigurationProperties.html" title="class in io.micronaut.security.x509">X509ConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default Subject Distinguished Name (DN) regex.</div>
@@ -2638,6 +2642,11 @@ access Oracle Database.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadataFetcher.Optimizations.html#findMetadata(java.lang.String)" class="member-name-link">findMetadata(String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadataFetcher.Optimizations.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadataFetcher.Optimizations</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#findPattern(io.micronaut.http.HttpRequest)" class="member-name-link">findPattern(HttpRequest)</a> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
+<dd>
+<div class="block">Finds the first configured pattern that applies to the request, using the same
+method-specific precedence as <a href="io/micronaut/security/rules/SecurityRule.html#check(T,io.micronaut.security.authentication.Authentication)"><code>SecurityRule.check(HttpRequest, Authentication)</code></a>.</div>
+</dd>
 <dt><a href="io/micronaut/security/session/SessionIdResolver.html#findSessionId(T)" class="member-name-link">findSessionId(T)</a> - Method in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SessionIdResolver.html" title="interface in io.micronaut.security.session">SessionIdResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html#findToken(io.micronaut.http.HttpRequest)" class="member-name-link">findToken(HttpRequest)</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagator</a></dt>
@@ -5258,6 +5267,10 @@ used as routes in the application.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html#isActive()" class="member-name-link">isActive()</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#isAnonymous(io.micronaut.http.HttpRequest)" class="member-name-link">isAnonymous(HttpRequest)</a> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
+<dd>
+<div class="block">Whether the first configured pattern that applies to the request allows anonymous access.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html#isAudience()" class="member-name-link">isAudience()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html#isAudience()" class="member-name-link">isAudience()</a> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClaimsValidationConfiguration</a></dt>
@@ -5484,6 +5497,10 @@ should be to reject the request or allow the not found response to be returned.<
 <div class="block">Whether the cookie is a session cookie.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html#isSessionCookie()" class="member-name-link">isSessionCookie()</a> - Method in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/filters/SecurityFilterConfiguration.html#isStaticResourceAuthenticationBypass()" class="member-name-link">isStaticResourceAuthenticationBypass()</a> - Method in interface io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#isStaticResourceAuthenticationBypass()" class="member-name-link">isStaticResourceAuthenticationBypass()</a> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfiguration.html#isSubjectNotNull()" class="member-name-link">isSubjectNotNull()</a> - Method in interface io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfiguration.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidatorConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -7815,6 +7832,12 @@ methods.</div>
 <div class="block">Security Filter.</div>
 </dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" class="member-name-link">SecurityFilter(Collection, Collection, SecurityConfiguration)</a> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)" class="member-name-link">SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)</a> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilterConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a> - Interface in <a href="io/micronaut/security/filters/package-summary.html">io.micronaut.security.filters</a></dt>
 <dd>
@@ -8858,6 +8881,10 @@ authorization endpoint.</div>
 <dd>
 <div class="block">Whether the cookie is a session cookie.</div>
 </dd>
+<dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#setStaticResourceAuthenticationBypass(boolean)" class="member-name-link">setStaticResourceAuthenticationBypass(boolean)</a> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
+<dd>
+<div class="block">Enables bypassing authentication resolution for anonymous static resources.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#setStreetAddress(java.lang.String)" class="member-name-link">setStreetAddress(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>
 <div class="block">Sets the full street address.</div>
@@ -8956,6 +8983,10 @@ authorization endpoint.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html#%3Cinit%3E()" class="member-name-link">Sha256Condition()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Sha256Condition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/filters/StaticResourceAuthenticationBypass.html#shouldBypass(T)" class="member-name-link">shouldBypass(T)</a> - Method in interface io.micronaut.security.filters.<a href="io/micronaut/security/filters/StaticResourceAuthenticationBypass.html" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass</a></dt>
+<dd>
+<div class="block">Whether authentication resolution can be skipped for the request.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html#shouldRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException)" class="member-name-link">shouldRedirect(HttpRequest, AuthorizationErrorResponseException)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseExceptionHandler</a></dt>
 <dd>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
@@ -9058,6 +9089,10 @@ authorization endpoint.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/jwks/StaticJwksSignatureConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">StaticJwksSignatureConfigurationProperties()</a> - Constructor for class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/StaticJwksSignatureConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.signature.jwks">StaticJwksSignatureConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/filters/StaticResourceAuthenticationBypass.html" class="type-name-link" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass&lt;T&gt;</a> - Interface in <a href="io/micronaut/security/filters/package-summary.html">io.micronaut.security.filters</a></dt>
+<dd>
+<div class="block">Decides whether authentication resolution can be skipped for a request.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#STREET_ADDRESS" class="member-name-link">STREET_ADDRESS</a> - Static variable in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#STYLES" class="member-name-link">STYLES</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>

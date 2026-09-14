@@ -71,7 +71,9 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getPatternList()" tabindex="0">getPatternList()</a></li>
 <li><a href="#getOrder()" tabindex="0">getOrder()</a></li>
+<li><a href="#isAnonymous(io.micronaut.http.HttpRequest)" tabindex="0">isAnonymous(HttpRequest)</a></li>
 <li><a href="#check(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)" tabindex="0">check(HttpRequest, Authentication)</a></li>
+<li><a href="#findPattern(io.micronaut.http.HttpRequest)" tabindex="0">findPattern(HttpRequest)</a></li>
 </ol>
 </li>
 </ol>
@@ -163,13 +165,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">If no configured pattern matches the request, return <a href="SecurityRuleResult.html#UNKNOWN"><code>SecurityRuleResult.UNKNOWN</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrder()" class="member-name-link">getOrder</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPatternList()" class="member-name-link">getPatternList</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findPattern(io.micronaut.http.HttpRequest)" class="member-name-link">findPattern</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Finds the first configured pattern that applies to the request, using the same
+method-specific precedence as <a href="SecurityRule.html#check(T,io.micronaut.security.authentication.Authentication)"><code>SecurityRule.check(HttpRequest, Authentication)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrder()" class="member-name-link">getOrder</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPatternList()" class="member-name-link">getPatternList</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Provides a list of <a href="../config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config"><code>InterceptUrlMapPattern</code></a> which will be used to provide <a href="SecurityRule.html" title="interface in io.micronaut.security.rules"><code>SecurityRule</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAnonymous(io.micronaut.http.HttpRequest)" class="member-name-link">isAnonymous</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the first configured pattern that applies to the request allows anonymous access.</div>
 </div>
 </div>
 </div>
@@ -254,6 +267,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="isAnonymous(io.micronaut.http.HttpRequest)">
+<h3>isAnonymous</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAnonymous</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<div class="block">Whether the first configured pattern that applies to the request allows anonymous access.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - The current request</dd>
+<dt>Returns:</dt>
+<dd>Whether authentication resolution can be skipped for the request</dd>
+<dt>Since:</dt>
+<dd>5.4.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="check(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)">
 <h3>check</h3>
 <div class="horizontal-scroll">
@@ -273,6 +304,22 @@ Reads the rules in order. The first matched rule will be used for determining au
 <li><a href="SecurityRuleResult.html" title="enum class in io.micronaut.security.rules"><code>SecurityRuleResult</code></a></li>
 </ul>
 </dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findPattern(io.micronaut.http.HttpRequest)">
+<h3>findPattern</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</span>&nbsp;<span class="element-name">findPattern</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</span></div>
+<div class="block">Finds the first configured pattern that applies to the request, using the same
+method-specific precedence as <a href="SecurityRule.html#check(T,io.micronaut.security.authentication.Authentication)"><code>SecurityRule.check(HttpRequest, Authentication)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - The current request</dd>
+<dt>Returns:</dt>
+<dd>The matching pattern, if any</dd>
 </dl>
 </div>
 </section>

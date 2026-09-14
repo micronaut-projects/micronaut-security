@@ -163,6 +163,8 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-runAs"><a href="#runAs"><strong>6.2.5</strong><span>Run As Annotation</span></a></div>
         
+        <div class="toc-item" style="margin-left:10px" id="toc-item-staticResourceAuthenticationBypass"><a href="#staticResourceAuthenticationBypass"><strong>6.3</strong><span>Static Resource Authentication Bypass</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-exceptionHandlers"><a href="#exceptionHandlers"><strong>7</strong><span>Exception Handlers</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-endpoints"><a href="#endpoints"><strong>8</strong><span>Endpoints</span></a></div>
@@ -2478,6 +2480,170 @@ The use of <code>jakarta.annotation.security.RunAs</code> requires <code>io.micr
 </div>
 <div class="paragraph">
 <p>One good use case is a bean with <a href="../api/io/micronaut/scheduling/annotation/Scheduled.html">Scheduled</a> methods. Because <a href="https://docs.micronaut.io/latest/guide/#scheduling">scheduled tasks</a> do not run as part of an incoming authenticated request, <a href="../api/io/micronaut/security/annotation/RunAs.html">@RunAs</a> lets the scheduled job delegate to services that expect an authenticated user.</p>
+</div>
+
+<h2 id="staticResourceAuthenticationBypass"><a class="anchor" href="#staticResourceAuthenticationBypass"></a>6.3 Static Resource Authentication Bypass</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.4.x/src/main/docs/guide/securityFilter/staticResourceAuthenticationBypass.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Resolving an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> can be expensive; for example, an <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> may hit a database on every request. For static resources served anonymously, that work is wasted.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>micronaut.security.filter.static-resource-authentication-bypass</code> to <code>true</code> to skip every <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> for requests which are served as anonymous static resources:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.router.static-resources.default.mapping=/assets/**
+micronaut.router.static-resources.default.paths=classpath:assets
+micronaut.security.filter.static-resource-authentication-bypass=true
+micronaut.security.intercept-url-map[0].pattern=/assets/**
+micronaut.security.intercept-url-map[0].access[0]=isAnonymous()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  router:
+    static-resources:
+      default:
+        mapping: /assets/**
+        paths: classpath:assets
+  security:
+    filter:
+      static-resource-authentication-bypass: true
+    intercept-url-map:
+      - pattern: /assets/**
+        access:
+          - isAnonymous()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {router = {static-resources = {default = {mapping = "/assets/**", paths = "classpath:assets"}}}, security = {filter = {static-resource-authentication-bypass = true}, intercept-url-map = [{pattern = "/assets/**", access = ["isAnonymous()"]}]}}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  router {
+    staticResources {
+      'default' {
+        mapping = "/assets/**"
+        paths = "classpath:assets"
+      }
+    }
+  }
+  security {
+    filter {
+      staticResourceAuthenticationBypass = true
+    }
+    interceptUrlMap = [{
+        pattern = "/assets/**"
+        access = ["isAnonymous()"]
+      }]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    router {
+      static-resources {
+        default {
+          mapping = "/assets/**"
+          paths = "classpath:assets"
+        }
+      }
+    }
+    security {
+      filter {
+        static-resource-authentication-bypass = true
+      }
+      intercept-url-map = [{
+          pattern = "/assets/**"
+          access = ["isAnonymous()"]
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "router": {
+      "static-resources": {
+        "default": {
+          "mapping": "/assets/**",
+          "paths": "classpath:assets"
+        }
+      }
+    },
+    "security": {
+      "filter": {
+        "static-resource-authentication-bypass": true
+      },
+      "intercept-url-map": [{
+          "pattern": "/assets/**",
+          "access": ["isAnonymous()"]
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The bypass is disabled by default. When enabled, <a href="../api/io/micronaut/security/filters/SecurityFilter.html">SecurityFilter</a> skips authentication resolution only if all of the following hold:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The request method is <code>GET</code> or <code>HEAD</code>.</p>
+</li>
+<li>
+<p>The request did not match a route. A route always takes precedence over a static resource, and routed requests are never bypassed.</p>
+</li>
+<li>
+<p>The request path resolves to a static resource.</p>
+</li>
+<li>
+<p>The first <code>micronaut.security.intercept-url-map</code> entry which applies to the request grants <code>isAnonymous()</code> access.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>An explicit <code>isAnonymous()</code> intercept URL map entry is required. Without one, no request is bypassed.</p>
+</div>
+<div class="paragraph">
+<p>Bypassing only skips authentication resolution. Every bean of type <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> is still evaluated, so the request is authorized exactly as an anonymous request would be. Because the entry grants <code>isAnonymous()</code> access, the outcome cannot depend on who is making the request.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The rules are evaluated with a <code>null</code> authentication, and no <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is available for the rest of the filter chain. If your application defines a <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> ordered before <a href="../api/io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html">ConfigurationInterceptUrlMapRule</a>, or a filter which reads the authentication for bypassed paths, it observes an anonymous request.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To decide which requests bypass authentication resolution yourself, replace the default implementation with your own bean of type <a href="../api/io/micronaut/security/filters/StaticResourceAuthenticationBypass.html">StaticResourceAuthenticationBypass</a>. The configuration property must still be set to <code>true</code>.</p>
 </div>
 
 <h1 id="exceptionHandlers"><a class="anchor" href="#exceptionHandlers"></a>7 Exception Handlers</h1>
