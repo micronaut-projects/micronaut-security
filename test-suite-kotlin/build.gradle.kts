@@ -17,6 +17,7 @@ dependencies {
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(projects.micronautSecurityFetchMetadata)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteKeycloakDocker)

@@ -1,0 +1,20 @@
+Some endpoints are intentionally called by browser applications on other origins. The module automatically exempts a matched route annotated with `@CrossOrigin` when the request's `Origin` header and HTTP method are permitted by that annotation:
+
+snippet::io.micronaut.security.fetchmetadata.FetchMetadataTestController[tags="cors",project="security-fetch-metadata"]
+
+The annotation alone does not bypass resource isolation. Requests without an `Origin` header, requests from an origin not accepted by the route, and requests using a method not accepted by the route continue to the remaining policy rules and are rejected if no rule allows them. Micronaut's CORS filter remains responsible for CORS response headers and preflight validation.
+
+This automatic exemption applies to https://docs.micronaut.io/latest/guide/#annotationBasedCors[route-level `@CrossOrigin` configuration]. Globally configured CORS origins do not automatically exempt a route from the Fetch Metadata policy.
+
+The CORS endpoint rule is enabled by default. Disable it when cross-origin requests should not receive this automatic exemption:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        allow-cross-origin: false
+----
+
+CAUTION: Do not add `@CrossOrigin` merely to bypass resource isolation. Before exempting an endpoint, verify that it is intended for cross-origin access and does not disclose sensitive user-specific information to the allowed origins.
