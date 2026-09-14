@@ -38,9 +38,11 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".signatures.jwks";
 
     /**
-     * The default key type.
+     * The key type used by default before 5.4.0.
+     * @deprecated Not used. Since 5.4.0 no key type is configured by default, and keys of any key type are used to verify signatures.
      */
     @SuppressWarnings("WeakerAccess")
+    @Deprecated(forRemoval = true, since = "5.4.0")
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
     /**
@@ -63,7 +65,8 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     private String url;
 
-    private KeyType keyType = DEFAULT_KEYTYPE;
+    @Nullable
+    private KeyType keyType;
 
     @NonNull
     private Duration refreshInterval = DEFAULT_REFRESH_INTERVAL;
@@ -121,7 +124,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      *
-     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
+     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any key type may be used.
      */
     @Override
     @Nullable
@@ -130,10 +133,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).
+     * Key type (the kty parameter of a JSON Web Key, e.g. RSA or EC). If set, only keys of this type are used to verify JWT signatures. By default, it is not set and keys of any key type are used.
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
-    public void setKeyType(KeyType keyType) {
+    public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
     }
 

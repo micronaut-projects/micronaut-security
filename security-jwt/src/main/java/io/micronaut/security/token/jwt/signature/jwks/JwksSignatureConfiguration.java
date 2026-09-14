@@ -39,10 +39,13 @@ public interface JwksSignatureConfiguration extends Named {
 
     /**
      * Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
-     * @return The KeyType for the JWKS signature configuration.
+     * If not {@code null}, only keys of this type are used to verify JWT signatures.
+     * @return The KeyType for the JWKS signature configuration or {@code null} if keys of any key type may be used. Defaults to {@code null}.
      */
     @Nullable
-    KeyType getKeyType();
+    default KeyType getKeyType() {
+        return null;
+    }
 
     /**
      * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write

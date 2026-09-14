@@ -22,6 +22,8 @@ Note that the same approach will be applied when using a `jwks_uri` supplied via
 
 When a JWT is verified, a key of the JWK Set is only used if its Key ID (`kid`) matches the token header (when the token carries one), its `use` is absent or `sig`, its `key_ops` is absent or contains `verify`, and its `alg` is absent or equal to the token `alg` header. Keys published for encryption, or bound to a different algorithm, are never used to verify a signature.
 
+By default, keys of any key type (`kty`) are used. If you set `micronaut.security.token.jwt.signatures.jwks.*.key-type` (for example `RSA` or `EC`), only keys of that key type are used to verify tokens. The JWKS configurations created automatically for the `jwks_uri` of <<openid-authorization-code, Open ID Connect>> clients do not restrict the key type.
+
 The https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] based implementation can be explicitly disabled in favor of the JWT library's internal resource fetching implementation by explicitly setting `micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false`. For example:
 
 [configuration]

@@ -1,6 +1,10 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.4 breaking changes
+
+- `micronaut.security.token.jwt.signatures.jwks.*.key-type` is now honoured when verifying JWT signatures, and its default value changed from `RSA` to not set (keys of any key type are used). Previously the property was ignored and keys of every key type were tried, so applications which do not set it keep the same behaviour. If you set `key-type` explicitly, only keys of that type are used to verify tokens. `JwksSignatureConfigurationProperties.DEFAULT_KEYTYPE` is deprecated and no longer used.
+
 == Micronaut Security 5.0 breaking changes
 
 - The JSR 250 annotation mappers have been moved to a new module `micronaut-security-processor`.
