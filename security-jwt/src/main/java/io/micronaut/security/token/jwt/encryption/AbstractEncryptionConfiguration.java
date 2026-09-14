@@ -36,9 +36,9 @@ import java.text.ParseException;
  */
 public abstract class AbstractEncryptionConfiguration implements EncryptionConfiguration {
 
-    protected JWEAlgorithm algorithm;
+    protected volatile JWEAlgorithm algorithm;
 
-    protected EncryptionMethod method;
+    protected volatile EncryptionMethod method;
 
     @Override
     public String encrypt(final JWT jwt) throws JOSEException, ParseException {
@@ -100,8 +100,12 @@ public abstract class AbstractEncryptionConfiguration implements EncryptionConfi
 
     /**
      * algorithm Setter.
+     * <p>Configure the algorithm through the corresponding configuration bean and the constructor instead.
+     * These classes are shared singletons used concurrently; mutating them at runtime is not thread-safe.</p>
      * @param algorithm Instance of {@link JWEAlgorithm}
+     * @deprecated Configure the algorithm via configuration. Mutating a shared singleton at runtime is not thread-safe.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public void setAlgorithm(final JWEAlgorithm algorithm) {
         this.algorithm = algorithm;
     }
@@ -116,8 +120,12 @@ public abstract class AbstractEncryptionConfiguration implements EncryptionConfi
 
     /**
      * method Setter.
+     * <p>Configure the encryption method through the corresponding configuration bean and the constructor instead.
+     * These classes are shared singletons used concurrently; mutating them at runtime is not thread-safe.</p>
      * @param method Instance of {@link EncryptionMethod}
+     * @deprecated Configure the encryption method via configuration. Mutating a shared singleton at runtime is not thread-safe.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public void setMethod(final EncryptionMethod method) {
         this.method = method;
     }

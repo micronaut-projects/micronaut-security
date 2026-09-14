@@ -24,7 +24,7 @@ import com.nimbusds.jose.JWSAlgorithm;
  */
 public abstract class AbstractSignatureConfiguration implements SignatureConfiguration {
 
-    protected JWSAlgorithm algorithm = JWSAlgorithm.HS256;
+    protected volatile JWSAlgorithm algorithm = JWSAlgorithm.HS256;
 
     /**
      *
@@ -36,8 +36,12 @@ public abstract class AbstractSignatureConfiguration implements SignatureConfigu
 
     /**
      * algorithm Setter.
+     * <p>Configure the algorithm through the corresponding configuration bean and the constructor instead.
+     * These classes are shared singletons used concurrently; mutating them at runtime is not thread-safe.</p>
      * @param algorithm Instance of {@link JWSAlgorithm}
+     * @deprecated Configure the algorithm via configuration. Mutating a shared singleton at runtime is not thread-safe.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public void setAlgorithm(final JWSAlgorithm algorithm) {
         this.algorithm = algorithm;
     }
