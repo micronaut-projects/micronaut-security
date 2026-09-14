@@ -55,6 +55,43 @@ class CspNonceFunctionalTest {
     }
 
     @Test
+    void generatesNonceWhenOnlyStyleSrcNonceIsEnabled() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.style-src.nonce", true))) {
+            try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+                BlockingHttpClient client = httpClient.toBlocking();
+                HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
+                Matcher matcher = SCRIPT_NONCE.matcher(response.body());
+
+                assertTrue(matcher.find());
+                String header = response.header("Content-Security-Policy");
+                assertTrue(header.contains("style-src 'nonce-" + matcher.group(1) + "'"));
+                assertTrue(header.contains("script-src 'none'"));
+            }
+        }
+    }
+
+    @Test
+    void scriptSrcAndStyleSrcShareTheSameNonce() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.script-src.nonce", true,
+                "micronaut.security.csp.style-src.nonce", true))) {
+            try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+                BlockingHttpClient client = httpClient.toBlocking();
+                HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
+                Matcher matcher = SCRIPT_NONCE.matcher(response.body());
+
+                assertTrue(matcher.find());
+                String header = response.header("Content-Security-Policy");
+                assertTrue(header.contains("script-src 'nonce-" + matcher.group(1) + "'"));
+                assertTrue(header.contains("style-src 'nonce-" + matcher.group(1) + "'"));
+            }
+        }
+    }
+
+    @Test
     void addsStrictDynamicToScriptSrcWhenEnabled() {
         try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
                 "spec.name", SPEC_NAME,

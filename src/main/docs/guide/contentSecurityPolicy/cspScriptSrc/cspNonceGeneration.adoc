@@ -11,7 +11,7 @@ micronaut:
 
 Once enabled, a fresh, unpredictable https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#nonces[nonce] is generated for every HTTP request by api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[]. The default implementation uses a random UUID. To use a different nonce format or source of randomness, provide a bean that implements api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[].
 
-The module stores the nonce as an HTTP request attribute named `cspNonce`. When Micronaut Views is present and the view model is a `Map`, the module also adds the nonce to the model with that key. Use the value as the `nonce` attribute of every trusted inline script that the policy should allow:
+The module stores the nonce as an HTTP request attribute named `cspNonce`. Use the value as the `nonce` attribute of every trusted inline script that the policy should allow:
 
 [source,html]
 ----
@@ -19,6 +19,8 @@ The module stores the nonce as an HTTP request attribute named `cspNonce`. When 
     // trusted inline script
 </script>
 ----
+
+Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
 
 The nonce in the HTML element must exactly match the value in the `script-src 'nonce-<value>'` response directive. Never reuse a nonce across requests and never place untrusted content inside a nonce-authorized element.
 

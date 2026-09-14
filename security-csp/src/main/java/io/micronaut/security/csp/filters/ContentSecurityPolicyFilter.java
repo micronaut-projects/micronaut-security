@@ -16,14 +16,18 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.security.csp.conf.NonceConfiguration;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
-import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
+
+import java.util.List;
 
 /**
- * Generates the Content Security Policy nonce for a request when nonce-based script policies are enabled.
+ * Generates the Content Security Policy nonce for a request when any enabled directive, such as
+ * {@code script-src} or {@code style-src}, uses nonces. Every such directive shares the same nonce.
  *
  * <p>The CSP response header is written by {@link ContentSecurityPolicyResponseHeaderPopulator}.</p>
  *
@@ -32,31 +36,35 @@ import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 @Internal
 @ServerFilter("${" + ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
 final class ContentSecurityPolicyFilter {
-    private final ScriptSrcConfiguration scriptSrcConfiguration;
+    private final List<NonceConfiguration> nonceConfigurations;
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
      * Creates the server filter that generates request nonces.
      *
-     * @param scriptSrcConfiguration configures nonce generation for {@code script-src}
+     * @param nonceConfigurations directive configurations that support nonces
      * @param cspNonceGenerator generates per-response CSP nonces
      */
-    ContentSecurityPolicyFilter(ScriptSrcConfiguration scriptSrcConfiguration,
+    ContentSecurityPolicyFilter(List<NonceConfiguration> nonceConfigurations,
                                 ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
-        this.scriptSrcConfiguration = scriptSrcConfiguration;
+        this.nonceConfigurations = nonceConfigurations;
         this.cspNonceGenerator = cspNonceGenerator;
     }
 
     /**
      * Generates and stores the nonce before view rendering and response policy generation when
-     * nonce support is enabled for {@code script-src}.
+     * nonce support is enabled for any directive.
      *
      * @param request the current request
      */
     @RequestFilter
     void generateNonce(HttpRequest<?> request) {
-        if (scriptSrcConfiguration.isEnabled() && scriptSrcConfiguration.isNonce()) {
+        if (nonceConfigurations.stream().anyMatch(ContentSecurityPolicyFilter::isNonceEnabled)) {
             request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
         }
+    }
+
+    private static boolean isNonceEnabled(NonceConfiguration configuration) {
+        return configuration.isNonce() && (!(configuration instanceof Toggleable toggleable) || toggleable.isEnabled());
     }
 }
