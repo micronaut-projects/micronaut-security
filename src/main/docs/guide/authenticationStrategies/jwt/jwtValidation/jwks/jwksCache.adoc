@@ -28,3 +28,22 @@ micronaut:
     jwks:
       expire-after-write: 24h
 ----
+
+**Refresh on unknown key ID**
+
+Authorization servers rotate their signing keys. When a JWT carries a `kid` header which is not present in the cached JWKS, Micronaut Security does not wait for the cache to expire: it clears the cached JWKS for that URL, fetches the JWKS again and verifies the token against the fresh keys. Tokens without a `kid` header, or whose `kid` is already present in the cached JWKS, never trigger a refresh.
+
+To protect the authorization server from tokens with bogus key IDs, the refresh is rate limited per JWKS URL: at most one refresh happens per `micronaut.security.token.jwt.signatures.jwks.*.refresh-interval` (default 30 seconds). Requests with an unknown `kid` arriving within that interval are rejected without fetching the JWKS again.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXX/.well-known/jwks.json'
+              refresh-interval: 1m
+----
