@@ -13,7 +13,7 @@ dependencies {
         exclude(group = "io.micronaut", module = "micronaut-json-core")
     }
     api(mnValidation.validation)
-    implementation(mn.micronaut.json.core)
+    compileOnly(mn.micronaut.json.core)
     compileOnly(mnViews.micronaut.views.core)
     compileOnly(mnValidation.micronaut.validation)
     compileOnly(mn.jackson.databind)

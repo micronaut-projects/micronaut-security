@@ -18,7 +18,7 @@
  *
  * @see <a href="https://w3c.github.io/reporting/">Reporting API</a>
  */
-@Requires(classes = Controller.class)
+@Requires(classes = HttpRequest.class)
 @Requires(property = ContentSecurityPolicyConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Configuration
 @NullMarked
@@ -27,6 +27,6 @@ package io.micronaut.security.csp.report;
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import org.jspecify.annotations.NullMarked;

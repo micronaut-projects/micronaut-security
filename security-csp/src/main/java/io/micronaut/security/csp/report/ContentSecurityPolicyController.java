@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
@@ -41,6 +42,7 @@ import java.util.List;
 @Controller("${" + ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".path:/csp/report}")
 @Requires(beans = ContentSecurityPolicyReportHandler.class)
 @Requires(beans = ContentSecurityPolicyControllerConfiguration.class)
+@Internal
 class ContentSecurityPolicyController {
     static final String APPLICATION_REPORTS_JSON = "application/reports+json";
 

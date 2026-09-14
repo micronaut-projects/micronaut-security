@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +29,8 @@ import org.jspecify.annotations.NonNull;
  * @since 5.4.0
  */
 @ConfigurationProperties(ContentSecurityPolicyFilterConfigurationProperties.PREFIX)
-public class ContentSecurityPolicyFilterConfigurationProperties implements ContentSecurityPolicyFilterConfiguration {
+@Internal
+final class ContentSecurityPolicyFilterConfigurationProperties implements ContentSecurityPolicyFilterConfiguration {
     /** Configuration prefix for the CSP response filter. */
     public static final String PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".filter";
     /** Property that enables or disables the CSP response filter. */

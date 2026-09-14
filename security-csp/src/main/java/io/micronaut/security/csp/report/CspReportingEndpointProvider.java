@@ -29,7 +29,7 @@ import java.net.URI;
 /**
  * Advertises the handler-backed CSP report controller through the Reporting API module.
  */
-@Requires(beans = ContentSecurityPolicyReportHandler.class)
+@Requires(beans = { ReportToConfiguration.class, ContentSecurityPolicyControllerConfiguration.class })
 @Singleton
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
@@ -60,7 +60,6 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
             return null;
         }
         return new ReportingEndpoint() {
-
             @Override
             public String getName() {
                 return reportToConfiguration.getGroup();

@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.csp.filters;
 
+import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -30,42 +29,49 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class ContentSecurityPolicyFilterTest {
+class ContentSecurityPolicyResponseHeaderPopulatorTest {
 
     @Test
     void addsContentSecurityPolicyHeader() {
-        ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self' images.example.com"),
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ScriptSrcConfigurationProperties(),
-                request -> "unused"
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
-        HttpRequest<?> request = HttpRequest.GET("/");
-        MutableHttpResponse<?> response = HttpResponse.ok();
 
-        filter.filter(request, response);
-
-        assertEquals("default-src 'self'; img-src 'self' images.example.com; upgrade-insecure-requests",
-                response.header("Content-Security-Policy"));
+        assertEquals(
+                List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY,
+                        "default-src 'self'; img-src 'self' images.example.com; upgrade-insecure-requests")),
+                populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
     }
 
     @Test
     void omitsContentSecurityPolicyHeaderWhenGeneratorReturnsNull() {
-        ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> null,
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ScriptSrcConfigurationProperties(),
-                request -> "unused"
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
-        HttpRequest<?> request = HttpRequest.GET("/");
-        MutableHttpResponse<?> response = HttpResponse.ok();
 
-        filter.filter(request, response);
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
+    }
 
-        assertNull(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+    @Test
+    void omitsContentSecurityPolicyHeaderWhenPathDoesNotMatchPattern() {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern("/foo/**");
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'")
+                )),
+                new ContentSecurityPolicyConfigurationProperties(),
+                filterConfiguration
+        );
+
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/bar"), HttpResponse.ok()));
     }
 }

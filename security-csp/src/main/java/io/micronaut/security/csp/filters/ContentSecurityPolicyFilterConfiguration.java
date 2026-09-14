@@ -16,7 +16,6 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.core.util.Toggleable;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Configuration for {@link io.micronaut.security.csp.filters.ContentSecurityPolicyFilter}.
@@ -29,5 +28,5 @@ public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
      *
      * @return the pattern the {@link ContentSecurityPolicyFilter} should match
      */
-    @NonNull String getPattern();
+    String getPattern();
 }

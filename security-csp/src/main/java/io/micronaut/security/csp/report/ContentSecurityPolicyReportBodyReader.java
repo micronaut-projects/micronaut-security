@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.report;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.Headers;
@@ -38,6 +39,8 @@ import java.util.List;
  * Decodes the Reporting API's dedicated JSON media type.
  */
 @Internal
+@Requires(classes = JsonMapper.class)
+@Requires(beans = JsonMapper.class)
 @Singleton
 @Consumes(ContentSecurityPolicyController.APPLICATION_REPORTS_JSON)
 final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<List<ContentSecurityPolicyReport>> {

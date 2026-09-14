@@ -18,6 +18,7 @@ package io.micronaut.security.csp.nonce;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 import java.util.UUID;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @Requires(missingBeans =  ContentSecurityPolicyNonceGenerator.class)
 @Singleton
 @Internal
+@Named("UUID")
 final class UUIDContentSecurityPolicyNonceGenerator implements ContentSecurityPolicyNonceGenerator {
     @Override
     public String generateNonce(HttpRequest<?> request) {

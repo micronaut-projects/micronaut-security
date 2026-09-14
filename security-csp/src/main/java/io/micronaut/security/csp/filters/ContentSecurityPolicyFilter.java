@@ -17,47 +17,32 @@ package io.micronaut.security.csp.filters;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.RequestFilter;
-import io.micronaut.http.annotation.ResponseFilter;
 import io.micronaut.http.annotation.ServerFilter;
-import io.micronaut.security.csp.ContentSecurityPolicy;
-import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 
 /**
- * Adds the Content Security Policy generated for a request to its response.
+ * Generates the Content Security Policy nonce for a request when nonce-based script policies are enabled.
  *
- * <p>When nonce-based script policies are enabled, a request filter first creates their nonce.
- * The response filter then writes the generated policy only when the application has not already
- * supplied the selected CSP response header.</p>
+ * <p>The CSP response header is written by {@link ContentSecurityPolicyResponseHeaderPopulator}.</p>
  *
  * @author Sergio del Amo
  */
 @Internal
 @ServerFilter("${" + ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
 final class ContentSecurityPolicyFilter {
-    private final ContentSecurityPolicyGenerator cspGenerator;
-    private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final ScriptSrcConfiguration scriptSrcConfiguration;
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
-     * Creates the server filter that generates request nonces and CSP response headers.
+     * Creates the server filter that generates request nonces.
      *
-     * @param cspGenerator generates the directives to write to the response
-     * @param cspConfiguration configures how the policy is written
      * @param scriptSrcConfiguration configures nonce generation for {@code script-src}
      * @param cspNonceGenerator generates per-response CSP nonces
      */
-    ContentSecurityPolicyFilter(ContentSecurityPolicyGenerator cspGenerator,
-                                ContentSecurityPolicyConfiguration cspConfiguration,
-                                ScriptSrcConfiguration scriptSrcConfiguration,
+    ContentSecurityPolicyFilter(ScriptSrcConfiguration scriptSrcConfiguration,
                                 ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
-        this.cspGenerator = cspGenerator;
-        this.cspConfiguration = cspConfiguration;
         this.scriptSrcConfiguration = scriptSrcConfiguration;
         this.cspNonceGenerator = cspNonceGenerator;
     }
@@ -72,25 +57,6 @@ final class ContentSecurityPolicyFilter {
     void generateNonce(HttpRequest<?> request) {
         if (scriptSrcConfiguration.isEnabled() && scriptSrcConfiguration.isNonce()) {
             request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
-        }
-    }
-
-    /**
-     * Writes the enforcing or report-only CSP header unless application code already set it.
-     *
-     * @param request the current request
-     * @param response the response to which the header may be added
-     */
-    @ResponseFilter
-    void filter(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        String headerName = cspConfiguration.isReportOnly()
-            ? ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY : ContentSecurityPolicy.CONTENT_SECURITY_POLICY;
-        boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
-        if (!responseSetsAlreadyCspHeader) {
-            ContentSecurityPolicy csp = cspGenerator.contentSecurityPolicy(request);
-            if (csp != null) {
-                response.header(headerName, csp.toString());
-            }
         }
     }
 }
