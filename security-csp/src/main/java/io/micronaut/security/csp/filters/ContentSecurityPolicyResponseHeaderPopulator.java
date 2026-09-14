@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @since 5.4.0
  */
-@Requires(classes = { HttpRequest.class, HttpResponse.class })
+@Requires(classes = ResponseHeaderPopulator.class)
 @Singleton
 @Internal
 final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHeaderPopulator {
