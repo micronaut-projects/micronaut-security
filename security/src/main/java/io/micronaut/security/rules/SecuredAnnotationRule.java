@@ -67,25 +67,25 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
-        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
-            if (routeMatch instanceof MethodBasedRouteMatch) {
-                MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
-                AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
-                if (securedAnnotation != null) {
-                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-                        boolean[] arr = securedAnnotation.booleanValues();
-                        if (arr.length > 0) {
-                            return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
-                        }
+        // The route match is owned by the request pipeline; it must not be closed here.
+        RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
+        if (routeMatch instanceof MethodBasedRouteMatch) {
+            MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
+            AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
+            if (securedAnnotation != null) {
+                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                    boolean[] arr = securedAnnotation.booleanValues();
+                    if (arr.length > 0) {
+                        return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
                     }
-                    Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
-                    if (optionalValue.isPresent()) {
-                        List<String> values = Arrays.asList(optionalValue.get());
-                        if (values.contains(SecurityRule.DENY_ALL)) {
-                            return Mono.just(SecurityRuleResult.REJECTED);
-                        }
-                        return compareRoles(values, getRoles(authentication));
+                }
+                Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
+                if (optionalValue.isPresent()) {
+                    List<String> values = Arrays.asList(optionalValue.get());
+                    if (values.contains(SecurityRule.DENY_ALL)) {
+                        return Mono.just(SecurityRuleResult.REJECTED);
                     }
+                    return compareRoles(values, getRoles(authentication));
                 }
             }
         }
