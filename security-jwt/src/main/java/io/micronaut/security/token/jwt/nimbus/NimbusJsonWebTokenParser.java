@@ -61,7 +61,7 @@ class NimbusJsonWebTokenParser implements JsonWebTokenParser<JWT> {
                 return Optional.of(jwt);
             } else {
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("token {} does not contain two dots", token);
+                    LOG.trace("token does not contain two dots");
                 }
             }
         } catch (final ParseException e) {
