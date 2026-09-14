@@ -1,6 +1,14 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.4 breaking changes
+
+- Unsigned JSON Web Tokens (JWS header `alg=none`) are now rejected by the JWT validators even when no api:security.token.jwt.signature.SignatureConfiguration[] bean is present. Previously, an application without any signature configuration silently accepted unsigned tokens, which anyone can forge.
++
+If you rely on unsigned tokens (for example in local development), set `micronaut.security.token.jwt.accept-unsigned-tokens` to `true`. A warning is logged at startup when the flag is enabled. Unsigned tokens are still rejected when a signature configuration is present, regardless of the flag.
++
+api:security.token.jwt.generator.JwtTokenGenerator[] still emits unsigned tokens when no `@Named("generator")` api:security.token.jwt.signature.SignatureGeneratorConfiguration[] bean is present, but it now logs a warning at startup.
+
 == Micronaut Security 5.0 breaking changes
 
 - The JSR 250 annotation mappers have been moved to a new module `micronaut-security-processor`.
