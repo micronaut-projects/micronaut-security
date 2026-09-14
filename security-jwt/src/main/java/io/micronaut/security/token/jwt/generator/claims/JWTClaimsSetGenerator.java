@@ -171,13 +171,22 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
 
     /**
      * Populates Claims with Authentication object.
+     * Authentication attributes are copied into the claims set as additional claims. Attributes whose name collides
+     * with a registered claim name ({@link Claims#ALL_CLAIMS}) are ignored so that they cannot override the
+     * registered claims populated by this generator.
      *
      * @param builder     the Claims Builder
      * @param authentication Authenticated user's representation.
      */
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
         populateSub(builder, authentication);
-        authentication.getAttributes().forEach(builder::claim);
+        authentication.getAttributes().forEach((name, value) -> {
+            if (Claims.ALL_CLAIMS.contains(name)) {
+                LOG.debug("Ignoring authentication attribute {} because it collides with a registered claim", name);
+            } else {
+                builder.claim(name, value);
+            }
+        });
         String rolesKey = tokenConfiguration.getRolesName();
         if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
             builder.claim(ROLES_KEY, rolesKey);
