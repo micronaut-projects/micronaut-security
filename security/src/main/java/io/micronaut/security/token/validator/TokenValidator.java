@@ -45,10 +45,12 @@ public interface TokenValidator<T> extends Ordered {
      *
      * @param token The token string
      * @param request The current request (or null)
-     * @return An authentication publisher. If the publisher emits an error, no further validators will
-     * be attempted and the validation will fail. If the publisher is empty, the next validator in order will be
-     * attempted. If the publisher emits an authentication, that authentication will be used and no further
-     * validators will be attempted.
+     * @return An authentication publisher. If the publisher emits an error, the error is treated as a failed
+     * validation by this validator: it is logged (without the token value) and the next validator in order will be
+     * attempted, exactly as if the publisher had been empty. Errors are never propagated to the caller, so they
+     * result in an unauthenticated request rather than a server error. If the publisher is empty, the next validator
+     * in order will be attempted. If the publisher emits an authentication, that authentication will be used and no
+     * further validators will be attempted.
      */
     @NonNull
     @SingleResult

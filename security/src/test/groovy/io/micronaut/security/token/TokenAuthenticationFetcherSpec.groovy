@@ -1,5 +1,9 @@
 package io.micronaut.security.token
 
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.AppenderBase
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
@@ -18,6 +22,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.slf4j.LoggerFactory
 import reactor.core.publisher.Mono
 import groovy.transform.Canonical
 import spock.lang.Specification
@@ -139,8 +144,127 @@ class TokenAuthenticationFetcherSpec extends Specification {
         validatorInvocations.invocations == [new Invocation("high", "bbb"), new Invocation("low", "bbb")]
     }
 
+    void "a validator error is treated as a failed validation and the next validator is tried"() {
+        given: 'the higher precedence validator errors, the lower one authenticates'
+        MemoryAppender appender = attachAppender()
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "error-then-ok")
+
+        when:
+        Authentication authentication = fetchAuthentication(request)
+
+        then: 'the lower precedence validator authenticates'
+        authentication
+        "recovered" == authentication.name
+
+        and: 'both validators were tried, in order'
+        validatorInvocations.invocations == [new Invocation("high", "error-then-ok"), new Invocation("low", "error-then-ok")]
+
+        and: 'the token is recorded and the event published once'
+        request.getAttribute(SecurityFilter.TOKEN, String).get() == "error-then-ok"
+        tokenValidatedEventListener.events.size() == 1
+        tokenValidatedEventListener.events[0].source == "error-then-ok"
+
+        and: 'the validator failure was logged at WARN without the token value'
+        appender.events.size() == 1
+        appender.events[0].level == Level.WARN
+        appender.events[0].formattedMessage.contains(HighPrecedenceApiKeyTokenValidator.name)
+        appender.events[0].formattedMessage.contains("jwks unavailable")
+        !appender.events[0].formattedMessage.contains("error-then-ok")
+
+        cleanup:
+        detachAppender(appender)
+    }
+
+    void "a validator error on the first token does not prevent a later token from authenticating"() {
+        given: 'both validators error for the X-API-KEY token, the Authorization token is valid'
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "all-error")
+        request.headers.add(HttpHeaders.AUTHORIZATION, "Bearer yyy")
+
+        when:
+        Authentication authentication = fetchAuthentication(request)
+
+        then:
+        authentication
+        "foo" == authentication.name
+        validatorInvocations.invocations == [new Invocation("high", "all-error"), new Invocation("low", "all-error"), new Invocation("high", "yyy")]
+        request.getAttribute(SecurityFilter.TOKEN, String).get() == "yyy"
+        tokenValidatedEventListener.events*.source == ["yyy"]
+    }
+
+    void "when every validator errors the fetcher emits empty and logs a warning without the token value"() {
+        given:
+        MemoryAppender appender = attachAppender()
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "all-error")
+
+        when:
+        Authentication authentication = fetchAuthentication(request)
+
+        then: 'no error is propagated and no authentication is produced'
+        noExceptionThrown()
+        authentication == null
+
+        and: 'every validator was tried'
+        validatorInvocations.invocations == [new Invocation("high", "all-error"), new Invocation("low", "all-error")]
+
+        and: 'no token is recorded and no event is published'
+        !request.getAttribute(SecurityFilter.TOKEN, String).isPresent()
+        tokenValidatedEventListener.events.isEmpty()
+
+        and: 'one WARN per failed validator, naming the validator and the exception but never the token'
+        appender.events.size() == 2
+        appender.events.every { it.level == Level.WARN }
+        appender.events[0].formattedMessage.contains(HighPrecedenceApiKeyTokenValidator.name)
+        appender.events[1].formattedMessage.contains(LowPrecedenceApiKeyTokenValidator.name)
+        appender.events.every { it.formattedMessage.contains("jwks unavailable") }
+        appender.events.every { !it.formattedMessage.contains("all-error") }
+
+        cleanup:
+        detachAppender(appender)
+    }
+
+    void "a validator that throws synchronously is treated as a failed validation"() {
+        given:
+        SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
+        request.headers.add("X-API-KEY", "throws-then-ok")
+
+        when:
+        Authentication authentication = fetchAuthentication(request)
+
+        then:
+        noExceptionThrown()
+        authentication
+        "recovered" == authentication.name
+        validatorInvocations.invocations == [new Invocation("high", "throws-then-ok"), new Invocation("low", "throws-then-ok")]
+    }
+
     private Authentication fetchAuthentication(SimpleHttpRequest request) {
         Mono.from(tokenAuthenticationFetcher.fetchAuthentication(request)).block()
+    }
+
+    private static MemoryAppender attachAppender() {
+        MemoryAppender appender = new MemoryAppender()
+        Logger logger = (Logger) LoggerFactory.getLogger(TokenAuthenticationFetcher.class)
+        logger.addAppender(appender)
+        appender.start()
+        appender
+    }
+
+    private static void detachAppender(MemoryAppender appender) {
+        Logger logger = (Logger) LoggerFactory.getLogger(TokenAuthenticationFetcher.class)
+        logger.detachAppender(appender)
+        appender.stop()
+    }
+
+    static class MemoryAppender extends AppenderBase<ILoggingEvent> {
+        final List<ILoggingEvent> events = new CopyOnWriteArrayList<>()
+
+        @Override
+        protected void append(ILoggingEvent e) {
+            events.add(e)
+        }
     }
 
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
@@ -195,6 +319,12 @@ class TokenAuthenticationFetcherSpec extends Specification {
             if (token.equals("sync-second")) {
                 return Mono.just(Authentication.build("sync-second-user"))
             }
+            if (token.equals("error-then-ok") || token.equals("all-error")) {
+                return Mono.error(new IllegalStateException("jwks unavailable"))
+            }
+            if (token.equals("throws-then-ok")) {
+                throw new IllegalStateException("jwks unavailable")
+            }
             Mono.empty()
         }
 
@@ -222,6 +352,12 @@ class TokenAuthenticationFetcherSpec extends Specification {
             }
             if (token.equals("bbb")) {
                 return Mono.just(Authentication.build("baz"))
+            }
+            if (token.equals("error-then-ok") || token.equals("throws-then-ok")) {
+                return Mono.just(Authentication.build("recovered"))
+            }
+            if (token.equals("all-error")) {
+                return Mono.error(new IllegalStateException("jwks unavailable"))
             }
             Mono.empty()
         }
