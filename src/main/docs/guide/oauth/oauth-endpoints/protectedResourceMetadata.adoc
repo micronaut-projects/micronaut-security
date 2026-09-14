@@ -10,3 +10,5 @@ A GET endpoint is exposed in `/.well-known/oauth-protected-resource`. The API to
 api:security.oauth2.metadata.ProtectedResourceMetadataProvider[]
 
 You can create a bean replacement for it if the default implementation does not fit your needs.
+
+IMPORTANT: The `resource` value in the metadata document and the `resource_metadata` URL in the `WWW-Authenticate` challenge are built with api:http.server.util.HttpHostResolver[]. By default it derives the scheme, host and port from the request `Host` header and the `Forwarded` / `X-Forwarded-*` headers, which an unauthenticated caller controls. When the application runs behind a reverse proxy, pin the host resolution with the `micronaut.server.host-resolution.*` properties (for example `host-allow-list`, `host-header`, `protocol-header` and `port-header`), or set `micronaut.security.oauth2.base-url` (for example `https://app.example.com`) so these URLs use a fixed base regardless of the request headers.

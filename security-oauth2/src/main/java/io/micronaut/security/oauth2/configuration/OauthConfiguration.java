@@ -51,4 +51,19 @@ public interface OauthConfiguration extends Toggleable {
      */
     @NonNull
     OpenIdConfiguration getOpenid();
+
+    /**
+     * An optional fixed base URL (scheme, host and optional port, for example {@code https://app.example.com}) used to build
+     * absolute URLs such as the OAuth 2.0 callback {@code redirect_uri}, the OpenID Connect {@code post_logout_redirect_uri},
+     * and the protected resource metadata {@code resource} and {@code resource_metadata} values.
+     * When empty, those URLs are derived from the request via {@code io.micronaut.http.server.util.HttpHostResolver}, which by
+     * default trusts the {@code Host} and {@code Forwarded} / {@code X-Forwarded-*} request headers.
+     *
+     * @return the base URL, without a trailing slash, or empty to derive it from the request
+     * @since 5.4.0
+     */
+    @NonNull
+    default Optional<String> getBaseUrl() {
+        return Optional.empty();
+    }
 }

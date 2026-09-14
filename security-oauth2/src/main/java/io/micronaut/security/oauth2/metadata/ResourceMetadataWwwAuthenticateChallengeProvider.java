@@ -25,6 +25,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.security.authentication.WwwAuthenticateChallenge;
 import io.micronaut.security.authentication.WwwAuthenticateChallengeProvider;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import jakarta.inject.Singleton;
 
 /**
@@ -39,10 +40,14 @@ import jakarta.inject.Singleton;
 class ResourceMetadataWwwAuthenticateChallengeProvider implements WwwAuthenticateChallengeProvider<HttpRequest<?>> {
     private static final String PARAM_RESOURCE_METADATA = "resource_metadata";
     private static final String SLASH = "/";
-    private final HttpHostResolver  httpHostResolver;
+    private final HttpHostResolver httpHostResolver;
+    @Nullable
+    private final String baseUrl;
 
-    ResourceMetadataWwwAuthenticateChallengeProvider(HttpHostResolver httpHostResolver) {
+    ResourceMetadataWwwAuthenticateChallengeProvider(HttpHostResolver httpHostResolver,
+                                                     OauthConfiguration oauthConfiguration) {
         this.httpHostResolver = httpHostResolver;
+        this.baseUrl = oauthConfiguration.getBaseUrl().orElse(null);
     }
 
     @Override
@@ -58,7 +63,7 @@ class ResourceMetadataWwwAuthenticateChallengeProvider implements WwwAuthenticat
     @NonNull
     private String resourceMetadata(@Nullable HttpRequest<?> request) {
         StringBuilder sb = new StringBuilder();
-        sb.append(httpHostResolver.resolve(request));
+        sb.append(baseUrl != null ? baseUrl : httpHostResolver.resolve(request));
         sb.append(ProtectedResourceMetadataConfiguration.PATH);
         if (request != null && StringUtils.isNotEmpty(request.getPath()) && !request.getPath().equals(SLASH)) {
             sb.append(request.getPath());
