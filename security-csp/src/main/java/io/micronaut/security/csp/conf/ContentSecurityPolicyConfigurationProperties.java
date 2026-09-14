@@ -40,8 +40,6 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     public static final String PREFIX = "micronaut.security.csp";
     /** Configuration prefix for the {@code base-uri} directive. */
     public static final String PROPERTY_BASE_URI = ContentSecurityPolicyConfigurationProperties.PREFIX + ".base-uri";
-    /** Configuration prefix for the {@code child-src} directive. */
-    public static final String PROPERTY_CHILD_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".child-src";
     /** Configuration prefix for the {@code connect-src} directive. */
     public static final String PROPERTY_CONNECT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".connect-src";
     /** Configuration prefix for the {@code default-src} directive. */
@@ -68,16 +66,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     public static final String PROPERTY_PREFETCH_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".prefetch-src";
     /** Configuration prefix for the {@code script-src} directive. */
     public static final String PROPERTY_SCRIPT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src";
-    /** Configuration prefix for the {@code script-src-attr} directive. */
-    public static final String PROPERTY_SCRIPT_SRC_ATTR = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-attr";
-    /** Configuration prefix for the {@code script-src-elem} directive. */
-    public static final String PROPERTY_SCRIPT_SRC_ELEM = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src-elem";
     /** Configuration prefix for the {@code style-src} directive. */
     public static final String PROPERTY_STYLE_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src";
-    /** Configuration prefix for the {@code style-src-attr} directive. */
-    public static final String PROPERTY_STYLE_SRC_ATTR = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-attr";
-    /** Configuration prefix for the {@code style-src-elem} directive. */
-    public static final String PROPERTY_STYLE_SRC_ELEM = ContentSecurityPolicyConfigurationProperties.PREFIX + ".style-src-elem";
     /** Configuration prefix for the {@code worker-src} directive. */
     public static final String PROPERTY_WORKER_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src";
 
