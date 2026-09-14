@@ -34,7 +34,6 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
-import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -257,14 +256,14 @@ public class SecurityFilter implements HttpServerFilter {
                                 method,
                                 path);
                     }
-                    try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
-                        // no rule found for the given request
-                        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                            return chain.proceed(request);
-                        } else {
-                            ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
-                            return Mono.error(new AuthorizationException(authentication));
-                        }
+                    // The route match is owned by the request pipeline; it must not be closed here.
+                    boolean routeMatchPresent = RouteAttributes.getRouteMatch(request).isPresent();
+                    // no rule found for the given request
+                    if (!routeMatchPresent && !securityConfiguration.isRejectNotFound()) {
+                        return chain.proceed(request);
+                    } else {
+                        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
+                        return Mono.error(new AuthorizationException(authentication));
                     }
                 }));
     }
