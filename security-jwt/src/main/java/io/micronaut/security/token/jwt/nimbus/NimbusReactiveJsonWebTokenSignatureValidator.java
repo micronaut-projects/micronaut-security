@@ -42,10 +42,29 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
         this.signatures = signatures(signatureConfigurations, reactiveSignatureConfigurations);
     }
 
+    /**
+     * Validates the signature against every signature configuration. If none of them verifies the token and the token
+     * carries a {@code kid} header, the signature configurations are given a second chance with
+     * {@link JwksClientReactorContext#allowRefreshOnUnknownKeyId()} so that JWKS based configurations may refresh their
+     * cached JWKS if the key ID is unknown to them.
+     * @param signedToken The signed token
+     * @return Whether the signature could be verified. Empty if no signature configuration verified the token.
+     */
     @Override
     @SingleResult
     public Publisher<Boolean> validateSignature(@NonNull SignedJWT signedToken) {
         JwksClientReactorContext jwksClientReactorContext = new JwksClientReactorContext();
+        Mono<Boolean> verified = verify(signedToken, jwksClientReactorContext);
+        if (signedToken.getHeader().getKeyID() == null) {
+            return verified;
+        }
+        return verified.switchIfEmpty(Mono.defer(() -> {
+            jwksClientReactorContext.allowRefreshOnUnknownKeyId();
+            return verify(signedToken, jwksClientReactorContext);
+        }));
+    }
+
+    private Mono<Boolean> verify(@NonNull SignedJWT signedToken, @NonNull JwksClientReactorContext jwksClientReactorContext) {
         return Flux.fromIterable(signatures)
                 .flatMap(signatureConfiguration -> Mono.from(signatureConfiguration.verify(signedToken))
                     .contextWrite(ctx -> ctx.put(JwksClientReactorContext.class, jwksClientReactorContext)))

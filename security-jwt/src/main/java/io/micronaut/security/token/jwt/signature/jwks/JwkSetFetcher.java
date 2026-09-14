@@ -44,4 +44,15 @@ public interface JwkSetFetcher<T> {
      * Clears cache
      */
     void clearCache(String url);
+
+    /**
+     * Clears the cache for the given provider name and Jwks uri. Implementations which key their cache by provider name and url should override this method.
+     * The default implementation delegates to {@link #clearCache(String)}.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @since 5.4.0
+     */
+    default void clearCache(@Nullable String providerName, @NonNull String url) {
+        clearCache(url);
+    }
 }

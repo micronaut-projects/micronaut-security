@@ -17,11 +17,14 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.cache.annotation.CacheConfig;
+import io.micronaut.cache.annotation.CacheInvalidate;
 import io.micronaut.cache.annotation.Cacheable;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 
 /**
@@ -47,5 +50,17 @@ class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     @Cacheable
     public Publisher<JWKSet> fetch(String providerName, String url) {
         return super.fetch(providerName, url);
+    }
+
+    @Override
+    @CacheInvalidate(all = true)
+    public void clearCache(@NonNull String url) {
+        super.clearCache(url);
+    }
+
+    @Override
+    @CacheInvalidate
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        super.clearCache(url);
     }
 }
