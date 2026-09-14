@@ -1,6 +1,12 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.4 breaking changes
+
+- The `issuer` returned by the discovery document of an OpenID provider is now validated against the configured `micronaut.security.oauth2.clients.*.openid.issuer` (ignoring a trailing slash and the case of the scheme), as required by https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation[OpenID Connect Discovery 1.0, Section 4.3]. Providers returning a different issuer previously worked; their metadata now fails to resolve with a `ConfigurationException` naming both values and the provider. Either fix the configured issuer or set `micronaut.security.oauth2.clients.*.openid.validate-issuer: false` for that client to restore the previous behavior.
+
+- A failure to fetch the OpenID configuration at startup no longer disables the `DefaultOpenIdProviderMetadata` bean of that provider for the life of the application. The failure is logged, the application starts, and the fetch is retried on first use no more often than every five seconds. `DefaultOpenIdProviderMetadata` is no longer a `@Context` bean.
+
 == Micronaut Security 5.0 breaking changes
 
 - The JSR 250 annotation mappers have been moved to a new module `micronaut-security-processor`.
