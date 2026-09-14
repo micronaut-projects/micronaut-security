@@ -1,7 +1,6 @@
 package io.micronaut.security.endpoints.introspection
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -16,6 +15,7 @@ import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 
 class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
@@ -57,9 +57,26 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
         when:
         Map m = response.body()
 
-        then:
-        m.keySet() == ['active'] as Set<String>
+        then: 'the refresh token is active and the response is populated from the persisted Authentication'
         m['active'] == true
+        m['username'] == 'user'
+        m['sub'] == 'user'
+
+        when: 'the refresh token is revoked'
+        InMemoryRefreshTokenPersistence persistence = applicationContext.getBean(InMemoryRefreshTokenPersistence)
+        persistence.tokens.clear()
+        response = client.exchange(request, Map)
+
+        then:
+        noExceptionThrown()
+        response.status() == HttpStatus.OK
+
+        when:
+        m = response.body()
+
+        then: 'the refresh token is reported inactive even though its signature is still valid'
+        m.keySet() == ['active'] as Set<String>
+        m['active'] == false
     }
 
     @Requires(property = 'spec.name', value = 'RefreshTokenIntrospectionEndpointSpec')
@@ -75,7 +92,7 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
 
         @Override
         Publisher<Authentication> getAuthentication(String refreshToken) {
-            Publishers.just(tokens.get(refreshToken))
+            Mono.justOrEmpty(tokens.get(refreshToken))
         }
     }
 
