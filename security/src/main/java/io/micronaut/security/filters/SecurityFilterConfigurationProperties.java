@@ -38,6 +38,11 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
+     * The default static resource authentication bypass enable value.
+     */
+    public static final boolean DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS = false;
+
+    /**
      *
      * The pattern the {@link SecurityFilter} should match.
      */
@@ -47,12 +52,19 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
 
     private boolean enabled = DEFAULT_ENABLED;
 
+    private boolean staticResourceAuthenticationBypass = DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS;
+
     /**
      * @return true if you want to enable the {@link SecurityFilter}
      */
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public boolean isStaticResourceAuthenticationBypass() {
+        return staticResourceAuthenticationBypass;
     }
 
     @Override
@@ -67,6 +79,17 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Enables bypassing authentication resolution for anonymous static resources.
+     * Default value {@value #DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS}.
+     *
+     * @param staticResourceAuthenticationBypass Whether the bypass is enabled
+     * @since 5.4.0
+     */
+    public void setStaticResourceAuthenticationBypass(boolean staticResourceAuthenticationBypass) {
+        this.staticResourceAuthenticationBypass = staticResourceAuthenticationBypass;
     }
 
     /**

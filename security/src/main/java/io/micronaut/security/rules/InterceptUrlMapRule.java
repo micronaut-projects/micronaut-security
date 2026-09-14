@@ -74,6 +74,19 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
+        return Mono.from(findPattern(request)
+                .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
+                .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
+    }
+
+    /**
+     * Finds the first configured pattern that applies to the request, using the same
+     * method-specific precedence as {@link #check(HttpRequest, Authentication)}.
+     *
+     * @param request The current request
+     * @return The matching pattern, if any
+     */
+    protected Optional<InterceptUrlMapPattern> findPattern(HttpRequest<?> request) {
         final String path = StringUtils.trimTrailingSlashExceptRoot(request.getUri().getPath());
         final HttpMethod httpMethod = request.getMethod();
 
@@ -104,8 +117,6 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
             }
         }
 
-        return Mono.from(matchedPattern
-                .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
-                .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
+        return matchedPattern;
     }
 }
