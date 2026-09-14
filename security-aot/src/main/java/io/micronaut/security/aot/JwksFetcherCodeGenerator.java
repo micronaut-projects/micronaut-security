@@ -38,7 +38,7 @@ import reactor.core.publisher.Mono;
 import javax.lang.model.element.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,14 +80,26 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
         }
     }
 
+    /**
+     * Collects the JWKS URLs to bake at build time, keyed by URL.
+     * <p>
+     * The runtime optimisation ({@link DefaultJwkSetFetcher.Optimizations}) is looked up by URL, not by name.
+     * Keying by URL ensures that a {@link JwksSignatureConfiguration} and an {@link OpenIdProviderMetadata}
+     * sharing the same name but pointing at different URLs are both baked, while several sources sharing
+     * one URL are fetched and baked only once.
+     *
+     * @param context The AOT context
+     * @return A map of JWKS URL to the name of the first source that declared it, in discovery order
+     */
     @NonNull
     private Map<String, String> jwksUrls(@NonNull AOTContext context) {
-        Map<String, String> urls = new HashMap<>();
-        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context)
-            .forEach(config -> urls.put(config.getName(), config.getUrl()));
+        Map<String, String> urls = new LinkedHashMap<>();
+        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context).stream()
+            .filter(config -> StringUtils.isNotEmpty(config.getUrl()))
+            .forEach(config -> urls.putIfAbsent(config.getUrl(), config.getName()));
         AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
-            .filter(metadata -> metadata.getJwksUri() != null)
-            .forEach(metadata -> urls.put(metadata.getName(), metadata.getJwksUri()));
+            .filter(metadata -> StringUtils.isNotEmpty(metadata.getJwksUri()))
+            .forEach(metadata -> urls.putIfAbsent(metadata.getJwksUri(), metadata.getName()));
         return urls;
     }
 
@@ -97,7 +109,9 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
         List<GeneratedFile> result = new ArrayList<>();
         int count = 0;
         for (Map.Entry<String, String> entry: urls.entrySet()) {
-            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, entry.getKey(), entry.getValue(), count);
+            String url = entry.getKey();
+            String providerName = entry.getValue();
+            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, providerName, url, count);
             if (generatedFile.isPresent()) {
                 result.add(generatedFile.get());
                 count++;
