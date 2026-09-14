@@ -18,6 +18,7 @@ package io.micronaut.security.x509;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -29,6 +30,7 @@ import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -53,9 +55,34 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
     /**
      *
      * @param x509Configuration x509 configuration
+     * @throws ConfigurationException if the subject DN regex is not a valid regular expression with exactly one capturing group
      */
     public X509AuthenticationFetcher(X509Configuration x509Configuration) {
-        subjectDnPattern = Pattern.compile(x509Configuration.getSubjectDnRegex(), CASE_INSENSITIVE);
+        subjectDnPattern = compileSubjectDnRegex(x509Configuration.getSubjectDnRegex());
+    }
+
+    /**
+     * Compiles the subject DN regex, failing fast if it is invalid or does not contain exactly one capturing group.
+     * The group is used to extract the name from the certificate subject DN, so a regex with zero or several
+     * groups would never authenticate anybody.
+     *
+     * @param subjectDnRegex the subject DN regex
+     * @return the compiled pattern
+     * @throws ConfigurationException if the regex is not a valid regular expression with exactly one capturing group
+     */
+    @NonNull
+    static Pattern compileSubjectDnRegex(@NonNull String subjectDnRegex) {
+        Pattern pattern;
+        try {
+            pattern = Pattern.compile(subjectDnRegex, CASE_INSENSITIVE);
+        } catch (PatternSyntaxException e) {
+            throw new ConfigurationException("Invalid value \"" + subjectDnRegex + "\" for " + X509ConfigurationProperties.PREFIX + ".subject-dn-regex: " + e.getMessage(), e);
+        }
+        int groupCount = pattern.matcher("").groupCount();
+        if (groupCount != 1) {
+            throw new ConfigurationException("Invalid value \"" + subjectDnRegex + "\" for " + X509ConfigurationProperties.PREFIX + ".subject-dn-regex: the regular expression must contain exactly one capturing group but contains " + groupCount);
+        }
+        return pattern;
     }
 
     @Override
@@ -121,11 +148,6 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
         if (!matcher.find()) {
             return Optional.empty();
         }
-
-        if (matcher.groupCount() != 1) {
-            return Optional.empty();
-        }
-
-        return Optional.of(matcher.group(1));
+        return Optional.ofNullable(matcher.group(1));
     }
 }
