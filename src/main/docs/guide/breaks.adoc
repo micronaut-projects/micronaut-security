@@ -1,6 +1,34 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.4 breaking changes
+
+=== Token cookies default to `SameSite=Lax`
+
+The JWT access token cookie (`micronaut.security.token.cookie`) and the refresh token cookie (`micronaut.security.token.refresh.cookie`) are now issued with the `SameSite=Lax` attribute by default. Previously, no `SameSite` attribute was set.
+
+To keep the previous behaviour or use a different value, set `cookie-same-site` explicitly. Allowed values are `Strict`, `Lax` or `None`:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: None
+      refresh:
+        cookie:
+          cookie-same-site: None
+----
+
+NOTE: `SameSite=None` requires the cookie to also be `Secure`.
+
+The `SameSite` attribute cannot be unset via configuration because the property is bound to the `io.micronaut.http.cookie.SameSite` enum. To omit the attribute, invoke `setCookieSameSite(null)` on the configuration bean, for example via a `BeanCreatedEventListener<TokenCookieConfigurationProperties>`.
+
+=== Warning when token cookies are issued without `Secure`
+
+`cookie-secure` still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the `Secure` attribute over a request that was not detected as secure, api:security.token.cookie.CookieLoginHandler[] now logs a `WARN` once. Behind a TLS-terminating proxy, set `micronaut.security.token.cookie.cookie-secure=true` and `micronaut.security.token.refresh.cookie.cookie-secure=true`, or configure forwarded-header handling so that requests are detected as secure.
+
 == Micronaut Security 5.0 breaking changes
 
 - The JSR 250 annotation mappers have been moved to a new module `micronaut-security-processor`.
