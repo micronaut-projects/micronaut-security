@@ -17,7 +17,6 @@ package io.micronaut.security.csrf.session;
 
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
@@ -33,7 +32,7 @@ import java.util.Optional;
  */
 @Requires(classes = { HttpRequest.class, SessionForRequest.class })
 @Requires(beans = CsrfConfiguration.class)
-@Requires(property = CsrfConfiguration.PREFIX + ".repositories.session.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(condition = SessionCsrfTokenRepositoryEnabledCondition.class)
 @Singleton
 public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
     private final CsrfConfiguration csrfConfiguration;
