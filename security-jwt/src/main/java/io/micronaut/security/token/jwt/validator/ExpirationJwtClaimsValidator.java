@@ -23,7 +23,10 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.time.Duration;
 import java.util.Date;
 
 /**
@@ -39,16 +42,40 @@ public class ExpirationJwtClaimsValidator<T> implements GenericJwtClaimsValidato
 
     private static final Logger LOG = LoggerFactory.getLogger(ExpirationJwtClaimsValidator.class);
 
+    private final Duration clockSkew;
+
+    /**
+     * Constructor without clock skew tolerance.
+     *
+     * @deprecated Use {@link #ExpirationJwtClaimsValidator(JwtClaimsValidatorConfiguration)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
+    public ExpirationJwtClaimsValidator() {
+        this.clockSkew = Duration.ZERO;
+    }
+
+    /**
+     *
+     * @param jwtClaimsValidatorConfiguration JWT Claims Validator Configuration
+     * @since 5.4.0
+     */
+    @Inject
+    public ExpirationJwtClaimsValidator(@NonNull JwtClaimsValidatorConfiguration jwtClaimsValidatorConfiguration) {
+        Duration skew = jwtClaimsValidatorConfiguration.getClockSkew();
+        this.clockSkew = skew == null || skew.isNegative() ? Duration.ZERO : skew;
+    }
+
     /**
      *
      * @param claimsSet The JWT Claims
-     * @return true if the expiration claim denotes a date after now.
+     * @return true if the expiration claim plus the configured clock skew denotes a date after now.
      */
     protected boolean validate(@NonNull JWTClaimsSet claimsSet) {
         final Date expTime = claimsSet.getExpirationTime();
         if (expTime != null) {
             final Date now = new Date();
-            if (expTime.before(now)) {
+            final Date expTimeWithSkew = new Date(expTime.getTime() + clockSkew.toMillis());
+            if (expTimeWithSkew.before(now)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("JWT token has expired");
                 }
