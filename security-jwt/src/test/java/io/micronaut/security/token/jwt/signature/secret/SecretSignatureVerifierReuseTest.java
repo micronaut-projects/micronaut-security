@@ -23,6 +23,7 @@ class SecretSignatureVerifierReuseTest {
     private static final String OTHER_SECRET = "anotherSecretWhichIsLongEnoughToo";
 
     @Test
+    @SuppressWarnings("removal")
     void verifierAndSignerAreReusedAcrossCallsAndInvalidatedBySetSecret() throws Exception {
         SecretSignature secretSignature = secretSignature(SECRET);
         assertNull(field(secretSignature, "verifier"));

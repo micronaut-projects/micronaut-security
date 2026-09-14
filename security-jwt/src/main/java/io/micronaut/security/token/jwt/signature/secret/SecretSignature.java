@@ -41,7 +41,7 @@ import java.util.Objects;
 @EachBean(SecretSignatureConfiguration.class)
 public class SecretSignature extends AbstractSignatureConfiguration implements SignatureGeneratorConfiguration {
 
-    private byte[] secret;
+    private volatile byte[] secret;
 
     /**
      * Lazily created and reused across calls. {@link MACSigner} is thread-safe.
@@ -94,16 +94,23 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     /**
      *
+     * <p>Exposing the raw secret as a {@link String} is discouraged; read it from the configuration bean if needed.</p>
      * @return a string build the secret byte[] and UTF_8 charset
+     * @deprecated The secret should not be re-exposed from the shared singleton. Use the configuration bean instead.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public String getSecret() {
         return new String(secret, UTF_8);
     }
 
     /**
      * Sets secret byte[] with a string with UTF_8 charset.
+     * <p>Configure the secret through the corresponding configuration bean and the constructor instead.
+     * These classes are shared singletons used concurrently; mutating them at runtime is not thread-safe.</p>
      * @param secret UTF_8 string
+     * @deprecated Configure the secret via configuration. Mutating a shared singleton at runtime is not thread-safe.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public void setSecret(final String secret) {
         this.secret = secret.getBytes(UTF_8);
         this.signer = null;
