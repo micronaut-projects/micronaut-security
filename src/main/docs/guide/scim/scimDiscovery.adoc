@@ -1,0 +1,22 @@
+The module also models the RFC 7643 discovery resources:
+
+[cols="1,2"]
+|===
+|Type |Purpose
+
+|api:security.scim.core.ServiceProviderConfig[]
+|Advertises support and limits for patch, bulk, filter, password change, sorting, entity tags, and authentication schemes.
+
+|api:security.scim.core.ResourceType[]
+|Describes a resource type, its endpoint, primary schema, and supported schema extensions.
+
+|api:security.scim.core.Schema[]
+|Describes a schema and its attributes.
+
+|api:security.scim.core.AttributeDefinition[]
+|Describes an attribute's type, sub-attributes, cardinality, canonical values, case sensitivity, and other characteristics.
+|===
+
+api:security.scim.core.AttributeType[], api:security.scim.core.Mutability[], api:security.scim.core.Returned[], and api:security.scim.core.Uniqueness[] use the lowercase wire values defined by RFC 7643. Supporting records such as api:security.scim.core.BulkFeature[], api:security.scim.core.FilterFeature[], api:security.scim.core.SupportedFeature[], api:security.scim.core.AuthenticationScheme[], and api:security.scim.core.SchemaExtension[] model the nested discovery attributes.
+
+These classes represent discovery payloads only. Your application supplies the endpoints and determines the advertised capabilities from its actual SCIM implementation.
