@@ -43,7 +43,7 @@ public class CookiePkcePersistence extends CookiePersistence implements PkcePers
     }
 
     /**
-     * Retrieve the code verifier and removes it from the session if present.
+     * Retrieve the code verifier from the request cookie if present.
      *
      * @param request The request
      * @return The optional PKCE code verifier
@@ -59,5 +59,10 @@ public class CookiePkcePersistence extends CookiePersistence implements PkcePers
                             @NonNull MutableHttpResponse<?> response,
                             @NonNull Pkce pkce) {
         save(request, response, pkce.getCodeVerifier());
+    }
+
+    @Override
+    public void clearPkce(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        clear(request, response);
     }
 }
