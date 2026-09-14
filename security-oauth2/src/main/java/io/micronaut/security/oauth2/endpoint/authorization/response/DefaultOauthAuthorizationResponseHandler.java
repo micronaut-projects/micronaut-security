@@ -46,6 +46,7 @@ import reactor.core.publisher.Flux;
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
+    private static final String AUTHORIZATION_CODE_MISSING = "Authorization code missing from callback";
 
     private final TokenEndpointClient tokenEndpointClient;
 
@@ -92,6 +93,13 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Skipping state validation, no state validator found");
             }
+        }
+
+        if (!authorizationResponse.hasCode()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Authorization response from provider [{}] does not contain an authorization code", clientConfiguration.getName());
+            }
+            return Flux.just(new AuthenticationFailed(AUTHORIZATION_CODE_MISSING));
         }
 
         String codeVerifier = null;

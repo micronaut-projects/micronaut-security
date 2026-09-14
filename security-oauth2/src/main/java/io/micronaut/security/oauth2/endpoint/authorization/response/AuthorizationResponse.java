@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -45,6 +46,16 @@ public interface AuthorizationResponse {
     @NonNull
     String getCode();
 
+    /**
+     * Whether the callback carries an authorization code. Implementations should answer this without throwing so that
+     * a callback missing the {@code code} parameter can be turned into an authentication failure instead of an error.
+     *
+     * @return True if the callback request contains a non-blank authorization code.
+     * @since 5.4.0
+     */
+    default boolean hasCode() {
+        return StringUtils.hasText(getCode());
+    }
 
     /**
      * @return The authorization callback request
