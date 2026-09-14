@@ -33,6 +33,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +51,7 @@ import static io.micronaut.security.ojdbc.extensions.OracleResourceProviderParam
  */
 @Experimental
 @Internal
-public class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAccessTokenFetcher {
+public class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAccessTokenFetcher, AutoCloseable {
     private final Map<String, HttpClient> httpClientMap = new ConcurrentHashMap<>();
     private final Map<ClientCredentialsClientConfiguration, ClientCredentialsClient> clientCredentialsClientMap = new ConcurrentHashMap<>();
 
@@ -142,6 +143,23 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
                 throw new ConfigurationException("token URL " + k + " is invalid", e);
             }
         });
+    }
+
+    /**
+     * Closes the HTTP clients created by this fetcher and clears the cached clients.
+     * The fetcher remains usable; a subsequent fetch creates new clients.
+     *
+     * @since 5.4.0
+     */
+    @Override
+    public void close() {
+        clientCredentialsClientMap.clear();
+        Iterator<HttpClient> iterator = httpClientMap.values().iterator();
+        while (iterator.hasNext()) {
+            HttpClient httpClient = iterator.next();
+            iterator.remove();
+            httpClient.close();
+        }
     }
 
     private OauthClientConfiguration oauthClientConfiguration(ClientCredentialsClientConfiguration k) {
