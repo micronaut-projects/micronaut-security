@@ -97,7 +97,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
         String codeVerifier = null;
 
         if (pkcePersistence != null) {
-            codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null);
+            codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest(), authorizationResponse.getState()).orElse(null);
         }
 
         OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, codeVerifier);
