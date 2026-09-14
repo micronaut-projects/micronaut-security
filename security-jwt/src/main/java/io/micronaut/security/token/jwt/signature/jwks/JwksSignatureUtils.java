@@ -61,7 +61,22 @@ public final class JwksSignatureUtils {
      * @throws JOSEException exception when verifying the JWT
      */
     public static boolean verify(SignedJWT jwt, JWKSet jwkSet, JwkValidator jwkValidator) throws JOSEException {
-        List<JWK> matches = matches(jwt, jwkSet, null);
+        return verify(jwt, jwkSet, null, jwkValidator);
+    }
+
+    /**
+     * Verify a signed JWT only with keys of the given key type.
+     *
+     * @param jwt the signed JWT
+     * @param jwkSet JSON Web Key Set
+     * @param keyType Key Type. If {@code null}, keys of any key type are used.
+     * @param jwkValidator JWK Validator
+     * @return whether the signed JWT is verified
+     * @throws JOSEException exception when verifying the JWT
+     * @since 5.4.0
+     */
+    public static boolean verify(SignedJWT jwt, JWKSet jwkSet, @Nullable KeyType keyType, JwkValidator jwkValidator) throws JOSEException {
+        List<JWK> matches = matches(jwt, jwkSet, keyType);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found {} matching JWKs", matches.size());
         }

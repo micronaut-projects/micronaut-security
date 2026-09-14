@@ -43,6 +43,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * per {@link JwksSignatureConfiguration#getRefreshInterval()} so that key rotations at the authorization server are
  * picked up without waiting for the cache to expire.</p>
  *
+ * <p>If {@link JwksSignatureConfiguration#getKeyType()} is set, only keys of that key type are used to verify the JWT.</p>
+ *
  * @author Sergio del Amo
  * @since 4.8.0
 */
@@ -135,7 +137,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
 
     private boolean verify(SignedJWT jwt, JWKSet jwkSet) {
         try {
-            boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator);
+            boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwksSignatureConfiguration.getKeyType(), jwkValidator);
             if (LOG.isDebugEnabled()) {
                 if (result) {
                     LOG.debug("JWT Signature verified: {}", jwt.getParsedString());
