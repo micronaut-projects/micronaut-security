@@ -20,6 +20,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import java.net.URI;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,7 +33,6 @@ import java.util.UUID;
 @Introspected
 public class DefaultState implements MutableState {
 
-    private URI originalUri;
     private URI redirectUri;
     private String nonce = UUID.randomUUID().toString();
 
@@ -43,10 +43,16 @@ public class DefaultState implements MutableState {
     }
 
     /**
-     * @param originalUri The original URI
+     * This method is a no-op. The value is ignored and never serialized into the state. Redirecting back to the
+     * original URI after login is handled by {@link io.micronaut.security.errors.PriorToLoginPersistence}.
+     *
+     * @param originalUri The original URI, ignored
+     * @deprecated The original URI is not part of the state. Use {@link io.micronaut.security.errors.PriorToLoginPersistence} instead.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Override
     public void setOriginalUri(URI originalUri) {
-        this.originalUri = originalUri;
+        // no-op
     }
 
     /**
@@ -71,10 +77,7 @@ public class DefaultState implements MutableState {
 
     @Override
     public int hashCode() {
-        if (originalUri == null) {
-            return 0;
-        }
-        return originalUri.hashCode();
+        return Objects.hashCode(nonce);
     }
 
     @Override

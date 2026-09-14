@@ -18,18 +18,16 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
- * A default state provider that stores the original
- * request URI to redirect back to after authentication.
+ * A default state provider that generates a random nonce and records the redirect URI
+ * used in the authorization request.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -54,12 +52,7 @@ public class DefaultStateFactory implements StateFactory {
     @Nullable
     @Override
     public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
-        Optional<HttpStatus> rejectedStatus = Optional.ofNullable(ServerRequestContextSecurityContextSupplier.getSecurityContext(request).getRejectionStatus())
-            .map(HttpStatus::valueOf);
         MutableState state = createInitialState();
-
-       rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).ifPresent(status ->
-               state.setOriginalUri(request.getUri()));
 
         Optional.ofNullable(authorizationRequest)
                 .flatMap(AuthorizationRequest::getRedirectUri)
