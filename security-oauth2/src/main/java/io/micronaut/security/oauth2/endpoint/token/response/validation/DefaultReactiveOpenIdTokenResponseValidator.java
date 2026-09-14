@@ -39,7 +39,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link ReactiveOpenIdTokenResponseValidator}.
@@ -114,8 +113,8 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                     }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return true;
-                    } else if (LOG.isErrorEnabled()) {
-                        LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
+                    } else if (LOG.isWarnEnabled()) {
+                        LOG.warn("{} failed for provider [{}]. Expected nonce present: {}, nonce claim present: {}, ID token claims: {}", NonceClaimValidator.class.getSimpleName(), clientConfiguration.getName(), nonce != null, claims.getNonce() != null, claims.getClaims().keySet());
                     }
                 } else if (LOG.isErrorEnabled()) {
                     LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());

@@ -108,12 +108,12 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
             }
         } catch (ParseException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Parse exception parsing refresh token {} into JWS Object", refreshToken);
+                LOG.warn("Parse exception parsing refresh token into JWS Object: {}", e.getMessage());
             }
             return Optional.empty();
         } catch (JOSEException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("JOSEException parsing refresh token {} into JWS Object", refreshToken);
+                LOG.warn("JOSEException verifying refresh token JWS Object: {}", e.getMessage());
             }
         }
         return Optional.empty();
