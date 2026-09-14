@@ -71,8 +71,8 @@ class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
     private boolean validateHmac(T request, String csrfTokenInRequest) {
         String[] arr = csrfTokenInRequest.split("\\" + CsrfHmacTokenGenerator.HMAC_RANDOM_SEPARATOR);
         if (arr.length != 2) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Invalid CSRF token: {}", csrfTokenInRequest);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("CSRF token rejected: expected two dot-separated segments");
             }
             return false;
         }
