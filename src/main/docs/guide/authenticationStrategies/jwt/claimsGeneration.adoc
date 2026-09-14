@@ -18,3 +18,5 @@ micronaut:
         claims-validators:
           audience: https://api.example.com
 ----
+
+The built-in `JWTClaimsSetGenerator` copies the attributes of the api:io.micronaut.security.authentication.Authentication[] into the token as additional claims, but an attribute cannot override a registered claim (`iss`, `sub`, `aud`, `exp`, `nbf`, `iat`, `jti`); attributes with those names are ignored. Every other attribute is copied, including provider tokens such as `openIdToken`, `accessToken` and `refreshToken` when using `micronaut.security.authentication: idtoken` or the OAuth 2.0 additional-claims options, so consider <<jwtEncryption, encrypting>> the generated JWT if those attributes should not be readable by the client.
