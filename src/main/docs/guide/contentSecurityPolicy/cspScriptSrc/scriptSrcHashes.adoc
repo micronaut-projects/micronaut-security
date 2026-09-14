@@ -1,0 +1,23 @@
+You can provide https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#hashes[hash source expressions] as values of the `script-src` directive. The digest must match the script content exactly:
+
+IMPORTANT: A hash source expression must be surrounded by single quotes in the generated CSP header, for example `'sha256-<base64-value>'`. Values configured through `script-src.values` are serialized as supplied, so include the single quotes in the configured value.
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        self: true
+        values:
+          - "'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='"
+----
+
+The configuration generates:
+
+[source,text]
+----
+script-src 'self' 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='
+----
+
+Nonce generation remains disabled unless explicitly enabled; nonces and hashes may be used together.

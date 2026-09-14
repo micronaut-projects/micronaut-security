@@ -1,0 +1,22 @@
+You can add host or URL source expressions to `script-src`, but URL allowlists are the least recommended approach for controlling script execution. An allowlisted origin may contain attacker-controlled JSONP endpoints, uploaded content, or vulnerable libraries. Prefer nonces or hashes whenever possible.
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        self: true
+        values:
+          - "'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE='"
+          - https://cdn.jsdelivr.net
+----
+
+The configuration generates:
+
+[source,text]
+----
+script-src 'self' 'sha256-Eco45CPSfPGYCeRWuzpCqnc/toI8+r22Lkjfm5XoezE=' https://cdn.jsdelivr.net
+----
+
+URL and host source expressions are emitted without single quotes.
