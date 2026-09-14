@@ -90,7 +90,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
         if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isAccessToken()) {
             claims.put(OauthAuthenticationMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
         }
-        if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isRefreshToken() && tokenResponse.getRefreshToken() != null) {
+        if ((idtokenAuthentication || openIdAdditionalClaimsConfiguration.isRefreshToken()) && tokenResponse.getRefreshToken() != null) {
             claims.put(OauthAuthenticationMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
         }
         return claims;
