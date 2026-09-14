@@ -22,7 +22,9 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyOperation;
 import com.nimbusds.jose.jwk.KeyType;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
 import org.jspecify.annotations.NonNull;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -138,6 +141,8 @@ public final class JwksSignatureUtils {
 
     /**
      * Calculates a list of JWK matches for a JWT.
+     * A key matches if its Key ID equals the JWT {@code kid} header (when present), its key type equals {@code keyType}
+     * (when given) and it is {@link #isEligibleForVerification(JWK, JWSAlgorithm) eligible} to verify the JWT algorithm.
      *
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set
@@ -165,8 +170,49 @@ public final class JwksSignatureUtils {
                 builder = builder.keyID(keyId);
             }
 
-            matches = new JWKSelector(builder.build()).select(jwkSet);
+            JWSAlgorithm algorithm = jwt.getHeader().getAlgorithm();
+            matches = new JWKSelector(builder.build()).select(jwkSet)
+                .stream()
+                .filter(jwk -> isEligibleForVerification(jwk, algorithm))
+                .toList();
         }
         return matches;
+    }
+
+    /**
+     * Whether a JSON Web Key may be used to verify a signature produced with the given algorithm.
+     * A key is eligible only if its {@code use} is absent or {@code sig}, its {@code key_ops} is absent or contains
+     * {@code verify}, and its {@code alg} is absent or equal to the JWS algorithm of the token.
+     * Keys published for encryption, keys not intended for verification, and keys bound to a different algorithm
+     * are never used to verify a signature, even if their Key ID matches.
+     *
+     * @param jwk A JSON Web Key
+     * @param algorithm The JWS algorithm of the token header
+     * @return whether the key may be used to verify a signature produced with the algorithm
+     * @since 5.4.0
+     */
+    public static boolean isEligibleForVerification(@NonNull JWK jwk, @Nullable JWSAlgorithm algorithm) {
+        KeyUse keyUse = jwk.getKeyUse();
+        if (keyUse != null && !KeyUse.SIGNATURE.equals(keyUse)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWK with Key ID {} skipped: use {} is not sig", jwk.getKeyID(), keyUse);
+            }
+            return false;
+        }
+        Set<KeyOperation> keyOperations = jwk.getKeyOperations();
+        if (keyOperations != null && !keyOperations.contains(KeyOperation.VERIFY)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWK with Key ID {} skipped: key_ops {} does not contain verify", jwk.getKeyID(), keyOperations);
+            }
+            return false;
+        }
+        Algorithm keyAlgorithm = jwk.getAlgorithm();
+        if (keyAlgorithm != null && !keyAlgorithm.equals(algorithm)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWK with Key ID {} skipped: alg {} does not match token alg {}", jwk.getKeyID(), keyAlgorithm, algorithm);
+            }
+            return false;
+        }
+        return true;
     }
 }
