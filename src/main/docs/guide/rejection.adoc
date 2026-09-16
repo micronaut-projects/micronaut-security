@@ -11,7 +11,10 @@ For a rejected request, a 403 http response will be sent if `forbidden.enabled` 
 To fully customize the behavior, replace the relevant bean with your own implementation.
 
 For example:
-[source,java]
-----
-include::{testssecurityjwt}/rejection/MyRejectionHandler.java[tag=clazz,indent=0]
-----
+
+snippet::io.micronaut.security.docs.rejection.MyRejectionHandler[tags="clazz"]
+
+[.lang-python]
+--
+A Python class cannot extend a Java class such as `DefaultAuthorizationExceptionHandler`, so the Python replacement implements the `ExceptionHandler` interface and delegates to an instance of the default handler.
+--
