@@ -12,6 +12,8 @@ If you use the default implementation, which stores the nonce in a HTTP cookie, 
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration.adoc[]
 
+NOTE: The `SameSite` attribute of the nonce cookie is not set by default. You can set it with `micronaut.security.oauth2.openid.nonce.cookie.cookie-same-site` (`Strict`, `Lax` or `None`). `SameSite=None` requires `Secure`, so set `micronaut.security.oauth2.openid.nonce.cookie.cookie-secure: true` too.
+
 To use (api:security.oauth2.endpoint.nonce.persistence.session.SessionNoncePersistence[]`). which stores the nonce in a HTTP session:
 
 . Add a dependency to `micronaut-session`
