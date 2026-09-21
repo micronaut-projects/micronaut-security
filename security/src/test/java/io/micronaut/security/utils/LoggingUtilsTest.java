@@ -1,9 +1,10 @@
-package io.micronaut.security.authentication;
+package io.micronaut.security.utils;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import io.micronaut.security.authentication.Authentication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class AuthenticationUtilsTest {
+class LoggingUtilsTest {
 
     private static final String SECRET = "secret-value";
     private static final String EMAIL = "alice@example.com";
@@ -32,7 +33,7 @@ class AuthenticationUtilsTest {
 
     @BeforeEach
     void setup() {
-        logger = (Logger) LoggerFactory.getLogger(AuthenticationUtilsTest.class);
+        logger = (Logger) LoggerFactory.getLogger(LoggingUtilsTest.class);
         originalLevel = logger.getLevel();
         appender = new ListAppender<>();
         appender.start();
@@ -49,21 +50,21 @@ class AuthenticationUtilsTest {
     @Test
     void nullAuthenticationIsNotLogged() {
         logger.setLevel(Level.TRACE);
-        assertDoesNotThrow(() -> AuthenticationUtils.logAttributes(logger, null));
+        assertDoesNotThrow(() -> LoggingUtils.logAuthenticationAttributes(logger, null));
         assertTrue(appender.list.isEmpty());
     }
 
     @Test
     void nothingIsLoggedIfLevelIsAboveDebug() {
         logger.setLevel(Level.INFO);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", Map.of("accessToken", SECRET, "email", EMAIL)));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", Map.of("accessToken", SECRET, "email", EMAIL)));
         assertTrue(appender.list.isEmpty());
     }
 
     @Test
     void atDebugOnlyTheAttributeKeysAreLogged() {
         logger.setLevel(Level.DEBUG);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", Map.of("accessToken", SECRET, "email", EMAIL)));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", Map.of("accessToken", SECRET, "email", EMAIL)));
 
         assertEquals(1, appender.list.size());
         assertEquals(Level.DEBUG, appender.list.get(0).getLevel());
@@ -82,7 +83,7 @@ class AuthenticationUtilsTest {
         attributes.put("email", EMAIL);
         attributes.put("age", 30);
         attributes.put("nickname", null);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", attributes));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", attributes));
 
         assertEquals(1, appender.list.size());
         assertEquals(Level.TRACE, appender.list.get(0).getLevel());
@@ -97,7 +98,7 @@ class AuthenticationUtilsTest {
     @ValueSource(strings = {"accessToken", "refreshToken", "openIdToken", "ACCESSTOKEN", "accesstoken", "X-Custom-Token", "id_token", "TOKEN"})
     void atTraceTokenValuesAreRedacted(String key) {
         logger.setLevel(Level.TRACE);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", Map.of(key, SECRET)));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", Map.of(key, SECRET)));
 
         assertEquals(1, appender.list.size());
         String message = appender.list.get(0).getFormattedMessage();
@@ -109,7 +110,7 @@ class AuthenticationUtilsTest {
     @ValueSource(strings = {"email", "tokenType", "token_expiry"})
     void atTraceValuesOfKeysNotNamingATokenAreNotRedacted(String key) {
         logger.setLevel(Level.TRACE);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", Map.of(key, "visible-value")));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", Map.of(key, "visible-value")));
 
         assertEquals(1, appender.list.size());
         assertTrue(appender.list.get(0).getFormattedMessage().contains(key + "=>visible-value"));
@@ -120,7 +121,7 @@ class AuthenticationUtilsTest {
         logger.setLevel(Level.TRACE);
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("accessToken", null);
-        AuthenticationUtils.logAttributes(logger, Authentication.build("alice", attributes));
+        LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice", attributes));
 
         assertEquals(1, appender.list.size());
         assertTrue(appender.list.get(0).getFormattedMessage().contains("accessToken=>null"));
@@ -130,7 +131,7 @@ class AuthenticationUtilsTest {
     @ValueSource(strings = {"DEBUG", "TRACE"})
     void authenticationWithoutAttributesIsLogged(String level) {
         logger.setLevel(Level.toLevel(level));
-        assertDoesNotThrow(() -> AuthenticationUtils.logAttributes(logger, Authentication.build("alice")));
+        assertDoesNotThrow(() -> LoggingUtils.logAuthenticationAttributes(logger, Authentication.build("alice")));
 
         assertEquals(1, appender.list.size());
         assertTrue(appender.list.get(0).getFormattedMessage().startsWith(MESSAGE_PREFIX));

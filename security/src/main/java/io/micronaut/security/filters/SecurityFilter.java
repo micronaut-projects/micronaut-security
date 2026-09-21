@@ -29,12 +29,12 @@ import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationUtils;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.security.utils.LoggingUtils;
 import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
@@ -153,7 +153,7 @@ public class SecurityFilter implements HttpServerFilter {
                                                              HttpRequest<?> request,
                                                              ServerFilterChain chain) {
         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
-        AuthenticationUtils.logAttributes(LOG, authentication);
+        LoggingUtils.logAuthenticationAttributes(LOG, authentication);
         return checkRules(request, chain, authentication);
     }
 
