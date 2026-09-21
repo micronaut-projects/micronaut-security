@@ -28,6 +28,24 @@ class BearerTokenReaderSpec extends Specification {
 
         and:
         !bearerTokenReader.extractTokenFromAuthorization('XXX').isPresent()
+
+        and: 'the prefix comparison is case insensitive'
+        bearerTokenReader.extractTokenFromAuthorization('bEaReR XXX').get() == 'XXX'
+
+        and: 'a prefix-only header yields no token'
+        !bearerTokenReader.extractTokenFromAuthorization('Bearer').isPresent()
+
+        and: 'a prefix followed only by a space yields an empty token'
+        bearerTokenReader.extractTokenFromAuthorization('Bearer ').get() == ''
+    }
+
+    def "a very long token round-trips unchanged"() {
+        given:
+        String token = 'eyJhbGciOiJIUzI1NiJ9.' + ('abcdefghijklmnopqrstuvwxyz0123456789' * 200) + '.signature'
+        def request = HttpRequest.create(HttpMethod.GET, '/').header('Authorization', 'Bearer ' + token)
+
+        expect:
+        bearerTokenReader.findToken(request).get() == token
     }
 
     def "if authorization header not present returns empty"() {
