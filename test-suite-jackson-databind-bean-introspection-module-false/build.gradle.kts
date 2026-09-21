@@ -11,6 +11,8 @@ dependencies {
     testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(projects.micronautSecurity)
     testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(mnTest.junit.jupiter.params)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.jackson.databind)
