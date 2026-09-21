@@ -1250,7 +1250,19 @@ The <code>micronaut-security-processor</code> dependency is only required to use
 </div>
 </div>
 <div class="paragraph">
-<p>For each request, the filter evaluates the request against every bean of type <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a>. That evaluation may result in an instance of type <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> being resolved.</p>
+<p>For each request, the filter evaluates the request against the beans of type <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a>. Fetchers are consulted sequentially in their <code>Ordered</code> precedence, and the first one to emit an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> wins; fetchers of lower precedence are not invoked once an authentication has been resolved.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A custom <code>AuthenticationFetcher</code> must return a publisher that either emits a single <code>Authentication</code> or completes empty. When using <code>Mono.create</code>, emit only one terminal signal.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Then, the optional authentication is evaluated against every bean of type <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> to determine if the request is authorized. If not authorized, an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> is thrown.</p>
