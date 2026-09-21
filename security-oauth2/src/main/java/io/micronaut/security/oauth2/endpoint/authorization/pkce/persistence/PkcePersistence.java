@@ -49,4 +49,17 @@ public interface PkcePersistence {
     void persistPkce(@NonNull HttpRequest<?> request,
                      @NonNull MutableHttpResponse<?> response,
                      @NonNull Pkce pkce);
+
+    /**
+     * Clears the persisted PKCE code verifier so it cannot be reused. Invoked once the code verifier has been
+     * consumed by an authorization callback, regardless of whether authentication succeeded.
+     * Implementations which already remove the code verifier on retrieval do not need to override this method.
+     *
+     * @param request The authorization callback request
+     * @param response The authorization callback response
+     * @since 5.4.0
+     */
+    default void clearPkce(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        // no-op by default
+    }
 }
