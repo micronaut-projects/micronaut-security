@@ -90,7 +90,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                                                        @NonNull T requestContext) {
         String token = introspectionRequest.getToken();
         return Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
+                .concatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
                 .map(authentication -> createIntrospectionResponse(authentication, requestContext))
                 .defaultIfEmpty(emptyIntrospectionResponse(token))
