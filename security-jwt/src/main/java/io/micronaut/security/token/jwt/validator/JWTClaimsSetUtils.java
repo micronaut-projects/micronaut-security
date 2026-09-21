@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 
 /**
  * Utils class to instantiate a JWClaimsSet give a map of claims.
@@ -30,11 +31,16 @@ public final class JWTClaimsSetUtils {
     }
 
     /**
+     * If {@code claims} already wraps a {@link JWTClaimsSet} (i.e. it is a {@link JwtClaimsSetAdapter}),
+     * the wrapped instance is returned as-is; otherwise a new {@link JWTClaimsSet} is built from the claims.
      *
      * @param claims JWT claims
      * @return A JWTClaimsSet
      */
     public static JWTClaimsSet jwtClaimsSetFromClaims(Claims claims) {
+        if (claims instanceof JwtClaimsSetAdapter adapter) {
+            return adapter.getJwtClaimsSet();
+        }
         JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder();
         for (String k : claims.names()) {
             claimsSetBuilder.claim(k, claims.get(k));
