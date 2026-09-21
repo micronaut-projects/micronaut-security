@@ -4,7 +4,7 @@ image::securityfilter.png[]
 
 For each request, the filter evaluates the request against the beans of type api:security.filters.AuthenticationFetcher[]. Fetchers are consulted sequentially in their `Ordered` precedence, and the first one to emit an api:security.authentication.Authentication[] wins; fetchers of lower precedence are not invoked once an authentication has been resolved.
 
-NOTE: A custom `AuthenticationFetcher` must return a publisher that either emits a single `Authentication` or completes empty. If you use `Mono.create`, do not call `success()` after `success(authentication)`; because fetchers are subscribed to sequentially, the second call can complete the publisher before the value is requested and the authentication is silently discarded.
+NOTE: A custom `AuthenticationFetcher` must return a publisher that either emits a single `Authentication` or completes empty. When using `Mono.create`, emit only one terminal signal.
 
 Then, the optional authentication is evaluated against every bean of type api:security.rules.SecurityRule[] to determine if the request is authorized. If not authorized, an api:security.authentication.AuthorizationException[] is thrown.
 
