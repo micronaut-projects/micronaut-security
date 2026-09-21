@@ -11,6 +11,7 @@ dependencies {
     testImplementation(mnData.micronaut.data.processor)
     testImplementation(mn.micronaut.inject.python.test)
     testImplementation(mn.micronaut.context.python)
+    testCompileOnly(mn.jackson.databind)
 
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(mnTest.junit.jupiter.engine)

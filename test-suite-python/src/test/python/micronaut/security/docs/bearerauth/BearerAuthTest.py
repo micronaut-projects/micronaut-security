@@ -1,6 +1,5 @@
 from typing import Annotated
 
-import java
 from jakarta.inject import Inject, Singleton
 from micronaut.context.annotation import Property, Requires
 from micronaut.core.type import Argument
@@ -17,10 +16,6 @@ from micronaut.test.extensions.junit5.annotation import MicronautTest
 from org.junit.jupiter.api import Test
 
 from .Book import Book
-
-# TODO(python): java.type needed because the Python class is passed as the runtime type argument of Argument.listOf();
-# the Python class object itself is not accepted as a Java Class
-BookClass = java.type("micronaut.security.docs.bearerauth.Book")
 
 
 @Property(name="spec.name", value="BearerAuthTest")
@@ -41,7 +36,7 @@ class BearerAuthTest:
         # tag::bearerAuth[]
         accessToken = rsp.body().getAccessToken()
         books = client.retrieve(HttpRequest.GET("/api/gateway")
-                                .bearerAuth(accessToken), Argument.listOf(BookClass))
+                                .bearerAuth(accessToken), Argument.listOf(Book))
         # end::bearerAuth[]
         assert books.size() == 2
 

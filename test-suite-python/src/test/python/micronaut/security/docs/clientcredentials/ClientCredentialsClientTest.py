@@ -1,18 +1,14 @@
 from typing import Annotated
 
-import java
 from jakarta.inject import Inject
 from micronaut.context import ApplicationContext
 from micronaut.context.annotation import Property
 from micronaut.inject.qualifiers import Qualifiers
+from micronaut.security.oauth2.client.clientcredentials import ClientCredentialsClient
 from micronaut.test.extensions.junit5.annotation import MicronautTest
 from org.junit.jupiter.api import Test
 
 from .MyClass import MyClass
-
-# TODO(python): java.type needed because the imported Java interface is a wrapper that ApplicationContext.getBean()
-# does not accept as the bean type ("Unsupported operation identifier 'getType' ... type: _MicronautJavaType")
-ClientCredentialsClient = java.type("io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClient")
 
 
 @Property(name="spec.name", value="ClientCredentialsClientTest")

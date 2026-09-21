@@ -13,8 +13,3 @@ To fully customize the behavior, replace the relevant bean with your own impleme
 For example:
 
 snippet::io.micronaut.security.docs.rejection.MyRejectionHandler[tags="clazz"]
-
-[.lang-python]
---
-A Python class cannot extend a Java class such as `DefaultAuthorizationExceptionHandler`, so the Python replacement implements the `ExceptionHandler` interface and delegates to an instance of the default handler.
---

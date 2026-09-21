@@ -2,7 +2,6 @@ import time
 from abc import ABC, abstractmethod
 from typing import Annotated
 
-import java
 from jakarta.inject import Inject
 from java.lang import AutoCloseable
 from java.util.concurrent import CopyOnWriteArrayList, TimeUnit
@@ -18,10 +17,6 @@ from micronaut.websocket import WebSocketBroadcaster, WebSocketClient, WebSocket
 from micronaut.websocket.annotation import ClientWebSocket, OnMessage, OnOpen, ServerWebSocket
 from org.junit.jupiter.api import Test
 from reactor.core.publisher import Flux
-
-# TODO(python): java.type needed because the Python class is passed as the runtime type argument of
-# WebSocketClient.connect(); the Python class object itself is not accepted as a Java Class
-AuthenticationEchoClientWebSocketClass = java.type("micronaut.security.websocket.AuthenticationEchoClientWebSocket")
 
 
 @MicronautTest
@@ -43,7 +38,7 @@ class AuthenticationWebSocketStateBinderSpec:
         # when:
         token = accessToken.get()
         request = HttpRequest.GET("http://localhost:" + str(self.server.getPort()) + "/auth-echo").bearerAuth(token)
-        client = Flux.from_(self.wsClient.connect(AuthenticationEchoClientWebSocketClass, request)).blockFirst()
+        client = Flux.from_(self.wsClient.connect(AuthenticationEchoClientWebSocket, request)).blockFirst()
 
         # then:
         for _ in range(50):
