@@ -66,7 +66,7 @@ public class X509ConfigurationProperties implements X509Configuration {
      * @throws io.micronaut.context.exceptions.ConfigurationException if the regex is not a valid regular expression with exactly one capturing group
      */
     public void setSubjectDnRegex(@NonNull String subjectDnRegex) {
-        X509AuthenticationFetcher.compileSubjectDnRegex(subjectDnRegex);
+        X509Utils.compileSubjectDnRegex(subjectDnRegex);
         this.subjectDnRegex = subjectDnRegex;
     }
 
