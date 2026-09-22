@@ -9,6 +9,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.simple.SimpleHttpRequest;
 import io.micronaut.security.csrf.generator.CsrfHmacTokenGenerator;
 import io.micronaut.security.csrf.repository.CsrfTokenRepository;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,12 +51,12 @@ class RepositoryCsrfTokenValidatorLoggingTest {
         CsrfTokenRepository<HttpRequest<?>> repository = request -> Optional.of(MALFORMED_TOKEN);
         CsrfHmacTokenGenerator<HttpRequest<?>> generator = new CsrfHmacTokenGenerator<>() {
             @Override
-            public String hmac(HttpRequest<?> request, String base64EncodedRandomValue) {
+            public @NonNull String hmac(@NonNull HttpRequest<?> request, @NonNull String base64EncodedRandomValue) {
                 return "hmac";
             }
 
             @Override
-            public String generateCsrfToken(HttpRequest<?> request) {
+            public @NonNull String generateCsrfToken(HttpRequest<?> request) {
                 return "hmac" + HMAC_RANDOM_SEPARATOR + "random";
             }
         };
