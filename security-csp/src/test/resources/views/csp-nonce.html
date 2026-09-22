@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CSP nonce</title>
+</head>
+<body>
+<script th:attr="nonce=${cspNonce}">console.log('trusted');</script>
+</body>
+</html>
