@@ -90,7 +90,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                                                        @NonNull T requestContext) {
         String token = introspectionRequest.getToken();
         return Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
+                .concatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
                 .map(authentication -> createIntrospectionResponse(authentication, requestContext))
                 .defaultIfEmpty(emptyIntrospectionResponse(token))
@@ -163,7 +163,10 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
             if (FIELDS_ATTRIBUTE_NAMES.contains(k)) {
                 continue;
             }
-            extensions.put(k, authentication.getAttributes().get(k));
+            Object value = authentication.getAttributes().get(k);
+            if (value != null) {
+                extensions.put(k, value);
+            }
         }
         if (!extensions.containsKey(tokenConfiguration.getRolesName())) {
             extensions.put(tokenConfiguration.getRolesName(), new ArrayList<>(authentication.getRoles()));
@@ -177,9 +180,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @return the scope
      */
     protected Optional<String> resolveScope(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(SCOPE)) ?
-            Optional.of(authentication.getAttributes().get(SCOPE).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, SCOPE);
     }
 
     /**
@@ -189,9 +190,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveTokenType(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(TOKEN_TYPE)) ?
-            Optional.of(authentication.getAttributes().get(TOKEN_TYPE).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, TOKEN_TYPE);
     }
 
     /**
@@ -201,9 +200,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveClientId(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(CLIENT_ID)) ?
-            Optional.of(authentication.getAttributes().get(CLIENT_ID).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, CLIENT_ID);
     }
 
     /**
@@ -213,9 +210,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveAud(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(AUDIENCE)) ?
-            Optional.of(authentication.getAttributes().get(AUDIENCE).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, AUDIENCE);
     }
 
     /**
@@ -225,9 +220,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected String resolveSub(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(SUBJECT)) ?
-            authentication.getAttributes().get(SUBJECT).toString() :
-            authentication.getName();
+        return attributeAsString(authentication, SUBJECT).orElse(authentication.getName());
     }
 
     /**
@@ -237,9 +230,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveIssuer(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(ISSUER)) ?
-            Optional.of(authentication.getAttributes().get(ISSUER).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, ISSUER);
     }
 
     /**
@@ -249,9 +240,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveJwtId(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(JWT_ID)) ?
-            Optional.of(authentication.getAttributes().get(JWT_ID).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, JWT_ID);
 
     }
 
@@ -262,9 +251,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Optional<String> resolveUsername(@NonNull Authentication authentication) {
-        return (authentication.getAttributes().containsKey(USERNAME)) ?
-            Optional.of(authentication.getAttributes().get(USERNAME).toString()) :
-            Optional.empty();
+        return attributeAsString(authentication, USERNAME);
     }
 
     /**
@@ -280,12 +267,12 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      *
      * @param attributeName The attribute name e.g. exp nbf iat
      * @param authentication Authentication
-     * @return An empty optional if the authentication attribute is not found or it cannot be transformed to epoch seconds
+     * @return An empty optional if the authentication attribute is not found, is null or it cannot be transformed to epoch seconds
      */
     protected Optional<Long> secondsSinceEpochOfAttribute(@NonNull String attributeName,
                                                           @NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(attributeName)) {
-            Object obj = authentication.getAttributes().get(attributeName);
+        Object obj = authentication.getAttributes().get(attributeName);
+        if (obj != null) {
             if (obj instanceof Long) {
                 return Optional.of((Long) obj);
             } else if (obj instanceof Date) {
@@ -330,5 +317,17 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     public static long toSecondsSinceEpoch(final Date date) {
         return date.getTime() / 1000L;
+    }
+    
+    /**
+     * Resolves an authentication attribute as a String. A {@code null} value is treated the same as an absent key.
+     * @param authentication Authentication
+     * @param attributeName The attribute name
+     * @return The attribute value as a String, or an empty optional if the attribute is absent or null
+     */
+    @NonNull
+    private Optional<String> attributeAsString(@NonNull Authentication authentication,
+                                               @NonNull String attributeName) {
+        return Optional.ofNullable(authentication.getAttributes().get(attributeName)).map(Object::toString);
     }
 }

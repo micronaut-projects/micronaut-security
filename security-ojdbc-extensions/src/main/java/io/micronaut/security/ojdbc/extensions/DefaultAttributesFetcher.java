@@ -136,14 +136,34 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
         return parseAttributes(name, parseJsonObject(name, jsonString));
     }
 
+    /**
+     * Converts a JSON object of END USER CONTEXT names to a Map. The JSON
+     * objects stored in the returned Map are copies, so that objects obtained
+     * from an {@link Authentication} are never mutated by a later {@link #merge}.
+     *
+     * @param name Name to use in error messages. Not null.
+     * @param jsonObject JSON object whose values are END USER CONTEXT attributes. Not null.
+     * @return Map of END USER CONTEXT attributes, not null.
+     */
     private Map<String, OracleJsonObject> parseAttributes(String name, OracleJsonObject jsonObject) {
         HashMap<String, OracleJsonObject> attributes = HashMap.newHashMap(jsonObject.size());
         for (Map.Entry<String, OracleJsonValue> entry : jsonObject.entrySet()) {
             String contextName = entry.getKey();
             OracleJsonObject attributeValues = JsonUtils.requireJsonObject(contextName + WITHIN + name, entry.getValue());
-            attributes.put(contextName, attributeValues);
+            attributes.put(contextName, copyOf(attributeValues));
         }
         return attributes;
+    }
+
+    /**
+     * Creates a mutable copy of a JSON object owned by this fetcher, so that the
+     * source object (which may belong to an {@link Authentication}) is never mutated.
+     *
+     * @param jsonObject JSON object to copy. Not null.
+     * @return a copy of the JSON object. Not null.
+     */
+    private OracleJsonObject copyOf(OracleJsonObject jsonObject) {
+        return oracleJsonFactory.createObject(jsonObject);
     }
 
     private OracleJsonObject parseJsonObject(String name, String jsonString) {
@@ -175,9 +195,11 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
      * the existing map. May be null, but may not contain null.
      *
      * @return Map that contains all values in the existing map, plus those in
-     * the current Map. Not null, may not contain null.
+     * the current Map. Not null, may not contain null. JSON objects contained
+     * in either input map are never mutated: when both maps contain the same
+     * key, a new JSON object is created for the merged value.
      */
-    private static Map<String, OracleJsonObject> merge(
+    private Map<String, OracleJsonObject> merge(
             Map<String, OracleJsonObject> existing,
             Map<String, OracleJsonObject> current) {
 
@@ -195,8 +217,9 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
         for (Map.Entry<String, OracleJsonObject> entry : current.entrySet()) {
             merged.merge(
                     entry.getKey(), entry.getValue(), (existingJson, currentJson) -> {
-                        existingJson.putAll(currentJson);
-                        return existingJson;
+                        OracleJsonObject mergedJson = copyOf(existingJson);
+                        mergedJson.putAll(currentJson);
+                        return mergedJson;
                     });
         }
 
@@ -277,10 +300,10 @@ public class DefaultAttributesFetcher implements AttributesFetcher {
             throw new IllegalArgumentException("Value of " + name + " is null. A JSON object is required.");
         }
         if (value instanceof OracleJsonObject jsonObject) {
-            return jsonObject;
+            return copyOf(jsonObject);
         }
         if (value instanceof OracleJsonValue jsonValue) {
-            return JsonUtils.requireJsonObject(name, jsonValue);
+            return copyOf(JsonUtils.requireJsonObject(name, jsonValue));
         }
         if (value instanceof CharSequence charSequence) {
             return parseJsonObject(name, charSequence.toString());
