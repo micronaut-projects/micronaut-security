@@ -56,7 +56,11 @@ public class DefaultLdapSearchService implements LdapSearchService {
             ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         }
         NamingEnumeration<SearchResult> results = managerContext.search(settings.getBase(), settings.getFilter(), settings.getArguments(), ctrls);
-        return createResults(results, settings.getExcludedAttributes());
+        Collection<String> excludedAttributes = settings.getExcludedAttributes();
+        if (CollectionUtils.isEmpty(excludedAttributes)) {
+            return createResults(results);
+        }
+        return createResults(results, excludedAttributes);
     }
 
     /**
