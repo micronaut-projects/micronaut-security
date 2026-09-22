@@ -31,7 +31,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 4.11.0
  */
-@Requires(classes = HttpRequest.class)
+@Requires(classes = { HttpRequest.class, SessionForRequest.class })
 @Requires(beans = CsrfConfiguration.class)
 @Requires(property = CsrfConfiguration.PREFIX + ".repositories.session.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton

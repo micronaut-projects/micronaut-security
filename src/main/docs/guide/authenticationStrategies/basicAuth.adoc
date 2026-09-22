@@ -20,10 +20,6 @@ which attempts to validate them.
 
 The code snippet below illustrates how to send credentials using the `basicAuth` method from https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html[MutableHttpRequest] method:
 
-[source, groovy]
-.Accessing a protected resource using an Authorization request header
-----
-include::{testssecurity}/security/token/basicauth/BasicAuthSpec.groovy[tag=basicAuth, indent=0]
-----
+snippet::io.micronaut.security.docs.basicauth.BasicAuthTest[tags="basicAuth",indent=0,title="Accessing a protected resource using an Authorization request header"]
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-security-basicauth.html[Basic Authentication Micronaut Guide] to learn more.

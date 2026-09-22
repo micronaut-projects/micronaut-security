@@ -83,7 +83,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated claim set: {}", builder.build().toJSONObject());
+            LOG.debug("Generated claim set with claims: {}", builder.build().getClaims().keySet());
         }
         return builder.build().getClaims();
     }
