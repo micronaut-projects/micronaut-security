@@ -9,7 +9,7 @@ include::{includedir}configurationProperties/io.micronaut.security.ldap.configur
 
 When `micronaut.security.ldap.*.search.attributes` is not set, the user search requests every attribute the manager account is allowed to read. The attributes are then exposed to your api:security.ldap.ContextAuthenticationMapper[] and api:security.ldap.group.LdapGroupProcessor[] implementations through the api:security.ldap.context.LdapSearchResult[].
 
-To avoid pulling password hashes into memory, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. Set the property to an empty list to disable the exclusion, or extend the list to strip additional sensitive attributes.
+To avoid exposing password hashes to application code, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. Set the property to an empty list to disable the exclusion, or extend the list to strip additional sensitive attributes.
 
 It is recommended to set `micronaut.security.ldap.*.search.attributes` explicitly to the minimal set of attributes your application needs, for example:
 
