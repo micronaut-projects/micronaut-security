@@ -65,6 +65,7 @@ class MicrosoftEndSessionEndpointTest {
             try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class,
                     Map.of("spec.name", "MicrosoftEndSessionEndpointTest",
                             "micronaut.security.oauth2.clients." + nameQualifier + ".openid.issuer", authServer.getURL().toString(),
+                            "micronaut.security.oauth2.clients." + nameQualifier + ".openid.validate-issuer", "false", // the mock discovery document imitates Microsoft's issuer
                             "micronaut.security.oauth2.clients." + nameQualifier + ".client-secret", "yyy",
                             "micronaut.security.oauth2.clients." + nameQualifier + ".client-id", "xxx"
                     ))) {

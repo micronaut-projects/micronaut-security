@@ -24,8 +24,12 @@ import io.micronaut.core.annotation.Internal;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Sergio del Amo
@@ -40,17 +44,19 @@ public class OpenIdProviderMetadataFetcherFactory {
      *
      * @param openIdClientConfiguration The openid client configuration
      * @param issuerClient The client to request the metadata
+     * @param blockingExecutor Executor used to fetch the metadata when it is requested from a non-blocking thread
      * @return The OpenID Provider Metadata Fetcher
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Singleton
     @NonNull
     public OpenIdProviderMetadataFetcher createOpenIdProviderMetadataFetcher(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                                             @Client HttpClient issuerClient) {
+                                                                             @Client HttpClient issuerClient,
+                                                                             @Named(TaskExecutors.BLOCKING) ExecutorService blockingExecutor) {
         if (!openIdClientConfiguration.isFetchConfiguration()) {
             throw new DisabledBeanException("OpenID provider metadata fetching is disabled for provider [" +
                 openIdClientConfiguration.getName() + "]");
         }
-        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient);
+        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient, DefaultOpenIdProviderMetadataFetcher.RETRY_BACKOFF, blockingExecutor);
     }
 }

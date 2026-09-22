@@ -39,7 +39,8 @@ class WellKnownProxyFilterTest {
                 "micronaut.security.oauth2.clients.authserver.client-secret", "YYY",
                 "micronaut.security.oauth2.clients.authserver.proxy-well-known-oauth-authorization-server", StringUtils.TRUE,
                 "micronaut.security.oauth2.clients.authserver.proxy-well-known-openid-configuration", StringUtils.TRUE,
-                "micronaut.security.oauth2.clients.authserver.openid.issuer", authServer.getURL().toString()
+                "micronaut.security.oauth2.clients.authserver.openid.issuer", authServer.getURL().toString(),
+                "micronaut.security.oauth2.clients.authserver.openid.validate-issuer", "false" // the mock discovery document declares a different issuer
             ));
             try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, serverConfig)) {
                 try (HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {

@@ -30,9 +30,11 @@ class DefaultOpenIdClientSpec extends Specification {
                 'micronaut.security.oauth2.clients.google.client-id', 'xxx',
                 'micronaut.security.oauth2.clients.google.client-secret', 'yyyy',
                 'micronaut.security.oauth2.clients.google.openid.issuer', "http://localhost:${google.port}/oauth2/default",
+                'micronaut.security.oauth2.clients.google.openid.validate-issuer', false, // the mock discovery documents imitate Okta's issuer
                 'micronaut.security.oauth2.clients.cognito.client-id', 'xxx',
                 'micronaut.security.oauth2.clients.cognito.client-secret', 'yyyy',
-                'micronaut.security.oauth2.clients.cognito.openid.issuer', "http://localhost:${cognito.port}/oauth2/default"))
+                'micronaut.security.oauth2.clients.cognito.openid.issuer', "http://localhost:${cognito.port}/oauth2/default",
+                'micronaut.security.oauth2.clients.cognito.openid.validate-issuer', false))
 
         HttpClient httpClient = server.applicationContext.createBean(HttpClient, server.URL)
         BlockingHttpClient client = httpClient.toBlocking()
