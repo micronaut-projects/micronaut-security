@@ -18,7 +18,7 @@ class AuthenticationToStringConverter : TypeConverter<Authentication, String> { 
         targetType: Class<String>,
         context: ConversionContext
     ): Optional<String> {
-        return Optional.ofNullable(authentication.getAttributes()["CUSTOM_ID_ATTR"]).map { obj -> obj.toString() } // <3>
+        return Optional.ofNullable(authentication.getAttributes()["CUSTOM_ID_ATTR"]).map { obj -> obj.toString() } // <2>
     }
 }
 //end::clazz[]
