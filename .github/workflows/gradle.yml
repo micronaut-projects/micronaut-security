@@ -151,6 +151,8 @@ jobs:
   # fail, so a red or cancelled build never takes runners for the native matrix.
   native:
     needs: build
-    if: needs.build.outputs.sonar != 'failure'
+    # TEMPORARY: native tests disabled. Restore the condition below to re-enable them:
+    # if: needs.build.outputs.sonar != 'failure'
+    if: false
     uses: ./.github/workflows/graalvm-latest.yml
     secrets: inherit

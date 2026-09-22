@@ -3,15 +3,14 @@ managed-nimbus-jose-jwt = "10.9.1"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
-micronaut = "5.2.1"
+micronaut = "5.2.3"
 micronaut-platform = "5.1.5"
 awaitility = "4.3.0"
 geb = "8.0.1"
 selenium = "4.47.0"
 system-stubs-core = "2.1.8"
 unboundid-ldapsdk = "7.0.5"
-bouncycastle = "1.70"
-bcpkix = "1.70"
+bouncycastle = "1.84"
 micronaut-hibernate-validator = "5.1.0"
 micronaut-multitenancy = "6.1.0"
 micronaut-cache = "6.1.1"
@@ -57,9 +56,7 @@ selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-d
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
-bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
-bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
-bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
+bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 jsonassert = { module = 'org.skyscreamer:jsonassert', version.ref = 'jsonassert'}
 commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-codec'}
