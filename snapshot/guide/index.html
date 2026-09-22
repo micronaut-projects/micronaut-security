@@ -878,6 +878,28 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Replaces, Requires
+from micronaut.http import HttpRequest
+from micronaut.inject import ExecutableMethod
+from micronaut.management.endpoint import EndpointSensitivityProcessor
+from micronaut.security.authentication import Authentication
+from micronaut.security.rules import SecurityRuleResult, SensitiveEndpointRule
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Mono
+
+@Singleton
+@Replaces(SensitiveEndpointRule)
+class SensitiveEndpointRuleReplacement(SensitiveEndpointRule):
+    def __init__(self, endpointSensitivityProcessor: EndpointSensitivityProcessor):
+        super().__init__(endpointSensitivityProcessor)
+
+    def checkSensitiveAuthenticated(self, request: HttpRequest, authentication: Authentication, method: ExecutableMethod) -&gt; Publisher[SecurityRuleResult]:
+        return Mono.just(SecurityRuleResult.ALLOWED)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -1192,6 +1214,15 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 &lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-processor"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -1207,6 +1238,15 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -1736,30 +1776,134 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 <p>As illustrated below, you can use the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation to control
 access to controllers or controller methods.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Controller("/example")
-@Secured(SecurityRule.IS_AUTHENTICATED) <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Produces;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.rules.SecurityRule;
+
+@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED) // <b class="conum">(1)</b>
 public class ExampleController {
 
     @Produces(MediaType.TEXT_PLAIN)
     @Get("/admin")
-    @Secured({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="2"></i><b>(2)</b>
+    @Secured({"ROLE_ADMIN", "ROLE_X"}) // <b class="conum">(2)</b>
     public String withroles() {
         return "You have ROLE_ADMIN or ROLE_X roles";
     }
 
     @Produces(MediaType.TEXT_PLAIN)
     @Get("/anonymous")
-    @Secured(SecurityRule.IS_ANONYMOUS)  <i class="conum" data-value="3"></i><b>(3)</b>
+    @Secured(SecurityRule.IS_ANONYMOUS)  // <b class="conum">(3)</b>
     public String anonymous() {
         return "You are anonymous";
     }
 
     @Produces(MediaType.TEXT_PLAIN)
-    @Get("/authenticated") <i class="conum" data-value="1"></i><b>(1)</b>
+    @Get("/authenticated") // <b class="conum">(1)</b>
     public String authenticated(Authentication authentication) {
         return authentication.getName() + " is authenticated";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.http import MediaType
+from micronaut.http.annotation import Controller, Get, Produces
+from micronaut.security.annotation import Secured
+from micronaut.security.authentication import Authentication
+from micronaut.security.rules import SecurityRule
+
+@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED)  # <b class="conum">(1)</b>
+class ExampleController:
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @Secured(["ROLE_ADMIN", "ROLE_X"])  # <b class="conum">(2)</b>
+    def withroles(self) -&gt; str:
+        return "You have ROLE_ADMIN or ROLE_X roles"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @Secured(SecurityRule.IS_ANONYMOUS)  # <b class="conum">(3)</b>
+    def anonymous(self) -&gt; str:
+        return "You are anonymous"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/authenticated")  # <b class="conum">(1)</b>
+    def authenticated(self, authentication: Authentication) -&gt; str:
+        return authentication.getName() + " is authenticated"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRule
+
+@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED) // <b class="conum">(1)</b>
+class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @Secured("ROLE_ADMIN", "ROLE_X") // <b class="conum">(2)</b>
+    fun withroles(): String = "You have ROLE_ADMIN or ROLE_X roles"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @Secured(SecurityRule.IS_ANONYMOUS)  // <b class="conum">(3)</b>
+    fun anonymous(): String = "You are anonymous"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/authenticated") // <b class="conum">(1)</b>
+    fun authenticated(authentication: Authentication): String = "${authentication.name} is authenticated"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRule
+
+@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED) // <b class="conum">(1)</b>
+class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @Secured(["ROLE_ADMIN", "ROLE_X"]) // <b class="conum">(2)</b>
+    String withroles() {
+        "You have ROLE_ADMIN or ROLE_X roles"
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @Secured(SecurityRule.IS_ANONYMOUS)  // <b class="conum">(3)</b>
+    String anonymous() {
+        "You are anonymous"
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/authenticated") // <b class="conum">(1)</b>
+    String authenticated(Authentication authentication) {
+        "${authentication.name} is authenticated"
     }
 }</code></pre>
 </div>
@@ -1806,23 +1950,104 @@ public class ExampleController {
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller("/example")
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Produces;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+
+@Controller("/example")
 public class ExampleController {
 
     @Produces(MediaType.TEXT_PLAIN)
     @Get("/admin")
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="1"></i><b>(1)</b>
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_X"}) // <b class="conum">(1)</b>
     public String withroles() {
         return "You have ROLE_ADMIN or ROLE_X roles";
     }
 
     @Produces(MediaType.TEXT_PLAIN)
     @Get("/anonymous")
-    @PermitAll  <i class="conum" data-value="2"></i><b>(2)</b>
+    @PermitAll  // <b class="conum">(2)</b>
     public String anonymous() {
         return "You are anonymous";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.annotation.security import PermitAll, RolesAllowed
+from micronaut.http import MediaType
+from micronaut.http.annotation import Controller, Get, Produces
+
+@Controller("/example")
+class ExampleController:
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @RolesAllowed(["ROLE_ADMIN", "ROLE_X"])  # <b class="conum">(1)</b>
+    def withroles(self) -&gt; str:
+        return "You have ROLE_ADMIN or ROLE_X roles"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @PermitAll  # <b class="conum">(2)</b>
+    def anonymous(self) -&gt; str:
+        return "You are anonymous"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import jakarta.annotation.security.PermitAll
+import jakarta.annotation.security.RolesAllowed
+
+@Controller("/example")
+class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @RolesAllowed("ROLE_ADMIN", "ROLE_X") // <b class="conum">(1)</b>
+    fun withroles(): String = "You have ROLE_ADMIN or ROLE_X roles"
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @PermitAll  // <b class="conum">(2)</b>
+    fun anonymous(): String = "You are anonymous"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import jakarta.annotation.security.PermitAll
+import jakarta.annotation.security.RolesAllowed
+
+@Controller("/example")
+class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @RolesAllowed(["ROLE_ADMIN", "ROLE_X"]) // <b class="conum">(1)</b>
+    String withroles() {
+        "You have ROLE_ADMIN or ROLE_X roles"
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @PermitAll  // <b class="conum">(2)</b>
+    String anonymous() {
+        "You are anonymous"
     }
 }</code></pre>
 </div>
@@ -1900,6 +2125,18 @@ public class ExampleController {
         return principal.getName() + " is authenticated";
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@Controller("/authenticated")
+class ExampleController:
+
+    @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/email")
+    def authentication_by_email(self, principal: Principal) -&gt; str:
+        return principal.getName() + " is authenticated"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2341,6 +2578,32 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Replaces, Requires
+from micronaut.http import HttpRequest
+from micronaut.inject import ExecutableMethod
+from micronaut.management.endpoint import EndpointSensitivityProcessor
+from micronaut.security.authentication import Authentication
+from micronaut.security.rules import SecurityRuleResult, SensitiveEndpointRule
+from micronaut.security.token import RolesFinder
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Mono
+
+@Replaces(SensitiveEndpointRule)
+@Singleton
+class SensitiveEndpointRuleReplacement(SensitiveEndpointRule):
+    def __init__(self, endpointSensitivityProcessor: EndpointSensitivityProcessor, rolesFinder: RolesFinder):
+        super().__init__(endpointSensitivityProcessor)
+        self.rolesFinder = rolesFinder
+
+    def checkSensitiveAuthenticated(self, request: HttpRequest, authentication: Authentication, method: ExecutableMethod) -&gt; Publisher[SecurityRuleResult]:
+        if self.rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.getRoles()):
+            return Mono.just(SecurityRuleResult.ALLOWED)
+        return Mono.just(SecurityRuleResult.REJECTED)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -2429,6 +2692,22 @@ public class RunAsService {
         return SecurityContextHolder.getSecurityContext().getAuthentication();
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@RunAs(
+    name="aegon",
+    roles=["TARGARYEN"],
+    attributes=[
+        RunAs.Attribute(key="family_name", value="Targaryen"),
+        RunAs.Attribute(key="given_name", value="Aegon"),
+    ],
+)
+@Singleton
+class RunAsService:
+    def change_auth(self) -&gt; Authentication:
+        return SecurityContextHolder.getSecurityContext().getAuthentication()</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3274,6 +3553,20 @@ class CustomAuthenticationProvider&lt;B&gt; implements HttpRequestReactiveAuthen
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@Singleton
+class CustomAuthenticationProvider(HttpRequestReactiveAuthenticationProvider):
+
+    @SingleResult
+    def authenticate(self, requestContext: HttpRequest, authRequest: AuthenticationRequest) -&gt; Publisher[AuthenticationResponse]:
+        if authRequest.getIdentity() == "user" and authRequest.getSecret() == "password":
+            rsp = AuthenticationResponse.success("user")
+        else:
+            rsp = AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+        return Mono.create(lambda emitter: emitter.success(rsp))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@Singleton
 class CustomAuthenticationProvider :
     HttpRequestReactiveAuthenticationProvider&lt;Any&gt; {
@@ -3332,6 +3625,17 @@ class CustomAuthenticationProvider&lt;B&gt; implements HttpRequestAuthentication
                 : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@Singleton
+class CustomAuthenticationProvider(HttpRequestAuthenticationProvider):
+
+    def authenticate(self, requestContext: HttpRequest, authRequest: AuthenticationRequest) -&gt; AuthenticationResponse:
+        if authRequest.getIdentity() == "user" and authRequest.getSecret() == "password":
+            return AuthenticationResponse.success("user")
+        return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3457,7 +3761,25 @@ which attempts to validate them.</p>
 <div class="paragraph">
 <p>The code snippet below illustrates how to send credentials using the <code>basicAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">HttpRequest&lt;?&gt; request = HttpRequest.GET("/home").basicAuth("sherlock", "password");</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">request = HttpRequest.GET("/home").basicAuth("sherlock", "password")</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">val request = HttpRequest.GET&lt;Any&gt;("/home").basicAuth("sherlock", "password")</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">HttpRequest request = HttpRequest.GET("/home").basicAuth('sherlock', 'password')</code></pre>
@@ -3529,6 +3851,15 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 &lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-processor"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -3544,6 +3875,15 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-session&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-session"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -3760,6 +4100,15 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
 &lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-processor"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -3775,6 +4124,15 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-jwt"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -3944,11 +4302,35 @@ The <code>micronaut-security-processor</code> dependency is only required to use
 <div class="paragraph">
 <p>The code snippet below illustrates how to send a JWT token in the <code>Authorization</code> request header, using the <code>bearerAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String accessToken = rsp.body().getAccessToken();
+List&lt;Book&gt; books = client.retrieve(HttpRequest.GET("/api/gateway")
+        .bearerAuth(accessToken), Argument.listOf(Book.class));</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">accessToken = rsp.body().getAccessToken()
+books = client.retrieve(HttpRequest.GET("/api/gateway")
+                        .bearerAuth(accessToken), Argument.listOf(Book))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Accessing a protected resource using an Authorization request header</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">val accessToken: String = rsp.body()!!.accessToken
+val books: List&lt;Book&gt; = client.retrieve(HttpRequest.GET&lt;Any&gt;("/api/gateway")
+        .bearerAuth(accessToken), Argument.listOf(Book::class.java))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">String accessToken = rsp.body().accessToken
-List&lt;Book&gt; books = gatewayClient.toBlocking().retrieve(HttpRequest.GET("/api/gateway")
+List&lt;Book&gt; books = client.retrieve(HttpRequest.GET("/api/gateway")
         .bearerAuth(accessToken), Argument.listOf(Book))</code></pre>
 </div>
 </div>
@@ -4577,6 +4959,15 @@ or <a href="https://micronaut-projects.github.io/micronaut-cache/latest/guide/#m
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.cache:micronaut-cache-caffeine"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -5084,14 +5475,81 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 <div class="paragraph">
 <p>A programmatic setup of a RSA signature generation may look like</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Factory
-class MySignatureGeneratorConfigurationFactory {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Bean;
+import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator;
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration;
+import jakarta.inject.Named;
+
+@Factory
+public class MySignatureGeneratorConfigurationFactory {
+
     @Bean
-    @Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
-    SignatureGeneratorConfiguration signatureGeneratorConfiguration(RSASignatureGeneratorConfiguration configuration) {<i class="conum" data-value="2"></i><b>(2)</b>
-        return new RSASignatureGenerator(configuration)
+    @Named("generator") // <b class="conum">(1)</b>
+    SignatureGeneratorConfiguration signatureGeneratorConfiguration(RSASignatureGeneratorConfiguration configuration) { // <b class="conum">(2)</b>
+        return new RSASignatureGenerator(configuration);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Named
+from micronaut.context.annotation import Bean, Factory, Requires
+from micronaut.security.token.jwt.signature import SignatureGeneratorConfiguration
+from micronaut.security.token.jwt.signature.rsa import RSASignatureGenerator, RSASignatureGeneratorConfiguration
+
+@Factory
+class MySignatureGeneratorConfigurationFactory:
+
+    @Bean
+    @Named("generator")  # <b class="conum">(1)</b>
+    def signature_generator_configuration(self, configuration: RSASignatureGeneratorConfiguration) -&gt; SignatureGeneratorConfiguration:  # <b class="conum">(2)</b>
+        return RSASignatureGenerator(configuration)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Bean
+import io.micronaut.context.annotation.Factory
+import io.micronaut.context.annotation.Requires
+import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import jakarta.inject.Named
+
+@Factory
+class MySignatureGeneratorConfigurationFactory {
+
+    @Bean
+    @Named("generator") // <b class="conum">(1)</b>
+    fun signatureGeneratorConfiguration(configuration: RSASignatureGeneratorConfiguration): SignatureGeneratorConfiguration { // <b class="conum">(2)</b>
+        return RSASignatureGenerator(configuration)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Bean
+import io.micronaut.context.annotation.Factory
+import io.micronaut.context.annotation.Requires
+import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import jakarta.inject.Named
+
+@Factory
+class MySignatureGeneratorConfigurationFactory {
+
+    @Bean
+    @Named("generator") // <b class="conum">(1)</b>
+    SignatureGeneratorConfiguration signatureGeneratorConfiguration(RSASignatureGeneratorConfiguration configuration) { // <b class="conum">(2)</b>
+        new RSASignatureGenerator(configuration)
     }
 }</code></pre>
 </div>
@@ -5517,9 +5975,153 @@ pem {
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openssl genrsa -out rsa-2048bit-key-pair.pem 2048</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JWEAlgorithm;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Value;
+import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryptionConfiguration;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
+import java.security.KeyPair;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Optional;
+
+@Named("generator") // <b class="conum">(1)</b>
+@Singleton
+public class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
+
+    private RSAPrivateKey rsaPrivateKey;
+    private RSAPublicKey rsaPublicKey;
+    private final JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256;
+    private final EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
+
+    public RSAOAEPEncryptionConfiguration(@Value("${pem.path}") String pemPath) {
+        Optional&lt;KeyPair&gt; keyPair = KeyPairProvider.keyPair(pemPath);
+        if (keyPair.isPresent()) {
+            this.rsaPublicKey = (RSAPublicKey) keyPair.get().getPublic();
+            this.rsaPrivateKey = (RSAPrivateKey) keyPair.get().getPrivate();
+        }
+    }
+
+    @Override
+    public RSAPublicKey getPublicKey() {
+        return rsaPublicKey;
+    }
+
+    @Override
+    public RSAPrivateKey getPrivateKey() {
+        return rsaPrivateKey;
+    }
+
+    @Override
+    public JWEAlgorithm getJweAlgorithm() {
+        return jweAlgorithm;
+    }
+
+    @Override
+    public EncryptionMethod getEncryptionMethod() {
+        return encryptionMethod;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from com.nimbusds.jose import EncryptionMethod, JWEAlgorithm
+from jakarta.inject import Named, Singleton
+from java.security.interfaces import RSAPrivateKey, RSAPublicKey
+from micronaut.context.annotation import Requires, Value
+from micronaut.security.token.jwt.encryption.rsa import RSAEncryptionConfiguration
+
+from .KeyPairProvider import KeyPairProvider
+
+@Named("generator")  # <b class="conum">(1)</b>
+@Singleton
+class RSAOAEPEncryptionConfiguration(RSAEncryptionConfiguration):
+
+    def __init__(self, pemPath: Annotated[str, Value("${pem.path}")]):
+        self.rsaPrivateKey = None
+        self.rsaPublicKey = None
+        self.jweAlgorithm = JWEAlgorithm.RSA_OAEP_256
+        self.encryptionMethod = EncryptionMethod.A128GCM
+        keyPair = KeyPairProvider.key_pair(pemPath)
+        if keyPair.isPresent():
+            self.rsaPublicKey = keyPair.get().getPublic()
+            self.rsaPrivateKey = keyPair.get().getPrivate()
+
+    def getPublicKey(self) -&gt; RSAPublicKey:
+        return self.rsaPublicKey
+
+    def getPrivateKey(self) -&gt; RSAPrivateKey:
+        return self.rsaPrivateKey
+
+    def getJweAlgorithm(self) -&gt; JWEAlgorithm:
+        return self.jweAlgorithm
+
+    def getEncryptionMethod(self) -&gt; EncryptionMethod:
+        return self.encryptionMethod</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.nimbusds.jose.EncryptionMethod
+import com.nimbusds.jose.JWEAlgorithm
+import io.micronaut.context.annotation.Requires
+import io.micronaut.context.annotation.Value
+import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryptionConfiguration
+import jakarta.inject.Named
+import jakarta.inject.Singleton
+import java.security.interfaces.RSAPrivateKey
+import java.security.interfaces.RSAPublicKey
+
+@Named("generator") // <b class="conum">(1)</b>
+@Singleton
+class RSAOAEPEncryptionConfiguration(@Value("\${pem.path}") pemPath: String) : RSAEncryptionConfiguration {
+
+    private var rsaPrivateKey: RSAPrivateKey? = null
+    private var rsaPublicKey: RSAPublicKey? = null
+    private val jweAlgorithm = JWEAlgorithm.RSA_OAEP_256
+    private val encryptionMethod = EncryptionMethod.A128GCM
+
+    init {
+        val keyPair = KeyPairProvider.keyPair(pemPath)
+        if (keyPair.isPresent) {
+            rsaPublicKey = keyPair.get().public as RSAPublicKey
+            rsaPrivateKey = keyPair.get().private as RSAPrivateKey
+        }
+    }
+
+    override fun getPublicKey(): RSAPublicKey? = rsaPublicKey
+
+    override fun getPrivateKey(): RSAPrivateKey? = rsaPrivateKey
+
+    override fun getJweAlgorithm(): JWEAlgorithm = jweAlgorithm
+
+    override fun getEncryptionMethod(): EncryptionMethod = encryptionMethod
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.nimbusds.jose.EncryptionMethod
+import com.nimbusds.jose.JWEAlgorithm
+import io.micronaut.context.annotation.Requires
+import io.micronaut.context.annotation.Value
+import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryptionConfiguration
+import jakarta.inject.Named
+import jakarta.inject.Singleton
+
+import java.security.KeyPair
+import java.security.interfaces.RSAPrivateKey
+import java.security.interfaces.RSAPublicKey
+
+@Named("generator") // <b class="conum">(1)</b>
 @Singleton
 class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
 
@@ -5538,22 +6140,22 @@ class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
 
     @Override
     RSAPublicKey getPublicKey() {
-        return rsaPublicKey
+        rsaPublicKey
     }
 
     @Override
     RSAPrivateKey getPrivateKey() {
-        return rsaPrivateKey
+        rsaPrivateKey
     }
 
     @Override
     JWEAlgorithm getJweAlgorithm() {
-        return jweAlgorithm
+        jweAlgorithm
     }
 
     @Override
     EncryptionMethod getEncryptionMethod() {
-        return encryptionMethod
+        encryptionMethod
     }
 }</code></pre>
 </div>
@@ -5568,9 +6170,175 @@ class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
 <div class="paragraph">
 <p>To parse the PEM key, use a collaborator as described in <a href="https://connect2id.com/products/nimbus-jose-jwt/openssl-key-generation">OpenSSL key generation</a>.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Slf4j
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMException;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.security.KeyPair;
+import java.security.Security;
+import java.util.Optional;
+
+public class KeyPairProvider {
+    private static final Logger LOG = LoggerFactory.getLogger(KeyPairProvider.class);
+
+    /**
+     * @param pemPath Full path to PEM file.
+     * @return returns KeyPair if successfully for PEM files.
+     */
+    public static Optional&lt;KeyPair&gt; keyPair(String pemPath) {
+        // Load BouncyCastle as JCA provider
+        Security.addProvider(new BouncyCastleProvider());
+
+        // Parse the EC key pair
+        try (PEMParser pemParser = new PEMParser(new InputStreamReader(Files.newInputStream(Paths.get(pemPath))))) {
+            PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject();
+
+            // Convert to Java (JCA) format
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+            KeyPair keyPair = converter.getKeyPair(pemKeyPair);
+
+            return Optional.of(keyPair);
+
+        } catch (FileNotFoundException | NoSuchFileException e) {
+            LOG.warn("file not found: {}", pemPath);
+
+        } catch (PEMException e) {
+            LOG.warn("PEMException {}", e.getMessage());
+
+        } catch (IOException e) {
+            LOG.warn("IOException {}", e.getMessage());
+        }
+        return Optional.empty();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">import logging
+
+from java.io import InputStreamReader
+from java.nio.file import Files, Paths
+from java.security import Security
+from java.util import Optional
+from org.bouncycastle.jce.provider import BouncyCastleProvider
+from org.bouncycastle.openssl import PEMParser
+from org.bouncycastle.openssl.jcajce import JcaPEMKeyConverter
+
+LOG = logging.getLogger(__name__)
+
+
+class KeyPairProvider:
+
+    @staticmethod
+    def key_pair(pemPath: str) -&gt; Optional:
+        """
+        :param pemPath: Full path to PEM file.
+        :return: returns KeyPair if successfully for PEM files.
+        """
+        # Load BouncyCastle as JCA provider
+        Security.addProvider(BouncyCastleProvider())
+
+        # Parse the EC key pair
+        try:
+            pemParser = PEMParser(InputStreamReader(Files.newInputStream(Paths.get(pemPath))))
+            try:
+                pemKeyPair = pemParser.readObject()
+
+                # Convert to Java (JCA) format
+                converter = JcaPEMKeyConverter()
+                keyPair = converter.getKeyPair(pemKeyPair)
+
+                return Optional.of(keyPair)
+            finally:
+                pemParser.close()
+        except Exception as e:
+            LOG.warning("could not read the key pair from %s: %s", pemPath, e)
+        return Optional.empty()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.openssl.PEMException
+import org.bouncycastle.openssl.PEMKeyPair
+import org.bouncycastle.openssl.PEMParser
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
+import org.slf4j.LoggerFactory
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStreamReader
+import java.nio.file.Files
+import java.nio.file.NoSuchFileException
+import java.nio.file.Paths
+import java.security.KeyPair
+import java.security.Security
+import java.util.Optional
+
+object KeyPairProvider {
+    private val LOG = LoggerFactory.getLogger(KeyPairProvider::class.java)
+
+    /**
+     * @param pemPath Full path to PEM file.
+     * @return returns KeyPair if successfully for PEM files.
+     */
+    fun keyPair(pemPath: String): Optional&lt;KeyPair&gt; {
+        // Load BouncyCastle as JCA provider
+        Security.addProvider(BouncyCastleProvider())
+
+        // Parse the EC key pair
+        try {
+            PEMParser(InputStreamReader(Files.newInputStream(Paths.get(pemPath)))).use { pemParser -&gt;
+                val pemKeyPair = pemParser.readObject() as PEMKeyPair
+
+                // Convert to Java (JCA) format
+                val converter = JcaPEMKeyConverter()
+                val keyPair = converter.getKeyPair(pemKeyPair)
+
+                return Optional.of(keyPair)
+            }
+        } catch (e: FileNotFoundException) {
+            LOG.warn("file not found: {}", pemPath)
+        } catch (e: NoSuchFileException) {
+            LOG.warn("file not found: {}", pemPath)
+        } catch (e: PEMException) {
+            LOG.warn("PEMException {}", e.message)
+        } catch (e: IOException) {
+            LOG.warn("IOException {}", e.message)
+        }
+        return Optional.empty()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import groovy.util.logging.Slf4j
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.openssl.PEMException
+import org.bouncycastle.openssl.PEMKeyPair
+import org.bouncycastle.openssl.PEMParser
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
+
+import java.nio.file.Files
+import java.nio.file.NoSuchFileException
+import java.nio.file.Paths
+import java.security.KeyPair
+import java.security.Security
+
+@Slf4j
 class KeyPairProvider {
     /**
      *
@@ -5594,7 +6362,7 @@ class KeyPairProvider {
 
             return Optional.of(keyPair)
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | NoSuchFileException e) {
             log.warn("file not found: {}", pemPath)
 
         } catch (PEMException e) {
@@ -5638,6 +6406,15 @@ class CustomClaimsAudienceProvider implements ClaimsAudienceProvider {
         return AUDIENCE;
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@Singleton
+class CustomClaimsAudienceProvider(ClaimsAudienceProvider):
+
+    def audience(self) -&gt; list[str]:
+        return AUDIENCE</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5875,11 +6652,31 @@ Pragma: no-cache
 <div class="paragraph">
 <p>Micronaut supports authentication with LDAP out of the box. To get started, add the <code>security-ldap</code> dependency to your application.</p>
 </div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">compile "io.micronaut.security:micronaut-security-ldap"</code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-ldap")</span></code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-ldap&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-ldap"</span>,
+]</code></pre>
+</div>
+</div>
+</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -6456,7 +7253,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-x509.htm
 <div class="paragraph">
 <p>For example, if you use a product like <a href="https://www.broadcom.com/products/cyber-security/identity/siteminder">SiteMinder</a> that handles authentication for you, you can trust that users access your application are authenticated, and you can access their username via the <code>SM_USER</code> request header and build an <code>Authentication</code> from that:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="title">SiteMinder Authentication Fetcher</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
@@ -6486,6 +7283,100 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher&lt
             Collection&lt;String&gt; roles = Collections.singleton("ROLE_USER");
             emitter.success(Authentication.build(siteminderUser, roles));
         });
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">SiteMinder Authentication Fetcher</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Requires
+from micronaut.core.util import StringUtils
+from micronaut.http import HttpRequest
+from micronaut.security.authentication import Authentication
+from micronaut.security.filters import AuthenticationFetcher
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Mono
+@Singleton
+class SiteminderAuthenticationFetcher(AuthenticationFetcher[HttpRequest]):
+
+    SITEMINDER_USER_HEADER = "SM_USER"
+
+    def fetchAuthentication(self, request: HttpRequest) -&gt; Publisher[Authentication]:
+        def fetch(emitter):
+            siteminderUser = request.getHeaders().get(self.SITEMINDER_USER_HEADER)
+            if StringUtils.isEmpty(siteminderUser):
+                emitter.success()
+                return
+
+            roles = ["ROLE_USER"]
+            emitter.success(Authentication.build(siteminderUser, roles))
+
+        return Mono.create(fetch)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">SiteMinder Authentication Fetcher</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
+import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.filters.AuthenticationFetcher
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+@Singleton
+class SiteminderAuthenticationFetcher : AuthenticationFetcher&lt;HttpRequest&lt;*&gt;&gt; {
+
+    override fun fetchAuthentication(request: HttpRequest&lt;*&gt;): Publisher&lt;Authentication&gt; {
+        return Mono.create { emitter -&gt;
+            val siteminderUser = request.headers[SITEMINDER_USER_HEADER]
+            if (siteminderUser == null || StringUtils.isEmpty(siteminderUser)) {
+                emitter.success()
+                return@create
+            }
+
+            val roles: Collection&lt;String&gt; = setOf("ROLE_USER")
+            emitter.success(Authentication.build(siteminderUser, roles))
+        }
+    }
+
+    companion object {
+        const val SITEMINDER_USER_HEADER = "SM_USER"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">SiteMinder Authentication Fetcher</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
+import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.filters.AuthenticationFetcher
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+@Singleton
+class SiteminderAuthenticationFetcher implements AuthenticationFetcher&lt;HttpRequest&lt;?&gt;&gt; {
+
+    public static final String SITEMINDER_USER_HEADER = "SM_USER"
+
+    @Override
+    Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
+        Mono.&lt;Authentication&gt;create(emitter -&gt; {
+            String siteminderUser = request.headers.get(SITEMINDER_USER_HEADER)
+            if (StringUtils.isEmpty(siteminderUser)) {
+                emitter.success()
+                return
+            }
+
+            Collection&lt;String&gt; roles = Collections.singleton("ROLE_USER")
+            emitter.success(Authentication.build(siteminderUser, roles))
+        })
     }
 }</code></pre>
 </div>
@@ -6563,11 +7454,10 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher&lt
 <div class="paragraph">
 <p>For example:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
-import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
@@ -6576,7 +7466,11 @@ import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
+import io.micronaut.security.authentication.WwwAuthenticateChallengeProvider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 @Singleton
 @Replaces(DefaultAuthorizationExceptionHandler.class)
@@ -6585,8 +7479,9 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
     public MyRejectionHandler(ErrorResponseProcessor&lt;?&gt; errorResponseProcessor,
                               RedirectConfiguration redirectConfiguration,
                               RedirectService redirectService,
+                              List&lt;WwwAuthenticateChallengeProvider&lt;HttpRequest&lt;?&gt;&gt;&gt; wwwAuthenticateChallengeProviders,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        super(errorResponseProcessor, redirectConfiguration, redirectService, priorToLoginPersistence);
+        super(errorResponseProcessor, redirectConfiguration, redirectService, wwwAuthenticateChallengeProviders, priorToLoginPersistence);
     }
 
     @Override
@@ -6594,6 +7489,104 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
         //Let the DefaultAuthorizationExceptionHandler create the initial response
         //then add a header
         return super.handle(request, exception).header("X-Reason", "Example Header");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Replaces, Requires
+from micronaut.http import HttpRequest, MutableHttpResponse
+from micronaut.http.server.exceptions.response import ErrorResponseProcessor
+from micronaut.security.authentication import AuthorizationException, DefaultAuthorizationExceptionHandler, WwwAuthenticateChallengeProvider
+from micronaut.security.config import RedirectConfiguration, RedirectService
+from micronaut.security.errors import PriorToLoginPersistence
+
+@Singleton
+@Replaces(DefaultAuthorizationExceptionHandler)
+class MyRejectionHandler(DefaultAuthorizationExceptionHandler):
+
+    def __init__(self,
+                 errorResponseProcessor: ErrorResponseProcessor,
+                 redirectConfiguration: RedirectConfiguration,
+                 redirectService: RedirectService,
+                 wwwAuthenticateChallengeProviders: list[WwwAuthenticateChallengeProvider],
+                 priorToLoginPersistence: PriorToLoginPersistence | None):
+        super().__init__(errorResponseProcessor, redirectConfiguration, redirectService, wwwAuthenticateChallengeProviders, priorToLoginPersistence)
+
+    def handle(self, request: HttpRequest, exception: AuthorizationException) -&gt; MutableHttpResponse:
+        # Let the DefaultAuthorizationExceptionHandler create the initial response
+        # then add a header
+        return super().handle(request, exception).header("X-Reason", "Example Header")</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor
+import io.micronaut.security.authentication.AuthorizationException
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
+import io.micronaut.security.authentication.WwwAuthenticateChallengeProvider
+import io.micronaut.security.config.RedirectConfiguration
+import io.micronaut.security.config.RedirectService
+import io.micronaut.security.errors.PriorToLoginPersistence
+import jakarta.inject.Singleton
+
+@Singleton
+@Replaces(DefaultAuthorizationExceptionHandler::class)
+class MyRejectionHandler(
+    errorResponseProcessor: ErrorResponseProcessor&lt;*&gt;,
+    redirectConfiguration: RedirectConfiguration,
+    redirectService: RedirectService,
+    wwwAuthenticateChallengeProviders: List&lt;WwwAuthenticateChallengeProvider&lt;HttpRequest&lt;*&gt;&gt;&gt;,
+    priorToLoginPersistence: PriorToLoginPersistence&lt;*, *&gt;?
+) : DefaultAuthorizationExceptionHandler(errorResponseProcessor, redirectConfiguration, redirectService, wwwAuthenticateChallengeProviders, priorToLoginPersistence) {
+
+    override fun handle(request: HttpRequest&lt;*&gt;, exception: AuthorizationException): MutableHttpResponse&lt;*&gt; {
+        //Let the DefaultAuthorizationExceptionHandler create the initial response
+        //then add a header
+        return super.handle(request, exception).header("X-Reason", "Example Header")
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor
+import io.micronaut.security.authentication.AuthorizationException
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
+import io.micronaut.security.authentication.WwwAuthenticateChallengeProvider
+import io.micronaut.security.config.RedirectConfiguration
+import io.micronaut.security.config.RedirectService
+import io.micronaut.security.errors.PriorToLoginPersistence
+import jakarta.inject.Singleton
+import org.jspecify.annotations.Nullable
+
+@Singleton
+@Replaces(DefaultAuthorizationExceptionHandler)
+class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
+
+    MyRejectionHandler(ErrorResponseProcessor&lt;?&gt; errorResponseProcessor,
+                       RedirectConfiguration redirectConfiguration,
+                       RedirectService redirectService,
+                       List&lt;WwwAuthenticateChallengeProvider&lt;HttpRequest&lt;?&gt;&gt;&gt; wwwAuthenticateChallengeProviders,
+                       @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        super(errorResponseProcessor, redirectConfiguration, redirectService, wwwAuthenticateChallengeProviders, priorToLoginPersistence)
+    }
+
+    @Override
+    MutableHttpResponse&lt;?&gt; handle(HttpRequest request, AuthorizationException exception) {
+        //Let the DefaultAuthorizationExceptionHandler create the initial response
+        //then add a header
+        super.handle(request, exception).header("X-Reason", "Example Header")
     }
 }</code></pre>
 </div>
@@ -6670,6 +7663,15 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-csrf&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-csrf"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -7169,6 +8171,15 @@ amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</c
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-reporting"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 
@@ -7347,6 +8358,15 @@ micronaut.security.reporting-endpoints.network.url=https://reports.example.com/n
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-html-sanitizer&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-html-sanitizer"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -7749,6 +8769,15 @@ will propagate the security token seamlessly.</p>
     &lt;groupId&gt;io.micrometer&lt;/groupId&gt;
     &lt;artifactId&gt;context-propagation&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micrometer:context-propagation"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -8189,15 +9218,17 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 <div class="paragraph">
 <p>You can bind <code>java.security.Principal</code> as a method parameter in a controller.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import org.jspecify.annotations.Nullable
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.security.annotation.Secured
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.security.annotation.Secured;
+import org.jspecify.annotations.Nullable;
 
-import java.security.Principal
+import java.security.Principal;
+import java.util.Collections;
+import java.util.Map;
 
 
 @Controller("/user")
@@ -8205,7 +9236,7 @@ public class UserController {
 
     @Secured("isAnonymous()")
     @Get("/myinfo")
-    public Map myinfo(@Nullable Principal principal) {
+    public Map&lt;String, Object&gt; myinfo(@Nullable Principal principal) {
         if (principal == null) {
             return Collections.singletonMap("isLoggedIn", false);
         }
@@ -8214,14 +9245,126 @@ public class UserController {
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from java.security import Principal
+from micronaut.http.annotation import Controller, Get
+from micronaut.security.annotation import Secured
+
+
+@Controller("/user")
+class UserController:
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    def myinfo(self, principal: Principal | None) -&gt; dict:
+        if principal is None:
+            return {"isLoggedIn": False}
+        return {"isLoggedIn": True, "username": principal.getName()}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+import java.security.Principal
+
+
+@Controller("/user")
+class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    fun myinfo(principal: Principal?): Map&lt;String, Any&gt; {
+        if (principal == null) {
+            return mapOf("isLoggedIn" to false)
+        }
+        return mapOf("isLoggedIn" to true, "username" to principal.name)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+import org.jspecify.annotations.Nullable
+
+import java.security.Principal
+
+
+@Controller("/user")
+class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    Map&lt;String, Object&gt; myinfo(@Nullable Principal principal) {
+        if (principal == null) {
+            return [isLoggedIn: false]
+        }
+        [isLoggedIn: true, username: principal.name]
+    }
+}</code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p>If you need more detail, you can bind <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> as a method parameter in a controller.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import org.jspecify.annotations.Nullable
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.http.annotation.Controller
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.Map;
+
+
+@Controller("/user")
+public class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    public Map&lt;String, Object&gt; myinfo(@Nullable Authentication authentication) {
+        if (authentication == null) {
+            return Collections.singletonMap("isLoggedIn", false);
+        }
+        return CollectionUtils.mapOf("isLoggedIn", true,
+                "username", authentication.getName(),
+                "roles", authentication.getRoles()
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.http.annotation import Controller, Get
+from micronaut.security.annotation import Secured
+from micronaut.security.authentication import Authentication
+
+
+@Controller("/user")
+class UserController:
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    def myinfo(self, authentication: Authentication | None) -&gt; dict:
+        if authentication is None:
+            return {"isLoggedIn": False}
+        return {"isLoggedIn": True,
+                "username": authentication.getName(),
+                "roles": list(authentication.getRoles())}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
@@ -8232,14 +9375,39 @@ class UserController {
 
     @Secured("isAnonymous()")
     @Get("/myinfo")
-    Map myinfo(@Nullable Authentication authentication) {
+    fun myinfo(authentication: Authentication?): Map&lt;String, Any&gt; {
         if (authentication == null) {
-            return Collections.singletonMap("isLoggedIn", false);
+            return mapOf("isLoggedIn" to false)
         }
-        return CollectionUtils.mapOf("isLoggedIn", true,
-                "username", authentication.getName(),
-                "roles", authentication.getRoles()
-        );
+        return mapOf("isLoggedIn" to true,
+                "username" to authentication.name,
+                "roles" to authentication.roles
+        )
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
+import org.jspecify.annotations.Nullable
+
+
+@Controller("/user")
+class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    Map&lt;String, Object&gt; myinfo(@Nullable Authentication authentication) {
+        if (authentication == null) {
+            return [isLoggedIn: false]
+        }
+        [isLoggedIn: true,
+         username: authentication.name,
+         roles: authentication.roles]
     }
 }</code></pre>
 </div>
@@ -8267,9 +9435,24 @@ class UserController {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">    @OnOpen
+    def onOpen(self, session: WebSocketSession, authentication: Authentication) -&gt; None:
+        self.broadcaster.broadcastSync("joined! " + authentication.getName(), self.is_valid(session))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">        @OnOpen
         fun onOpen(session: WebSocketSession, authentication: Authentication) {
             broadcaster.broadcastSync("joined! " + authentication.name, isValid(session))
+        }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">        @OnOpen
+        void onOpen(WebSocketSession session, Authentication authentication) {
+            broadcaster.broadcastSync("joined! ${authentication.name}".toString(), isValid(session))
         }</code></pre>
 </div>
 </div>
@@ -8305,6 +9488,27 @@ public record AuthenticationWithEmail(String username,
         return new AuthenticationWithEmail(authentication.getName(), email);
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from dataclasses import dataclass
+
+from micronaut.security.authentication import Authentication
+from micronaut.serde.annotation import Serdeable
+
+
+@Serdeable
+@dataclass
+class AuthenticationWithEmail:
+    username: str
+    email: str | None = None
+
+    @staticmethod
+    def of(authentication: Authentication) -&gt; "AuthenticationWithEmail":
+        obj = authentication.getAttributes().get("email")
+        email = None if obj is None else str(obj)
+        return AuthenticationWithEmail(authentication.getName(), email)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8385,6 +9589,39 @@ public class AuthenticationWithEmailArgumentBinder implements TypedRequestArgume
         return existing.isPresent() ? (() -&gt; existing.map(AuthenticationWithEmail::of)) : BindingResult.EMPTY;
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Requires
+from micronaut.core.bind.ArgumentBinder import BindingResult
+from micronaut.core.convert import ArgumentConversionContext
+from micronaut.core.type import Argument
+from micronaut.http import HttpRequest
+from micronaut.http.bind.binders import TypedRequestArgumentBinder
+from micronaut.security.authentication import Authentication
+from micronaut.security.filters import SecurityFilter
+
+from .AuthenticationWithEmail import AuthenticationWithEmail
+
+
+@Requires(property="spec.name", value="CustomAuthenticationTest")
+@Singleton
+class AuthenticationWithEmailArgumentBinder(TypedRequestArgumentBinder[AuthenticationWithEmail]):
+    def __init__(self):
+        self.argument_type = Argument.of(AuthenticationWithEmail)
+
+    def argumentType(self) -&gt; Argument:
+        return self.argument_type
+
+    def bind(self, context: ArgumentConversionContext, source: HttpRequest) -&gt; BindingResult:
+        if not source.getAttributes().contains(SecurityFilter.KEY):
+            return BindingResult.UNSATISFIED
+        existing = source.getUserPrincipal(Authentication)
+        if existing.isPresent():
+            return lambda: existing.map(AuthenticationWithEmail.of)
+        return BindingResult.EMPTY</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8472,6 +9709,15 @@ class AuthenticationWithEmailArgumentBinder implements TypedRequestArgumentBinde
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/custom-authentication")
+    def index(self, authentication: AuthenticationWithEmail) -&gt; str:
+        return authentication.email</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">        @Secured(SecurityRule.IS_AUTHENTICATED)
         @Produces(MediaType.TEXT_PLAIN)
         @Get("/custom-authentication")
@@ -8527,6 +9773,15 @@ class AuthenticationWithEmailArgumentBinder implements TypedRequestArgumentBinde
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micrometer:context-propagation"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 </div>
@@ -8566,7 +9821,7 @@ import io.micronaut.security.annotation.CreatedBy;
 import io.micronaut.security.annotation.UpdatedBy;
 import jakarta.validation.constraints.NotBlank;
 
-@MappedEntity //1
+@MappedEntity // <b class="conum">(1)</b>
 public record Book(
     @Id
     @GeneratedValue
@@ -8580,13 +9835,33 @@ public record Book(
     String author,
 
     @Nullable
-    @CreatedBy //2
+    @CreatedBy // <b class="conum">(2)</b>
     String creator,
 
     @Nullable
-    @UpdatedBy //3
+    @UpdatedBy // <b class="conum">(3)</b>
     String editor) {
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from dataclasses import dataclass
+from typing import Annotated
+
+from jakarta.validation.constraints import NotBlank
+from micronaut.data.annotation import GeneratedValue, Id, MappedEntity
+from micronaut.security.annotation import CreatedBy, UpdatedBy
+
+
+@MappedEntity  # <b class="conum">(1)</b>
+@dataclass
+class Book:
+    id: Annotated[int | None, Id, GeneratedValue]
+    title: Annotated[str, NotBlank]
+    author: Annotated[str, NotBlank]
+    creator: Annotated[str | None, CreatedBy]  # <b class="conum">(2)</b>
+    editor: Annotated[str | None, UpdatedBy]  # <b class="conum">(3)</b></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8597,16 +9872,16 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.security.annotation.CreatedBy
 import io.micronaut.security.annotation.UpdatedBy
 
-@MappedEntity //1
+@MappedEntity // <b class="conum">(1)</b>
 data class Book(
     @field:Id
     @field:GeneratedValue(GeneratedValue.Type.AUTO)
     var id: Long? = null,
     var title: String,
     var author: String,
-    @field:CreatedBy //2
+    @field:CreatedBy // <b class="conum">(2)</b>
     var creator: String? = null,
-    @UpdatedBy //3
+    @UpdatedBy // <b class="conum">(3)</b>
     var editor: String? = null
 )</code></pre>
 </div>
@@ -8621,7 +9896,7 @@ import io.micronaut.security.annotation.CreatedBy
 import io.micronaut.security.annotation.UpdatedBy
 import jakarta.validation.constraints.NotBlank
 
-@MappedEntity //1
+@MappedEntity // <b class="conum">(1)</b>
 class Book {
 
     @Id
@@ -8635,10 +9910,10 @@ class Book {
     @NotBlank
     String author
 
-    @CreatedBy //2
+    @CreatedBy // <b class="conum">(2)</b>
     String creator
 
-    @UpdatedBy //3
+    @UpdatedBy // <b class="conum">(3)</b>
     String editor
 }</code></pre>
 </div>
@@ -8693,6 +9968,20 @@ public class AuthenticationToStringConverter implements TypeConverter&lt;Authent
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from java.util import Optional
+from micronaut.context.annotation import Requires
+from micronaut.core.convert import ConversionContext, TypeConverter
+from micronaut.security.authentication import Authentication
+
+@Singleton
+class AuthenticationToStringConverter(TypeConverter[Authentication, str]):  # <b class="conum">(1)</b>
+    def convert(self, authentication: Authentication, targetType: type[str], context: ConversionContext) -&gt; Optional[str]:
+        return Optional.ofNullable(authentication.getAttributes().get("CUSTOM_ID_ATTR")).map(lambda value: str(value))  # <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.core.convert.ConversionContext
 import io.micronaut.core.convert.TypeConverter
@@ -8707,7 +9996,7 @@ class AuthenticationToStringConverter : TypeConverter&lt;Authentication, String&
         targetType: Class&lt;String&gt;,
         context: ConversionContext
     ): Optional&lt;String&gt; {
-        return Optional.ofNullable(authentication.getAttributes()["CUSTOM_ID_ATTR"]).map { obj -&gt; obj.toString() } // <b class="conum">(3)</b>
+        return Optional.ofNullable(authentication.getAttributes()["CUSTOM_ID_ATTR"]).map { obj -&gt; obj.toString() } // <b class="conum">(2)</b>
     }
 }</code></pre>
 </div>
@@ -8951,6 +10240,15 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-oauth2"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -9004,6 +10302,15 @@ To use OpenID client flows, the <code>security-jwt</code> dependency must be in 
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-jwt"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -9156,6 +10463,28 @@ public class OAuthCsrfFilter implements HttpServerFilter {
         return chain.proceed(request);
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.core.async_.publisher import Publishers
+from micronaut.http import HttpRequest, HttpResponse, HttpStatus, MutableHttpResponse
+from micronaut.http.annotation import Filter
+from micronaut.http.filter import HttpServerFilter, ServerFilterChain
+from org.reactivestreams import Publisher
+
+@Filter(value=["/oauth/login", "/oauth/login/*"])
+class OAuthCsrfFilter(HttpServerFilter):
+
+    def doFilter(self, request: HttpRequest, chain: ServerFilterChain) -&gt; Publisher[MutableHttpResponse]:
+        requestParameter = request.getParameters().get("_csrf")
+        cookieValue = request.getCookies().findCookie("_csrf").map(lambda cookie: cookie.getValue()).orElse(None)
+
+        if cookieValue is None or cookieValue != requestParameter:
+            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN))
+
+        return chain.proceed(request)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -9471,6 +10800,24 @@ public class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from dataclasses import dataclass
+
+from micronaut.core.annotation import Introspected
+from tools.jackson.databind import PropertyNamingStrategies
+from tools.jackson.databind.annotation import JsonNaming
+
+
+@Introspected
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy)
+@dataclass
+class GithubUser:
+    login: str | None = None
+    name: str | None = None
+    email: str | None = None</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import tools.jackson.databind.PropertyNamingStrategies
 import tools.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
@@ -9518,6 +10865,28 @@ public interface GithubApiClient {
     @Get("/user")
     Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from abc import ABC, abstractmethod
+from typing import Annotated
+
+from micronaut.http.annotation import Get, Header
+from micronaut.http.client.annotation import Client
+from org.reactivestreams import Publisher
+
+from .GithubUser import GithubUser
+
+
+@Header(name="User-Agent", value="Micronaut")
+@Client("https://api.github.com")
+class GithubApiClient(ABC):
+
+    @Get("/user")
+    @abstractmethod
+    def get_user(self, authorization: Annotated[str, Header("Authorization")]) -&gt; Publisher[GithubUser]:
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -9589,6 +10958,32 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
                 });
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Named, Singleton
+from micronaut.context.annotation import Requires
+from micronaut.security.authentication import AuthenticationResponse
+from micronaut.security.oauth2.endpoint.authorization.state import State
+from micronaut.security.oauth2.endpoint.token.response import OauthAuthenticationMapper, TokenResponse
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Flux
+
+from .GithubApiClient import GithubApiClient
+
+
+@Named("github")  # <b class="conum">(1)</b>
+@Singleton
+class GithubAuthenticationMapper(OauthAuthenticationMapper):
+
+    def __init__(self, apiClient: GithubApiClient):  # <b class="conum">(2)</b>
+        self.apiClient = apiClient
+
+    def createAuthenticationResponse(self, tokenResponse: TokenResponse, state: State | None) -&gt; Publisher[AuthenticationResponse]:  # <b class="conum">(3)</b>
+        return Flux.from_(self.apiClient.get_user("token " + tokenResponse.getAccessToken())).map(
+            lambda user: AuthenticationResponse.success(user.login, ["ROLE_GITHUB"])  # <b class="conum">(4)</b>
+        )</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -10171,6 +11566,25 @@ public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMap
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.context.annotation import Replaces, Requires
+from micronaut.security.authentication import AuthenticationResponse
+from micronaut.security.oauth2.endpoint.authorization.state import State
+from micronaut.security.oauth2.endpoint.token.response import DefaultOpenIdAuthenticationMapper, OpenIdAuthenticationMapper, OpenIdClaims, OpenIdTokenResponse
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Flux
+
+
+@Singleton
+@Replaces(DefaultOpenIdAuthenticationMapper)
+class GlobalOpenIdAuthenticationMapper(OpenIdAuthenticationMapper):
+
+    def createAuthenticationResponse(self, providerName: str, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State | None) -&gt; Publisher[AuthenticationResponse]:
+        return Flux.just(AuthenticationResponse.success("name"))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -10246,6 +11660,29 @@ public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
         return Flux.just(AuthenticationResponse.success("name")); // <b class="conum">(6)</b>
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Named, Singleton
+from micronaut.context.annotation import Requires
+from micronaut.security.authentication import AuthenticationResponse
+from micronaut.security.oauth2.endpoint.authorization.state import State
+from micronaut.security.oauth2.endpoint.token.response import OpenIdAuthenticationMapper, OpenIdClaims, OpenIdTokenResponse
+from org.reactivestreams import Publisher
+from reactor.core.publisher import Flux
+
+
+@Singleton
+@Named("okta")  # <b class="conum">(1)</b>
+class OktaAuthenticationMapper(OpenIdAuthenticationMapper):
+
+    def createAuthenticationResponse(self,
+                                     providerName: str,  # <b class="conum">(2)</b>
+                                     tokenResponse: OpenIdTokenResponse,  # <b class="conum">(3)</b>
+                                     openIdClaims: OpenIdClaims,  # <b class="conum">(4)</b>
+                                     state: State | None) -&gt; Publisher[AuthenticationResponse]:  # <b class="conum">(5)</b>
+        return Flux.just(AuthenticationResponse.success("name"))  # <b class="conum">(6)</b></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -10536,6 +11973,15 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-session"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 </li>
@@ -10816,6 +12262,15 @@ If nonce validation fails, the user will not be authenticated.
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-session"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 </li>
@@ -11071,21 +12526,52 @@ micronaut.security.oauth2.clients.google.openid.issuer=https://accounts.google.c
 <div class="paragraph">
 <p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> for any of the OAuth 2.0 clients using a <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">Name Qualifier</a>.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public MyClass(@Named("google") ClientCredentialsClient googleClientCredentialclient) {
-    ...
-
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public MyClass(@Named("google") ClientCredentialsClient googleClientCredentialsClient) {
+    this.googleClientCredentialsClient = googleClientCredentialsClient;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def __init__(self, googleClientCredentialsClient: Annotated[ClientCredentialsClient, Named("google")]):
+    self.googleClientCredentialsClient = googleClientCredentialsClient</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">class MyClass(@Named("google") val googleClientCredentialsClient: ClientCredentialsClient)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">MyClass(@Named("google") ClientCredentialsClient googleClientCredentialsClient) {
+    this.googleClientCredentialsClient = googleClientCredentialsClient
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>or</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">...
-beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyauthserver"))</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ClientCredentialsClient client = beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyauthserver"));</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">client = self.beanContext.getBean(ClientCredentialsClient, Qualifiers.byName("companyauthserver"))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">val client = beanContext.getBean(ClientCredentialsClient::class.java, Qualifiers.byName("companyauthserver"))</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">ClientCredentialsClient client = beanContext.getBean(ClientCredentialsClient, Qualifiers.byName("companyauthserver"))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11302,6 +12788,18 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
         .clientSecret(clientSecret)
         .token(tokenUrl)
         .build());</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">clientCredentialsClient = ClientCredentialsClient.of(
+    httpClient,
+    OauthClientConfiguration.builder().name("test")
+        .clientId(clientId)
+        .clientSecret(clientSecret)
+        .token(tokenUrl)
+        .build(),
+)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -11999,6 +13497,15 @@ The module registers an <a href="https://docs.oracle.com/en/database/oracle/orac
     &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-ojdbc-extensions&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.security:micronaut-security-ojdbc-extensions"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
