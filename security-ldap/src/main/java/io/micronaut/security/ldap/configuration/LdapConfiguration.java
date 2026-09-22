@@ -258,6 +258,8 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * The attributes stripped from the user search results by default.
+         *
+         * @since 5.4.0
          */
         public static final List<String> DEFAULT_EXCLUDED_ATTRIBUTES = List.of("userPassword", "unicodePwd");
 
@@ -337,6 +339,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return The attributes stripped from the search results. Never null.
+         * @since 5.4.0
          */
         public List<String> getExcludedAttributes() {
             return excludedAttributes;
@@ -347,6 +350,7 @@ public class LdapConfiguration implements Toggleable {
          * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
          *
          * @param excludedAttributes The attributes to exclude
+         * @since 5.4.0
          */
         public void setExcludedAttributes(List<String> excludedAttributes) {
             this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : excludedAttributes;
