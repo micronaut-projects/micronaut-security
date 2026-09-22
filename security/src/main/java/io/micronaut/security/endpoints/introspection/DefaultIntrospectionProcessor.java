@@ -175,18 +175,6 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     }
 
     /**
-     * Resolves an authentication attribute as a String. A {@code null} value is treated the same as an absent key.
-     * @param authentication Authentication
-     * @param attributeName The attribute name
-     * @return The attribute value as a String, or an empty optional if the attribute is absent or null
-     */
-    @NonNull
-    protected Optional<String> attributeAsString(@NonNull Authentication authentication,
-                                                 @NonNull String attributeName) {
-        return Optional.ofNullable(authentication.getAttributes().get(attributeName)).map(Object::toString);
-    }
-
-    /**
      * Populates the introspection response scope.
      * @param authentication Authentication
      * @return the scope
@@ -329,5 +317,17 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     public static long toSecondsSinceEpoch(final Date date) {
         return date.getTime() / 1000L;
+    }
+    
+    /**
+     * Resolves an authentication attribute as a String. A {@code null} value is treated the same as an absent key.
+     * @param authentication Authentication
+     * @param attributeName The attribute name
+     * @return The attribute value as a String, or an empty optional if the attribute is absent or null
+     */
+    @NonNull
+    private Optional<String> attributeAsString(@NonNull Authentication authentication,
+                                               @NonNull String attributeName) {
+        return Optional.ofNullable(authentication.getAttributes().get(attributeName)).map(Object::toString);
     }
 }
