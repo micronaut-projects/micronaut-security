@@ -36,6 +36,7 @@ dependencies {
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
     testImplementation(libs.awaitility)
+    testImplementation(libs.bcpkix)
 }
 tasks.withType<Test> {
     useJUnitPlatform()
