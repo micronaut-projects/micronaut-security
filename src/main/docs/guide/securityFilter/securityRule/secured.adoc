@@ -1,10 +1,7 @@
 As illustrated below, you can use the ann:security.annotation.Secured[] annotation to control
 access to controllers or controller methods.
 
-[source, groovy]
-----
-include::{testssecurity}/security/securityRule/secured/ExampleController.java[tag=exampleControllerPlusImports,indent=0]
-----
+snippet::io.micronaut.security.docs.securityrule.secured.ExampleController[tags="exampleControllerPlusImports"]
 
 <1> Authenticated users are able to access `authenticated` Controller's action.
 <2> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
