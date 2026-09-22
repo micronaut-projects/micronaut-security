@@ -2,8 +2,4 @@ All authentication strategies implement the api:security.filters.AuthenticationF
 
 For example, if you use a product like https://www.broadcom.com/products/cyber-security/identity/siteminder[SiteMinder] that handles authentication for you, you can trust that users access your application are authenticated, and you can access their username via the `SM_USER` request header and build an `Authentication` from that:
 
-[source, java]
-.SiteMinder Authentication Fetcher
-----
-include::{testssecurity}/security/authorization/SiteminderAuthenticationFetcher.java[tag=clazz, indent=0]
-----
+snippet::io.micronaut.security.docs.siteminder.SiteminderAuthenticationFetcher[tags="clazz",title="SiteMinder Authentication Fetcher"]
