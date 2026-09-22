@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.filters;
 
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
@@ -34,5 +35,6 @@ public interface AuthenticationFetcher<T> extends Ordered {
      * @param request an HTTP Request being executed.
      * @return {@link Authentication} if found
      */
+    @SingleResult
     Publisher<Authentication> fetchAuthentication(T request);
 }

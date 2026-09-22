@@ -34,6 +34,7 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.security.utils.LoggingUtils;
 import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
@@ -43,8 +44,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Security Filter.
@@ -143,7 +142,7 @@ public class SecurityFilter implements HttpServerFilter {
         }
 
         return Flux.fromIterable(authenticationFetchers)
-                .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
+                .concatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
                 .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
                 .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
@@ -154,19 +153,8 @@ public class SecurityFilter implements HttpServerFilter {
                                                              HttpRequest<?> request,
                                                              ServerFilterChain chain) {
         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
-        logAuthenticationAttributes(authentication);
+        LoggingUtils.logAuthenticationAttributes(LOG, authentication);
         return checkRules(request, chain, authentication);
-    }
-
-    private void logAuthenticationAttributes(@Nullable Authentication authentication) {
-        if (authentication != null && LOG.isDebugEnabled()) {
-            Map<String, Object> attributes = authentication.getAttributes();
-            LOG.debug("Attributes: {}", attributes
-                    .entrySet()
-                    .stream()
-                    .map((entry) -> entry.getKey() + "=>" + (entry.getValue() != null ? entry.getValue().toString() : "null"))
-                    .collect(Collectors.joining(", ")));
-        }
     }
 
     /**

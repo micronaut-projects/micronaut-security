@@ -24,7 +24,6 @@ import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
 import jakarta.inject.Singleton;
-import java.util.Optional;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -46,15 +45,8 @@ public class SessionAuthenticationFetcher implements AuthenticationFetcher<HttpR
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        return Mono.<Authentication>create(emitter -> {
-            Optional<Session> opt = request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
-            if (opt.isPresent()) {
-                Session session = opt.get();
-                Optional<Authentication> authentication = session.get(SecurityFilter.AUTHENTICATION, Authentication.class);
-                authentication.ifPresent(emitter::success);
-            }
-            emitter.success();
-        });
+        return Mono.defer(() -> Mono.justOrEmpty(request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class)
+                .flatMap(session -> session.get(SecurityFilter.AUTHENTICATION, Authentication.class))));
     }
 
     @Override
