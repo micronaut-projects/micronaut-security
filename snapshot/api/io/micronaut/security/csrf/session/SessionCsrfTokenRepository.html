@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="annotations">@Requires(classes=io.micronaut.http.HttpRequest.class) @Requires(beans=<a href="../CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a>.class) @Requires(property="micronaut.security.csrf.repositories.session.enabled",value="true",defaultValue="true")
+<div class="type-signature"><span class="annotations">@Requires(classes={io.micronaut.http.HttpRequest.class,io.micronaut.session.http.SessionForRequest.class}) @Requires(beans=<a href="../CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a>.class) @Requires(property="micronaut.security.csrf.repositories.session.enabled",value="true",defaultValue="true")
 @Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SessionCsrfTokenRepository</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
