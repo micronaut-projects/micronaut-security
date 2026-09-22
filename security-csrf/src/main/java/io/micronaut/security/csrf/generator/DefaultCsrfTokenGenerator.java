@@ -25,6 +25,7 @@ import io.micronaut.security.session.SessionIdResolver;
 import io.micronaut.security.utils.HMacUtils;
 import jakarta.inject.Singleton;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -99,7 +100,7 @@ final class DefaultCsrfTokenGenerator<T> implements CsrfHmacTokenGenerator<T> {
 
     static String hmacMessagePayload(String sessionId, String randomValue) {
         // both session id and randomValue will be base64 encoded strings to ensure they don't contain the separator ! as a substring.
-        final String base64SessionId = Base64.getEncoder().encodeToString(sessionId.getBytes());
+        final String base64SessionId = Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
         return  base64SessionId.length() +
                 SESSION_RANDOM_SEPARATOR +
                 base64SessionId +
