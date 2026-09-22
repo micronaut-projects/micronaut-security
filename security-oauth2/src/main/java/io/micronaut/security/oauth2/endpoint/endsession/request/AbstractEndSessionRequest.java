@@ -16,12 +16,15 @@
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import org.jspecify.annotations.Nullable;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -34,6 +37,7 @@ import java.util.function.Supplier;
  */
 public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractEndSessionRequest.class);
     private static final String PARAMETERS_KEY = "parameters";
 
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
@@ -53,23 +57,40 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
         this.providerMetadataSupplier = providerMetadata;
     }
 
+    /**
+     * Builds the end session URL. Returns {@code null} when {@link #getUrl()} returns {@code null} or an empty string,
+     * for example when the OpenID provider metadata does not advertise an {@code end_session_endpoint} and no default
+     * can be derived for the provider. Callers treat a {@code null} URL as "no end session redirect available".
+     *
+     * @param originating The originating request
+     * @param authentication The authentication
+     * @return The end session URL, or {@code null} if it cannot be determined
+     */
     @Nullable
     @Override
     public String getUrl(HttpRequest<?> originating, Authentication authentication) {
-        return getTemplate().expand(getParameters(originating, authentication));
+        String url = getUrl();
+        if (StringUtils.isEmpty(url)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No end session URL could be determined for provider [{}]. The OpenID provider metadata does not contain an end_session_endpoint", clientConfiguration.getName());
+            }
+            return null;
+        }
+        return getTemplate(url).expand(getParameters(originating, authentication));
     }
 
     private Map<String, Object> getParameters(HttpRequest<?> originating, Authentication authentication) {
         return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
-    private UriTemplate getTemplate() {
-        return UriTemplate.of(getUrl()).nest("{?" + PARAMETERS_KEY + "*}");
+    private UriTemplate getTemplate(String url) {
+        return UriTemplate.of(url).nest("{?" + PARAMETERS_KEY + "*}");
     }
 
     /**
-     * @return The url of the request
+     * @return The url of the request, or {@code null} if it cannot be determined (e.g. the provider metadata lacks an {@code end_session_endpoint})
      */
+    @Nullable
     protected abstract String getUrl();
 
     /**
