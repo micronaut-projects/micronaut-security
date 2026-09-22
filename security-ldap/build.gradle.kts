@@ -7,7 +7,7 @@ dependencies {
 
     api(projects.micronautSecurity)
 
-    implementation(mnReactor.micronaut.reactor)
+    testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mn.reactor.test)
 
     testImplementation(mn.micronaut.http.client)
