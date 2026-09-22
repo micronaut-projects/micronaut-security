@@ -156,29 +156,44 @@ class MicronautEndUserSecurityContextProviderTest {
     }
 
     @Test
-    void debugLoggingOmitsAttributeValues() {
-        List<String> messages = resolveContextAndCaptureLog(Level.DEBUG);
+    void debugLoggingIncludesDataRolesAndAttributeNamesButNotAttributeValues() {
+        OracleJsonObject attributeValues = JSON_FACTORY.createObject();
+        attributeValues.put("email", "alice@example.com");
 
-        assertFalse(messages.isEmpty());
-        assertTrue(messages.stream().anyMatch(message -> message.contains("hr.employee")));
+        List<String> messages = resolveContextAndCaptureLog(Level.DEBUG, List.of("REPORTING"), Map.of("hr.employee", attributeValues));
+
+        assertTrue(messages.stream().anyMatch(message -> message.contains("resolved with data roles [REPORTING] and attributes [hr.employee]")));
         assertTrue(messages.stream().noneMatch(message -> message.contains("alice@example.com")));
     }
 
     @Test
-    void traceLoggingIncludesAttributeValues() {
-        List<String> messages = resolveContextAndCaptureLog(Level.TRACE);
+    void debugLoggingReportsEmptyCollectionsWhenDataRolesAndAttributesAreNull() {
+        List<String> messages = resolveContextAndCaptureLog(Level.DEBUG, null, null);
 
+        assertTrue(messages.stream().anyMatch(message -> message.contains("resolved with data roles [] and attributes []")));
+    }
+
+    @Test
+    void traceLoggingIncludesAttributeValues() {
+        OracleJsonObject attributeValues = JSON_FACTORY.createObject();
+        attributeValues.put("email", "alice@example.com");
+
+        List<String> messages = resolveContextAndCaptureLog(Level.TRACE, List.of("REPORTING"), Map.of("hr.employee", attributeValues));
+
+        // The attribute value assertion is covered by the pre-existing "resolved the attributes {}" TRACE statement
+        // in MicronautEndUserSecurityContextProvider#getEndUserSecurityContext. That statement is the only place
+        // the attribute values are logged, so removing it would break the TRACE-side contract pinned here.
         assertTrue(messages.stream().anyMatch(message -> message.contains("hr.employee")));
         assertTrue(messages.stream().anyMatch(message -> message.contains("alice@example.com")));
     }
 
-    private static List<String> resolveContextAndCaptureLog(Level level) {
+    private static List<String> resolveContextAndCaptureLog(Level level,
+                                                            Collection<String> dataRoles,
+                                                            Map<String, OracleJsonObject> attributes) {
         RecordingDataRolesFetcher dataRolesFetcher = new RecordingDataRolesFetcher();
-        dataRolesFetcher.dataRoles = List.of("REPORTING");
+        dataRolesFetcher.dataRoles = dataRoles;
         RecordingAttributesFetcher attributesFetcher = new RecordingAttributesFetcher();
-        OracleJsonObject attributeValues = JSON_FACTORY.createObject();
-        attributeValues.put("email", "alice@example.com");
-        attributesFetcher.attributes = Map.of("hr.employee", attributeValues);
+        attributesFetcher.attributes = attributes;
         MicronautEndUserSecurityContextProvider provider = new MicronautEndUserSecurityContextProvider(
                 new RecordingDatabaseAccessTokenFetcher(),
                 dataRolesFetcher,
