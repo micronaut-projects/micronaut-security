@@ -8,7 +8,7 @@ import io.micronaut.security.annotation.CreatedBy
 import io.micronaut.security.annotation.UpdatedBy
 import jakarta.validation.constraints.NotBlank
 
-@MappedEntity //1
+@MappedEntity // <1>
 class Book {
 
     @Id
@@ -22,10 +22,10 @@ class Book {
     @NotBlank
     String author
 
-    @CreatedBy //2
+    @CreatedBy // <2>
     String creator
 
-    @UpdatedBy //3
+    @UpdatedBy // <3>
     String editor
 }
 //end::clazz[]
