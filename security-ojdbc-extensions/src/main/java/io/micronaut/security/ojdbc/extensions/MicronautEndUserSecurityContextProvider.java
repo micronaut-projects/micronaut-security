@@ -44,7 +44,7 @@ import java.util.function.Supplier;
  */
 @Experimental
 @Internal
-public final class MicronautEndUserSecurityContextProvider extends AbstractResourceProvider implements EndUserSecurityContextProvider {
+public final class MicronautEndUserSecurityContextProvider extends AbstractResourceProvider implements EndUserSecurityContextProvider, AutoCloseable {
     static final String DEFAULT_ROLE_PREFIX = "ORACLE_DATA_ROLE_";
     static final String DEFAULT_ATTRIBUTE_NAMES = "ORACLE_CONTEXT_ATTRIBUTES";
 
@@ -143,6 +143,19 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
         this.databaseAccessTokenFetcher = databaseAccessTokenFetcher;
         this.dataRolesFetcher = dataRolesFetcher;
         this.attributesFetcher = attributesFetcher;
+    }
+
+    /**
+     * Releases resources held by the fetchers, such as the HTTP clients used to request database access tokens.
+     *
+     * @throws Exception if a fetcher fails to close
+     * @since 5.4.0
+     */
+    @Override
+    public void close() throws Exception {
+        if (databaseAccessTokenFetcher instanceof AutoCloseable closeable) {
+            closeable.close();
+        }
     }
 
     @Override
