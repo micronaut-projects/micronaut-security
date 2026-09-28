@@ -22,6 +22,10 @@ micronaut:
 
 The issuer URL will be used to discover the endpoints exposed by the provider.
 
+The discovery document is fetched when the application starts. If the provider cannot be reached, the application still starts: the fetch is retried when the provider is first used, no more often than every five seconds, and the result is cached once it succeeds.
+
+As required by https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation[OpenID Connect Discovery 1.0, Section 4.3], the `issuer` returned in the discovery document must match the configured issuer (ignoring a trailing slash and the case of the scheme). Otherwise, the provider metadata cannot be resolved and an error naming both values is raised. For providers known to return a different issuer, set `validate-issuer: false` for that client.
+
 TIP: To disable a specific client for any given environment, set `enabled: false` within the client configuration.
 
 See the following tables for the configuration options:

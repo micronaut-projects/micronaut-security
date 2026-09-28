@@ -522,6 +522,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private final String name;
 
         private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
+        private boolean validateIssuer = DEFAULT_VALIDATE_ISSUER;
         private URL issuer;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
@@ -551,6 +552,20 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setFetchConfiguration(boolean fetchConfiguration) {
             this.fetchConfiguration = fetchConfiguration;
+        }
+
+        @Override
+        public boolean isValidateIssuer() {
+            return validateIssuer;
+        }
+
+        /**
+         * Whether the `issuer` returned by the OpenID configuration must match the configured issuer, ignoring a trailing slash and the case of the scheme, as required by OpenID Connect Discovery 1.0. Set it to false for providers known to return a different issuer. Default value: true.
+         *
+         * @param validateIssuer Whether the issuer returned by the OpenID configuration must match the configured issuer
+         */
+        public void setValidateIssuer(boolean validateIssuer) {
+            this.validateIssuer = validateIssuer;
         }
 
         @NonNull
