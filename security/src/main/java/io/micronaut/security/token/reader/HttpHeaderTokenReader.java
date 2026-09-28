@@ -17,7 +17,6 @@ package io.micronaut.security.token.reader;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
-import java.util.Locale;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,18 +64,17 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
         final String prefix = getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
+        if (prefix == null || prefix.isEmpty()) {
+            return Optional.of(authorization);
         }
-        String str = sb.toString().toLowerCase(Locale.ROOT);
-        if (authorization.toLowerCase(Locale.ROOT).startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            LOG.debug("{} does not start with {}", authorization, str);
-            return Optional.empty();
+        final int prefixLength = prefix.length();
+        if (authorization.length() > prefixLength
+                && authorization.charAt(prefixLength) == ' '
+                && authorization.regionMatches(true, 0, prefix, 0, prefixLength)) {
+            return Optional.of(authorization.substring(prefixLength + 1));
         }
+        LOG.debug("{} does not start with {}", authorization, prefix);
+        return Optional.empty();
     }
 }
