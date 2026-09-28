@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.token.jwt.config.JwtConfiguration;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
@@ -50,8 +51,9 @@ class NimbusJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> im
             List<SignatureConfiguration> imperativeSignatureConfigurations,
             List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations,
             JsonWebTokenParser<JWT> jsonWebTokenParser,
-            JsonWebTokenSignatureValidator<SignedJWT> signatureValidator) {
-        super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations);
+            JsonWebTokenSignatureValidator<SignedJWT> signatureValidator,
+            JwtConfiguration jwtConfiguration) {
+        super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations, jwtConfiguration);
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
     }
