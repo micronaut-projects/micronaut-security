@@ -16,6 +16,9 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import io.micronaut.security.endpoints.ControllerConfiguration;
+import org.jspecify.annotations.Nullable;
+
+import java.time.Duration;
 
 /**
  * Encapsulates the configuration of {@link KeysController}.
@@ -24,4 +27,16 @@ import io.micronaut.security.endpoints.ControllerConfiguration;
  * @since 1.1.0
  */
 public interface KeysControllerConfiguration extends ControllerConfiguration {
+
+    /**
+     * The value used for the {@code max-age} directive of the {@code Cache-Control} header of the JWKS response.
+     * A {@code null}, zero or negative duration disables the header.
+     *
+     * @return the maximum time a JWKS response may be cached by relying parties.
+     * @since 5.4.0
+     */
+    @Nullable
+    default Duration getCacheMaxAge() {
+        return KeysControllerConfigurationProperties.DEFAULT_CACHE_MAX_AGE;
+    }
 }

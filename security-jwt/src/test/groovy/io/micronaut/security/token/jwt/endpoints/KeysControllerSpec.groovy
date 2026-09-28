@@ -52,7 +52,72 @@ class KeysControllerSpec extends Specification {
         where:
         path << ['/keys', '/jwks.json']
     }
-    
+
+    void "keys endpoint response carries Cache-Control public, max-age=3600 by default"() {
+        given:
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'spec.name': 'keyscontrollerspec',
+        ])
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
+
+        when:
+        HttpResponse<Map> response = client.toBlocking().exchange(HttpRequest.GET('/keys'), Map)
+
+        then:
+        response.status == HttpStatus.OK
+        response.header('Cache-Control') == 'public, max-age=3600'
+
+        and:
+        response.body()['keys'].size() == 1
+
+        cleanup:
+        client.close()
+        embeddedServer.close()
+    }
+
+    void "micronaut.security.endpoints.keys.cache-max-age configures the Cache-Control max-age of the keys endpoint response"() {
+        given:
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'spec.name': 'keyscontrollerspec',
+                'micronaut.security.endpoints.keys.cache-max-age': '5m',
+        ])
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
+
+        when:
+        HttpResponse<Map> response = client.toBlocking().exchange(HttpRequest.GET('/keys'), Map)
+
+        then:
+        response.status == HttpStatus.OK
+        response.header('Cache-Control') == 'public, max-age=300'
+
+        cleanup:
+        client.close()
+        embeddedServer.close()
+    }
+
+    void "a cache-max-age of zero disables the Cache-Control header of the keys endpoint response"() {
+        given:
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'spec.name': 'keyscontrollerspec',
+                'micronaut.security.endpoints.keys.cache-max-age': '0s',
+        ])
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
+
+        when:
+        HttpResponse<Map> response = client.toBlocking().exchange(HttpRequest.GET('/keys'), Map)
+
+        then:
+        response.status == HttpStatus.OK
+        response.header('Cache-Control') == null
+
+        and:
+        response.body()['keys'].size() == 1
+
+        cleanup:
+        client.close()
+        embeddedServer.close()
+    }
+
     @Singleton
     @Requires(property = 'spec.name', value = 'keyscontrollerspec')
     static class RSAJwkProvider implements JwkProvider {

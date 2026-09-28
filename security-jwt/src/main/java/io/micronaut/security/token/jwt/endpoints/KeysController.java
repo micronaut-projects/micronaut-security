@@ -19,11 +19,16 @@ import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +37,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -52,16 +58,35 @@ public class KeysController {
 
     private final Collection<JwkProvider> jwkProviders;
     private final JsonMapper jsonMapper;
+    @Nullable
+    private final String cacheControl;
+
+    /**
+     * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
+     * @param jwkProviders a collection of JSON Web Key providers.
+     * @param jsonMapper Jackson ObjectMapper used to do serialization.
+     * @param keysControllerConfiguration Configuration for the Keys controller
+     * @since 5.4.0
+     */
+    @Inject
+    public KeysController(Collection<JwkProvider> jwkProviders,
+                          JsonMapper jsonMapper,
+                          KeysControllerConfiguration keysControllerConfiguration) {
+        this.jwkProviders = jwkProviders;
+        this.jsonMapper = jsonMapper;
+        this.cacheControl = cacheControlHeaderValue(keysControllerConfiguration.getCacheMaxAge());
+    }
 
     /**
      * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
      * @param jwkProviders a collection of JSON Web Key providers.
      * @param jsonMapper Jackson ObjectMapper used to do serialization.
      * @since 3.3
+     * @deprecated Use {@link #KeysController(Collection, JsonMapper, KeysControllerConfiguration)} instead
      */
+    @Deprecated(forRemoval = true, since = "5.4.0")
     public KeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
-        this.jwkProviders = jwkProviders;
-        this.jsonMapper = jsonMapper;
+        this(jwkProviders, jsonMapper, new KeysControllerConfigurationProperties());
     }
 
     /**
@@ -70,7 +95,27 @@ public class KeysController {
      */
     @Get
     @SingleResult
-    public Publisher<String> keys() {
+    public Publisher<MutableHttpResponse<String>> keys() {
+        return keysJson().map(this::response);
+    }
+
+    @Nullable
+    private static String cacheControlHeaderValue(@Nullable Duration cacheMaxAge) {
+        if (cacheMaxAge == null || cacheMaxAge.isZero() || cacheMaxAge.isNegative()) {
+            return null;
+        }
+        return "public, max-age=" + cacheMaxAge.toSeconds();
+    }
+
+    private MutableHttpResponse<String> response(String body) {
+        MutableHttpResponse<String> response = HttpResponse.ok(body);
+        if (cacheControl != null) {
+            response.header(HttpHeaders.CACHE_CONTROL, cacheControl);
+        }
+        return response;
+    }
+
+    private Mono<String> keysJson() {
         if (jwkProviders.isEmpty()) {
             return Mono.just(EMPTY_KEYS);
         }
@@ -93,6 +138,5 @@ public class KeysController {
                     }
                     return EMPTY_KEYS;
                 });
-
     }
 }
