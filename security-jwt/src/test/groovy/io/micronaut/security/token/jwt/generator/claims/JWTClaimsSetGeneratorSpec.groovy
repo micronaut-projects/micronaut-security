@@ -28,6 +28,38 @@ class JWTClaimsSetGeneratorSpec extends Specification {
         }
     }
 
+    def "authentication attributes cannot override registered claims but custom attributes are copied"() {
+        given:
+        ClaimsAudienceProvider claimsAudienceProvider = { ['https://api.example.com'] }
+        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(new TokenConfiguration() {}, null, claimsAudienceProvider, null)
+        Map<String, Object> attributes = [(Claims.EXPIRATION_TIME): 1,
+                                          (Claims.SUBJECT): 'attacker',
+                                          (Claims.ISSUER): 'x',
+                                          (Claims.AUDIENCE): 'x',
+                                          (Claims.NOT_BEFORE): 1,
+                                          (Claims.ISSUED_AT): 1,
+                                          (Claims.TOKEN_ID): 'x',
+                                          custom: 'y']
+        Authentication authentication = Authentication.build('admin', ['ROLE_USER'], attributes)
+
+        when:
+        Map<String, Object> claims = generator.generateClaims(authentication, 3600)
+
+        then:
+        claims[Claims.SUBJECT] == 'admin'
+        claims[Claims.ISSUER] == 'micronaut'
+        claims[Claims.AUDIENCE] == ['https://api.example.com']
+        claims[Claims.EXPIRATION_TIME] instanceof Date
+        ((Date) claims[Claims.EXPIRATION_TIME]).time > 1000L
+        claims[Claims.NOT_BEFORE] instanceof Date
+        ((Date) claims[Claims.NOT_BEFORE]).time > 1000L
+        claims[Claims.ISSUED_AT] instanceof Date
+        ((Date) claims[Claims.ISSUED_AT]).time > 1000L
+        !claims.containsKey(Claims.TOKEN_ID)
+        claims['custom'] == 'y'
+        claims['roles'].toList() == ['ROLE_USER']
+    }
+
     def "generateClaims includes aud claim when ClaimsAudienceProvider bean is present"() {
         given:
         ClaimsAudienceProvider claimsAudienceProvider = { ['https://api.example.com'] }
