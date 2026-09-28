@@ -15,10 +15,12 @@
  */
 package io.micronaut.security.token.propagation;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Base implementation class for {@link OutgoingRequestProcessorMatcher}.
@@ -28,13 +30,16 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractOutgoingRequestProcessorMatcher implements OutgoingRequestProcessorMatcher {
 
-    protected String serviceIdRegex;
+    private static final String SERVICE_ID_REGEX = "service-id-regex";
+    private static final String URI_REGEX = "uri-regex";
 
-    protected String uriRegex;
+    protected volatile String serviceIdRegex;
 
-    protected Pattern serviceIdPattern;
+    protected volatile String uriRegex;
 
-    protected Pattern uriPattern;
+    protected volatile Pattern serviceIdPattern;
+
+    protected volatile Pattern uriPattern;
 
     /**
      * @return a regular expression to match the service.
@@ -47,8 +52,10 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
     /**
      * a regular expression to match the service id.
      * @param serviceIdRegex serviceId regular expression
+     * @throws ConfigurationException if the value is not a valid regular expression
      */
     public void setServiceIdRegex(@Nullable String serviceIdRegex) {
+        this.serviceIdPattern = compile(SERVICE_ID_REGEX, serviceIdRegex);
         this.serviceIdRegex = serviceIdRegex;
     }
 
@@ -64,27 +71,35 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
     /**
      * a regular expression to match the uri.
      * @param uriRegex uri regular expression
+     * @throws ConfigurationException if the value is not a valid regular expression
      */
     public void setUriRegex(@Nullable String uriRegex) {
+        this.uriPattern = compile(URI_REGEX, uriRegex);
         this.uriRegex = uriRegex;
     }
 
     @Override
     @Nullable
     public Pattern getServiceIdPattern() {
-        if (this.serviceIdPattern == null && this.serviceIdRegex != null) {
-            serviceIdPattern = Pattern.compile(this.serviceIdRegex);
-        }
         return serviceIdPattern;
     }
 
     @Override
     @Nullable
     public Pattern getUriPattern() {
-        if (this.uriPattern == null && this.uriRegex != null) {
-            uriPattern = Pattern.compile(this.uriRegex);
-        }
         return uriPattern;
+    }
+
+    @Nullable
+    private static Pattern compile(String propertyName, @Nullable String regex) {
+        if (regex == null) {
+            return null;
+        }
+        try {
+            return Pattern.compile(regex);
+        } catch (PatternSyntaxException e) {
+            throw new ConfigurationException("Invalid regular expression '" + regex + "' for property " + propertyName + ": " + e.getDescription(), e);
+        }
     }
 
 }
