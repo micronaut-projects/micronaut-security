@@ -1,0 +1,11 @@
+Set `micronaut.security.csp.report-only=true` to emit `Content-Security-Policy-Report-Only` instead of enforcing the policy. This lets you identify violations before enforcing the policy:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      report-only: true
+----
+
+Report-only mode does not block resources. Review violation reports and browser console messages, adjust the policy, and then remove this setting to enforce it.
