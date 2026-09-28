@@ -16,8 +16,11 @@
 package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+
+import java.time.Duration;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link JwtClaimsValidatorConfiguration}.
@@ -60,7 +63,16 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_OPENID_ID_TOKEN = true;
 
+    /**
+     * The default clock skew in seconds.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final long DEFAULT_CLOCK_SKEW_SECONDS = 0;
+
     private boolean nonce = DEFAULT_NONCE;
+
+    @NonNull
+    private Duration clockSkew = Duration.ofSeconds(DEFAULT_CLOCK_SKEW_SECONDS);
 
     @Nullable
     private String audience;
@@ -170,5 +182,18 @@ public class JwtClaimsValidatorConfigurationProperties implements JwtClaimsValid
      */
     public void setOpenidIdtoken(boolean openidIdtoken) {
         this.openidIdtoken = openidIdtoken;
+    }
+
+    @Override
+    @NonNull
+    public Duration getClockSkew() {
+        return clockSkew;
+    }
+
+    /**
+     * @param clockSkew The clock skew tolerated when validating the expiration (exp) and not-before (nbf) claims. A token is considered expired only if its expiration time plus the clock skew is before the current time, and not yet valid only if its not-before time minus the clock skew is after the current time. Negative values are treated as zero. Default value {@value #DEFAULT_CLOCK_SKEW_SECONDS} seconds.
+     */
+    public void setClockSkew(@NonNull Duration clockSkew) {
+        this.clockSkew = clockSkew == null || clockSkew.isNegative() ? Duration.ZERO : clockSkew;
     }
 }
