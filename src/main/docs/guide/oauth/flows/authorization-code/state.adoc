@@ -4,7 +4,9 @@ Because the validation of the state requires the state to be stored somewhere te
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration.adoc[]
 
-You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has also been provided.
+WARNING: Cookie persistence is stateless by design and stores a single value per browser. It supports only **one in-flight login per browser**: if the user starts a second login (for example, in a second tab, or with a second provider) before completing the first one, the cookie is overwritten and the callback of the first login fails with a state validation error. The same applies to the cookie persistence of the <<pkce, PKCE code verifier>> and of the <<nonce, OpenID Connect nonce>>. If your users may have several logins in flight at the same time, use session persistence.
+
+You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has also been provided. Session persistence keeps several in-flight states per session (keyed by the nonce of the state), so concurrent login flows do not overwrite each other. At most five states are kept per session; when more logins are started, the oldest one is evicted.
 
 To enable state persistence with an http session:
 
@@ -36,3 +38,5 @@ There are several interfaces that implementations can be provided for to overrid
 |===
 
 To override the behavior of any of those beans, provide an implementation and replace the default one.
+
+If you provide your own api:security.oauth2.endpoint.authorization.state.StateFactory[], expose the state you build as the request attribute `StateFactory.REQUEST_ATTRIBUTE_STATE` as api:security.oauth2.endpoint.authorization.state.DefaultStateFactory[] does. The session persistence of the PKCE code verifier and of the OpenID Connect nonce reads that attribute to correlate those values with the login flow they belong to; without it, they fall back to a single value per session.

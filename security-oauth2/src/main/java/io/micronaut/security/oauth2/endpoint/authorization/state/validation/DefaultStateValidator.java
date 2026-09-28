@@ -49,7 +49,7 @@ public class DefaultStateValidator implements StateValidator {
         if (state == null) {
             throw new InvalidStateException("Provided state is null");
         }
-        Optional<State> persistedState = statePersistence.retrieveState(request);
+        Optional<State> persistedState = statePersistence.retrieveState(request, state);
         if (!persistedState.isPresent()) {
             throw new InvalidStateException("Could not find the stored state");
         }
