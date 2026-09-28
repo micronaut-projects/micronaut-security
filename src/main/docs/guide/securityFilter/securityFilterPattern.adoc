@@ -1,0 +1,15 @@
+By default, api:security.filters.SecurityFilter[] intercepts every request (`/**`). Set `micronaut.security.filter.pattern` to restrict the filter to a subset of paths:
+
+[configuration]
+----
+micronaut:
+  security:
+    filter:
+      pattern: /secured/**
+----
+
+WARNING: Requests whose path does not match the pattern are not processed by api:security.filters.SecurityFilter[], and therefore they are not secured.
+
+Only the `micronaut.security.filter.pattern` property affects which routes the filter intercepts. The filter pattern is resolved from that property when the filter is registered. api:security.filters.SecurityFilterConfiguration[]`#getPattern()` reflects the property, but replacing the api:security.filters.SecurityFilterConfiguration[] bean does not change the filter pattern.
+
+NOTE: `micronaut.security.filter.path` is deprecated. It still populates api:security.filters.SecurityFilterConfiguration[]`#getPattern()`, but it does not change which routes the filter intercepts. Use `micronaut.security.filter.pattern` instead.
