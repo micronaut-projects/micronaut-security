@@ -4,6 +4,8 @@ Because the validation of the state requires the state to be stored somewhere te
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration.adoc[]
 
+NOTE: The `SameSite` attribute of the state cookie is not set by default. You can set it with `micronaut.security.oauth2.state.cookie.cookie-same-site` (`Strict`, `Lax` or `None`). If you use `response_mode=form_post`, the authorization server posts the callback cross-site, so you may need `cookie-same-site: None`. Browsers only accept `SameSite=None` cookies that are also `Secure`, so set `micronaut.security.oauth2.state.cookie.cookie-secure: true` too. The PKCE (`micronaut.security.oauth2.pkce.cookie.*`) and nonce (`micronaut.security.oauth2.openid.nonce.cookie.*`) cookies support the same property.
+
 You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has also been provided.
 
 To enable state persistence with an http session:
