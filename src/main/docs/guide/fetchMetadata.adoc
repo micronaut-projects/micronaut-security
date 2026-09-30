@@ -1,0 +1,7 @@
+https://www.w3.org/TR/fetch-metadata/[Fetch Metadata] request headers describe how and where a browser request was initiated. The browser supplies headers such as `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest`, allowing a server to distinguish same-origin requests and navigations from potentially malicious cross-site resource requests.
+
+Micronaut Security Fetch Metadata uses those headers to enforce a https://web.dev/articles/fetch-metadata#enforcing_a_resource_isolation_policy[resource isolation policy]. The module allows requests that match an ordered policy rule and rejects requests that no rule allows with `403 Forbidden`.
+
+The Fetch Metadata filter runs before api:security.filters.SecurityFilter[], allowing unsuitable requests to be rejected before authentication and authorization are evaluated.
+
+IMPORTANT: Fetch Metadata is a defense-in-depth mechanism. It does not replace authentication, authorization, or <<csrf,CSRF protection>>. Non-browser clients can forge `Sec-Fetch-*` headers, and clients that do not send the headers require an explicit compatibility policy.

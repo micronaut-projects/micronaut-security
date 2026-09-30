@@ -1,0 +1,7 @@
+To exempt another deliberately public resource or implement an application-specific policy, provide a `@Singleton` implementation of api:security.fetchmetadata.HttpRequestFetchMetadataRule[]. For example, this rule allows a fixed public resource path:
+
+snippet::io.micronaut.security.docs.fetchmetadata.PublicResourceFetchMetadataRule[tags="imports,clazz"]
+
+A custom rule should return api:security.fetchmetadata.FetchMetadataRuleResult#UNKNOWN[UNKNOWN] when it does not apply. Returning `ALLOWED` or `REJECTED` stops rule evaluation. Because api:security.fetchmetadata.FetchMetadataRule[] implements `Ordered`, override `getOrder()` when the rule must run at a particular stage. Lower order values execute first; the example deliberately runs before every built-in rule.
+
+CAUTION: Keep exemptions narrow and based on server-controlled information such as an exact route or resource identifier. Do not exempt a path containing authenticated or user-specific data solely because it is publicly reachable.

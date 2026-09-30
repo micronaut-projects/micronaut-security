@@ -1,0 +1,52 @@
+The module evaluates its built-in rules in the same sequence as the https://web.dev/articles/fetch-metadata#enforcing_a_resource_isolation_policy[recommended resource isolation policy]:
+
+. Requests without `Sec-Fetch-Site`
+. Same-origin requests
+. Same-site requests
+. Requests initiated directly through browser UI
+. Simple `GET` navigations
+. Requests to https://docs.micronaut.io/latest/guide/#annotationBasedCors[CORS-enabled routes]
+
+The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule returns `UNKNOWN` when it does not apply, allowing evaluation to continue. If every rule returns `UNKNOWN`, the filter responds with `403 Forbidden`.
+
+[cols="1,2,1"]
+|===
+|Rule |Behavior |Default
+
+|No Fetch Metadata
+|Allows clients that do not send `Sec-Fetch-Site`. Requests with `Sec-Fetch-Site` are evaluated by the remaining rules even when another Fetch Metadata header is incomplete or unrecognized.
+|Enabled
+
+|Same origin
+|Allows `Sec-Fetch-Site: same-origin`.
+|Enabled
+
+|Same site
+|Allows `Sec-Fetch-Site: same-site`. Enable this only when every same-site origin is trusted.
+|Disabled
+
+|Browser initiated
+|Allows `Sec-Fetch-Site: none`, which represents requests explicitly initiated through browser UI, such as the address bar or a bookmark.
+|Enabled
+
+|Simple navigation
+|Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object` and `embed` destinations.
+|Enabled
+
+|CORS endpoint
+|Allows a request when the matched route declares CORS and its configuration accepts the request origin and method.
+|Enabled
+|===
+
+The simple navigation rule intentionally allows cross-site `GET` navigations, including frame and iframe destinations. It does not protect against framing; use https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors[CSP `frame-ancestors`] and/or https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] to control whether the application may be framed.
+
+The compatibility rule treats requests without `Sec-Fetch-Site` as Fetch Metadata-unaware. A request that includes `Sec-Fetch-Site` but has an incomplete or unrecognized Fetch Metadata value is evaluated by the remaining rules and is rejected if none allows it. To reject requests without `Sec-Fetch-Site`, disable `micronaut.security.fetch-metadata.rules.allow-no-fetch-metadata`. Verify that every supported browser, API client, webhook, monitoring probe, and other caller sends `Sec-Fetch-Site` or is otherwise exempted before enabling this stricter behavior.
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        allow-no-fetch-metadata: false
+----
