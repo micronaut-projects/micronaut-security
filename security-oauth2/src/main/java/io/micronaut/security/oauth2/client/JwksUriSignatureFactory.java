@@ -19,7 +19,9 @@ import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.oauth2.client.condition.JwksUriSignatureConfigurationCondition;
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
@@ -38,6 +40,7 @@ public class JwksUriSignatureFactory {
       * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration
      */
     @EachBean(DefaultOpenIdProviderMetadata.class)
+    @Requires(condition = JwksUriSignatureConfigurationCondition.class)
     public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
         DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
