@@ -20,13 +20,14 @@ import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import io.micronaut.security.utils.QualifierUtils;
 
 import java.util.Optional;
 
 /**
- * Checks whether an explicit JWKS configuration already exists for an OIDC provider.
+ * Checks whether an explicit JWKS configuration duplicates the URL discovered for an OIDC provider.
  */
 @Internal
 public final class JwksUriSignatureConfigurationCondition implements Condition {
@@ -38,10 +39,14 @@ public final class JwksUriSignatureConfigurationCondition implements Condition {
         if (name.isEmpty()) {
             return true;
         }
-        boolean missingExplicitConfiguration = context.findBean(JwksSignatureConfigurationProperties.class, Qualifiers.byName(name.get())).isEmpty();
-        if (!missingExplicitConfiguration) {
-            context.fail("Skipped OIDC JWKS configuration for provider [" + name.get() + "] because an explicit JWKS configuration exists");
+        Optional<JwksSignatureConfigurationProperties> explicitConfiguration = context.findBean(JwksSignatureConfigurationProperties.class, Qualifiers.byName(name.get()));
+        Optional<DefaultOpenIdProviderMetadata> providerMetadata = context.findBean(DefaultOpenIdProviderMetadata.class, Qualifiers.byName(name.get()));
+        boolean sameJwksUrl = explicitConfiguration
+            .flatMap(explicit -> providerMetadata.filter(metadata -> explicit.getUrl() != null && explicit.getUrl().equals(metadata.getJwksUri())))
+            .isPresent();
+        if (sameJwksUrl) {
+            context.fail("Skipped OIDC JWKS configuration for provider [" + name.get() + "] because the explicit JWKS configuration uses the same URL");
         }
-        return missingExplicitConfiguration;
+        return !sameJwksUrl;
     }
 }
