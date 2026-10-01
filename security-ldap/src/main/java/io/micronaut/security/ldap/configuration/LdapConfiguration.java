@@ -24,6 +24,7 @@ import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.SearchSettings;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -255,6 +256,13 @@ public class LdapConfiguration implements Toggleable {
          */
         public static final String PREFIX = LdapConfiguration.PREFIX + ".search";
 
+        /**
+         * The attributes stripped from the user search results by default.
+         *
+         * @since 5.4.0
+         */
+        public static final List<String> DEFAULT_EXCLUDED_ATTRIBUTES = List.of("userPassword", "unicodePwd");
+
         private static final boolean DEFAULT_SUBTREE = true;
         private static final String DEFAULT_FILTER = "(uid={0})";
 
@@ -262,6 +270,7 @@ public class LdapConfiguration implements Toggleable {
         private String base = "";
         private String filter = DEFAULT_FILTER;
         private String[] attributes = null;
+        private List<String> excludedAttributes = DEFAULT_EXCLUDED_ATTRIBUTES;
 
         /**
          * @return True if the subtree should be searched
@@ -319,12 +328,32 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
-         * Sets the attributes to return. Default all
+         * Sets the attributes to return. Default all, except the attributes listed in {@code excluded-attributes}.
+         * It is recommended to set this to the minimal set of attributes your application needs.
          *
          * @param attributes The attributes
          */
         public void setAttributes(String[] attributes) {
             this.attributes = attributes;
+        }
+
+        /**
+         * @return The attributes stripped from the search results. Never null.
+         * @since 5.4.0
+         */
+        public List<String> getExcludedAttributes() {
+            return excludedAttributes;
+        }
+
+        /**
+         * Sets the attributes stripped from the user search results before they are exposed to the application.
+         * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
+         *
+         * @param excludedAttributes The attributes to exclude
+         * @since 5.4.0
+         */
+        public void setExcludedAttributes(List<String> excludedAttributes) {
+            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : excludedAttributes;
         }
 
         /**
