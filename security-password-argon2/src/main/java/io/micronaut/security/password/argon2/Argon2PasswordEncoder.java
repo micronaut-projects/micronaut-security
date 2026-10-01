@@ -70,7 +70,7 @@ class Argon2PasswordEncoder implements PasswordEncoder {
 
     @Override
     public String encode(String rawPassword) {
-        if (StringUtils.isEmpty(rawPassword)) {
+        if (!StringUtils.hasText(rawPassword)) {
             throw new IllegalArgumentException("The raw password must not be blank");
         }
         byte[] salt = new byte[saltLength];
@@ -81,7 +81,7 @@ class Argon2PasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(String rawPassword, String encodedPassword) {
-        if (StringUtils.isEmpty(rawPassword) || StringUtils.isEmpty(encodedPassword)) {
+        if (!StringUtils.hasText(rawPassword) || !StringUtils.hasText(encodedPassword)) {
             return false;
         }
         Argon2PhcString phc = Argon2PhcString.parse(encodedPassword);
