@@ -12,6 +12,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.micronautSecurity)
     testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityPasswordArgon2)
     testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mnTest.junit.jupiter.engine)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)

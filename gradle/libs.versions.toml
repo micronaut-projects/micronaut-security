@@ -3,6 +3,7 @@ managed-nimbus-jose-jwt = "10.9.1"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
+managed-password4j = "1.8.4"
 micronaut = "5.2.4"
 micronaut-platform = "5.1.5"
 awaitility = "4.3.0"
@@ -48,6 +49,7 @@ managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
 managed-ojdbc-provider-common = { module = "com.oracle.database.jdbc:ojdbc-provider-common", version.ref = "managed-ojdbc-extensions" }
+managed-password4j = { module = "com.password4j:password4j", version.ref = "managed-password4j" }
 
 geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
