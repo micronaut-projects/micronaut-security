@@ -26,6 +26,9 @@ unrelated company, workflow, or template-package policy.
 ## Code Conventions
 
 - Follow nearby Micronaut patterns before introducing new abstractions.
+- The Java baseline is Java 25: Micronaut Framework 5 requires Java 25 or later.
+  Use Java 25 language features and JDK APIs freely, and do not add workarounds
+  for earlier Java releases.
 - Use `jakarta.inject` APIs, constructor injection where practical, and existing
   Micronaut configuration patterns for configuration models.
 - Use existing JSpecify annotations from `org.jspecify.annotations` for new or
