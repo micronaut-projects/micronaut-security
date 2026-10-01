@@ -1,5 +1,9 @@
 package io.micronaut.security.ojdbc.extensions;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
@@ -10,6 +14,7 @@ import oracle.sql.json.OracleJsonFactory;
 import oracle.sql.json.OracleJsonObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -148,6 +153,69 @@ class MicronautEndUserSecurityContextProviderTest {
         assertEquals(Set.of("REPORTING", "DBA"), context.dataRoles());
         assertEquals(Set.of("hr.employee"), context.attributes().keySet());
         assertEquals("Sales", context.attributes().get("hr.employee").getString("department"));
+    }
+
+    @Test
+    void debugLoggingIncludesDataRolesAndAttributeNamesButNotAttributeValues() {
+        OracleJsonObject attributeValues = JSON_FACTORY.createObject();
+        attributeValues.put("email", "alice@example.com");
+
+        List<String> messages = resolveContextAndCaptureLog(Level.DEBUG, List.of("REPORTING"), Map.of("hr.employee", attributeValues));
+
+        assertTrue(messages.stream().anyMatch(message -> message.contains("resolved with data roles [REPORTING] and attributes [hr.employee]")));
+        assertTrue(messages.stream().noneMatch(message -> message.contains("alice@example.com")));
+    }
+
+    @Test
+    void debugLoggingReportsEmptyCollectionsWhenDataRolesAndAttributesAreNull() {
+        List<String> messages = resolveContextAndCaptureLog(Level.DEBUG, null, null);
+
+        assertTrue(messages.stream().anyMatch(message -> message.contains("resolved with data roles [] and attributes []")));
+    }
+
+    @Test
+    void traceLoggingIncludesAttributeValues() {
+        OracleJsonObject attributeValues = JSON_FACTORY.createObject();
+        attributeValues.put("email", "alice@example.com");
+
+        List<String> messages = resolveContextAndCaptureLog(Level.TRACE, List.of("REPORTING"), Map.of("hr.employee", attributeValues));
+
+        // The attribute value assertion is covered by the pre-existing "resolved the attributes {}" TRACE statement
+        // in MicronautEndUserSecurityContextProvider#getEndUserSecurityContext. That statement is the only place
+        // the attribute values are logged, so removing it would break the TRACE-side contract pinned here.
+        assertTrue(messages.stream().anyMatch(message -> message.contains("hr.employee")));
+        assertTrue(messages.stream().anyMatch(message -> message.contains("alice@example.com")));
+    }
+
+    private static List<String> resolveContextAndCaptureLog(Level level,
+                                                            Collection<String> dataRoles,
+                                                            Map<String, OracleJsonObject> attributes) {
+        RecordingDataRolesFetcher dataRolesFetcher = new RecordingDataRolesFetcher();
+        dataRolesFetcher.dataRoles = dataRoles;
+        RecordingAttributesFetcher attributesFetcher = new RecordingAttributesFetcher();
+        attributesFetcher.attributes = attributes;
+        MicronautEndUserSecurityContextProvider provider = new MicronautEndUserSecurityContextProvider(
+                new RecordingDatabaseAccessTokenFetcher(),
+                dataRolesFetcher,
+                attributesFetcher);
+        Authentication authentication = Authentication.build("alice", List.of("ROLE_DETECTIVE"));
+        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
+                TOKEN_URL_PARAMETER, "https://example.com/token");
+
+        Logger logger = (Logger) LoggerFactory.getLogger(MicronautEndUserSecurityContextProvider.class);
+        Level originalLevel = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(level);
+        try {
+            withSecurityContext(authentication, END_USER_TOKEN, () -> provider.getEndUserSecurityContext(parameters));
+        } finally {
+            logger.setLevel(originalLevel);
+            logger.detachAppender(appender);
+            appender.stop();
+        }
+        return appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
     }
 
     private static EndUserSecurityContext withSecurityContext(Authentication authentication,
