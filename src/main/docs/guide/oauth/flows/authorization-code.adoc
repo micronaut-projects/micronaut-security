@@ -8,6 +8,8 @@ The URI templates for login and callback have a template variable in them `{prov
 
 For example `/oauth/login{?provider}` is not a valid configuration because Micronaut does not consider the query segment of a URL when routing requests. The provider variable must be part of the *path*.
 
+IMPORTANT: The absolute callback URL (the `redirect_uri` sent to the provider and repeated in the authorization code exchange) and the OpenID Connect `post_logout_redirect_uri` are built with api:http.server.util.HttpHostResolver[]. By default it derives the scheme, host and port from the request `Host` header and the `Forwarded` / `X-Forwarded-*` headers, so a client can influence them. When the application runs behind a reverse proxy, pin the host resolution with the `micronaut.server.host-resolution.*` properties (for example `host-allow-list`, `host-header`, `protocol-header` and `port-header`), or set `micronaut.security.oauth2.base-url` (for example `https://app.example.com`) so those URLs use a fixed base regardless of the request headers. A `callback-uri` that is already an absolute URL is used as is.
+
 TIP: It is possible to designate a default provider. The value of the configuration must match one of the client names. The default provider will have the same uri template, but with `null` passed as the provider parameter. By default that will result in `/oauth/login` being redirected to the default provider authentication page.
 
 #### OAuth Login and CSRF
