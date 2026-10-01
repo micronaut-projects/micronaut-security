@@ -1,6 +1,13 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.4 breaking changes
+
+=== Deprecations
+
+- The configuration property `micronaut.security.csrf.repository.cookie.enabled` is deprecated. Use `micronaut.security.csrf.repositories.cookie.enabled` instead. The deprecated property is still honored when `micronaut.security.csrf.repositories.cookie.enabled` is not set, and a warning is logged.
+- The configuration property `micronaut.security.csrf.repository.session.enabled` is accepted as a deprecated alias of `micronaut.security.csrf.repositories.session.enabled`, with the same precedence rules.
+
 == Micronaut Security 5.0 breaking changes
 
 - The JSR 250 annotation mappers have been moved to a new module `micronaut-security-processor`.

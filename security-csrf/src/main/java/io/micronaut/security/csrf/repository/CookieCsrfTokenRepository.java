@@ -17,7 +17,6 @@ package io.micronaut.security.csrf.repository;
 
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.csrf.CsrfConfiguration;
@@ -31,7 +30,7 @@ import java.util.Optional;
  * @since 4.11.0
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = CsrfConfiguration.PREFIX + ".repository.cookie.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(condition = CookieCsrfTokenRepositoryEnabledCondition.class)
 @Singleton
 public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>>  {
     private final CsrfConfiguration csrfConfiguration;
