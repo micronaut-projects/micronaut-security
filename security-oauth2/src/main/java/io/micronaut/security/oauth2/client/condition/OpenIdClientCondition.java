@@ -57,7 +57,7 @@ public class OpenIdClientCondition implements Condition {
                     if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                         Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
                         if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-                            return true;
+                            return ClientIdConditionUtils.hasClientId(clientConfiguration, context, failureMessagePrefix);
                         } else {
                             context.fail(failureMessagePrefix + "] because the response type is not 'code'");
                         }
