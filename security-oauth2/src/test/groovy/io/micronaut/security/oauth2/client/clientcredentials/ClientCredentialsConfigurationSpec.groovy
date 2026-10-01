@@ -53,6 +53,34 @@ class ClientCredentialsConfigurationSpec extends Specification {
         applicationContext.close()
     }
 
+    void "default expiration defaults to 5 minutes and can be set with client-credentials.default-expiration"(String value, Duration expected) {
+        given:
+        Map<String, Object> properties = [
+                'micronaut.security.oauth2.clients.authservermanual.token.url': "http://foo.bar/token",
+                'micronaut.security.oauth2.clients.authservermanual.client-id': 'XXX',
+                'micronaut.security.oauth2.clients.authservermanual.client-secret': 'YYY',
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.scope': 'create-file',
+        ]
+        if (value) {
+            properties['micronaut.security.oauth2.clients.authservermanual.client-credentials.default-expiration'] = value
+        }
+        ApplicationContext applicationContext = ApplicationContext.run(properties)
+
+        when:
+        OauthClientConfiguration configuration = applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
+
+        then:
+        configuration.getClientCredentials().get().defaultExpiration == expected
+
+        cleanup:
+        applicationContext.close()
+
+        where:
+        value | expected
+        null  | Duration.ofMinutes(5)
+        '90s' | Duration.ofSeconds(90)
+    }
+
     void "is is possible to set additionalRequestParams with client-credentials.additional-request-params"() {
         given:
         ApplicationContext applicationContext = ApplicationContext.run([
