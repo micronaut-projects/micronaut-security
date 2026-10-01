@@ -29,10 +29,13 @@ import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Abstract class which defines an implementation of {@link RedirectingLoginHandler} where a redirect response is issued.
@@ -42,6 +45,8 @@ import java.util.Optional;
  * @since 2.0.0
  */
 public abstract class CookieLoginHandler implements RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CookieLoginHandler.class);
 
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence;
@@ -53,6 +58,8 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
 
     @Nullable
     protected final String refresh;
+
+    private final AtomicBoolean insecureCookieWarned = new AtomicBoolean(false);
 
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
@@ -171,5 +178,26 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
             response = response.cookie(cookie);
         }
         return response;
+    }
+
+    /**
+     * Logs a warning, once per handler instance, when a token cookie is about to be issued without the {@code Secure} attribute
+     * because the request was not detected as secure and no explicit {@code cookie-secure} configuration is set.
+     * This typically happens behind a TLS-terminating proxy when forwarded-header handling is not configured.
+     *
+     * @param cookie The cookie about to be issued
+     * @param request The current request
+     * @since 5.4.0
+     */
+    protected void warnIfInsecureCookie(Cookie cookie, HttpRequest<?> request) {
+        if (cookie.isSecure() || request.isSecure()) {
+            return;
+        }
+        if (insecureCookieWarned.compareAndSet(false, true) && LOG.isWarnEnabled()) {
+            LOG.warn("Token cookie '{}' is being issued without the Secure attribute because the request was not detected as secure. "
+                    + "If the application runs behind a TLS-terminating proxy, set micronaut.security.token.cookie.cookie-secure=true "
+                    + "(and micronaut.security.token.refresh.cookie.cookie-secure=true) or configure forwarded-header handling so that requests are detected as secure. "
+                    + "This warning is logged only once.", cookie.getName());
+        }
     }
 }

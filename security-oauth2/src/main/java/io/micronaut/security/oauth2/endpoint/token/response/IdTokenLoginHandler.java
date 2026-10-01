@@ -104,6 +104,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessToken);
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
+        warnIfInsecureCookie(jwtCookie, request);
         if (!accessTokenCookieConfiguration.isSessionCookie()) {
             jwtCookie.maxAge(cookieExpiration(authentication, request));
         }
