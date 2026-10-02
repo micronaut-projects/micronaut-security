@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.password.argon2;
 
+import io.micronaut.core.annotation.Internal;
+
 /**
  * Configuration of the Argon2id {@link io.micronaut.security.password.PasswordEncoder}.
  *
@@ -24,6 +26,7 @@ package io.micronaut.security.password.argon2;
  *
  * @since 5.5.0
  */
+@Internal
 public interface Argon2PasswordEncoderConfiguration {
 
     /**
