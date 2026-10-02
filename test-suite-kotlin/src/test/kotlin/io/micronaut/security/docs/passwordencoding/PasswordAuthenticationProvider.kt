@@ -5,7 +5,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider
+import io.micronaut.security.authentication.provider.HttpRequestExecutorAuthenticationProvider
 import io.micronaut.security.password.PasswordEncoder
 import jakarta.inject.Singleton
 
@@ -15,7 +15,7 @@ import jakarta.inject.Singleton
 class PasswordAuthenticationProvider(
     private val userStore: UserStore,
     private val passwordEncoder: PasswordEncoder
-) : HttpRequestAuthenticationProvider<Any> {
+) : HttpRequestExecutorAuthenticationProvider<Any> {
 
     override fun authenticate(
         requestContext: HttpRequest<Any>?,

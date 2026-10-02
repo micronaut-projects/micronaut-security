@@ -5,14 +5,14 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider
+import io.micronaut.security.authentication.provider.HttpRequestExecutorAuthenticationProvider
 import io.micronaut.security.password.PasswordEncoder
 import jakarta.inject.Singleton
 
 @Requires(property = "spec.name", value = "PasswordEncodingTest")
 //tag::clazz[]
 @Singleton
-class PasswordAuthenticationProvider<B> implements HttpRequestAuthenticationProvider<B> {
+class PasswordAuthenticationProvider<B> implements HttpRequestExecutorAuthenticationProvider<B> {
 
     private final UserStore userStore
     private final PasswordEncoder passwordEncoder

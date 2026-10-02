@@ -2,7 +2,7 @@ from jakarta.inject import Singleton
 from micronaut.context.annotation import Requires
 from micronaut.http import HttpRequest
 from micronaut.security.authentication import AuthenticationFailureReason, AuthenticationRequest, AuthenticationResponse
-from micronaut.security.authentication.provider import HttpRequestAuthenticationProvider
+from micronaut.security.authentication.provider import HttpRequestExecutorAuthenticationProvider
 from micronaut.security.password import PasswordEncoder
 
 from .UserStore import UserStore
@@ -11,7 +11,7 @@ from .UserStore import UserStore
 @Requires(property="spec.name", value="PasswordEncodingTest")
 # tag::clazz[]
 @Singleton
-class PasswordAuthenticationProvider(HttpRequestAuthenticationProvider):
+class PasswordAuthenticationProvider(HttpRequestExecutorAuthenticationProvider):
 
     def __init__(self, userStore: UserStore, passwordEncoder: PasswordEncoder):
         self.userStore = userStore
