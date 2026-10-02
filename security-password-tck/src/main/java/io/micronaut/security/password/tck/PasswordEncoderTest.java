@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -143,7 +144,7 @@ class PasswordEncoderTest {
     }
 
     @Test
-    void encoderIsSafeForConcurrentUse(PasswordEncoder passwordEncoder) throws Exception {
+    void encoderIsSafeForConcurrentUse(PasswordEncoder passwordEncoder) {
         List<Callable<boolean[]>> tasks = new ArrayList<>();
         for (int i = 0; i < THREADS * 2; i++) {
             String password = PASSWORD + i;
@@ -154,8 +155,8 @@ class PasswordEncoderTest {
             });
         }
         try (ExecutorService executor = Executors.newFixedThreadPool(THREADS)) {
-            for (Future<boolean[]> result : executor.invokeAll(tasks)) {
-                boolean[] matches = result.get();
+            for (Future<boolean[]> result : assertDoesNotThrow(() -> executor.invokeAll(tasks))) {
+                boolean[] matches = assertDoesNotThrow(() -> result.get());
                 assertTrue(matches[0]);
                 assertFalse(matches[1]);
             }
