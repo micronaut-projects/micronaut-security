@@ -85,9 +85,7 @@ class PasswordEncoderTest {
         "pass word|pass  word",
     })
     void caseAndWhitespaceAreSignificant(String password, String other, PasswordEncoder passwordEncoder) {
-        String encoded = passwordEncoder.encode(password);
-        assertTrue(passwordEncoder.matches(password, encoded));
-        assertFalse(passwordEncoder.matches(other, encoded));
+        passwordAssert(password, other, passwordEncoder);
     }
 
     @ParameterizedTest
@@ -98,6 +96,10 @@ class PasswordEncoderTest {
         "🔐🔑, 🔐🗝",
     })
     void nonAsciiCharactersAreSignificant(String password, String other, PasswordEncoder passwordEncoder) {
+        passwordAssert(password, other, passwordEncoder);
+    }
+
+    private static void passwordAssert(String password, String other, PasswordEncoder passwordEncoder) {
         String encoded = passwordEncoder.encode(password);
         assertTrue(passwordEncoder.matches(password, encoded));
         assertFalse(passwordEncoder.matches(other, encoded));
