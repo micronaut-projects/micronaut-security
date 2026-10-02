@@ -2,6 +2,7 @@ package io.micronaut.security.password.tck.pbkdf2;
 
 import io.micronaut.security.password.PasswordEncoder;
 import jakarta.inject.Singleton;
+import jakarta.validation.constraints.NotBlank;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -27,10 +28,7 @@ class Pbkdf2PasswordEncoder implements PasswordEncoder {
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
-    public String encode(String rawPassword) {
-        if (rawPassword.isBlank()) {
-            throw new IllegalArgumentException("The raw password must not be blank");
-        }
+    public String encode(@NotBlank String rawPassword) {
         byte[] salt = new byte[SALT_LENGTH];
         secureRandom.nextBytes(salt);
         Base64.Encoder encoder = Base64.getEncoder().withoutPadding();
@@ -38,10 +36,7 @@ class Pbkdf2PasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public boolean matches(String rawPassword, String encodedPassword) {
-        if (rawPassword.isBlank()) {
-            return false;
-        }
+    public boolean matches(@NotBlank String rawPassword, @NotBlank String encodedPassword) {
         String[] parts = encodedPassword.split(SEPARATOR, -1);
         if (parts.length != 3) {
             return false;

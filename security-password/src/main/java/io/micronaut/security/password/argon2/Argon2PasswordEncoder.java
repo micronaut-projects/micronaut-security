@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.password.PasswordEncoder;
+import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ import static io.micronaut.security.password.argon2.Argon2PhcString.MEMORY_PER_L
  */
 @EachBean(Argon2HashFunction.class)
 @Internal
-final class Argon2PasswordEncoder implements PasswordEncoder {
+class Argon2PasswordEncoder implements PasswordEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(Argon2PasswordEncoder.class);
     private final SecureRandom secureRandom = new SecureRandom();
     private final Argon2HashFunction argon2HashFunction;
@@ -61,7 +62,7 @@ final class Argon2PasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public String encode(String rawPassword) {
+    public String encode(@NotBlank String rawPassword) {
         if (!StringUtils.hasText(rawPassword)) {
             throw new IllegalArgumentException("The raw password must not be blank");
         }
@@ -72,7 +73,7 @@ final class Argon2PasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public boolean matches(String rawPassword, String encodedPassword) {
+    public boolean matches(@NotBlank String rawPassword, @NotBlank String encodedPassword) {
         if (!StringUtils.hasText(rawPassword) || !StringUtils.hasText(encodedPassword)) {
             return false;
         }

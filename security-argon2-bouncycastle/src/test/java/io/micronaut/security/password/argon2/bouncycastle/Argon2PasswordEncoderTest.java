@@ -6,6 +6,7 @@ import io.micronaut.security.password.PasswordEncoder;
 import io.micronaut.security.password.argon2.Argon2HashFunction;
 import io.micronaut.security.password.argon2.Argon2PasswordEncoderConfigurationProperties;
 import io.micronaut.security.password.argon2.Argon2PhcString;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -91,9 +92,9 @@ class Argon2PasswordEncoderTest {
         PasswordEncoder encoder = encoder(configuration(256, 1, 1));
         String encoded = encoder.encode(PASSWORD);
 
-        assertThrows(IllegalArgumentException.class, () -> encoder.encode(blank));
-        assertFalse(encoder.matches(blank, encoded));
-        assertFalse(encoder.matches(PASSWORD, blank));
+        assertThrows(ConstraintViolationException.class, () -> encoder.encode(blank));
+        assertThrows(ConstraintViolationException.class, () -> encoder.matches(blank, encoded));
+        assertThrows(ConstraintViolationException.class, () -> encoder.matches(PASSWORD, blank));
     }
 
     @ParameterizedTest

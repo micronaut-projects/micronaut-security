@@ -17,9 +17,11 @@ package io.micronaut.security.password.tck;
 
 import io.micronaut.security.password.PasswordEncoder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
@@ -77,11 +79,25 @@ class PasswordEncoderTest {
     }
 
     @ParameterizedTest
+    @NullSource
     @ValueSource(strings = {"", " ", "   ", "\t", "\n"})
-    void blankPasswordsAreRejected(String blank, PasswordEncoder passwordEncoder) {
-        assertThrows(IllegalArgumentException.class, () -> passwordEncoder.encode(blank));
-        assertFalse(passwordEncoder.matches(blank, passwordEncoder.encode(PASSWORD)));
-        assertFalse(passwordEncoder.matches(PASSWORD, blank));
+    void encodeRejectsABlankRawPassword(String blank, PasswordEncoder passwordEncoder) {
+        assertThrows(ConstraintViolationException.class, () -> passwordEncoder.encode(blank));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " ", "   ", "\t", "\n"})
+    void matchesRejectsABlankRawPassword(String blank, PasswordEncoder passwordEncoder) {
+        String encoded = passwordEncoder.encode(PASSWORD);
+        assertThrows(ConstraintViolationException.class, () -> passwordEncoder.matches(blank, encoded));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " ", "   ", "\t", "\n"})
+    void matchesRejectsABlankEncodedPassword(String blank, PasswordEncoder passwordEncoder) {
+        assertThrows(ConstraintViolationException.class, () -> passwordEncoder.matches(PASSWORD, blank));
     }
 
     @ParameterizedTest

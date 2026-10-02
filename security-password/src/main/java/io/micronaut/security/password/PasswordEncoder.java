@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.password;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * Encodes passwords for storage and verifies a password against a stored encoding.
  *
@@ -24,9 +26,10 @@ package io.micronaut.security.password;
  * results, and the encoding never contains the raw password.</li>
  * <li>Every character of the raw password is significant. Implementations must not truncate the
  * password or alter its whitespace or case.</li>
- * <li>A blank raw password, one that is empty or contains only whitespace, is never encoded.
- * {@link #encode(String)} throws an {@link IllegalArgumentException} for it, and
- * {@link #matches(String, String)} returns {@code false}.</li>
+ * <li>Blank values, which are {@code null}, empty or contain only whitespace, are rejected. The
+ * parameters of {@link #encode(String)} and {@link #matches(String, String)} are constrained with
+ * {@link NotBlank}, so an implementation that is a validated bean throws a
+ * {@link jakarta.validation.ConstraintViolationException} for them.</li>
  * <li>{@link #matches(String, String)} returns {@code false}, instead of throwing an exception, for
  * an encoded password that the implementation cannot parse.</li>
  * <li>Implementations are safe for use by multiple threads.</li>
@@ -41,9 +44,9 @@ public interface PasswordEncoder {
      *
      * @param rawPassword the raw password
      * @return the encoded password, which includes the salt and any parameters required to verify it
-     * @throws IllegalArgumentException if the raw password is blank
+     * @throws jakarta.validation.ConstraintViolationException if the raw password is blank
      */
-    String encode(String rawPassword);
+    String encode(@NotBlank String rawPassword);
 
     /**
      * Verifies a raw password against an encoded password.
@@ -51,6 +54,8 @@ public interface PasswordEncoder {
      * @param rawPassword the raw password to verify
      * @param encodedPassword the encoded password, as returned by {@link #encode(String)}
      * @return {@code true} if the raw password matches the encoded password
+     * @throws jakarta.validation.ConstraintViolationException if the raw password or the encoded
+     * password is blank
      */
-    boolean matches(String rawPassword, String encodedPassword);
+    boolean matches(@NotBlank String rawPassword, @NotBlank String encodedPassword);
 }

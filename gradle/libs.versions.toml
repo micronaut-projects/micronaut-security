@@ -3,7 +3,6 @@ managed-nimbus-jose-jwt = "10.9.1"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
-managed-password4j = "1.8.4"
 managed-bouncycastle = "1.86"
 micronaut = "5.2.12"
 micronaut-platform = "5.2.1"
@@ -50,7 +49,6 @@ managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
 managed-ojdbc-provider-common = { module = "com.oracle.database.jdbc:ojdbc-provider-common", version.ref = "managed-ojdbc-extensions" }
-managed-password4j = { module = "com.password4j:password4j", version.ref = "managed-password4j" }
 managed-bcprov-jdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "managed-bouncycastle" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "managed-bouncycastle" }
 geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
