@@ -30,11 +30,16 @@ import java.util.regex.Pattern;
  * order {@code m,t,p} as decimals without leading zeros, and the salt and hash must be canonical
  * unpadded Base64. The optional {@code keyid} and {@code data} parameters are not supported.</p>
  *
+ * @param memory the memory cost, in kibibytes
+ * @param iterations the number of iterations
+ * @param parallelism the degree of parallelism
+ * @param salt the salt
+ * @param hash the hash
  * @see <a href="https://github.com/C2SP/C2SP/blob/main/phc-strings.md">PHC string format</a>
  * @since 5.5.0
  */
 @Internal
-public final class Argon2PhcString {
+public record Argon2PhcString(long memory, long iterations, int parallelism, byte[] salt, byte[] hash) {
 
     /** Lowest memory cost, in kibibytes, that Argon2 accepts for each degree of parallelism. */
     public static final int MEMORY_PER_LANE = 8;
@@ -56,20 +61,6 @@ public final class Argon2PhcString {
     private static final int BASE64_GROUP_LENGTH = 4;
     private static final Base64.Encoder ENCODER = Base64.getEncoder().withoutPadding();
     private static final Base64.Decoder DECODER = Base64.getDecoder();
-
-    private final long memory;
-    private final long iterations;
-    private final int parallelism;
-    private final byte[] salt;
-    private final byte[] hash;
-
-    private Argon2PhcString(long memory, long iterations, int parallelism, byte[] salt, byte[] hash) {
-        this.memory = memory;
-        this.iterations = iterations;
-        this.parallelism = parallelism;
-        this.salt = salt;
-        this.hash = hash;
-    }
 
     /**
      * Parses an Argon2id PHC string.
@@ -104,41 +95,6 @@ public final class Argon2PhcString {
     public static String format(int memory, int iterations, int parallelism, byte[] salt, byte[] hash) {
         return PREFIX + "m=" + memory + ",t=" + iterations + ",p=" + parallelism
             + '$' + ENCODER.encodeToString(salt) + '$' + ENCODER.encodeToString(hash);
-    }
-
-    /**
-     * @return the memory cost, in kibibytes
-     */
-    public long memory() {
-        return memory;
-    }
-
-    /**
-     * @return the number of iterations
-     */
-    public long iterations() {
-        return iterations;
-    }
-
-    /**
-     * @return the degree of parallelism
-     */
-    public int parallelism() {
-        return parallelism;
-    }
-
-    /**
-     * @return the salt
-     */
-    public byte[] salt() {
-        return salt;
-    }
-
-    /**
-     * @return the hash
-     */
-    public byte[] hash() {
-        return hash;
     }
 
     private static byte @Nullable [] decode(String base64) {
