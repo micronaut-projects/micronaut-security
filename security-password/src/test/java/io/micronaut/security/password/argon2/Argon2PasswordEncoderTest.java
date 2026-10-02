@@ -2,6 +2,7 @@ package io.micronaut.security.password.argon2;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -34,6 +35,22 @@ class Argon2PasswordEncoderTest {
         assertThrows(IllegalArgumentException.class, () -> encoder.encode(blank));
         assertFalse(encoder.matches(blank, encoder.encode(PASSWORD)));
         assertFalse(encoder.matches(PASSWORD, blank));
+    }
+
+    // the invocation names leave the arguments out: test reports cannot represent an unpaired surrogate
+    @ParameterizedTest(name = "[{index}]")
+    @CsvSource({
+        "\uD800, ?",
+        "\uDC00, ?",
+        "pass\uD800word, pass?word",
+        "\uD800A, ?A",
+    })
+    void rejectsPasswordsWithAnUnpairedSurrogate(String malformed, String lookalike) {
+        Argon2PasswordEncoder encoder = encoder();
+
+        assertThrows(IllegalArgumentException.class, () -> encoder.encode(malformed));
+        // the stub hashes the UTF-8 bytes of the password, where an unpaired surrogate becomes '?'
+        assertFalse(encoder.matches(malformed, encoder.encode(lookalike)));
     }
 
     @Test

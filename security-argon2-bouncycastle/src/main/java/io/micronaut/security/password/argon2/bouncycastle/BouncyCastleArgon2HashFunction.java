@@ -22,8 +22,6 @@ import jakarta.inject.Singleton;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * Argon2id password encoder implemented with Bouncy Castle.
  *
@@ -48,7 +46,9 @@ final class BouncyCastleArgon2HashFunction implements Argon2HashFunction {
         Argon2BytesGenerator generator = new Argon2BytesGenerator();
         generator.init(parameters);
         byte[] hash = new byte[hashLength];
-        generator.generateBytes(rawPassword.getBytes(StandardCharsets.UTF_8), hash);
+        // The char[] variant encodes the password as UTF-8 and fails on an unpaired surrogate, where
+        // String#getBytes would replace it with '?' and make different passwords hash alike.
+        generator.generateBytes(rawPassword.toCharArray(), hash);
         return hash;
     }
 

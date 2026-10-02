@@ -23,6 +23,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
@@ -66,6 +67,9 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         if (!StringUtils.hasText(rawPassword)) {
             throw new IllegalArgumentException("The raw password must not be blank");
         }
+        if (!isWellFormed(rawPassword)) {
+            throw new IllegalArgumentException("The raw password must not contain an unpaired surrogate");
+        }
         byte[] salt = new byte[saltLength];
         secureRandom.nextBytes(salt);
         byte[] hash = argon2HashFunction.hash(rawPassword, salt, memory, iterations, parallelism, hashLength);
@@ -75,6 +79,9 @@ class Argon2PasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(@NotBlank String rawPassword, @NotBlank String encodedPassword) {
         if (!StringUtils.hasText(rawPassword) || !StringUtils.hasText(encodedPassword)) {
+            return false;
+        }
+        if (!isWellFormed(rawPassword)) {
             return false;
         }
         Argon2PhcString phc = Argon2PhcString.parse(encodedPassword);
@@ -94,4 +101,11 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         return MessageDigest.isEqual(phc.hash(), hash);
     }
 
+    /**
+     * An unpaired surrogate has no UTF-8 encoding. Hash functions either fail on it or replace it,
+     * and a replacement makes different passwords hash alike.
+     */
+    private static boolean isWellFormed(String rawPassword) {
+        return StandardCharsets.UTF_8.newEncoder().canEncode(rawPassword);
+    }
 }

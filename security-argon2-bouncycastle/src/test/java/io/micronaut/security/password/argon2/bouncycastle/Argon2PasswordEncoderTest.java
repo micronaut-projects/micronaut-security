@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Argon2PasswordEncoderTest {
@@ -77,6 +78,23 @@ class Argon2PasswordEncoderTest {
         String encoded = encoder(configured).encode(PASSWORD);
 
         assertTrue(encoder(configuration(256, 1, 1)).matches(PASSWORD, encoded));
+    }
+
+    @Test
+    void anUnpairedSurrogateIsNotReplacedBeforeHashing() {
+        BouncyCastleArgon2HashFunction hashFunction = new BouncyCastleArgon2HashFunction();
+        byte[] salt = new byte[16];
+
+        assertThrows(IllegalStateException.class, () -> hashFunction.hash("\uD800", salt, 256, 1, 1, 32));
+    }
+
+    @Test
+    void aPasswordWithAnUnpairedSurrogateDoesNotMatchItsReplacement() {
+        PasswordEncoder encoder = encoder(configuration(256, 1, 1));
+        String encoded = encoder.encode("?");
+
+        assertTrue(encoder.matches("?", encoded));
+        assertFalse(encoder.matches("\uD800", encoded));
     }
 
     private static Argon2PasswordEncoderConfigurationProperties configuration(int memory, int iterations, int parallelism) {
