@@ -49,7 +49,7 @@ class Pbkdf2PasswordEncoder implements PasswordEncoder {
                 return false;
             }
             return MessageDigest.isEqual(expected, hash(rawPassword, salt, iterations));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             return false;
         }
     }
