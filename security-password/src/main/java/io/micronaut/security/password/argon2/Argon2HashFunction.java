@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.password.argon2;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.naming.Named;
 
 /**
@@ -23,6 +24,7 @@ import io.micronaut.core.naming.Named;
  *
  * @since 5.5.0
  */
+@Internal
 public interface Argon2HashFunction extends Named {
 
     /**
