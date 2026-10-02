@@ -1,6 +1,5 @@
 package io.micronaut.security.password.argon2;
 
-import io.micronaut.context.exceptions.ConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -18,7 +17,7 @@ class Argon2PasswordEncoderTest {
 
     @Test
     void formatsAndVerifiesWithTheSharedPolicy() {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties(), new StubArgon2HashFunction());
+        Argon2PasswordEncoder encoder = encoder();
         String encoded = encoder.encode(PASSWORD);
 
         assertTrue(encoded.startsWith("$argon2id$v=19$m=19456,t=2,p=1$"));
@@ -30,7 +29,7 @@ class Argon2PasswordEncoderTest {
     @NullSource
     @ValueSource(strings = {"", " ", "\t", "\n"})
     void rejectsBlankPasswords(String blank) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties(), new StubArgon2HashFunction());
+        Argon2PasswordEncoder encoder = encoder();
 
         assertThrows(IllegalArgumentException.class, () -> encoder.encode(blank));
         assertFalse(encoder.matches(blank, encoder.encode(PASSWORD)));
@@ -39,23 +38,13 @@ class Argon2PasswordEncoderTest {
 
     @Test
     void rejectsInvalidAndUnsafeEncodedPasswords() {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties(), new StubArgon2HashFunction());
+        Argon2PasswordEncoder encoder = encoder();
         String encoded = encoder.encode(PASSWORD);
 
         assertFalse(encoder.matches(PASSWORD, "invalid"));
         assertFalse(encoder.matches(PASSWORD, encoded.replace("m=19456", "m=262145")));
         assertFalse(encoder.matches(PASSWORD, encoded.replace("t=2", "t=11")));
         assertFalse(encoder.matches(PASSWORD, encoded.replace("m=19456", "m=7")));
-    }
-
-    @Test
-    void rejectsMemoryOutsideTheConfiguredRange() {
-        Argon2PasswordEncoderConfigurationProperties configuration = new Argon2PasswordEncoderConfigurationProperties();
-        configuration.setMemory(7);
-        assertThrows(ConfigurationException.class, () -> new Argon2PasswordEncoder(configuration, new StubArgon2HashFunction()));
-
-        configuration.setMemory(262145);
-        assertThrows(ConfigurationException.class, () -> new Argon2PasswordEncoder(configuration, new StubArgon2HashFunction()));
     }
 
     @Test
@@ -76,6 +65,10 @@ class Argon2PasswordEncoderTest {
         assertEquals(48, configuration.getHashLength());
         assertEquals(1024, configuration.getMaxMemory());
         assertEquals(5, configuration.getMaxIterations());
+    }
+
+    private static Argon2PasswordEncoder encoder() {
+        return new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties(), new StubArgon2HashFunction());
     }
 
     /** Only exercises the shared policy; concrete implementation tests cover real Argon2 hashing. */

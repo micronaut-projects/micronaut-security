@@ -36,6 +36,8 @@ import java.util.regex.Pattern;
 @Internal
 public final class Argon2PhcString {
 
+    /** Lowest memory cost, in kibibytes, that Argon2 accepts for each degree of parallelism. */
+    public static final int MEMORY_PER_LANE = 8;
     /** Highest degree of parallelism allowed by the PHC string format. */
     public static final int MAX_PARALLELISM = 255;
     /** Shortest salt, in bytes, allowed by the PHC string format. */

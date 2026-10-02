@@ -48,7 +48,9 @@ class Argon2PasswordEncoderTest {
             "micronaut.security.password.argon2.hash-length", 12
         ))) {
             PasswordEncoder encoder = context.getBean(PasswordEncoder.class);
-            assertInstanceOf(BouncyCastleArgon2HashFunction.class, context.getBean(Argon2HashFunction.class));
+            Argon2HashFunction hashFunction = context.getBean(Argon2HashFunction.class);
+            assertInstanceOf(BouncyCastleArgon2HashFunction.class, hashFunction);
+            assertEquals(BouncyCastleArgon2HashFunction.NAME, hashFunction.getName());
             String encoded = encoder.encode(PASSWORD);
             assertTrue(encoded.startsWith("$argon2id$v=19$m=256,t=3,p=2$"));
             Argon2PhcString phc = Argon2PhcString.parse(encoded);
@@ -125,7 +127,7 @@ class Argon2PasswordEncoderTest {
         Argon2PasswordEncoderConfigurationProperties configuration = configuration(15, 1, 2);
 
         BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> encoder(configuration));
-        assertTrue(exception.getMessage().contains("micronaut.security.password.argon2.memory"));
+        assertTrue(exception.getMessage().contains("memory - must be between 16 and 262144"));
     }
 
     private static Argon2PasswordEncoderConfigurationProperties configuration(int memory, int iterations, int parallelism) {

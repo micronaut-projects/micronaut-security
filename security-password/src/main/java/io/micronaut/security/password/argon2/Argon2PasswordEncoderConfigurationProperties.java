@@ -16,14 +16,22 @@
 package io.micronaut.security.password.argon2;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.core.annotation.Internal;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 /**
  * Binds configuration for the Argon2id password encoder.
  *
+ * <p>The configuration is bound and validated when the application context starts, so an invalid
+ * configuration prevents the application from starting.</p>
+ *
  * @since 5.5.0
  */
 @ConfigurationProperties(Argon2PasswordEncoderConfigurationProperties.PREFIX)
+@Context
+@ValidArgon2Costs
 @Internal
 public final class Argon2PasswordEncoderConfigurationProperties implements Argon2PasswordEncoderConfiguration {
     /** Configuration prefix for the Argon2id password encoder. */
@@ -44,10 +52,22 @@ public final class Argon2PasswordEncoderConfigurationProperties implements Argon
     public static final int DEFAULT_MAX_ITERATIONS = 10;
 
     private int memory = DEFAULT_MEMORY;
+
+    @Min(1)
     private int iterations = DEFAULT_ITERATIONS;
+
+    @Min(1)
+    @Max(Argon2PhcString.MAX_PARALLELISM)
     private int parallelism = DEFAULT_PARALLELISM;
+
+    @Min(Argon2PhcString.MIN_SALT_LENGTH)
+    @Max(Argon2PhcString.MAX_SALT_LENGTH)
     private int saltLength = DEFAULT_SALT_LENGTH;
+
+    @Min(Argon2PhcString.MIN_HASH_LENGTH)
+    @Max(Argon2PhcString.MAX_HASH_LENGTH)
     private int hashLength = DEFAULT_HASH_LENGTH;
+
     private int maxMemory = DEFAULT_MAX_MEMORY;
     private int maxIterations = DEFAULT_MAX_ITERATIONS;
 

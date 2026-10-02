@@ -16,7 +16,6 @@
 package io.micronaut.security.password.argon2;
 
 import io.micronaut.context.annotation.EachBean;
-import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.password.PasswordEncoder;
@@ -26,18 +25,18 @@ import org.slf4j.LoggerFactory;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
+import static io.micronaut.security.password.argon2.Argon2PhcString.MEMORY_PER_LANE;
+
 /**
- * Shared Argon2id password policy and PHC string handling for hash implementations.
- *
- * <p>Subclasses provide the Argon2id hash operation. Each invocation must be safe for concurrent
- * use and return exactly {@code hashLength} bytes.</p>
+ * {@link PasswordEncoder} that applies the Argon2id password policy and PHC string handling shared
+ * by the hash implementations, and delegates the hash operation to an {@link Argon2HashFunction}.
  */
 @EachBean(Argon2HashFunction.class)
 @Internal
 final class Argon2PasswordEncoder implements PasswordEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(Argon2PasswordEncoder.class);
-    private static final int MEMORY_PER_LANE = 8;
-
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final Argon2HashFunction argon2HashFunction;
     private final int memory;
     private final int iterations;
     private final int parallelism;
@@ -45,24 +44,20 @@ final class Argon2PasswordEncoder implements PasswordEncoder {
     private final int hashLength;
     private final int maxMemory;
     private final int maxIterations;
-    private final SecureRandom secureRandom = new SecureRandom();
-    private final Argon2HashFunction argon2HashFunction;
 
     /**
-     * Validates the configuration used for newly encoded passwords.
-     *
      * @param configuration the Argon2id configuration
-     * @param argon2HashFunction the Argon2 Hashfunction
+     * @param argon2HashFunction the Argon2 hash function
      */
     Argon2PasswordEncoder(Argon2PasswordEncoderConfiguration configuration, Argon2HashFunction argon2HashFunction) {
-        this.parallelism = requireRange("parallelism", configuration.getParallelism(), 1, Argon2PhcString.MAX_PARALLELISM);
+        this.argon2HashFunction = argon2HashFunction;
+        this.memory = configuration.getMemory();
+        this.iterations = configuration.getIterations();
+        this.parallelism = configuration.getParallelism();
+        this.saltLength = configuration.getSaltLength();
+        this.hashLength = configuration.getHashLength();
         this.maxMemory = configuration.getMaxMemory();
         this.maxIterations = configuration.getMaxIterations();
-        this.memory = requireRange("memory", configuration.getMemory(), MEMORY_PER_LANE * parallelism, maxMemory);
-        this.iterations = requireRange("iterations", configuration.getIterations(), 1, maxIterations);
-        this.saltLength = requireRange("salt-length", configuration.getSaltLength(), Argon2PhcString.MIN_SALT_LENGTH, Argon2PhcString.MAX_SALT_LENGTH);
-        this.hashLength = requireRange("hash-length", configuration.getHashLength(), Argon2PhcString.MIN_HASH_LENGTH, Argon2PhcString.MAX_HASH_LENGTH);
-        this.argon2HashFunction = argon2HashFunction;
     }
 
     @Override
@@ -96,11 +91,4 @@ final class Argon2PasswordEncoder implements PasswordEncoder {
         return MessageDigest.isEqual(phc.hash(), hash);
     }
 
-    private static int requireRange(String property, int value, int min, int max) {
-        if (value < min || value > max) {
-            throw new ConfigurationException(Argon2PasswordEncoderConfigurationProperties.PREFIX + "." + property
-                + " must be between " + min + " and " + max + " but was " + value);
-        }
-        return value;
-    }
 }
