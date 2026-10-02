@@ -3,7 +3,7 @@ plugins {
 }
 dependencies {
     api(projects.micronautSecurityPassword)
-    implementation(libs.managed.bcprov.jdk18on)
+    implementation(libs.bcprov)
     testImplementation(projects.micronautSecurityPasswordTck)
 }
 micronautBuild {
