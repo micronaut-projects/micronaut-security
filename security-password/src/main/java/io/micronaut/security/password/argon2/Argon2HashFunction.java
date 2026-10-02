@@ -28,17 +28,6 @@ import io.micronaut.core.naming.Named;
 public interface Argon2HashFunction extends Named {
 
     /**
-     * Hashes a password using the parameters and salt from a parsed PHC string.
-     *
-     * @param rawPassword the password
-     * @param phc the parsed Argon2id PHC string
-     * @return the Argon2id hash
-     */
-    default byte[] hash(String rawPassword, Argon2PhcString phc) {
-        return hash(rawPassword, phc.salt(), (int) phc.memory(), (int) phc.iterations(), phc.parallelism(), phc.hash().length);
-    }
-
-    /**
      * Hashes a password using the requested parameters.
      *
      * @param rawPassword the password

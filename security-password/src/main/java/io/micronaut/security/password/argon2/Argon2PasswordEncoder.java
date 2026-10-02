@@ -88,7 +88,9 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         if (phc.memory() < (long) MEMORY_PER_LANE * phc.parallelism()) {
             return false;
         }
-        byte[] hash = argon2HashFunction.hash(rawPassword, phc);
+        // the checks above keep the memory and iterations within the configured int limits
+        byte[] hash = argon2HashFunction.hash(rawPassword, phc.salt(), Math.toIntExact(phc.memory()),
+            Math.toIntExact(phc.iterations()), phc.parallelism(), phc.hash().length);
         return MessageDigest.isEqual(phc.hash(), hash);
     }
 
