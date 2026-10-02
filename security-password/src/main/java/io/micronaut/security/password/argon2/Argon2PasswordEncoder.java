@@ -56,7 +56,7 @@ final class Argon2PasswordEncoder implements PasswordEncoder {
      * @param configuration the Argon2id configuration
      * @param argon2HashFunction the Argon2 Hashfunction
      */
-    protected Argon2PasswordEncoder(Argon2PasswordEncoderConfiguration configuration, Argon2HashFunction argon2HashFunction) {
+    Argon2PasswordEncoder(Argon2PasswordEncoderConfiguration configuration, Argon2HashFunction argon2HashFunction) {
         this.parallelism = requireRange("parallelism", configuration.getParallelism(), 1, Argon2PhcString.MAX_PARALLELISM);
         this.maxMemory = configuration.getMaxMemory();
         this.maxIterations = configuration.getMaxIterations();
