@@ -17,6 +17,7 @@ package io.micronaut.security.password.argon2.bouncycastle;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.password.argon2.Argon2HashFunction;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
@@ -30,7 +31,10 @@ import java.nio.charset.StandardCharsets;
  */
 @Singleton
 @Internal
+@Named(BouncyCastleArgon2HashFunction.NAME)
 final class BouncyCastleArgon2HashFunction implements Argon2HashFunction {
+    static final String NAME = "bouncycastle";
+
     @Override
     public byte[] hash(String rawPassword, byte[] salt, int memory, int iterations, int parallelism, int hashLength) {
         Argon2Parameters parameters = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
@@ -46,5 +50,10 @@ final class BouncyCastleArgon2HashFunction implements Argon2HashFunction {
         byte[] hash = new byte[hashLength];
         generator.generateBytes(rawPassword.getBytes(StandardCharsets.UTF_8), hash);
         return hash;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

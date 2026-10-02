@@ -15,13 +15,15 @@
  */
 package io.micronaut.security.password.argon2;
 
+import io.micronaut.core.naming.Named;
+
 /**
  * Computes Argon2id hashes for an {@link Argon2PasswordEncoder}.
  * Implementations must be safe for concurrent use and return the requested number of bytes.
  *
  * @since 5.5.0
  */
-public interface Argon2HashFunction {
+public interface Argon2HashFunction extends Named {
 
     /**
      * Hashes a password using the parameters and salt from a parsed PHC string.

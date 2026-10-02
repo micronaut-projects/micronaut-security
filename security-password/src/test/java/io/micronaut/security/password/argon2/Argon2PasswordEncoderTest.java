@@ -89,5 +89,10 @@ class Argon2PasswordEncoderTest {
             }
             return result;
         }
+
+        @Override
+        public String getName() {
+            return "stub";
+        }
     }
 }

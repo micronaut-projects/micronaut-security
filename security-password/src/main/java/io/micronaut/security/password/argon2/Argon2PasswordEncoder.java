@@ -15,12 +15,11 @@
  */
 package io.micronaut.security.password.argon2;
 
-import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.password.PasswordEncoder;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +32,7 @@ import java.security.SecureRandom;
  * <p>Subclasses provide the Argon2id hash operation. Each invocation must be safe for concurrent
  * use and return exactly {@code hashLength} bytes.</p>
  */
-@Requires(bean = Argon2HashFunction.class)
-@Singleton
+@EachBean(Argon2HashFunction.class)
 @Internal
 final class Argon2PasswordEncoder implements PasswordEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(Argon2PasswordEncoder.class);
