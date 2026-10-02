@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.password;
 
+import io.micronaut.core.annotation.Experimental;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -37,6 +38,7 @@ import jakarta.validation.constraints.NotBlank;
  *
  * @since 5.5.0
  */
+@Experimental
 public interface PasswordEncoder {
 
     /**
