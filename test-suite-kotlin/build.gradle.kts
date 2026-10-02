@@ -19,7 +19,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
-    testImplementation(projects.micronautSecurityPasswordArgon2)
+    testImplementation(projects.micronautSecurityArgon2Password4j)
     testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
