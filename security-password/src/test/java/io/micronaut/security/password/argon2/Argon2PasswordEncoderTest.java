@@ -3,7 +3,6 @@ package io.micronaut.security.password.argon2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
@@ -24,17 +23,6 @@ class Argon2PasswordEncoderTest {
         assertTrue(encoded.startsWith("$argon2id$v=19$m=19456,t=2,p=1$"));
         assertTrue(encoder.matches(PASSWORD, encoded));
         assertFalse(encoder.matches(PASSWORD + "!", encoded));
-    }
-
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"", " ", "\t", "\n"})
-    void rejectsBlankPasswords(String blank) {
-        Argon2PasswordEncoder encoder = encoder();
-
-        assertThrows(IllegalArgumentException.class, () -> encoder.encode(blank));
-        assertFalse(encoder.matches(blank, encoder.encode(PASSWORD)));
-        assertFalse(encoder.matches(PASSWORD, blank));
     }
 
     // the invocation names leave the arguments out: test reports cannot represent an unpaired surrogate

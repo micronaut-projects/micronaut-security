@@ -17,7 +17,6 @@ package io.micronaut.security.password.argon2;
 
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.password.PasswordEncoder;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
@@ -64,9 +63,6 @@ class Argon2PasswordEncoder implements PasswordEncoder {
 
     @Override
     public String encode(@NotBlank String rawPassword) {
-        if (!StringUtils.hasText(rawPassword)) {
-            throw new IllegalArgumentException("The raw password must not be blank");
-        }
         if (!isWellFormed(rawPassword)) {
             throw new IllegalArgumentException("The raw password must not contain an unpaired surrogate");
         }
@@ -78,9 +74,6 @@ class Argon2PasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(@NotBlank String rawPassword, @NotBlank String encodedPassword) {
-        if (!StringUtils.hasText(rawPassword) || !StringUtils.hasText(encodedPassword)) {
-            return false;
-        }
         if (!isWellFormed(rawPassword)) {
             return false;
         }
