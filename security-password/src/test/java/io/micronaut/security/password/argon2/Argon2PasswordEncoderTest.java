@@ -37,14 +37,41 @@ class Argon2PasswordEncoderTest {
     }
 
     @Test
-    void rejectsInvalidAndUnsafeEncodedPasswords() {
+    void rejectsAnEncodedPasswordThatIsNotAPhcString() {
+        assertFalse(encoder().matches(PASSWORD, "invalid"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "m=262145,t=2,p=1", // more memory than the default max-memory
+        "m=19456,t=11,p=1", // more iterations than the default max-iterations
+        "m=7,t=2,p=1", // less memory than Argon2 requires
+        "m=15,t=2,p=2", // less memory than Argon2 requires for the parallelism
+    })
+    void rejectsUnsafeHashParameters(String parameters) {
         Argon2PasswordEncoder encoder = encoder();
         String encoded = encoder.encode(PASSWORD);
 
-        assertFalse(encoder.matches(PASSWORD, "invalid"));
-        assertFalse(encoder.matches(PASSWORD, encoded.replace("m=19456", "m=262145")));
-        assertFalse(encoder.matches(PASSWORD, encoded.replace("t=2", "t=11")));
-        assertFalse(encoder.matches(PASSWORD, encoded.replace("m=19456", "m=7")));
+        // the stub ignores the cost parameters, so only the limits can reject the password
+        assertFalse(encoder.matches(PASSWORD, encoded.replace("m=19456,t=2,p=1", parameters)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "m=1025,t=1,p=1",
+        "m=256,t=5,p=1",
+    })
+    void rejectsHashParametersAboveTheConfiguredLimits(String parameters) {
+        Argon2PasswordEncoderConfigurationProperties configuration = new Argon2PasswordEncoderConfigurationProperties();
+        configuration.setMemory(256);
+        configuration.setIterations(1);
+        configuration.setMaxMemory(1024);
+        configuration.setMaxIterations(4);
+        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration, new StubArgon2HashFunction());
+        String encoded = encoder.encode(PASSWORD);
+
+        assertTrue(encoder.matches(PASSWORD, encoded.replace("m=256,t=1,p=1", "m=1024,t=4,p=1")));
+        assertFalse(encoder.matches(PASSWORD, encoded.replace("m=256,t=1,p=1", parameters)));
     }
 
     @Test

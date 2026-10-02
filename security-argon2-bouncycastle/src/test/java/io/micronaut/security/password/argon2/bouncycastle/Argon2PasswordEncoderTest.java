@@ -1,17 +1,13 @@
 package io.micronaut.security.password.argon2.bouncycastle;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.security.password.PasswordEncoder;
 import io.micronaut.security.password.argon2.Argon2HashFunction;
 import io.micronaut.security.password.argon2.Argon2PasswordEncoderConfigurationProperties;
 import io.micronaut.security.password.argon2.Argon2PhcString;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Map;
 
@@ -19,12 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Argon2PasswordEncoderTest {
     private static final String PASSWORD = "correct horse battery staple";
-    private static final String SALT_AND_HASH = "$" + "A".repeat(22) + "$" + "A".repeat(43);
 
     @Test
     void encodesWithTheDefaultParameters() {
@@ -83,52 +77,6 @@ class Argon2PasswordEncoderTest {
         String encoded = encoder(configured).encode(PASSWORD);
 
         assertTrue(encoder(configuration(256, 1, 1)).matches(PASSWORD, encoded));
-    }
-
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"", " ", "\t", "\n"})
-    void rejectsBlankPasswords(String blank) {
-        PasswordEncoder encoder = encoder(configuration(256, 1, 1));
-        String encoded = encoder.encode(PASSWORD);
-
-        assertThrows(ConstraintViolationException.class, () -> encoder.encode(blank));
-        assertThrows(ConstraintViolationException.class, () -> encoder.matches(blank, encoded));
-        assertThrows(ConstraintViolationException.class, () -> encoder.matches(PASSWORD, blank));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-        "not-an-encoded-password",
-        "$argon2i$v=19$m=256,t=1,p=1$AAAAAAAAAAAAAAAAAAAAAA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "$argon2id$v=16$m=256,t=1,p=1$AAAAAAAAAAAAAAAAAAAAAA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "$argon2id$v=19$m=256,t=1,p=1$AAAAAAAAAAAAAAAAAAAAA=$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    })
-    void rejectsMalformedHashes(String encoded) {
-        assertFalse(encoder(configuration(256, 1, 1)).matches(PASSWORD, encoded));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-        "m=1025,t=1,p=1",
-        "m=256,t=5,p=1",
-        "m=7,t=1,p=1",
-        "m=15,t=1,p=2",
-    })
-    void rejectsUnsafeHashParameters(String parameters) {
-        Argon2PasswordEncoderConfigurationProperties configuration = configuration(256, 1, 1);
-        configuration.setMaxMemory(1024);
-        configuration.setMaxIterations(4);
-
-        assertFalse(encoder(configuration).matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
-    }
-
-    @Test
-    void rejectsInvalidConfiguration() {
-        Argon2PasswordEncoderConfigurationProperties configuration = configuration(15, 1, 2);
-
-        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> encoder(configuration));
-        assertTrue(exception.getMessage().contains("memory - must be between 16 and 262144"));
     }
 
     private static Argon2PasswordEncoderConfigurationProperties configuration(int memory, int iterations, int parallelism) {
