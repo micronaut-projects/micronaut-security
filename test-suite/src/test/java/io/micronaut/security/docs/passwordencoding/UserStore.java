@@ -5,7 +5,6 @@ import io.micronaut.security.password.PasswordEncoder;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Requires(property = "spec.name", value = "PasswordEncodingTest")
@@ -24,8 +23,8 @@ class UserStore {
         encodedPasswords.put(username, passwordEncoder.encode(rawPassword)); // <1>
     }
 
-    Optional<String> findEncodedPassword(String username) {
-        return Optional.ofNullable(encodedPasswords.get(username));
+    String findEncodedPassword(String username) {
+        return encodedPasswords.get(username);
     }
 }
 //end::clazz[]

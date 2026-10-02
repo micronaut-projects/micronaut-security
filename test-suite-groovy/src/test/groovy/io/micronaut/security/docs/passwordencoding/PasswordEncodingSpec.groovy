@@ -21,9 +21,11 @@ class PasswordEncodingSpec extends Specification {
         userStore.register("sherlock", "elementary")
 
         then:
-        userStore.findEncodedPassword("sherlock").orElseThrow().startsWith('$argon2id$v=19$')
+        userStore.findEncodedPassword("sherlock").startsWith('$argon2id$v=19$')
         authenticationProvider.authenticate(null, new UsernamePasswordCredentials("sherlock", "elementary")).authenticated
         !authenticationProvider.authenticate(null, new UsernamePasswordCredentials("sherlock", "wrong")).authenticated
         !authenticationProvider.authenticate(null, new UsernamePasswordCredentials("watson", "elementary")).authenticated
+        authenticationProvider.authenticate(null, new UsernamePasswordCredentials("sherlock", "wrong")).message ==
+                authenticationProvider.authenticate(null, new UsernamePasswordCredentials("watson", "elementary")).message
     }
 }

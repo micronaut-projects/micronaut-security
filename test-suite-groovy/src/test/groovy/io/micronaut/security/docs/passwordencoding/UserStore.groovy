@@ -22,8 +22,8 @@ class UserStore {
         encodedPasswords.put(username, passwordEncoder.encode(rawPassword)) // <1>
     }
 
-    Optional<String> findEncodedPassword(String username) {
-        Optional.ofNullable(encodedPasswords.get(username))
+    String findEncodedPassword(String username) {
+        encodedPasswords.get(username)
     }
 }
 //end::clazz[]

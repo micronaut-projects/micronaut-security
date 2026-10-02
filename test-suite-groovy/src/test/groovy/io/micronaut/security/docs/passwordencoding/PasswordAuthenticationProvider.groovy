@@ -16,18 +16,21 @@ class PasswordAuthenticationProvider<B> implements HttpRequestExecutorAuthentica
 
     private final UserStore userStore
     private final PasswordEncoder passwordEncoder
+    private final String unknownUserPassword
 
     PasswordAuthenticationProvider(UserStore userStore, PasswordEncoder passwordEncoder) {
         this.userStore = userStore
         this.passwordEncoder = passwordEncoder
+        this.unknownUserPassword = passwordEncoder.encode(UUID.randomUUID().toString()) // <1>
     }
 
     @Override
     AuthenticationResponse authenticate(HttpRequest<B> requestContext, AuthenticationRequest<String, String> authRequest) {
-        userStore.findEncodedPassword(authRequest.identity)
-                .filter(encodedPassword -> passwordEncoder.matches(authRequest.secret, encodedPassword)) // <1>
-                .map(encodedPassword -> AuthenticationResponse.success(authRequest.identity))
-                .orElseGet(() -> AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
+        String encodedPassword = userStore.findEncodedPassword(authRequest.identity)
+        boolean matches = passwordEncoder.matches(authRequest.secret, encodedPassword ?: unknownUserPassword) // <2>
+        encodedPassword != null && matches
+                ? AuthenticationResponse.success(authRequest.identity)
+                : AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH) // <3>
     }
 }
 //end::clazz[]

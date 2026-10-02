@@ -24,6 +24,7 @@ class PasswordEncodingTest:
         assert self.authenticate("sherlock", "elementary").isAuthenticated()
         assert not self.authenticate("sherlock", "wrong").isAuthenticated()
         assert not self.authenticate("watson", "elementary").isAuthenticated()
+        assert self.authenticate("sherlock", "wrong").getMessage().get() == self.authenticate("watson", "elementary").getMessage().get()
 
     def authenticate(self, username: str, password: str):
         return self.authenticationProvider.authenticate(None, UsernamePasswordCredentials(username, password))

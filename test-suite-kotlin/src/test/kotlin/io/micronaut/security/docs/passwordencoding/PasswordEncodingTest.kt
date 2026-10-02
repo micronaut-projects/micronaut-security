@@ -25,5 +25,9 @@ class PasswordEncodingTest {
         Assertions.assertTrue(authenticationProvider.authenticate(null, UsernamePasswordCredentials("sherlock", "elementary")).isAuthenticated)
         Assertions.assertFalse(authenticationProvider.authenticate(null, UsernamePasswordCredentials("sherlock", "wrong")).isAuthenticated)
         Assertions.assertFalse(authenticationProvider.authenticate(null, UsernamePasswordCredentials("watson", "elementary")).isAuthenticated)
+        Assertions.assertEquals(
+            authenticationProvider.authenticate(null, UsernamePasswordCredentials("sherlock", "wrong")).message,
+            authenticationProvider.authenticate(null, UsernamePasswordCredentials("watson", "elementary")).message
+        )
     }
 }
