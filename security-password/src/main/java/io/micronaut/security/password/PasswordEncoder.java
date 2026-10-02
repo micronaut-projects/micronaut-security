@@ -24,6 +24,9 @@ package io.micronaut.security.password;
  * results, and the encoding never contains the raw password.</li>
  * <li>Every character of the raw password is significant. Implementations must not truncate the
  * password or alter its whitespace or case.</li>
+ * <li>A blank raw password, one that is empty or contains only whitespace, is never encoded.
+ * {@link #encode(String)} throws an {@link IllegalArgumentException} for it, and
+ * {@link #matches(String, String)} returns {@code false}.</li>
  * <li>{@link #matches(String, String)} returns {@code false}, instead of throwing an exception, for
  * an encoded password that the implementation cannot parse.</li>
  * <li>Implementations are safe for use by multiple threads.</li>
@@ -38,6 +41,7 @@ public interface PasswordEncoder {
      *
      * @param rawPassword the raw password
      * @return the encoded password, which includes the salt and any parameters required to verify it
+     * @throws IllegalArgumentException if the raw password is blank
      */
     String encode(String rawPassword);
 

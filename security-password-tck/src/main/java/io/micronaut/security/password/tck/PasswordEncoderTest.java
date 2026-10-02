@@ -32,6 +32,7 @@ import java.util.concurrent.Future;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest(startApplication = false)
@@ -73,6 +74,14 @@ class PasswordEncoderTest {
     @Test
     void matchesReturnsFalseForADifferentPassword(PasswordEncoder passwordEncoder) {
         assertFalse(passwordEncoder.matches("Tr0ub4dor&3", passwordEncoder.encode(PASSWORD)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "   ", "\t", "\n"})
+    void blankPasswordsAreRejected(String blank, PasswordEncoder passwordEncoder) {
+        assertThrows(IllegalArgumentException.class, () -> passwordEncoder.encode(blank));
+        assertFalse(passwordEncoder.matches(blank, passwordEncoder.encode(PASSWORD)));
+        assertFalse(passwordEncoder.matches(PASSWORD, blank));
     }
 
     @ParameterizedTest
