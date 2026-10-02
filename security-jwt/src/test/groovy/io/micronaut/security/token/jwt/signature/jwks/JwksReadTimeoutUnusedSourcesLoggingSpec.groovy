@@ -73,6 +73,8 @@ class JwksReadTimeoutUnusedSourcesLoggingSpec extends Specification {
                 'micronaut.security.authentication': 'bearer',
                 'micronaut.http.client.read-timeout': '50ms',
                 'micronaut.http.client.pool.enabled': false,
+                'micronaut.http.services.provider1.url': "http://localhost:${provider1.port}",
+                'micronaut.http.services.provider1.read-timeout': '5s',
                 'micronaut.security.token.jwt.signatures.jwks.provider1.url': "http://localhost:${provider1.port}/keys",
                 'micronaut.security.token.jwt.signatures.jwks.provider2.url': "http://localhost:${provider2.port}/keys",
                 'micronaut.security.token.jwt.signatures.jwks.provider3.url': "http://localhost:${provider3.port}/keys",
