@@ -25,7 +25,7 @@ import io.micronaut.core.annotation.Internal;
  */
 @ConfigurationProperties(Argon2PasswordEncoderConfigurationProperties.PREFIX)
 @Internal
-final class Argon2PasswordEncoderConfigurationProperties implements Argon2PasswordEncoderConfiguration {
+public final class Argon2PasswordEncoderConfigurationProperties implements Argon2PasswordEncoderConfiguration {
     /** Configuration prefix for the Argon2id password encoder. */
     public static final String PREFIX = "micronaut.security.password.argon2";
     /** Default memory cost, in kibibytes. */
@@ -50,6 +50,10 @@ final class Argon2PasswordEncoderConfigurationProperties implements Argon2Passwo
     private int hashLength = DEFAULT_HASH_LENGTH;
     private int maxMemory = DEFAULT_MAX_MEMORY;
     private int maxIterations = DEFAULT_MAX_ITERATIONS;
+
+    /** Creates the shared Argon2id configuration with default values. */
+    public Argon2PasswordEncoderConfigurationProperties() {
+    }
 
     @Override
     public int getMemory() {

@@ -23,7 +23,7 @@ class Argon2PasswordEncoderTest {
 
     @Test
     void encodesWithTheDefaultParameters() {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties());
+        Argon2PasswordEncoder encoder = encoder(new Argon2PasswordEncoderConfigurationProperties());
 
         String encoded = encoder.encode(PASSWORD);
 
@@ -37,7 +37,7 @@ class Argon2PasswordEncoderTest {
 
     @Test
     void encodesWithTheConfiguredParameters() {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 3, 2, 8, 12));
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 3, 2, 8, 12));
 
         String encoded = encoder.encode(PASSWORD);
 
@@ -63,7 +63,7 @@ class Argon2PasswordEncoderTest {
         "pässwörd-密码-🔐, '$argon2id$v=19$m=16384,t=2,p=1$9Qn2FOuD/EI7hi34pX2m2w$uSEl4qIaL4M+Jbs7Gvrt7YxY+rVOat+MwRlrU0yE9k4'",
     })
     void matchesHashesCreatedByOtherImplementations(String password, String encoded) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(new Argon2PasswordEncoderConfigurationProperties());
+        Argon2PasswordEncoder encoder = encoder(new Argon2PasswordEncoderConfigurationProperties());
 
         assertTrue(encoder.matches(password, encoded));
         assertFalse(encoder.matches(password + "!", encoded));
@@ -71,8 +71,8 @@ class Argon2PasswordEncoderTest {
 
     @Test
     void matchesAHashCreatedWithParametersOtherThanTheConfiguredOnes() {
-        String encoded = new Argon2PasswordEncoder(configuration(512, 3, 2, 24, 48)).encode(PASSWORD);
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 1, 1, 16, 32));
+        String encoded = encoder(configuration(512, 3, 2, 24, 48)).encode(PASSWORD);
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 1, 1, 16, 32));
 
         assertTrue(encoder.matches(PASSWORD, encoded));
         assertFalse(encoder.matches("Tr0ub4dor&3", encoded));
@@ -83,12 +83,12 @@ class Argon2PasswordEncoderTest {
         Argon2PasswordEncoderConfigurationProperties highest = configuration(1024, 4, 1, 16, 32);
         highest.setMaxMemory(1024);
         highest.setMaxIterations(4);
-        String encoded = new Argon2PasswordEncoder(highest).encode(PASSWORD);
+        String encoded = encoder(highest).encode(PASSWORD);
         Argon2PasswordEncoderConfigurationProperties configuration = configuration(256, 1, 1, 16, 32);
         configuration.setMaxMemory(1024);
         configuration.setMaxIterations(4);
 
-        assertTrue(new Argon2PasswordEncoder(configuration).matches(PASSWORD, encoded));
+        assertTrue(encoder(configuration).matches(PASSWORD, encoded));
     }
 
     @ParameterizedTest
@@ -101,7 +101,7 @@ class Argon2PasswordEncoderTest {
         Argon2PasswordEncoderConfigurationProperties configuration = configuration(256, 1, 1, 16, 32);
         configuration.setMaxMemory(1024);
 
-        assertFalse(new Argon2PasswordEncoder(configuration).matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
+        assertFalse(encoder(configuration).matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
     }
 
     @ParameterizedTest
@@ -114,7 +114,7 @@ class Argon2PasswordEncoderTest {
         Argon2PasswordEncoderConfigurationProperties configuration = configuration(256, 1, 1, 16, 32);
         configuration.setMaxIterations(4);
 
-        assertFalse(new Argon2PasswordEncoder(configuration).matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
+        assertFalse(encoder(configuration).matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
     }
 
     @ParameterizedTest
@@ -124,7 +124,7 @@ class Argon2PasswordEncoderTest {
         "m=2039,t=1,p=255",
     })
     void doesNotMatchAHashThatDeclaresLessMemoryThanItsParallelismRequires(String parameters) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 1, 1, 16, 32));
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 1, 1, 16, 32));
 
         assertFalse(encoder.matches(PASSWORD, "$argon2id$v=19$" + parameters + SALT_AND_HASH));
     }
@@ -137,7 +137,7 @@ class Argon2PasswordEncoderTest {
         "$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/PgBkqquzi.Ss7KIUgO2t0jWMUW",
     })
     void doesNotMatchAnEncodedPasswordItCannotParse(String encoded) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 1, 1, 16, 32));
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 1, 1, 16, 32));
 
         assertFalse(encoder.matches(PASSWORD, encoded));
     }
@@ -146,7 +146,7 @@ class Argon2PasswordEncoderTest {
     @NullSource
     @ValueSource(strings = {"", " ", "\t", "\n"})
     void encodeRejectsABlankPassword(String blank) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 1, 1, 16, 32));
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 1, 1, 16, 32));
 
         assertThrows(IllegalArgumentException.class, () -> encoder.encode(blank));
     }
@@ -155,7 +155,7 @@ class Argon2PasswordEncoderTest {
     @NullSource
     @ValueSource(strings = {"", " ", "\t", "\n"})
     void doesNotMatchABlankPasswordOrABlankEncodedPassword(String blank) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(256, 1, 1, 16, 32));
+        Argon2PasswordEncoder encoder = encoder(configuration(256, 1, 1, 16, 32));
         String encoded = encoder.encode(PASSWORD);
 
         assertFalse(encoder.matches(blank, encoded));
@@ -180,7 +180,7 @@ class Argon2PasswordEncoderTest {
     void rejectsAnInvalidConfiguration(String property, int memory, int iterations, int parallelism, int saltLength, int hashLength) {
         Argon2PasswordEncoderConfigurationProperties configuration = configuration(memory, iterations, parallelism, saltLength, hashLength);
 
-        ConfigurationException e = assertThrows(ConfigurationException.class, () -> new Argon2PasswordEncoder(configuration));
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> encoder(configuration));
 
         assertTrue(e.getMessage().startsWith("micronaut.security.password.argon2." + property + " must be between "));
     }
@@ -192,7 +192,7 @@ class Argon2PasswordEncoderTest {
         "2040, 10, 255, 48, 64",
     })
     void acceptsAConfigurationAtTheLimits(int memory, int iterations, int parallelism, int saltLength, int hashLength) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(configuration(memory, iterations, parallelism, saltLength, hashLength));
+        Argon2PasswordEncoder encoder = encoder(configuration(memory, iterations, parallelism, saltLength, hashLength));
 
         assertNotNull(encoder);
     }
@@ -205,5 +205,9 @@ class Argon2PasswordEncoderTest {
         configuration.setSaltLength(saltLength);
         configuration.setHashLength(hashLength);
         return configuration;
+    }
+
+    private static Argon2PasswordEncoder encoder(Argon2PasswordEncoderConfiguration configuration) {
+        return new Argon2PasswordEncoder(configuration, new Password4jArgon2HashFunction());
     }
 }

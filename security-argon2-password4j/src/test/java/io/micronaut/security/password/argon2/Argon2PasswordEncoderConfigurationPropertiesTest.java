@@ -76,6 +76,7 @@ class Argon2PasswordEncoderConfigurationPropertiesTest {
             PasswordEncoder encoder = context.getBean(PasswordEncoder.class);
 
             assertInstanceOf(Argon2PasswordEncoder.class, encoder);
+            assertInstanceOf(Password4jArgon2HashFunction.class, context.getBean(Argon2HashFunction.class));
             String encoded = encoder.encode("correct horse battery staple");
             assertTrue(encoded.startsWith("$argon2id$v=19$m=512,t=3,p=2$"));
             assertTrue(encoder.matches("correct horse battery staple", encoded));

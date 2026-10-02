@@ -15,8 +15,7 @@
  */
 package io.micronaut.security.password.argon2;
 
-import com.password4j.Argon2Function;
-import com.password4j.types.Argon2;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
@@ -25,25 +24,20 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 /**
- * {@link PasswordEncoder} that hashes passwords with Argon2id and stores them as PHC strings.
+ * Shared Argon2id password policy and PHC string handling for hash implementations.
  *
- * <p>A password is verified with the parameters declared in its encoded form, so passwords encoded
- * with previous settings keep matching after the configuration changes.</p>
- *
- * @since 5.5.0
+ * <p>Subclasses provide the Argon2id hash operation. Each invocation must be safe for concurrent
+ * use and return exactly {@code hashLength} bytes.</p>
  */
+@Requires(bean = Argon2HashFunction.class)
 @Singleton
 @Internal
-class Argon2PasswordEncoder implements PasswordEncoder {
-
+final class Argon2PasswordEncoder implements PasswordEncoder {
     private static final Logger LOG = LoggerFactory.getLogger(Argon2PasswordEncoder.class);
-    private static final int VERSION = 19;
-    // Argon2 requires at least 8 kibibytes of memory per lane.
     private static final int MEMORY_PER_LANE = 8;
 
     private final int memory;
@@ -54,11 +48,15 @@ class Argon2PasswordEncoder implements PasswordEncoder {
     private final int maxMemory;
     private final int maxIterations;
     private final SecureRandom secureRandom = new SecureRandom();
+    private final Argon2HashFunction argon2HashFunction;
 
     /**
+     * Validates the configuration used for newly encoded passwords.
+     *
      * @param configuration the Argon2id configuration
+     * @param argon2HashFunction the Argon2 Hashfunction
      */
-    Argon2PasswordEncoder(Argon2PasswordEncoderConfiguration configuration) {
+    protected Argon2PasswordEncoder(Argon2PasswordEncoderConfiguration configuration, Argon2HashFunction argon2HashFunction) {
         this.parallelism = requireRange("parallelism", configuration.getParallelism(), 1, Argon2PhcString.MAX_PARALLELISM);
         this.maxMemory = configuration.getMaxMemory();
         this.maxIterations = configuration.getMaxIterations();
@@ -66,6 +64,7 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         this.iterations = requireRange("iterations", configuration.getIterations(), 1, maxIterations);
         this.saltLength = requireRange("salt-length", configuration.getSaltLength(), Argon2PhcString.MIN_SALT_LENGTH, Argon2PhcString.MAX_SALT_LENGTH);
         this.hashLength = requireRange("hash-length", configuration.getHashLength(), Argon2PhcString.MIN_HASH_LENGTH, Argon2PhcString.MAX_HASH_LENGTH);
+        this.argon2HashFunction = argon2HashFunction;
     }
 
     @Override
@@ -75,7 +74,7 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         }
         byte[] salt = new byte[saltLength];
         secureRandom.nextBytes(salt);
-        byte[] hash = hash(rawPassword, salt, memory, iterations, parallelism, hashLength);
+        byte[] hash = argon2HashFunction.hash(rawPassword, salt, memory, iterations, parallelism, hashLength);
         return Argon2PhcString.format(memory, iterations, parallelism, salt, hash);
     }
 
@@ -95,14 +94,8 @@ class Argon2PasswordEncoder implements PasswordEncoder {
         if (phc.memory() < (long) MEMORY_PER_LANE * phc.parallelism()) {
             return false;
         }
-        byte[] hash = hash(rawPassword, phc.salt(), (int) phc.memory(), (int) phc.iterations(), phc.parallelism(), phc.hash().length);
+        byte[] hash = argon2HashFunction.hash(rawPassword, phc);
         return MessageDigest.isEqual(phc.hash(), hash);
-    }
-
-    private static byte[] hash(String rawPassword, byte[] salt, int memory, int iterations, int parallelism, int hashLength) {
-        return Argon2Function.getInstance(memory, iterations, parallelism, hashLength, Argon2.ID, VERSION)
-            .hash(rawPassword.getBytes(StandardCharsets.UTF_8), salt)
-            .getBytes();
     }
 
     private static int requireRange(String property, int value, int min, int max) {

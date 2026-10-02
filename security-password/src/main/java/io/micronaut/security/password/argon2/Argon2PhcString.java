@@ -34,18 +34,18 @@ import java.util.regex.Pattern;
  * @since 5.5.0
  */
 @Internal
-final class Argon2PhcString {
+public final class Argon2PhcString {
 
     /** Highest degree of parallelism allowed by the PHC string format. */
-    static final int MAX_PARALLELISM = 255;
+    public static final int MAX_PARALLELISM = 255;
     /** Shortest salt, in bytes, allowed by the PHC string format. */
-    static final int MIN_SALT_LENGTH = 8;
+    public static final int MIN_SALT_LENGTH = 8;
     /** Longest salt, in bytes, allowed by the PHC string format. */
-    static final int MAX_SALT_LENGTH = 48;
+    public static final int MAX_SALT_LENGTH = 48;
     /** Shortest hash, in bytes, allowed by the PHC string format. */
-    static final int MIN_HASH_LENGTH = 12;
+    public static final int MIN_HASH_LENGTH = 12;
     /** Longest hash, in bytes, allowed by the PHC string format. */
-    static final int MAX_HASH_LENGTH = 64;
+    public static final int MAX_HASH_LENGTH = 64;
 
     private static final String PREFIX = "$argon2id$v=19$";
     // 11 to 64 Base64 characters hold 8 to 48 bytes; 16 to 86 characters hold 12 to 64 bytes.
@@ -75,7 +75,7 @@ final class Argon2PhcString {
      * @param encoded the PHC string
      * @return the parsed string, or {@code null} if it is not a conforming Argon2id PHC string
      */
-    static @Nullable Argon2PhcString parse(String encoded) {
+    public static @Nullable Argon2PhcString parse(String encoded) {
         Matcher matcher = PATTERN.matcher(encoded);
         if (!matcher.matches()) {
             return null;
@@ -99,7 +99,7 @@ final class Argon2PhcString {
      * @param hash the hash
      * @return the PHC string
      */
-    static String format(int memory, int iterations, int parallelism, byte[] salt, byte[] hash) {
+    public static String format(int memory, int iterations, int parallelism, byte[] salt, byte[] hash) {
         return PREFIX + "m=" + memory + ",t=" + iterations + ",p=" + parallelism
             + '$' + ENCODER.encodeToString(salt) + '$' + ENCODER.encodeToString(hash);
     }
@@ -107,35 +107,35 @@ final class Argon2PhcString {
     /**
      * @return the memory cost, in kibibytes
      */
-    long memory() {
+    public long memory() {
         return memory;
     }
 
     /**
      * @return the number of iterations
      */
-    long iterations() {
+    public long iterations() {
         return iterations;
     }
 
     /**
      * @return the degree of parallelism
      */
-    int parallelism() {
+    public int parallelism() {
         return parallelism;
     }
 
     /**
      * @return the salt
      */
-    byte[] salt() {
+    public byte[] salt() {
         return salt;
     }
 
     /**
      * @return the hash
      */
-    byte[] hash() {
+    public byte[] hash() {
         return hash;
     }
 
