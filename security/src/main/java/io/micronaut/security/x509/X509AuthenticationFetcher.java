@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.x509;
 
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-
 import io.micronaut.context.annotation.Requires;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
@@ -53,9 +52,10 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
     /**
      *
      * @param x509Configuration x509 configuration
+     * @throws ConfigurationException if the subject DN regex is not a valid regular expression with exactly one capturing group
      */
     public X509AuthenticationFetcher(X509Configuration x509Configuration) {
-        subjectDnPattern = Pattern.compile(x509Configuration.getSubjectDnRegex(), CASE_INSENSITIVE);
+        subjectDnPattern = X509Utils.compileSubjectDnRegex(x509Configuration.getSubjectDnRegex());
     }
 
     @Override
@@ -121,11 +121,6 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
         if (!matcher.find()) {
             return Optional.empty();
         }
-
-        if (matcher.groupCount() != 1) {
-            return Optional.empty();
-        }
-
-        return Optional.of(matcher.group(1));
+        return Optional.ofNullable(matcher.group(1));
     }
 }
