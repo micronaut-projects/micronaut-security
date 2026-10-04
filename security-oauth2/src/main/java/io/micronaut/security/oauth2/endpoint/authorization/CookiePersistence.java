@@ -67,4 +67,22 @@ public abstract class CookiePersistence {
         }
     }
 
+    /**
+     * If the request carries the cookie specified by {@link CookieConfiguration#getCookieName()}, adds an expiring
+     * copy of it (same name, path, domain and attributes, with a max age of zero) to the response so the browser discards it.
+     *
+     * @param request HTTP Request
+     * @param response HTTP Response
+     * @since 5.4.0
+     */
+    protected void clear(@NonNull HttpRequest<?> request,
+                         @NonNull MutableHttpResponse<?> response) {
+        if (request.getCookies().contains(cookieConfiguration.getCookieName())) {
+            Cookie cookie = Cookie.of(cookieConfiguration.getCookieName(), "");
+            cookie.configure(cookieConfiguration, request.isSecure());
+            cookie.maxAge(0);
+            response.cookie(cookie);
+        }
+    }
+
 }

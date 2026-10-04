@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -55,5 +56,10 @@ public class CookieStatePersistence extends CookiePersistence implements StatePe
     @Override
     public void persistState(HttpRequest<?> request, MutableHttpResponse response, State state) {
         save(request, response, stateSerDes.serialize(state));
+    }
+
+    @Override
+    public void clearState(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        clear(request, response);
     }
 }
