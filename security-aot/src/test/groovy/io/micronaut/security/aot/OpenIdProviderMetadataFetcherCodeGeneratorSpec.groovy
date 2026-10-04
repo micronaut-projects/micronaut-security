@@ -29,6 +29,7 @@ class OpenIdProviderMetadataFetcherCodeGeneratorSpec extends AbstractSourceGener
                 'micronaut.security.oauth2.clients.cognito.client-id': 'XXX',
                 'micronaut.security.oauth2.clients.cognito.client-secret': 'YYY',
                 'micronaut.security.oauth2.clients.cognito.openid.issuer': "http://localhost:$embeddedServer.port",
+                'micronaut.security.oauth2.clients.cognito.openid.validate-issuer': false, // the mock discovery document imitates Cognito's issuer
         ])
         builder.environments(Environment.TEST)
         super.customizeContext(builder)
