@@ -19,8 +19,10 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -35,11 +37,15 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Validates the {@link IntrospectionRequest#getToken()} with the available {@link TokenValidator}.
  * Then it creates a {@link IntrospectionResponse} with the first {@link Authentication} object.
  * If no TokenValidator is able to validate the token, it tries with {@link RefreshTokenValidator}.
+ * A refresh token whose format is valid is then looked up in {@link RefreshTokenPersistence}, when such a bean exists,
+ * so that a revoked refresh token is reported as inactive. If no {@link RefreshTokenPersistence} bean exists,
+ * a refresh token is reported active as soon as the {@link RefreshTokenValidator} accepts it.
  * If it cannot authenticate it returns {active: false}
  * @author Sergio del Amo
  * @since 2.1.0
@@ -75,13 +81,38 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     protected final Collection<TokenValidator<T>> tokenValidators;
     protected final TokenConfiguration tokenConfiguration;
     protected final RefreshTokenValidator refreshTokenValidator;
+    @Nullable
+    protected final RefreshTokenPersistence refreshTokenPersistence;
 
+    /**
+     * @param tokenValidators Token validators
+     * @param tokenConfiguration Token configuration
+     * @param refreshTokenValidator Refresh token validator
+     * @deprecated Use {@link #DefaultIntrospectionProcessor(Collection, TokenConfiguration, RefreshTokenValidator, RefreshTokenPersistence)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
+        this(tokenValidators, tokenConfiguration, refreshTokenValidator, null);
+    }
+
+    /**
+     * @param tokenValidators Token validators
+     * @param tokenConfiguration Token configuration
+     * @param refreshTokenValidator Refresh token validator
+     * @param refreshTokenPersistence Refresh token persistence, consulted to detect revoked refresh tokens
+     * @since 5.4.0
+     */
+    @Inject
+    public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
+                                         TokenConfiguration tokenConfiguration,
+                                         @Nullable RefreshTokenValidator refreshTokenValidator,
+                                         @Nullable RefreshTokenPersistence refreshTokenPersistence) {
         this.tokenValidators = tokenValidators;
         this.tokenConfiguration = tokenConfiguration;
         this.refreshTokenValidator = refreshTokenValidator;
+        this.refreshTokenPersistence = refreshTokenPersistence;
     }
 
     @NonNull
@@ -93,8 +124,67 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                 .concatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
                 .map(authentication -> createIntrospectionResponse(authentication, requestContext))
-                .defaultIfEmpty(emptyIntrospectionResponse(token))
+                .switchIfEmpty(Mono.defer(() -> introspectRefreshToken(token, requestContext)))
                 .flux();
+    }
+
+    /**
+     * Introspects a token which no {@link TokenValidator} accepted, treating it as a refresh token.
+     * Only invoked when every {@link TokenValidator} emitted empty.
+     * <ul>
+     *     <li>If there is no {@link RefreshTokenValidator} or it rejects the token, the token is reported inactive.</li>
+     *     <li>If there is no {@link RefreshTokenPersistence} bean, the token is reported active once the validator accepts it,
+     *     because there is no revocation point to consult.</li>
+     *     <li>Otherwise the token is reported active only if {@link RefreshTokenPersistence#getAuthentication(String)}
+     *     emits an {@link Authentication}; an empty publisher or an error means the token is reported inactive.</li>
+     * </ul>
+     * @param token Token
+     * @param requestContext Request context
+     * @return Introspection Response
+     * @since 5.4.0
+     */
+    @NonNull
+    protected Mono<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
+        if (refreshTokenValidator == null) {
+            return Mono.just(inactiveIntrospectionResponse());
+        }
+        Optional<String> refreshTokenKey = refreshTokenValidator.validate(token);
+        if (refreshTokenKey.isEmpty()) {
+            return Mono.just(inactiveIntrospectionResponse());
+        }
+        if (refreshTokenPersistence == null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("No RefreshTokenPersistence bean present. Reporting refresh token active based only on RefreshTokenValidator");
+            }
+            return Mono.just(activeIntrospectionResponse());
+        }
+        return Mono.from(refreshTokenPersistence.getAuthentication(refreshTokenKey.get()))
+                .map(authentication -> createIntrospectionResponse(authentication, requestContext))
+                .onErrorResume(t -> {
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive: {}", t.getMessage());
+                    }
+                    return Mono.empty();
+                })
+                .defaultIfEmpty(inactiveIntrospectionResponse());
+    }
+
+    /**
+     * @return An {@link IntrospectionResponse} with {@code active: false} and no other fields.
+     * @since 5.4.0
+     */
+    @NonNull
+    protected IntrospectionResponse inactiveIntrospectionResponse() {
+        return introspectionResponse(false);
+    }
+
+    /**
+     * @return An {@link IntrospectionResponse} with {@code active: true} and no other fields.
+     * @since 5.4.0
+     */
+    @NonNull
+    protected IntrospectionResponse activeIntrospectionResponse() {
+        return introspectionResponse(true);
     }
 
     /**
@@ -102,10 +192,17 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * Empty response for introspection response.
      * @param token Token
      * @return Introspection Response
+     * @deprecated No longer used. Use {@link #introspectRefreshToken(String, Object)} instead, which also consults {@link RefreshTokenPersistence}.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     @NonNull
     protected IntrospectionResponse emptyIntrospectionResponse(@NonNull String token) {
-        return new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent(),
+        return introspectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent());
+    }
+
+    @NonNull
+    private static IntrospectionResponse introspectionResponse(boolean active) {
+        return new IntrospectionResponse(active,
             null,
             null,
             null,
