@@ -21,10 +21,12 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.Claims;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Date;
 
 /**
@@ -43,10 +45,33 @@ public class NotBeforeJwtClaimsValidator<T> implements GenericJwtClaimsValidator
 
     private static final Logger LOG = LoggerFactory.getLogger(NotBeforeJwtClaimsValidator.class);
 
+    private final Duration clockSkew;
+
+    /**
+     * Constructor without clock skew tolerance.
+     *
+     * @deprecated Use {@link #NotBeforeJwtClaimsValidator(JwtClaimsValidatorConfiguration)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
+    public NotBeforeJwtClaimsValidator() {
+        this.clockSkew = Duration.ZERO;
+    }
+
+    /**
+     *
+     * @param jwtClaimsValidatorConfiguration JWT Claims Validator Configuration
+     * @since 5.4.0
+     */
+    @Inject
+    public NotBeforeJwtClaimsValidator(@NonNull JwtClaimsValidatorConfiguration jwtClaimsValidatorConfiguration) {
+        Duration skew = jwtClaimsValidatorConfiguration.getClockSkew();
+        this.clockSkew = skew == null || skew.isNegative() ? Duration.ZERO : skew;
+    }
+
     /**
      *
      * @param claimsSet The JWT Claims
-     * @return true if the not-before claim denotes a date before now
+     * @return true if the not-before claim minus the configured clock skew denotes a date not after now
      */
     protected boolean validate(@NonNull JWTClaimsSet claimsSet) {
         final Date notBefore = claimsSet.getNotBeforeTime();
@@ -56,7 +81,8 @@ public class NotBeforeJwtClaimsValidator<T> implements GenericJwtClaimsValidator
 
         final Date now = new Date();
 
-        if (now.before(notBefore)) {
+        final Date notBeforeWithSkew = new Date(notBefore.getTime() - clockSkew.toMillis());
+        if (notBeforeWithSkew.after(now)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Invalidating JWT not-before Claim because current time ({}) is before ({}).", now, notBefore);
             }
