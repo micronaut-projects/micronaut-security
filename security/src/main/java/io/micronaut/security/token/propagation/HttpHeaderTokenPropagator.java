@@ -16,6 +16,7 @@
 package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -50,7 +51,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      */
     @Override
     public void writeToken(MutableHttpRequest<?> request, String token) {
-        request.header(configuration.getHeaderName(), headerValue(token));
+        request.getHeaders().set(configuration.getHeaderName(), headerValue(token));
     }
 
     /**
@@ -70,35 +71,45 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = new StringBuilder();
-        String prefix = configuration.getPrefix();
-        if (prefix != null) {
-            sb.append(prefix);
-            if (!prefix.endsWith(" ")) {
-                sb.append(" ");
-            }
+        String prefix = effectivePrefix();
+        if (prefix == null) {
+            return token;
         }
-        sb.append(token);
-        return sb.toString();
+        return prefix + " " + token;
     }
 
     /**
+     * Extracts the token from the header value. Prefix matching is case-insensitive and requires a
+     * single space separator between the prefix and the token. An empty or blank prefix is treated
+     * as no prefix.
      * @param authorization Authorization header value
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
+        final String prefix = effectivePrefix();
+        if (prefix == null) {
+            return Optional.of(authorization);
         }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            return Optional.empty();
+        final int prefixLength = prefix.length();
+        if (authorization.length() > prefixLength
+                && authorization.regionMatches(true, 0, prefix, 0, prefixLength)
+                && authorization.charAt(prefixLength) == ' ') {
+            return Optional.of(authorization.substring(prefixLength + 1));
         }
+        return Optional.empty();
+    }
+
+    /**
+     * @return the configured prefix without surrounding whitespace, or {@code null} if no prefix is configured or it is blank
+     */
+    @Nullable
+    private String effectivePrefix() {
+        String prefix = configuration.getPrefix();
+        if (prefix == null) {
+            return null;
+        }
+        String trimmed = prefix.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     /**
