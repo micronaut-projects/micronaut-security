@@ -1716,7 +1716,8 @@ micronaut.security.ip-patterns[1]=192.168.1.*</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {ip-patterns = ["127.0.0.1", "192.168.1.*"]}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security]
+ip-patterns = ["127.0.0.1", "192.168.1.*"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2227,7 +2228,24 @@ micronaut.security.intercept-url-map[3].access[0]=ROLE_ADMIN</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {intercept-url-map = [{pattern = "/images/*", http-method = "GET", access = ["isAnonymous()"]}, {pattern = "/books", access = ["isAuthenticated()"]}, {pattern = "/books/grails", http-method = "POST", access = ["ROLE_GRAILS", "ROLE_GROOVY"]}, {pattern = "/books/grails", http-method = "PUT", access = ["ROLE_ADMIN"]}]}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[[micronaut.security.intercept-url-map]]
+pattern = "/images/*"
+http-method = "GET"
+access = ["isAnonymous()"]
+
+[[micronaut.security.intercept-url-map]]
+pattern = "/books"
+access = ["isAuthenticated()"]
+
+[[micronaut.security.intercept-url-map]]
+pattern = "/books/grails"
+http-method = "POST"
+access = ["ROLE_GRAILS", "ROLE_GROOVY"]
+
+[[micronaut.security.intercept-url-map]]
+pattern = "/books/grails"
+http-method = "PUT"
+access = ["ROLE_ADMIN"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2358,7 +2376,14 @@ micronaut.security.intercept-url-map[1].access[0]=isAuthenticated()</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {intercept-url-map = [{pattern = "/v1/myResource/**", httpMethod = "GET", access = ["isAnonymous()"]}, {pattern = "/v1/myResource/**", access = ["isAuthenticated()"]}]}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[[micronaut.security.intercept-url-map]]
+pattern = "/v1/myResource/**"
+httpMethod = "GET"
+access = ["isAnonymous()"]
+
+[[micronaut.security.intercept-url-map]]
+pattern = "/v1/myResource/**"
+access = ["isAuthenticated()"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2473,7 +2498,13 @@ endpoints.info.sensitive=false</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">endpoints = {beans = {enabled = true, sensitive = true}, info = {enabled = true, sensitive = false}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[endpoints.beans]
+enabled = true
+sensitive = true
+
+[endpoints.info]
+enabled = true
+sensitive = false</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2818,7 +2849,16 @@ micronaut.security.intercept-url-map[0].access[0]=isAnonymous()</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {router = {static-resources = {default = {mapping = "/assets/**", paths = "classpath:assets"}}}, security = {filter = {static-resource-authentication-bypass = true}, intercept-url-map = [{pattern = "/assets/**", access = ["isAnonymous()"]}]}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.router.static-resources.default]
+mapping = "/assets/**"
+paths = "classpath:assets"
+
+[micronaut.security.filter]
+static-resource-authentication-bypass = true
+
+[[micronaut.security.intercept-url-map]]
+pattern = "/assets/**"
+access = ["isAnonymous()"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3933,7 +3973,11 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {authentication = "session", redirect = {login-failure = "/login/authFailed"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security]
+authentication = "session"
+
+[micronaut.security.redirect]
+login-failure = "/login/authFailed"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4585,7 +4629,8 @@ allows you to validate the signature of a JWT token.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {jwks = {awscognito = {url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks.awscognito]
+url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4690,7 +4735,13 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {http = {services = {awscognito = {url = "https://cognito-idp.eu-west-1.amazonaws.com", proxy-type = "http", proxy-address = "proxy.company.net:8080"}}}, security = {token = {jwt = {signatures = {jwks = {awscognito = {url = "/eu-west-XXXX/.well-known/jwks.json"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.http.services.awscognito]
+url = "https://cognito-idp.eu-west-1.amazonaws.com"
+proxy-type = "http"
+proxy-address = "proxy.company.net:8080"
+
+[micronaut.security.token.jwt.signatures.jwks.awscognito]
+url = "/eu-west-XXXX/.well-known/jwks.json"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4814,7 +4865,11 @@ micronaut.security.token.jwt.signatures.jwks.awscognito.url=/eu-west-XXXX/.well-
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {jwks-client = {http-client = {enabled = false}}, jwks = {awscognito = {url = "/eu-west-XXXX/.well-known/jwks.json"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks-client.http-client]
+enabled = false
+
+[micronaut.security.token.jwt.signatures.jwks.awscognito]
+url = "/eu-west-XXXX/.well-known/jwks.json"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4990,7 +5045,8 @@ runtime = [
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {caches = {jwks = {expire-after-write = "24h"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.caches.jwks]
+expire-after-write = "24h"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5066,7 +5122,8 @@ runtime = [
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {jwks-static = {google = {path = "classpath:jwks/certs.json"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks-static.google]
+path = "classpath:jwks/certs.json"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5273,7 +5330,9 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {secret = {generator = {secret = "pleaseChangeThisSecretForANewOne", jws-algorithm = "HS256"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.secret.generator]
+secret = "pleaseChangeThisSecretForANewOne"
+jws-algorithm = "HS256"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5380,7 +5439,10 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {secret = {generator = {secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=", base64 = true, jws-algorithm = "HS256"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.secret.generator]
+secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
+base64 = true
+jws-algorithm = "HS256"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5639,7 +5701,10 @@ micronaut.security.token.jwt.encryptions.secret.generator.encryption-method=A256
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {encryptions = {secret = {generator = {secret = "pleaseChangeThisSecretForANewOne", jwe-algorithm = "dir", encryption-method = "A256GCM"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.encryptions.secret.generator]
+secret = "pleaseChangeThisSecretForANewOne"
+jwe-algorithm = "dir"
+encryption-method = "A256GCM"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5754,7 +5819,11 @@ micronaut.security.token.jwt.encryptions.secret.generator.encryption-method=A256
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {encryptions = {secret = {generator = {secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=", base64 = true, jwe-algorithm = "dir", encryption-method = "A256GCM"}}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.encryptions.secret.generator]
+secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
+base64 = true
+jwe-algorithm = "dir"
+encryption-method = "A256GCM"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5878,8 +5947,12 @@ pem:
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {signatures = {secret = {generator = {secret = "pleaseChangeThisSecretForANewOne", jws-algorithm = "HS256"}}}}}}}
-pem = {path = "/home/user/rsa-2048bit-key-pair.pem"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.secret.generator]
+secret = "pleaseChangeThisSecretForANewOne"
+jws-algorithm = "HS256"
+
+[pem]
+path = "/home/user/rsa-2048bit-key-pair.pem"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -6460,7 +6533,8 @@ class CustomClaimsAudienceProvider implements ClaimsAudienceProvider {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {claims-validators = {audience = "https://api.example.com"}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.claims-validators]
+audience = "https://api.example.com"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -7119,7 +7193,27 @@ micronaut.server.ssl.trust-store.type=JKS</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {application = {name = "your_application_name"}, security = {x509 = {enabled = true}}, ssl = {enabled = true}, server = {ssl = {client-authentication = "want", key-store = {path = "classpath:ssl/keystore.p12", password = "your_keystore_password", type = "PKCS12"}, trust-store = {path = "classpath:ssl/truststore.jks", password = "your_truststore_password", type = "JKS"}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.application]
+name = "your_application_name"
+
+[micronaut.security.x509]
+enabled = true
+
+[micronaut.ssl]
+enabled = true
+
+[micronaut.server.ssl]
+client-authentication = "want"
+
+[micronaut.server.ssl.key-store]
+path = "classpath:ssl/keystore.p12"
+password = "your_keystore_password"
+type = "PKCS12"
+
+[micronaut.server.ssl.trust-store]
+path = "classpath:ssl/truststore.jks"
+password = "your_truststore_password"
+type = "JKS"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -7872,7 +7966,8 @@ amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</c
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {csrf = {signature-key = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.csrf]
+signature-key = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8216,7 +8311,11 @@ micronaut.security.reporting-endpoints.network.url=https://reports.example.com/n
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {reporting-endpoints = {csp = {url = "/csp/report"}, network = {url = "https://reports.example.com/network"}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.reporting-endpoints.csp]
+url = "/csp/report"
+
+[micronaut.security.reporting-endpoints.network]
+url = "https://reports.example.com/network"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8433,7 +8532,8 @@ micronaut.security.html-sanitizer.policies[3]=IMAGES</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {html-sanitizer = {policies = ["BLOCKS", "FORMATTING", "LINKS", "IMAGES"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.html-sanitizer]
+policies = ["BLOCKS", "FORMATTING", "LINKS", "IMAGES"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8544,7 +8644,21 @@ micronaut.security.token.propagation.service-id-regex=http://localhost:(8083|808
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {application = {name = "gateway"}, security = {token = {jwt = {signatures = {secret = {generator = {secret = "pleaseChangeThisSecretForANewOne", jws-algorithm = "HS256"}}}}, propagation = {header = {enabled = true, headerName = "Authorization", prefix = "Bearer "}, enabled = true, service-id-regex = "http://localhost:(8083|8081|8082)"}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.application]
+name = "gateway"
+
+[micronaut.security.token.jwt.signatures.secret.generator]
+secret = "pleaseChangeThisSecretForANewOne"
+jws-algorithm = "HS256"
+
+[micronaut.security.token.propagation]
+enabled = true
+service-id-regex = "http://localhost:(8083|8081|8082)"
+
+[micronaut.security.token.propagation.header]
+enabled = true
+headerName = "Authorization"
+prefix = "Bearer "</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -8897,7 +9011,8 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {token = {jwt = {generator = {refresh-token = {secret = "pleaseChangeThisSecretForANewOne"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.generator.refresh-token]
+secret = "pleaseChangeThisSecretForANewOne"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -10131,7 +10246,12 @@ micronaut.security.oauth2.clients.google.openid.issuer=https://accounts.google.c
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {google = {client-secret = "&lt;&lt;your client secret&gt;&gt;", client-id = "&lt;&lt;your client id&gt;&gt;", openid = {issuer = "https://accounts.google.com"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.google]
+client-secret = "&lt;&lt;your client secret&gt;&gt;"
+client-id = "&lt;&lt;your client id&gt;&gt;"
+
+[micronaut.security.oauth2.clients.google.openid]
+issuer = "https://accounts.google.com"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -10637,7 +10757,17 @@ micronaut.security.oauth2.clients.github.token.auth-method=client-secret-post</c
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {github = {client-id = "&lt;&lt;my client id&gt;&gt;", client-secret = "&lt;&lt;my client secret&gt;&gt;", scopes = ["user:email", "read:user"], authorization = {url = "https://github.com/login/oauth/authorize"}, token = {url = "https://github.com/login/oauth/access_token", auth-method = "client-secret-post"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.github]
+client-id = "&lt;&lt;my client id&gt;&gt;"
+client-secret = "&lt;&lt;my client secret&gt;&gt;"
+scopes = ["user:email", "read:user"]
+
+[micronaut.security.oauth2.clients.github.authorization]
+url = "https://github.com/login/oauth/authorize"
+
+[micronaut.security.oauth2.clients.github.token]
+url = "https://github.com/login/oauth/access_token"
+auth-method = "client-secret-post"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -11143,7 +11273,12 @@ micronaut.security.oauth2.clients.okta.openid.issuer=&lt;&lt;my openid issuer&gt
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {okta = {client-id = "&lt;&lt;my client id&gt;&gt;", client-secret = "&lt;&lt;my client secret&gt;&gt;", openid = {issuer = "&lt;&lt;my openid issuer&gt;&gt;"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.okta]
+client-id = "&lt;&lt;my client id&gt;&gt;"
+client-secret = "&lt;&lt;my client secret&gt;&gt;"
+
+[micronaut.security.oauth2.clients.okta.openid]
+issuer = "&lt;&lt;my openid issuer&gt;&gt;"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -12005,7 +12140,8 @@ runtime = [
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {nonce = {persistence = "session"}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.nonce]
+persistence = "session"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -12433,7 +12569,20 @@ micronaut.security.oauth2.clients.google.openid.issuer=https://accounts.google.c
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {companyauthserver = {client-id = "XXX", client-secret = "YYY", token = {url = "https://foo.bar/token", auth-method = "client_secret_basic"}}, google = {client-id = "ZZZZ", client-secret = "PPPP", openid = {issuer = "https://accounts.google.com"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.companyauthserver]
+client-id = "XXX"
+client-secret = "YYY"
+
+[micronaut.security.oauth2.clients.companyauthserver.token]
+url = "https://foo.bar/token"
+auth-method = "client_secret_basic"
+
+[micronaut.security.oauth2.clients.google]
+client-id = "ZZZZ"
+client-secret = "PPPP"
+
+[micronaut.security.oauth2.clients.google.openid]
+issuer = "https://accounts.google.com"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -12622,7 +12771,16 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {companyauthserver = {client-id = "XXX", client-secret = "YYY", client-credentials = {service-id-regex = "inventory"}, token = {url = "https://foo.bar/token", auth-method = "client_secret_basic"}}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.companyauthserver]
+client-id = "XXX"
+client-secret = "YYY"
+
+[micronaut.security.oauth2.clients.companyauthserver.client-credentials]
+service-id-regex = "inventory"
+
+[micronaut.security.oauth2.clients.companyauthserver.token]
+url = "https://foo.bar/token"
+auth-method = "client_secret_basic"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -12903,7 +13061,8 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {security = {oauth2 = {clients = {github = {grant-type = "password"}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.github]
+grant-type = "password"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
