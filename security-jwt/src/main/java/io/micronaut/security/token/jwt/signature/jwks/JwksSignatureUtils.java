@@ -25,6 +25,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -123,6 +124,16 @@ public final class JwksSignatureUtils {
      */
     public static boolean verify(JwkValidator jwkValidator, List<JWK> matches, SignedJWT jwt) {
         return matches.stream().anyMatch(jwk -> jwkValidator.validate(jwt, jwk));
+    }
+
+    /**
+     * @param jwkSet A JSON Web Key Set
+     * @param keyId A Key ID
+     * @return Whether the JSON Web Key Set contains a key with the given Key ID.
+     * @since 5.4.0
+     */
+    public static boolean containsKeyId(@Nullable JWKSet jwkSet, @NonNull String keyId) {
+        return jwkSet != null && jwkSet.getKeyByKeyId(keyId) != null;
     }
 
     /**
