@@ -32,7 +32,7 @@ micronaut:
 
 NOTE: You can provide your own implementation of api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[]
 
-WARNING: If nonce validation fails, the user will not be authenticated.
+WARNING: If nonce validation fails, the user will not be authenticated. Because a nonce is always sent in the authorization request when nonce support is enabled, validation also fails if the persisted nonce cannot be retrieved at callback time (for example, because the nonce cookie expired or was not sent back), even if the ID token does not contain a `nonce` claim.
 
 === Customization
 
