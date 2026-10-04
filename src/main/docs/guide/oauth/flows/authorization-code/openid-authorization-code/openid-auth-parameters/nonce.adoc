@@ -34,6 +34,8 @@ NOTE: You can provide your own implementation of api:security.oauth2.endpoint.no
 
 WARNING: If nonce validation fails, the user will not be authenticated.
 
+NOTE: Cookie persistence supports only one in-flight login per browser, whereas session persistence keeps the nonces of several in-flight logins, keyed by the state of the login flow they belong to. See the <<state, state>> documentation for details.
+
 === Customization
 
 There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.
