@@ -38,6 +38,12 @@ import java.util.List;
  * Attempts to retrieve a token form the {@link HttpRequest} and if existing validated.
  * It uses a {@link TokenResolver} and the list of {@link TokenValidator} registered in the ApplicationContext.
  *
+ * <p>Tokens are validated sequentially, in {@link io.micronaut.security.token.reader.TokenReader} order, and each
+ * token is passed to the {@link TokenValidator} beans sequentially, in their {@link io.micronaut.core.order.Ordered}
+ * order. The first validator to emit an {@link Authentication} wins: later validators for that token and later tokens
+ * are never subscribed. Only the winning token is recorded on the request and only one {@link TokenValidatedEvent}
+ * is published.</p>
+ *
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
@@ -80,6 +86,25 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
         this.httpLocaleResolver = httpLocaleResolver;
     }
 
+    /**
+     * Resolves the tokens present in the request and validates them sequentially.
+     *
+     * <p>Tokens are tried in the order returned by the {@link TokenResolver} (that is, in
+     * {@link io.micronaut.security.token.reader.TokenReader} order) and, for each token, the
+     * {@link TokenValidator} beans are tried in their {@link io.micronaut.core.order.Ordered} order.
+     * Validation is strictly sequential: a validator is only subscribed once the previous one has
+     * completed empty, and a token is only validated once every validator returned empty for the
+     * previous token. The first non-empty {@link Authentication} wins; the remaining validators and
+     * tokens are never subscribed.</p>
+     *
+     * <p>Only the winning token is recorded on the request (see {@link io.micronaut.security.filters.SecurityFilter#TOKEN})
+     * and only one {@link TokenValidatedEvent}, carrying the winning token, is published.</p>
+     *
+     * <p>If a validator emits an error, the error is propagated and no further validation is attempted.</p>
+     *
+     * @param request The request
+     * @return A publisher emitting at most one {@link Authentication}
+     */
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
 
@@ -88,24 +113,35 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher<HttpReq
             return Flux.empty();
         }
         return Flux.fromIterable(tokens)
-            .flatMap(tokenValue -> Flux.fromIterable(tokenValidators)
-                .flatMapSequential(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+            .concatMap(tokenValue -> Flux.fromIterable(tokenValidators)
+                .concatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
-                .map(authentication -> {
-                    ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken(tokenValue);
-                    tokenValidatedEventPublisher.publishEvent(
-                        new TokenValidatedEvent(
-                            tokenValue,
-                            httpHostResolver.resolve(request),
-                            httpLocaleResolver.resolveOrDefault(request)
-                        )
-                    );
-                    return authentication;
-                }));
+                .map(authentication -> new ValidatedToken(tokenValue, authentication)))
+            .next()
+            .doOnNext(validatedToken -> {
+                ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken(validatedToken.token());
+                tokenValidatedEventPublisher.publishEvent(
+                    new TokenValidatedEvent(
+                        validatedToken.token(),
+                        httpHostResolver.resolve(request),
+                        httpLocaleResolver.resolveOrDefault(request)
+                    )
+                );
+            })
+            .map(ValidatedToken::authentication);
     }
 
     @Override
     public int getOrder() {
         return ORDER;
+    }
+
+    /**
+     * A token together with the {@link Authentication} produced by the validator that accepted it.
+     *
+     * @param token The token value
+     * @param authentication The authentication
+     */
+    private record ValidatedToken(String token, Authentication authentication) {
     }
 }
