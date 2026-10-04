@@ -16,7 +16,6 @@
 package io.micronaut.security.authentication.provider;
 
 import io.micronaut.context.annotation.Executable;
-import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.Indexed;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -38,8 +37,11 @@ public interface AuthenticationProvider<T, I, S> extends Ordered {
      * Authenticates a user with the given request.
      * If authenticated successfully return {@link AuthenticationResponse#success(String)}.
      * If not authenticated return {@link AuthenticationResponse#failure()}.
-     * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
-     * dedicated thread in order to not block the main reactive chain of execution.
+     * If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
+     * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
+     * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
+     * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
+     * Annotating the overridden method with {@code @Blocking} has no effect on how the authenticator schedules the provider.
      * @param requestContext The context request (typically an HTTP Request).
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
@@ -52,8 +54,11 @@ public interface AuthenticationProvider<T, I, S> extends Ordered {
      * Authenticates a user with the given request.
      * If authenticated successfully return {@link AuthenticationResponse#success(String)}.
      * If not authenticated return {@link AuthenticationResponse#failure()}.
-     * If your implementation is blocking, annotate the overriden method with {@link Blocking} and it will be safely executed on a
-     * dedicated thread in order to not block the main reactive chain of execution.
+     * If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
+     * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
+     * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
+     * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
+     * Annotating the overridden method with {@code @Blocking} has no effect on how the authenticator schedules the provider.
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
      */
