@@ -61,6 +61,7 @@ import reactor.core.publisher.Mono;
 public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAuthorizationResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
+    private static final String AUTHORIZATION_CODE_MISSING = "Authorization code missing from callback";
 
     private final ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator;
     private final OpenIdAuthenticationMapper defaultAuthenticationMapper;
@@ -106,6 +107,12 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
             validateState(authorizationResponse, clientConfiguration);
         } catch (InvalidStateException e) {
             return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+        }
+        if (!authorizationResponse.hasCode()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Authorization response from provider [{}] does not contain an authorization code", clientConfiguration.getName());
+            }
+            return Flux.just(new AuthenticationFailed(AUTHORIZATION_CODE_MISSING));
         }
         return Flux.from(sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
                 .switchMap(response -> Flux.from(createAuthenticationResponse(authorizationResponse.getNonce(),
