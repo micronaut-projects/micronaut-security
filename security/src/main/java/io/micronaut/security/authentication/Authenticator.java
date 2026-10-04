@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
@@ -44,9 +43,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
@@ -206,37 +206,49 @@ public class Authenticator<T> {
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
         } else {
-            AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  providers.stream()
-                    .map(auth -> Flux.from(auth.authenticate(request, authenticationRequest)))
-                    .map(sequence -> sequence.switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
-                            .onErrorResume((Function<Throwable, Publisher>) t -> {
-                                lastError.set(t);
+            // Providers may complete on different threads, so failures are recorded by provider index and, when no
+            // provider succeeds, the failure of the first provider in provider order is returned. This mirrors the
+            // imperative ANY path.
+            AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
+            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1, IntStream.range(0, providers.size())
+                    .mapToObj(index -> Flux.from(providers.get(index).authenticate(request, authenticationRequest))
+                            .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                            .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
+                                failures.set(index, failedResponseForThrowable(t));
                                 return Flux.empty();
-                            })
-                            ).toList()
+                            }))
+                    .toList()
                     .toArray(emptyArr));
 
             return authentication.take(1)
-                    .switchIfEmpty(Flux.create(emitter -> {
-                Throwable error = lastError.get();
-                if (error != null) {
-                    if (error instanceof AuthenticationException) {
-                        AuthenticationResponse response = ((AuthenticationException) error).getResponse();
-                        if (response != null) {
-                            emitter.next(response);
-                            emitter.complete();
-                        } else {
-                            emitter.error(error);
-                        }
-                    } else {
-                        emitter.error(error);
-                    }
-                } else {
-                    emitter.complete();
-                }
-            }, FluxSink.OverflowStrategy.ERROR));
+                    .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
         }
+    }
+
+    @Nullable
+    private static AuthenticationResponse firstFailure(@NonNull AtomicReferenceArray<AuthenticationResponse> failures) {
+        for (int i = 0; i < failures.length(); i++) {
+            AuthenticationResponse failure = failures.get(i);
+            if (failure != null) {
+                return failure;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Converts a throwable raised by a provider in the ANY strategy into an {@link AuthenticationResponse}.
+     * An {@link AuthenticationException} carrying a response yields that response; any other throwable yields an
+     * {@link AuthenticationFailed}, as the imperative path does when a provider throws.
+     * @param t Throwable raised by a provider
+     * @return The failed authentication response
+     */
+    @NonNull
+    private static AuthenticationResponse failedResponseForThrowable(@NonNull Throwable t) {
+        if (t instanceof AuthenticationException authenticationException && authenticationException.getResponse() != null) {
+            return authenticationException.getResponse();
+        }
+        return authenticationResponseForThrowable(t);
     }
 
     private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
