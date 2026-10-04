@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static io.micronaut.security.utils.LoggingUtils.debug;
 
@@ -148,10 +147,10 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
-                debug(LOG, "tokenGenerator failed to generate access token claims: {}", claims.entrySet()
-                        .stream()
-                        .map(entry -> entry.getKey() + "=>" + entry.getValue().toString())
-                        .collect(Collectors.joining(", ")));
+            if (LOG.isDebugEnabled()) {
+                // Log only the claim names: claim values may be null and may contain PII.
+                LOG.debug("tokenGenerator failed to generate access token for claims: {}", claims.keySet());
+            }
             return Optional.empty();
         }
         String accessToken = optionalAccessToken.get();
