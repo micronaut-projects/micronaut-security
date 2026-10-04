@@ -19,6 +19,8 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.jwt.config.JwtConfiguration;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Abstract class for common methods for JWT validation.
@@ -37,32 +40,58 @@ import java.util.List;
  */
 abstract class AbstractJsonWebTokenValidator<R> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJsonWebTokenValidator.class);
+    private static final String ACCEPT_UNSIGNED_TOKENS_PROPERTY = JwtConfigurationProperties.PREFIX + ".accept-unsigned-tokens";
+    private static final AtomicBoolean ACCEPT_UNSIGNED_TOKENS_WARNED = new AtomicBoolean();
 
     private final boolean noSignatures;
+    private final boolean acceptUnsignedTokens;
+    private final AtomicBoolean unsignedTokenRejectionWarned = new AtomicBoolean();
     private List<? extends JwtClaimsValidator<R>> claimsValidators;
 
     AbstractJsonWebTokenValidator(List<GenericJwtClaimsValidator<R>> claimsValidators,
                                   List<SignatureConfiguration> imperativeSignatureConfigurations,
-                                  List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations) {
+                                  List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations,
+                                  JwtConfiguration jwtConfiguration) {
         this.claimsValidators = claimsValidators;
         this.noSignatures = imperativeSignatureConfigurations.isEmpty() && reactiveSignatureConfigurations.isEmpty();
+        this.acceptUnsignedTokens = jwtConfiguration.isAcceptUnsignedTokens();
+        if (acceptUnsignedTokens && ACCEPT_UNSIGNED_TOKENS_WARNED.compareAndSet(false, true) && LOG.isWarnEnabled()) {
+            LOG.warn("{} is true: unsigned JWTs (alg=none) will be accepted when no signature configuration is present. "
+                    + "Unsigned tokens can be forged by anyone. Do not enable this in production.", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+        }
     }
 
+    /**
+     * Unsigned JWTs are only accepted when there is no signature configuration and
+     * {@link JwtConfiguration#isAcceptUnsignedTokens()} is explicitly {@code true}.
+     * If any signature configuration is present, an unsigned token is always rejected.
+     * @param plainJWT Unsigned JWT
+     * @return Whether the unsigned JWT should be accepted
+     */
     protected boolean validateSignature(PlainJWT plainJWT) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating plain JWT");
         }
-        if (noSignatures) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT is not signed and no signature configurations -> verified");
-            }
-            return true;
-        } else {
+        if (!noSignatures) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("A non-signed JWT cannot be accepted as signature configurations have been defined");
             }
             return false;
         }
+        if (acceptUnsignedTokens) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT is not signed, no signature configurations and {} is true -> verified", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+            }
+            return true;
+        }
+        if (unsignedTokenRejectionWarned.compareAndSet(false, true) && LOG.isWarnEnabled()) {
+            LOG.warn("Rejected an unsigned JWT (alg=none) because no signature configuration is present. "
+                    + "Configure a signature (e.g. micronaut.security.token.jwt.signatures.secret.generator.secret) "
+                    + "or set {} to true to accept unsigned tokens (not recommended). This warning is logged once.", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Rejected an unsigned JWT because no signature configuration is present and {} is false", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+        }
+        return false;
     }
 
     protected boolean validateClaims(JWT jwt, R request) {

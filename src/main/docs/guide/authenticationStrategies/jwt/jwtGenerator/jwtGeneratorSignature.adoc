@@ -8,3 +8,5 @@ link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConf
 https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
 
 IMPORTANT: Remember to qualify with `@Named` `generator` your signature configuration beans which you wish to use to sign your JSON web tokens.
+
+WARNING: If no `@Named("generator")` signature configuration bean is present, api:security.token.jwt.generator.JwtTokenGenerator[] emits unsigned tokens (`alg=none`) and logs a warning at startup. Such tokens can be forged by anyone and are rejected by the token validators unless `micronaut.security.token.jwt.accept-unsigned-tokens` is set to `true`.

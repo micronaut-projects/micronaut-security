@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import jakarta.inject.Named;
@@ -60,6 +61,12 @@ public class JwtTokenGenerator implements TokenGenerator {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
         this.claimsGenerator = claimsGenerator;
+        if (signatureConfiguration == null && LOG.isWarnEnabled()) {
+            LOG.warn("No SignatureGeneratorConfiguration bean qualified with @Named(\"generator\") is present. "
+                    + "JwtTokenGenerator will emit unsigned JWTs (alg=none), which can be forged by anyone and are rejected by the "
+                    + "token validators unless {}.accept-unsigned-tokens is true. Configure a signature, "
+                    + "e.g. micronaut.security.token.jwt.signatures.secret.generator.secret", JwtConfigurationProperties.PREFIX);
+        }
     }
 
     /**

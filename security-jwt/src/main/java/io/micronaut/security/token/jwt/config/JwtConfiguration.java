@@ -31,4 +31,16 @@ public interface JwtConfiguration extends Toggleable {
      */
     @Override
     boolean isEnabled();
+
+    /**
+     * Whether unsigned JSON Web Tokens (JWS header {@code alg=none}) are accepted by the token validators when
+     * no {@link io.micronaut.security.token.jwt.signature.SignatureConfiguration} bean is present.
+     * Unsigned tokens can be forged by anyone, so this should only be enabled for local development or testing.
+     * When a signature configuration is present, unsigned tokens are always rejected regardless of this flag.
+     * @return {@code true} if unsigned tokens should be accepted when no signature configuration exists. Defaults to {@code false}.
+     * @since 5.4.0
+     */
+    default boolean isAcceptUnsignedTokens() {
+        return false;
+    }
 }
