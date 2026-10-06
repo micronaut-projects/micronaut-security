@@ -86,4 +86,10 @@ val coverageVerifications = coveredProjects.map { module ->
 
 tasks.named("check") {
     dependsOn(coverageVerifications)
+    val verified = everyTestRuns
+    doFirst {
+        if (!verified.get()) {
+            logger.warn("Coverage is not verified: predictive test selection runs a subset of the tests. Use -DpredictiveTestSelection=false")
+        }
+    }
 }

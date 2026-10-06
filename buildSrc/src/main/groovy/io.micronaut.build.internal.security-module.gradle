@@ -9,6 +9,11 @@ afterEvaluate {
         jacoco.enabled = true
     }
 }
+// Predictive test selection runs a subset of the tests, and Develocity does not make it an input of the tests.
+// Without it, running every test is up-to-date after running a subset, and test-suite-coverage verifies the subset.
+tasks.withType(Test).configureEach {
+    inputs.property("predictiveTestSelection", develocity.predictiveTestSelection.enabled.orElse(false))
+}
 dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
