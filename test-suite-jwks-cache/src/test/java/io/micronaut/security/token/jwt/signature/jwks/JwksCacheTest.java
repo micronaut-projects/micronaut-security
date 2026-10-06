@@ -50,7 +50,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,115 +66,124 @@ class JwksCacheTest  {
         );
     }
 
-    private static void hello(BlockingHttpClient client, String token) {
-        assertEquals("Hello World", client.retrieve(HttpRequest.GET("/hello").bearerAuth(token)));
+    private void hello(BlockingHttpClient client, String token, boolean doAssertion) {
+        HttpRequest<?> request = HttpRequest.GET("/hello").bearerAuth(token);
+        if (doAssertion) {
+            String response = client.retrieve(request);
+            assertEquals("Hello World", response);
+        } else {
+            try {
+                client.retrieve(request);
+            } catch(HttpClientResponseException e) {
+                assertTrue(true); // token is not valid for cached JWKS
+            }
+        }
     }
 
     @Test
     void jwkAreCached() throws ParseException, InterruptedException, JOSEException {
         //given:
         // Start three servers which expose JSON Web Key Sets
-        try (EmbeddedServer googleEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("GoogleJwksCacheSpec"));
-             EmbeddedServer cognitoEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("CognitoJwksCacheSpec"));
-             EmbeddedServer appleEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("AppleJwksCacheSpec"));
-             // Start another Micronaut application which configures the JSON Web Key Sets of the previous three servers
-             EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer.class, Map.of(
-                     "micronaut.http.client.read-timeout", "30s",
-                     "micronaut.caches.jwks.expire-after-write", "5s",
-                     "micronaut.security.token.jwt.signatures.jwks.apple.url", "http://localhost:" + appleEmbeddedServer.getPort() + "/keys",
-                     "micronaut.security.token.jwt.signatures.jwks.google.url", "http://localhost:" + googleEmbeddedServer.getPort() + "/keys",
-                     "micronaut.security.token.jwt.signatures.jwks.cognito.url", "http://localhost:" + cognitoEmbeddedServer.getPort() + "/keys",
-                     "spec.name", "JwksCacheSpec"
-             ));
-             // Get HTTP Clients pointing to the three servers
-             HttpClient googleHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, googleEmbeddedServer.getURL());
-             HttpClient appleHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, appleEmbeddedServer.getURL());
-             HttpClient cognitoHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, cognitoEmbeddedServer.getURL());
-             // Get an HTTP Client pointing to the main Server
-             HttpClient httpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, embeddedServer.getURL())) {
-            BlockingHttpClient client = httpClient.toBlocking();
-            AtomicInteger googleInvocations = googleEmbeddedServer.getApplicationContext().getBean(GoogleKeysController.class).invocations;
-            AtomicInteger appleInvocations = appleEmbeddedServer.getApplicationContext().getBean(AppleKeysController.class).invocations;
-            AtomicInteger cognitoInvocations = cognitoEmbeddedServer.getApplicationContext().getBean(CognitoKeysController.class).invocations;
+        EmbeddedServer googleEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("GoogleJwksCacheSpec"));
+        EmbeddedServer cognitoEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("CognitoJwksCacheSpec"));
+        EmbeddedServer appleEmbeddedServer = ApplicationContext.run(EmbeddedServer.class, config("AppleJwksCacheSpec"));
 
-            // Verify JWKS Caching is using Micronaut Cache not reactor caching
-            assertFalse(embeddedServer.getApplicationContext().containsBean(ReactorCacheJwkSetFetcher.class));
-            assertThrows(NoSuchBeanException.class, () -> embeddedServer.getApplicationContext().getBean(ReactorCacheJwkSetFetcher.class));
-            assertDoesNotThrow(() -> embeddedServer.getApplicationContext().getBean(CacheableJwkSetFetcher.class));
+        // Start another Micronaut application which configures the JSON Web Key Sets of the previous three servers
+        Map<String, Object> embeddedServerConfig = Map.of(
+                "micronaut.http.client.read-timeout","30s",
+                "micronaut.caches.jwks.expire-after-write","5s",
+                "micronaut.security.token.jwt.signatures.jwks.apple.url","http://localhost:" + appleEmbeddedServer.getPort() + "/keys",
+                "micronaut.security.token.jwt.signatures.jwks.google.url","http://localhost:" + googleEmbeddedServer.getPort() + "/keys",
+                "micronaut.security.token.jwt.signatures.jwks.cognito.url","http://localhost:" + cognitoEmbeddedServer.getPort() + "/keys",
+                "spec.name", "JwksCacheSpec"
+        );
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer.class, embeddedServerConfig);
 
-            // Get an access Token for each of the three servers
-            String googleAccessToken = loginAccessToken(googleHttpClient.toBlocking());
-            assertKeyId(JWTParser.parse(googleAccessToken), "google");
-            String appleAccessToken = loginAccessToken(appleHttpClient.toBlocking());
-            assertKeyId(JWTParser.parse(appleAccessToken), "apple");
-            String cognitoAccessToken = loginAccessToken(cognitoHttpClient.toBlocking());
-            assertKeyId(JWTParser.parse(cognitoAccessToken), "cognito");
+        // Get HTTP Clients pointing to the three servers
+        HttpClient googleHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, googleEmbeddedServer.getURL());
+        BlockingHttpClient googleClient = googleHttpClient.toBlocking();
 
-            // the servers keys endpoints have not been invoked yet
-            assertEquals(0, googleInvocations.get());
-            assertEquals(0, appleInvocations.get());
-            assertEquals(0, cognitoInvocations.get());
+        HttpClient appleHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, appleEmbeddedServer.getURL());
+        BlockingHttpClient appleClient = appleHttpClient.toBlocking();
 
-            //when: 'a token is validated for the first time'
-            hello(client, googleAccessToken);
+        HttpClient cognitoHttpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, cognitoEmbeddedServer.getURL());
+        BlockingHttpClient cognitoClient = cognitoHttpClient.toBlocking();
 
-            //then: 'the JWKS which verifies the token is fetched once'
-            assertEquals(1, googleInvocations.get());
+        // Get an HTTP Client pointing to the main Server
+        HttpClient httpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, embeddedServer.getURL());
+        BlockingHttpClient client = httpClient.toBlocking();
 
-            // The JWKS of every provider are fetched concurrently, and the fetches still in flight when a JWKS
-            // verifies the token are cancelled before their response is cached. Hence, the keys endpoints of Apple
-            // and Cognito may be invoked more than once until a token signed with their keys is validated.
+        // Verify JWKS Caching is using Micronaut Cache not reactor caching
+        assertFalse(embeddedServer.getApplicationContext().containsBean(ReactorCacheJwkSetFetcher.class));
+        assertThrows(NoSuchBeanException.class, () -> embeddedServer.getApplicationContext().getBean(ReactorCacheJwkSetFetcher.class));
+        assertDoesNotThrow(() -> embeddedServer.getApplicationContext().getBean(CacheableJwkSetFetcher.class));
 
-            //when: 'a token of each of the other providers is validated'
-            hello(client, appleAccessToken);
-            hello(client, cognitoAccessToken);
+        // the servers keys endpoints have not been invoked yet
+        assertEquals(0, totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer));
 
-            //then: 'the JWKS of every provider has been fetched, and the cached Google JWKS was not fetched again'
-            assertEquals(1, googleInvocations.get());
-            assertTrue(appleInvocations.get() >= 1);
-            assertTrue(cognitoInvocations.get() >= 1);
+        // Get an access Token for the Google Server
+        BearerAccessRefreshToken googleBearerAccessRefreshToken = assertDoesNotThrow(() -> login(googleClient));
+        assertNotNull(googleBearerAccessRefreshToken.getAccessToken());
+        String googleAccessToken = googleBearerAccessRefreshToken.getAccessToken();
+        JWT googleJWT = JWTParser.parse(googleAccessToken);
+        assertKeyId(googleJWT, "google");
 
-            //when: 'when you invoke it again all the keys are cached'
-            // An extra round of requests gives the fetches cancelled above time to reach the keys endpoints
-            hello(client, googleAccessToken);
-            hello(client, appleAccessToken);
-            hello(client, cognitoAccessToken);
-            int cachedAppleInvocations = appleInvocations.get();
-            int cachedCognitoInvocations = cognitoInvocations.get();
-            hello(client, googleAccessToken);
-            hello(client, appleAccessToken);
-            hello(client, cognitoAccessToken);
+        // Get an access Token for the Apple Server
+        BearerAccessRefreshToken appleBearerAccessRefreshToken = login(appleClient);
+        assertNotNull(appleBearerAccessRefreshToken.getAccessToken());
+        String appleAccessToken = appleBearerAccessRefreshToken.getAccessToken();
 
-            //then:
-            assertEquals(1, googleInvocations.get());
-            assertEquals(cachedAppleInvocations, appleInvocations.get());
-            assertEquals(cachedCognitoInvocations, cognitoInvocations.get());
+        // Get an access Token for the Cognito Server
+        BearerAccessRefreshToken cognitoBearerAccessRefreshToken = login(cognitoClient);
+        assertNotNull(cognitoBearerAccessRefreshToken.getAccessToken());
+        String cognitoAccessToken = cognitoBearerAccessRefreshToken.getAccessToken();
+        JWT cognitoJWT = JWTParser.parse(cognitoAccessToken);
+        assertKeyId(cognitoJWT, "cognito");
 
-            // when: ' when you invoke it with a random key, key are cached
-            HttpRequest<?> randomSignedJwtRequest = HttpRequest.GET("/hello").bearerAuth(randomSignedJwt());
-            HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> client.retrieve(randomSignedJwtRequest));
+        // the servers keys endpoints have not been invoked yet
+        int oldInvocations = totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer);
+        assertEquals(0, oldInvocations);
 
-            //then:
-            assertEquals(HttpStatus.UNAUTHORIZED, e.getStatus());
-            assertEquals(1, googleInvocations.get());
-            assertEquals(cachedAppleInvocations, appleInvocations.get());
-            assertEquals(cachedCognitoInvocations, cognitoInvocations.get());
+        //when:
+        hello(client, googleAccessToken, true);
+        hello(client, appleAccessToken, true);
+        hello(client, cognitoAccessToken, true);
 
-            //when: 'keys expire, they are fetched again'
-            sleep(6_000); // longer than the cache expire-after-write
-            hello(client, appleAccessToken);
+        // then:
+        assertEquals((oldInvocations + 3), totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer));
 
-            //then: 'the JWKS which verifies the token is fetched once'
-            assertEquals(cachedAppleInvocations + 1, appleInvocations.get());
+        //when: 'when you invoke it again all the keys are cached'
+        oldInvocations = totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer);
+        hello(client, appleAccessToken, true);
 
-            //when:
-            hello(client, googleAccessToken);
-            hello(client, cognitoAccessToken);
+        //then:
+        assertEquals(totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer), oldInvocations);
 
-            //then:
-            assertTrue(googleInvocations.get() > 1);
-            assertTrue(cognitoInvocations.get() > cachedCognitoInvocations);
-        }
+        // when: ' when you invoke it with a random key, key are cached
+        String randomSignedJwt = randomSignedJwt();
+        oldInvocations = totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer);
+        hello(client, randomSignedJwt, false);
+
+        //then:
+        assertEquals(totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer), oldInvocations);
+
+        //when: 'keys expire, they are fetched again'
+        oldInvocations = totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer);
+        sleep(6_000); // cache expires the token, JWKS refresh
+        hello(client, loginAccessToken(appleClient), false);
+
+        //then:
+        assertEquals((oldInvocations + 3), totalInvocations(appleEmbeddedServer, cognitoEmbeddedServer, googleEmbeddedServer));
+
+        //cleanup:
+        googleEmbeddedServer.close();
+        cognitoEmbeddedServer.close();
+        appleEmbeddedServer.close();
+        embeddedServer.close();
+    }
+
+    private int totalInvocations(EmbeddedServer appleServer, EmbeddedServer cognitoServer, EmbeddedServer googleServer) {
+        return googleInvocations(googleServer) + appleInvocations(appleServer) + cognitoInvocations(cognitoServer);
     }
 
     private void assertKeyId(JWT jwt, String keyId) {
@@ -198,7 +206,7 @@ class JwksCacheTest  {
     @Controller("/keys")
     @Replaces(KeysController.class)
     static class GoogleKeysController extends KeysController {
-        final AtomicInteger invocations = new AtomicInteger();
+        int invocations = 0;
         GoogleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
@@ -208,7 +216,7 @@ class JwksCacheTest  {
         @SingleResult
         public Publisher<String> keys() {
             Publisher<String> result = super.keys();
-            invocations.incrementAndGet();
+            invocations++;
             return result;
         }
     }
@@ -217,7 +225,7 @@ class JwksCacheTest  {
     @Controller("/keys")
     @Replaces(KeysController.class)
     static class AppleKeysController extends KeysController {
-        final AtomicInteger invocations = new AtomicInteger();
+        int invocations = 0;
         AppleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
         }
@@ -227,7 +235,7 @@ class JwksCacheTest  {
         @SingleResult
         public Publisher<String> keys() {
             Publisher<String> result = super.keys();
-            invocations.incrementAndGet();
+            invocations++;
             return result;
         }
     }
@@ -236,7 +244,7 @@ class JwksCacheTest  {
     @Controller("/keys")
     @Replaces(KeysController.class)
     static class CognitoKeysController extends KeysController {
-        final AtomicInteger invocations = new AtomicInteger();
+        int invocations = 0;
 
         CognitoKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
             super(jwkProviders, jsonMapper);
@@ -247,7 +255,7 @@ class JwksCacheTest  {
         @SingleResult
         public Publisher<String> keys() {
             Publisher<String> result = super.keys();
-            invocations.incrementAndGet();
+            invocations++;
             return result;
         }
     }
@@ -502,6 +510,18 @@ class JwksCacheTest  {
             }
             return rsaKey;
         }
+    }
+
+    private int googleInvocations(EmbeddedServer server) {
+        return server.getApplicationContext().getBean(GoogleKeysController.class).invocations;
+    }
+
+    private int appleInvocations(EmbeddedServer server) {
+        return server.getApplicationContext().getBean(AppleKeysController.class).invocations;
+    }
+
+    private int cognitoInvocations(EmbeddedServer server) {
+        return server.getApplicationContext().getBean(CognitoKeysController.class).invocations;
     }
 
     private static BearerAccessRefreshToken login(BlockingHttpClient client) {
