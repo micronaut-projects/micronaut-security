@@ -49,6 +49,7 @@ include "test-suite-serde"
 include "test-suite-ldap"
 include "test-suite-jackson-databind-bean-introspection-module-false"
 include "test-suite-hibernate-validator"
+include "test-suite-dev-reload"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 // Micronaut core 5.3.0-SNAPSHOT, which carries the development-mode API, comes from Maven local, where a
