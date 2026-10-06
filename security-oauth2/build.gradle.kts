@@ -32,10 +32,15 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.testSuiteKeycloakDocker)
+    testImplementation(mnLogging.logback.classic)
     testImplementation(libs.system.stubs.core)
     testImplementation(mn.micronaut.retry)
     testImplementation(libs.jsonassert)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(platform(mnTest.boms.junit))
+    testImplementation(mnTest.junit.jupiter.params)
     testImplementation(mnTest.mockito.core)
 }
 tasks.withType<Test> {

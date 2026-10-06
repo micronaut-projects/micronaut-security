@@ -1,6 +1,6 @@
 import io.micronaut.build.TestFramework
 plugins {
-    id("io.micronaut.build.internal.security-module")
+    id("io.micronaut.build.internal.security-full-coverage")
 }
 dependencies {
     annotationProcessor(mnValidation.micronaut.validation.processor)
