@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "10.9.1"
+managed-nimbus-jose-jwt = "10.10"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
@@ -23,7 +23,7 @@ micronaut-validation = "5.2.1"
 micronaut-test = "5.2.0"
 micronaut-data = "5.2.0"
 micronaut-sql = "7.2.0"
-graalvm-native-buildtools = "1.1.10"
+graalvm-native-buildtools = "1.1.14"
 jsonassert = "1.5.3"
 commons-codec = "1.22.1"
 
