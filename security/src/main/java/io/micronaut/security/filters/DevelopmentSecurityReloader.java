@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.filters;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanRegistration;
 import io.micronaut.context.WatchableBeanContext;
@@ -46,6 +47,8 @@ import java.util.List;
  *     created, and the filter that holds them.</li>
  *     <li>A class change applied in place that retires a classloader recreates the rules, the authentication
  *     fetchers and the filter: they would hold, and run, classes of the retired generation.</li>
+ *     <li>A change of the configuration that enables or disables the security filter asks for a restart: it adds or
+ *     removes a filter route, which recreating beans cannot do.</li>
  * </ul>
  *
  * <p>A filter route resolves its filter once and keeps it. In development mode the router builds its routes again
@@ -72,15 +75,26 @@ final class DevelopmentSecurityReloader {
      */
     private static final List<String> PREFIXES = List.of(SecurityConfigurationProperties.PREFIX, "endpoints");
 
+    /**
+     * The properties that decide whether the security filter exists at all.
+     */
+    private static final List<String> FILTER_ENABLED = List.of(SecurityConfigurationProperties.PREFIX + ".enabled", SecurityFilterConfigurationProperties.PREFIX + ".enabled");
+
     private static final Logger LOG = LoggerFactory.getLogger(DevelopmentSecurityReloader.class);
 
     private final BeanContext beanContext;
+
+    /**
+     * Whether the security filter was enabled when this context was built: the routes have a filter route only if so.
+     */
+    private final boolean filterEnabled;
 
     /**
      * @param beanContext The context, watched when it can be
      */
     DevelopmentSecurityReloader(BeanContext beanContext) {
         this.beanContext = beanContext;
+        this.filterEnabled = filterEnabled();
         if (beanContext instanceof WatchableBeanContext watchable) {
             // the first batch is what the filter was, or will be, built from: only what changes after it matters
             watchable.watchDefinitions(SecurityRule.class, null, change -> {
@@ -94,10 +108,32 @@ final class DevelopmentSecurityReloader {
                 }
             });
             for (String prefix : PREFIXES) {
-                watchable.watchConfiguration(prefix, change -> recreate(true, false, "the configuration under " + prefix + " changed"));
+                watchable.watchConfiguration(prefix, change -> onConfigurationChange(prefix));
             }
             watchable.watchClassChanges(this::onClassChange);
         }
+    }
+
+    private ConfigurationWatcher.Outcome onConfigurationChange(String prefix) {
+        if (filterEnabled() != filterEnabled) {
+            // a filter enabled or disabled adds or removes a filter route, and a filter bean that is not there is
+            // neither destroyed nor recreated: only a new context has the routes the configuration now asks for
+            LOG.debug("The security filter was enabled or disabled: a restart applies it");
+            return ConfigurationWatcher.Outcome.REQUIRES_RESTART;
+        }
+        return recreate(true, false, "the configuration under " + prefix + " changed");
+    }
+
+    private boolean filterEnabled() {
+        if (!(beanContext instanceof ApplicationContext context)) {
+            return true;
+        }
+        for (String property : FILTER_ENABLED) {
+            if (!context.getEnvironment().getProperty(property, Boolean.class).orElse(true)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean changed(BeanDefinitionChange<?> change) {

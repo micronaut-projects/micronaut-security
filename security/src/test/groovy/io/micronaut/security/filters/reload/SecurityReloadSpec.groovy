@@ -93,6 +93,47 @@ class SecurityReloadSpec extends Specification {
         context.close()
     }
 
+    void "in development mode enabling a security filter that was disabled asks for a restart, since no filter route serves it yet"() {
+        given:
+        ApplicationContext context = devContext(true, ['micronaut.security.filter.enabled': false])
+        ConfigurationRefresher refresher = context.getBean(ConfigurationRefresher)
+        ConfigurationInterceptUrlMapRule urlMapRule = context.getBean(ConfigurationInterceptUrlMapRule)
+
+        expect:
+        context.containsBean(reloader())
+        !context.containsBean(SecurityFilter)
+
+        when:
+        RefreshResult refresh = edit(context, refresher, [
+            'micronaut.security.filter.enabled'                : true,
+            'micronaut.security.intercept-url-map[0].access[0]': 'isAuthenticated()'
+        ])
+
+        then: 'nothing is recreated in place: a restart builds the filter and its route'
+        refresh.requiresRestart()
+        context.getBean(ConfigurationInterceptUrlMapRule).is(urlMapRule)
+
+        cleanup:
+        context.close()
+    }
+
+    void "in development mode disabling the security filter asks for a restart and keeps the filter until then"() {
+        given:
+        ApplicationContext context = devContext(true)
+        ConfigurationRefresher refresher = context.getBean(ConfigurationRefresher)
+        SecurityFilter filter = context.getBean(SecurityFilter)
+
+        when:
+        RefreshResult refresh = edit(context, refresher, ['micronaut.security.filter.enabled': false])
+
+        then:
+        refresh.requiresRestart()
+        context.getBean(SecurityFilter).is(filter)
+
+        cleanup:
+        context.close()
+    }
+
     void "in development mode a change of the endpoints configuration recreates the sensitive endpoint rule"() {
         given:
         ApplicationContext context = devContext(true)
@@ -196,9 +237,9 @@ class SecurityReloadSpec extends Specification {
         context.close()
     }
 
-    private static ApplicationContext devContext(boolean track) {
+    private static ApplicationContext devContext(boolean track, Map<String, Object> properties = [:]) {
         return ApplicationContext.builder()
-            .properties(securityProperties() + ['micronaut.dev.enabled': true])
+            .properties(securityProperties() + properties + ['micronaut.dev.enabled': true])
             .trackBeanDependencies(track)
             .start()
     }
