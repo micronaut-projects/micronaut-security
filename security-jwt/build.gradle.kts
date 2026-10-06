@@ -23,7 +23,6 @@ dependencies {
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
-    testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteUtils)
@@ -31,7 +30,6 @@ dependencies {
     testImplementation(mnMultitenancy.micronaut.multitenancy)
     testImplementation(mnViews.micronaut.views.velocity)
     testRuntimeOnly(mnViews.velocity.engine.core)
-    testImplementation(mnLogging.logback.classic)
 
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
@@ -41,10 +39,6 @@ dependencies {
 
     testImplementation(libs.system.stubs.core)
 
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mnTest.micronaut.test.junit5)
-    testImplementation(mnTest.junit.jupiter.params)
-    testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
 
 tasks.test {

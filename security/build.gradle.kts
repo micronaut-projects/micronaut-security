@@ -22,7 +22,6 @@ dependencies {
     compileOnly(mn.jackson.databind)
 
     testAnnotationProcessor(projects.micronautSecurityProcessor)
-    testAnnotationProcessor(mn.micronaut.inject.java)
 
     testCompileOnly(mnData.micronaut.data.processor)
     testCompileOnly(projects.micronautSecurityProcessor)
@@ -38,12 +37,7 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(mn.snakeyaml)
     testImplementation(libs.bcpkix)
-    testImplementation(mnLogging.logback.classic)
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mnTest.mockito.core)
-    testImplementation(mnTest.junit.jupiter.params)
-    testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(libs.jsonassert)
     testImplementation(libs.awaitility)
 }
