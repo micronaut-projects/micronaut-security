@@ -300,6 +300,29 @@ for authentication to succeed.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/cookie/CookieLoginHandler.html#applyCookies(io.micronaut.http.MutableHttpResponse,java.util.List)" class="member-name-link">applyCookies(MutableHttpResponse, List)</a> - Method in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">CookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2HashFunction.html" class="type-name-link" title="interface in io.micronaut.security.password.argon2">Argon2HashFunction</a> - Interface in <a href="io/micronaut/security/password/argon2/package-summary.html">io.micronaut.security.password.argon2</a></dt>
+<dd>
+<div class="block">Computes Argon2id hashes for an <code>Argon2PasswordEncoder</code>.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a> - Interface in <a href="io/micronaut/security/password/argon2/package-summary.html">io.micronaut.security.password.argon2</a></dt>
+<dd>
+<div class="block">Configuration of the Argon2id <a href="io/micronaut/security/password/PasswordEncoder.html" title="interface in io.micronaut.security.password"><code>PasswordEncoder</code></a>.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a> - Class in <a href="io/micronaut/security/password/argon2/package-summary.html">io.micronaut.security.password.argon2</a></dt>
+<dd>
+<div class="block">Binds configuration for the Argon2id password encoder.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">Argon2PasswordEncoderConfigurationProperties()</a> - Constructor for class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html" class="type-name-link" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a> - Record Class in <a href="io/micronaut/security/password/argon2/package-summary.html">io.micronaut.security.password.argon2</a></dt>
+<dd>
+<div class="block">An Argon2id hash in the PHC string format:
+<code>$argon2id$v=19$m=&lt;memory&gt;,t=&lt;iterations&gt;,p=&lt;parallelism&gt;$&lt;salt&gt;$&lt;hash&gt;</code>.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#%3Cinit%3E(long,long,int,byte%5B%5D,byte%5B%5D)" class="member-name-link">Argon2PhcString(long, long, int, byte[], byte[])</a> - Constructor for record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>Argon2PhcString</code> record class.</div>
+</dd>
 <dt><a href="io/micronaut/security/authentication/AbstractPrincipalArgumentBinder.html#argumentType()" class="member-name-link">argumentType()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AbstractPrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication">AbstractPrincipalArgumentBinder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/AsMap.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.grants">AsMap</a> - Interface in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
@@ -1852,6 +1875,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dd>
 <div class="block">Default Get Allowed.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_HASH_LENGTH" class="member-name-link">DEFAULT_HASH_LENGTH</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default hash length, in bytes.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagatorConfiguration.html#DEFAULT_HEADER_NAME" class="member-name-link">DEFAULT_HEADER_NAME</a> - Static variable in interface io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagatorConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html#DEFAULT_HTTPONLY" class="member-name-link">DEFAULT_HTTPONLY</a> - Static variable in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
@@ -1861,6 +1888,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dt><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH" class="member-name-link">DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH</a> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default value whether intercept url patterns should be prepended with the context path.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_ITERATIONS" class="member-name-link">DEFAULT_ITERATIONS</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default number of iterations.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_JWS_ALGORITHM" class="member-name-link">DEFAULT_JWS_ALGORITHM</a> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
 <dd>
@@ -1882,6 +1913,18 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dd>
 <div class="block">The default logout URL.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_MAX_ITERATIONS" class="member-name-link">DEFAULT_MAX_ITERATIONS</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default highest number of iterations accepted when verifying an encoded password.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_MAX_MEMORY" class="member-name-link">DEFAULT_MAX_MEMORY</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default highest memory cost, in kibibytes, accepted when verifying an encoded password.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_MEMORY" class="member-name-link">DEFAULT_MEMORY</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default memory cost, in kibibytes.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY" class="member-name-link">DEFAULT_NAME_KEY</a> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html#DEFAULT_NONCE" class="member-name-link">DEFAULT_NONCE</a> - Static variable in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.validator">JwtClaimsValidatorConfigurationProperties</a></dt>
@@ -1895,6 +1938,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dt><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html#DEFAULT_OPENID_ID_TOKEN" class="member-name-link">DEFAULT_OPENID_ID_TOKEN</a> - Static variable in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.validator">JwtClaimsValidatorConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default not-before value.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_PARALLELISM" class="member-name-link">DEFAULT_PARALLELISM</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default degree of parallelism.</div>
 </dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html#DEFAULT_PATH" class="member-name-link">DEFAULT_PATH</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionConfigurationProperties</a></dt>
 <dd>
@@ -1944,6 +1991,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_SEPARATOR" class="member-name-link">DEFAULT_ROLES_SEPARATOR</a> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#DEFAULT_SALT_LENGTH" class="member-name-link">DEFAULT_SALT_LENGTH</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default salt length, in bytes.</div>
+</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html#DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS" class="member-name-link">DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS</a> - Static variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters">SecurityFilterConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default static resource authentication bypass enable value.</div>
@@ -2396,6 +2447,10 @@ request URI to redirect back to after authentication.</div>
 <dd>
 <div class="block">Sets whether the OAuth client configuration is enabled.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/PasswordEncoder.html#encode(java.lang.String)" class="member-name-link">encode(String)</a> - Method in interface io.micronaut.security.password.<a href="io/micronaut/security/password/PasswordEncoder.html" title="interface in io.micronaut.security.password">PasswordEncoder</a></dt>
+<dd>
+<div class="block">Encodes a raw password for storage.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#encrypt(com.nimbusds.jwt.JWT)" class="member-name-link">encrypt(JWT)</a> - Method in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/EncryptionConfiguration.html#encrypt(com.nimbusds.jwt.JWT)" class="member-name-link">encrypt(JWT)</a> - Method in interface io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a></dt>
@@ -2520,6 +2575,10 @@ provider.</div>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html" title="class in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadata</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
@@ -2689,6 +2748,10 @@ method-specific precedence as <a href="io/micronaut/security/rules/SecurityRule.
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectService.html#forbiddenUrl()" class="member-name-link">forbiddenUrl()</a> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#format(int,int,int,byte%5B%5D,byte%5B%5D)" class="member-name-link">format(int, int, int, byte[], byte[])</a> - Static method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Formats an Argon2id hash as a PHC string.</div>
+</dd>
 <dt><a href="io/micronaut/security/html/HtmlSanitizerPolicy.html#FORMATTING" class="member-name-link">FORMATTING</a> - Enum constant in enum class io.micronaut.security.html.<a href="io/micronaut/security/html/HtmlSanitizerPolicy.html" title="enum class in io.micronaut.security.html">HtmlSanitizerPolicy</a></dt>
 <dd>
 <div class="block">Common formatting elements.</div>
@@ -3472,6 +3535,10 @@ OPTIONAL.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html#getGroups()" class="member-name-link">getGroups()</a> - Method in class io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getHashLength()" class="member-name-link">getHashLength()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getHashLength()" class="member-name-link">getHashLength()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/csrf/CsrfConfiguration.html#getHeaderName()" class="member-name-link">getHeaderName()</a> - Method in interface io.micronaut.security.csrf.<a href="io/micronaut/security/csrf/CsrfConfiguration.html" title="interface in io.micronaut.security.csrf">CsrfConfiguration</a></dt>
 <dd>
 <div class="block">HTTP Header name to look for the CSRF token.</div>
@@ -3578,6 +3645,10 @@ REQUIRED.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html#getIssuer()" class="member-name-link">getIssuer()</a> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidatorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.validator">JwtClaimsValidatorConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getIterations()" class="member-name-link">getIterations()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getIterations()" class="member-name-link">getIterations()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/aot/GeneratedFile.html#getJavaFile()" class="member-name-link">getJavaFile()</a> - Method in class io.micronaut.security.aot.<a href="io/micronaut/security/aot/GeneratedFile.html" title="class in io.micronaut.security.aot">GeneratedFile</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html#getJti()" class="member-name-link">getJti()</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></dt>
@@ -3660,6 +3731,14 @@ REQUIRED.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html#getMaxAge()" class="member-name-link">getMaxAge()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getMaxIterations()" class="member-name-link">getMaxIterations()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getMaxIterations()" class="member-name-link">getMaxIterations()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getMaxMemory()" class="member-name-link">getMaxMemory()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getMaxMemory()" class="member-name-link">getMaxMemory()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#getMediaType()" class="member-name-link">getMediaType()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/TokenRequestContext.html#getMediaType()" class="member-name-link">getMediaType()</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/TokenRequestContext.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request.context">TokenRequestContext</a></dt>
@@ -3672,6 +3751,10 @@ REQUIRED.</div>
 <dd>
 <div class="block">Resolves the media type for the request body.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getMemory()" class="member-name-link">getMemory()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getMemory()" class="member-name-link">getMemory()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#getMessage()" class="member-name-link">getMessage()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>
 <div class="block">message getter.</div>
@@ -3828,6 +3911,10 @@ OPTIONAL.</div>
 <dt><a href="io/micronaut/security/errors/CookiePriorToLoginPersistence.html#getOriginalUri(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse)" class="member-name-link">getOriginalUri(HttpRequest, MutableHttpResponse)</a> - Method in class io.micronaut.security.errors.<a href="io/micronaut/security/errors/CookiePriorToLoginPersistence.html" title="class in io.micronaut.security.errors">CookiePriorToLoginPersistence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/PriorToLoginPersistence.html#getOriginalUri(I,O)" class="member-name-link">getOriginalUri(I, O)</a> - Method in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getParallelism()" class="member-name-link">getParallelism()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getParallelism()" class="member-name-link">getParallelism()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#getPassword()" class="member-name-link">getPassword()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>
 <dd>
@@ -4163,6 +4250,10 @@ that stores the key where the roles are stored.</div>
 <div class="block">Separator which will be used for splitting the roles before processing the <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#getRolesSeparator()" class="member-name-link">getRolesSeparator()</a> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html#getSaltLength()" class="member-name-link">getSaltLength()</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfiguration.html" title="interface in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#getSaltLength()" class="member-name-link">getSaltLength()</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html#getScope()" class="member-name-link">getScope()</a> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></dt>
 <dd>&nbsp;</dd>
@@ -4550,8 +4641,16 @@ returns the authentication response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles(java.util.List,java.util.Map)" class="member-name-link">hasAnyRequiredRoles(List, Map)</a> - Method in interface io.micronaut.security.token.<a href="io/micronaut/security/token/RolesFinder.html" title="interface in io.micronaut.security.token">RolesFinder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#hash()" class="member-name-link">hash()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./io/micronaut/security/password/argon2/Argon2PhcString.html#param-hash"><code>hash</code></a> record component.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#hash(java.lang.String)" class="member-name-link">hash(String)</a> - Static method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2HashFunction.html#hash(java.lang.String,byte%5B%5D,int,int,int,int)" class="member-name-link">hash(String, byte[], int, int, int, int)</a> - Method in interface io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2HashFunction.html" title="interface in io.micronaut.security.password.argon2">Argon2HashFunction</a></dt>
+<dd>
+<div class="block">Hashes a password using the requested parameters.</div>
+</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/ClientAuthentication.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ClientAuthentication.html" title="class in io.micronaut.security.authentication">ClientAuthentication</a></dt>
@@ -4575,6 +4674,10 @@ returns the authentication response.</div>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html" title="class in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadata</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
@@ -5107,6 +5210,14 @@ used as routes in the application.</div>
 <dd>
 <div class="block">Micronaut Security OJDBC Extensions.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/package-summary.html">io.micronaut.security.password</a> - package io.micronaut.security.password</dt>
+<dd>
+<div class="block">Password encoding API.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/package-summary.html">io.micronaut.security.password.argon2</a> - package io.micronaut.security.password.argon2</dt>
+<dd>
+<div class="block">Shared Argon2id password encoding format and configuration.</div>
+</dd>
 <dt><a href="io/micronaut/security/processor/package-summary.html">io.micronaut.security.processor</a> - package io.micronaut.security.processor</dt>
 <dd>
 <div class="block">Annotation processors for security.</div>
@@ -5548,6 +5659,10 @@ should be to reject the request or allow the not found response to be returned.<
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/nimbus/NimbusJsonWebTokenValidatorConfiguration.html#isValidator()" class="member-name-link">isValidator()</a> - Method in interface io.micronaut.security.token.jwt.nimbus.<a href="io/micronaut/security/token/jwt/nimbus/NimbusJsonWebTokenValidatorConfiguration.html" title="interface in io.micronaut.security.token.jwt.nimbus">NimbusJsonWebTokenValidatorConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#iterations()" class="member-name-link">iterations()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./io/micronaut/security/password/argon2/Argon2PhcString.html#param-iterations"><code>iterations</code></a> record component.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:J">J</h2>
 <dl class="index">
@@ -6093,10 +6208,34 @@ an appropriate response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html#matches(io.micronaut.context.condition.ConditionContext)" class="member-name-link">matches(ConditionContext)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Sha256Condition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/PasswordEncoder.html#matches(java.lang.String,java.lang.String)" class="member-name-link">matches(String, String)</a> - Method in interface io.micronaut.security.password.<a href="io/micronaut/security/password/PasswordEncoder.html" title="interface in io.micronaut.security.password">PasswordEncoder</a></dt>
+<dd>
+<div class="block">Verifies a raw password against an encoded password.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#matchesIssuer(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,java.lang.String)" class="member-name-link">matchesIssuer(OpenIdClientConfiguration, String)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MAX_HASH_LENGTH" class="member-name-link">MAX_HASH_LENGTH</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Longest hash, in bytes, allowed by the PHC string format.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MAX_PARALLELISM" class="member-name-link">MAX_PARALLELISM</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Highest degree of parallelism allowed by the PHC string format.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MAX_SALT_LENGTH" class="member-name-link">MAX_SALT_LENGTH</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Longest salt, in bytes, allowed by the PHC string format.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#mediaType" class="member-name-link">mediaType</a> - Variable in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#memory()" class="member-name-link">memory()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./io/micronaut/security/password/argon2/Argon2PhcString.html#param-memory"><code>memory</code></a> record component.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MEMORY_PER_LANE" class="member-name-link">MEMORY_PER_LANE</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Lowest memory cost, in kibibytes, that Argon2 accepts for each degree of parallelism.</div>
+</dd>
 <dt><a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html#mergeDataRoles(java.util.Set...)" class="member-name-link">mergeDataRoles(Set...)</a> - Static method in class io.micronaut.security.ojdbc.extensions.<a href="io/micronaut/security/ojdbc/extensions/DefaultDataRolesFetcher.html" title="class in io.micronaut.security.ojdbc.extensions">DefaultDataRolesFetcher</a></dt>
 <dd>
 <div class="block">Merges data role sets into a single set.</div>
@@ -6147,6 +6286,18 @@ an appropriate response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityOjdbcExtensionsModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityOjdbcExtensionsModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityOjdbcExtensionsModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityOjdbcExtensionsModuleInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordArgon2BouncycastleModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityPasswordArgon2BouncycastleModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordArgon2BouncycastleModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityPasswordArgon2BouncycastleModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityPasswordArgon2BouncycastleModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityPasswordArgon2BouncycastleModuleInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityPasswordModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityPasswordModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityPasswordModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityPasswordModuleInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordTckModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityPasswordTckModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/info/MicronautSecurityPasswordTckModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityPasswordTckModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityPasswordTckModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityPasswordTckModuleInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityProcessorModuleInfo.html" class="type-name-link" title="class in io.micronaut.security.info">MicronautSecurityProcessorModuleInfo</a> - Class in <a href="io/micronaut/security/info/package-summary.html">io.micronaut.security.info</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/info/MicronautSecurityProcessorModuleInfo.html#%3Cinit%3E()" class="member-name-link">MicronautSecurityProcessorModuleInfo()</a> - Constructor for class io.micronaut.security.info.<a href="io/micronaut/security/info/MicronautSecurityProcessorModuleInfo.html" title="class in io.micronaut.security.info">MicronautSecurityProcessorModuleInfo</a></dt>
@@ -6161,6 +6312,14 @@ an appropriate response.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#MICROSOFT" class="member-name-link">MICROSOFT</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MIN_HASH_LENGTH" class="member-name-link">MIN_HASH_LENGTH</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Shortest hash, in bytes, allowed by the PHC string format.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#MIN_SALT_LENGTH" class="member-name-link">MIN_SALT_LENGTH</a> - Static variable in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Shortest salt, in bytes, allowed by the PHC string format.</div>
+</dd>
 <dt><a href="io/micronaut/security/testutils/authprovider/MockAuthenticationProvider.html" class="type-name-link" title="class in io.micronaut.security.testutils.authprovider">MockAuthenticationProvider&lt;T,<wbr>I,<wbr>S&gt;</a> - Class in <a href="io/micronaut/security/testutils/authprovider/package-summary.html">io.micronaut.security.testutils.authprovider</a></dt>
 <dd>
 <div class="block">Utility class to mock authentication scenarios.</div>
@@ -6686,6 +6845,10 @@ request to an OpenID provider.</div>
 <dd>
 <div class="block">The Authorization Server SHOULD display the authentication and consent UI consistent with a full User Agent page view.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#parallelism()" class="member-name-link">parallelism()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./io/micronaut/security/password/argon2/Argon2PhcString.html#param-parallelism"><code>parallelism</code></a> record component.</div>
+</dd>
 <dt><a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html#param(java.lang.String,java.lang.Object)" class="member-name-link">param(String, Object)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/WwwAuthenticateChallenge.Builder.html" title="class in io.micronaut.security.authentication">WwwAuthenticateChallenge.Builder</a></dt>
 <dd>
 <div class="block">Add or replace a parameter.</div>
@@ -6724,6 +6887,10 @@ request to an OpenID provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JsonWebTokenParser.html#parse(java.lang.String)" class="member-name-link">parse(String)</a> - Method in interface io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JsonWebTokenParser.html" title="interface in io.micronaut.security.token.jwt.validator">JsonWebTokenParser</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#parse(java.lang.String)" class="member-name-link">parse(String)</a> - Static method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Parses an Argon2id PHC string.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#parseAudiences(io.micronaut.security.token.Claims)" class="member-name-link">parseAudiences(Claims)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#parseAzpClaim(io.micronaut.security.token.Claims)" class="member-name-link">parseAzpClaim(Claims)</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
@@ -6753,6 +6920,10 @@ request to an OpenID provider.</div>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailureReason.html#PASSWORD_EXPIRED" class="member-name-link">PASSWORD_EXPIRED</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum class in io.micronaut.security.authentication">AuthenticationFailureReason</a></dt>
 <dd>
 <div class="block">Failure when the cause is the user's password expired.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/PasswordEncoder.html" class="type-name-link" title="interface in io.micronaut.security.password">PasswordEncoder</a> - Interface in <a href="io/micronaut/security/password/package-summary.html">io.micronaut.security.password</a></dt>
+<dd>
+<div class="block">Encodes passwords for storage and verifies a password against a stored encoding.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" class="type-name-link" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a> - Class in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
 <dd>
@@ -6986,6 +7157,10 @@ request to an OpenID provider.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadataConfiguration.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in interface io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadataConfiguration.html" title="interface in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadataConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Configuration prefix for the Argon2id password encoder.</div>
+</dd>
 <dt><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionIdResolver.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SessionIdResolver.html" title="interface in io.micronaut.security.session">SessionIdResolver</a></dt>
@@ -7638,6 +7813,10 @@ following order:
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator)" class="member-name-link">S256PkceGenerator(CodeVerifierGenerator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#salt()" class="member-name-link">salt()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./io/micronaut/security/password/argon2/Argon2PhcString.html#param-salt"><code>salt</code></a> record component.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#SAML_2_0_BEARER_ASSERTION_GRANT" class="member-name-link">SAML_2_0_BEARER_ASSERTION_GRANT</a> - Enum constant in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html" class="type-name-link" title="class in io.micronaut.security.oauth2.grants">SamlBearerAssertionGrant</a> - Class in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
@@ -8487,6 +8666,10 @@ group search filter.</div>
 <dd>
 <div class="block">Sets the group configuration.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setHashLength(int)" class="member-name-link">setHashLength(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the length, in bytes, of the hash generated for each encoded password.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html#setHeaderName(java.lang.String)" class="member-name-link">setHeaderName(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></dt>
 <dd>
 <div class="block">Http Header to be used to propagate the token.</div>
@@ -8539,6 +8722,10 @@ group search filter.</div>
 <dd>
 <div class="block">URL using the https scheme with no query or fragment component that the
 Open ID provider asserts as its issuer identifier.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setIterations(int)" class="member-name-link">setIterations(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the number of iterations used to encode passwords.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html#setJweAlgorithm(com.nimbusds.jose.JWEAlgorithm)" class="member-name-link">setJweAlgorithm(JWEAlgorithm)</a> - Method in class io.micronaut.security.token.jwt.encryption.secret.<a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption.secret">SecretEncryptionConfiguration</a></dt>
 <dd>
@@ -8603,6 +8790,18 @@ authorization code grant flow.</div>
 <dd>
 <div class="block">Maximum authentication age.</div>
 </dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setMaxIterations(int)" class="member-name-link">setMaxIterations(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the highest number of iterations accepted when verifying an encoded password.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setMaxMemory(int)" class="member-name-link">setMaxMemory(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the highest memory cost, in kibibytes, accepted when verifying an encoded password.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setMemory(int)" class="member-name-link">setMemory(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the memory cost, in kibibytes, used to encode passwords.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#setMethod(com.nimbusds.jose.EncryptionMethod)" class="member-name-link">setMethod(EncryptionMethod)</a> - Method in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>
 <div class="block">method Setter.</div>
@@ -8639,6 +8838,10 @@ authorization code grant flow.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setOriginalUri(java.net.URI)" class="member-name-link">setOriginalUri(URI)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setParallelism(int)" class="member-name-link">setParallelism(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the degree of parallelism used to encode passwords.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#setPassword(java.lang.String)" class="member-name-link">setPassword(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#setPassword(java.lang.String)" class="member-name-link">setPassword(String)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>
@@ -8822,6 +9025,10 @@ authorization endpoint.</div>
 <dt><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#setRolesSeparator(java.lang.String)" class="member-name-link">setRolesSeparator(String)</a> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
 <dd>
 <div class="block">If the entry used for the roles in the <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map is a String, you can use the separator to split its value into multiple roles.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html#setSaltLength(int)" class="member-name-link">setSaltLength(int)</a> - Method in class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PasswordEncoderConfigurationProperties.html" title="class in io.micronaut.security.password.argon2">Argon2PasswordEncoderConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the length, in bytes, of the salt generated for each encoded password.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#setScope(java.lang.String)" class="member-name-link">setScope(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
 <dd>&nbsp;</dd>
@@ -9484,6 +9691,10 @@ of propagation between services.</div>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#toString()" class="member-name-link">toString()</a> - Method in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html#toString()" class="member-name-link">toString()</a> - Method in record class io.micronaut.security.oauth2.metadata.<a href="io/micronaut/security/oauth2/metadata/ProtectedResourceMetadata.html" title="class in io.micronaut.security.oauth2.metadata">ProtectedResourceMetadata</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="io/micronaut/security/password/argon2/Argon2PhcString.html#toString()" class="member-name-link">toString()</a> - Method in record class io.micronaut.security.password.argon2.<a href="io/micronaut/security/password/argon2/Argon2PhcString.html" title="class in io.micronaut.security.password.argon2">Argon2PhcString</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
