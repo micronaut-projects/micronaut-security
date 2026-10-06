@@ -94,8 +94,6 @@ jobs:
       - name: "🔎 Run static analysis"
         id: qodana
         uses: JetBrains/qodana-action@v2026.1
-        with:
-          pr-mode: false
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
           QODANA_ENDPOINT: 'https://qodana.cloud'
