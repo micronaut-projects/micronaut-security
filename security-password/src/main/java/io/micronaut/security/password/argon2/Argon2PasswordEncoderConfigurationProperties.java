@@ -71,10 +71,6 @@ public final class Argon2PasswordEncoderConfigurationProperties implements Argon
     private int maxMemory = DEFAULT_MAX_MEMORY;
     private int maxIterations = DEFAULT_MAX_ITERATIONS;
 
-    /** Creates the shared Argon2id configuration with default values. */
-    public Argon2PasswordEncoderConfigurationProperties() {
-    }
-
     @Override
     public int getMemory() {
         return memory;
