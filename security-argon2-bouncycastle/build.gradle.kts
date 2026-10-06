@@ -1,5 +1,5 @@
 plugins {
-    id("io.micronaut.build.internal.security-full-coverage")
+    id("io.micronaut.build.internal.security-module")
 }
 dependencies {
     api(projects.micronautSecurityPassword)
