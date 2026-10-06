@@ -1,6 +1,7 @@
 package io.micronaut.security.filters.reload
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.RuntimeBeanDefinition
 import io.micronaut.context.env.PropertySource
 import io.micronaut.context.reload.ClassChangeEvent
@@ -10,12 +11,14 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.runtime.context.scope.refresh.ConfigurationRefresher
 import io.micronaut.runtime.context.scope.refresh.RefreshResult
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.filters.AuthenticationFetcher
 import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.security.rules.ConfigurationInterceptUrlMapRule
 import io.micronaut.security.rules.IpPatternsRule
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
+import jakarta.inject.Singleton
 import org.jspecify.annotations.Nullable
 import org.reactivestreams.Publisher
 import spock.lang.Specification
@@ -96,21 +99,28 @@ class SecurityReloadSpec extends Specification {
         ConfigurationRefresher refresher = context.getBean(ConfigurationRefresher)
         SensitiveEndpointRule rule = context.getBean(SensitiveEndpointRule)
 
-        when:
-        edit(context, refresher, ['endpoints.health.sensitive': true])
+        expect:
+        healthSensitivity(rule) == [false] as Set
 
-        then:
-        !context.getBean(SensitiveEndpointRule).is(rule)
+        when:
+        RefreshResult refresh = edit(context, refresher, ['endpoints.health.sensitive': true])
+        SensitiveEndpointRule recreated = context.getBean(SensitiveEndpointRule)
+
+        then: 'the new rule checks the health endpoint as sensitive'
+        !refresh.requiresRestart()
+        !recreated.is(rule)
+        healthSensitivity(recreated) == [true] as Set
 
         cleanup:
         context.close()
     }
 
-    void "in development mode a reload that retires a classloader recreates the rules and the filter, and a restart does not"() {
+    void "in development mode a reload that retires a classloader recreates the rules, the fetchers and the filter, and a restart does not"() {
         given:
         ApplicationContext context = devContext(true)
         SecurityFilter filter = context.getBean(SecurityFilter)
         ConfigurationInterceptUrlMapRule urlMapRule = context.getBean(ConfigurationInterceptUrlMapRule)
+        EmptyFetcher fetcher = context.getBean(EmptyFetcher)
 
         when: 'the application restarts: the new context has new rules'
         context.publishEvent(classChange(ReloadStrategy.RESTART))
@@ -118,6 +128,7 @@ class SecurityReloadSpec extends Specification {
         then:
         context.getBean(SecurityFilter).is(filter)
         context.getBean(ConfigurationInterceptUrlMapRule).is(urlMapRule)
+        context.getBean(EmptyFetcher).is(fetcher)
 
         when:
         context.publishEvent(classChange(ReloadStrategy.RELOAD))
@@ -125,6 +136,8 @@ class SecurityReloadSpec extends Specification {
         then:
         !context.getBean(SecurityFilter).is(filter)
         !context.getBean(ConfigurationInterceptUrlMapRule).is(urlMapRule)
+        !context.getBean(EmptyFetcher).is(fetcher)
+        !context.getBean(SecurityFilter).authenticationFetchers.any { it.is(fetcher) }
 
         cleanup:
         context.close()
@@ -192,6 +205,7 @@ class SecurityReloadSpec extends Specification {
 
     private static Map<String, Object> securityProperties() {
         return [
+            'spec.name'                                        : 'SecurityReloadSpec',
             'micronaut.security.intercept-url-map[0].pattern'  : '/reload/**',
             'micronaut.security.intercept-url-map[0].access[0]': 'isAnonymous()',
             'micronaut.security.ip-patterns'                   : ['0.0.0.0']
@@ -203,12 +217,25 @@ class SecurityReloadSpec extends Specification {
         return refresher.refresh()
     }
 
+    private static Set<Boolean> healthSensitivity(SensitiveEndpointRule rule) {
+        return rule.endpointMethods.findAll { it.key.declaringType.simpleName == 'HealthEndpoint' }.values() as Set
+    }
+
     private static Class<?> reloader() {
         return Class.forName(RELOADER)
     }
 
     private static ClassChangeEvent classChange(ReloadStrategy strategy) {
         return new ClassChangeEvent(SecurityReloadSpec, 1, [SecurityReloadSpec.classLoader] as Set, SecurityReloadSpec.classLoader, [], strategy)
+    }
+
+    @Singleton
+    @Requires(property = 'spec.name', value = 'SecurityReloadSpec')
+    static class EmptyFetcher implements AuthenticationFetcher<HttpRequest<?>> {
+        @Override
+        Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
+            return Publishers.empty()
+        }
     }
 
     static class RejectingRule implements SecurityRule<HttpRequest<?>> {

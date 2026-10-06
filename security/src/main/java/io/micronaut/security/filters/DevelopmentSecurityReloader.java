@@ -45,8 +45,8 @@ import java.util.List;
  *     <li>A change of the configuration under {@code micronaut.security} or {@code endpoints} recreates the
  *     security rules, which read the intercept-url map, the IP patterns and the endpoint sensitivity when they are
  *     created, and the filter that holds them.</li>
- *     <li>A class change applied in place that retires a classloader does the same: the filter would hold the
- *     rules and the fetchers of the retired generation.</li>
+ *     <li>A class change applied in place that retires a classloader recreates the rules, the authentication
+ *     fetchers and the filter: they would hold, and run, classes of the retired generation.</li>
  *     <li>After the filter is recreated, the development router, when present, rebuilds its routes: a filter route
  *     keeps the filter it first resolved, so requests reach the new filter only through new routes.</li>
  * </ul>
@@ -85,16 +85,16 @@ final class DevelopmentSecurityReloader {
             // the first batch is what the filter was, or will be, built from: only what changes after it matters
             watchable.watchDefinitions(SecurityRule.class, null, change -> {
                 if (changed(change)) {
-                    recreate(false, "security rule definitions changed");
+                    recreate(false, false, "security rule definitions changed");
                 }
             });
             watchable.watchDefinitions(AuthenticationFetcher.class, null, change -> {
                 if (changed(change)) {
-                    recreate(false, "authentication fetcher definitions changed");
+                    recreate(false, false, "authentication fetcher definitions changed");
                 }
             });
             for (String prefix : PREFIXES) {
-                watchable.watchConfiguration(prefix, change -> recreate(true, "the configuration under " + prefix + " changed"));
+                watchable.watchConfiguration(prefix, change -> recreate(true, false, "the configuration under " + prefix + " changed"));
             }
             watchable.watchClassChanges(this::onClassChange);
         }
@@ -107,22 +107,23 @@ final class DevelopmentSecurityReloader {
     private void onClassChange(ClassChangeEvent change) {
         // a restart builds a new context, with new rules and a new filter
         if (change.strategy() != ReloadStrategy.RESTART && !change.retiredLoaders().isEmpty()) {
-            recreate(true, "a reload retired a classloader");
+            recreate(true, true, "a reload retired a classloader");
         }
     }
 
     /**
-     * Recreates the security rules, when asked, and the security filters the context holds. Nothing is created
+     * Recreates the security rules and the authentication fetchers, when asked, and the security filters the context holds. Nothing is created
      * that was not created already: a bean nobody asked for yet is built from the current definitions and
      * configuration when it is first asked for.
      *
      * @param rules Whether to recreate the rules too
+     * @param fetchers Whether to recreate the authentication fetchers too
      * @param reason Why, for the log
      * @return {@link ConfigurationWatcher.Outcome#IGNORED} when no such bean was held, {@link ConfigurationWatcher.Outcome#APPLIED}
      * when they were recreated, and {@link ConfigurationWatcher.Outcome#REQUIRES_RESTART} when they were held but kept, as by
      * a context that does not track bean dependencies
      */
-    private ConfigurationWatcher.Outcome recreate(boolean rules, String reason) {
+    private ConfigurationWatcher.Outcome recreate(boolean rules, boolean fetchers, String reason) {
         if (!(beanContext instanceof WatchableBeanContext context)) {
             return ConfigurationWatcher.Outcome.IGNORED;
         }
@@ -130,6 +131,11 @@ final class DevelopmentSecurityReloader {
         List<Object> beans = new ArrayList<>();
         if (rules) {
             for (BeanRegistration<SecurityRule> registration : beanContext.getActiveBeanRegistrations(SecurityRule.class)) {
+                add(beans, registration.bean());
+            }
+        }
+        if (fetchers) {
+            for (BeanRegistration<AuthenticationFetcher> registration : beanContext.getActiveBeanRegistrations(AuthenticationFetcher.class)) {
                 add(beans, registration.bean());
             }
         }
