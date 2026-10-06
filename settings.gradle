@@ -52,6 +52,7 @@ include "test-suite-serde"
 include "test-suite-ldap"
 include "test-suite-jackson-databind-bean-introspection-module-false"
 include "test-suite-hibernate-validator"
+include "test-suite-coverage"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
