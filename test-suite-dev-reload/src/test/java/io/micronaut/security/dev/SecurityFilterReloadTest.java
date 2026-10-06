@@ -48,7 +48,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Serves requests through the security filter in development mode, with the development-only router, and
- * changes what the filter was built from: the next request is checked by the new rules.
+ * changes what the filter was built from: the next request is checked by the new rules. Nothing asks the router to
+ * rebuild its routes: it does so itself when the recreated filter destroys the previous one.
  */
 class SecurityFilterReloadTest {
 

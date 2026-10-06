@@ -19,9 +19,6 @@ dependencies {
     compileOnly(mnData.micronaut.data.runtime)
     compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.management)
-    // the development-only router, which the development-only reloader asks to rebuild the filter routes
-    compileOnly(mn.micronaut.dev)
-    compileOnly(mn.micronaut.router)
     compileOnly(mn.jackson.databind)
 
     testAnnotationProcessor(projects.micronautSecurityProcessor)

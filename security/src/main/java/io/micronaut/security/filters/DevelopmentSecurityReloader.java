@@ -26,7 +26,6 @@ import io.micronaut.context.reload.ReloadStrategy;
 import io.micronaut.context.watch.BeanDefinitionChange;
 import io.micronaut.context.watch.ConfigurationWatcher;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.reflect.ClassUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.rules.SecurityRule;
 import org.slf4j.Logger;
@@ -47,9 +46,10 @@ import java.util.List;
  *     created, and the filter that holds them.</li>
  *     <li>A class change applied in place that retires a classloader recreates the rules, the authentication
  *     fetchers and the filter: they would hold, and run, classes of the retired generation.</li>
- *     <li>After the filter is recreated, the development router, when present, rebuilds its routes: a filter route
- *     keeps the filter it first resolved, so requests reach the new filter only through new routes.</li>
  * </ul>
+ *
+ * <p>A filter route resolves its filter once and keeps it. In development mode the router builds its routes again
+ * when a server filter bean is destroyed, so the next request reaches the recreated filter.</p>
  *
  * <p>Each bean is recreated through {@link WatchableBeanContext#recreate(Object)}, which destroys the beans that
  * received it, as the dependency graph of a development context records. A context that does not track bean
@@ -139,10 +139,8 @@ final class DevelopmentSecurityReloader {
                 add(beans, registration.bean());
             }
         }
-        boolean filters = false;
         for (BeanRegistration<SecurityFilter> registration : beanContext.getActiveBeanRegistrations(SecurityFilter.class)) {
             add(beans, registration.bean());
-            filters = true;
         }
         if (beans.isEmpty()) {
             return ConfigurationWatcher.Outcome.IGNORED;
@@ -154,10 +152,6 @@ final class DevelopmentSecurityReloader {
             // not track bean dependencies: they are kept, and read again after a restart
             recreated |= context.recreate(bean);
         }
-        if (filters && recreated) {
-            // the filter route of a router keeps the filter it first resolved: only new routes resolve the new one
-            DevelopmentRoutes.rebuild(beanContext);
-        }
         return recreated ? ConfigurationWatcher.Outcome.APPLIED : ConfigurationWatcher.Outcome.REQUIRES_RESTART;
     }
 
@@ -168,41 +162,5 @@ final class DevelopmentSecurityReloader {
             }
         }
         beans.add(bean);
-    }
-
-    /**
-     * The development router, when the development runtime is on the classpath. The filter routes resolve a filter
-     * once and keep it, so a recreated filter serves requests only once the routes are built again, which the
-     * development router does in place. Its classes, and the router's, are referenced from this class only, which
-     * is loaded once they are known to be present.
-     */
-    private static final class DevelopmentRoutes {
-
-        private static final String DEV_ROUTER = "io.micronaut.dev.http.DevRouter";
-
-        private DevelopmentRoutes() {
-        }
-
-        static void rebuild(BeanContext beanContext) {
-            if (!ClassUtils.isPresent(DEV_ROUTER, DevelopmentSecurityReloader.class.getClassLoader())) {
-                LOG.debug("No development router: the filter routes keep the previous security filter until the next restart");
-                return;
-            }
-            Holder.rebuild(beanContext);
-        }
-
-        private static final class Holder {
-            private Holder() {
-            }
-
-            static void rebuild(BeanContext beanContext) {
-                // only a router already created has routes holding the previous filter
-                for (BeanRegistration<io.micronaut.web.router.Router> registration : beanContext.getActiveBeanRegistrations(io.micronaut.web.router.Router.class)) {
-                    if (registration.bean() instanceof io.micronaut.dev.http.DevRouter router) {
-                        router.rebuild();
-                    }
-                }
-            }
-        }
     }
 }
