@@ -240,7 +240,7 @@ class SecurityReloadSpec extends Specification {
     private static ApplicationContext devContext(boolean track, Map<String, Object> properties = [:]) {
         return ApplicationContext.builder()
             .properties(securityProperties() + properties + ['micronaut.dev.enabled': true])
-            .trackBeanDependencies(track)
+            .beanDependencyTrackingEnabled(track)
             .start()
     }
 
@@ -267,7 +267,7 @@ class SecurityReloadSpec extends Specification {
     }
 
     private static ClassChangeEvent classChange(ReloadStrategy strategy) {
-        return new ClassChangeEvent(SecurityReloadSpec, 1, [SecurityReloadSpec.classLoader] as Set, SecurityReloadSpec.classLoader, [], strategy)
+        return new ClassChangeEvent(SecurityReloadSpec, [SecurityReloadSpec.classLoader] as Set, SecurityReloadSpec.classLoader, [], strategy)
     }
 
     @Singleton

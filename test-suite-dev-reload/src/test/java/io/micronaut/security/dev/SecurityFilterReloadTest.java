@@ -128,7 +128,7 @@ class SecurityFilterReloadTest {
                 "micronaut.security.intercept-url-map[0].pattern", "/reload/**",
                 "micronaut.security.intercept-url-map[0].access[0]", "isAnonymous()"
             ))
-            .trackBeanDependencies(trackDependencies)
+            .beanDependencyTrackingEnabled(trackDependencies)
             .start();
         // created first: it compares the next refresh against the configuration as it is now
         refresher = context.getBean(ConfigurationRefresher.class);
