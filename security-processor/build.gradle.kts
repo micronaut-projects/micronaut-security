@@ -8,7 +8,6 @@ dependencies {
     testImplementation(mn.micronaut.core.processor)
     testImplementation(mnTest.junit.jupiter.api)
     testImplementation(mnTest.mockito.core)
-    testRuntimeOnly(mnTest.junit.jupiter.engine)
 }
 
 micronautBuild {

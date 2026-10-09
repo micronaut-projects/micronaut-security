@@ -2,7 +2,29 @@ plugins {
     id "io.micronaut.build.internal.security-base"
     id "io.micronaut.build.internal.module"
 }
+// The Micronaut build plugins only enable JaCoCo on CI, and they do so in afterEvaluate.
+// Registered after them, so that the coverage verification of test-suite-coverage also has data locally.
+afterEvaluate {
+    tasks.withType(Test).configureEach {
+        jacoco.enabled = true
+    }
+}
+// Predictive test selection runs a subset of the tests, and Develocity does not make it an input of the tests.
+// Without it, running every test is up-to-date after running a subset, and test-suite-coverage verifies the subset.
+tasks.withType(Test).configureEach {
+    inputs.property("predictiveTestSelection", develocity.predictiveTestSelection.enabled.orElse(false))
+}
 dependencies {
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")   
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.junit.jupiter.params)
+    testImplementation(mnTest.junit.platform.suite)
+    testImplementation(mnTest.junit.platform.launcher)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testImplementation(mnLogging.logback.classic)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
 

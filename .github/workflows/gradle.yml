@@ -33,9 +33,6 @@ jobs:
     strategy:
       matrix:
         java: ['25']
-    outputs:
-      # Outcome of the static analysis step: success, failure or skipped (no Sonar token, e.g. fork pull requests)
-      sonar: ${{ steps.sonar.outcome }}
     env:
       TESTCONTAINERS_RYUK_DISABLED: true
       SONAR_TOKEN_AVAILABLE: ${{ secrets.SONAR_TOKEN != '' }}
@@ -97,17 +94,6 @@ jobs:
         run: |
           ./gradlew check jacocoReport --no-daemon --continue
 
-      - name: "🔎 Run static analysis"
-        id: sonar
-        if: env.SONAR_TOKEN_AVAILABLE == 'true' && matrix.java == '25'
-        # Waits for the quality gate so a failing gate stops the native and Python tests, but does not
-        # fail this job: snapshot and docs publishing below keep running on branch pushes.
-        continue-on-error: true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./gradlew sonar --no-parallel --continue -Dsonar.qualitygate.wait=true
-
       - name: "📊 Publish Test Report"
         if: always()
         uses: mikepenz/action-junit-report@a9170d5795813c01ab4901ffb045b52bab4ab09d # v6
@@ -150,11 +136,36 @@ jobs:
       - name: "❓ Optional cleanup step"
         run: |
           [ -f ./cleanup.sh ] && ./cleanup.sh || [ ! -f ./cleanup.sh ]
-  # Native and Python tests start only when the build and its tests passed and the Sonar quality gate
-  # did not fail, so a red or cancelled build never takes runners for their matrices.
+  # Static analysis runs beside the build rather than after it: Qodana imports the Gradle project
+  # itself and uses none of the build's output, so it does not hold back the native tests.
+  qodana:
+    name: "qodana"
+    if: github.repository != 'micronaut-projects/micronaut-project-template' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Annotations are published as a check run and the summary as a pull request comment.
+      checks: write
+      pull-requests: write
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # The pull request head rather than GitHub's merge commit, so only the pull request's own
+          # changes are analysed. Empty on pushes, which then check out the pushed commit.
+          ref: ${{ github.event.pull_request.head.sha }}
+          # Pull request analysis needs the full history to find the merge base.
+          fetch-depth: 0
+
+      - name: "🔎 Run static analysis"
+        uses: JetBrains/qodana-action@4861e015da555e86a72b862892aba6c2b93e6891 # v2026.1.3
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+          QODANA_ENDPOINT: 'https://qodana.cloud'
+  # Native and Python tests start only when the build and its tests passed, so a red or cancelled build never
+  # takes runners for the native matrix.
   native:
     needs: build
-    if: needs.build.outputs.sonar != 'failure'
     uses: ./.github/workflows/graalvm-latest.yml
     secrets: inherit
   python:
