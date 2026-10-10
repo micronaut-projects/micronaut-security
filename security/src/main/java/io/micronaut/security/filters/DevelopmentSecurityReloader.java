@@ -24,7 +24,7 @@ import io.micronaut.context.env.DevelopmentActive;
 import io.micronaut.context.reload.ClassChangeEvent;
 import io.micronaut.context.reload.ReloadStrategy;
 import io.micronaut.context.watch.BeanDefinitionChange;
-import io.micronaut.context.watch.ConfigurationWatcher;
+import io.micronaut.context.watch.ReloadingConfigurationWatcher;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.rules.SecurityRule;
@@ -96,29 +96,29 @@ final class DevelopmentSecurityReloader {
         this.filterEnabled = filterEnabled();
         if (beanContext instanceof WatchableBeanContext watchable) {
             // the first batch is what the filter was, or will be, built from: only what changes after it matters
-            watchable.watchDefinitions(SecurityRule.class, null, change -> {
+            watchable.definitions(SecurityRule.class).watch(change -> {
                 if (changed(change)) {
                     recreate(false, false, "security rule definitions changed");
                 }
             });
-            watchable.watchDefinitions(AuthenticationFetcher.class, null, change -> {
+            watchable.definitions(AuthenticationFetcher.class).watch(change -> {
                 if (changed(change)) {
                     recreate(false, false, "authentication fetcher definitions changed");
                 }
             });
             for (String prefix : PREFIXES) {
-                watchable.watchConfiguration(prefix, change -> onConfigurationChange(prefix));
+                watchable.configuration(prefix).watchReloading(change -> onConfigurationChange(prefix));
             }
-            watchable.watchClassChanges(this::onClassChange);
+            watchable.classChanges().watch(this::onClassChange);
         }
     }
 
-    private ConfigurationWatcher.Outcome onConfigurationChange(String prefix) {
+    private ReloadingConfigurationWatcher.Outcome onConfigurationChange(String prefix) {
         if (filterEnabled() != filterEnabled) {
             // a filter enabled or disabled adds or removes a filter route, and a filter bean that is not there is
             // neither destroyed nor recreated: only a new context has the routes the configuration now asks for
             LOG.debug("The security filter was enabled or disabled: a restart applies it");
-            return ConfigurationWatcher.Outcome.REQUIRES_RESTART;
+            return ReloadingConfigurationWatcher.Outcome.REQUIRES_RESTART;
         }
         return recreate(true, false, "the configuration under " + prefix + " changed");
     }
@@ -154,13 +154,13 @@ final class DevelopmentSecurityReloader {
      * @param rules Whether to recreate the rules too
      * @param fetchers Whether to recreate the authentication fetchers too
      * @param reason Why, for the log
-     * @return {@link ConfigurationWatcher.Outcome#IGNORED} when no such bean was held, {@link ConfigurationWatcher.Outcome#APPLIED}
-     * when they were recreated, and {@link ConfigurationWatcher.Outcome#REQUIRES_RESTART} when they were held but kept, as by
+     * @return {@link ReloadingConfigurationWatcher.Outcome#IGNORED} when no such bean was held, {@link ReloadingConfigurationWatcher.Outcome#APPLIED}
+     * when they were recreated, and {@link ReloadingConfigurationWatcher.Outcome#REQUIRES_RESTART} when they were held but kept, as by
      * a context that does not track bean dependencies
      */
-    private ConfigurationWatcher.Outcome recreate(boolean rules, boolean fetchers, String reason) {
+    private ReloadingConfigurationWatcher.Outcome recreate(boolean rules, boolean fetchers, String reason) {
         if (!(beanContext instanceof WatchableBeanContext context)) {
-            return ConfigurationWatcher.Outcome.IGNORED;
+            return ReloadingConfigurationWatcher.Outcome.IGNORED;
         }
         // taken first: recreating one destroys the beans that received it, as the graph records them
         List<Object> beans = new ArrayList<>();
@@ -178,7 +178,7 @@ final class DevelopmentSecurityReloader {
             add(beans, registration.bean());
         }
         if (beans.isEmpty()) {
-            return ConfigurationWatcher.Outcome.IGNORED;
+            return ReloadingConfigurationWatcher.Outcome.IGNORED;
         }
         LOG.debug("Recreating the security rules and filter: {}", reason);
         boolean recreated = false;
@@ -187,7 +187,7 @@ final class DevelopmentSecurityReloader {
             // not track bean dependencies: they are kept, and read again after a restart
             recreated |= context.recreate(bean);
         }
-        return recreated ? ConfigurationWatcher.Outcome.APPLIED : ConfigurationWatcher.Outcome.REQUIRES_RESTART;
+        return recreated ? ReloadingConfigurationWatcher.Outcome.APPLIED : ReloadingConfigurationWatcher.Outcome.REQUIRES_RESTART;
     }
 
     private static void add(List<Object> beans, Object bean) {
