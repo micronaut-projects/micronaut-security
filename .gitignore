@@ -37,3 +37,4 @@ src/main/docs/resources/img/micronaut-logo-white.svg
 .kotlin
 /buildSrc/gradle.properties
 .oca
+.claude/worktrees
