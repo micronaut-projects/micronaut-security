@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.ldap;
 
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -86,7 +87,19 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     @Override
     public AuthenticationResponse authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         String username = authenticationRequest.getIdentity().toString();
-        String password = authenticationRequest.getSecret().toString();
+        S secret = authenticationRequest.getSecret();
+        if (secret == null) {
+            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is null", username);
+            return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+        }
+        String password = secret.toString();
+        if (StringUtils.isEmpty(password)) {
+            // RFC 4513 section 5.1.2: a simple bind with a non-empty DN and an empty password is an
+            // unauthenticated bind, which some directories (e.g. Active Directory) accept by default.
+            // Never send it to the server.
+            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is empty", username);
+            return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+        }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
