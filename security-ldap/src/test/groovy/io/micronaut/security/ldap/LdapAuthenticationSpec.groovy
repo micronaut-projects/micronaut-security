@@ -3,8 +3,17 @@ package io.micronaut.security.ldap
 import com.unboundid.ldap.listener.InMemoryDirectoryServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.ldap.configuration.LdapConfiguration
+import io.micronaut.security.ldap.context.ContextBuilder
+import io.micronaut.security.ldap.context.LdapSearchService
+import io.micronaut.security.ldap.group.LdapGroupProcessor
+import io.micronaut.scheduling.TaskExecutors
 import reactor.test.StepVerifier
+
+import java.util.concurrent.ExecutorService
 
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
@@ -197,6 +206,71 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc")))
                 .expectErrorMessage("Credentials Do Not Match")
                 .verify()
+
+        cleanup:
+        ctx.close()
+        s.shutDown(true)
+    }
+
+    void "test authenticating with an empty password is rejected without an unauthenticated bind"() {
+        given:
+        InMemoryDirectoryServer s = createServer("basic.ldif")
+        s.startListening()
+        ApplicationContext ctx = ApplicationContext.run([
+                'micronaut.security.ldap.default.enabled': true,
+                'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
+                'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
+                'micronaut.security.ldap.default.context.managerPassword': "password",
+                'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
+                'micronaut.security.ldap.default.groups.enabled': true,
+                'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
+        ])
+        LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
+
+        when:
+        AuthenticationResponse authenticationResponse = authenticate(authenticationProvider, "euclid", password)
+
+        then:
+        !authenticationResponse.isAuthenticated()
+        authenticationResponse instanceof AuthenticationFailed
+        AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH == ((AuthenticationFailed) authenticationResponse).reason
+
+        cleanup:
+        ctx.close()
+        s.shutDown(true)
+
+        where:
+        password << ["", null]
+    }
+
+    void "test empty password never reaches the directory"() {
+        given:
+        InMemoryDirectoryServer s = createServer("basic.ldif")
+        s.startListening()
+        ApplicationContext ctx = ApplicationContext.run([
+                'micronaut.security.ldap.default.enabled': true,
+                'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
+                'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
+                'micronaut.security.ldap.default.context.managerPassword': "password",
+                'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
+        ])
+        LdapConfiguration configuration = ctx.getBean(LdapConfiguration)
+        ContextBuilder contextBuilder = Mock(ContextBuilder)
+        LdapAuthenticationProvider authenticationProvider = new LdapAuthenticationProvider(
+                configuration,
+                ctx.getBean(LdapSearchService),
+                contextBuilder,
+                ctx.getBean(ContextAuthenticationMapper),
+                ctx.getBean(LdapGroupProcessor),
+                ctx.getBean(ExecutorService, Qualifiers.byName(TaskExecutors.IO)))
+
+        when:
+        AuthenticationResponse authenticationResponse = authenticate(authenticationProvider, "euclid", "")
+
+        then:
+        0 * contextBuilder._
+        !authenticationResponse.isAuthenticated()
+        AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH == ((AuthenticationFailed) authenticationResponse).reason
 
         cleanup:
         ctx.close()
