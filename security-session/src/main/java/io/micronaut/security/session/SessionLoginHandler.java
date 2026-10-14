@@ -39,9 +39,13 @@ import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link RedirectingLoginHandler} implementation for session based authentication.
+ * On successful authentication, a new session is created and any pre-existing session is invalidated, so that the
+ * session identifier changes when the privilege level changes.
  *
  * @author Sergio del Amo
  * @since 1.0
@@ -49,6 +53,8 @@ import java.util.Optional;
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
 public class SessionLoginHandler implements RedirectingLoginHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SessionLoginHandler.class);
 
     @Nullable
     protected final String loginSuccess;
@@ -147,8 +153,36 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
         return uriSupplier;
     }
 
+    /**
+     * Saves the authentication in a new session.
+     * @param authentication Authentication
+     * @param request HTTP Request
+     */
     private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+        Session session = createSession(request);
         session.put(SecurityFilter.AUTHENTICATION, authentication);
+    }
+
+    /**
+     * Creates a new session for the request. If the request already carries a session, its attributes are migrated
+     * to the new session and the previous session is deleted from the {@link SessionStore}. Issuing a new session
+     * identifier upon authentication protects against session fixation attacks (CWE-384).
+     * @param request HTTP Request
+     * @return A new session stored in the request attributes
+     */
+    @NonNull
+    private Session createSession(@NonNull HttpRequest<?> request) {
+        Optional<Session> previousSession = SessionForRequest.find(request);
+        Session session = SessionForRequest.create(sessionStore, request);
+        previousSession.ifPresent(previous -> {
+            previous.asMap().forEach(session::put);
+            sessionStore.deleteSession(previous.getId()).exceptionally(throwable -> {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not delete the previous session {} after authentication", previous.getId(), throwable);
+                }
+                return false;
+            });
+        });
+        return session;
     }
 }
