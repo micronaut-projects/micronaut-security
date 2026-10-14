@@ -7,6 +7,7 @@ import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 
@@ -29,7 +30,12 @@ class ClaimsUtilsConcurrentModificationTest {
     @Inject
     IdTokenClaimsValidator<Object> cut;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    @AfterAll
+    static void shutdownExecutor() {
+        executor.shutdownNow();
+    }
 
     @RepeatedTest(500)
     void validateIssuerWithConcurrentAccess(RepetitionInfo repetitionInfo) throws Exception {
