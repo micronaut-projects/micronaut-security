@@ -36,6 +36,12 @@ Read the following guides to learn more about session based authentication:
 - https://guides.micronaut.io/latest/micronaut-security-session.html[Session-Based Authentication Micronaut Guide]
 - https://guides.micronaut.io/latest/micronaut-security-session-database-authentication.html[Database Authentication]
 
+== Session lifecycle
+
+api:security.session.SessionLoginHandler[] issues a new session on every successful login. If the request already carries a session, its attributes are migrated to the new session and the previous session is deleted from the `SessionStore`. Renewing the session identifier when the privilege level changes protects against https://cwe.mitre.org/data/definitions/384.html[session fixation] attacks.
+
+api:security.session.SessionLogoutHandler[] deletes the session from the `SessionStore` and expires the session cookie on logout, so the session identifier cannot be reused after the user logs out.
+
 == Session-based authentication without redirection
 
 When you set `micronaut.security.authentication` to `session`, you enable api:security.session.SessionLoginHandler[] and api:security.session.SessionLogoutHandler[].
