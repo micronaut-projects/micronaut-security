@@ -27,14 +27,14 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = SignupControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(SignupControllerConfigurationProperties.PREFIX)
-public class SignupControllerConfigurationProperties extends ControllerConfigurationProperties implements LoginControllerConfiguration {
+public class SignupControllerConfigurationProperties extends ControllerConfigurationProperties implements SignupControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.signup";
 
     /**
      * The default path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_PATH = "/login";
+    public static final String DEFAULT_PATH = "/signup";
 
     public SignupControllerConfigurationProperties() {
         super(DEFAULT_PATH);

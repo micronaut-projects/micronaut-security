@@ -40,4 +40,7 @@ dependencies {
     testImplementation(mnTest.mockito.core)
     testImplementation(libs.jsonassert)
     testImplementation(libs.awaitility)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.junit.jupiter)
 }
