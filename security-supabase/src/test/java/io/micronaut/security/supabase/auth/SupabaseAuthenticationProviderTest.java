@@ -7,7 +7,6 @@ import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.supabase.auth.SignupRequest;
-import io.micronaut.supabase.auth.Supabase;
 import io.micronaut.supabase.auth.SupabaseAuthClient;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;

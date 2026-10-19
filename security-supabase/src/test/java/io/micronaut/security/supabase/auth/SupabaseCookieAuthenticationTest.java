@@ -19,7 +19,6 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.supabase.auth.SignupRequest;
-import io.micronaut.supabase.auth.Supabase;
 import io.micronaut.supabase.auth.SupabaseAuthClient;
 import io.micronaut.supabase.auth.SupabaseAuthRequests.TokenRequest;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;

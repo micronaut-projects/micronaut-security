@@ -1,9 +1,17 @@
 plugins {
     id("io.micronaut.build.internal.security-module")
 }
+repositories {
+    mavenLocal {
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
+}
 dependencies {
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
+    api("io.micronaut.supabase:micronaut-supabase:0.0.1-SNAPSHOT")
     api(mnSerde.micronaut.serde.api)
     api(mnValidation.validation) // jakarta.validation:jakarta.validation-api
     compileOnly(mn.micronaut.http.client.core)

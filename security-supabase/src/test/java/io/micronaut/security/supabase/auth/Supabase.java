@@ -1,4 +1,4 @@
-package io.micronaut.supabase.auth;
+package io.micronaut.security.supabase.auth;
 
 import io.micronaut.supabase.SupabaseConfiguration;
 import org.slf4j.Logger;
