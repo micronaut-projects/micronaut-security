@@ -1,0 +1,37 @@
+/*
+ * Copyright 2017-2026 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.supabase.storage;
+
+import io.micronaut.core.annotation.Experimental;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * JSON body returned by {@code POST /object/upload/sign/{bucketName}/{key}}.
+ *
+ * @param url Path of the signed upload URL relative to the Storage API, with the token as a query parameter
+ * @param token Upload token, also present in the URL
+ * @since 0.0.1
+ */
+@Serdeable
+@Experimental
+public record SignedUploadUrlResponse(
+    @NonNull @NotBlank String url,
+    @Nullable String token
+) {
+}

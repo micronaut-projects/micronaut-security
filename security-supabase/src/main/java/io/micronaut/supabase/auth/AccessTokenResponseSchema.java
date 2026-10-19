@@ -22,19 +22,21 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Models the AccessTokenResponseSchema object in Supabase Auth.
+ * Session issued by Supabase Auth after a successful authentication.
  *
- * @param accessToken A valid JWT that will expire in `expires_in` seconds.
- * @param refreshToken An opaque string that can be used once to obtain a new access and refresh token.
- * @param tokenType What type of token this is. Only `bearer` returned, may change in the future.
- * @param expiresIn Number of seconds after which the `access_token` should be renewed by using the refresh token with
- *     the `refresh_token` grant type.
- * @param expiresAt UNIX timestamp after which the `access_token` should be renewed by using the refresh token with
- *     the `refresh_token` grant type.
- * @param weakPassword Only returned on the `/token?grant_type=password` endpoint. When present, it indicates that the
- *     password used is weak. Inspect the `reasons` and/or `message` properties to identify why.
- * @param user The value for {@code user}.
- * @since 5.5.1
+ * <p>Returned by {@code POST /token}, {@code POST /verify}, {@code POST /factors/{factorId}/verify} and
+ * {@code POST /factors/recovery-codes/verify}. The access token is a JWT signed with the project's
+ * JWT secret or signing key; the refresh token is opaque and single use.</p>
+ *
+ * @param accessToken JWT access token that expires after {@code expiresIn} seconds
+ * @param refreshToken Opaque single-use token that obtains a new access and refresh token through the
+ *                     {@code refresh_token} grant
+ * @param tokenType Token type; currently always {@code bearer}
+ * @param expiresIn Number of seconds until the access token expires
+ * @param expiresAt Unix epoch seconds at which the access token expires
+ * @param weakPassword Present only for the {@code password} grant when the password used is weak
+ * @param user The user the tokens were issued for
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
@@ -48,12 +50,14 @@ public record AccessTokenResponseSchema(
     @Nullable UserSchema user
 ) {
     /**
-     * Only returned on the `/token?grant_type=password` endpoint. When present, it indicates that the password
-     * used is weak. Inspect the `reasons` and/or `message` properties to identify why.
+     * Warning that the password used to sign in does not meet the project's password policy.
      *
-     * @param reasons The value for {@code reasons}.
-     * @param message The value for {@code message}.
-     * @since 5.5.1
+     * <p>The session is still issued. Applications typically prompt the user to choose a stronger
+     * password.</p>
+     *
+     * @param reasons Policy violations, such as {@code length}, {@code characters} or {@code pwned}
+     * @param message Human-readable explanation of why the password is weak
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental

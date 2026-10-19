@@ -22,16 +22,18 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * A freshly generated set of MFA recovery codes. Returned only by `POST /factors/recovery-codes` and `POST
- * /factors/recovery-codes/regenerate`; the codes cannot be retrieved afterwards.
+ * Freshly generated set of multi-factor recovery codes.
  *
- * @param id ID of the user's `recovery_code` factor.
- * @param type Always `recovery_code`.
- * @param friendlyName The value for {@code friendlyName}.
- * @param total Number of codes in the set.
- * @param codes The plaintext single-use codes in canonical form (16 characters by default). Show them to the user
- *     once.
- * @since 5.5.1
+ * <p>Returned only by {@code POST /factors/recovery-codes} and {@code POST /factors/recovery-codes/regenerate}.
+ * The plaintext codes cannot be retrieved afterwards, so show them to the user once. Each code can be
+ * redeemed a single time through {@code POST /factors/recovery-codes/verify}.</p>
+ *
+ * @param id Identifier of the user's {@code recovery_code} factor
+ * @param type Factor type; always {@code recovery_code}
+ * @param friendlyName Name displayed for the recovery-code factor
+ * @param total Number of codes in the set
+ * @param codes Plaintext single-use codes in canonical form, 16 characters each by default
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

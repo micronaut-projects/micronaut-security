@@ -17,33 +17,39 @@ package io.micronaut.supabase.auth;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
 /**
- * PublicKeyCredentialCreationOptions for WebAuthn registration
+ * WebAuthn {@code PublicKeyCredentialCreationOptions} issued when a user enrols a WebAuthn factor.
  *
- * @param rp The value for {@code rp}.
- * @param user The value for {@code user}.
- * @param challenge A challenge to be signed by the authenticator
- * @param pubKeyCredParams List of supported public key algorithms
- * @param timeout Time (in milliseconds) that the caller is willing to wait for the call to complete
- * @param excludeCredentials List of credentials to exclude (prevent re-registration)
- * @param authenticatorSelection The value for {@code authenticatorSelection}.
- * @param attestation Attestation conveyance preference
- * @param attestationFormats Preferred attestation statement formats
- * @param hints Hints for the browser about what types of authenticators to show
- * @param extensions WebAuthn extensions to enable
- * @since 5.5.1
+ * <p>Pass these options to the browser's {@code navigator.credentials.create()} call and return the
+ * resulting credential through the factor verification request.</p>
+ *
+ * @param rp Relying party the credential is created for
+ * @param user Account the credential is bound to
+ * @param challenge Random challenge the authenticator must sign, base64url encoded
+ * @param pubKeyCredParams Public key algorithms the relying party accepts, in order of preference
+ * @param timeout Milliseconds the caller is willing to wait for the ceremony to complete
+ * @param excludeCredentials Credentials already registered for the user, to prevent duplicate registration
+ * @param authenticatorSelection Constraints on the authenticator the browser may use
+ * @param attestation Attestation conveyance preference, such as {@code none} or {@code direct}
+ * @param attestationFormats Attestation statement formats the relying party prefers
+ * @param hints Hints about which kinds of authenticator the browser should offer
+ * @param extensions WebAuthn extensions to enable, keyed by extension identifier
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record CredentialCreationOptions(
-    Rp rp,
-    User user,
-    String challenge,
-    List<PubKeyCredParam> pubKeyCredParams,
+    @NotNull Rp rp,
+    @NotNull User user,
+    @NotBlank String challenge,
+    @NotEmpty List<PubKeyCredParam> pubKeyCredParams,
     @Nullable Integer timeout,
     @Nullable List<PublicKeyCredentialDescriptor> excludeCredentials,
     @Nullable AuthenticatorSelection authenticatorSelection,
@@ -53,57 +59,57 @@ public record CredentialCreationOptions(
     @Nullable Map<String, Object> extensions
 ) {
     /**
-     * Models the Rp object in Supabase Auth.
+     * WebAuthn relying party, the service the credential is scoped to.
      *
-     * @param id Relying Party ID (usually the domain)
-     * @param name Human-readable Relying Party name
-     * @since 5.5.1
+     * @param id Relying party identifier, usually the effective domain of the site
+     * @param name Human-readable relying party name shown by the authenticator
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record Rp(
-        String id,
-        String name
-    ) {
+        @NotBlank String id,
+        @NotBlank String name) {
     }
+
     /**
-     * Models the User object in Supabase Auth.
+     * WebAuthn user entity the credential is created for.
      *
-     * @param id User handle (opaque byte sequence, base64url encoded string or raw bytes)
-     * @param name User account identifier (e.g., username or email)
-     * @param displayName Human-readable user display name
-     * @since 5.5.1
+     * @param id Opaque user handle, base64url encoded
+     * @param name Account identifier such as a username or email address
+     * @param displayName Human-readable name shown by the authenticator
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record User(
-        String id,
-        String name,
-        String displayName
-    ) {
+        @NotBlank String id,
+        @NotBlank String name,
+        @NotBlank String displayName) {
     }
+
     /**
-     * Models the PubKeyCredParam object in Supabase Auth.
+     * Public key algorithm the relying party accepts for a new credential.
      *
-     * @param type The value for {@code type}.
-     * @param alg COSE algorithm identifier (e.g., -7 for ES256, -257 for RS256)
-     * @since 5.5.1
+     * @param type Credential type; currently always {@code public-key}
+     * @param alg COSE algorithm identifier, for example {@code -7} for ES256 or {@code -257} for RS256
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record PubKeyCredParam(
-        String type,
-        Integer alg
-    ) {
+        @NotBlank String type,
+        @NotNull Integer alg) {
     }
+
     /**
-     * Models the AuthenticatorSelection object in Supabase Auth.
+     * Constraints on which authenticators may take part in the registration ceremony.
      *
-     * @param authenticatorAttachment Preferred authenticator type
-     * @param requireResidentKey Whether to require a resident key (deprecated, use residentKey)
-     * @param residentKey Resident key requirement
-     * @param userVerification User verification requirement
-     * @since 5.5.1
+     * @param authenticatorAttachment Preferred attachment, either {@code platform} or {@code cross-platform}
+     * @param requireResidentKey Legacy flag for requiring a discoverable credential; prefer {@code residentKey}
+     * @param residentKey Discoverable credential requirement: {@code discouraged}, {@code preferred} or {@code required}
+     * @param userVerification User verification requirement: {@code discouraged}, {@code preferred} or {@code required}
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental

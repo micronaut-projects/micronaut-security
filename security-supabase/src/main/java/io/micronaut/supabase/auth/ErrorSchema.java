@@ -22,18 +22,21 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Models the ErrorSchema object in Supabase Auth.
+ * Error body returned by Supabase Auth for a rejected request.
  *
- * @param error Certain responses will contain this property with the provided values.  Usually one of these:   -
- *     invalid_request   - unauthorized_client   - access_denied   - server_error   -
- *     temporarily_unavailable   - unsupported_otp_type
- * @param errorDescription Certain responses that have an `error` property may have this property which describes the error.
- * @param code The HTTP status code. Usually missing if `error` is present.
- * @param msg A basic message describing the problem with the request. Usually missing if `error` is present.
- * @param errorCode A short code used to describe the class of error encountered.
- * @param weakPassword Only returned on the `/signup` endpoint if the password used is too weak. Inspect the `reasons`
- *     and `msg` property to identify the causes.
- * @since 5.5.1
+ * <p>Two shapes exist. OAuth-style errors carry {@code error} and {@code errorDescription}; all other
+ * errors carry {@code code}, {@code msg} and a stable {@code errorCode} such as {@code weak_password} or
+ * {@code user_already_exists}. Branch on {@code errorCode} rather than on {@code msg}, whose wording may
+ * change.</p>
+ *
+ * @param error OAuth 2.0 error identifier such as {@code invalid_request}, {@code access_denied} or
+ *              {@code server_error}
+ * @param errorDescription Human-readable description accompanying {@code error}
+ * @param code HTTP status code; usually absent when {@code error} is present
+ * @param msg Human-readable message describing the problem; usually absent when {@code error} is present
+ * @param errorCode Stable machine-readable code identifying the class of error
+ * @param weakPassword Present only for {@code POST /signup} when the password is too weak
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
@@ -46,11 +49,10 @@ public record ErrorSchema(
     @JsonProperty("weak_password") @Nullable WeakPassword weakPassword
 ) {
     /**
-     * Only returned on the `/signup` endpoint if the password used is too weak. Inspect the `reasons` and `msg`
-     * property to identify the causes.
+     * Details of a password rejected by the project's password policy.
      *
-     * @param reasons The value for {@code reasons}.
-     * @since 5.5.1
+     * @param reasons Policy violations, such as {@code length}, {@code characters} or {@code pwned}
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental

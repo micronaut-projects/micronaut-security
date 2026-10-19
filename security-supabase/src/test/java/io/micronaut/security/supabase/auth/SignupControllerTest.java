@@ -1,4 +1,4 @@
-package io.micronaut.supabase.auth;
+package io.micronaut.security.supabase.auth;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Property;
@@ -15,6 +15,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.endpoints.SignupController;
 import io.micronaut.security.handlers.SignupHandler;
+import io.micronaut.supabase.auth.Supabase;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;
 import jakarta.annotation.PreDestroy;

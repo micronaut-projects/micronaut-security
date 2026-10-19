@@ -21,18 +21,22 @@ import io.micronaut.serde.annotation.Serdeable;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Represents a MFA factor.
+ * Multi-factor authentication factor enrolled by a user.
  *
- * @param id The value for {@code id}.
- * @param status Usually one of: - verified - unverified
- * @param friendlyName The value for {@code friendlyName}.
- * @param factorType Usually one of: - totp - phone - webauthn - recovery_code
- * @param webauthnCredential The value for {@code webauthnCredential}.
- * @param phone The value for {@code phone}.
- * @param createdAt The value for {@code createdAt}.
- * @param updatedAt The value for {@code updatedAt}.
- * @param lastChallengedAt The value for {@code lastChallengedAt}.
- * @since 5.5.1
+ * <p>A factor starts as {@code unverified} after enrollment and becomes {@code verified} once the user
+ * completes a challenge. Sessions that verify a factor are upgraded to authenticator assurance level
+ * {@code aal2}.</p>
+ *
+ * @param id Factor identifier used in {@code /factors/{factorId}} routes
+ * @param status Verification status, either {@code verified} or {@code unverified}
+ * @param friendlyName User-chosen name that distinguishes the factor, unique per user
+ * @param factorType Factor type: {@code totp}, {@code phone}, {@code webauthn} or {@code recovery_code}
+ * @param webauthnCredential Credential descriptor of a {@code webauthn} factor
+ * @param phone Phone number of a {@code phone} factor in E.164 format
+ * @param createdAt Creation timestamp in RFC 3339 format
+ * @param updatedAt Last modification timestamp in RFC 3339 format
+ * @param lastChallengedAt Timestamp of the most recent challenge in RFC 3339 format
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

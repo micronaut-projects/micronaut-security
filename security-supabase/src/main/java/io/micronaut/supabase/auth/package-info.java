@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 /**
- * Data models for the Supabase Auth API.
- * @see <a href="https://raw.githubusercontent.com/supabase/auth/refs/heads/master/openapi.yaml">Supabase Auth REST API</a>
+ * Declarative HTTP client and data models for the Supabase Auth (GoTrue) REST API.
  *
- * @since 5.6.0
+ * <p>{@link io.micronaut.supabase.auth.SupabaseAuthClient} exposes every route of the API. Request bodies
+ * whose schemas are inline in the OpenAPI document live in
+ * {@link io.micronaut.supabase.auth.SupabaseAuthRequests}; named schemas have a record of their own.
+ * Where the running server differs from the published OpenAPI document, the client follows the server
+ * and documents the difference.</p>
+ *
+ * @see <a href="https://github.com/supabase/auth/blob/master/openapi.yaml">Supabase Auth REST API</a>
+ * @since 0.0.1
  */
 @NullMarked
 package io.micronaut.supabase.auth;

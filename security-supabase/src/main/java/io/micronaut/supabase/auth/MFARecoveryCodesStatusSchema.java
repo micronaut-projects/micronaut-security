@@ -20,13 +20,15 @@ import io.micronaut.serde.annotation.Serdeable;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Enrollment status of the user's MFA recovery codes. Never contains code values.
+ * Enrollment status of a user's multi-factor recovery codes, as returned by {@code GET /factors/recovery-codes}.
  *
- * @param id ID of the user's `recovery_code` factor.
- * @param type Always `recovery_code`.
- * @param total Number of codes in the current set.
- * @param remaining Number of codes in the current set that have not been used yet.
- * @since 5.5.1
+ * <p>Never contains code values. The server answers {@code 404} when the user has not enrolled recovery codes.</p>
+ *
+ * @param id Identifier of the user's {@code recovery_code} factor
+ * @param type Factor type; always {@code recovery_code}
+ * @param total Number of codes in the current set
+ * @param remaining Number of codes in the current set that have not been redeemed
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

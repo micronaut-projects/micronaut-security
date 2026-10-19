@@ -22,23 +22,28 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Represents an OAuth 2.1 client
+ * Client application registered with the Supabase Auth OAuth 2.1 authorization server.
  *
- * @param clientId Unique client identifier
- * @param clientName Human-readable name of the client application
- * @param clientSecret Client secret for confidential clients (only returned on registration/regeneration)
- * @param clientType Type of the client
- * @param tokenEndpointAuthMethod Authentication method for the token endpoint
- * @param registrationType Registration type of the client
- * @param clientUri URL of the client application's homepage
- * @param logoUri URL of the client application's logo
- * @param redirectUris Array of redirect URIs used by the client
- * @param grantTypes OAuth grant types the client is authorized to use
- * @param responseTypes OAuth response types the client can use
- * @param scope Space-separated list of scope values
- * @param createdAt The value for {@code createdAt}.
- * @param updatedAt The value for {@code updatedAt}.
- * @since 5.5.1
+ * <p>Clients are created either by an administrator through {@code /admin/oauth/clients} or, when dynamic
+ * registration is enabled, by the application itself through {@code POST /oauth/clients/register}. The
+ * client secret is returned only when it is created or regenerated.</p>
+ *
+ * @param clientId Server-assigned client identifier, a UUID
+ * @param clientName Human-readable name shown to users on the consent page
+ * @param clientSecret Secret of a confidential client; present only in registration and regeneration responses
+ * @param clientType Either {@code public} or {@code confidential}
+ * @param tokenEndpointAuthMethod How the client authenticates at the token endpoint: {@code none},
+ *                                {@code client_secret_basic} or {@code client_secret_post}
+ * @param registrationType How the client was registered, either {@code dynamic} or {@code manual}
+ * @param clientUri Homepage of the client application
+ * @param logoUri Logo of the client application shown on the consent page
+ * @param redirectUris Redirect URIs the client may use; {@code http} is permitted only for loopback hosts
+ * @param grantTypes Grant types the client may use: {@code authorization_code} and {@code refresh_token}
+ * @param responseTypes Response types the client may request; currently {@code code}
+ * @param scope Space-separated scopes the client may request
+ * @param createdAt Creation timestamp in RFC 3339 format
+ * @param updatedAt Last modification timestamp in RFC 3339 format
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

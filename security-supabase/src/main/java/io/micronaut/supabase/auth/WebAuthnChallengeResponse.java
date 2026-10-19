@@ -18,24 +18,30 @@ package io.micronaut.supabase.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
- * Models the WebAuthnChallengeResponse object in Supabase Auth.
+ * Challenge issued by {@code POST /factors/{factorId}/challenge} for a {@code webauthn} factor.
  *
- * @param id ID of the challenge.
- * @param type Type of the challenge.
- * @param expiresAt UNIX seconds of the timestamp past which the challenge should not be verified.
- * @param webauthn The value for {@code webauthn}.
- * @since 5.5.1
+ * <p>The {@code webauthn} map carries the browser options: {@link CredentialCreationOptions} when the
+ * factor is still unverified and must be registered, or {@link CredentialRequestOptions} when an
+ * existing credential must authenticate. Return the browser's answer through the factor verification
+ * request before the challenge expires.</p>
+ *
+ * @param id Challenge identifier to send with the verification request
+ * @param type Factor type the challenge belongs to; always {@code webauthn}
+ * @param expiresAt Unix epoch seconds after which the challenge can no longer be verified
+ * @param webauthn WebAuthn creation or request options to pass to the browser
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record WebAuthnChallengeResponse(
-    String id,
-    String type,
+    @NotBlank String id,
+    @NotBlank String type,
     @JsonProperty("expires_at") @Nullable Integer expiresAt,
-    Map<String, Object> webauthn
-) {
+    @NotNull Map<String, Object> webauthn) {
 }

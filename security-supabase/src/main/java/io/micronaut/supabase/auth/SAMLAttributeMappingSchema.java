@@ -23,10 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Models the SAMLAttributeMappingSchema object in Supabase Auth.
+ * Mapping from SAML assertion attributes to Supabase Auth user metadata.
  *
- * @param keys The value for {@code keys}.
- * @since 5.5.1
+ * <p>Each key becomes a field of the user's metadata and is populated from the named SAML attribute of
+ * the identity provider's assertion. For example {@code email} mapped to {@code mail} copies the
+ * {@code mail} attribute into the user's email.</p>
+ *
+ * @param keys Mappings keyed by the target user attribute name
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
@@ -34,12 +38,14 @@ public record SAMLAttributeMappingSchema(
     @Nullable Map<String, AttributeMapping> keys
 ) {
     /**
-     * Models the AttributeMapping object in Supabase Auth.
+     * Source of a single mapped user attribute.
      *
-     * @param name The value for {@code name}.
-     * @param names The value for {@code names}.
-     * @param defaultValue The value for {@code defaultValue}.
-     * @since 5.5.1
+     * <p>Specify either {@code name} for one SAML attribute or {@code names} to try several in order.</p>
+     *
+     * @param name SAML attribute name to read the value from
+     * @param names SAML attribute names tried in order until one is present
+     * @param defaultValue Value used when none of the SAML attributes is present
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental

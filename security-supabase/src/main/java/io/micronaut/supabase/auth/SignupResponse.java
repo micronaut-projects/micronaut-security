@@ -24,20 +24,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The GoTrue signup response when signup creates a session.
+ * Body returned by {@code POST /signup} when the signup immediately creates a session.
  *
- * <p>When email or phone confirmation is required, GoTrue instead returns a
- * user object without session fields. {@link SupabaseAuthClient} therefore
- * exposes its response body as a map to preserve both response forms.</p>
+ * <p>This happens when email or phone confirmation is disabled or auto-confirmed. When confirmation is
+ * required, Supabase Auth instead returns the user object alone, without session fields.
+ * {@link SupabaseAuthClient#signup} therefore exposes the body as a map so both forms can be handled;
+ * bind that map to this record when a session is expected.</p>
  *
  * @param accessToken JWT access token
- * @param tokenType Token type, typically {@code bearer}
- * @param expiresIn Access token lifetime in seconds
- * @param expiresAt Access token expiration as Unix epoch seconds
- * @param refreshToken Refresh token
- * @param providerToken Provider access token, when supplied by an external provider
- * @param providerRefreshToken Provider refresh token, when supplied by an external provider
- * @param user Created Supabase Auth user
+ * @param tokenType Token type; currently always {@code bearer}
+ * @param expiresIn Number of seconds until the access token expires
+ * @param expiresAt Unix epoch seconds at which the access token expires
+ * @param refreshToken Opaque single-use refresh token
+ * @param providerToken Access token issued by an external provider, when one was involved
+ * @param providerRefreshToken Refresh token issued by an external provider, when one was involved
+ * @param user The newly created user
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
@@ -52,26 +54,30 @@ public record SignupResponse(
     @Nullable User user
 ) {
     /**
-     * Supabase Auth user data returned by signup.
+     * User fields returned by signup.
      *
-     * @param id User identifier
-     * @param aud User audience
-     * @param role User role
-     * @param email User email address
-     * @param phone User phone number
-     * @param appMetadata Supabase-managed application metadata
-     * @param userMetadata User metadata provided during signup
-     * @param identities Linked identity records
-     * @param createdAt User creation timestamp
-     * @param updatedAt User update timestamp
-     * @param confirmedAt User confirmation timestamp
-     * @param emailConfirmedAt Email confirmation timestamp
-     * @param phoneConfirmedAt Phone confirmation timestamp
-     * @param confirmationSentAt Confirmation message timestamp
-     * @param lastSignInAt Last sign-in timestamp
-     * @param isAnonymous Whether the user is anonymous
+     * <p>A subset of {@link UserSchema} that is stable across signup response forms.</p>
+     *
+     * @param id User identifier, a UUID
+     * @param aud Audience claim placed in the user's tokens
+     * @param role Role claim placed in the user's tokens, typically {@code authenticated}
+     * @param email Email address, when the user signed up with one
+     * @param phone Phone number, when the user signed up with one
+     * @param appMetadata Metadata managed by the application through admin APIs; not editable by the user
+     * @param userMetadata Metadata supplied by the user at signup
+     * @param identities Identities linked to the user
+     * @param createdAt Creation timestamp in RFC 3339 format
+     * @param updatedAt Last modification timestamp in RFC 3339 format
+     * @param confirmedAt Timestamp at which either the email or the phone was confirmed
+     * @param emailConfirmedAt Timestamp at which the email address was confirmed
+     * @param phoneConfirmedAt Timestamp at which the phone number was confirmed
+     * @param confirmationSentAt Timestamp at which the confirmation message was sent
+     * @param lastSignInAt Timestamp of the most recent sign-in
+     * @param isAnonymous Whether the user was created through anonymous sign-in
+     * @since 0.0.1
      */
     @Serdeable
+    @Experimental
     public record User(
         @Nullable String id,
         @Nullable String aud,

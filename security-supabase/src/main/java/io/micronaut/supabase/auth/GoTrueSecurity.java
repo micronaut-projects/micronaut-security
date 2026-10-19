@@ -21,10 +21,13 @@ import io.micronaut.serde.annotation.Serdeable;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Use this property to pass a CAPTCHA token only if you have enabled CAPTCHA protection.
+ * CAPTCHA fields sent as {@code gotrue_meta_security} in request bodies.
  *
- * @param captchaToken The value for {@code captchaToken}.
- * @since 5.5.1
+ * <p>Only required when CAPTCHA protection is enabled on the Supabase Auth server. Requests carrying
+ * admin credentials bypass CAPTCHA verification.</p>
+ *
+ * @param captchaToken Token obtained from the configured CAPTCHA provider, such as hCaptcha or Turnstile
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

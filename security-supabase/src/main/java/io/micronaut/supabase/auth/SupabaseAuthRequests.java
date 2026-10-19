@@ -18,6 +18,9 @@ package io.micronaut.supabase.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -25,9 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Request body records for Supabase Auth operations whose schemas are inline in the OpenAPI document.
+ * Request bodies for {@link SupabaseAuthClient} operations whose schemas are declared inline in the
+ * Supabase Auth OpenAPI document rather than as named components.
  *
- * @since 5.5.1
+ * <p>All records are JSON bodies except {@link OAuthTokenRequest}, which is sent form-encoded. Null fields
+ * are optional and may be omitted from the request.</p>
+ *
+ * @since 0.0.1
  */
 @Experimental
 public final class SupabaseAuthRequests {
@@ -54,7 +61,7 @@ public final class SupabaseAuthRequests {
      * @param message Signed Web3 authentication message
      * @param signature Signature of the Web3 message
      * @param chain Blockchain used by the Web3 message
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -87,7 +94,7 @@ public final class SupabaseAuthRequests {
      * @param email Email address associated with the token
      * @param phone Phone number associated with the token
      * @param redirectTo Redirect URI after successful verification
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -108,12 +115,12 @@ public final class SupabaseAuthRequests {
      * @param codeChallenge PKCE code challenge
      * @param codeChallengeMethod PKCE challenge method
      * @param security CAPTCHA security fields
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record RecoverRequest(
-        String email,
+        @NotBlank String email,
         @JsonProperty("code_challenge") @Nullable String codeChallenge,
         @JsonProperty("code_challenge_method") @Nullable String codeChallengeMethod,
         @JsonProperty("gotrue_meta_security") @Nullable GoTrueSecurity security
@@ -127,7 +134,7 @@ public final class SupabaseAuthRequests {
      * @param phone Phone number associated with the confirmation
      * @param type Resend operation type
      * @param security CAPTCHA security fields
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -145,12 +152,12 @@ public final class SupabaseAuthRequests {
      * @param email Destination email address
      * @param data User metadata to attach when creating a user
      * @param security CAPTCHA security fields
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record MagicLinkRequest(
-        String email,
+        @NotBlank String email,
         @Nullable Map<String, Object> data,
         @JsonProperty("gotrue_meta_security") @Nullable GoTrueSecurity security
     ) {
@@ -167,7 +174,7 @@ public final class SupabaseAuthRequests {
      * @param codeChallengeMethod PKCE challenge method
      * @param codeChallenge PKCE code challenge
      * @param security CAPTCHA security fields
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -193,7 +200,7 @@ public final class SupabaseAuthRequests {
      * @param data User metadata
      * @param appMetadata Application metadata
      * @param channel Phone delivery channel
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -215,12 +222,12 @@ public final class SupabaseAuthRequests {
      * @param friendlyName User-visible factor name
      * @param issuer Issuer name for a TOTP factor
      * @param phone Phone number for a phone factor
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record EnrollFactorRequest(
-        @JsonProperty("factor_type") String factorType,
+        @JsonProperty("factor_type") @NotBlank String factorType,
         @JsonProperty("friendly_name") @Nullable String friendlyName,
         @Nullable String issuer,
         @Nullable String phone
@@ -231,7 +238,7 @@ public final class SupabaseAuthRequests {
      * Request fields for creating a multi-factor authentication challenge.
      *
      * @param channel Phone delivery channel
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -246,12 +253,12 @@ public final class SupabaseAuthRequests {
      * @param challengeId Challenge identifier
      * @param code TOTP or SMS verification code
      * @param webauthn WebAuthn verification request
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record VerifyFactorRequest(
-        @JsonProperty("challenge_id") String challengeId,
+        @JsonProperty("challenge_id") @NotBlank String challengeId,
         @Nullable String code,
         @Nullable WebAuthn webauthn
     ) {
@@ -260,14 +267,13 @@ public final class SupabaseAuthRequests {
          *
          * @param type WebAuthn operation type, either {@code create} or {@code request}
          * @param credentialResponse Credential response returned by the WebAuthn client
-         * @since 5.5.1
+         * @since 0.0.1
          */
         @Serdeable
         @Experimental
         public record WebAuthn(
-            String type,
-            @JsonProperty("credential_response") Map<String, Object> credentialResponse
-        ) {
+            @NotBlank String type,
+            @JsonProperty("credential_response") @NotNull Map<String, Object> credentialResponse) {
         }
     }
 
@@ -275,7 +281,7 @@ public final class SupabaseAuthRequests {
      * Optional request fields for generating multi-factor recovery codes.
      *
      * @param friendlyName Name displayed for the recovery-code factor
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -288,13 +294,12 @@ public final class SupabaseAuthRequests {
      * Request fields for redeeming a multi-factor recovery code.
      *
      * @param code Recovery code to redeem
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record VerifyRecoveryCodeRequest(
-        String code
-    ) {
+        @NotBlank String code) {
     }
 
     /**
@@ -307,7 +312,7 @@ public final class SupabaseAuthRequests {
      * @param codeChallenge PKCE code challenge
      * @param codeChallengeMethod PKCE challenge method
      * @param security CAPTCHA security fields
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -327,12 +332,12 @@ public final class SupabaseAuthRequests {
      *
      * @param email Email address to invite
      * @param data User metadata to attach to the invited account
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record InviteUserRequest(
-        String email,
+        @NotBlank String email,
         @Nullable Map<String, Object> data
     ) {
     }
@@ -346,13 +351,13 @@ public final class SupabaseAuthRequests {
      * @param password Password to set for signup links
      * @param data User metadata
      * @param redirectTo Redirect URI after link verification
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record GenerateAdminLinkRequest(
-        String type,
-        String email,
+        @NotBlank String type,
+        @NotBlank String email,
         @JsonProperty("new_email") @Nullable String newEmail,
         @Nullable String password,
         @Nullable Map<String, Object> data,
@@ -365,7 +370,7 @@ public final class SupabaseAuthRequests {
      *
      * <p>The current OpenAPI schema defines this body as an empty object.</p>
      *
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -380,12 +385,12 @@ public final class SupabaseAuthRequests {
      * @param metadataXml Provider metadata document
      * @param domains Email domains served by the provider
      * @param attributeMapping SAML attribute mapping
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record CreateSsoProviderRequest(
-        String type,
+        @NotBlank String type,
         @JsonProperty("metadata_url") @Nullable String metadataUrl,
         @JsonProperty("metadata_xml") @Nullable String metadataXml,
         @Nullable List<String> domains,
@@ -400,7 +405,7 @@ public final class SupabaseAuthRequests {
      * @param metadataXml Provider metadata document
      * @param domains Email domains served by the provider
      * @param attributeMapping SAML attribute mapping
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -424,15 +429,15 @@ public final class SupabaseAuthRequests {
      * @param grantTypes Allowed OAuth grant types
      * @param responseTypes Allowed OAuth response types
      * @param scope Space-separated scope values
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record OAuthClientRegistrationRequest(
-        @JsonProperty("client_name") String clientName,
+        @JsonProperty("client_name") @NotBlank String clientName,
         @JsonProperty("client_uri") @Nullable String clientUri,
         @JsonProperty("logo_uri") @Nullable String logoUri,
-        @JsonProperty("redirect_uris") List<String> redirectUris,
+        @JsonProperty("redirect_uris") @NotEmpty List<String> redirectUris,
         @JsonProperty("client_type") @Nullable String clientType,
         @JsonProperty("token_endpoint_auth_method") @Nullable String tokenEndpointAuthMethod,
         @JsonProperty("grant_types") @Nullable List<String> grantTypes,
@@ -450,7 +455,7 @@ public final class SupabaseAuthRequests {
      * @param redirectUris Allowed redirect URIs
      * @param grantTypes Allowed OAuth grant types
      * @param tokenEndpointAuthMethod Client authentication method
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -474,12 +479,12 @@ public final class SupabaseAuthRequests {
      * @param refreshToken Refresh token for the refresh-token grant
      * @param clientId OAuth client identifier
      * @param clientSecret OAuth client secret
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record OAuthTokenRequest(
-        @JsonProperty("grant_type") String grantType,
+        @JsonProperty("grant_type") @NotBlank String grantType,
         @Nullable String code,
         @JsonProperty("redirect_uri") @Nullable String redirectUri,
         @JsonProperty("code_verifier") @Nullable String codeVerifier,
@@ -492,7 +497,7 @@ public final class SupabaseAuthRequests {
          * Null optional fields are omitted. The HTTP client encodes these values as form data.
          *
          * @return Form field names and values
-         * @since 5.5.1
+         * @since 0.0.1
          */
         public Map<String, String> toMap() {
             Map<String, String> fields = new HashMap<>();
@@ -542,16 +547,16 @@ public final class SupabaseAuthRequests {
      * @param tokenUrl OAuth token endpoint
      * @param userinfoUrl OAuth user-info endpoint
      * @param jwksUri JSON Web Key Set URL
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record CreateCustomOAuthProviderRequest(
-        @JsonProperty("provider_type") String providerType,
-        String identifier,
-        String name,
-        @JsonProperty("client_id") String clientId,
-        @JsonProperty("client_secret") String clientSecret,
+        @JsonProperty("provider_type") @NotBlank String providerType,
+        @NotBlank String identifier,
+        @NotBlank String name,
+        @JsonProperty("client_id") @NotBlank String clientId,
+        @JsonProperty("client_secret") @NotBlank String clientSecret,
         @JsonProperty("acceptable_client_ids") @Nullable List<String> acceptableClientIds,
         @Nullable List<String> scopes,
         @JsonProperty("pkce_enabled") @Nullable Boolean pkceEnabled,
@@ -591,7 +596,7 @@ public final class SupabaseAuthRequests {
      * @param tokenUrl OAuth token endpoint
      * @param userinfoUrl OAuth user-info endpoint
      * @param jwksUri JSON Web Key Set URL
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -621,12 +626,11 @@ public final class SupabaseAuthRequests {
      * Request fields for approving or denying an OAuth authorization.
      *
      * @param action Consent action, either {@code approve} or {@code deny}
-     * @since 5.5.1
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
     public record ConsentOAuthAuthorizationRequest(
-        String action
-    ) {
+        @NotBlank String action) {
     }
 }

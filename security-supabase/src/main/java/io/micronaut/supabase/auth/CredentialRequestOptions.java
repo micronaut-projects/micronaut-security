@@ -17,26 +17,30 @@ package io.micronaut.supabase.auth;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
 /**
- * PublicKeyCredentialRequestOptions for WebAuthn authentication
+ * WebAuthn {@code PublicKeyCredentialRequestOptions} issued when a WebAuthn factor is challenged.
  *
- * @param challenge A challenge to be signed by the authenticator
- * @param timeout Time (in milliseconds) that the caller is willing to wait for the call to complete
- * @param rpId Relying Party ID
- * @param allowCredentials List of acceptable credentials for authentication
- * @param userVerification User verification requirement
- * @param hints Hints for the browser about what types of authenticators to show
- * @param extensions WebAuthn extensions to enable
- * @since 5.5.1
+ * <p>Pass these options to the browser's {@code navigator.credentials.get()} call and return the
+ * resulting assertion through the factor verification request.</p>
+ *
+ * @param challenge Random challenge the authenticator must sign, base64url encoded
+ * @param timeout Milliseconds the caller is willing to wait for the ceremony to complete
+ * @param rpId Relying party identifier the credential must be scoped to
+ * @param allowCredentials Credentials acceptable for this authentication; empty allows any discoverable credential
+ * @param userVerification User verification requirement: {@code discouraged}, {@code preferred} or {@code required}
+ * @param hints Hints about which kinds of authenticator the browser should offer
+ * @param extensions WebAuthn extensions to enable, keyed by extension identifier
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record CredentialRequestOptions(
-    String challenge,
+    @NotBlank String challenge,
     @Nullable Integer timeout,
     @Nullable String rpId,
     @Nullable List<PublicKeyCredentialDescriptor> allowCredentials,

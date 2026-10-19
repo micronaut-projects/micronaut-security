@@ -22,18 +22,23 @@ import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
- * Models the IdentitySchema object in Supabase Auth.
+ * Identity linked to a Supabase Auth user.
  *
- * @param identityId The value for {@code identityId}.
- * @param id The value for {@code id}.
- * @param userId The value for {@code userId}.
- * @param identityData The value for {@code identityData}.
- * @param provider The value for {@code provider}.
- * @param lastSignInAt The value for {@code lastSignInAt}.
- * @param createdAt The value for {@code createdAt}.
- * @param updatedAt The value for {@code updatedAt}.
- * @param email The value for {@code email}.
- * @since 5.5.1
+ * <p>A user has one identity per sign-in method, for example {@code email}, {@code phone} or an external
+ * provider such as {@code github}. Identities can be linked and unlinked through
+ * {@code /user/identities} when manual linking is enabled; a user must keep at least one identity.</p>
+ *
+ * @param identityId Unique identifier of the identity record
+ * @param id Identifier of the user at the provider; equals the user id for the {@code email} and {@code phone}
+ *           providers
+ * @param userId Identifier of the Supabase Auth user the identity belongs to
+ * @param identityData Profile data supplied by the provider, such as {@code email} and {@code sub}
+ * @param provider Sign-in method, for example {@code email}, {@code phone} or {@code github}
+ * @param lastSignInAt Timestamp of the last sign-in through this identity in RFC 3339 format
+ * @param createdAt Creation timestamp in RFC 3339 format
+ * @param updatedAt Last modification timestamp in RFC 3339 format
+ * @param email Email address reported by the provider, if any
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

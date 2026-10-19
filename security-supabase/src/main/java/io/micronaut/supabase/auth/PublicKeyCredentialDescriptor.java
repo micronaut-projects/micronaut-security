@@ -17,22 +17,27 @@ package io.micronaut.supabase.auth;
 
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Models the PublicKeyCredentialDescriptor object in Supabase Auth.
+ * WebAuthn {@code PublicKeyCredentialDescriptor} identifying an existing credential.
  *
- * @param type Credential type
- * @param id Credential ID
- * @param transports Supported transports for this credential
- * @since 5.5.1
+ * <p>Used in {@link CredentialCreationOptions#excludeCredentials()} to avoid re-registering a credential
+ * and in {@link CredentialRequestOptions#allowCredentials()} to restrict which credentials may authenticate.</p>
+ *
+ * @param type Credential type; currently always {@code public-key}
+ * @param id Credential identifier, base64url encoded
+ * @param transports Transports the authenticator supports, such as {@code usb}, {@code nfc}, {@code ble} or
+ *                   {@code internal}
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record PublicKeyCredentialDescriptor(
-    String type,
-    String id,
+    @NotBlank String type,
+    @NotBlank String id,
     @Nullable List<String> transports
 ) {
 }

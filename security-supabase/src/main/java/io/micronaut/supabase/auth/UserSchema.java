@@ -23,36 +23,39 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Object describing the user related to the issued access and refresh tokens.
+ * Supabase Auth user account.
  *
- * @param id The value for {@code id}.
- * @param aud The value for {@code aud}.
- * @param role The value for {@code role}.
- * @param email User's primary contact email. In most cases you can uniquely identify a user by their email
- *     address, but not in all cases.
- * @param emailConfirmedAt The value for {@code emailConfirmedAt}.
- * @param phone User's primary contact phone number. In most cases you can uniquely identify a user by their phone
- *     number, but not in all cases.
- * @param phoneConfirmedAt The value for {@code phoneConfirmedAt}.
- * @param confirmationSentAt The value for {@code confirmationSentAt}.
- * @param confirmedAt The value for {@code confirmedAt}.
- * @param recoverySentAt The value for {@code recoverySentAt}.
- * @param newEmail The value for {@code newEmail}.
- * @param emailChangeSentAt The value for {@code emailChangeSentAt}.
- * @param newPhone The value for {@code newPhone}.
- * @param phoneChangeSentAt The value for {@code phoneChangeSentAt}.
- * @param reauthenticationSentAt The value for {@code reauthenticationSentAt}.
- * @param lastSignInAt The value for {@code lastSignInAt}.
- * @param appMetadata The value for {@code appMetadata}.
- * @param userMetadata The value for {@code userMetadata}.
- * @param factors The value for {@code factors}.
- * @param identities The value for {@code identities}.
- * @param bannedUntil The value for {@code bannedUntil}.
- * @param createdAt The value for {@code createdAt}.
- * @param updatedAt The value for {@code updatedAt}.
- * @param deletedAt The value for {@code deletedAt}.
- * @param isAnonymous The value for {@code isAnonymous}.
- * @since 5.5.1
+ * <p>Returned by the {@code /user} and {@code /admin/users} routes and embedded in
+ * {@link AccessTokenResponseSchema}. Administrators also send this record as the body of
+ * {@code PUT /admin/users/{userId}}; only the non-null fields are applied. Timestamps use RFC 3339
+ * format.</p>
+ *
+ * @param id User identifier, a UUID
+ * @param aud Audience claim placed in the user's tokens
+ * @param role Role claim placed in the user's tokens, typically {@code authenticated}
+ * @param email Primary email address; unique among users of the same audience
+ * @param emailConfirmedAt Timestamp at which the email address was confirmed
+ * @param phone Primary phone number in E.164 format; unique among users of the same audience
+ * @param phoneConfirmedAt Timestamp at which the phone number was confirmed
+ * @param confirmationSentAt Timestamp at which the last confirmation message was sent
+ * @param confirmedAt Timestamp at which either the email or the phone was confirmed
+ * @param recoverySentAt Timestamp at which the last password recovery message was sent
+ * @param newEmail Email address awaiting confirmation after an email change
+ * @param emailChangeSentAt Timestamp at which the last email change message was sent
+ * @param newPhone Phone number awaiting confirmation after a phone change
+ * @param phoneChangeSentAt Timestamp at which the last phone change message was sent
+ * @param reauthenticationSentAt Timestamp at which the last reauthentication nonce was sent
+ * @param lastSignInAt Timestamp of the most recent sign-in
+ * @param appMetadata Metadata managed by the application through admin APIs; not editable by the user
+ * @param userMetadata Metadata the user may edit through {@code PUT /user}
+ * @param factors Multi-factor authentication factors enrolled by the user
+ * @param identities Identities linked to the user
+ * @param bannedUntil Timestamp until which the user is banned from signing in
+ * @param createdAt Creation timestamp
+ * @param updatedAt Last modification timestamp
+ * @param deletedAt Soft-deletion timestamp
+ * @param isAnonymous Whether the user was created through anonymous sign-in
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental

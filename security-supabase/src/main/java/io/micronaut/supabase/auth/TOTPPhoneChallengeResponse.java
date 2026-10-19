@@ -18,21 +18,24 @@ package io.micronaut.supabase.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.serde.annotation.Serdeable;
-import org.jspecify.annotations.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
- * Models the TOTPPhoneChallengeResponse object in Supabase Auth.
+ * Challenge issued by {@code POST /factors/{factorId}/challenge} for a {@code totp} or {@code phone} factor.
  *
- * @param id ID of the challenge.
- * @param type Type of the challenge.
- * @param expiresAt UNIX seconds of the timestamp past which the challenge should not be verified.
- * @since 5.5.1
+ * <p>Complete the challenge by sending the one-time code to {@code POST /factors/{factorId}/verify}
+ * before it expires.</p>
+ *
+ * @param id Challenge identifier to send with the verification request
+ * @param type Factor type the challenge belongs to, either {@code totp} or {@code phone}
+ * @param expiresAt Unix epoch seconds after which the challenge can no longer be verified
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record TOTPPhoneChallengeResponse(
-    String id,
-    String type,
-    @JsonProperty("expires_at") Integer expiresAt
-) {
+    @NotBlank String id,
+    @NotBlank String type,
+    @JsonProperty("expires_at") @NotNull Integer expiresAt) {
 }

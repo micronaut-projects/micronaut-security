@@ -22,25 +22,29 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Models the SSOProviderSchema object in Supabase Auth.
+ * SAML 2.0 single sign-on provider registered through {@code /admin/sso/providers}.
  *
- * @param id The value for {@code id}.
- * @param ssoDomains The value for {@code ssoDomains}.
- * @param saml The value for {@code saml}.
- * @since 5.5.1
+ * <p>Users whose email domain matches one of the provider's domains are routed to it by
+ * {@code POST /sso}. Supabase Auth serializes the domains under the JSON name {@code domains}, which
+ * differs from the {@code sso_domains} name in the published OpenAPI document.</p>
+ *
+ * @param id Server-assigned provider identifier, a UUID
+ * @param ssoDomains Email domains served by this provider
+ * @param saml SAML configuration parsed from the identity provider metadata
+ * @since 0.0.1
  */
 @Serdeable
 @Experimental
 public record SSOProviderSchema(
     @Nullable String id,
-    @JsonProperty("sso_domains") @Nullable List<SsoDomain> ssoDomains,
+    @JsonProperty("domains") @Nullable List<SsoDomain> ssoDomains,
     @Nullable Saml saml
 ) {
     /**
-     * Models the SsoDomain object in Supabase Auth.
+     * Email domain mapped to an SSO provider.
      *
-     * @param domain The value for {@code domain}.
-     * @since 5.5.1
+     * @param domain Email domain, for example {@code example.com}
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
@@ -48,14 +52,15 @@ public record SSOProviderSchema(
         @Nullable String domain
     ) {
     }
+
     /**
-     * Models the Saml object in Supabase Auth.
+     * SAML 2.0 details of an SSO provider.
      *
-     * @param entityId The value for {@code entityId}.
-     * @param metadataXml The value for {@code metadataXml}.
-     * @param metadataUrl The value for {@code metadataUrl}.
-     * @param attributeMapping The value for {@code attributeMapping}.
-     * @since 5.5.1
+     * @param entityId Entity identifier of the identity provider, taken from its metadata
+     * @param metadataXml Identity provider metadata document; omitted from list responses
+     * @param metadataUrl URL the metadata was fetched from, when it was registered by URL
+     * @param attributeMapping Mapping from SAML assertion attributes to user metadata
+     * @since 0.0.1
      */
     @Serdeable
     @Experimental
