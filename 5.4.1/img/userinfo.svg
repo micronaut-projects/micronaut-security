@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="105 112 1104 635" width="1104" height="635">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M -8 0 L 0 3 L 0 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="userinfo" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
+    <title>userinfo</title>
+    <g id="userinfo_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <rect x="105.52734" y="112.5" width="189" height="127.5" fill="white"/>
+        <rect x="105.52734" y="112.5" width="189" height="127.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(110.52734 167.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="59.884" y="15" xml:space="preserve">Browser</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <rect x="577.5625" y="112.5" width="189" height="127.5" fill="white"/>
+        <rect x="577.5625" y="112.5" width="189" height="127.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(582.5625 167.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="36.74" y="15" xml:space="preserve">Micronaut App</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="200.27734" y="240" width=".5" height="500" fill="white"/>
+        <rect x="200.27734" y="240" width=".5" height="500" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_20">
+        <rect x="1018.7832" y="112.5" width="189" height="127.5" fill="white"/>
+        <rect x="1018.7832" y="112.5" width="189" height="127.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1023.7832 167.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="30.228" y="15" xml:space="preserve">OpenID Provider</tspan>
+        </text>
+      </g>
+      <g id="Graphic_21">
+        <rect x="670.8125" y="240" width=".5" height="500" fill="white"/>
+        <rect x="670.8125" y="240" width=".5" height="500" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_22">
+        <rect x="1113.5332" y="240" width=".5" height="500" fill="white"/>
+        <rect x="1113.5332" y="240" width=".5" height="500" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_31">
+        <line x1="734.7914" y1="384.6887" x2="1057.9541" y2="382.83533" marker-start="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_47">
+        <line x1="269.51367" y1="318.18237" x2="592.6763" y2="316.329" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_46">
+        <text transform="translate(318.90892 271.41675)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="74.616" y="15" xml:space="preserve">GET /books</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="1586914e-12" y="33.448" xml:space="preserve">Authorization: Bearer xxx.yyy.zzz</tspan>
+        </text>
+      </g>
+      <g id="Line_56">
+        <line x1="272.39007" y1="712.3944" x2="595.5527" y2="710.541" marker-start="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_55">
+        <text transform="translate(401.7875 723.2688)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="37658765e-20" y="15" xml:space="preserve">200 OK</tspan>
+        </text>
+      </g>
+      <g id="Graphic_69">
+        <text transform="translate(783.8191 306.55347)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="68.104" y="15" xml:space="preserve">GET /userinfo</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="4121148e-19" y="33.448" xml:space="preserve">Authorization: Bearer xxx.yyy.zzz</tspan>
+        </text>
+      </g>
+      <g id="Line_70">
+        <line x1="725.8916" y1="360.3379" x2="1049.0543" y2="358.4845" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_71">
+        <text transform="translate(731.38676 389.46313)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="11" xml:space="preserve">{&quot;sub”:”123baba456909&quot;}</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="25.336" xml:space="preserve">{&quot;nickname”:”mn}</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="39.671997" xml:space="preserve">{&quot;name”:”Micronaut User”}</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="54.007996" xml:space="preserve">{&quot;updated_at&quot;:&quot;2025-09-17T17:12:41.152Z&quot;}</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="68.343994" xml:space="preserve">{&quot;email&quot;:&quot;info@micronaut..io&quot;}</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" fill="black" x="0" y="82.67999" xml:space="preserve">{&quot;email_verified&quot;:true}</tspan>
+        </text>
+      </g>
+      <g id="Graphic_72">
+        <rect x="574.34375" y="499.10693" width="195.4375" height="82.63672" fill="white"/>
+        <rect x="574.34375" y="499.10693" width="195.4375" height="82.63672" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(579.34375 511.2013)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="5.0598125" y="15" xml:space="preserve">Build </tspan>
+          <tspan font-family="Courier New" font-size="16" fill="black" y="15" xml:space="preserve">Authentication</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" y="15" xml:space="preserve"> </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x=".45571875" y="35" xml:space="preserve">based on the </tspan>
+          <tspan font-family="Courier New" font-size="16" fill="black" y="35" xml:space="preserve">/userinfo </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="34.63075" y="55" xml:space="preserve">response claims</tspan>
+        </text>
+      </g>
+      <g id="Graphic_73">
+        <rect x="576.5625" y="604.824" width="189" height="82.63672" fill="white"/>
+        <rect x="576.5625" y="604.824" width="189" height="82.63672" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(581.5625 616.9183)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="37.5" y="15" xml:space="preserve">Evaluate every </tspan>
+          <tspan font-family="Courier New" font-size="16" fill="black" x="1.370625" y="33.448" xml:space="preserve">SecurityRule</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" y="33.448" xml:space="preserve"> with the </tspan>
+          <tspan font-family="Courier New" font-size="16" fill="black" x="22.289062" y="53.448" xml:space="preserve">Authentication</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" y="53.448" xml:space="preserve"> </tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
