@@ -13,6 +13,9 @@ import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Requires
 
+// Keycloak tests are updated in Micronaut 5 but no longer supported in this Micronaut 3 branch.
+// The jboss/keycloak Docker image they rely on is no longer available.
+@spock.lang.Ignore("Keycloak tests are updated in Micronaut 5 but no longer supported in this Micronaut 3 branch")
 @Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
