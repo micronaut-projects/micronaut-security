@@ -80,29 +80,3 @@ jobs:
         with:
           name: binary-compatibility-reports-${{ matrix.java }}
           path: "**/build/reports/binary-compatibility-*.html"
-      - name: Publish to Sonatype Snapshots
-        if: success() && github.event_name == 'push' && matrix.java == '11'
-        env:
-          GH_TOKEN_PUBLIC_REPOS_READONLY: ${{ secrets.GH_TOKEN_PUBLIC_REPOS_READONLY }}
-          GH_USERNAME: ${{ secrets.GH_USERNAME }}        
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-          GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
-          GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
-        run: ./gradlew publishToSonatype docs --no-daemon
-      - name: Determine docs target repository
-        uses: haya14busa/action-cond@v1
-        id: docs_target
-        with:
-          cond: ${{ github.repository == 'micronaut-projects/micronaut-core' }}
-          if_true: "micronaut-projects/micronaut-docs"
-          if_false: ${{ github.repository }}
-      - name: Publish to Github Pages
-        if: success() && github.event_name == 'push' && matrix.java == '11'
-        uses: micronaut-projects/github-pages-deploy-action@master
-        env:
-          TARGET_REPOSITORY: ${{ steps.docs_target.outputs.value }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: build/docs
