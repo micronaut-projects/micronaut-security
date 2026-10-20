@@ -533,6 +533,24 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
 <div class="sect1">
+<h2 id="_micronaut_security_5_4_breaking_changes">Micronaut Security 5.4 breaking changes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> issues a new session on successful login instead of reusing the session present in the request. Attributes of the previous session are migrated to the new session and the previous session is deleted from the session store.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a> deletes the session from the session store and expires the session cookie on logout instead of only removing the authentication from the session.</p>
+</li>
+<li>
+<p>The constructor <code>SessionLogoutHandler(RedirectConfiguration, RedirectService)</code> has been deprecated. Use <code>SessionLogoutHandler(RedirectConfiguration, RedirectService, SessionStore, List&lt;HttpSessionIdEncoder&gt;)</code> instead.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_micronaut_security_5_0_breaking_changes">Micronaut Security 5.0 breaking changes</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -4042,6 +4060,17 @@ login-failure = "/login/authFailed"</code></pre>
 <p><a href="https://guides.micronaut.io/latest/micronaut-security-session-database-authentication.html">Database Authentication</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_session_lifecycle">Session lifecycle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> issues a new session on every successful login. If the request already carries a session, its attributes are migrated to the new session and the previous session is deleted from the <code>SessionStore</code>. Renewing the session identifier when the privilege level changes protects against <a href="https://cwe.mitre.org/data/definitions/384.html">session fixation</a> attacks.</p>
+</div>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a> deletes the session from the <code>SessionStore</code> and expires the session cookie on logout, so the session identifier cannot be reused after the user logs out.</p>
 </div>
 </div>
 </div>
