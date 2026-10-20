@@ -17,10 +17,12 @@
  * Integration between Micronaut Security and Supabase Auth.
  *
  * <p>Classes in this package adapt the Supabase Auth data models of {@code io.micronaut.supabase.auth} to the
- * Micronaut Security contracts and plug Supabase into the login, refresh and logout flows:</p>
+ * Micronaut Security contracts and plug Supabase into the signup, login, refresh and logout flows:</p>
  * <ul>
  *   <li>{@link io.micronaut.security.supabase.auth.SupabaseAuthenticationProvider} signs users in with the
  *   password grant.</li>
+ *   <li>{@link io.micronaut.security.supabase.auth.SupabaseSignupHandler} creates users for the signup
+ *   endpoint, redirecting or answering JSON as the login handler does.</li>
  *   <li>{@link io.micronaut.security.supabase.auth.AuthenticationAccessTokenResponseSchemaAdapter} carries the
  *   Supabase tokens, so cookie and bearer login handlers hand them to the client instead of minting their
  *   own.</li>

@@ -19,7 +19,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
@@ -31,7 +33,8 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import java.util.Map;
 
 /**
- * Handles signup requests by delegating to a {@link SignupHandler}.
+ * Handles signup requests by delegating to a {@link SignupHandler}. Accepts JSON and form-urlencoded bodies, so
+ * it serves both API clients and HTML signup forms.
  * @author Sergio del Amo
  * @since 5.6.0
  */
@@ -57,6 +60,7 @@ public class SignupController {
      * @return The HTTP response returned by the {@link SignupHandler}
      */
     @ExecuteOn(TaskExecutors.BLOCKING)
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     public HttpResponse<?> signup(HttpRequest<?> request, @Body Map<String, Object> body) {
         return signupHandler.signup(request, body);
