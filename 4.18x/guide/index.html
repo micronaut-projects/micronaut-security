@@ -387,7 +387,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> 4.18.0 </p>
+        <p><strong>Version:</strong> 4.18.1 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -3383,6 +3383,17 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
 <p><a href="https://guides.micronaut.io/latest/micronaut-security-session-database-authentication.html">Database Authentication</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_session_lifecycle">Session lifecycle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> issues a new session on every successful login. If the request already carries a session, its attributes are migrated to the new session and the previous session is deleted from the <code>SessionStore</code>. Renewing the session identifier when the privilege level changes protects against <a href="https://cwe.mitre.org/data/definitions/384.html">session fixation</a> attacks.</p>
+</div>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a> deletes the session from the <code>SessionStore</code> and expires the session cookie on logout, so the session identifier cannot be reused after the user logs out.</p>
 </div>
 </div>
 </div>
