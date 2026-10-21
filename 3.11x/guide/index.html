@@ -288,7 +288,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html'>LATEST</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M7/guide/index.html'>4.0.0-M7</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M6/guide/index.html'>4.0.0-M6</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M5/guide/index.html'>4.0.0-M5</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M4/guide/index.html'>4.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M3/guide/index.html'>4.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M2/guide/index.html'>4.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-security/4.0.0-M1/guide/index.html'>4.0.0-M1</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/3.11.1/guide/index.html'>3.11.1</option><option value='https://micronaut-projects.github.io/micronaut-security/3.11.0/guide/index.html'>3.11.0</option><option value='https://micronaut-projects.github.io/micronaut-security/3.10.1/guide/index.html'>3.10.1</option><option value='https://micronaut-projects.github.io/micronaut-security/3.10.0/guide/index.html'>3.10.0</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.5/guide/index.html'>3.9.5</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.4/guide/index.html'>3.9.4</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.3/guide/index.html'>3.9.3</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.2/guide/index.html'>3.9.2</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.1/guide/index.html'>3.9.1</option><option value='https://micronaut-projects.github.io/micronaut-security/3.9.0/guide/index.html'>3.9.0</option><option value='https://micronaut-projects.github.io/micronaut-security/3.8.3/guide/index.html'>3.8.3</option><option value='https://micronaut-projects.github.io/micronaut-security/3.8.2/guide/index.html'>3.8.2</option><option value='https://micronaut-projects.github.io/micronaut-security/3.8.1/guide/index.html'>3.8.1</option><option value='https://micronaut-projects.github.io/micronaut-security/3.8.0/guide/index.html'>3.8.0</option><option value='https://micronaut-projects.github.io/micronaut-security/3.7.3/guide/index.html'>3.7.3</option><option value='https://micronaut-projects.github.io/micronaut-security/3.7.2/guide/index.html'>3.7.2</option><option value='https://micronaut-projects.github.io/micronaut-security/3.7.1/guide/index.html'>3.7.1</option><option value='https://micronaut-projects.github.io/micronaut-security/3.7.0/guide/index.html'>3.7.0</option><option value='https://micronaut-projects.github.io/micronaut-security/3.6.5/guide/index.html'>3.6.5</option><option value='https://micronaut-projects.github.io/micronaut-security/3.6.4/guide/index.html'>3.6.4</option><option value='https://micronaut-projects.github.io/micronaut-security/3.6.3/guide/index.html'>3.6.3</option><option value='https://micronaut-projects.github.io/micronaut-security/3.6.2/guide/index.html'>3.6.2</option><option value='https://micronaut-projects.github.io/micronaut-security/3.6.1/guide/index.html'>3.6.1</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html'>LATEST</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -2270,6 +2270,17 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_session_lifecycle">Session lifecycle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> issues a new session on every successful login. If the request already carries a session, its attributes are migrated to the new session and the previous session is deleted from the <code>SessionStore</code>. Renewing the session identifier when the privilege level changes protects against <a href="https://cwe.mitre.org/data/definitions/384.html">session fixation</a> attacks.</p>
+</div>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a> deletes the session from the <code>SessionStore</code> and expires the session cookie on logout, so the session identifier cannot be reused after the user logs out.</p>
 </div>
 </div>
 </div>
@@ -6467,6 +6478,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -6481,11 +6497,6 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The JWKS signature URI.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
 </tr>
 </tbody>
 </table>
