@@ -23,6 +23,11 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 graalvmNative {
+    binaries {
+        test {
+            buildArgs.add('--initialize-at-run-time=io.micronaut.logging.impl.$Log4jLoggingSystem$Definition,io.micronaut.logging.impl.$LogbackLoggingSystem$Definition')
+        }
+    }
     metadataRepository {
         enabled = true
     }

@@ -30,6 +30,11 @@ tasks.withType(Test).configureEach {
 }
 
 graalvmNative {
+    binaries {
+        test {
+            buildArgs.add('--initialize-at-run-time=io.micronaut.logging.impl.$LogbackLoggingSystem$Definition')
+        }
+    }
     metadataRepository {
         enabled = true
     }
