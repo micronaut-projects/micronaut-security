@@ -32,7 +32,7 @@ jobs:
           MICRONAUT_BUILD_EMAIL: ${{ secrets.MICRONAUT_BUILD_EMAIL }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to Sonatype OSSRH
+      - name: Publish to Maven Central
         id: publish
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
@@ -45,15 +45,25 @@ jobs:
           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
         run: |
           echo $GPG_FILE | base64 -d > secring.gpg
-          # Publish both locally and to Sonatype.
-          # The artifacts stored locally will be used to generate the SLSA provenance.
-          ./gradlew publishAllPublicationsToBuildRepository publishToSonatype closeAndReleaseSonatypeStagingRepository
           # Read the current version from gradle.properties.
           VERSION=$(./gradlew properties | grep 'version:' | awk '{print $2}')
           # Read the project group from gradle.properties.
           GROUP_PATH=$(./gradlew properties| grep "projectGroup" | awk '{print $2}' | sed 's/\./\//g')
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "group=$GROUP_PATH" >> "$GITHUB_OUTPUT"
+          # Publish locally, then upload the bundle through the Maven Central Portal API.
+          ./gradlew publishAllPublicationsToBuildRepository
+          cd build/repo
+          zip -r ../../artifacts.zip "$GROUP_PATH"
+          cd ../..
+          SONATYPE_BEARER=$(printf "%s:%s" "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')
+          echo "Publishing via the Maven Central Portal API"
+          curl --fail-with-body --show-error --silent -X POST \
+            https://central.sonatype.com/api/v1/publisher/upload \
+            -H "Authorization: Bearer $SONATYPE_BEARER" \
+            -F "name=$GROUP_PATH $VERSION" \
+            -F "publishingType=AUTOMATIC" \
+            -F "bundle=@artifacts.zip"
       - name: Generate subject
         id: hash
         run: |
