@@ -20,6 +20,8 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.naming.Named;
 
+import java.time.Duration;
+
 /**
  * JSON Web Key Set Configuration.
  *
@@ -49,4 +51,14 @@ public interface JwksSignatureConfiguration extends Named {
     @NonNull
     @Deprecated(forRemoval = true, since = "4.11.0")
     Integer getCacheExpiration();
+
+    /**
+     * Minimum interval between two forced refreshes of the cached JWKS triggered by a token whose {@code kid} is not present in the cached key set.
+     * @return The minimum interval between two refreshes triggered by an unknown key ID.
+     * @since 5.4.0
+     */
+    @NonNull
+    default Duration getRefreshInterval() {
+        return JwksSignatureConfigurationProperties.DEFAULT_REFRESH_INTERVAL;
+    }
 }
