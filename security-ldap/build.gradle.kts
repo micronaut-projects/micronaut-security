@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
+    testAnnotationProcessor(mn.micronaut.inject.java)
 
     api(projects.micronautSecurity)
 
@@ -14,4 +15,6 @@ dependencies {
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.unboundid.ldapsdk)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
