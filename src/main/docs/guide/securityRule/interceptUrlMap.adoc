@@ -32,3 +32,5 @@ micronaut:
 
 - accessing `/v1/myResource/**` with a GET request does not require authentication
 - accessing `/v1/myResource/**` with a request that isn't GET requires authentication
+
+NOTE: When `micronaut.server.context-path` is set and `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` is enabled, the patterns are prepended with the context path. Requests for the context root, for example `/context` and `/context/`, are matched as the root path `/` is matched when no context path is set. Thus, root patterns such as `/` or `/*` keep protecting the application's root route.

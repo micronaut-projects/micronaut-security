@@ -21,6 +21,9 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
     if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
         testImplementation libs.bcpkix
     }

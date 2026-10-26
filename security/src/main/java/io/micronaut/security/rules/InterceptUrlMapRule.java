@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
@@ -80,8 +81,8 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         final String path = request.getUri().getPath();
         final HttpMethod httpMethod = request.getMethod();
 
-        Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod().isPresent() && httpMethod.equals(p.getHttpMethod().get());
-        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> pathMatcher.matches(p.getPattern(), path) && !p.getHttpMethod().isPresent();
+        Predicate<InterceptUrlMapPattern> exactMatch = p -> matchesPath(p.getPattern(), path) && p.getHttpMethod().isPresent() && httpMethod.equals(p.getHttpMethod().get());
+        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> matchesPath(p.getPattern(), path) && !p.getHttpMethod().isPresent();
 
         Optional<InterceptUrlMapPattern> matchedPattern = getPatternList()
                 .stream()
@@ -110,5 +111,20 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         return Mono.from(matchedPattern
                 .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
                 .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
+    }
+
+    /**
+     * Whether a configured pattern matches a request path.
+     * <p>
+     * Subclasses may override this method to accept additional paths for a pattern, for example to match
+     * requests for the server context root as the root path.
+     *
+     * @param pattern The configured Ant-style pattern
+     * @param path The request path
+     * @return Whether the pattern matches the path
+     * @since 3.11.3
+     */
+    protected boolean matchesPath(@NonNull String pattern, @NonNull String path) {
+        return pathMatcher.matches(pattern, path);
     }
 }
