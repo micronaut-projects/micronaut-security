@@ -43,10 +43,18 @@ public record ReportingEndpoints(Collection<ReportingEndpoint> endpoints) {
     /**
      * Creates an immutable endpoint collection in deterministic serialization order.
      *
+     * <p>Every endpoint name must be a Structured Fields dictionary key matching
+     * {@code [a-z*][a-z0-9_\-.*]*}; a name outside that grammar would make user agents discard
+     * the whole header, so it is rejected here instead of being serialized.</p>
+     *
      * @param endpoints endpoints to advertise
+     * @throws IllegalArgumentException when an endpoint name is not a valid dictionary key
      * @since 5.4.0
      */
     public ReportingEndpoints {
+        for (ReportingEndpoint endpoint : endpoints) {
+            ReportingEndpointNames.require(endpoint.getName());
+        }
         endpoints = endpoints.stream().sorted(ENDPOINT_COMPARATOR).toList();
     }
 

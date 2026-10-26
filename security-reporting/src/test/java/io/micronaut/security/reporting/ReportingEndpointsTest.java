@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportingEndpointsTest {
 
@@ -70,6 +72,28 @@ class ReportingEndpointsTest {
     }
 
     @Test
+    void rendersTwoEndpointsAsAnRfc8941Dictionary() {
+        ReportingEndpoints reportingEndpoints = new ReportingEndpoints(List.of(
+            endpoint("default", "https://reports.example.com/default"),
+            endpoint("csp", "/csp/report")
+        ));
+
+        // sf-dictionary: key "=" sf-string, members separated by "," OWS; keys are sf-key tokens.
+        assertEquals("csp=\"/csp/report\", default=\"https://reports.example.com/default\"",
+            reportingEndpoints.toString());
+    }
+
+    @Test
+    void rejectsEndpointImplementationsWithInvalidNames() {
+        ReportingEndpoint invalid = customEndpoint("Csp", "/csp/report");
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+            () -> new ReportingEndpoints(List.of(endpoint("csp", "/csp/report"), invalid)));
+
+        assertTrue(e.getMessage().contains("\"Csp\""), e.getMessage());
+    }
+
+    @Test
     void makesADefensiveCopyOfTheEndpointCollection() {
         List<ReportingEndpoint> mutableEndpoints = new ArrayList<>();
         mutableEndpoints.add(endpoint("first", "/first"));
@@ -82,5 +106,23 @@ class ReportingEndpointsTest {
 
     private static ReportingEndpoint endpoint(String name, String uri) {
         return new ReportingEndpointRecord(name, URI.create(uri));
+    }
+
+    /**
+     * A {@link ReportingEndpoint} that bypasses the record's validation, as a third-party
+     * provider implementation could.
+     */
+    private static ReportingEndpoint customEndpoint(String name, String uri) {
+        return new ReportingEndpoint() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public URI getUrl() {
+                return URI.create(uri);
+            }
+        };
     }
 }
