@@ -16,6 +16,7 @@
 package io.micronaut.security.ldap.configuration;
 
 import io.micronaut.security.ldap.context.SearchSettings;
+import java.util.List;
 
 /**
  * Implementation of {@link SearchSettings} that derives values from an
@@ -61,5 +62,10 @@ public class SearchPropertiesSearchSettings implements SearchSettings {
     @Override
     public String[] getAttributes() {
         return properties.getAttributes();
+    }
+
+    @Override
+    public List<String> getExcludedAttributes() {
+        return properties.getExcludedAttributes();
     }
 }

@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.ldap.context;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Contract to provide settings to search LDAP.
  *
@@ -49,5 +52,18 @@ public interface SearchSettings {
      * @return Which attributes should be returned from the search
      */
     String[] getAttributes();
+
+    /**
+     * Attributes that must never be included in the search results, even when the
+     * server returns them. Matching is case-insensitive. Useful to keep sensitive
+     * attributes such as {@code userPassword} out of memory and out of the
+     * {@link LdapSearchResult} handed to downstream code.
+     *
+     * @return The attribute names to strip from the search results
+     * @since 5.4.0
+     */
+    default List<String> getExcludedAttributes() {
+        return Collections.emptyList();
+    }
 
 }
