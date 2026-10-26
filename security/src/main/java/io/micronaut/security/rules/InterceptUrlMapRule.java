@@ -16,6 +16,7 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.core.util.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
@@ -90,8 +91,8 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
         final String path = StringUtils.trimTrailingSlashExceptRoot(request.getUri().getPath());
         final HttpMethod httpMethod = request.getMethod();
 
-        Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() != null && httpMethod.equals(p.getHttpMethod());
-        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() == null;
+        Predicate<InterceptUrlMapPattern> exactMatch = p -> matchesPath(p.getPattern(), path) && p.getHttpMethod() != null && httpMethod.equals(p.getHttpMethod());
+        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> matchesPath(p.getPattern(), path) && p.getHttpMethod() == null;
 
         Optional<InterceptUrlMapPattern> matchedPattern = getPatternList()
                 .stream()
@@ -118,5 +119,22 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
         }
 
         return matchedPattern;
+    }
+
+    /**
+     * Whether a configured pattern matches a request path.
+     * <p>
+     * The request path is compared with its trailing slash trimmed (except for the root), so a trailing
+     * slash in the pattern is trimmed the same way. Otherwise, a pattern such as {@code /context/}, which
+     * is what the root pattern {@code /} becomes once the server context path is prepended, would never
+     * match any request.
+     *
+     * @param pattern The configured Ant-style pattern
+     * @param path The request path with any trailing slash trimmed, except for the root path
+     * @return Whether the pattern matches the path
+     * @since 5.5.2
+     */
+    protected boolean matchesPath(@NonNull String pattern, @NonNull String path) {
+        return pathMatcher.matches(StringUtils.trimTrailingSlashExceptRoot(pattern), path);
     }
 }
