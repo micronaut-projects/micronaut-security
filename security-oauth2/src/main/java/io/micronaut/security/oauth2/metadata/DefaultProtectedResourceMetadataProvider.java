@@ -24,12 +24,15 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.runtime.ApplicationConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Default implementation of {@link ProtectedResourceMetadataProvider}.
@@ -54,17 +57,42 @@ public class DefaultProtectedResourceMetadataProvider implements ProtectedResour
     protected final List<OpenIdClientConfiguration> openIdClients;
 
     /**
+     * OAuth 2.0 configuration. May be {@code null} when constructed via the deprecated constructor.
+     */
+    @Nullable
+    protected final OauthConfiguration oauthConfiguration;
+
+    /**
      *
      * @param applicationConfiguration Application configuration.
      * @param httpHostResolver HTTP Host Resolver.
      * @param openIdClients OpenID client configurations.
+     * @deprecated Use {@link #DefaultProtectedResourceMetadataProvider(ApplicationConfiguration, HttpHostResolver, List, OauthConfiguration)} instead.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public DefaultProtectedResourceMetadataProvider(ApplicationConfiguration applicationConfiguration,
                                                     HttpHostResolver httpHostResolver,
                                                     List<OpenIdClientConfiguration> openIdClients) {
+        this(applicationConfiguration, httpHostResolver, openIdClients, null);
+    }
+
+    /**
+     *
+     * @param applicationConfiguration Application configuration.
+     * @param httpHostResolver HTTP Host Resolver.
+     * @param openIdClients OpenID client configurations.
+     * @param oauthConfiguration OAuth 2.0 configuration.
+     * @since 5.4.0
+     */
+    @Inject
+    public DefaultProtectedResourceMetadataProvider(ApplicationConfiguration applicationConfiguration,
+                                                    HttpHostResolver httpHostResolver,
+                                                    List<OpenIdClientConfiguration> openIdClients,
+                                                    @Nullable OauthConfiguration oauthConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
         this.httpHostResolver = httpHostResolver;
         this.openIdClients = openIdClients;
+        this.oauthConfiguration = oauthConfiguration;
     }
 
     @Override
@@ -104,10 +132,25 @@ public class DefaultProtectedResourceMetadataProvider implements ProtectedResour
      */
     @NonNull
     protected String resource(@Nullable String path, @NonNull HttpRequest<?> request) {
-        String host = httpHostResolver.resolve(request);
+        String host = baseUrl(request);
         return StringUtils.isNotEmpty(path)
             ? host + path
             : host;
+    }
+
+    /**
+     * Resolves the base (scheme, host and optional port) of the resource URL. Returns the configured
+     * {@link OauthConfiguration#getBaseUrl()} when present; otherwise the host resolved from the request.
+     *
+     * @param request The HTTP Request
+     * @return The base URL
+     * @since 5.4.0
+     */
+    @NonNull
+    protected String baseUrl(@NonNull HttpRequest<?> request) {
+        return Optional.ofNullable(oauthConfiguration)
+            .flatMap(OauthConfiguration::getBaseUrl)
+            .orElseGet(() -> httpHostResolver.resolve(request));
     }
 
     /**

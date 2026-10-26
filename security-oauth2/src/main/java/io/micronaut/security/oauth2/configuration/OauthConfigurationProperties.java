@@ -45,6 +45,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     private String callbackUri = DEFAULT_CALLBACK;
     private String loginUri = DEFAULT_LOGIN;
     private String defaultProvider = null;
+    private String baseUrl = null;
 
     private OpenIdConfigurationProperties openid = new OpenIdConfigurationProperties();
 
@@ -107,6 +108,34 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      */
     public void setCallbackUri(@NonNull String callbackUri) {
         this.callbackUri = callbackUri;
+    }
+
+    @Override
+    @NonNull
+    public Optional<String> getBaseUrl() {
+        return Optional.ofNullable(baseUrl);
+    }
+
+    /**
+     * A fixed base URL (scheme, host and optional port, for example {@code https://app.example.com}) used to build the
+     * absolute OAuth 2.0 callback URL (the {@code redirect_uri}), the OpenID Connect {@code post_logout_redirect_uri}
+     * and the protected resource metadata URLs. When not set, those URLs are derived from the request
+     * {@code Host} and {@code Forwarded} / {@code X-Forwarded-*} headers via {@code HttpHostResolver}.
+     * Set it when the application runs behind a reverse proxy and you do not want the request headers to decide the host.
+     *
+     * @param baseUrl The base URL. A trailing slash is removed.
+     * @since 5.4.0
+     */
+    public void setBaseUrl(@Nullable String baseUrl) {
+        if (baseUrl == null || baseUrl.isBlank()) {
+            this.baseUrl = null;
+            return;
+        }
+        String trimmed = baseUrl.trim();
+        while (trimmed.endsWith("/")) {
+            trimmed = trimmed.substring(0, trimmed.length() - 1);
+        }
+        this.baseUrl = trimmed;
     }
 
     @Override
