@@ -18,6 +18,7 @@ package io.micronaut.security.ldap.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
@@ -29,11 +30,16 @@ import java.util.Optional;
 
 /**
  * Configuration for LDAP authentication.
+ * <p>
+ * A configuration is created for every name under {@value #PREFIX} that has nested properties. Single-valued keys
+ * directly under the prefix, such as the global switch {@code micronaut.security.ldap.enabled}, are not
+ * configuration names.
  *
  * @author James Kleeh
  * @since 1.0
  */
 @EachProperty(value = LdapConfiguration.PREFIX, primary = "default")
+@Requires(condition = LdapConfigurationCondition.class)
 public class LdapConfiguration implements Toggleable {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".ldap";
