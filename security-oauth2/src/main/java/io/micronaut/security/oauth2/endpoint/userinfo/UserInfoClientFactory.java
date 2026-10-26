@@ -78,16 +78,34 @@ final class UserInfoClientFactory {
             .orElse(null);
     }
 
+    /**
+     * Splits the UserInfo endpoint URL into the base URL (scheme and authority) used to create the {@link HttpClient} and the path (including the query string, if any) used for the request.
+     * @param userInfoEndpoint UserInfo endpoint URL
+     * @param name Name qualifier
+     * @return The configuration
+     * @throws DisabledBeanException if the URL is not set or malformed
+     */
     @NonNull
-    private UserInfoClientTokenValidatorConfiguration createUserInfoClientWithUrl(@Nullable String userInfoEndpoint,
-                                                                                  @NonNull String name) {
+    static UserInfoClientTokenValidatorConfiguration createUserInfoClientWithUrl(@Nullable String userInfoEndpoint,
+                                                                                 @NonNull String name) {
         if (StringUtils.isEmpty(userInfoEndpoint)) {
             throw new DisabledBeanException("UserInfo endpoint not set for " + name);
         }
         try {
             URL url = new URL(userInfoEndpoint);
+            String authority = url.getAuthority();
+            if (StringUtils.isEmpty(authority)) {
+                throw new DisabledBeanException("UserInfo endpoint " + userInfoEndpoint + " for " + name + " has no authority");
+            }
+            String baseUrl = url.getProtocol() + "://" + authority;
             String path = url.getPath();
-            String baseUrl = url.toString().substring(0, url.toString().indexOf(path));
+            if (StringUtils.isEmpty(path)) {
+                path = "/";
+            }
+            String query = url.getQuery();
+            if (query != null) {
+                path = path + "?" + query;
+            }
             return UserInfoClientTokenValidatorConfiguration.builder()
                 .baseUrl(baseUrl)
                 .name(name)
