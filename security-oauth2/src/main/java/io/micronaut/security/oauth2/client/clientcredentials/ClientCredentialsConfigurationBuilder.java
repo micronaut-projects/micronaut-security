@@ -93,7 +93,9 @@ public final class ClientCredentialsConfigurationBuilder {
     }
 
     /**
-     * Sets additional parameters included in the client credentials token request.
+     * Sets additional parameters included in the client credentials token request. The reserved keys
+     * {@code grant_type}, {@code client_id} and {@code client_secret} are ignored, as is {@code scope} when a scope
+     * is already set for the request. A warning is logged once per client for each ignored key.
      *
      * @param additionalRequestParams Additional request parameters.
      * @return This builder.
