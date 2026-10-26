@@ -19,13 +19,20 @@ import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 
 /**
  * Factory to create {@link ReactiveJwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
+ * <p>
+ * The beans are only created for the {@link io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode, where the
+ * ID token issued by the provider is the request credential. In any other authentication mode, tokens signed by the provider's keys, such
+ * as ID tokens issued to other clients, must not authenticate requests. The ID token obtained during the authorization code flow is
+ * validated against the provider's JWKS independently of these beans.
  *
  * @author Sergio del Amo
  * @since 1.3.0
@@ -33,10 +40,11 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Factory
 @Internal
 public class JwksUriSignatureFactory {
-     /**
+    /**
      * @param openIdProviderMetadata The open id provider metadata
-      * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration
+     * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration
      */
+    @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
         DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
