@@ -26,6 +26,9 @@ import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Inject;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -78,7 +81,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
      */
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
-        final String path = request.getUri().getPath();
+        final String path = pathForMatching(request);
         final HttpMethod httpMethod = request.getMethod();
 
         Predicate<InterceptUrlMapPattern> exactMatch = p -> matchesPath(p.getPattern(), path) && p.getHttpMethod().isPresent() && httpMethod.equals(p.getHttpMethod().get());
@@ -111,6 +114,57 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         return Mono.from(matchedPattern
                 .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
                 .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
+    }
+
+    /**
+     * Builds the request path the configured patterns are matched against.
+     * <p>
+     * Routes are matched against the raw, percent-encoded request path, so the patterns are matched against the
+     * same path with each segment percent-decoded. A segment is kept percent-encoded when decoding it would
+     * introduce a slash or leave a blank segment, because either would change the segments the pattern matcher
+     * sees and a path variable such as {@code x%2Fy} or {@code %20} could skip a fixed-depth pattern such as
+     * {@code /admin/*} even though the route still handles the request.
+     *
+     * @param request The current request
+     * @return The path to match the patterns against
+     */
+    @NonNull
+    static String pathForMatching(@NonNull HttpRequest<?> request) {
+        String rawPath = request.getUri().getRawPath();
+        if (rawPath == null) {
+            return "";
+        }
+        if (rawPath.indexOf('%') < 0) {
+            return rawPath;
+        }
+        StringBuilder path = new StringBuilder(rawPath.length());
+        int start = 0;
+        while (true) {
+            int end = rawPath.indexOf('/', start);
+            path.append(decodeSegment(end < 0 ? rawPath.substring(start) : rawPath.substring(start, end)));
+            if (end < 0) {
+                return path.toString();
+            }
+            path.append('/');
+            start = end + 1;
+        }
+    }
+
+    @NonNull
+    private static String decodeSegment(@NonNull String segment) {
+        if (segment.indexOf('%') < 0) {
+            return segment;
+        }
+        String decoded;
+        try {
+            decoded = URLDecoder.decode(segment.replace("+", "%2B"), StandardCharsets.UTF_8.name());
+        } catch (IllegalArgumentException | UnsupportedEncodingException e) {
+            return segment;
+        }
+        if (decoded.indexOf('/') >= 0 || decoded.trim().isEmpty()) {
+            return segment;
+        }
+        return decoded;
     }
 
     /**
