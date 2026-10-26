@@ -313,5 +313,10 @@
     "type": "io.micronaut.security.ldap.LdapAuthenticationProvider",
     "member": "Implemented interface io.micronaut.security.authentication.AuthenticationProvider",
     "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition",
+    "member": "Method io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition.isEnabled(io.micronaut.context.BeanContext)",
+    "reason": "Micronaut generated bean definition, not public API. LdapConfiguration is now annotated with @Requires(condition = LdapConfigurationCondition.class) so the generated definition evaluates its conditions instead of the constant isEnabled override"
   }
 ]

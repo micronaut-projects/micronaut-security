@@ -1,6 +1,10 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.5 breaking changes
+
+- Single-valued keys directly under `micronaut.security.ldap`, such as the global switch `micronaut.security.ldap.enabled`, no longer create an api:security.ldap.configuration.LdapConfiguration[] named after the key. Previously `micronaut.security.ldap.enabled: true` created a configuration and an api:security.ldap.LdapAuthenticationProvider[] named `enabled` with no server, whose failures turned login attempts for unknown usernames into HTTP 500 responses and allowed username enumeration. Only keys with nested properties, for example `micronaut.security.ldap.default.*`, define LDAP configurations.
+
 == Micronaut Security 5.4 breaking changes
 
 - api:security.session.SessionLoginHandler[] issues a new session on successful login instead of reusing the session present in the request. Attributes of the previous session are migrated to the new session and the previous session is deleted from the session store.
