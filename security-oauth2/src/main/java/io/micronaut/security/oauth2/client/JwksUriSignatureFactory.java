@@ -30,6 +30,11 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 
 /**
  * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
+ * <p>
+ * The beans are only created for the {@link io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode, where the
+ * ID token issued by the provider is the request credential. In any other authentication mode, tokens signed by the provider's keys, such
+ * as ID tokens issued to other clients, must not authenticate requests. The ID token obtained during the authorization code flow is
+ * validated against the provider's JWKS independently of these beans.
  *
  * @author Sergio del Amo
  * @since 1.3.0

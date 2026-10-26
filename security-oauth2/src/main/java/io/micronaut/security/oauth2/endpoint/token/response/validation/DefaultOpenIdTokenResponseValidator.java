@@ -20,6 +20,8 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
@@ -46,6 +48,11 @@ import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link OpenIdTokenResponseValidator}.
+ * <p>
+ * The ID token signature is verified exclusively against the JSON Web Key Set published at the
+ * {@link OpenIdProviderMetadata#getJwksUri()} of the provider that issued it, as required by the
+ * <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section of the
+ * OpenID Connect specification. The signature configurations used to validate request credentials are not consulted.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -115,7 +122,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
             if (LOG.isTraceEnabled()) {
                 LOG.trace("JWT signature validation succeeded. Validating claims...");
             }
-            return validateClaims(clientConfiguration, openIdProviderMetadata, jwt.get(), nonce);
+            return validateClaims(clientConfiguration, openIdProviderMetadata, jwt.get(), nonce, ServerRequestContext.currentRequest().orElse(null));
         } else {
             if (LOG.isErrorEnabled()) {
                 LOG.error("JWT signature validation failed for provider [{}]", clientConfiguration.getName());
@@ -137,10 +144,29 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                                            @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                            @NonNull JWT jwt,
                                            @Nullable String nonce) {
+        return validateClaims(clientConfiguration, openIdProviderMetadata, jwt, nonce, null);
+    }
+
+    /**
+     *
+     * @param clientConfiguration The OAuth 2.0 client configuration
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @param jwt JWT with valida signature
+     * @param nonce The persisted nonce value
+     * @param request The current request, if any. It is passed to the {@link GenericJwtClaimsValidator} beans.
+     * @return the same JWT supplied as a parameter if the claims validation were succesful or empty if not.
+     * @since 3.11.3
+     */
+    @NonNull
+    protected Optional<JWT> validateClaims(@NonNull OauthClientConfiguration clientConfiguration,
+                                           @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                           @NonNull JWT jwt,
+                                           @Nullable String nonce,
+                                           @Nullable HttpRequest<?> request) {
         try {
             JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
             OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, null))) {
+            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, request))) {
                 if (openIdClaimsValidators.stream().allMatch(validator ->
                         validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
                     if (nonceClaimValidator == null) {

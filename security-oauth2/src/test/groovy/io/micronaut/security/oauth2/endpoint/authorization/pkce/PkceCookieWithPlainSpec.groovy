@@ -38,6 +38,7 @@ import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.BrowserHttpRequest
@@ -88,6 +89,9 @@ class PkceCookieWithPlainSpec extends Specification {
         server.applicationContext.containsBean(HomeController)
         server.applicationContext.containsBean(RedirectingLoginHandler)
         server.applicationContext.containsBean(OauthClient)
+
+        and: 'outside idtoken mode the provider JWKS is not registered to validate request tokens'
+        !server.applicationContext.containsBean(JwksSignature)
 
         and: 'auth server is exposing the AuthServerController routes'
         oauthServer

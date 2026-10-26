@@ -9,5 +9,7 @@ include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]
 
 The previous snippet creates a link:{api}/io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html[JwksSignature] bean with a `awscognito` name qualifier.
 
+A `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`.
+
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 
