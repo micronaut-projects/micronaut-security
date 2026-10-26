@@ -15,8 +15,10 @@
  */
 package io.micronaut.security.token.jwt.nimbus;
 
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 import org.jspecify.annotations.NonNull;
@@ -56,6 +58,11 @@ class NimbusJsonWebTokenParser implements JsonWebTokenParser<JWT> {
                     Optional<SignedJWT> optionalSignedJWT = jsonWebTokenEncryption.decrypt(encryptedJWT);
                     if (optionalSignedJWT.isPresent()) {
                         jwt = optionalSignedJWT.get();
+                    } else if (encryptedJWT.getState() != JWEObject.State.DECRYPTED) {
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("Encrypted JWT could not be decrypted with the available encryption configurations");
+                        }
+                        return Optional.empty();
                     }
                 }
                 return Optional.of(jwt);
@@ -80,7 +87,14 @@ class NimbusJsonWebTokenParser implements JsonWebTokenParser<JWT> {
             return Optional.empty();
         }
         try {
-            return Optional.of(new JwtClaimsSetAdapter(jwtOptional.get().getJWTClaimsSet()));
+            JWTClaimsSet claimsSet = jwtOptional.get().getJWTClaimsSet();
+            if (claimsSet == null) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("JWT does not expose a claims set");
+                }
+                return Optional.empty();
+            }
+            return Optional.of(new JwtClaimsSetAdapter(claimsSet));
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to parse JWT Claims", e);
