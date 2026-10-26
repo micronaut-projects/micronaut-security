@@ -39,6 +39,7 @@ public final class ClientCredentialsConfigurationBuilder {
     private boolean enabled = true;
     private @Nullable String scope;
     private Duration advancedExpiration = OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION;
+    private Duration defaultExpiration = ClientCredentialsConfiguration.DEFAULT_EXPIRATION;
     private @Nullable ClientCredentialsHeaderTokenPropagatorConfiguration headerPropagation;
     private Map<String, String> additionalRequestParams = Collections.emptyMap();
     private @Nullable String serviceIdRegex;
@@ -77,6 +78,20 @@ public final class ClientCredentialsConfigurationBuilder {
     @NonNull
     public ClientCredentialsConfigurationBuilder advancedExpiration(@NonNull Duration advancedExpiration) {
         this.advancedExpiration = Objects.requireNonNull(advancedExpiration, "advancedExpiration");
+        return this;
+    }
+
+    /**
+     * Sets how long a token is cached when the token response does not include {@code expires_in}
+     * and the access token is not a JWT with an {@code exp} claim.
+     *
+     * @param defaultExpiration The default expiration duration.
+     * @return This builder.
+     * @since 5.4.0
+     */
+    @NonNull
+    public ClientCredentialsConfigurationBuilder defaultExpiration(@NonNull Duration defaultExpiration) {
+        this.defaultExpiration = Objects.requireNonNull(defaultExpiration, "defaultExpiration");
         return this;
     }
 
@@ -142,6 +157,7 @@ public final class ClientCredentialsConfigurationBuilder {
         private final boolean enabled;
         private final @Nullable String scope;
         private final Duration advancedExpiration;
+        private final Duration defaultExpiration;
         private final @Nullable ClientCredentialsHeaderTokenPropagatorConfiguration headerPropagation;
         private final Map<String, String> additionalRequestParams;
         private final @Nullable Pattern serviceIdPattern;
@@ -151,6 +167,7 @@ public final class ClientCredentialsConfigurationBuilder {
             this.enabled = builder.enabled;
             this.scope = builder.scope;
             this.advancedExpiration = builder.advancedExpiration;
+            this.defaultExpiration = builder.defaultExpiration;
             this.headerPropagation = builder.headerPropagation;
             this.additionalRequestParams = Map.copyOf(builder.additionalRequestParams);
             this.serviceIdPattern = builder.serviceIdRegex == null ? null : Pattern.compile(builder.serviceIdRegex);
@@ -172,6 +189,12 @@ public final class ClientCredentialsConfigurationBuilder {
         @NonNull
         public Duration getAdvancedExpiration() {
             return advancedExpiration;
+        }
+
+        @Override
+        @NonNull
+        public Duration getDefaultExpiration() {
+            return defaultExpiration;
         }
 
         @Override
