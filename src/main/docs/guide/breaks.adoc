@@ -3,6 +3,12 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 3.11 breaking changes
 
+- The plain OAuth 2.0 client (api:security.oauth2.client.DefaultOauthClient[]) now sends the application's own callback URL, built with api:security.oauth2.url.OauthRouteUrlBuilder[], as the `redirect_uri` parameter of the authorization code grant token request. Previously the value stored in the `state` parameter of the authorization response was used, which allowed anyone redirecting the browser to the callback endpoint to choose the `redirect_uri` sent to the provider and redeem an authorization code issued for a different redirection URI (RFC 6749 sections 4.1.3 and 10.6). The OpenID Connect client already behaved this way.
+
+- The constructor `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)` has been deprecated. Use `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)` instead.
+
+- The constructor `OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)` has been deprecated. Use `OauthCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration, String)` instead. A context created with the deprecated constructor no longer sends a `redirect_uri` parameter to the token endpoint.
+
 - Single-valued keys directly under `micronaut.security.ldap`, such as the global switch `micronaut.security.ldap.enabled`, no longer create an api:security.ldap.configuration.LdapConfiguration[] named after the key. Previously `micronaut.security.ldap.enabled: true` created a configuration and an api:security.ldap.LdapAuthenticationProvider[] named `enabled` with no server, whose failures turned login attempts for unknown usernames into HTTP 500 responses and allowed username enumeration. Only keys with nested properties, for example `micronaut.security.ldap.default.*`, define LDAP configurations.
 
 == Micronaut Security 3.4 breaking changes
