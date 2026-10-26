@@ -3,6 +3,12 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 5.5 breaking changes
 
+- The plain OAuth 2.0 client (api:security.oauth2.client.DefaultOauthClient[]) now sends the application's own callback URL, built with api:security.oauth2.url.OauthRouteUrlBuilder[], as the `redirect_uri` parameter of the authorization code grant token request. Previously the value stored in the `state` parameter of the authorization response was used, which allowed anyone redirecting the browser to the callback endpoint to choose the `redirect_uri` sent to the provider and redeem an authorization code issued for a different redirection URI (RFC 6749 sections 4.1.3 and 10.6). The OpenID Connect client already behaved this way.
+
+- The constructor `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)` has been deprecated. Use `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)` instead.
+
+- The constructor `OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)` has been deprecated. Use `OauthCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration, String)` instead. A context created with the deprecated constructor no longer sends a `redirect_uri` parameter to the token endpoint.
+
 - Starting with 5.5.2, the JSON Web Key Set published at the `jwks_uri` of an OpenID provider is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`, as it was before Micronaut Security 4.8.0. In `cookie`, `session` and `bearer` modes, or when the authentication mode is not set, tokens signed by the provider's keys, such as ID tokens issued to other clients, no longer authenticate requests. Applications that must accept the provider's tokens as request credentials in those modes need to configure the JWKS explicitly with `micronaut.security.token.jwt.signatures.jwks.*`.
 
 - The ID token returned by the token endpoint during the authorization code flow is verified exclusively against the issuing provider's JWKS. It is no longer accepted when signed by any other signature configuration of the application.
