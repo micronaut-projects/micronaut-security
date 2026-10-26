@@ -18,7 +18,7 @@ For example, to use an HTTP proxy for the fetching of the JWK Set from the above
 include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlserviceclientconfig]
 ----
 
-Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata.
+Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata. Such a JWKS is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`.
 
 The https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] based implementation can be explicitly disabled in favor of the JWT library's internal resource fetching implementation by explicitly setting `micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false`. For example:
 

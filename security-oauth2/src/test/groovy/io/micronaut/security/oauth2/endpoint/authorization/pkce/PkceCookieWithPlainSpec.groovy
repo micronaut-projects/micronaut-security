@@ -91,8 +91,10 @@ class PkceCookieWithPlainSpec extends Specification {
         server.applicationContext.containsBean(RedirectingLoginHandler)
         server.applicationContext.containsBean(OauthClient)
         !server.applicationContext.containsBean(SignatureConfiguration)
-        server.applicationContext.containsBean(ReactiveJwksSignature)
-        server.applicationContext.containsBean(ReactiveSignatureConfiguration)
+
+        and: 'outside idtoken mode the provider JWKS is not registered to validate request tokens'
+        !server.applicationContext.containsBean(ReactiveJwksSignature)
+        !server.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         and: 'auth server is exposing the AuthServerController routes'
         oauthServer

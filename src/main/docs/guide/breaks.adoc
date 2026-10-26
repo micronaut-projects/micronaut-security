@@ -3,6 +3,10 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 4.18 breaking changes
 
+- Starting with 4.18.2, the JSON Web Key Set published at the `jwks_uri` of an OpenID provider is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`, as it was before Micronaut Security 4.8.0. In `cookie`, `session` and `bearer` modes, or when the authentication mode is not set, tokens signed by the provider's keys, such as ID tokens issued to other clients, no longer authenticate requests. Applications that must accept the provider's tokens as request credentials in those modes need to configure the JWKS explicitly with `micronaut.security.token.jwt.signatures.jwks.*`.
+
+- The ID token returned by the token endpoint during the authorization code flow is verified exclusively against the issuing provider's JWKS. It is no longer accepted when signed by any other signature configuration of the application.
+
 - Single-valued keys directly under `micronaut.security.ldap`, such as the global switch `micronaut.security.ldap.enabled`, no longer create an api:security.ldap.configuration.LdapConfiguration[] named after the key. Previously `micronaut.security.ldap.enabled: true` created a configuration and an api:security.ldap.LdapAuthenticationProvider[] named `enabled` with no server, whose failures turned login attempts for unknown usernames into HTTP 500 responses and allowed username enumeration. Only keys with nested properties, for example `micronaut.security.ldap.default.*`, define LDAP configurations.
 
 == Micronaut Security 4.0 breaking changes
