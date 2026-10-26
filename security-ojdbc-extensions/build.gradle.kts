@@ -16,6 +16,7 @@ dependencies {
     testImplementation(libs.managed.nimbus.jose.jwt)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(mnLogging.logback.classic)
     annotationProcessor(mnSerde.micronaut.serde.processor)
     implementation(mnSerde.micronaut.serde.jackson)
 }
