@@ -1,4 +1,3 @@
-.claude/worktrees 
 dist/
 .DS_Store
 target/
@@ -41,3 +40,4 @@ src/main/docs/resources/img/micronaut-logo-white.svg
 
 # OpenCode files
 .sisyphus/
+.claude/worktrees

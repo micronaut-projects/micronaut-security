@@ -65,7 +65,7 @@ public class OauthControllerConfigurationProperties extends ControllerConfigurat
      */
     @Override
     public void setEnabled(boolean enabled) {
-        super.setEnabled(true);
+        super.setEnabled(enabled);
     }
 
     /**
