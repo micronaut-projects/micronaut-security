@@ -16,6 +16,7 @@
 package io.micronaut.security.errors;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -26,12 +27,19 @@ import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.TokenCookieConfiguration;
 import jakarta.inject.Singleton;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Optional;
 
 /**
  * Stores the last unauthorized URL in a cookie to redirect back to after
  * logging in.
+ *
+ * <p>Only the path and query of the unauthorized request are persisted, and only a
+ * local path (one that starts with a single {@code /}) is ever returned by
+ * {@link #getOriginalUri(HttpRequest, MutableHttpResponse)}. A request line such as
+ * {@code GET ///evil.example/x} or a planted cookie must not turn the post-login redirect
+ * into a redirect to another host (CWE-601).</p>
  *
  * @author James Kleeh
  * @since 2.0.0
@@ -50,7 +58,11 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
     @Override
     public void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Cookie cookie = Cookie.of(COOKIE_NAME, request.getUri().toString());
+        Optional<String> originalUri = localPathAndQuery(request.getUri());
+        if (originalUri.isEmpty()) {
+            return;
+        }
+        Cookie cookie = Cookie.of(COOKIE_NAME, originalUri.get());
         configure(cookie, request);
         cookie.maxAge(Duration.ofMinutes(5));
         response.cookie(cookie);
@@ -58,14 +70,67 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
     @Override
     public Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Optional<URI> uri = request.getCookies().get(COOKIE_NAME, URI.class);
-        if (uri.isPresent()) {
-            Cookie cookie = Cookie.of(COOKIE_NAME, "");
-            configure(cookie, request);
-            cookie.maxAge(0);
-            response.cookie(cookie);
+        Optional<Cookie> originalUriCookie = request.getCookies().findCookie(COOKIE_NAME);
+        if (originalUriCookie.isEmpty()) {
+            return Optional.empty();
         }
-        return uri;
+        Cookie expired = Cookie.of(COOKIE_NAME, "");
+        configure(expired, request);
+        expired.maxAge(0);
+        response.cookie(expired);
+        return parseUri(originalUriCookie.get().getValue()).filter(CookiePriorToLoginPersistence::isLocalUri);
+    }
+
+    @NonNull
+    private static Optional<URI> parseUri(@Nullable String value) {
+        if (value == null) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(new URI(value));
+        } catch (URISyntaxException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Extracts the path and query of a request URI when they denote a local path.
+     *
+     * @param uri The request URI
+     * @return The raw path and query, or empty when the path is not a local path
+     */
+    @NonNull
+    private static Optional<String> localPathAndQuery(@NonNull URI uri) {
+        String path = uri.getRawPath();
+        if (!isLocalPath(path)) {
+            return Optional.empty();
+        }
+        String query = uri.getRawQuery();
+        return Optional.of(query == null ? path : path + "?" + query);
+    }
+
+    /**
+     * @param uri A URI
+     * @return Whether the URI is a relative reference to a local path, that is, it has no scheme,
+     * no authority and its path starts with a single {@code /}
+     */
+    private static boolean isLocalUri(@NonNull URI uri) {
+        return uri.getScheme() == null
+            && uri.getRawAuthority() == null
+            && isLocalPath(uri.getRawPath())
+            && isLocalPath(uri.toString());
+    }
+
+    /**
+     * @param path A raw path
+     * @return Whether the path starts with a single {@code /}. A path starting with {@code //} is rejected because
+     * browsers interpret it as a scheme-relative URL pointing to another host.
+     */
+    private static boolean isLocalPath(@Nullable String path) {
+        return path != null
+            && path.startsWith("/")
+            && !path.startsWith("//")
+            && !path.startsWith("/\\");
     }
 
     /**

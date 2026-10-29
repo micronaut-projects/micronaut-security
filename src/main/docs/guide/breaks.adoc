@@ -3,6 +3,8 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 3.11 breaking changes
 
+- api:security.errors.CookiePriorToLoginPersistence[] only stores the path and query of the request rejected prior to login, and only honours a local path (one starting with a single `/`) when redirecting after login. Scheme-relative (`//host/...`) or absolute URIs are ignored and the login handlers fall back to `micronaut.security.redirect.login-success`.
+
 - The plain OAuth 2.0 client (api:security.oauth2.client.DefaultOauthClient[]) now sends the application's own callback URL, built with api:security.oauth2.url.OauthRouteUrlBuilder[], as the `redirect_uri` parameter of the authorization code grant token request. Previously the value stored in the `state` parameter of the authorization response was used, which allowed anyone redirecting the browser to the callback endpoint to choose the `redirect_uri` sent to the provider and redeem an authorization code issued for a different redirection URI (RFC 6749 sections 4.1.3 and 10.6). The OpenID Connect client already behaved this way.
 
 - The constructor `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)` has been deprecated. Use `DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)` instead.
