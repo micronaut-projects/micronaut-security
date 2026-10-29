@@ -23,7 +23,6 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.token.reader.TokenResolver;
 import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.Optional;
@@ -158,11 +157,9 @@ public class EndSessionEndpointResolver {
                                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
-        TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
         return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
                 oauthClientConfiguration,
                 openIdProviderMetadata,
-                securityConfiguration,
-                tokenResolver));
+                securityConfiguration));
     }
 }
