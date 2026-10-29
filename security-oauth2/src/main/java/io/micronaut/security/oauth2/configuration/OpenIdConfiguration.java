@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.Optional;
 
 /**
@@ -54,7 +54,7 @@ public interface OpenIdConfiguration {
      *
      * @return {@code true} to always qualify the username, {@code false} to never qualify it, or empty when not set
      * and the component which creates the authentication applies its own default
-     * @since 5.5.2
+     * @since 4.18.2
      */
     @NonNull
     default Optional<Boolean> getQualifyUsernameWithProvider() {

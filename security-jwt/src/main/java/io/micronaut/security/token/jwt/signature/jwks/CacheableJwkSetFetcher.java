@@ -17,11 +17,13 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.cache.annotation.CacheConfig;
+import io.micronaut.cache.annotation.CacheInvalidate;
 import io.micronaut.cache.annotation.Cacheable;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
 import org.reactivestreams.Publisher;
 
 /**
@@ -39,13 +41,23 @@ import org.reactivestreams.Publisher;
 class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     public static final String CACHE_JWKS = "jwks";
 
-    CacheableJwkSetFetcher(JwksClient jwksClient) {
-        super(jwksClient);
+    CacheableJwkSetFetcher(JwksClient jwksClient, JwksClientConfiguration jwksClientConfiguration) {
+        super(jwksClient, jwksClientConfiguration);
     }
 
     @Override
     @Cacheable
     public Publisher<JWKSet> fetch(String providerName, String url) {
         return super.fetch(providerName, url);
+    }
+
+    /**
+     * Clears the whole {@value #CACHE_JWKS} cache, since cache entries are keyed by provider name and url, together with the failure back-off for the given url.
+     * @param url The Jwks uri
+     */
+    @Override
+    @CacheInvalidate(all = true)
+    public void clearCache(@NonNull String url) {
+        super.clearCache(url);
     }
 }

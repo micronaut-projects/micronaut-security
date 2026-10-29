@@ -111,7 +111,9 @@ class JwksUriSignatureTimeoutSpec extends Specification {
                 'micronaut.http.client.read-timeout': '1s',
                 'micronaut.security.authentication': 'idtoken',
                 'micronaut.security.oauth2.clients.a.client-id': "XXX",
-                'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authEmbeddedServer.port}/oauth2/default"
+                'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authEmbeddedServer.port}/oauth2/default",
+                // this spec relies on the JWKS being requested again for every retried request
+                'micronaut.security.token.jwt.signatures.jwks-client.failure-backoff': '0s',
         ])
         EmbeddedServer clientServer = ApplicationContext.run(EmbeddedServer, [
                 (SPEC_NAME_PROPERTY) : 'JwksUriSignatureTimeoutSpec.client-retry',
