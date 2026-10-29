@@ -201,11 +201,11 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * Whether the username of an authentication built from an OpenID provider response is qualified with the
-         * provider name, as {@code providerName:subject}. If not set, the {@code UserInfo} token validator qualifies the
-         * username when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured.
+         * Whether the username of an authentication built from an OpenID provider response, by the default OpenID authentication mapper at login or by the `UserInfo` endpoint token validator, is the `sub` claim qualified with the provider name (`providerName:subject`) instead of the bare `sub` claim.
+         * The `sub` claim is only unique within one provider. If not set, the username is qualified only when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under `micronaut.security.oauth2.clients`. It does not apply when `micronaut.security.authentication` is `idtoken`.
          *
-         * @param qualifyUsernameWithProvider Whether to qualify the username with the provider name
+         * @param qualifyUsernameWithProvider Whether to qualify the username with the provider name.
+         * @since 5.5.2
          */
         public void setQualifyUsernameWithProvider(@Nullable Boolean qualifyUsernameWithProvider) {
             this.qualifyUsernameWithProvider = qualifyUsernameWithProvider;
