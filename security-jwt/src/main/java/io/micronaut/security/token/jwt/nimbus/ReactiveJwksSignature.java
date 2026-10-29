@@ -33,6 +33,9 @@ import reactor.core.publisher.Mono;
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
+ * <p>
+ * If the configuration specifies a {@link JwksSignatureConfiguration#getKeyType() key type}, only keys of that type ({@code kty})
+ * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -59,7 +62,8 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     }
 
     /**
-     * Verify a signed JWT.
+     * Verify a signed JWT. Only keys whose type matches {@link JwksSignatureConfiguration#getKeyType()} are considered,
+     * if a key type is configured.
      *
      * @param jwt the signed JWT
      * @return whether the signed JWT is verified
@@ -70,7 +74,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
                 .map(jwkSet -> {
                     try {
-                        boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator);
+                        boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
                         if (LOG.isDebugEnabled()) {
                             if (result) {
                                 LOG.debug("JWT Signature verified: {}", jwt.getParsedString());
