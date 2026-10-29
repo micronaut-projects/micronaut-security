@@ -37,7 +37,9 @@ public interface JwksSignatureConfiguration extends Named {
 
     /**
      * Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
-     * @return The KeyType for the JWKS signature configuration.
+     * When a key type is returned, only keys of that type are used to verify token signatures; a token signed with a key of
+     * another type is not verified, even if that key is part of the JWKS.
+     * @return The KeyType for the JWKS signature configuration, or {@code null} if keys of any type are matched.
      */
     @Nullable
     KeyType getKeyType();
