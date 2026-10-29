@@ -59,7 +59,7 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
     @Override
     public void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response) {
         Optional<String> originalUri = localPathAndQuery(request.getUri());
-        if (originalUri.isEmpty()) {
+        if (!originalUri.isPresent()) {
             return;
         }
         Cookie cookie = Cookie.of(COOKIE_NAME, originalUri.get());
@@ -71,7 +71,7 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
     @Override
     public Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response) {
         Optional<Cookie> originalUriCookie = request.getCookies().findCookie(COOKIE_NAME);
-        if (originalUriCookie.isEmpty()) {
+        if (!originalUriCookie.isPresent()) {
             return Optional.empty();
         }
         Cookie expired = Cookie.of(COOKIE_NAME, "");

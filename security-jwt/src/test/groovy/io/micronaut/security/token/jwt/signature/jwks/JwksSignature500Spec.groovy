@@ -29,6 +29,8 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
         given:
         ApplicationContext context = ApplicationContext.run([
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
+                // this spec counts one JWKS request per attempt, so the failure back-off is disabled
+                'micronaut.security.token.jwt.signatures.jwks-client.failure-backoff': '0s',
         ])
 
         when:

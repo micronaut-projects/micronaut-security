@@ -24,6 +24,9 @@ dependencies {
     testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
     testImplementation(libs.testcontainers)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 test {

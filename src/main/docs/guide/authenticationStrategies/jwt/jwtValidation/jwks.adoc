@@ -11,5 +11,25 @@ The previous snippet creates a link:{api}/io/micronaut/security/token/jwt/signat
 
 A `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`.
 
+**Failure back-off**
+
+If a remote JWK Set cannot be retrieved (for example, the connection is refused, the endpoint responds with a non-2xx status or the body cannot be parsed) or the retrieved JWK Set contains no keys, the JWK Set is not requested again until a back-off elapses. While the back-off lasts, tokens which cannot be verified by another signature configuration are rejected without contacting the JWKS endpoint. This prevents an unauthenticated client from triggering one outbound JWKS request (and one error log entry) per request while the authorization server is unavailable. The back-off is keyed by JWKS url. You can configure its duration with:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks-client:
+            failure-backoff: 10s
+            retrieval-timeout: 30s
+----
+
+`failure-backoff` defaults to 10 seconds. Set it to `0s` to disable the back-off and retry the retrieval for every token.
+
+`retrieval-timeout` (default 30 seconds) is applied as the connect timeout and the read timeout of the HTTP retrieval, so a JWKS endpoint which never answers does not block every token for that signature configuration. A retrieval which times out counts as a failure and starts the back-off. Set it to `0s` to disable the timeout.
+
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 

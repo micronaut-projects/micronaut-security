@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.errors;
 
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.simple.SimpleHttpRequest;
+import io.netty.handler.codec.http.cookie.ClientCookieDecoder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -52,9 +54,9 @@ class CookiePriorToLoginPersistenceTest {
     void onUnauthorizedPersistsOnlyTheLocalPathAndQuery(String requestUri, String expectedCookieValue) {
         MutableHttpResponse<?> response = HttpResponse.ok();
         persistence.onUnauthorized(new SimpleHttpRequest<>(HttpMethod.GET, requestUri, null), response);
-        Optional<Cookie> cookie = response.getCookie(COOKIE_NAME);
+        Optional<io.netty.handler.codec.http.cookie.Cookie> cookie = cookie(response, COOKIE_NAME);
         assertTrue(cookie.isPresent());
-        assertEquals(expectedCookieValue, cookie.get().getValue());
+        assertEquals(expectedCookieValue, cookie.get().value());
     }
 
     @ParameterizedTest
@@ -66,7 +68,7 @@ class CookiePriorToLoginPersistenceTest {
     void onUnauthorizedDoesNotPersistNonLocalPaths(String requestUri) {
         MutableHttpResponse<?> response = HttpResponse.ok();
         persistence.onUnauthorized(new SimpleHttpRequest<>(HttpMethod.GET, requestUri, null), response);
-        assertFalse(response.getCookie(COOKIE_NAME).isPresent(), () -> requestUri + " must not be persisted");
+        assertFalse(cookie(response, COOKIE_NAME).isPresent(), () -> requestUri + " must not be persisted");
     }
 
     @ParameterizedTest
@@ -108,9 +110,19 @@ class CookiePriorToLoginPersistenceTest {
     }
 
     private static void assertCookieCleared(MutableHttpResponse<?> response) {
-        Optional<Cookie> cleared = response.getCookie(COOKIE_NAME);
+        Optional<io.netty.handler.codec.http.cookie.Cookie> cleared = cookie(response, COOKIE_NAME);
         assertTrue(cleared.isPresent(), "cookie should be expired once read");
-        assertEquals("", cleared.get().getValue());
-        assertEquals(0, cleared.get().getMaxAge());
+        assertEquals("", cleared.get().value());
+        assertEquals(0, cleared.get().maxAge());
+    }
+
+    /**
+     * On this branch the Netty response does not expose the cookies it was given, so they are read back from the Set-Cookie headers.
+     */
+    private static Optional<io.netty.handler.codec.http.cookie.Cookie> cookie(MutableHttpResponse<?> response, String name) {
+        return response.getHeaders().getAll(HttpHeaders.SET_COOKIE).stream()
+            .map(ClientCookieDecoder.LAX::decode)
+            .filter(c -> c != null && name.equals(c.name()))
+            .findFirst();
     }
 }

@@ -29,9 +29,8 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.provider.HttpRequestExecutorAuthenticationProvider;
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider;
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.AfterAll;
@@ -48,6 +47,8 @@ import java.net.Socket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,13 +73,14 @@ class JwtCookiePriorToLoginOpenRedirectTest {
 
     @BeforeAll
     static void start() {
-        server = ApplicationContext.run(EmbeddedServer.class, Map.of(
-            "spec.name", SPEC_NAME,
-            "micronaut.http.client.follow-redirects", StringUtils.FALSE,
-            "micronaut.security.authentication", "cookie",
-            "micronaut.security.redirect.prior-to-login", StringUtils.TRUE,
-            "micronaut.security.redirect.unauthorized.url", "/login/auth",
-            "micronaut.security.token.jwt.signatures.secret.generator.secret", "test-fixture-not-a-secret-0123456789"));
+        Map<String, Object> configuration = new HashMap<>();
+        configuration.put("spec.name", SPEC_NAME);
+        configuration.put("micronaut.http.client.follow-redirects", StringUtils.FALSE);
+        configuration.put("micronaut.security.authentication", "cookie");
+        configuration.put("micronaut.security.redirect.prior-to-login", StringUtils.TRUE);
+        configuration.put("micronaut.security.redirect.unauthorized.url", "/login/auth");
+        configuration.put("micronaut.security.token.jwt.signatures.secret.generator.secret", "test-fixture-not-a-secret-0123456789");
+        server = ApplicationContext.run(EmbeddedServer.class, configuration);
         httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL());
     }
 
@@ -110,7 +112,7 @@ class JwtCookiePriorToLoginOpenRedirectTest {
     void loginNeverRedirectsToAnotherHostBecauseOfTheRequestLine(String requestTarget) throws IOException {
         RawResponse unauthorized = rawGet(requestTarget);
         Optional<String> originalUri = unauthorized.cookieValue(ORIGINAL_URI_COOKIE);
-        if (originalUri.isEmpty()) {
+        if (!originalUri.isPresent()) {
             return; // nothing persisted, nothing to redirect to
         }
         HttpResponse<?> loginResponse = login(originalUri.get());
@@ -137,7 +139,10 @@ class JwtCookiePriorToLoginOpenRedirectTest {
     }
 
     private static HttpResponse<?> login(String originalUriCookieValue) {
-        HttpRequest<?> loginRequest = HttpRequest.POST("/login", Map.of("username", "sherlock", "password", "password"))
+        Map<String, String> credentials = new HashMap<>();
+        credentials.put("username", "sherlock");
+        credentials.put("password", "password");
+        HttpRequest<?> loginRequest = HttpRequest.POST("/login", credentials)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
             .cookie(Cookie.of(ORIGINAL_URI_COOKIE, originalUriCookieValue));
         return httpClient.toBlocking().exchange(loginRequest, String.class);
@@ -164,7 +169,15 @@ class JwtCookiePriorToLoginOpenRedirectTest {
         }
     }
 
-    private record RawResponse(int status, List<String> headers) {
+    private static final class RawResponse {
+        private final int status;
+        private final List<String> headers;
+
+        private RawResponse(int status, List<String> headers) {
+            this.status = status;
+            this.headers = headers;
+        }
+
         Optional<String> cookieValue(String name) {
             return headers.stream()
                 .filter(h -> h.regionMatches(true, 0, "Set-Cookie:", 0, "Set-Cookie:".length()))
@@ -177,10 +190,9 @@ class JwtCookiePriorToLoginOpenRedirectTest {
 
     @Requires(property = "spec.name", value = SPEC_NAME)
     @Singleton
-    static class AuthProvider<B> implements HttpRequestExecutorAuthenticationProvider<B> {
-        @Override
-        public AuthenticationResponse authenticate(HttpRequest<B> requestContext, AuthenticationRequest<String, String> authRequest) {
-            return AuthenticationResponse.success("sherlock");
+    static class AuthProvider extends MockAuthenticationProvider {
+        AuthProvider() {
+            super(Collections.singletonList(new SuccessAuthenticationScenario("sherlock")));
         }
     }
 
