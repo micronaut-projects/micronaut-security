@@ -62,13 +62,14 @@ public class DefaultProviderResolver implements ProviderResolver {
     /**
      *
      * @param issuer Token Issuer
-     * @return {@literal Optional#empty()} if the issuer does not match the issuer of any open id client. If it matches, the open id client is returned wrapped in an optional
+     * @return {@literal Optional#empty()} if the issuer does not match the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) of any open id client. If it matches, the open id client is returned wrapped in an optional
      */
     @NonNull
     protected Optional<String> openIdClientNameWhichMatchesIssuer(@NonNull String issuer) {
         return openIdClientConfigurations.stream()
-                .filter(conf -> conf.getIssuer().isPresent())
-                .filter(conf -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(conf.getIssuer().get().toString(), issuer))
+                .filter(conf -> conf.getIssuerIdentifier()
+                        .map(expectedIssuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(expectedIssuer, issuer))
+                        .orElse(false))
                 .map(Named::getName)
                 .findFirst();
     }

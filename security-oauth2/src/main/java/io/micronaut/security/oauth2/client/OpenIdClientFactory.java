@@ -39,8 +39,12 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -55,6 +59,7 @@ import java.util.function.Supplier;
 @Requires(configuration = "io.micronaut.security.token.jwt")
 @Requires(beans = {HttpClientRegistry.class, JsonMapper.class})
 class OpenIdClientFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
 
     private final BeanContext beanContext;
 
@@ -126,9 +131,7 @@ class OpenIdClientFactory {
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
                                     OpenIdClientConfiguration openIdClientConfiguration,
                                     OauthClientConfiguration oauthClientConfiguration) {
-        if (StringUtils.isEmpty(configuration.getIssuer())) {
-            openIdClientConfiguration.getIssuer().ifPresent(url -> configuration.setIssuer(url.toString()));
-        }
+        overrideIssuer(configuration, openIdClientConfiguration);
 
         openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
 
@@ -157,6 +160,47 @@ class OpenIdClientFactory {
         EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
         if (endSession.isEnabled()) {
             endSession.getUrl().ifPresent(configuration::setEndSessionEndpoint);
+        }
+    }
+
+    /**
+     * Validates the issuer of the provider metadata against the configured issuer identifier.
+     * <p>
+     * OpenID Connect Discovery 1.0, section 4.3: the {@code issuer} value returned MUST be identical to the Issuer URL
+     * that was used to retrieve the configuration. The issuer is asserted by the provider, so an issuer that does not
+     * match the configured one is discarded and the configured one is used instead. That way a provider cannot get
+     * tokens of another issuer accepted by announcing that issuer in its discovery document. The comparison only
+     * tolerates the case of the scheme and a trailing slash (see {@link OpenIdIssuers#equivalent(String, String)}).
+     *
+     * @param configuration The provider metadata
+     * @param openIdClientConfiguration The openid client configuration
+     */
+    private static void overrideIssuer(DefaultOpenIdProviderMetadata configuration,
+                                       OpenIdClientConfiguration openIdClientConfiguration) {
+        Optional<String> expected = openIdClientConfiguration.getIssuerIdentifier();
+        if (expected.isEmpty()) {
+            return;
+        }
+        String expectedIssuer = expected.get();
+        String discoveredIssuer = configuration.getIssuer();
+        if (StringUtils.isEmpty(discoveredIssuer)) {
+            configuration.setIssuer(expectedIssuer);
+            return;
+        }
+        if (OpenIdIssuers.equivalent(expectedIssuer, discoveredIssuer)) {
+            return;
+        }
+        configuration.setIssuer(expectedIssuer);
+        boolean explicitIdentifier = openIdClientConfiguration.getIssuer()
+            .map(URL::toString)
+            .map(url -> !url.equals(expectedIssuer))
+            .orElse(true);
+        if (explicitIdentifier) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("The issuer [{}] of the OpenID provider metadata of client [{}] differs from the configured issuer identifier [{}]. The configured issuer identifier is used.", discoveredIssuer, openIdClientConfiguration.getName(), expectedIssuer);
+            }
+        } else if (LOG.isErrorEnabled()) {
+            LOG.error("The issuer [{}] of the OpenID provider metadata of client [{}] does not match the configured issuer [{}]. OpenID Connect Discovery 1.0 section 4.3 requires both to be identical. The announced issuer is ignored and ID tokens are only accepted if their iss claim is [{}]. If the provider issues tokens with a different iss (for example, discovery is fetched over an internal URL), set micronaut.security.oauth2.clients.{}.openid.issuer-identifier to the expected iss value.", discoveredIssuer, openIdClientConfiguration.getName(), expectedIssuer, expectedIssuer, openIdClientConfiguration.getName());
         }
     }
 }
