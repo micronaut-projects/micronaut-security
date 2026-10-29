@@ -27,7 +27,6 @@ import io.micronaut.security.token.ClaimsUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -206,7 +205,7 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
         boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
         if (!matchesIssuer) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(EMPTY), iss);
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuerIdentifier().orElse(EMPTY), iss);
             }
             return false;
         }
@@ -232,13 +231,12 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
      *
      * @param iss Issuer claim
      * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
-     * @return true wrapped in an Optional if the OAuth 2.0 client OpenID issuer matches the iss claim. Empty Optional of OpenID Client configuration does not define an issuer.
+     * @return true wrapped in an Optional if the expected issuer of the OAuth 2.0 client ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) matches the iss claim. Empty Optional if the OpenID Client configuration does not define an issuer.
      */
     @NonNull
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
-        return openIdClientConfiguration.getIssuer()
-                .map(URL::toString)
+        return openIdClientConfiguration.getIssuerIdentifier()
                 .map(issuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(issuer, iss));
     }
 
