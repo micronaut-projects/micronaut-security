@@ -17,6 +17,8 @@ This library supports end session for Auth0, AWS Cognito, and Okta out of the bo
 
 WARNING: If you are using a custom domain URL for your auth server, instead of inferring it, you can set the authorization server you use by setting the property `micronaut.security.oauth2.clients.*.authorization-server`.
 
+For Okta and Oracle Cloud, api:security.oauth2.endpoint.endsession.request.OktaEndSessionEndpoint[] sends an `id_token_hint` parameter. It is the ID token obtained during the authorization code flow when that token is available in the authentication attributes. Otherwise, when `micronaut.security.authentication` is set to `idtoken`, it is the token which authenticated the current request, that is, the ID token cookie. Other tokens present in the request, such as an `Authorization` header added by a gateway or reverse proxy, are never sent to the OpenID provider.
+
 Before choosing any of the default providers, the endpoint resolver will first look for an api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.
 
 If for example you are using one of the providers that is supported out of the box and you don't want the end session support, it is possible to disable it per client.
