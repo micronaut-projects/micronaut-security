@@ -56,7 +56,22 @@ public final class JwksSignatureUtils {
      * @throws JOSEException exception when verifying the JWT
      */
     public static boolean verify(SignedJWT jwt, JWKSet jwkSet, JwkValidator jwkValidator) throws JOSEException {
-        List<JWK> matches = matches(jwt, jwkSet, null);
+        return verify(jwt, jwkSet, jwkValidator, null);
+    }
+
+    /**
+     * Verify a signed JWT with the keys of the given type.
+     *
+     * @param jwt the signed JWT
+     * @param jwkSet JSON Web Key Set
+     * @param jwkValidator JWK Validator
+     * @param keyType Key Type ({@code kty}) the verifying key must have, or {@code null} to consider keys of any type
+     * @return whether the signed JWT is verified with a key of the key set whose type matches {@code keyType}
+     * @throws JOSEException exception when verifying the JWT
+     * @since 3.11.3
+     */
+    public static boolean verify(SignedJWT jwt, JWKSet jwkSet, JwkValidator jwkValidator, @Nullable KeyType keyType) throws JOSEException {
+        List<JWK> matches = matches(jwt, jwkSet, keyType);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found {} matching JWKs", matches.size());
         }
@@ -130,7 +145,7 @@ public final class JwksSignatureUtils {
      *
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set
-     * @param keyType Key Type
+     * @param keyType Key Type ({@code kty}) the keys must have, or {@code null} to match keys of any type
      * @return a List of JSON Web Keys
      */
     public static List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet, @Nullable KeyType keyType) {
@@ -153,6 +168,8 @@ public final class JwksSignatureUtils {
             if (keyId != null) {
                 builder = builder.keyID(keyId);
             }
+            // A key published with an explicit alg is only used for that algorithm; keys without alg match any algorithm.
+            builder = builder.algorithms(jwt.getHeader().getAlgorithm(), null);
 
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }

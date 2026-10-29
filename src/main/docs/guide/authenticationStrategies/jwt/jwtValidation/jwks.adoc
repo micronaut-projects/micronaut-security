@@ -31,5 +31,23 @@ micronaut:
 
 `retrieval-timeout` (default 30 seconds) is applied as the connect timeout and the read timeout of the HTTP retrieval, so a JWKS endpoint which never answers does not block every token for that signature configuration. A retrieval which times out counts as a failure and starts the back-off. Set it to `0s` to disable the timeout.
 
+### Restricting the key type
+
+By default, every key of the JWKS is used to verify token signatures, whatever its type (`kty`). If the identity provider publishes keys of several types but tokens must only be accepted when signed with one of them, restrict the JWKS with the `key-type` property. Only keys of the configured type are then used to verify a token; a token signed with a key of another type is rejected, even if that key is part of the JWKS. The value is case-insensitive and must be `RSA`, `EC`, `OKP` or `oct`; any other value fails application startup.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json'
+              key-type: RSA
+----
+
+
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 

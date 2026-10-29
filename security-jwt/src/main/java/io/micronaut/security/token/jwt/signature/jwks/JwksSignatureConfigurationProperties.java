@@ -36,8 +36,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      * The default key type.
+     * @deprecated No longer used. Since 3.11.3 no key type is applied unless {@link #setKeyType(KeyType)} is configured, so that keys of any type of the JWKS are matched.
      */
     @SuppressWarnings("WeakerAccess")
+    @Deprecated
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
     /**
@@ -51,7 +53,8 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     private String url;
 
-    private KeyType keyType = DEFAULT_KEYTYPE;
+    @Nullable
+    private KeyType keyType;
 
     @Override
     @NonNull
@@ -89,7 +92,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      *
-     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
+     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any type are matched.
      */
     @Override
     @Nullable
@@ -98,10 +101,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).
+     * Representation of the kty parameter in a JSON Web Key (JWK). When set, only keys of this type are used to verify token signatures; a token signed with a key of another type is rejected even if that key is part of the JWKS. Default value (null): keys of any type are matched.
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
-    public void setKeyType(KeyType keyType) {
+    public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
     }
 }

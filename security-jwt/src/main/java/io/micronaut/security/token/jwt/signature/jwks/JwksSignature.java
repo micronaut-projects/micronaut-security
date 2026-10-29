@@ -38,6 +38,9 @@ import java.util.stream.Collectors;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
+ * <p>
+ * If the configuration specifies a {@link JwksSignatureConfiguration#getKeyType() key type}, only keys of that type ({@code kty})
+ * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
  *
  * A bean of this class is created for each {@link io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration}.
  *
@@ -186,7 +189,8 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     /**
-     * Verify a signed JWT.
+     * Verify a signed JWT. Only keys whose type matches {@link JwksSignatureConfiguration#getKeyType()} are considered,
+     * if a key type is configured.
      *
      * @param jwt the signed JWT
      * @return whether the signed JWT is verified
@@ -194,7 +198,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
-        return JwksSignatureUtils.verify(jwt, computeJWKSet().orElse(null), jwkValidator);
+        return JwksSignatureUtils.verify(jwt, computeJWKSet().orElse(null), jwkValidator, jwksSignatureConfiguration.getKeyType());
     }
 
     /**
