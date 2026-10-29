@@ -138,6 +138,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
         private ClaimsValidationConfigurationProperties claimsValidation = new ClaimsValidationConfigurationProperties();
         private AdditionalClaimsConfigurationProperties additionalClaims = new AdditionalClaimsConfigurationProperties();
+        private Boolean qualifyUsernameWithProvider;
 
         @Override
         public String getLogoutUri() {
@@ -191,6 +192,23 @@ public class OauthConfigurationProperties implements OauthConfiguration {
          */
         public void setAdditionalClaims(AdditionalClaimsConfigurationProperties claims) {
             this.additionalClaims = claims;
+        }
+
+        @Override
+        @NonNull
+        public Optional<Boolean> getQualifyUsernameWithProvider() {
+            return Optional.ofNullable(qualifyUsernameWithProvider);
+        }
+
+        /**
+         * Whether the username of an authentication built from an OpenID provider response is qualified with the
+         * provider name, as {@code providerName:subject}. If not set, the {@code UserInfo} token validator qualifies the
+         * username when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured.
+         *
+         * @param qualifyUsernameWithProvider Whether to qualify the username with the provider name
+         */
+        public void setQualifyUsernameWithProvider(@Nullable Boolean qualifyUsernameWithProvider) {
+            this.qualifyUsernameWithProvider = qualifyUsernameWithProvider;
         }
 
         /**

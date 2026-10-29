@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
+import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -45,5 +46,19 @@ public interface OpenIdConfiguration {
      * @return Claims configuration
      */
     OpenIdAdditionalClaimsConfiguration getAdditionalClaims();
+
+    /**
+     * Whether the username of an {@link io.micronaut.security.authentication.Authentication} built from an OpenID
+     * provider response is qualified with the provider name, as {@code providerName:subject}, so that the same
+     * subject at two providers never maps to one user.
+     *
+     * @return {@code true} to always qualify the username, {@code false} to never qualify it, or empty when not set
+     * and the component which creates the authentication applies its own default
+     * @since 5.5.2
+     */
+    @NonNull
+    default Optional<Boolean> getQualifyUsernameWithProvider() {
+        return Optional.empty();
+    }
 
 }
