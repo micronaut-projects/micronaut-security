@@ -28,13 +28,17 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OpenIdConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import jakarta.inject.Singleton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 @Requires(beans = HttpClientConfiguration.class)
 @Factory
@@ -42,11 +46,27 @@ import java.net.URL;
 final class UserInfoClientFactory {
     private final BeanContext beanContext;
     private final HttpClientConfiguration httpClientConfiguration;
+    private final boolean qualifyUsername;
 
+    /**
+     * @param beanContext Bean context
+     * @param httpClientConfiguration HTTP client configuration
+     * @param oauthClientConfigurations OAuth 2.0 client configurations
+     * @param openIdConfiguration OpenID configuration. If {@link OpenIdConfiguration#getQualifyUsernameWithProvider()}
+     *                            is empty, usernames are qualified when more than one enabled client which can
+     *                            authenticate users is configured.
+     */
     UserInfoClientFactory(BeanContext beanContext,
-                          HttpClientConfiguration httpClientConfiguration) {
+                          HttpClientConfiguration httpClientConfiguration,
+                          List<OauthClientConfiguration> oauthClientConfigurations,
+                          OpenIdConfiguration openIdConfiguration) {
         this.beanContext = beanContext;
         this.httpClientConfiguration = httpClientConfiguration;
+        this.qualifyUsername = openIdConfiguration.getQualifyUsernameWithProvider()
+            .orElseGet(() -> oauthClientConfigurations.stream()
+                .filter(OauthClientConfiguration::isEnabled)
+                .filter(c -> c.getGrantType() != GrantType.CLIENT_CREDENTIALS)
+                .count() > 1);
     }
 
     @EachBean(OpenIdProviderMetadata.class)
@@ -64,7 +84,7 @@ final class UserInfoClientFactory {
     UserInfoClientTokenValidator createUserInfoClient(UserInfoClientTokenValidatorConfiguration config) {
         try {
             HttpClient httpClient = beanContext.createBean(HttpClient.class, new URL(config.baseUrl()), httpClientConfiguration);
-            return new UserInfoClientTokenValidator(config.name(), httpClient, config.path());
+            return new UserInfoClientTokenValidator(config.name(), httpClient, config.path(), qualifyUsername);
         } catch (MalformedURLException e) {
             throw new DisabledBeanException("Malformed URL Exception for UserInfo endpoint " + config.baseUrl() + " for " + config.getName());
         }
