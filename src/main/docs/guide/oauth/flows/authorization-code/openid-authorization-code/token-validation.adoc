@@ -3,3 +3,27 @@ A api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseVali
 By default all implementations of api:io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator[] and api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] are used to validate the token.
 
 To allow for additional or custom  validations, register an api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] bean.
+
+=== Issuer validation
+
+api:security.oauth2.endpoint.token.response.validation.IssuerClaimValidator[] validates the `iss` claim of the ID token. The expected issuer is `micronaut.security.oauth2.clients.*.openid.issuer-identifier` if set, otherwise `micronaut.security.oauth2.clients.*.openid.issuer`. The `iss` claim must equal it (the only differences tolerated are the case of the scheme and a trailing slash) and must exactly match the Issuer Identifier of the provider metadata.
+
+The `issuer` announced in the provider's discovery document is controlled by the provider. Per https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation[OpenID Connect Discovery 1.0 section 4.3] it must be identical to the issuer used to retrieve the discovery document. If it does not match the expected issuer, Micronaut Security logs an error, discards the announced issuer and uses the expected issuer as the Issuer Identifier of the provider. Thus, a provider cannot get ID tokens issued by another configured provider accepted by announcing that provider's issuer.
+
+If the `iss` claim of the tokens legitimately differs from the URL used to fetch the discovery document, for example because discovery is fetched over a cluster-internal URL while tokens carry the public URL, or with Oracle IDCS, whose tokens carry the provider wide issuer `https://identity.oraclecloud.com/`, configure the expected value with `issuer-identifier`. The same value is the expected `iss` for api:security.oauth2.client.IdTokenClaimsValidator[] and api:security.oauth2.ProviderResolver[] when `micronaut.security.authentication=idtoken`:
+
+[configuration]
+----
+micronaut:
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          openid:
+            issuer: http://keycloak:8080/realms/app
+            issuer-identifier: https://sso.example.com/realms/app
+----
+
+If there is neither a configured issuer nor a discovery document, the provider metadata has no issuer and the validator rejects every token.
+
+Issuer validation can be disabled with `micronaut.security.oauth2.openid.claims-validation.issuer=false`, but doing so removes this protection; prefer `issuer-identifier`.
