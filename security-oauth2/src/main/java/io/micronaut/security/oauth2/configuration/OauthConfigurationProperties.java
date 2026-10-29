@@ -138,6 +138,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
         private ClaimsValidationConfigurationProperties claimsValidation = new ClaimsValidationConfigurationProperties();
         private AdditionalClaimsConfigurationProperties additionalClaims = new AdditionalClaimsConfigurationProperties();
+        private Boolean qualifyUsernameWithProvider;
 
         @Override
         public String getLogoutUri() {
@@ -191,6 +192,23 @@ public class OauthConfigurationProperties implements OauthConfiguration {
          */
         public void setAdditionalClaims(AdditionalClaimsConfigurationProperties claims) {
             this.additionalClaims = claims;
+        }
+
+        @Override
+        @NonNull
+        public Optional<Boolean> getQualifyUsernameWithProvider() {
+            return Optional.ofNullable(qualifyUsernameWithProvider);
+        }
+
+        /**
+         * Whether the username of an authentication built from an OpenID provider response, by the default OpenID authentication mapper at login or by the `UserInfo` endpoint token validator, is the `sub` claim qualified with the provider name (`providerName:subject`) instead of the bare `sub` claim.
+         * The `sub` claim is only unique within one provider. If not set, the username is qualified only when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under `micronaut.security.oauth2.clients`. It does not apply when `micronaut.security.authentication` is `idtoken`.
+         *
+         * @param qualifyUsernameWithProvider Whether to qualify the username with the provider name.
+         * @since 3.11.3
+         */
+        public void setQualifyUsernameWithProvider(@Nullable Boolean qualifyUsernameWithProvider) {
+            this.qualifyUsernameWithProvider = qualifyUsernameWithProvider;
         }
 
         /**

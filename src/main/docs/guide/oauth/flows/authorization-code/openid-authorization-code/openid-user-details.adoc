@@ -6,6 +6,23 @@ include::{includedir}configurationProperties/io.micronaut.security.oauth2.config
 
 IMPORTANT: Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
 
+=== Username
+
+The default mapper derives the username returned by `Authentication.getName()` from the `sub` claim of the ID token. A `sub` is only unique within the provider which issued it: two different users at two providers may well share the same `sub`, especially with providers that let users pick an account name or that issue sequential or e-mail based subjects. For that reason:
+
+- When more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under `micronaut.security.oauth2.clients`, the username is the provider name followed by `:` and the `sub` claim, for example `okta:248289761001`. The unqualified subject remains available in the `sub` attribute.
+- With a single client the username is the bare `sub` claim.
+
+TIP: Set `micronaut.security.oauth2.openid.qualify-username-with-provider` to `true` explicitly in any application which keys data on the username. The automatic rule depends on the clients configured, so adding another client later would otherwise rename every user.
+
+NOTE: `micronaut.security.authentication` set to `idtoken` is not covered. In that mode the cookie holds the raw ID token and every request after login is authenticated from its claims, so the username is the bare `sub` claim whatever the property value and the same `sub` issued by two providers still maps to the same user. When you configure several providers and key data on the username, do not use `idtoken`; use `cookie` or `session`, or derive the key from the `iss` and `sub` claims.
+
+The provider name is always available in the `oauth2Provider` attribute as well. You can force or disable the qualification with `micronaut.security.oauth2.openid.qualify-username-with-provider`:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
+
+WARNING: Disabling the qualification while several clients are configured lets a user at one provider act as the user with the same `sub` at another provider in any application that keys data on the username.
+
 If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.
 
 To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper[].

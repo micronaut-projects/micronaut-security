@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import java.util.Optional;
 
@@ -45,5 +46,21 @@ public interface OpenIdConfiguration {
      * @return Claims configuration
      */
     OpenIdAdditionalClaimsConfiguration getAdditionalClaims();
+
+    /**
+     * Whether the username of an {@link io.micronaut.security.authentication.Authentication} built from an OpenID
+     * provider response, by the default {@link io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper}
+     * at login or by the {@code UserInfo} endpoint token validator, is qualified with the provider name, as
+     * {@code providerName:subject}, instead of being the bare {@code sub} claim. The {@code sub} claim is only unique
+     * within one provider, so an unqualified username lets a user at one provider share identity with a user at
+     * another provider which issued the same {@code sub}.
+     *
+     * @return {@code true} to always qualify the username, {@code false} to never qualify it, or empty to qualify only when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under {@code micronaut.security.oauth2.clients}
+     * @since 3.11.3
+     */
+    @NonNull
+    default Optional<Boolean> getQualifyUsernameWithProvider() {
+        return Optional.empty();
+    }
 
 }
