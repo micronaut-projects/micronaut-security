@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -25,6 +26,8 @@ import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -37,6 +40,18 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfigurationProperties#getIpPatterns()} ()}.
+ *
+ * <p>Each configured pattern is interpreted in one of two ways:</p>
+ * <ul>
+ *     <li>A pattern made only of hexadecimal digits, dots, colons and {@code *} (for example {@code 127.0.0.1},
+ *     {@code 192.168.1.*} or {@code fe80:*}) is an IP wildcard: dots and colons match literally, a {@code *}
+ *     inside the pattern matches within one address segment and a trailing {@code *} matches the rest of the
+ *     address. {@code 192.168.1.*} therefore matches {@code 192.168.1.0} to {@code 192.168.1.255} only, and not
+ *     {@code 192.168.10.5}; {@code 192.168.*.1} matches {@code 192.168.2.1} but not {@code 192.168.2.3.1}.
+ *     Hexadecimal digits match regardless of case.</li>
+ *     <li>Any other pattern (for example {@code 192\.168\.1\.\d+}), including one starting with a dot such as
+ *     {@code .*}, is compiled as a regular expression and must match the whole host address.</li>
+ * </ul>
  *
  * @author Sergio del Amo
  * @since 1.0
@@ -51,7 +66,16 @@ public class IpPatternsRule extends AbstractSecurityRule {
 
     private static final Logger LOG = LoggerFactory.getLogger(IpPatternsRule.class);
 
+    /**
+     * Patterns made only of these characters are IP wildcards rather than regular expressions.
+     */
+    private static final Pattern IP_WILDCARD = Pattern.compile("[0-9A-Fa-f.:*]+");
+
+    private static final String WILDCARD = "*";
+
+    private final List<String> ipPatterns;
     private final List<Pattern> patternList;
+    private final boolean anywhere;
 
     /**
      * @param rolesFinder Roles Parser
@@ -61,10 +85,39 @@ public class IpPatternsRule extends AbstractSecurityRule {
     public IpPatternsRule(RolesFinder rolesFinder,
                           SecurityConfiguration securityConfiguration) {
         super(rolesFinder);
-        this.patternList = securityConfiguration.getIpPatterns()
-                .stream()
-                .map(Pattern::compile)
+        this.ipPatterns = Collections.unmodifiableList(new ArrayList<>(securityConfiguration.getIpPatterns()));
+        this.anywhere = ipPatterns.contains(SecurityConfigurationProperties.ANYWHERE);
+        this.patternList = ipPatterns.stream()
+                .map(IpPatternsRule::compile)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Compiles a configured IP pattern. IP wildcards (digits, dots, colons and {@code *}, not starting with a dot) are
+     * quoted so that dots and colons match literally. A {@code *} inside the wildcard matches within one address
+     * segment, a trailing {@code *} matches the rest of the address and hexadecimal digits match regardless of case.
+     * Every other pattern, including an "allow all" regular expression such as {@code .*}, is compiled as a regular
+     * expression.
+     *
+     * @param ipPattern The configured IP pattern
+     * @return The compiled pattern
+     */
+    @NonNull
+    private static Pattern compile(@NonNull String ipPattern) {
+        if (IP_WILDCARD.matcher(ipPattern).matches() && !ipPattern.startsWith(".")) {
+            String[] parts = ipPattern.split(Pattern.quote(WILDCARD), -1);
+            StringBuilder regex = new StringBuilder();
+            for (int i = 0; i < parts.length; i++) {
+                if (!parts[i].isEmpty()) {
+                    regex.append(Pattern.quote(parts[i]));
+                }
+                if (i < parts.length - 1) {
+                    regex.append(i == parts.length - 2 && parts[i + 1].isEmpty() ? ".*" : "[^.:]*");
+                }
+            }
+            return Pattern.compile(regex.toString(), Pattern.CASE_INSENSITIVE);
+        }
+        return Pattern.compile(ipPattern);
     }
 
     @Override
@@ -91,13 +144,11 @@ public class IpPatternsRule extends AbstractSecurityRule {
                     return Mono.just(SecurityRuleResult.UNKNOWN);
                 }
                 String hostAddress = socketAddress.getAddress().getHostAddress();
-                if (patternList.stream().anyMatch(pattern ->
-                        pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
-                                pattern.matcher(hostAddress).matches())) {
-                            debug(LOG, "One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
-                            return Mono.just(SecurityRuleResult.UNKNOWN);
+                if (anywhere || patternList.stream().anyMatch(pattern -> pattern.matcher(hostAddress).matches())) {
+                    debug(LOG, "One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
+                    return Mono.just(SecurityRuleResult.UNKNOWN);
                 } else {
-                    debug(LOG, "None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
+                    debug(LOG, "None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", ipPatterns, hostAddress);
                     return Mono.just(SecurityRuleResult.REJECTED);
                 }
             } catch (IllegalArgumentException e) {
