@@ -53,7 +53,7 @@ public final class BasicAuthUtils {
             decoded = Base64.getDecoder().decode(credentials);
         } catch (IllegalArgumentException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Error while trying to Base 64 decode: {}", credentials);
+                LOG.debug("Error while trying to Base 64 decode the basic auth credentials");
             }
             return Optional.empty();
         }

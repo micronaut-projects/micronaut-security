@@ -106,7 +106,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         return expirationDate(tokenResponse).map(expDate -> {
             boolean isExpired = isExpired(expDate);
             if (isExpired && LOG.isTraceEnabled()) {
-                LOG.trace("token: {} is expired", tokenResponse.getAccessToken());
+                LOG.trace("access token is expired");
             }
             return isExpired;
         }).orElse(true);
@@ -135,7 +135,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
             return Optional.ofNullable(jwt.getJWTClaimsSet().getExpirationTime());
         } catch (ParseException e) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("cannot parse access token {} to JWT", tokenResponse.getAccessToken());
+                LOG.trace("cannot parse access token to JWT");
             }
         }
         return tokenResponse.getExpiresInDate();

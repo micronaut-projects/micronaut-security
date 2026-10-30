@@ -48,7 +48,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link ReactiveOpenIdTokenResponseValidator}.
@@ -176,7 +175,7 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return true;
                     } else if (LOG.isErrorEnabled()) {
-                        LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
+                        LOG.error("Nonce validation failed for provider [{}]", clientConfiguration.getName());
                     }
                 } else if (LOG.isErrorEnabled()) {
                     LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
