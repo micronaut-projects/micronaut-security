@@ -35,4 +35,17 @@ public class LoginFailedEvent extends ApplicationEvent {
     public LoginFailedEvent(Object source) {
         super(source);
     }
+
+    /**
+     * The string representation never includes the source. Micronaut logs every published
+     * event at DEBUG using its string representation, and the source may carry tokens or an
+     * authentication with sensitive attributes.
+     *
+     * @return The string representation of the event with the source redacted.
+     * @since 3.11.3
+     */
+    @Override
+    public String toString() {
+        return getClass().getName() + "[source=<redacted>]";
+    }
 }
