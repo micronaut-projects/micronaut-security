@@ -11,6 +11,7 @@ import io.micronaut.security.ldap.LdapAuthenticationProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -29,7 +30,7 @@ class LdapGroupNameWithCommaTest {
 
     private static InMemoryDirectoryServer server;
     private static ApplicationContext context;
-    private static LdapAuthenticationProvider<Object, String, String> authenticationProvider;
+    private static LdapAuthenticationProvider<Object> authenticationProvider;
 
     @BeforeAll
     @SuppressWarnings("unchecked")
@@ -79,7 +80,7 @@ class LdapGroupNameWithCommaTest {
     }
 
     private static Collection<String> authenticate(String username) {
-        AuthenticationResponse response = authenticationProvider.authenticate(null, request(username));
+        AuthenticationResponse response = Mono.from(authenticationProvider.authenticate(null, request(username))).block();
         assertTrue(response.isAuthenticated());
         Authentication authentication = response.getAuthentication().orElseThrow();
         assertEquals(username, authentication.getName());
