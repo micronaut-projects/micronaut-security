@@ -77,9 +77,9 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
                         boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
                         if (LOG.isDebugEnabled()) {
                             if (result) {
-                                LOG.debug("JWT Signature verified: {}", jwt.getParsedString());
+                                LOG.debug("JWT Signature verified");
                             } else {
-                                LOG.debug("JWT Signature not verified: {}", jwt.getParsedString());
+                                LOG.debug("JWT Signature not verified");
                                 if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
                                     LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
                                 }
