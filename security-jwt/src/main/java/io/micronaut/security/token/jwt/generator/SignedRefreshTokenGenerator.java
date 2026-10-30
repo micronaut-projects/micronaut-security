@@ -97,23 +97,33 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
         return Optional.empty();
     }
 
+    /**
+     * Validates a refresh token. The token value is never logged: the introspection endpoint and the refresh grant
+     * pass arbitrary client supplied tokens (including other users' access tokens) to this method.
+     * @param refreshToken The refresh token
+     * @return the payload of the refresh token if the signature is valid, or empty otherwise
+     */
     @NonNull
     @Override
     public Optional<String> validate(@NonNull String refreshToken) {
-        JWSObject jwsObject = null;
         try {
-            jwsObject = JWSObject.parse(refreshToken);
+            JWSObject jwsObject = JWSObject.parse(refreshToken);
             if (jwsObject.verify(verifier)) {
                 return Optional.of(jwsObject.getPayload().toString());
             }
         } catch (ParseException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Parse exception parsing refresh token {} into JWS Object", refreshToken);
+                LOG.warn("Parse exception parsing refresh token into JWS Object");
             }
-            return Optional.empty();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Parse exception parsing refresh token into JWS Object", e);
+            }
         } catch (JOSEException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("JOSEException parsing refresh token {} into JWS Object", refreshToken);
+                LOG.warn("JOSEException verifying refresh token JWS Object");
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JOSEException verifying refresh token JWS Object", e);
             }
         }
         return Optional.empty();

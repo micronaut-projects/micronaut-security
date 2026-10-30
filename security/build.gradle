@@ -22,6 +22,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation(libs.junit.jupiter.api)
+    testImplementation(mn.logback)
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)
     if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {

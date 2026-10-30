@@ -81,7 +81,7 @@ public final class JwtValidator {
                     return validate(jwt, request);
                 } else {
                     if (LOG.isTraceEnabled()) {
-                        LOG.trace("token {} does not contain two dots", token);
+                        LOG.trace("token does not contain two dots");
                     }
                 }
             } catch (final ParseException e) {
@@ -229,7 +229,7 @@ public final class JwtValidator {
             boolean verified = signatureConfiguration.verify(jwt);
             if (!verified) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("JWT Signature verification failed: {}", jwt.getParsedString());
+                    LOG.debug("JWT Signature verification failed");
                 }
             } else {
                 return Optional.of(jwt);

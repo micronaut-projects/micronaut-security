@@ -25,6 +25,8 @@ dependencies {
     testRuntimeOnly(libs.velocity.engine.core)
     testImplementation(libs.testcontainers)
     testImplementation(libs.junit.jupiter.api)
+    testImplementation(mn.logback)
+    testImplementation(mn.micronaut.test.junit5)
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
