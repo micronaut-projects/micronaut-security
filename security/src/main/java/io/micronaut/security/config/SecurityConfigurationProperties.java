@@ -134,7 +134,9 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * Allowed IP patterns. Default value ([{@value #ANYWHERE}])
+     * Allowed IP patterns. Default value ([{@value #ANYWHERE}]). A pattern made only of hexadecimal digits, dots, colons
+     * and {@code *} (e.g. {@code 192.168.1.*}) is an IP wildcard whose dots and colons match literally; any other pattern
+     * is a regular expression matched against the whole host address.
      *
      * @param ipPatterns The IP patterns
      */
