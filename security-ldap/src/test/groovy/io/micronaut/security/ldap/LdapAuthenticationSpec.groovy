@@ -177,10 +177,14 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
 
-        expect:
-        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password")))
-                .expectErrorMessage("User Not Found")
-                .verify()
+        when:
+        AuthenticationResponse authenticationResponse = authenticate(authenticationProvider, "abc")
+
+        then:
+        !authenticationResponse.isAuthenticated()
+        authenticationResponse instanceof AuthenticationFailed
+        // an unknown username must not be distinguishable from a wrong password
+        AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH == ((AuthenticationFailed) authenticationResponse).reason
 
         cleanup:
         ctx.close()

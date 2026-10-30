@@ -10,6 +10,7 @@ dependencies {
 
     implementation(libs.reactor.core)
     testImplementation(libs.reactor.test)
+    testImplementation project(":security-jwt")
 
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
