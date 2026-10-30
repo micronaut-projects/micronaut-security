@@ -23,6 +23,8 @@ import java.util.Optional;
 
 /**
  * Repository API for CSRF Tokens.
+ * {@link CsrfTokenRepository} is an {@link Ordered} api. Override the {@link #getOrder()} method to provide a custom order.
+ * Repositories are consulted in order and the first repository holding a CSRF token for the request is authoritative when validating the token supplied in the request.
  * @param <T> Request
  */
 @Indexed(CsrfTokenRepository.class)

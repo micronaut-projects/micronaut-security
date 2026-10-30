@@ -28,6 +28,8 @@ import java.util.Optional;
 
 /**
  * Implementation of {@link CsrfTokenRepository} that retrieves the CSRF token from an HTTP session using the key defined in {@link CsrfConfiguration#getHttpSessionName()}.
+ * This repository takes precedence over {@link io.micronaut.security.csrf.repository.CookieCsrfTokenRepository}: when the request carries an HTTP session holding a CSRF token,
+ * the session token is the one validated against the token supplied in the request.
  * @author Sergio del Amo
  * @since 4.11.0
  */
@@ -36,6 +38,12 @@ import java.util.Optional;
 @Requires(property = CsrfConfiguration.PREFIX + ".repositories.session.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>> {
+    /**
+     * The order of this repository. It runs before {@link io.micronaut.security.csrf.repository.CookieCsrfTokenRepository}.
+     * @since 4.18.2
+     */
+    public static final int ORDER = -100;
+
     private final CsrfConfiguration csrfConfiguration;
 
     /**
@@ -51,5 +59,10 @@ public class SessionCsrfTokenRepository implements CsrfTokenRepository<HttpReque
     public Optional<String> findCsrfToken(@NonNull HttpRequest<?> request) {
         return SessionForRequest.find(request)
                 .flatMap(session -> session.get(csrfConfiguration.getHttpSessionName(), String.class));
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }

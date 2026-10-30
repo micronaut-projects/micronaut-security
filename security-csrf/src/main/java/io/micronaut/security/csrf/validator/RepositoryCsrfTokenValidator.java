@@ -30,7 +30,9 @@ import java.security.MessageDigest;
 
 /**
  * {@link CsrfTokenValidator} implementation that uses a {@link CsrfTokenRepository}.
- * First attempts to retrieve a token from a {@link CsrfTokenRepository} and if found validates it against the supplied token.
+ * The repositories are consulted following their {@link io.micronaut.core.order.Ordered} order. The first repository which holds a CSRF token for the request is authoritative:
+ * the supplied token must match the token stored in that repository. Other repositories are not consulted, so that a token planted in a lower precedence
+ * repository (for example a CSRF cookie planted by an attacker) cannot replace the token stored in a higher precedence repository (for example the HTTP session).
  * @param <T> Request
  * @since 4.11.0
  * @author Sergio del Amo
@@ -60,10 +62,11 @@ class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
             Optional<String> csrfTokenOptional = repo.findCsrfToken(request);
             if (csrfTokenOptional.isPresent()) {
                 String csrfTokenInRepository = csrfTokenOptional.get();
-                if (csrfTokenInRepository.equals(csrfTokenInRequest) && validateHmac(request, csrfTokenInRequest)) {
-                    return true;
-                }
+                return csrfTokenInRepository.equals(csrfTokenInRequest) && validateHmac(request, csrfTokenInRequest);
             }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("No CSRF token found in any CSRF token repository");
         }
         return false;
     }
