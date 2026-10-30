@@ -27,6 +27,7 @@ import io.micronaut.security.ldap.context.SearchSettings;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration for LDAP authentication.
@@ -268,6 +269,29 @@ public class LdapConfiguration implements Toggleable {
         private String base = "";
         private String filter = DEFAULT_FILTER;
         private String[] attributes = null;
+        private @Nullable String decoyDn;
+
+        /**
+         * @return The DN of the decoy entry bound when a username matches no entry, or null for a random non-existent entry
+         * @since 5.5.2
+         */
+        public @Nullable String getDecoyDn() {
+            return decoyDn;
+        }
+
+        /**
+         * Sets the DN bound, with the supplied password, when a username matches no directory entry, so that an unknown
+         * username costs the application the same bind round trip as a wrong password. Defaults to a random non-existent
+         * entry under the search base, which equalises only the client-side cost. Point it at a real account with an
+         * unmatchable password, excluded from any lockout policy, to also equalise directory-side work (password hashing,
+         * bad-password counters).
+         *
+         * @param decoyDn The decoy DN
+         * @since 5.5.2
+         */
+        public void setDecoyDn(@Nullable String decoyDn) {
+            this.decoyDn = decoyDn;
+        }
 
         /**
          * @return True if the subtree should be searched
