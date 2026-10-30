@@ -34,6 +34,16 @@ import reactor.core.publisher.Flux;
 /**
  * Attempts to retrieve a token form the {@link HttpRequest} and if existing validated.
  * It uses a {@link TokenResolver} and the list of {@link TokenValidator} registered in the ApplicationContext.
+ * <p>
+ * Token validators are consulted sequentially in order. The first validator which authenticates the token wins and the token
+ * is not handed to the remaining validators. Validators which perform remote calls should therefore have the lowest
+ * precedence so that they only receive tokens no local validator accepted.
+ * </p>
+ * <p>
+ * Token validators are consulted sequentially in order. The first validator which authenticates the token wins and the token
+ * is not handed to the remaining validators. Validators which perform remote calls, such as the OpenID provider UserInfo
+ * endpoint validator, should therefore have the lowest precedence so that they only receive tokens no local validator accepted.
+ * </p>
  *
  * @author Sergio del Amo
  * @author Graeme Rocher
@@ -77,7 +87,9 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         String tokenValue = token.get();
 
         return Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                // validators are consulted one at a time, in order. A token accepted by a validator is never handed to the remaining
+                // (possibly remote) validators, and a validator is only consulted once every preceding validator rejected the token.
+                .concatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
