@@ -58,4 +58,17 @@ public abstract class SecurityEvent extends ApplicationEvent {
     public Locale getLocale() {
         return locale;
     }
+
+    /**
+     * The string representation never includes the source. Micronaut logs every published
+     * event at DEBUG using its string representation, and the source may carry tokens or an
+     * authentication with sensitive attributes.
+     *
+     * @return The string representation of the event with the source redacted.
+     * @since 4.18.2
+     */
+    @Override
+    public String toString() {
+        return getClass().getName() + "[source=<redacted>]";
+    }
 }
