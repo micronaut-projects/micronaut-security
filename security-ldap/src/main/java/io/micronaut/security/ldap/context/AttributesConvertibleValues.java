@@ -33,6 +33,10 @@ import javax.naming.directory.Attributes;
  * A {@link ConvertibleValues} implementation that uses {@link Attributes} as
  * the backing data source.
  *
+ * <p>Each LDAP attribute value is treated as one element: when an attribute is read as a
+ * collection or an array, a single value is never split at commas, so a group named
+ * {@code Sales,Marketing} is returned as the single element {@code Sales,Marketing}.</p>
+ *
  * @author James Kleeh
  * @since 1.0
  */
@@ -90,7 +94,9 @@ public class AttributesConvertibleValues implements ConvertibleValues<Object> {
             }
             if (!results.isEmpty()) {
                 Object value;
-                if (results.size() > 1) {
+                if (results.size() > 1 || isCollectionType(conversionContext)) {
+                    // Every attribute value is a distinct element. Never hand a single value to the
+                    // conversion service as a bare string, since it would split it at commas.
                     value = results;
                 } else {
                     value = results.get(0);
@@ -103,5 +109,10 @@ public class AttributesConvertibleValues implements ConvertibleValues<Object> {
         } catch (NamingException e) {
             return Optional.empty();
         }
+    }
+
+    private static boolean isCollectionType(ArgumentConversionContext<?> conversionContext) {
+        Class<?> type = conversionContext.getArgument().getType();
+        return Iterable.class.isAssignableFrom(type) || type.isArray();
     }
 }

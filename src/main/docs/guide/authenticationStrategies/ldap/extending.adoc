@@ -22,7 +22,7 @@ public class MyContextAuthenticationMapper implements ContextAuthenticationMappe
 
 == Groups
 
-By default the groups found in LDAP, if enabled, will be returned as is without any processing. No additional groups from any other sources will be added to the list. It is a common requirement to retrieve additional groups from other sources, or to normalize the names of the groups in a specific format.
+By default the groups found in LDAP, if enabled, will be returned as is without any processing. Each value of the group attribute becomes exactly one role, even if it contains a comma: a group named `Sales,Marketing` results in the single role `Sales,Marketing`. No additional groups from any other sources will be added to the list. It is a common requirement to retrieve additional groups from other sources, or to normalize the names of the groups in a specific format.
 
 To extend this behavior, it is necessary to create your own implementation of api:security.ldap.group.LdapGroupProcessor[]. Likely it will be desired to extend the default implementation because it has the logic for querying the groups from LDAP and executes the other methods to process the groups and query for additional groups.
 
