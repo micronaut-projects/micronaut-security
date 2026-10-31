@@ -73,6 +73,8 @@ class AuthenticationModeIdTokenSpec extends GebSpec {
         ] as Map<String, Object>
         if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
             m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
+                          // The browser reaches Keycloak through the Testcontainers host, which Keycloak puts in the iss claim
+                          "micronaut.security.oauth2.clients.keycloak.openid.issuer-identifier": Keycloak.issuer.replace("localhost", TestContainersUtils.getHost()),
                           "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
                           "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
             ] as Map<String, Object>)
