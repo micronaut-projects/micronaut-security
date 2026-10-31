@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.Duration;
@@ -44,6 +46,10 @@ import java.util.function.Supplier;
  * {@link JwksClientConfiguration#getFailureBackoff()} elapses. Otherwise every bearer string which merely parses as a signed
  * JWT would trigger one outbound request to the failing JWKS endpoint, and one error log entry, while the endpoint is down.
  * The retrieval itself is bounded by {@link JwksClientConfiguration#getRetrievalTimeout()}.
+ * <p>
+ * The JWK Set is retrieved with the JDK {@link HttpURLConnection} and redirects are never followed: a redirect returned by
+ * the JWKS endpoint is a failed retrieval. Otherwise a malicious or compromised provider could make the application fetch
+ * any address it can reach and treat the JSON found there as the keys that sign the tokens it accepts.
  *
  * @author Sergio del Amo
  * @since 3.9.0
@@ -63,6 +69,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     private final long failureBackoffNanos;
     private final int retrievalTimeoutMillis;
     private final LongSupplier nanoTime;
+    private final DefaultResourceRetriever resourceRetriever;
     /**
      * JWKS url to the monotonic time (see {@link System#nanoTime()}) at which the JWK Set may be requested again.
      */
@@ -95,6 +102,15 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
         this.failureBackoffNanos = toNanosSaturated(failureBackoff);
         this.retrievalTimeoutMillis = toMillisSaturated(jwksClientConfiguration.getRetrievalTimeout());
         this.nanoTime = nanoTime;
+        this.resourceRetriever = new DefaultResourceRetriever(retrievalTimeoutMillis, retrievalTimeoutMillis, 0) {
+            @Override
+            protected HttpURLConnection openHTTPConnection(URL url) throws IOException {
+                HttpURLConnection connection = super.openHTTPConnection(url);
+                // never follow redirects when retrieving the JWK Set of the identity provider
+                connection.setInstanceFollowRedirects(false);
+                return connection;
+            }
+        };
     }
 
     /**
@@ -128,8 +144,8 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     /**
-     * Retrieves the JWK Set from the url. Subclasses may override it to change how the JWK Set is retrieved; the failure back-off
-     * is applied by {@link #fetch(String)} regardless.
+     * Retrieves the JWK Set from the url without following redirects. Subclasses may override it to change how the JWK Set is
+     * retrieved; the failure back-off is applied by {@link #fetch(String)} regardless.
      *
      * @param url The Jwks uri
      * @return The JWK Set, or empty if it cannot be retrieved or parsed
@@ -139,7 +155,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     @Blocking
     protected Optional<JWKSet> retrieve(@NonNull String url) {
         try {
-            return Optional.ofNullable(JWKSet.load(new URL(url), retrievalTimeoutMillis, retrievalTimeoutMillis, 0));
+            return Optional.ofNullable(JWKSet.parse(resourceRetriever.retrieveResource(new URL(url)).getContent()));
         } catch (IOException | ParseException e) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Failed to retrieve JWK Set from {}: {}", url, e.toString());

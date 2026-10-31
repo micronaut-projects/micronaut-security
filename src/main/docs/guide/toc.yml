@@ -104,6 +104,7 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
+  providerHttpClient: HTTP Clients for the Provider
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration

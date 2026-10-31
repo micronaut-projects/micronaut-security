@@ -1,0 +1,17 @@
+Micronaut Security creates HTTP clients to talk to the identity provider on behalf of your application:
+
+- api:security.oauth2.endpoint.token.request.DefaultTokenEndpointClient[] sends the token request (with the client credentials) to the token endpoint.
+- api:security.oauth2.client.DefaultOpenIdProviderMetadataFetcher[] retrieves the OpenID provider metadata from the issuer's discovery document.
+- api:security.token.jwt.signature.jwks.DefaultJwkSetFetcher[] retrieves the <<jwks, JWK Set>> that verifies the token signatures. It uses the JDK `HttpURLConnection` through the Nimbus JOSE + JWT library rather than the Micronaut HTTP client.
+
+The clients created from the Micronaut HTTP client copy the settings of the default HTTP client configuration (`micronaut.http.client.*`), such as timeouts, proxy or SSL settings, but they *never follow redirects*, regardless of `micronaut.http.client.follow-redirects`. The JDK connection which retrieves the JWK Set never follows redirects either. A redirect returned by the provider is never followed: the redirect target is not requested, and since the redirect response is not a valid provider response the operation fails: the token request fails, the provider metadata is not available or the JWK Set is not loaded.
+
+Following a redirect from the identity provider would let a malicious or compromised provider make your application send the token request, together with the client credentials, to any address your application can reach, such as loopback, internal services or cloud metadata endpoints (Server-Side Request Forgery). The application would then treat whatever JSON it finds at that address as the response of the provider. The OAuth 2.0 and OpenID Connect specifications do not require clients to follow redirects for these endpoints.
+
+If the token endpoint of a provider has moved, update the configuration of the provider (`micronaut.security.oauth2.clients.*.token.url`, `micronaut.security.oauth2.clients.*.openid.issuer`, etc.) instead of relying on redirects.
+
+A named service-specific client configuration (`micronaut.http.services.<provider>.*`) whose name matches the provider name only contributes its settings to the client of the token endpoint: redirects are never followed, even with `follow-redirects: true`. An `HttpClient` bean named after the provider is no longer used to call the token endpoint, because its redirect policy cannot be enforced. Micronaut Security creates a client from the named service configuration, or from the default configuration if there is none, with the load balancer of the service, and logs a warning. Use `micronaut.http.services.<provider>.*` to customize the client of a provider.
+
+The clients Micronaut Security creates have no client id, so client filters scoped to a service id (`@Filter(serviceId = "<provider>")`) are not applied to them; client filters without a service id are. A relative endpoint url is resolved against `micronaut.http.services.<provider>.url`; without such a configuration, configure absolute urls.
+
+The programmatic entry points which take an `HttpClient`, such as the `DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration, HttpClient)` constructor, use the given client as is: the caller is responsible for keeping redirects disabled.

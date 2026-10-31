@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.reactor.core)
 
     compileOnly(mn.micronaut.management)
+    compileOnly(mn.micronaut.http.client.core)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
