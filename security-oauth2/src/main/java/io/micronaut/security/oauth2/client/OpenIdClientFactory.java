@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClientRegistry;
 import io.micronaut.json.JsonMapper;
+import io.micronaut.security.oauth2.client.condition.OauthClientEnabledCondition;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -77,9 +78,11 @@ class OpenIdClientFactory {
      * @param openIdClientConfiguration The openid client configuration
      * @param openIdProviderMetadataFetcher OpenID Provider metadata Fetcher
      * @return The OpenID configuration
+     * The bean is not created for a disabled OAuth 2.0 client, so that neither its provider metadata nor its JWKS are registered.
      */
     @Context
     @EachBean(OpenIdClientConfiguration.class)
+    @Requires(condition = OauthClientEnabledCondition.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                                       @Parameter @Nullable OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher) {

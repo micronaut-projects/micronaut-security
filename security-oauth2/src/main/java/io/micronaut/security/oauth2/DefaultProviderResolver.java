@@ -22,8 +22,13 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.ClaimsUtils;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 /**
@@ -36,8 +41,29 @@ import java.util.Optional;
 public class DefaultProviderResolver implements ProviderResolver {
     private final List<OpenIdClientConfiguration> openIdClientConfigurations;
 
+    /**
+     * @param openIdClientConfigurations OpenID client configurations
+     * @param oauthClientConfigurations OAuth 2.0 client configurations. OpenID clients whose OAuth 2.0 client is disabled are ignored.
+     */
+    @Inject
+    public DefaultProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations,
+                                   Collection<OauthClientConfiguration> oauthClientConfigurations) {
+        Set<String> disabled = oauthClientConfigurations.stream()
+            .filter(conf -> !conf.isEnabled())
+            .map(OauthClientConfiguration::getName)
+            .collect(Collectors.toSet());
+        this.openIdClientConfigurations = openIdClientConfigurations.stream()
+            .filter(conf -> !disabled.contains(conf.getName()))
+            .toList();
+    }
+
+    /**
+     * @param openIdClientConfigurations OpenID client configurations
+     * @deprecated Use {@link #DefaultProviderResolver(List, Collection)} instead, which ignores disabled OAuth 2.0 clients.
+     */
+    @Deprecated(since = "5.5.2")
     public DefaultProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
-        this. openIdClientConfigurations =  openIdClientConfigurations;
+        this.openIdClientConfigurations = openIdClientConfigurations;
     }
 
     @Override

@@ -20,7 +20,7 @@ class IdTokenClaimsValidatorSpec extends ApplicationContextSpecification {
         openId.setIssuer(new URL(configIss))
         oauthClientConfiguration.setOpenid(openId)
         List<OauthClientConfiguration> l = List.of(oauthClientConfiguration)
-        IdTokenClaimsValidator claimsValidator = new IdTokenClaimsValidator(List.of(l))
+        IdTokenClaimsValidator claimsValidator = new IdTokenClaimsValidator(l)
 
         when:
         Optional<Boolean> validation = claimsValidator.matchesIssuer(openId, iss)
