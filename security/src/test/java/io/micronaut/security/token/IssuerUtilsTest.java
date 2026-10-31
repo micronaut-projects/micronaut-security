@@ -15,7 +15,8 @@ class IssuerUtilsTest {
         "https://auth.example.com/, https://auth.example.com",
         "HTTPS://auth.example.com, https://auth.example.com",
         "https://auth.example.com, HTTPS://auth.example.com",
-        "https://auth.example.com/realms/app, https://auth.example.com/realms/app/"
+        "https://auth.example.com/realms/app, https://auth.example.com/realms/app/",
+        "https://auth.example.com?tenant=a/, https://auth.example.com?tenant=a/"
     })
     void equivalentIssuers(String expected, String actual) {
         assertTrue(IssuerUtils.equivalent(expected, actual));
@@ -43,6 +44,9 @@ class IssuerUtilsTest {
         "http://10.0.0.1, 0.0.1",
         "http://10.0.0.1, http://0.0.1",
         "https://auth.example.com/realms/app, https://auth.example.com/realms/APP",
+        "https://auth.example.com?tenant=a, https://auth.example.com?tenant=a/",
+        "https://auth.example.com?tenant=a/, https://auth.example.com?tenant=a",
+        "https://auth.example.com#a, https://auth.example.com#a/",
         "https://auth.example.com/realms/app, https://auth.example.com"
     })
     void differentIssuers(String expected, String actual) {

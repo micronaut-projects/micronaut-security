@@ -73,6 +73,20 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
         context.close()
     }
 
+    void "issuer is not valid when issuer claim is a parent domain of the configured issuer"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(configuration + [
+            (IssuerJwtClaimsValidator.ISSUER_PROP): "https://svc-a.internal.example.com"
+        ])
+
+        expect:
+        !authenticate(context, generateJwtWithIssuer(context, "https://internal.example.com"))
+        authenticate(context, generateJwtWithIssuer(context, "https://svc-a.internal.example.com/"))
+
+        cleanup:
+        context.close()
+    }
+
     void "issuer is not valid when JWT does not have issuer claim and issuer configuration property exists"() {
         given:
         ApplicationContext context = ApplicationContext.run(configuration + [

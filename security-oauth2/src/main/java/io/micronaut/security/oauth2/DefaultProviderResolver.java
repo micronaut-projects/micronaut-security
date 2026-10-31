@@ -21,7 +21,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.Claims;
-import io.micronaut.security.token.ClaimsUtils;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -86,7 +86,8 @@ public class DefaultProviderResolver implements ProviderResolver {
     }
 
     /**
-     *
+     * The issuer matches an open id client when it is identical to the expected issuer of the client; only the case of the
+     * scheme and a single trailing slash are tolerated. See {@link IssuerUtils#equivalent(String, String)}.
      * @param issuer Token Issuer
      * @return {@literal Optional#empty()} if the issuer does not match the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) of any open id client. If it matches, the open id client is returned wrapped in an optional
      */
@@ -94,7 +95,7 @@ public class DefaultProviderResolver implements ProviderResolver {
     protected Optional<String> openIdClientNameWhichMatchesIssuer(@NonNull String issuer) {
         return openIdClientConfigurations.stream()
                 .filter(conf -> conf.getIssuerIdentifier()
-                        .map(expectedIssuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(expectedIssuer, issuer))
+                        .map(expectedIssuer -> IssuerUtils.equivalent(expectedIssuer, issuer))
                         .orElse(false))
                 .map(Named::getName)
                 .findFirst();

@@ -21,8 +21,9 @@ import io.micronaut.core.annotation.Nullable;
 /**
  * Utility class to compare issuers, such as the {@code iss} claim of a token against the issuer expected for a key set or an OpenID client.
  * <p>
- * Unlike {@link ClaimsUtils#endsWithIgnoringProtocolAndTrailingSlash(String, String)}, the comparison is an equality: no suffix, parent
- * domain or scheme change is tolerated. It is meant to run on untrusted input before a token is verified, so it allocates no state per
+ * Unlike {@link ClaimsUtils#equalsIgnoringProtocolAndTrailingSlash(String, String)}, a missing scheme or a different scheme is a
+ * mismatch ({@code http://} is not {@code https://}), as OpenID Connect Core 1.0 section 3.1.3.7 requires; no suffix or
+ * parent domain is tolerated either. It is meant to run on untrusted input before a token is verified, so it allocates no state per
  * distinct value.
  *
  * @author Sergio del Amo
@@ -36,8 +37,9 @@ public final class IssuerUtils {
 
     /**
      * Compares two issuers. They are equal if they are identical, ignoring the case of the scheme (folded for ASCII only)
-     * and a single trailing slash. Nothing else is tolerated: the host, port, userinfo and path must be identical, and
-     * a different scheme or a missing scheme is a mismatch.
+     * and a single trailing slash. The slash is only ignored when the issuer has no query ({@code ?}) and no fragment
+     * ({@code #}), where it would be part of that component. Nothing else is tolerated: the host, port, userinfo, path,
+     * query and fragment must be identical, and a different scheme or a missing scheme is a mismatch.
      *
      * @param expected The expected issuer
      * @param actual The issuer to compare
@@ -53,7 +55,8 @@ public final class IssuerUtils {
     }
 
     private static String normalize(String issuer) {
-        String value = issuer.endsWith("/") ? issuer.substring(0, issuer.length() - 1) : issuer;
+        boolean stripSlash = issuer.endsWith("/") && issuer.indexOf('?') == -1 && issuer.indexOf('#') == -1;
+        String value = stripSlash ? issuer.substring(0, issuer.length() - 1) : issuer;
         int index = value.indexOf("://");
         if (index <= 0) {
             return value;
