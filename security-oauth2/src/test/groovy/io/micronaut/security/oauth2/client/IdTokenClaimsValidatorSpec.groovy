@@ -13,7 +13,7 @@ class IdTokenClaimsValidatorSpec extends ApplicationContextSpecification {
     }
 
     @Unroll
-    void "issuer IdTokenClaimsValidator"(String configIss, String iss) {
+    void "issuer IdTokenClaimsValidator: #configIss vs #iss expected #expected"(String configIss, String iss, boolean expected) {
         given:
         def oauthClientConfiguration = new OauthClientConfigurationProperties("oci");
         def openId = new OauthClientConfigurationProperties.OpenIdClientConfigurationProperties("oci");
@@ -27,13 +27,32 @@ class IdTokenClaimsValidatorSpec extends ApplicationContextSpecification {
 
         then:
         validation.isPresent()
-        validation.get() == true
+        validation.get() == expected
 
         where:
-        configIss | iss
-        "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com/"
-        "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com"
-        "https://identity.oraclecloud.com" | "https://identity.oraclecloud.com"
+        configIss | iss | expected
+        "https://identity.oraclecloud.com" | "https://identity.oraclecloud.com" | true
+        "https://identity.oraclecloud.com" | "https://identity.oraclecloud.com/" | true
+        // a parent domain of the configured issuer is not accepted; Oracle IDCS users set issuer-identifier instead
+        "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com/" | false
+        "https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com" | "https://identity.oraclecloud.com" | false
+    }
+
+    @Unroll
+    void "issuer IdTokenClaimsValidator accepts the Oracle IDCS provider wide issuer when configured as issuer identifier: #iss"(String iss) {
+        given:
+        def oauthClientConfiguration = new OauthClientConfigurationProperties("oci");
+        def openId = new OauthClientConfigurationProperties.OpenIdClientConfigurationProperties("oci");
+        openId.setIssuer(new URL("https://idcs-227ebfb7094445cc5a3fbc0faa1fe87b.identity.oraclecloud.com"))
+        openId.setIssuerIdentifier("https://identity.oraclecloud.com/")
+        oauthClientConfiguration.setOpenid(openId)
+        IdTokenClaimsValidator claimsValidator = new IdTokenClaimsValidator(List.of(oauthClientConfiguration))
+
+        expect:
+        claimsValidator.matchesIssuer(openId, iss) == Optional.of(true)
+
+        where:
+        iss << ["https://identity.oraclecloud.com/", "https://identity.oraclecloud.com"]
     }
 
     @Unroll

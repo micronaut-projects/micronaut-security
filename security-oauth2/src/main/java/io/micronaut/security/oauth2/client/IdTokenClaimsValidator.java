@@ -23,7 +23,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.Claims;
-import io.micronaut.security.token.ClaimsUtils;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
@@ -238,7 +238,9 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     }
 
     /**
-     *
+     * The iss claim matches when it is identical to the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}),
+     * as OpenID Connect Core 1.0 section 3.1.3.7 requires. Only the case of the scheme and a single trailing slash are tolerated:
+     * the scheme, host, port and path must match. See {@link IssuerUtils#equivalent(String, String)}.
      * @param iss Issuer claim
      * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
      * @return true wrapped in an Optional if the expected issuer of the OAuth 2.0 client ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) matches the iss claim. Empty Optional if the OpenID Client configuration does not define an issuer.
@@ -247,7 +249,7 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
         return openIdClientConfiguration.getIssuerIdentifier()
-                .map(issuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(issuer, iss));
+                .map(issuer -> IssuerUtils.equivalent(issuer, iss));
     }
 
     /**
