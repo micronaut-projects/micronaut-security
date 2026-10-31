@@ -177,6 +177,7 @@ oauth:
     user-info: UserInfo Endpoint
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
+  providerHttpClient: HTTP Clients for the Provider
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
 ojdbcExtensions:
