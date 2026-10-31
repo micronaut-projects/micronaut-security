@@ -24,11 +24,13 @@ import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -38,6 +40,12 @@ import java.util.stream.Collectors;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
+ * <p>
+ * If the configuration is bound to an issuer ({@link JwksSignatureConfiguration#getIssuer()}), only tokens whose {@code iss}
+ * claim matches that issuer (see {@link IssuerUtils#equivalent(String, String)}) are verified with the key set. Tokens issued
+ * by another issuer, or without an {@code iss} claim, are not verified, even if their signature validates against one of the keys.
+ * The issuer is a binding on the key set, which keys are trusted to sign tokens of which issuer, and is checked before the key
+ * set is consulted. It does not replace the validation of the {@code iss} claim by the claims validators.
  * <p>
  * If the configuration specifies a {@link JwksSignatureConfiguration#getKeyType() key type}, only keys of that type ({@code kty})
  * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
@@ -189,8 +197,9 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     /**
-     * Verify a signed JWT. Only keys whose type matches {@link JwksSignatureConfiguration#getKeyType()} are considered,
-     * if a key type is configured.
+     * Verify a signed JWT. Returns {@code false} without consulting the key set if the configuration is bound to an issuer
+     * and the {@code iss} claim of the JWT does not match it. Only keys whose type matches
+     * {@link JwksSignatureConfiguration#getKeyType()} are considered, if a key type is configured.
      *
      * @param jwt the signed JWT
      * @return whether the signed JWT is verified
@@ -198,7 +207,52 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
+        if (!issuerMatches(jwt)) {
+            return false;
+        }
         return JwksSignatureUtils.verify(jwt, computeJWKSet().orElse(null), jwkValidator, jwksSignatureConfiguration.getKeyType());
+    }
+
+    /**
+     * @return The issuer this JSON Web Key Set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 3.11.3
+     */
+    @Nullable
+    public String getIssuer() {
+        return jwksSignatureConfiguration.getIssuer();
+    }
+
+    /**
+     * @param jwt the signed JWT
+     * @return {@code true} if the configuration is not bound to an issuer or the {@code iss} claim of the JWT matches the bound issuer
+     */
+    private boolean issuerMatches(SignedJWT jwt) {
+        String issuer = jwksSignatureConfiguration.getIssuer();
+        if (issuer == null) {
+            return true;
+        }
+        String iss;
+        try {
+            iss = jwt.getJWTClaimsSet().getIssuer();
+        } catch (ParseException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT not verified with JWKS [{}]: failed to parse the claims set", jwksSignatureConfiguration.getUrl(), e);
+            }
+            return false;
+        }
+        if (iss == null || iss.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT not verified with JWKS [{}]: the JWT has no (or an empty) iss claim and the JWKS is bound to issuer [{}]", jwksSignatureConfiguration.getUrl(), issuer);
+            }
+            return false;
+        }
+        if (!IssuerUtils.equivalent(issuer, iss)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT not verified with JWKS [{}]: iss claim [{}] does not match the issuer [{}] the JWKS is bound to", jwksSignatureConfiguration.getUrl(), iss, issuer);
+            }
+            return false;
+        }
+        return true;
     }
 
     /**

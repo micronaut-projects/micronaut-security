@@ -22,7 +22,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import io.micronaut.security.oauth2.client.OpenIdIssuers;
+import io.micronaut.security.token.IssuerUtils;
 import jakarta.inject.Singleton;
 import io.micronaut.core.annotation.NonNull;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class IssuerClaimValidator implements OpenIdClaimsValidator {
             return false;
         }
         Optional<String> configuredIssuer = configuredIssuer(clientConfiguration);
-        if (configuredIssuer.isPresent() && !OpenIdIssuers.equivalent(configuredIssuer.get(), issuer)) {
+        if (configuredIssuer.isPresent() && !IssuerUtils.equivalent(configuredIssuer.get(), issuer)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JWT issuer claim [{}] does not match the configured issuer [{}] of OpenID client [{}]", issuer, configuredIssuer.get(), clientConfiguration.getName());
             }

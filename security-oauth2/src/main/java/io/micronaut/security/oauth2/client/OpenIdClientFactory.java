@@ -39,6 +39,7 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
+import io.micronaut.security.token.IssuerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,7 +172,7 @@ class OpenIdClientFactory {
      * that was used to retrieve the configuration. The issuer is asserted by the provider, so an issuer that does not
      * match the configured one is discarded and the configured one is used instead. That way a provider cannot get
      * tokens of another issuer accepted by announcing that issuer in its discovery document. The comparison only
-     * tolerates the case of the scheme and a trailing slash (see {@link OpenIdIssuers#equivalent(String, String)}).
+     * tolerates the case of the scheme and a trailing slash (see {@link IssuerUtils#equivalent(String, String)}).
      *
      * @param configuration The provider metadata
      * @param openIdClientConfiguration The openid client configuration
@@ -188,7 +189,7 @@ class OpenIdClientFactory {
             configuration.setIssuer(expectedIssuer);
             return;
         }
-        if (OpenIdIssuers.equivalent(expectedIssuer, discoveredIssuer)) {
+        if (IssuerUtils.equivalent(expectedIssuer, discoveredIssuer)) {
             return;
         }
         configuration.setIssuer(expectedIssuer);

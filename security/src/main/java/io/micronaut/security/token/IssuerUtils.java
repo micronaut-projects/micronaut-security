@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
+package io.micronaut.security.token;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
 
 /**
- * Compares OpenID issuer identifiers.
+ * Utility class to compare issuers, such as the {@code iss} claim of a token against the issuer expected for a key set or an OpenID client.
+ * <p>
+ * The comparison is an equality: no suffix, parent domain or scheme change is tolerated. It is meant to run on untrusted input before a token is verified, so it allocates no state per
+ * distinct value.
  *
+ * @author Sergio del Amo
  * @since 3.11.3
  */
 @Internal
-public final class OpenIdIssuers {
+public final class IssuerUtils {
 
-    private OpenIdIssuers() {
+    private IssuerUtils() {
     }
 
     /**
@@ -36,7 +40,7 @@ public final class OpenIdIssuers {
      *
      * @param expected The expected issuer
      * @param actual The issuer to compare
-     * @return true if both issuers are equal
+     * @return {@code true} if both issuers are non-null, non-empty and equal
      */
     public static boolean equivalent(@Nullable String expected, @Nullable String actual) {
         if (expected == null || actual == null) {

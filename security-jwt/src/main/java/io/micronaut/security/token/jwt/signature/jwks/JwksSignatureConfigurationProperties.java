@@ -56,6 +56,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @Nullable
     private KeyType keyType;
 
+    @Nullable
+    private String issuer;
+
     @Override
     @NonNull
     public Integer getCacheExpiration() {
@@ -106,5 +109,24 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      */
     public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
+    }
+
+    /**
+     * @return The issuer the key set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 3.11.3
+     */
+    @Override
+    @Nullable
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * Issuer the JSON Web Key Set is bound to. When set, only tokens whose {@code iss} claim matches this issuer are verified with this key set. Default value (null): tokens are verified regardless of their {@code iss} claim.
+     * @param issuer Issuer the JSON Web Key Set is bound to. e.g. https://idp.example.com/
+     * @since 3.11.3
+     */
+    public void setIssuer(@Nullable String issuer) {
+        this.issuer = issuer;
     }
 }
