@@ -33,6 +33,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
 import jakarta.inject.Singleton;
 
 import java.net.MalformedURLException;
@@ -59,7 +60,8 @@ final class UserInfoClientFactory {
                           List<OauthClientConfiguration> oauthClientConfigurations,
                           OpenIdConfiguration openIdConfiguration) {
         this.beanContext = beanContext;
-        this.httpClientConfiguration = httpClientConfiguration;
+        // the UserInfo client never follows redirects: the bearer token must only be sent to the configured endpoint
+        this.httpClientConfiguration = new NoRedirectHttpClientConfiguration(httpClientConfiguration);
         this.qualifyUsername = openIdConfiguration.getQualifyUsernameWithProvider()
             .orElseGet(() -> oauthClientConfigurations.stream()
                 .filter(OauthClientConfiguration::isEnabled)

@@ -24,12 +24,15 @@ import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
+import io.micronaut.http.client.LoadBalancerResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
+import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
@@ -43,6 +46,13 @@ import org.slf4j.LoggerFactory;
 /**
  * The default implementation of {@link TokenEndpointClient}.
  *
+ * <p>The HTTP clients this class creates never follow redirects. The default client copies the settings of the
+ * {@link HttpClientConfiguration}. If an {@link HttpClientConfiguration} bean named after the provider exists
+ * ({@code micronaut.http.services.<provider>.*}), or an {@link HttpClient} bean named after the provider is declared,
+ * a client is created from that configuration (or from the default configuration when only the client bean exists) with
+ * the load balancer of the service. The named {@link HttpClient} bean itself is not used, because its redirect policy
+ * cannot be enforced.</p>
+ *
  * @author James Kleeh
  * @since 1.2.0
  */
@@ -53,16 +63,24 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
 
     private final BeanContext beanContext;
     private final Supplier<HttpClient> defaultTokenClient;
+    private final HttpClientConfiguration defaultClientConfiguration;
     private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
+    private final Set<HttpClient> createdClients = ConcurrentHashMap.newKeySet();
 
     /**
      * @param beanContext The bean context
-     * @param defaultClientConfiguration The default client configuration
+     * @param defaultClientConfiguration The default client configuration. Its settings are copied, but the client created
+     *                                   from it never follows redirects.
      */
     public DefaultTokenEndpointClient(BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultClientConfiguration = defaultClientConfiguration;
+        this.defaultTokenClient = SupplierUtil.memoized(() -> {
+            HttpClient client = beanContext.createBean(HttpClient.class, LoadBalancer.empty(), new NoRedirectHttpClientConfiguration(defaultClientConfiguration));
+            createdClients.add(client);
+            return client;
+        });
     }
 
     @NonNull
@@ -133,15 +151,56 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     }
 
     /**
-     * Retrieves a client for the given provider.
+     * Retrieves a client for the given provider. The returned client never follows redirects.
+     *
+     * <p>If an {@link HttpClientConfiguration} bean named after the provider exists, or an {@link HttpClient} bean named
+     * after the provider is declared, a client is created from the named configuration (or from the default configuration
+     * when only the client bean exists) with the load balancer of the service. Otherwise, the default client is returned.</p>
      *
      * @param providerName The provider name
      * @return An HTTP client to use to send the request
      */
     protected HttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, provider -> {
-            Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
-            return client.orElseGet(defaultTokenClient);
+            Optional<HttpClientConfiguration> namedConfiguration = beanContext.findBean(HttpClientConfiguration.class, Qualifiers.byName(provider));
+            boolean namedClient = beanContext.containsBean(HttpClient.class, Qualifiers.byName(provider));
+            if (namedConfiguration.isEmpty() && !namedClient) {
+                return defaultTokenClient.get();
+            }
+            if (namedClient && LOG.isWarnEnabled()) {
+                LOG.warn("The HttpClient bean named [{}] is not used to call the token endpoint of provider [{}]. A client which never follows redirects is created from the {} configuration instead",
+                    provider, provider, namedConfiguration.isPresent() ? "named service" : "default client");
+            }
+            HttpClientConfiguration configuration = namedConfiguration.orElse(defaultClientConfiguration);
+            HttpClient client = beanContext.createBean(HttpClient.class, serviceLoadBalancer(provider), new NoRedirectHttpClientConfiguration(configuration));
+            createdClients.add(client);
+            return client;
         });
+    }
+
+    /**
+     * Closes the HTTP clients this bean created.
+     *
+     * @since 4.18.2
+     */
+    @PreDestroy
+    public void close() {
+        for (HttpClient client : createdClients) {
+            client.close();
+        }
+        createdClients.clear();
+        tokenClients.clear();
+    }
+
+    /**
+     * Resolves the load balancer of the named service, so that a relative token endpoint url is resolved against
+     * {@code micronaut.http.services.<name>.url} as a client named after the provider would.
+     */
+    @NonNull
+    private LoadBalancer serviceLoadBalancer(@NonNull String provider) {
+        return beanContext.findBean(LoadBalancerResolver.class)
+            .flatMap(resolver -> resolver.resolve(provider))
+            .map(LoadBalancer.class::cast)
+            .orElseGet(LoadBalancer::empty);
     }
 }
