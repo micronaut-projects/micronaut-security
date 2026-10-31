@@ -51,4 +51,16 @@ public interface JwksSignatureConfiguration extends Named {
     @NonNull
     @Deprecated(forRemoval = true, since = "4.11.0")
     Integer getCacheExpiration();
+
+    /**
+     * The issuer this JSON Web Key Set is bound to. When an issuer is set, a token is only verified with this key set if
+     * its {@code iss} claim matches the issuer, even if its signature validates against one of the keys. This prevents a
+     * key trusted for one identity provider from signing tokens that claim to be issued by another provider.
+     * @return The issuer the key set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 5.5.2
+     */
+    @Nullable
+    default String getIssuer() {
+        return null;
+    }
 }
