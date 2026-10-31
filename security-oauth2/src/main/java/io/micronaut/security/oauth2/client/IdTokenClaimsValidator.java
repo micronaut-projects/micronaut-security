@@ -23,6 +23,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
@@ -230,7 +231,9 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     /**
-     *
+     * The iss claim matches when it is identical to the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}),
+     * as OpenID Connect Core 1.0 section 3.1.3.7 requires. Only the case of the scheme and a single trailing slash are tolerated:
+     * the scheme, host, port and path must match. See {@link IssuerUtils#equivalent(String, String)}.
      * @param iss Issuer claim
      * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
      * @return true wrapped in an Optional if the expected issuer of the OAuth 2.0 client ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) matches the iss claim. Empty Optional if the OpenID Client configuration does not define an issuer.
@@ -240,7 +243,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
         return openIdClientConfiguration.getIssuerIdentifier()
-                .map(issuer -> issuer.equalsIgnoreCase(iss));
+                .map(issuer -> IssuerUtils.equivalent(issuer, iss));
     }
 
     /**

@@ -35,8 +35,9 @@ public final class IssuerUtils {
 
     /**
      * Compares two issuers. They are equal if they are identical, ignoring the case of the scheme (folded for ASCII only)
-     * and a single trailing slash. Nothing else is tolerated: the host, port, userinfo and path must be identical, and
-     * a different scheme or a missing scheme is a mismatch.
+     * and a single trailing slash. The slash is only ignored when the issuer has no query ({@code ?}) and no fragment
+     * ({@code #}), where it would be part of that component. Nothing else is tolerated: the host, port, userinfo, path,
+     * query and fragment must be identical, and a different scheme or a missing scheme is a mismatch.
      *
      * @param expected The expected issuer
      * @param actual The issuer to compare
@@ -52,7 +53,8 @@ public final class IssuerUtils {
     }
 
     private static String normalize(String issuer) {
-        String value = issuer.endsWith("/") ? issuer.substring(0, issuer.length() - 1) : issuer;
+        boolean stripSlash = issuer.endsWith("/") && issuer.indexOf('?') == -1 && issuer.indexOf('#') == -1;
+        String value = stripSlash ? issuer.substring(0, issuer.length() - 1) : issuer;
         int index = value.indexOf("://");
         if (index <= 0) {
             return value;

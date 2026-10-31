@@ -11,7 +11,7 @@ Micronaut Security includes some validators by default:
 | JWT is not expired. It uses the `exp` claim.
 | Enabled by default. You can disable it by setting `micronaut.security.token.jwt.claims-validators.expiration` to false.
 | api:io.micronaut.security.token.jwt.validator.IssuerJwtClaimsValidator[]
-| JWT `iss` claim is set to an expected value.
+| JWT `iss` claim is identical to the expected value. The claim is compared verbatim: suffixes, parent domains, a different scheme or a trailing slash are not accepted, so configure the exact `iss` value your provider issues. If the property is present but has no value, every token is rejected.
 | Enabled when the `micronaut.security.token.jwt.claims-validators.issuer` property is set.
 | api:io.micronaut.security.token.jwt.validator.NotBeforeJwtClaimsValidator[]
 | If the JWT `nbf` claim is set, the token should only be valid if the current date is not before the provided date.

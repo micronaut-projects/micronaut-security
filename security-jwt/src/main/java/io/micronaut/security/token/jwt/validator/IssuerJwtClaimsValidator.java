@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Validates JWT issuer claim matches a configured value.
+ * <p>
+ * The {@code iss} claim is valid only when it is exactly equal to the configured issuer. Suffixes and parent domains of
+ * the configured issuer are not accepted. If the property is present but has no value, every token is rejected.
  *
  * @author Jason Schindler
  * @author Sergio del Amo
@@ -51,12 +54,19 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
             LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: {}", jwtClaimsValidatorConfiguration.getIssuer());
         }
         this.expectedIssuer = jwtClaimsValidatorConfiguration.getIssuer();
+        if (expectedIssuer == null || expectedIssuer.trim().isEmpty()) {
+            LOG.warn("{} is set but has no value; every JWT will be rejected until it is set to the expected iss claim", ISSUER_PROP);
+        }
     }
 
     @Override
     public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
-        if (expectedIssuer == null) {
-            return true;
+        if (expectedIssuer == null || expectedIssuer.trim().isEmpty()) {
+            // the property is present (the bean exists) but bound to no value: fail closed rather than skip the validation
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("{} has no value; rejecting the token", ISSUER_PROP);
+            }
+            return false;
         }
         Object issuerObject = claims.get(JwtClaims.ISSUER);
         if (issuerObject == null) {
