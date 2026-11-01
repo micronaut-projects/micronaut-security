@@ -45,6 +45,10 @@ import java.text.ParseException;
  * <p>
  * If the configuration specifies a {@link JwksSignatureConfiguration#getKeyType() key type}, only keys of that type ({@code kty})
  * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
+ * <p>
+ * The issuer and the url of the key set are resolved inside the reactive chain, so that a configuration which cannot resolve them
+ * yet (for example, the {@code jwks_uri} of an OpenID provider whose discovery document is not available) fails the verification
+ * instead of failing the request.
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -74,6 +78,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      * Verify a signed JWT. Emits {@code false} without consulting the key set if the configuration is bound to an issuer
      * and the {@code iss} claim of the JWT does not match it. Only keys whose type matches
      * {@link JwksSignatureConfiguration#getKeyType()} are considered, if a key type is configured.
+     * Emits {@code false} if the issuer or the url of the key set cannot be resolved, or if the key set cannot be verified against.
      *
      * @param jwt the signed JWT
      * @return whether the signed JWT is verified
@@ -81,31 +86,43 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     @Override
     @SingleResult
     public Publisher<Boolean> verify(SignedJWT jwt) {
-        if (!issuerMatches(jwt)) {
-            return Mono.just(false);
-        }
-        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
-                .map(jwkSet -> {
-                    try {
-                        boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
-                        if (LOG.isDebugEnabled()) {
-                            if (result) {
-                                LOG.debug("JWT Signature verified");
-                            } else {
-                                LOG.debug("JWT Signature not verified");
-                                if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
-                                    LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
-                                }
-                            }
-                        }
-                        return result;
-                    } catch (JOSEException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Error verifying JWT signature", e);
-                        }
-                        return false;
+        return Mono.defer(() -> {
+                    if (!issuerMatches(jwt)) {
+                        return Mono.just(false);
                     }
+                    return Mono.fromCallable(jwksSignatureConfiguration::getUrl)
+                            .flatMap(url -> Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), url)))
+                            .map(jwkSet -> verify(jwt, jwkSet));
+                })
+                .onErrorResume(e -> {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("JWT signature not verified with JWKS [{}]: {}", jwksSignatureConfiguration.getName(), e.getMessage());
+                        LOG.debug("Error verifying JWT signature with JWKS [{}]", jwksSignatureConfiguration.getName(), e);
+                    }
+                    return Mono.just(false);
                 });
+    }
+
+    private boolean verify(SignedJWT jwt, JWKSet jwkSet) {
+        try {
+            boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
+            if (LOG.isDebugEnabled()) {
+                if (result) {
+                    LOG.debug("JWT Signature verified");
+                } else {
+                    LOG.debug("JWT Signature not verified");
+                    if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
+                        LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
+                    }
+                }
+            }
+            return result;
+        } catch (JOSEException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error verifying JWT signature", e);
+            }
+            return false;
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
+import io.micronaut.context.BeanRegistration;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
@@ -23,16 +25,16 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.client.condition.OauthClientEnabledCondition;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature;
+import io.micronaut.security.token.jwt.signature.jwks.JwksClientConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
+import jakarta.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URL;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Factory to create {@link ReactiveJwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -40,7 +42,7 @@ import java.net.URL;
  * The beans are only created for the {@link io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode, where the
  * ID token issued by the provider is the request credential. In any other authentication mode, tokens signed by the provider's keys, such
  * as ID tokens issued to other clients, must not authenticate requests. The ID token obtained during the authorization code flow is
- * validated against the provider's JWKS independently of these beans.
+ * validated against the provider's JWKS independently of these beans. No bean is created for a disabled OAuth 2.0 client.
  * <p>
  * The key set of a provider is bound to the issuer of that provider (see {@link JwksSignatureConfiguration#getIssuer()}),
  * so that a token whose {@code iss} claim names one provider cannot be verified with the keys of another provider.
@@ -51,45 +53,58 @@ import java.net.URL;
 @Factory
 @Internal
 public class JwksUriSignatureFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureFactory.class);
+
+    private final BeanContext beanContext;
 
     /**
-     * @param openIdClientConfiguration The OpenID client configuration
-     * @param openIdProviderMetadata The open id provider metadata
-     * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration and bound to the issuer of the OpenID client
+     * @param beanContext The bean context
      */
-    @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
-    @EachBean(DefaultOpenIdProviderMetadata.class)
-    public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                                       @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
-        DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
-        jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
-        String issuer = issuer(openIdClientConfiguration, defaultOpenIdProviderMetadata);
-        if (issuer == null || issuer.isBlank()) {
-            LOG.warn("The JWKS of the OpenID client [{}] is not bound to an issuer because neither 'openid.issuer' is configured nor the provider metadata asserts one. Tokens signed with its keys are accepted whatever their 'iss' claim. Set 'micronaut.security.oauth2.clients.{}.openid.issuer', in particular when several providers are trusted.", defaultOpenIdProviderMetadata.getName(), defaultOpenIdProviderMetadata.getName());
-        } else {
-            jwksSignatureConfiguration.setIssuer(issuer);
-        }
-        return jwksSignatureConfiguration;
+    public JwksUriSignatureFactory(BeanContext beanContext) {
+        this.beanContext = beanContext;
     }
 
     /**
-     * The issuer asserted by the provider metadata is the value providers put in the {@code iss} claim, so it is preferred.
-     * The configured issuer may be only the discovery URL (e.g. Oracle IDCS), which differs from the {@code iss} claim and
-     * is therefore only used if the metadata does not assert an issuer (e.g. {@code fetch-configuration: false}).
+     * Creates a {@link JwksSignatureConfiguration} for the {@code jwks_uri} exposed via the OpenID configuration of the client.
+     * The configuration is created for every enabled OpenID client, even if the OpenID configuration could not be fetched at startup,
+     * so that an unreachable provider never leaves the application without signature configurations. The {@code jwks_uri} and the
+     * issuer come from the provider metadata: the one already created at startup, or else one resolved on the blocking executor,
+     * see {@link OpenIdProviderJwksSignatureConfiguration}.
      *
      * @param openIdClientConfiguration The OpenID client configuration
-     * @param openIdProviderMetadata The OpenID provider metadata
-     * @return The issuer asserted by the provider metadata or, if none, the issuer configured for the OpenID client
+     * @param openIdProviderMetadata The open id provider metadata
+     * @param executorService Executor used to resolve the provider metadata when it was not created at startup
+     * @param jwksClientConfiguration JWKS client configuration, whose failure back-off bounds how often the provider metadata is requested after a failure
+     * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration and bound to the issuer of the OpenID client
+     */
+    @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
+    @Requires(condition = OauthClientEnabledCondition.class)
+    @EachBean(OpenIdClientConfiguration.class)
+    public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
+                                                                       @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+                                                                       @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
+                                                                       JwksClientConfiguration jwksClientConfiguration) {
+        String name = openIdClientConfiguration.getName();
+        return new OpenIdProviderJwksSignatureConfiguration(name,
+            openIdClientConfiguration.getIssuerIdentifier().orElse(null),
+            createdMetadata(name),
+            openIdProviderMetadata,
+            executorService,
+            jwksClientConfiguration.getFailureBackoff());
+    }
+
+    /**
+     * The provider metadata bean is created eagerly at startup. Looking it up among the created singletons, instead of
+     * through the provider, never fetches the discovery document on the thread creating this configuration.
+     *
+     * @param name The OpenID client name
+     * @return The provider metadata of the client if it has already been created, {@code null} otherwise
      */
     @Nullable
-    static String issuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
-                         @NonNull OpenIdProviderMetadata openIdProviderMetadata) {
-        String asserted = openIdProviderMetadata.getIssuer();
-        if (asserted != null && !asserted.isBlank()) {
-            return asserted;
-        }
-        return openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null);
+    private DefaultOpenIdProviderMetadata createdMetadata(@NonNull String name) {
+        return beanContext.getActiveBeanRegistrations(DefaultOpenIdProviderMetadata.class).stream()
+            .map(BeanRegistration::getBean)
+            .filter(metadata -> name.equals(metadata.getName()))
+            .findFirst()
+            .orElse(null);
     }
 }

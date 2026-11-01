@@ -22,6 +22,8 @@ include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlserviceclient
 
 Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata. Such a JWKS is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`.
 
+NOTE: The signature configuration for the `jwks_uri` of an OpenID client is registered as soon as the client is configured, even if the provider's discovery document could not be fetched when the application started. While the provider metadata is unavailable, tokens signed with the provider's keys are rejected, and unsigned tokens are rejected as always when a signature configuration exists. The metadata is fetched again on demand, at most once per `micronaut.security.token.jwt.signatures.jwks-client.failure-backoff` (default 10 seconds) and never on the thread verifying a token, so signed tokens are accepted once the provider becomes reachable, without restarting the application.
+
 ### Binding a JWKS to an issuer
 
 When an application trusts the key sets of several identity providers, a key trusted for one provider must not be able to sign tokens that claim to be issued by another provider. A JWKS can be bound to an issuer with the `issuer` property. A bound JWKS only verifies tokens whose `iss` claim is equal to that issuer, tolerating only the case of the scheme and a trailing slash, the same comparison api:security.oauth2.endpoint.token.response.validation.IssuerClaimValidator[] applies to ID tokens. A different scheme, suffixes, parent domains and an empty `iss` never match; tokens issued by anyone else, or without an `iss` claim, are not verified with its keys, even if their signature validates against one of them.
@@ -39,7 +41,7 @@ micronaut:
               issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX'
 ----
 
-The JWKS created for the `jwks_uri` of an <<openid-authorization-code, Open ID Connect>> client is always bound to the issuer of that client (the `issuer` asserted by the provider metadata or, if it asserts none, `micronaut.security.oauth2.clients.*.openid.issuer`). If neither `openid.issuer` is configured nor the provider metadata asserts an issuer (for example `fetch-configuration: false` with `openid.jwks-uri`), the JWKS is not bound and the application logs a warning at startup. Always set `openid.issuer` when several providers are trusted. A JWKS configured explicitly without an `issuer` verifies tokens regardless of their `iss` claim.
+The JWKS created for the `jwks_uri` of an <<openid-authorization-code, Open ID Connect>> client is always bound to the issuer of that client (the `issuer` asserted by the provider metadata or, if it asserts none, `micronaut.security.oauth2.clients.*.openid.issuer`). If neither `openid.issuer` is configured nor the provider metadata asserts an issuer (for example `fetch-configuration: false` with `openid.jwks-uri`), the JWKS is not bound and the application logs a warning once the provider metadata is resolved. Always set `openid.issuer` when several providers are trusted. A JWKS configured explicitly without an `issuer` verifies tokens regardless of their `iss` claim.
 
 ### Restricting the key type
 
