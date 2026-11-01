@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.userinfo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.naming.Named;
 
 import java.util.Objects;
@@ -26,18 +27,31 @@ import java.util.Objects;
  * @param name Name Qualifier
  * @param baseUrl Authorization Server Base URL
  * @param path User Info Endpoint Path
+ * @param issuer Issuer of the tokens accepted by this UserInfo endpoint. A JWT whose {@code iss} claim does not match this issuer is never sent to the endpoint. If {@code null}, JWTs are treated like opaque tokens.
+ * @param validateOpaqueTokens Whether tokens which cannot be attributed to this provider (opaque tokens, JWTs without an {@code iss} claim, or JWTs of an issuer shared with another provider) are sent to the UserInfo endpoint. {@code null} means they are sent only when this is the only OpenID client configured and the only UserInfo token validator in the application.
  * @since 4.15.0
  */
 @Introspected
 public record UserInfoClientTokenValidatorConfiguration(
     @NonNull String baseUrl,
     @NonNull String name,
-    @NonNull String path
+    @NonNull String path,
+    @Nullable String issuer,
+    @Nullable Boolean validateOpaqueTokens
     ) implements Named {
     public static final String DEFAULT_PATH = "/userinfo";
 
     public UserInfoClientTokenValidatorConfiguration(String baseUrl, String name) {
         this(baseUrl, name, DEFAULT_PATH);
+    }
+
+    /**
+     * @param baseUrl Authorization Server Base URL
+     * @param name Name Qualifier
+     * @param path User Info Endpoint Path
+     */
+    public UserInfoClientTokenValidatorConfiguration(String baseUrl, String name, String path) {
+        this(baseUrl, name, path, null, null);
     }
 
     @Override
@@ -62,6 +76,8 @@ public record UserInfoClientTokenValidatorConfiguration(
         private String baseUrl;
         private String name;
         private String path = DEFAULT_PATH;
+        private String issuer;
+        private Boolean validateOpaqueTokens;
 
         /**
          * @param baseUrl Authorization Server Base URL
@@ -94,6 +110,28 @@ public record UserInfoClientTokenValidatorConfiguration(
         }
 
         /**
+         * @param issuer Issuer of the tokens accepted by this UserInfo endpoint. A JWT whose {@code iss} claim does not match it is never sent to the endpoint.
+         * @return this builder
+         * @since 4.18.2
+         */
+        @NonNull
+        public Builder issuer(@Nullable String issuer) {
+            this.issuer = issuer;
+            return this;
+        }
+
+        /**
+         * @param validateOpaqueTokens Whether tokens which cannot be attributed to this provider (opaque tokens, JWTs without an {@code iss} claim, or JWTs of an issuer shared with another provider) are sent to the UserInfo endpoint. {@code null} means they are sent only when this is the only OpenID client configured and the only UserInfo token validator in the application.
+         * @return this builder
+         * @since 4.18.2
+         */
+        @NonNull
+        public Builder validateOpaqueTokens(@Nullable Boolean validateOpaqueTokens) {
+            this.validateOpaqueTokens = validateOpaqueTokens;
+            return this;
+        }
+
+        /**
          * Builds the configuration instance.
          * @return The UserInfoClientConfiguration
          */
@@ -104,7 +142,7 @@ public record UserInfoClientTokenValidatorConfiguration(
             if (path == null) {
                 path = DEFAULT_PATH;
             }
-            return new UserInfoClientTokenValidatorConfiguration(baseUrl, name, path);
+            return new UserInfoClientTokenValidatorConfiguration(baseUrl, name, path, issuer, validateOpaqueTokens);
         }
     }
 }

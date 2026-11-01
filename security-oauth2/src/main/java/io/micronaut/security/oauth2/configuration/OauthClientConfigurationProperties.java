@@ -685,7 +685,27 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * User info endpoint configuration.
          */
         @ConfigurationProperties("user-info")
-        public static class UserInfoEndpointConfigurationProperties extends DefaultEndpointConfiguration { }
+        public static class UserInfoEndpointConfigurationProperties extends DefaultEndpointConfiguration implements UserInfoEndpointConfiguration {
+
+            private Boolean validateOpaqueTokens;
+
+            @Override
+            public Optional<Boolean> getValidateOpaqueTokens() {
+                return Optional.ofNullable(validateOpaqueTokens);
+            }
+
+            /**
+             * Whether bearer tokens which cannot be attributed to this provider (opaque tokens, or JWTs without an `iss` claim) are sent to this provider's UserInfo endpoint for validation.
+             * JWTs whose `iss` claim identifies a different issuer are never sent, regardless of this setting. A JWT whose issuer is expected by several providers cannot be attributed to one of them and is handled like an opaque token.
+             * If not set, such tokens are sent only when this is the only OpenID client configured.
+             *
+             * @param validateOpaqueTokens Whether to validate tokens which cannot be attributed to this provider against its UserInfo endpoint.
+             * @since 4.18.2
+             */
+            public void setValidateOpaqueTokens(@Nullable Boolean validateOpaqueTokens) {
+                this.validateOpaqueTokens = validateOpaqueTokens;
+            }
+        }
 
         /**
          * Authorization endpoint configuration.
