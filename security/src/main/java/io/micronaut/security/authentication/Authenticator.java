@@ -16,10 +16,12 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.order.OrderUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
 import jakarta.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,6 +37,16 @@ import reactor.core.publisher.Mono;
 /**
  * An Authenticator operates on several {@link AuthenticationProvider} instances returning the first
  * authenticated {@link AuthenticationResponse}.
+ *
+ * <p>Providers are evaluated one at a time in precedence order: providers implementing {@link io.micronaut.core.order.Ordered}
+ * first, by {@code getOrder()}, then the other providers in the order they are injected (which honours {@code @Order}). With the default {@link AuthenticationStrategy#ANY} strategy the
+ * response of the highest precedence provider that authenticates the request wins, regardless of how fast lower precedence
+ * providers answer, and lower precedence providers are not subscribed to once a provider has authenticated the request.</p>
+ *
+ * <p>Providers are evaluated one at a time in {@link io.micronaut.core.order.Ordered} precedence order. With the default
+ * {@link AuthenticationStrategy#ANY} strategy the response of the highest precedence provider that authenticates the
+ * request wins, regardless of how fast lower precedence providers answer, and lower precedence providers are not
+ * subscribed to once a provider has authenticated the request.</p>
  *
  * @author Sergio del Amo
  * @author Graeme Rocher
@@ -54,8 +66,24 @@ public class Authenticator {
      */
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
-        this.authenticationProviders = authenticationProviders;
+        this.authenticationProviders = sortedByPrecedence(authenticationProviders);
         this.securityConfiguration = securityConfiguration;
+    }
+
+    /**
+     * Sorts the providers by precedence. Providers implementing {@link io.micronaut.core.order.Ordered} come first, by
+     * {@code getOrder()}; the other providers follow in the order they were given.
+     *
+     * @param authenticationProviders The providers, possibly {@code null}
+     * @return The providers sorted by precedence, or {@code null} if none were given
+     */
+    private static List<AuthenticationProvider> sortedByPrecedence(Collection<AuthenticationProvider> authenticationProviders) {
+        if (authenticationProviders == null) {
+            return null;
+        }
+        List<AuthenticationProvider> sorted = new ArrayList<>(authenticationProviders);
+        OrderUtil.sort(sorted);
+        return sorted;
     }
 
     /**
@@ -75,21 +103,24 @@ public class Authenticator {
         Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
-            return Flux.mergeDelayError(1,
+            return Flux.concatDelayError(
                     authenticationProviders.stream()
-                            .map(provider -> Flux.from(provider.authenticate(request, authenticationRequest))
+                            .map(provider -> Flux.defer(() -> provider.authenticate(request, authenticationRequest))
                                     .switchMap(this::handleResponse)
                                     .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected"))))
                             .collect(Collectors.toList())
                     .toArray(emptyArr))
-                    .last()
+                    .collectList()
+                    .filter(responses -> !responses.isEmpty())
+                    .map(responses -> responses.get(0))
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
         } else {
             AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  authenticationProviders.stream()
-                    .map(auth -> auth.authenticate(request, authenticationRequest))
-                    .map(Flux::from)
+            // Subscribe to the providers sequentially in precedence order. Merging them would let the fastest
+            // provider win instead of the highest precedence provider that accepts the credentials.
+            Flux<AuthenticationResponse> authentication = Flux.concat(authenticationProviders.stream()
+                    .map(auth -> Flux.defer(() -> auth.authenticate(request, authenticationRequest)))
                     .map(sequence -> sequence.switchMap(this::handleResponse).onErrorResume(t -> {
                         lastError.set(t);
                         return Flux.empty();
