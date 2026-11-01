@@ -23,13 +23,18 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
+import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,6 +62,16 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
 
+    /**
+     * Names of claims an ID token must not carry: they are the names of the authentication attributes which this application
+     * sets during the authorization code flow, and which {@code /oauth/logout}
+     * trusts to pick the provider the user is redirected to. Since the attributes of an authentication created from an ID token
+     * are the claims of the token, a token carrying one of these claims could choose the client whose end session endpoint
+     * receives it as {@code id_token_hint}.
+     * @since 3.11.3
+     */
+    protected static final List<String> RESERVED_CLAIM_NAMES = Collections.unmodifiableList(Arrays.asList(OauthAuthenticationMapper.PROVIDER_KEY, OpenIdAuthenticationMapper.OPENID_TOKEN_KEY));
+
     protected final Collection<OauthClientConfiguration> oauthClientConfigurations;
 
     /**
@@ -71,6 +86,9 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
 
     @Override
     public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+        if (containsReservedClaim(claims)) {
+            return false;
+        }
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
             return false;
@@ -83,6 +101,23 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
         }
         List<String> audiences = audiencesOptional.get();
         return validateIssuerAudienceAndAzp(claims, iss, audiences);
+    }
+
+    /**
+     * @param claims JWT Claims
+     * @return true if the token carries a claim whose name is reserved for an attribute set by the application. See {@link #RESERVED_CLAIM_NAMES}.
+     * @since 3.11.3
+     */
+    protected boolean containsReservedClaim(@NonNull Claims claims) {
+        for (String name : RESERVED_CLAIM_NAMES) {
+            if (claims.contains(name)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("{} claim present. The claim name is reserved for an attribute set by the application", name);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -276,7 +311,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
             return false;
         }
         String azp = azpOptional.get();
-        boolean result = azp.equalsIgnoreCase(clientId);
+        boolean result = azp.equals(clientId);
         if (!result && LOG.isTraceEnabled()) {
             LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
