@@ -134,13 +134,36 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             synchronized (this) { // double check
                 jwkSetVariable = this.jwkSet;
                 if (jwkSetVariable == null) {
-                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
+                    Optional<String> url = resolveUrl();
+                    if (!url.isPresent()) {
+                        return Optional.empty();
+                    }
+                    jwkSetVariable = loadJwkSet(url.get());
                     this.jwkSet = jwkSetVariable;
                     this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
                 }
             }
         }
         return Optional.ofNullable(jwkSetVariable);
+    }
+
+    /**
+     * Resolves the url of the key set. A configuration which cannot resolve it yet (for example, the {@code jwks_uri} of an
+     * OpenID provider whose discovery document is not available) must fail the verification instead of failing the request.
+     *
+     * @return The url, or empty if it cannot be resolved
+     */
+    @NonNull
+    private Optional<String> resolveUrl() {
+        try {
+            return Optional.ofNullable(jwksSignatureConfiguration.getUrl());
+        } catch (RuntimeException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT signature not verified with JWKS: {}", e.getMessage());
+                LOG.debug("Error resolving the JWKS url", e);
+            }
+            return Optional.empty();
+        }
     }
 
     private List<JWK> getJsonWebKeys() {
@@ -155,7 +178,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     @Override
     public void clear() {
-        jwkSetFetcher.clearCache(jwksSignatureConfiguration.getUrl());
+        resolveUrl().ifPresent(jwkSetFetcher::clearCache);
         jwkSet = null;
         jwkSetCachedAt = null;
     }
@@ -200,6 +223,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * Verify a signed JWT. Returns {@code false} without consulting the key set if the configuration is bound to an issuer
      * and the {@code iss} claim of the JWT does not match it. Only keys whose type matches
      * {@link JwksSignatureConfiguration#getKeyType()} are considered, if a key type is configured.
+     * Returns {@code false} if the url of the key set cannot be resolved or the key set cannot be loaded.
      *
      * @param jwt the signed JWT
      * @return whether the signed JWT is verified
@@ -236,23 +260,35 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             iss = jwt.getJWTClaimsSet().getIssuer();
         } catch (ParseException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT not verified with JWKS [{}]: failed to parse the claims set", jwksSignatureConfiguration.getUrl(), e);
+                LOG.debug("JWT not verified with JWKS [{}]: failed to parse the claims set", jwksDescription(), e);
             }
             return false;
         }
         if (iss == null || iss.isEmpty()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT not verified with JWKS [{}]: the JWT has no (or an empty) iss claim and the JWKS is bound to issuer [{}]", jwksSignatureConfiguration.getUrl(), issuer);
+                LOG.debug("JWT not verified with JWKS [{}]: the JWT has no (or an empty) iss claim and the JWKS is bound to issuer [{}]", jwksDescription(), issuer);
             }
             return false;
         }
         if (!IssuerUtils.equivalent(issuer, iss)) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT not verified with JWKS [{}]: iss claim [{}] does not match the issuer [{}] the JWKS is bound to", jwksSignatureConfiguration.getUrl(), iss, issuer);
+                LOG.debug("JWT not verified with JWKS [{}]: iss claim [{}] does not match the issuer [{}] the JWKS is bound to", jwksDescription(), iss, issuer);
             }
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return The url of the key set for log messages, or a placeholder if it cannot be resolved
+     */
+    @NonNull
+    private String jwksDescription() {
+        try {
+            return String.valueOf(jwksSignatureConfiguration.getUrl());
+        } catch (RuntimeException e) {
+            return "unresolved url";
+        }
     }
 
     /**
