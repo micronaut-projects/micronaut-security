@@ -83,11 +83,25 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
     private Map<String, String> jwksUrls(@NonNull AOTContext context) {
         Map<String, String> urls = new HashMap<>();
         AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context)
-            .forEach(config -> urls.put(config.getName(), config.getUrl()));
+            .forEach(config -> jwksUrl(config).ifPresent(url -> urls.put(config.getName(), url)));
         AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
             .filter(metadata -> metadata.getJwksUri() != null)
             .forEach(metadata -> urls.put(metadata.getName(), metadata.getJwksUri()));
         return urls;
+    }
+
+    /**
+     * @param config JWKS signature configuration
+     * @return The JWKS url, or empty if the configuration has no url or the url cannot be resolved at build time,
+     * for example because the OpenID provider exposing it is not reachable.
+     */
+    @NonNull
+    private static Optional<String> jwksUrl(@NonNull JwksSignatureConfiguration config) {
+        try {
+            return Optional.ofNullable(config.getUrl());
+        } catch (RuntimeException e) {
+            return Optional.empty();
+        }
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
