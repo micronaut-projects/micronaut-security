@@ -18,11 +18,13 @@ package io.micronaut.security.rules;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.annotation.EvaluatedAnnotationValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
@@ -30,6 +32,7 @@ import jakarta.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -81,7 +84,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
             AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
             if (securedAnnotation != null) {
                 if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-                    boolean[] arr = securedAnnotation.booleanValues();
+                    boolean[] arr = evaluate(securedAnnotation, request, authentication);
                     if (arr.length == 0) {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("@Secured expression for route [{} {}] did not evaluate to a boolean. Rejecting the request", request.getMethodName(), request.getPath());
@@ -106,5 +109,23 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
     @Override
     public int getOrder() {
         return ORDER;
+    }
+
+    /**
+     * Evaluates the {@link Secured} expression with the request and authentication being checked bound to the
+     * propagated context. References such as {@code user} then resolve to the authentication of this request, even
+     * when the current thread is bound to the propagated context of another request.
+     *
+     * @param securedAnnotation The evaluated annotation
+     * @param request The request being checked
+     * @param authentication The authentication being checked, or null if none found
+     * @return The evaluated boolean values
+     */
+    private static boolean[] evaluate(AnnotationValue<Secured> securedAnnotation,
+                                      HttpRequest<?> request,
+                                      @Nullable Authentication authentication) {
+        PropagatedContext propagatedContext = ServerRequestContextSecurityContextSupplier.withRequestAndAuthentication(request, authentication);
+        Supplier<boolean[]> values = securedAnnotation::booleanValues;
+        return propagatedContext.propagate(values);
     }
 }

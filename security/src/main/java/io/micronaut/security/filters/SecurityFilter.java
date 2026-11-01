@@ -17,7 +17,9 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.propagation.ReactivePropagation;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
@@ -42,6 +44,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -107,12 +110,16 @@ public class SecurityFilter implements HttpServerFilter {
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
 
+        // Authentication fetchers may complete asynchronously on a thread bound to another request's propagated
+        // context (for example when several requests wait for the same remote JWK Set). Bind the propagated context
+        // of this request around each fetcher, so that what a fetcher does with its result after an asynchronous
+        // validation is bound to this request too, and resume the rule checks within that context.
+        PropagatedContext propagatedContext = PropagatedContext.getOrEmpty();
         return Flux.fromIterable(authenticationFetchers)
-                .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
+                .flatMap(authenticationFetcher -> inContext(propagatedContext, () -> authenticationFetcher.fetchAuthentication(request)))
                 .next()
-                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
-                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
-                        .next());
+                .flatMap(authentication -> Mono.from(inContext(propagatedContext, () -> createResponse(authentication, request, chain))))
+                .switchIfEmpty(Mono.from(inContext(propagatedContext, () -> createResponse(null, request, chain))));
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
@@ -148,9 +155,12 @@ public class SecurityFilter implements HttpServerFilter {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
+        // Each rule, and the rest of the filter chain, may be resumed on a thread bound to the propagated context of
+        // another request. Bind the context of this request explicitly around each of them.
+        PropagatedContext propagatedContext = PropagatedContext.getOrEmpty();
 
         return Flux.fromIterable(securityRules)
-                .concatMap(rule -> Mono.from(rule.check(request, authentication))
+                .concatMap(rule -> Mono.from(inContext(propagatedContext, () -> rule.check(request, authentication)))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter(result -> result != SecurityRuleResult.UNKNOWN)
@@ -161,7 +171,7 @@ public class SecurityFilter implements HttpServerFilter {
                         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     } else if (result == SecurityRuleResult.ALLOWED) {
-                        return chain.proceed(request);
+                        return inContext(propagatedContext, () -> chain.proceed(request));
                     } else {
                         return Mono.empty();
                     }
@@ -176,12 +186,16 @@ public class SecurityFilter implements HttpServerFilter {
                     RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
                     // no rule found for the given request
                     if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                        return chain.proceed(request);
+                        return inContext(propagatedContext, () -> chain.proceed(request));
                     } else {
                         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     }
                 }));
+    }
+
+    private static <T> Publisher<T> inContext(PropagatedContext propagatedContext, Supplier<Publisher<T>> supplier) {
+        return ReactivePropagation.propagate(propagatedContext, Flux.defer(supplier));
     }
 
     private void logResult(SecurityRuleResult result, String method, String path, Ordered ordered) {
