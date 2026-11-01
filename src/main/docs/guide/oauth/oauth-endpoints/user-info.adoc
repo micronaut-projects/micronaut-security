@@ -12,6 +12,19 @@ include::{includedir}configurationProperties/io.micronaut.security.oauth2.config
 
 NOTE: Set `micronaut.security.oauth2.userinfo.validator` to `false` to disable `UserInfo` endpoint token validation.
 
+=== Which provider receives the token
+
+A bearer token is only sent to the `UserInfo` endpoint of the provider which issued it, so that an access token issued by one provider is never disclosed to another provider:
+
+- If the token is a JWT, its `iss` claim must be equal to the expected issuer of the provider: `micronaut.security.oauth2.clients.*.openid.issuer-identifier` if set, otherwise `micronaut.security.oauth2.clients.*.openid.issuer`. The issuer announced by the discovery document is only used when neither is configured, since a provider must not be able to claim the issuer of another provider. The comparison is exact and tolerates only the case of the scheme and a trailing slash, the same rule api:security.oauth2.client.IdTokenClaimsValidator[] applies. The `iss` claim is read without verifying the token, which is left to the provider. A JWT issued by somebody else is never sent to the `UserInfo` endpoint, not even when only one provider is configured.
+- If several providers expect the same issuer but have distinct `UserInfo` endpoints (for example two Oracle IDCS tenants, which both issue tokens with the provider wide issuer `https://identity.oraclecloud.com/`), a JWT of that issuer cannot be attributed to one of them. It is handled like an opaque token: sent only to the providers which opt in with `validate-opaque-tokens: true`. A warning naming the providers is logged the first time such a token is checked.
+- If no issuer is known for a provider (neither configured nor announced by its discovery document, for example with `fetch-configuration: false` and a manually configured `user-info.url`), its validator cannot tell its own JWTs apart from those of other issuers and treats every JWT like an opaque token. A warning is logged at startup; configure `openid.issuer` or `openid.issuer-identifier` to bind the endpoint to an issuer.
+- If the token cannot be attributed to a provider (an opaque token, an encrypted JWT, or a JWT without an `iss` claim), it is sent to the `UserInfo` endpoint only when that provider is the only one known to the application (the only enabled OpenID client configured under `micronaut.security.oauth2.clients` and the only api:security.oauth2.endpoint.userinfo.UserInfoClientTokenValidatorConfiguration[] bean, counted together by name), or when the provider explicitly opts in with `micronaut.security.oauth2.clients.*.openid.user-info.validate-opaque-tokens: true`. Set the property to `false` to never send such tokens to a provider. The implicit allowance depends on the configured clients, not on which of them were reachable at startup: a provider whose discovery document could not be fetched still counts, so a temporary outage of one provider never routes its tokens to another. A JWT of an issuer shared by several providers is never covered by this implicit allowance; it always requires the explicit opt-in.
+
+WARNING: Enabling `validate-opaque-tokens` for several providers sends every opaque token to each of them. Only do so if you trust every one of those providers with the tokens of the others.
+
+If you register api:security.oauth2.endpoint.userinfo.UserInfoClientTokenValidatorConfiguration[] beans yourself, set `issuer` and, if needed, `validateOpaqueTokens` on the builder to get the same behavior.
+
 === Provider binding
 
 The api:security.authentication.Authentication[] created from a `UserInfo` response is bound to the provider whose `UserInfo` endpoint answered:

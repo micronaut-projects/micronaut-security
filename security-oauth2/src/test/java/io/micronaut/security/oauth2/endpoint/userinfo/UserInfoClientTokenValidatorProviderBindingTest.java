@@ -274,6 +274,9 @@ class UserInfoClientTokenValidatorProviderBindingTest {
             config.put(prefix + ".client-id", "client-" + names[i]);
             config.put(prefix + ".client-secret", "test-fixture-not-a-secret");
             config.put(prefix + ".openid.issuer", providers[i].getURL().toString());
+            // the tokens are opaque: every provider must opt in to receive tokens it cannot be attributed to, which is the
+            // scenario of this test (a malicious provider answering for the tokens of another provider)
+            config.put(prefix + ".openid.user-info.validate-opaque-tokens", true);
         }
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, config);
         if (extraConfig.isEmpty() || !extraConfig.containsKey("micronaut.security.oauth2.clients.provider-b.enabled")) {
