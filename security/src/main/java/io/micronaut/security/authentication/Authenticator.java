@@ -52,6 +52,11 @@ import java.util.stream.Collectors;
  * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
  * authenticated {@link AuthenticationResponse}.
  *
+ * <p>Providers are evaluated one at a time in {@link io.micronaut.core.order.Ordered} precedence order. With the default
+ * {@link AuthenticationStrategy#ANY} strategy the response of the highest precedence provider that authenticates the
+ * request wins, regardless of how fast lower precedence providers answer, and lower precedence providers are not
+ * subscribed to once a provider has authenticated the request.</p>
+ *
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
@@ -244,22 +249,26 @@ public class Authenticator<T> {
         Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
-            return Flux.mergeDelayError(1,
+            return Flux.concatDelayError(
                             providers.stream()
                             .map(provider ->
-                                Flux.from(provider.authenticate(request, authenticationRequest))
+                                Flux.defer(() -> provider.authenticate(request, authenticationRequest))
                                         .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
                                         .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")))
                             )
                             .toList()
                     .toArray(emptyArr))
-                    .last()
+                    .collectList()
+                    .filter(responses -> !responses.isEmpty())
+                    .map(responses -> responses.get(0))
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
         } else {
             AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  providers.stream()
-                    .map(auth -> Flux.from(auth.authenticate(request, authenticationRequest)))
+            // Subscribe to the providers sequentially in precedence order. Merging them would let the fastest
+            // provider win instead of the highest precedence provider that accepts the credentials.
+            Flux<AuthenticationResponse> authentication = Flux.concat(providers.stream()
+                    .map(auth -> Flux.defer(() -> auth.authenticate(request, authenticationRequest)))
                     .map(sequence -> sequence.switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
                             .onErrorResume((Function<Throwable, Publisher>) t -> {
                                 lastError.set(t);
