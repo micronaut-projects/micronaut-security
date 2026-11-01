@@ -53,5 +53,6 @@ class IdTokenValidatorSpec extends Specification {
         'xxx'    | null        | ['xxx', 'foo']  | 'iss'            | 'xxx' | false     | 'issuer claim not found'
         'xxx'    | 'foo'       | ['xxx', 'foo']  | 'iss'            | 'xxx' | false     | 'The Issuer Identifier for the OpenID Provider MUST exactly match the value of the iss (issuer) Claim'
         'xxx'    | 'iss'       | ['xxx', 'foo']  | 'iss'            | 'ooo' | false     | 'If an azp Claim is present, the Client SHOULD verify that its client_id is the Claim Value'
+        'xxx'    | 'iss'       | ['xxx', 'foo']  | 'iss'            | 'XXX' | false     | 'azp claim is compared case sensitively'
     }
 }
