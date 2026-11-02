@@ -4,6 +4,8 @@ image::openid-end-session.svg[]
 
 If any configured OpenID provider supports end session behavior, a route will be registered that responds to `/oauth/logout` and redirects to the provider to log the user out. A parameter is also sent to the provider that indicates what URL the provider should redirect the user to after logging out. The default URL is `/logout` which will cause the local authentication to also be cleared and a final redirect issued according to the api:security.handlers.LogoutHandler[].
 
+The end session URL advertised by the provider (the `end_session_endpoint` of its discovery document, or the URL derived from the issuer for providers that do not advertise one) is used as an opaque URI: the logout parameters, such as `post_logout_redirect_uri` or `id_token_hint`, are percent-encoded and appended to its query component, and any query component already present in the provider URL is preserved. The provider URL is never expanded as a URI template. The provider URL must be an absolute `http` or `https` URL with a host and without user information. If it is empty, takes another form (a relative URL, another scheme, or `https://user:password@provider.example/logout`) or is not a valid URI, no redirect is issued and `/oauth/logout` responds with 404.
+
 All of the above is configurable through `micronaut.security.oauth2.openid`:
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
