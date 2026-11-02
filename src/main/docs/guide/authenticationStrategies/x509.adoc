@@ -12,7 +12,7 @@ include::{includedir}configurationProperties/io.micronaut.security.x509.X509Conf
 
 Use `micronaut.security.x509.enabled` to enable X.509 support, or enable per-environment.
 
-Use the `micronaut.security.x509.subject-dn-regex` property to override the default regular expression used to extract the principal (username) from the certificate. Typically, the principal is stored in the `CN` (Common Name) property, prefixed with `"CN="`. The default regular expression `"CN=(.*?)(?:,|$)"` will extract the text after `"CN="` and up to the next (optional) delimiter, but if your certificates are configured differently, override the regex as needed.
+Use the `micronaut.security.x509.subject-dn-regex` property to override the default regular expression used to extract the principal (username) from the certificate. Typically, the principal is stored in the `CN` (Common Name) property, prefixed with `"CN="`. The default regular expression `"CN=(.*?)(?:,|$)"` will extract the text after `"CN="` and up to the next (optional) delimiter, but if your certificates are configured differently, override the regex as needed. The regular expression must contain exactly one capturing group, which is used to extract the principal; the application fails to start if the configured regex is invalid or has a different number of capturing groups.
 
 In addition to X.509-specific configuration, you must also https://docs.micronaut.io/latest/guide/#https[configure HTTPS] for your server, and configure requesting client certificates during the SSL handshake. Set the value of the property `micronaut.server.ssl.client-authentication` to `want` or `need` (depending on whether client certificates are optional or required).
 
