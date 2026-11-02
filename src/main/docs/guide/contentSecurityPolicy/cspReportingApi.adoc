@@ -1,0 +1,71 @@
+The CSP module integrates with the <<reporting,Reporting API module>> and can receive Content Security Policy reports. Reporting is disabled by default. Enable the `report-to` directive and select a reporting group:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      report-to:
+        enabled: true
+        group: csp
+----
+
+A reporting group is a name that connects a reporting policy to an endpoint declared by the `Reporting-Endpoints` response header. It is not a URL. The group configured above produces `report-to csp`; the same `csp` name identifies the endpoint in `Reporting-Endpoints`.
+
+When the application also provides an api:security.csp.report.ContentSecurityPolicyReportHandler[] bean, the module registers the controller at `/csp/report` and generates both required response headers:
+
+[source,http]
+----
+Reporting-Endpoints: csp="/csp/report"
+Content-Security-Policy: default-src 'none'; report-to csp
+----
+
+Without a handler, the reporting controller and the module-provided `Reporting-Endpoints` header are not registered. The generated policy can still use `report-to` with an application-managed or external `Reporting-Endpoints` header.
+
+Implement the handler to redact, persist, or forward reports to a monitoring service:
+
+[source,java]
+----
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
+import jakarta.inject.Singleton;
+
+import java.util.List;
+
+@Singleton
+final class ApplicationCspReportHandler implements ContentSecurityPolicyReportHandler {
+    @Override
+    public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
+        // Validate, sanitize, and send the reports to application storage or monitoring.
+    }
+}
+----
+
+The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
+
+The Reporting API envelope contains `age`, `type`, the originating `url`, `user_agent`, and `body`. The body is decoded according to the CSP-defined report type:
+
+* `csp-violation` becomes api:security.csp.report.ContentSecurityPolicyViolationReportBody[].
+* `csp-hash` becomes api:security.csp.report.ContentSecurityPolicyHashReportBody[].
+
+The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. The existing `report-uri` configuration uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint.
+
+Reporting endpoints should generally be reachable without authentication because cross-origin report deliveries do not contain credentials. When Micronaut Security is active, permit anonymous POST requests to the endpoint:
+
+[configuration]
+----
+micronaut:
+  security:
+    intercept-url-map:
+      - pattern: /csp/report
+        http-method: POST
+        access:
+          - isAnonymous()
+----
+
+Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Apply rate limits, sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.report.ContentSecurityPolicyControllerConfigurationProperties.adoc[]
