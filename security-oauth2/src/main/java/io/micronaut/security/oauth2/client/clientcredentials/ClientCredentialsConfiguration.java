@@ -49,6 +49,13 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequ
     @NonNull
     Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation();
 
+    /**
+     * Additional parameters included in the client credentials token request. The reserved keys {@code grant_type},
+     * {@code client_id} and {@code client_secret} are ignored, as is {@code scope} when a scope is already set for
+     * the request.
+     *
+     * @return Additional request parameters.
+     */
     @NonNull
     Map<String, String> getAdditionalRequestParams();
 
