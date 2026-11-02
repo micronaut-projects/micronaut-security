@@ -21,4 +21,17 @@ Micronaut Security includes some validators by default:
 | Enabled by default. You can disable it by setting `micronaut.security.token.jwt.claims-validators.subject-not-null` to false.
 |===
 
+By default, the expiration and not-before validators compare the `exp` and `nbf` claims against the current time strictly. If the application that issues the tokens and the application that validates them have clocks which are slightly out of sync, you can tolerate the difference by setting `micronaut.security.token.jwt.claims-validators.clock-skew` (a duration such as `30s`, it defaults to `0s`). With a clock skew configured, a token is considered expired only if its `exp` plus the clock skew is before the current time, and it is considered not yet valid only if its `nbf` minus the clock skew is after the current time.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        claims-validators:
+          not-before: true
+          clock-skew: 30s
+----
+
 If you are using `micronaut.security.authentication: idtoken`, api:io.micronaut.security.oauth2.client.IdTokenClaimsValidator[], a bean of type api:security.token.jwt.validator.GenericJwtClaimsValidator[], is registered in the bean context as well. `IdTokenClaimsValidator` validates points 2-5 of the https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation[ID Token Validation] section of the OpenID Connect Spec. You can disable it by setting `micronaut.security.token.jwt.claims-validators.openid-idtoken` to false.
