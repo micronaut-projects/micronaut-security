@@ -9,6 +9,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.JWKGenerator
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWT
+import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
@@ -363,13 +364,24 @@ class JwksCacheSpec extends Specification {
     }
 
     @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
-    @Refreshable
     @Singleton
     @Replaces(JwtTokenGenerator.class)
     static class JwtTokenGeneratorReplacement extends JwtTokenGenerator {
+        private final CognitoSignatureConfiguration cognitoSignatureConfiguration
+
         JwtTokenGeneratorReplacement(CognitoSignatureConfiguration cognitoSignatureConfiguration,
                                      ClaimsGenerator claimsGenerator) {
-            super(new RSASignatureGenerator(cognitoSignatureConfiguration), null, claimsGenerator)
+            super(null, null, claimsGenerator)
+            this.cognitoSignatureConfiguration = cognitoSignatureConfiguration
+        }
+
+        // The signature generator is built per token rather than in the constructor. Building it here would resolve the
+        // @Refreshable configuration while RefreshScope is still creating this bean, nesting two computeIfAbsent calls on
+        // the same ConcurrentHashMap, which fails with "Recursive update" whenever both bean keys land in the same bin.
+        // Reading the configuration through its proxy on every token also picks up the key generated after a refresh.
+        @Override
+        protected String internalGenerate(JWTClaimsSet claimsSet) {
+            new RSASignatureGenerator(cognitoSignatureConfiguration).sign(claimsSet).serialize()
         }
     }
 
@@ -439,13 +451,24 @@ class JwksCacheSpec extends Specification {
     }
 
     @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
-    @Refreshable
     @Singleton
     @Replaces(JwtTokenGenerator.class)
     static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
+        private final GoogleSignatureConfiguration googleSignatureConfiguration
+
         GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
                                            ClaimsGenerator claimsGenerator) {
-            super(new RSASignatureGenerator(googleSignatureConfiguration), null, claimsGenerator)
+            super(null, null, claimsGenerator)
+            this.googleSignatureConfiguration = googleSignatureConfiguration
+        }
+
+        // The signature generator is built per token rather than in the constructor. Building it here would resolve the
+        // @Refreshable configuration while RefreshScope is still creating this bean, nesting two computeIfAbsent calls on
+        // the same ConcurrentHashMap, which fails with "Recursive update" whenever both bean keys land in the same bin.
+        // Reading the configuration through its proxy on every token also picks up the key generated after a refresh.
+        @Override
+        protected String internalGenerate(JWTClaimsSet claimsSet) {
+            new RSASignatureGenerator(googleSignatureConfiguration).sign(claimsSet).serialize()
         }
     }
 
