@@ -32,6 +32,8 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestC
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
 import jakarta.inject.Singleton;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -126,11 +128,19 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
             LOG.trace("The token endpoint supports [{}] authentication methods", authMethodsSupported);
         }
 
-        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
+        String clientSecret = clientConfiguration.getClientSecret();
+        boolean hasClientSecret = clientSecret != null && !clientSecret.isBlank();
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC) && hasClientSecret) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
             }
-            request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
+            // RFC 6749 Section 2.3.1: client_id and client_secret must be form-url-encoded before being used as HTTP Basic credentials
+            request.basicAuth(formUrlEncode(clientConfiguration.getClientId()), formUrlEncode(clientSecret));
+        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("client_secret_basic authentication is supported but no client secret is configured. Skipping the Authorization header; the client_id will be present in the body");
+            }
+            addClientIdToBody(request, clientConfiguration);
         } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
@@ -146,11 +156,27 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
             }
-            request.getBody()
-                    .filter(SecureGrant.class::isInstance)
-                    .map(SecureGrant.class::cast)
-                    .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
+            addClientIdToBody(request, clientConfiguration);
         }
+    }
+
+    private static <G> void addClientIdToBody(@NonNull MutableHttpRequest<G> request,
+                                              @NonNull OauthClientConfiguration clientConfiguration) {
+        request.getBody()
+                .filter(SecureGrant.class::isInstance)
+                .map(SecureGrant.class::cast)
+                .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
+    }
+
+    /**
+     * Encodes a value as {@code application/x-www-form-urlencoded} as required by RFC 6749 Section 2.3.1 for HTTP Basic client credentials.
+     *
+     * @param value The value to encode
+     * @return The form-url-encoded value
+     */
+    @NonNull
+    private static String formUrlEncode(@NonNull String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     /**
