@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * {@link RequestFilter} which validates CSRF tokens and rejects a request if the token is invalid.
@@ -124,32 +125,85 @@ final class CsrfFilter implements Ordered {
     }
 
     private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(HttpRequest<?> request) {
-        List<CompletableFuture<Boolean>> futures = futureCsrfTokenResolvers.stream()
-                .map(resolver -> resolver.resolveToken(request)
-                        .thenApply(csrfToken -> {
-                            if (LOG.isTraceEnabled()) {
-                                LOG.trace("CSRF Token resolved");
-                            }
-                            return csrfTokenValidator.validateCsrfToken(request, csrfToken);
-                        })
-                )
+        List<CompletableFuture<@Nullable String>> futures = futureCsrfTokenResolvers.stream()
+                .map(resolver -> resolveTokenOrNull(resolver, request))
                 .toList();
         CompletableFuture<?>[] futuresArray = futures.toArray(new CompletableFuture<?>[0]);
-        return  CompletableFuture.allOf(futuresArray)
+        return CompletableFuture.allOf(futuresArray)
                 .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
-                .thenApply(validations -> {
-                    if (validations.stream().anyMatch(Boolean::booleanValue)) {
-                        return null;
-                    } else if (LOG.isTraceEnabled()) {
-                        LOG.trace("CSRF Token validation failed");
-                    }
-                    return unauthorized(request);
-                });
+                .thenApply(csrfTokens -> validateCsrfTokens(request, csrfTokens));
+    }
+
+    /**
+     * Resolves a CSRF token with the supplied resolver. A resolver which throws or completes exceptionally is treated as if it had not found a token, so that the request is rejected by this filter instead of failing with a server error.
+     * @param resolver CSRF Token resolver
+     * @param request HTTP Request
+     * @return A future which completes with the resolved token or {@code null} if the resolver did not find a token or failed.
+     */
+    @NonNull
+    private CompletableFuture<@Nullable String> resolveTokenOrNull(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver,
+                                                                   @NonNull HttpRequest<?> request) {
+        CompletableFuture<String> future;
+        try {
+            future = resolver.resolveToken(request);
+        } catch (RuntimeException e) {
+            logResolverFailure(resolver, e);
+            return CompletableFuture.completedFuture(null);
+        }
+        if (future == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return future.exceptionally(e -> {
+            logResolverFailure(resolver, e);
+            return null;
+        });
+    }
+
+    private static void logResolverFailure(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver, @NonNull Throwable e) {
+        if (LOG.isDebugEnabled()) {
+            Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
+            LOG.debug("CSRF token resolver {} failed, treating it as no token resolved: {}", resolver.getClass().getName(), cause.getMessage());
+        }
+    }
+
+    /**
+     * Validates the resolved CSRF tokens. Null or blank tokens are skipped, so the {@link CsrfTokenValidator} is only invoked with a real token.
+     * @param request HTTP Request
+     * @param csrfTokens Tokens resolved by every {@link FutureCsrfTokenResolver}. Entries may be {@code null}.
+     * @return {@code null} if any token is valid and the request should proceed; an unauthorized response otherwise.
+     */
+    @Nullable
+    private HttpResponse<?> validateCsrfTokens(@NonNull HttpRequest<?> request, @NonNull List<@Nullable String> csrfTokens) {
+        boolean tokenFound = false;
+        for (String csrfToken : csrfTokens) {
+            if (!hasText(csrfToken)) {
+                continue;
+            }
+            tokenFound = true;
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("CSRF Token resolved");
+            }
+            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+                return null;
+            }
+        }
+        if (!tokenFound) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
+            }
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
+        }
+        return unauthorized(request);
+    }
+
+    private static boolean hasText(@Nullable String csrfToken) {
+        return csrfToken != null && !csrfToken.isBlank();
     }
 
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (StringUtils.isEmpty(csrfToken)) {
+        if (!hasText(csrfToken)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
@@ -196,7 +250,7 @@ final class CsrfFilter implements Ordered {
     private String resolveCsrfToken(@NonNull HttpRequest<?> request) {
         for (CsrfTokenResolver<HttpRequest<?>> tokenResolver : csrfTokenResolvers) {
             Optional<String> tokenOptional = tokenResolver.resolveToken(request);
-            if (tokenOptional.isPresent()) {
+            if (tokenOptional.isPresent() && hasText(tokenOptional.get())) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
