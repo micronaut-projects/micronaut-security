@@ -26,6 +26,13 @@ import io.micronaut.core.util.Toggleable;
 public interface SecurityFilterConfiguration extends Toggleable {
 
     /**
+     * The pattern the {@link SecurityFilter} should match.
+     * <p>
+     * The routes the {@link SecurityFilter} intercepts are resolved from the
+     * {@code micronaut.security.filter.pattern} property placeholder declared in the filter annotation,
+     * not from this bean. Only the {@code micronaut.security.filter.pattern} property affects which routes the filter intercepts.
+     * The default implementation reflects that property; a custom implementation of this method does not change the filter pattern.
+     * </p>
      *
      * @return The pattern the {@link SecurityFilter} should match.
      */
