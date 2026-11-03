@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.nonce.persistence;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -43,4 +44,17 @@ public interface NoncePersistence {
      * @param nonce The nonce to persist
      */
     void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String nonce);
+
+    /**
+     * Clears the persisted nonce so it cannot be reused. Invoked once the nonce has been consumed
+     * by an authorization callback, regardless of whether authentication succeeded.
+     * Implementations which already remove the nonce on retrieval do not need to override this method.
+     *
+     * @param request The authorization callback request
+     * @param response The authorization callback response
+     * @since 5.4.0
+     */
+    default void clearNonce(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        // no-op by default
+    }
 }

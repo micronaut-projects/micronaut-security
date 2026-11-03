@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -32,6 +33,9 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
+import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 
 import java.util.Map;
 import org.reactivestreams.Publisher;
@@ -60,6 +64,15 @@ public class DefaultOauthController implements OauthController {
     private final HttpHostResolver httpHostResolver;
     private final HttpLocaleResolver httpLocaleResolver;
 
+    @Nullable
+    private final StatePersistence statePersistence;
+
+    @Nullable
+    private final PkcePersistence pkcePersistence;
+
+    @Nullable
+    private final NoncePersistence noncePersistence;
+
     /**
      * @param oauthClient                   The oauth client
      * @param loginHandler                  The login handler
@@ -67,7 +80,10 @@ public class DefaultOauthController implements OauthController {
      * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      * @param httpHostResolver              The http host resolver
      * @param httpLocaleResolver            The http locale resolver
-     * @since 4.7.0
+     * @param statePersistence              The state persistence, if any
+     * @param pkcePersistence               The PKCE persistence, if any
+     * @param noncePersistence              The nonce persistence, if any
+     * @since 5.4.0
      */
     DefaultOauthController(
         @Parameter OauthClient oauthClient,
@@ -75,7 +91,10 @@ public class DefaultOauthController implements OauthController {
         ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
         ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
         HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver
+        HttpLocaleResolver httpLocaleResolver,
+        @Nullable StatePersistence statePersistence,
+        @Nullable PkcePersistence pkcePersistence,
+        @Nullable NoncePersistence noncePersistence
     ) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;
@@ -83,6 +102,9 @@ public class DefaultOauthController implements OauthController {
         this.loginFailedEventPublisher = loginFailedEventPublisher;
         this.httpHostResolver = httpHostResolver;
         this.httpLocaleResolver = httpLocaleResolver;
+        this.statePersistence = statePersistence;
+        this.pkcePersistence = pkcePersistence;
+        this.noncePersistence = noncePersistence;
     }
 
     @Override
@@ -107,7 +129,30 @@ public class DefaultOauthController implements OauthController {
                 .map(response -> response.isAuthenticated() && response.getAuthentication().isPresent()
                         ? success(response.getAuthentication().get(), request)
                         : failure(response, request))
-                .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+                .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED))
+                .map(response -> clearPersistedValues(request, response));
+    }
+
+    /**
+     * The state, PKCE code verifier and nonce are single-use values which have been consumed by the callback.
+     * Ask each persistence mechanism to clear them so they cannot be replayed.
+     *
+     * @param request  The callback request
+     * @param response The callback response
+     * @return The callback response
+     */
+    private MutableHttpResponse<?> clearPersistedValues(@NonNull HttpRequest<?> request,
+                                                        @NonNull MutableHttpResponse<?> response) {
+        if (statePersistence != null) {
+            statePersistence.clearState(request, response);
+        }
+        if (pkcePersistence != null) {
+            pkcePersistence.clearPkce(request, response);
+        }
+        if (noncePersistence != null) {
+            noncePersistence.clearNonce(request, response);
+        }
+        return response;
     }
 
     private MutableHttpResponse<?> failure(@NonNull AuthenticationResponse response,

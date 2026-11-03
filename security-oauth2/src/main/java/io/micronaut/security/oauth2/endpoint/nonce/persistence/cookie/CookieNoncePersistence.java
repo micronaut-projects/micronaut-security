@@ -23,6 +23,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -58,5 +59,15 @@ public class CookieNoncePersistence implements NoncePersistence {
         Cookie cookie = Cookie.of(configuration.getCookieName(), nonce);
         cookie.configure(configuration, request.isSecure());
         response.cookie(cookie);
+    }
+
+    @Override
+    public void clearNonce(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        if (request.getCookies().contains(configuration.getCookieName())) {
+            Cookie cookie = Cookie.of(configuration.getCookieName(), "");
+            cookie.configure(configuration, request.isSecure());
+            cookie.maxAge(0);
+            response.cookie(cookie);
+        }
     }
 }
