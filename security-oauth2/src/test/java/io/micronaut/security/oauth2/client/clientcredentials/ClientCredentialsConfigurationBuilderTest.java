@@ -35,6 +35,7 @@ class ClientCredentialsConfigurationBuilderTest {
         assertTrue(configuration.isEnabled());
         assertFalse(configuration.getScope().isPresent());
         assertEquals(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION, configuration.getAdvancedExpiration());
+        assertEquals(ClientCredentialsConfiguration.DEFAULT_EXPIRATION, configuration.getDefaultExpiration());
         assertFalse(configuration.getHeaderPropagation().isPresent());
         assertEquals(Map.of(), configuration.getAdditionalRequestParams());
         assertNull(configuration.getServiceIdPattern());
@@ -51,6 +52,7 @@ class ClientCredentialsConfigurationBuilderTest {
                 .enabled(false)
                 .scope("read write")
                 .advancedExpiration(advancedExpiration)
+                .defaultExpiration(Duration.ofMinutes(10))
                 .headerPropagation(headerPropagation)
                 .additionalRequestParams(additionalRequestParams)
                 .serviceIdRegex("inventory|billing")
@@ -61,6 +63,7 @@ class ClientCredentialsConfigurationBuilderTest {
         assertFalse(configuration.isEnabled());
         assertEquals("read write", configuration.getScope().orElseThrow());
         assertEquals(advancedExpiration, configuration.getAdvancedExpiration());
+        assertEquals(Duration.ofMinutes(10), configuration.getDefaultExpiration());
         assertSame(headerPropagation, configuration.getHeaderPropagation().orElseThrow());
         assertEquals(Map.of("audience", "https://api.example.com"), configuration.getAdditionalRequestParams());
         assertThrows(UnsupportedOperationException.class, () -> configuration.getAdditionalRequestParams().put("resource", "https://resource.example.com"));
