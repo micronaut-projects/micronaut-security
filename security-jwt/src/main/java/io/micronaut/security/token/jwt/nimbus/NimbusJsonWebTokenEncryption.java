@@ -55,8 +55,10 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating encrypted JWT");
         }
-        if (LOG.isDebugEnabled() && encryptionConfigurationList.isEmpty()) {
-            LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+        if (encryptionConfigurationList.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+            }
             return Optional.empty();
         }
         final JWEHeader header = jwt.getHeader();
