@@ -23,6 +23,8 @@ micronaut.security.oauth2.state.persistence: session
 
 If state validation fails, the user will not be authenticated.
 
+The state is validated for both successful and error authorization responses. As described in link:https://tools.ietf.org/html/rfc6749#section-4.1.2.1[RFC 6749 section 4.1.2.1], the authorization server includes the `state` parameter in error responses too. An error callback (for example `/oauth/callback/{provider}?error=access_denied`) whose state does not match the persisted state is handled as a failed login through the api:security.handlers.LoginHandler[], exactly like a successful callback with an invalid state, and is not treated as an error reported by the provider.
+
 === Customization
 
 There are several interfaces that implementations can be provided for to override how the state parameter is handled.
