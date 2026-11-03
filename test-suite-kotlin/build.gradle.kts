@@ -19,6 +19,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityScimCore)
     testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
