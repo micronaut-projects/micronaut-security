@@ -151,7 +151,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
             tokenEndpoint,
             clientConfiguration,
             pkcePersistence == null ? null :
-                pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null));
+                pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest(), authorizationResponse.getState()).orElse(null));
         return Flux.from(tokenEndpointClient.sendRequest(requestContext)).publishOn(Schedulers.fromExecutorService(blockingExecutor));
     }
 

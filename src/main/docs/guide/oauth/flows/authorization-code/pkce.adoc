@@ -4,3 +4,5 @@ Using OpenID Connect <<openid-configuration, Discovery>> by setting `micronaut.s
 Using manual OAuth 2.0 Client configuration, you can specify the challenge method supported by setting `micronaut.security.oauth2.clients.*.authorization.code-challenge-method`.
 
 If the built-in implementation does not fulfill your needs, you can  provide a https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of bean api:security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator[] or api:security.oauth2.endpoint.authorization.pkce.PkceGenerator[].
+
+The code verifier is stored until the callback with a api:security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence[] bean. By default, it is stored in a HTTP cookie, which supports only one in-flight login per browser. Set `micronaut.security.oauth2.pkce.persistence` to `session` to store it in the HTTP session instead, which keeps the code verifiers of several in-flight logins, keyed by the state of the login flow they belong to. See the <<state, state>> documentation for details.
