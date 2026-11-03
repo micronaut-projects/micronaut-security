@@ -24,6 +24,8 @@ import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.Duration;
+
 /**
  * JSON Web Key Set (JWKS) Signature Configuration properties holder.
  *
@@ -47,6 +49,12 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    /**
+     * The default minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final Duration DEFAULT_REFRESH_INTERVAL = Duration.ofSeconds(30);
+
     @Nullable
     private final String name;
 
@@ -56,7 +64,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
-    
+
+    @NonNull
+    private Duration refreshInterval = DEFAULT_REFRESH_INTERVAL;
+
     public JwksSignatureConfigurationProperties(@Parameter String name) {
         this.name = name;
     }
@@ -124,5 +135,25 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      */
     public void setKeyType(KeyType keyType) {
         this.keyType = keyType;
+    }
+
+    /**
+     *
+     * @return Minimum interval between two JWKS refreshes triggered by a token whose key ID is not present in the cached JWKS.
+     */
+    @Override
+    @NonNull
+    public Duration getRefreshInterval() {
+        return refreshInterval;
+    }
+
+    /**
+     * When a JWT carries a {@code kid} header which is not present in the cached JWKS, the JWKS cache is cleared and the JWKS is fetched again.
+     * This property sets the minimum interval between two such refreshes. Default value 30 seconds.
+     * @param refreshInterval Minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     */
+    public void setRefreshInterval(@NonNull Duration refreshInterval) {
+        ArgumentUtils.requireNonNull("refreshInterval", refreshInterval);
+        this.refreshInterval = refreshInterval;
     }
 }

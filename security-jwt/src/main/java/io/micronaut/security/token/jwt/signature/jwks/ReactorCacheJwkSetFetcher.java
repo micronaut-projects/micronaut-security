@@ -61,6 +61,18 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
                 .map(JwksCacheEntry::jwkSet);
     }
 
+    @Override
+    public void clearCache(@NonNull String url) {
+        cache.keySet().removeIf(cacheKey -> url.equals(cacheKey.url()));
+        super.clearCache(url);
+    }
+
+    @Override
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        cache.remove(new CacheKey(providerName, url));
+        super.clearCache(url);
+    }
+
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
         return Mono.defer(() -> Mono.from(super.fetch(cacheKey.providerName, cacheKey.url())))
             .defaultIfEmpty(new JWKSet())
