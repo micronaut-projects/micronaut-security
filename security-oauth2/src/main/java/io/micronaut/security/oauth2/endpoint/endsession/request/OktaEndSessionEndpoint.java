@@ -24,6 +24,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.token.reader.TokenResolver;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -62,9 +63,18 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
         this.tokenResolver = tokenResolver;
     }
 
+    /**
+     * This endpoint is used for both Okta and Oracle Cloud (IDCS), whose logout paths differ
+     * ({@code /v1/logout} vs {@code /oauth2/v1/userlogout}), so no default is derived from the issuer.
+     *
+     * @return the {@code end_session_endpoint} advertised in the OpenID provider metadata, or {@code null} if the
+     * metadata does not contain one. A {@code null} URL results in no end session redirect instead of an error.
+     */
     @Override
+    @Nullable
     protected String getUrl() {
-        return providerMetadataSupplier.get().getEndSessionEndpoint();
+        OpenIdProviderMetadata openIdProviderMetadata = providerMetadataSupplier.get();
+        return openIdProviderMetadata != null ? openIdProviderMetadata.getEndSessionEndpoint() : null;
     }
 
     @Override
