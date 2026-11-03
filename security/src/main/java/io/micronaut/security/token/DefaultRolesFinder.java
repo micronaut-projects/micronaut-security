@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.token;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -50,7 +49,7 @@ public class DefaultRolesFinder implements RolesFinder {
      *
      * @param rolesObject Object containing the roles
      * @return if the supplied object is {@literal null} it returns an empty list,<br />
-     *         if it is a String and the {@link io.micronaut.security.token.config.TokenConfiguration#getRolesSeparator()} is not null then it will be split by the separator and returned as a list,<br />
+     *         if it is a String and the {@link io.micronaut.security.token.config.TokenConfiguration#getRolesSeparator()} is not null or empty then it will be split by the literal separator, each role trimmed and empty entries dropped, and returned as a list,<br />
      *         if it is an iterable, it returns a list of each element {@link Object#toString()},<br />
      *         else it returns {@link Object#toString()}
      */
@@ -60,8 +59,9 @@ public class DefaultRolesFinder implements RolesFinder {
             return emptyList();
         }
 
-        if (rolesObject instanceof CharSequence && tokenConfiguration.getRolesSeparator() != null) {
-            return asList(rolesObject.toString().split(tokenConfiguration.getRolesSeparator()));
+        String separator = tokenConfiguration.getRolesSeparator();
+        if (rolesObject instanceof CharSequence && separator != null && !separator.isEmpty()) {
+            return splitRoles(rolesObject.toString(), separator);
         }
 
         if (rolesObject instanceof Iterable) {
@@ -73,6 +73,32 @@ public class DefaultRolesFinder implements RolesFinder {
         }
 
         return singletonList(rolesObject.toString());
+    }
+
+    /**
+     * Splits the value on the literal separator, trims each entry and drops empty entries.
+     *
+     * @param value The roles value
+     * @param separator The literal, non-empty separator
+     * @return The list of roles
+     */
+    @NonNull
+    private static List<String> splitRoles(@NonNull String value, @NonNull String separator) {
+        List<String> roles = new ArrayList<>();
+        int start = 0;
+        while (start <= value.length()) {
+            int index = value.indexOf(separator, start);
+            int end = index == -1 ? value.length() : index;
+            String role = value.substring(start, end).trim();
+            if (!role.isEmpty()) {
+                roles.add(role);
+            }
+            if (index == -1) {
+                break;
+            }
+            start = index + separator.length();
+        }
+        return roles;
     }
 
     @Override
