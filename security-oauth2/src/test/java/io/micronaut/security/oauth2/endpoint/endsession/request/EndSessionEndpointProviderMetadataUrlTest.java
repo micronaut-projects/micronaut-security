@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -66,7 +67,7 @@ class EndSessionEndpointProviderMetadataUrlTest {
                 OpenIdClient openIdClient = server.getApplicationContext().getBean(OpenIdClient.class, Qualifiers.byName(CLIENT));
                 Authentication authentication = Authentication.build("sherlock");
                 HttpRequest<?> originating = new SimpleHttpRequest<>(HttpMethod.GET, "/oauth/logout", Collections.emptyMap());
-                assertTrue(openIdClient.endSessionRedirect(originating, authentication).isEmpty());
+                assertFalse(openIdClient.endSessionRedirect(originating, authentication).isPresent());
             }
         }
     }

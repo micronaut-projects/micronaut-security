@@ -30,6 +30,9 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +45,7 @@ class IpPatternsRuleServerTest {
 
     @Test
     void loopbackLiteralPatternAdmitsLoopbackRequests() {
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(List.of("127.0.0.1", "0:0:0:0:0:0:0:1")));
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(Arrays.asList("127.0.0.1", "0:0:0:0:0:0:0:1")));
              HttpClient client = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/anonymous"), String.class);
             assertEquals(HttpStatus.OK, response.getStatus());
@@ -52,7 +55,7 @@ class IpPatternsRuleServerTest {
 
     @Test
     void wildcardPatternOutsideLoopbackRejectsLoopbackRequests() {
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(List.of("192.168.1.*")));
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(Collections.singletonList("192.168.1.*")));
              HttpClient client = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             HttpClientResponseException e = assertThrows(HttpClientResponseException.class,
                 () -> client.toBlocking().exchange(HttpRequest.GET("/anonymous"), String.class));
@@ -64,7 +67,7 @@ class IpPatternsRuleServerTest {
     void dotsInWildcardPatternsAreLiteral() {
         // As a regular expression, "12.*" is "12" followed by anything and admits 127.0.0.1. As an IP wildcard the dot
         // is literal, so only addresses starting with "12." match and the loopback request is rejected.
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(List.of("12.*")));
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(Collections.singletonList("12.*")));
              HttpClient client = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             HttpClientResponseException e = assertThrows(HttpClientResponseException.class,
                 () -> client.toBlocking().exchange(HttpRequest.GET("/anonymous"), String.class));
@@ -73,10 +76,10 @@ class IpPatternsRuleServerTest {
     }
 
     private static Map<String, Object> configuration(List<String> ipPatterns) {
-        return Map.of(
-            "spec.name", SPEC_NAME,
-            "micronaut.security.ip-patterns", ipPatterns
-        );
+        Map<String, Object> configuration = new HashMap<>();
+        configuration.put("spec.name", SPEC_NAME);
+        configuration.put("micronaut.security.ip-patterns", ipPatterns);
+        return configuration;
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)
