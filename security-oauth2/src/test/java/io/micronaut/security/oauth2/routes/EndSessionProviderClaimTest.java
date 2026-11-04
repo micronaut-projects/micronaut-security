@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -109,7 +110,9 @@ class EndSessionProviderClaimTest {
     void userInfoResponseNamingAnotherIssuerDoesNotChangeTheEndSessionEndpoint() throws Exception {
         try (EmbeddedServer providerOne = startProvider(providerOneKey);
              EmbeddedServer providerTwo = startProvider(providerTwoKey);
-             EmbeddedServer server = startRelyingParty(providerOne, providerTwo)) {
+             // an opaque token is only sent to a UserInfo endpoint when that client opts in, see UserInfoClientTokenValidator
+             EmbeddedServer server = startRelyingParty(providerOne, providerTwo,
+                 Map.of("micronaut.security.oauth2.clients.two.openid.user-info.validate-opaque-tokens", true))) {
             // provider two accepts the opaque token at its UserInfo endpoint and answers with provider one's issuer and client id
             ProviderController two = provider(providerTwo);
             two.acceptedUserInfoToken = OPAQUE_TOKEN;
@@ -148,7 +151,12 @@ class EndSessionProviderClaimTest {
     }
 
     private static EmbeddedServer startRelyingParty(EmbeddedServer providerOne, EmbeddedServer providerTwo) {
-        return ApplicationContext.run(EmbeddedServer.class, Map.of(
+        return startRelyingParty(providerOne, providerTwo, Map.of());
+    }
+
+    private static EmbeddedServer startRelyingParty(EmbeddedServer providerOne, EmbeddedServer providerTwo, Map<String, Object> extra) {
+        Map<String, Object> configuration = new HashMap<>(extra);
+        configuration.putAll(Map.of(
             "spec.name", SPEC_NAME,
             "micronaut.security.authentication", "idtoken",
             "micronaut.security.redirect.enabled", StringUtils.FALSE,
@@ -158,6 +166,7 @@ class EndSessionProviderClaimTest {
             "micronaut.security.oauth2.clients.two.openid.issuer", issuer(providerTwo),
             "micronaut.security.oauth2.clients.two.client-id", CLIENT_TWO_ID,
             "micronaut.security.oauth2.clients.two.client-secret", CLIENT_SECRET));
+        return ApplicationContext.run(EmbeddedServer.class, configuration);
     }
 
     private static EmbeddedServer startProvider(RSAKey key) {
