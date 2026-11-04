@@ -8,6 +8,7 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.type.Argument;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -49,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class UserInfoClientTokenValidatorProviderBindingTest {
     private static final String QUALIFY_USERNAME_PROPERTY = OauthConfigurationProperties.OpenIdConfigurationProperties.PREFIX + ".qualify-username-with-provider";
+    private static final String USERINFO_VALIDATOR_PROPERTY = OauthConfigurationProperties.PREFIX + ".userinfo.validator";
     private static final String VICTIM_SUBJECT = "victim-subject-123";
     private static final String TOKEN_ISSUED_BY_A = "access-token-issued-by-provider-a-not-a-secret";
     private static final String TOKEN_ISSUED_BY_B = "access-token-issued-by-provider-b-not-a-secret";
@@ -268,6 +270,7 @@ class UserInfoClientTokenValidatorProviderBindingTest {
     private static EmbeddedServer startResourceServer(Map<String, Object> extraConfig, EmbeddedServer... providers) {
         Map<String, Object> config = new HashMap<>(extraConfig);
         config.put("spec.name", "UserInfoClientTokenValidatorProviderBindingTest");
+        config.put(USERINFO_VALIDATOR_PROPERTY, StringUtils.TRUE);
         String[] names = {"provider-a", "provider-b"};
         for (int i = 0; i < providers.length; i++) {
             String prefix = "micronaut.security.oauth2.clients." + names[i];
@@ -286,7 +289,10 @@ class UserInfoClientTokenValidatorProviderBindingTest {
     }
 
     private static EmbeddedServer startProvider(String acceptedToken) {
-        EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorProviderBindingTestProvider"));
+        // the fake provider controller lives in this package, which is disabled unless the validator is enabled
+        EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", "UserInfoClientTokenValidatorProviderBindingTestProvider",
+            USERINFO_VALIDATOR_PROPERTY, StringUtils.TRUE));
         FakeProvider fakeProvider = fakeProvider(provider);
         fakeProvider.url = provider.getURL().toString();
         fakeProvider.acceptedToken = acceptedToken;

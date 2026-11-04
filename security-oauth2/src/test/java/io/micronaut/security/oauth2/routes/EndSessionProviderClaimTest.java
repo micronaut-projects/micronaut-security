@@ -160,6 +160,7 @@ class EndSessionProviderClaimTest {
             "spec.name", SPEC_NAME,
             "micronaut.security.authentication", "idtoken",
             "micronaut.security.redirect.enabled", StringUtils.FALSE,
+            "micronaut.security.oauth2.userinfo.validator", StringUtils.TRUE,
             "micronaut.security.oauth2.clients.one.openid.issuer", issuer(providerOne),
             "micronaut.security.oauth2.clients.one.client-id", CLIENT_ONE_ID,
             "micronaut.security.oauth2.clients.one.client-secret", CLIENT_SECRET,
