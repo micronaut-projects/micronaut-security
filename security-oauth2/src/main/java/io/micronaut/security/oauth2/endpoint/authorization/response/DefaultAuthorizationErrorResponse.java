@@ -66,17 +66,14 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     static ErrorCode getError(ConvertibleMultiValues<String> responseData) {
         String name = responseData.get(JSON_KEY_ERROR);
-        try {
-            if (name != null) {
-                return AuthorizationErrorCode.valueOf(name.toUpperCase(Locale.ENGLISH));
-            }
-        } catch (IllegalArgumentException e) {
-            LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        ErrorCode errorCode = getError(name);
+        if (errorCode != null) {
+            return errorCode;
         }
         return new ErrorCode() {
             @Override
             public String getErrorCode() {
-                return responseData.get(JSON_KEY_ERROR);
+                return name;
             }
 
             @Override
@@ -84,6 +81,20 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
                 return responseData.get(JSON_KEY_ERROR_DESCRIPTION);
             }
         };
+    }
+
+    @Nullable
+    static ErrorCode getError(@Nullable String name) {
+        if (name != null) {
+            String constantName = name.toUpperCase(Locale.ENGLISH);
+            for (AuthorizationErrorCode errorCode : AuthorizationErrorCode.values()) {
+                if (errorCode.name().equals(constantName)) {
+                    return errorCode;
+                }
+            }
+        }
+        LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        return null;
     }
 
     @Nullable
