@@ -86,7 +86,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @param redirectConfiguration Redirect configuration
      * @param redirectService Redirection Service
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
-     * @deprecated Use {@link DefaultAuthorizationExceptionHandler(ErrorResponseProcessor, RedirectConfiguration, RedirectService, List, PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link #DefaultAuthorizationExceptionHandler(ErrorResponseProcessor, RedirectConfiguration, RedirectService, List, PriorToLoginPersistence)} instead.
      */
     @Deprecated(forRemoval = true, since = "4.14.0")
     public DefaultAuthorizationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor,
