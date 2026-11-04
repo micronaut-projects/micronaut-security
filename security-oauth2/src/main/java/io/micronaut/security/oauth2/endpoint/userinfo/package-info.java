@@ -16,9 +16,14 @@
 /**
  * Classes related with User Info endpoint.
  * <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo</a>
+ * <p>
+ * Token validation via the UserInfo endpoint is disabled by default. A UserInfo endpoint accepts every access token
+ * issued by the provider, including tokens issued to other clients, so it must be enabled explicitly by setting
+ * {@code micronaut.security.oauth2.userinfo.validator} to {@code true}.
+ * </p>
  * @since 4.15.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".userinfo.validator", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(property = OauthConfigurationProperties.PREFIX + ".userinfo.validator", value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 @Configuration
 package io.micronaut.security.oauth2.endpoint.userinfo;
 

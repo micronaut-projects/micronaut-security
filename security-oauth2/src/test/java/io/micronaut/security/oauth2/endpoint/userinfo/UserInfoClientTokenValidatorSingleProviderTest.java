@@ -55,7 +55,7 @@ class UserInfoClientTokenValidatorSingleProviderTest {
 
     @BeforeEach
     void startProvider() {
-        provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorSingleProviderTestProvider"));
+        provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorSingleProviderTestProvider", "micronaut.security.oauth2.userinfo.validator", "true"));
         fakeProvider().url = provider.getURL().toString();
     }
 
@@ -119,6 +119,7 @@ class UserInfoClientTokenValidatorSingleProviderTest {
         factoryLogger.addAppender(logEvents);
         Map<String, Object> config = Map.of(
             "spec.name", "UserInfoClientTokenValidatorSingleProviderTest",
+            "micronaut.security.oauth2.userinfo.validator", "true",
             "micronaut.security.oauth2.clients.authserver.client-id", "client",
             "micronaut.security.oauth2.clients.authserver.client-secret", "test-fixture-not-a-secret",
             "micronaut.security.oauth2.clients.authserver.openid.fetch-configuration", false,
@@ -148,6 +149,7 @@ class UserInfoClientTokenValidatorSingleProviderTest {
     private EmbeddedServer startResourceServer(Map<String, Object> extraConfig) {
         Map<String, Object> config = new HashMap<>(Map.of(
             "spec.name", "UserInfoClientTokenValidatorSingleProviderTest",
+            "micronaut.security.oauth2.userinfo.validator", "true",
             "micronaut.security.oauth2.clients.authserver.client-id", "client",
             "micronaut.security.oauth2.clients.authserver.client-secret", "test-fixture-not-a-secret",
             "micronaut.security.oauth2.clients.authserver.openid.issuer", provider.getURL().toString()

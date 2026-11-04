@@ -315,6 +315,7 @@ class UserInfoClientTokenValidatorMultipleProvidersTest {
         try (EmbeddedServer server = ApplicationContext.builder()
             .properties(Map.of(
                 "spec.name", "UserInfoClientTokenValidatorMultipleProvidersTest",
+                "micronaut.security.oauth2.userinfo.validator", "true",
                 "micronaut.security.oauth2.clients.provider-a.client-id", "client-a",
                 "micronaut.security.oauth2.clients.provider-a.client-secret", "test-fixture-not-a-secret",
                 "micronaut.security.oauth2.clients.provider-a.openid.issuer", providerA.getURL().toString()))
@@ -346,6 +347,7 @@ class UserInfoClientTokenValidatorMultipleProvidersTest {
     private EmbeddedServer startResourceServer(Map<String, Object> extraConfig, int expectedValidators) {
         Map<String, Object> config = new HashMap<>(Map.of(
             "spec.name", "UserInfoClientTokenValidatorMultipleProvidersTest",
+            "micronaut.security.oauth2.userinfo.validator", "true",
             "micronaut.security.oauth2.clients.provider-a.client-id", "client-a",
             "micronaut.security.oauth2.clients.provider-a.client-secret", "test-fixture-not-a-secret",
             "micronaut.security.oauth2.clients.provider-a.openid.issuer", providerA.getURL().toString(),
@@ -360,7 +362,7 @@ class UserInfoClientTokenValidatorMultipleProvidersTest {
     }
 
     private static EmbeddedServer startProvider(String name) {
-        EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorMultipleProvidersTestProvider"));
+        EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorMultipleProvidersTestProvider", "micronaut.security.oauth2.userinfo.validator", "true"));
         FakeProvider fakeProvider = provider.getApplicationContext().getBean(FakeProvider.class);
         fakeProvider.name = name;
         fakeProvider.url = provider.getURL().toString();
