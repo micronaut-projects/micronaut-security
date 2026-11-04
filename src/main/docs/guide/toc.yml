@@ -117,6 +117,10 @@ reporting:
   reportingEndpoints: Configuration Reporting Endpoints
   reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
+passwordEncoding:
+  title: Password Encoding
+  passwordEncodingArgon2: Argon2id
+  passwordEncodingTck: TCK
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers

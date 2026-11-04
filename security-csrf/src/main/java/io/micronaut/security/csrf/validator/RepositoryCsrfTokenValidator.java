@@ -24,9 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
-import java.security.MessageDigest;
 
 /**
  * {@link CsrfTokenValidator} implementation that uses a {@link CsrfTokenRepository}.
@@ -56,11 +56,14 @@ class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
 
     @Override
     public boolean validateCsrfToken(T request, String csrfTokenInRequest) {
+        if (csrfTokenInRequest == null) {
+            return false;
+        }
         for (CsrfTokenRepository<T> repo : repositories) {
             Optional<String> csrfTokenOptional = repo.findCsrfToken(request);
             if (csrfTokenOptional.isPresent()) {
                 String csrfTokenInRepository = csrfTokenOptional.get();
-                if (csrfTokenInRepository.equals(csrfTokenInRequest) && validateHmac(request, csrfTokenInRequest)) {
+                if (constantTimeEquals(csrfTokenInRepository, csrfTokenInRequest) && validateHmac(request, csrfTokenInRequest)) {
                     return true;
                 }
             }
@@ -72,13 +75,23 @@ class RepositoryCsrfTokenValidator<T> implements CsrfTokenValidator<T> {
         String[] arr = csrfTokenInRequest.split("\\" + CsrfHmacTokenGenerator.HMAC_RANDOM_SEPARATOR);
         if (arr.length != 2) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Invalid CSRF token: {}", csrfTokenInRequest);
+                LOG.warn("CSRF token in repository is not in the expected hmac{}random format", CsrfHmacTokenGenerator.HMAC_RANDOM_SEPARATOR);
             }
             return false;
         }
         String hmac = arr[0];
         String randomValue = arr[1];
         String expectedHmac = defaultCsrfTokenGenerator.hmac(request, randomValue);
-        return MessageDigest.isEqual(expectedHmac.getBytes(StandardCharsets.UTF_8), hmac.getBytes(StandardCharsets.UTF_8));
+        return constantTimeEquals(expectedHmac, hmac);
+    }
+
+    /**
+     * Compares two strings in constant time to avoid leaking a stored secret through timing differences.
+     * @param expected Expected value
+     * @param actual Actual value
+     * @return Whether both values are equal
+     */
+    private static boolean constantTimeEquals(String expected, String actual) {
+        return MessageDigest.isEqual(expected.getBytes(StandardCharsets.UTF_8), actual.getBytes(StandardCharsets.UTF_8));
     }
 }
