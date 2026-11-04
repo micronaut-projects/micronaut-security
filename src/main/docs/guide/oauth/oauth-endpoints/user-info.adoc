@@ -1,6 +1,19 @@
-Micronaut Security OAuth2 registers a bean of type api:io.micronaut.security.token.validator.TokenValidator[] for each OpenID provider.
+Micronaut Security OAuth2 can register a bean of type api:io.micronaut.security.token.validator.TokenValidator[] for each OpenID provider.
 It provides token validation using the remote authorization server's
 https://openid.net/specs/openid-connect-core-1_0.html#UserInfo[`UserInfo` endpoint].
+
+`UserInfo` endpoint token validation is disabled by default. To enable it, set `micronaut.security.oauth2.userinfo.validator` to `true`:
+
+[configuration]
+----
+micronaut:
+  security:
+    oauth2:
+      userinfo:
+        validator: true
+----
+
+WARNING: A `UserInfo` endpoint returns the claims of the user for every access token the provider issued, regardless of the client the token was issued to. The `UserInfo` endpoint response does not contain an audience, so when this validator is enabled, an access token issued by the same provider to a *different* client is accepted by your application and the request is authenticated as that token's user. Enable this validator only when every client registered with the OpenID provider is trusted (for example, a provider or realm dedicated to your application).
 
 image::userinfo.svg[]
 
@@ -10,7 +23,7 @@ However, you can set it also via configuration:
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]
 
-NOTE: Set `micronaut.security.oauth2.userinfo.validator` to `false` to disable `UserInfo` endpoint token validation.
+
 
 === Which provider receives the token
 

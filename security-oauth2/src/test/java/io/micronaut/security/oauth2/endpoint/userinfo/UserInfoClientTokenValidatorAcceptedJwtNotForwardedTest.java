@@ -69,10 +69,13 @@ class UserInfoClientTokenValidatorAcceptedJwtNotForwardedTest {
     @ParameterizedTest
     @EnumSource(Scenario.class)
     void jwtAcceptedByJwtValidatorIsNotSentToUserInfoEndpoint(Scenario scenario) throws Exception {
-        try (EmbeddedServer unrelatedAuthServer = ApplicationContext.run(EmbeddedServer.class,
-            Map.of("spec.name", "UserInfoClientTokenValidatorAcceptedJwtNotForwardedTestUnrelatedAuthServer"));
-             EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer.class,
-                 Map.of("spec.name", "UserInfoClientTokenValidatorAcceptedJwtNotForwardedTestAuthServer"))) {
+        // the mock authorization server beans live in this package, which is disabled unless the validator is enabled
+        try (EmbeddedServer unrelatedAuthServer = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                 "spec.name", "UserInfoClientTokenValidatorAcceptedJwtNotForwardedTestUnrelatedAuthServer",
+                 "micronaut.security.oauth2.userinfo.validator", "true"));
+             EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                 "spec.name", "UserInfoClientTokenValidatorAcceptedJwtNotForwardedTestAuthServer",
+                 "micronaut.security.oauth2.userinfo.validator", "true"))) {
             OpenIdAutoConfigurationController metadata = authServer.getApplicationContext().getBean(OpenIdAutoConfigurationController.class);
             metadata.setUrl(authServer.getURL().toString());
             UserInfoController userInfo = authServer.getApplicationContext().getBean(UserInfoController.class);
