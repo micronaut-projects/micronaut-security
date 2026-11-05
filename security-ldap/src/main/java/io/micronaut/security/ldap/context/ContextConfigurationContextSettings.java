@@ -16,6 +16,7 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,16 +34,21 @@ public class ContextConfigurationContextSettings implements ContextSettings {
     private final boolean pooled;
 
     /**
+     * Settings for the manager context. The context is pooled only if
+     * {@link LdapConfiguration.ContextConfiguration#isPooled()} is {@code true}.
+     *
      * @param configuration The ldap configuration
      */
     public ContextConfigurationContextSettings(LdapConfiguration configuration) {
         this.contextConfiguration = configuration.getContext();
         this.dn = contextConfiguration.getManagerDn();
         this.password = contextConfiguration.getManagerPassword();
-        this.pooled = true;
+        this.pooled = contextConfiguration.isPooled();
     }
 
     /**
+     * Settings for a context bound with user credentials. Such a context is never pooled.
+     *
      * @param configuration The ldap configuration
      * @param dn            The user DN to bind with
      * @param password      The password to bind with
@@ -80,8 +86,22 @@ public class ContextConfigurationContextSettings implements ContextSettings {
         return password;
     }
 
+    /**
+     * The additional properties of the configuration. For the pooled manager context they also carry the
+     * {@code com.sun.jndi.ldap.connect.timeout} JNDI environment property derived from
+     * {@link LdapConfiguration.ContextConfiguration.PoolConfiguration#getConnectTimeout()}, unless the
+     * configured properties already set it, so that a login does not wait indefinitely when the pool is saturated.
+     *
+     * @return The additional properties
+     */
     @Override
     public Map<String, Object> getAdditionalProperties() {
-        return contextConfiguration.getProperties();
+        Map<String, Object> properties = contextConfiguration.getProperties();
+        if (!pooled || properties.containsKey(LdapConnectionPoolConfigurer.CONNECT_TIMEOUT_PROPERTY)) {
+            return properties;
+        }
+        Map<String, Object> withConnectTimeout = new HashMap<>(properties);
+        LdapConnectionPoolConfigurer.applyConnectTimeout(withConnectTimeout, contextConfiguration.getPool().getConnectTimeout());
+        return withConnectTimeout;
     }
 }
