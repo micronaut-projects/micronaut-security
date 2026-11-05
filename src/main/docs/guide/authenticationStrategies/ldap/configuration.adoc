@@ -7,7 +7,29 @@ include::{includedir}configurationProperties/io.micronaut.security.ldap.configur
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]
 
-TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
+=== Connecting with TLS
+
+Without TLS, the manager credentials and every user's password are sent to the directory as clear-text LDAP simple binds. Use an `ldaps://` URL, or keep an `ldap://` URL and turn on TLS through the JNDI environment property `java.naming.security.protocol`. JNDI then opens a TLS connection to the port in the URL, or to 636 when the URL has no port; it does not negotiate StartTLS on the clear-text port.
+
+[configuration]
+----
+micronaut:
+  security:
+    ldap:
+      default:
+        context:
+          server: 'ldap://ldap.example.com:636'
+          manager-dn: 'cn=manager,dc=example,dc=com'
+          manager-password: '${LDAP_MANAGER_PASSWORD}'
+          properties:
+            java.naming.security.protocol: ssl
+----
+
+The entries under `micronaut.security.ldap.*.context.properties` are passed verbatim to api:security.ldap.context.ContextBuilder[], and from there to `javax.naming.directory.InitialDirContext`. Keys keep the exact spelling you write (for example `java.naming.ldap.derefAliases` or `com.sun.jndi.ldap.connect.timeout`) and are never split into nested maps or renamed. Scalar values such as numbers and booleans are passed as strings, which is what the LDAP provider of the JDK expects. Only entries which take a string can be set this way. An entry which takes an object, such as `com.sun.jndi.ldap.trace.ber` (an `OutputStream`) or `java.naming.ldap.control.connect` (an array of controls), cannot be expressed in configuration; set in configuration, it makes every bind fail with a `NamingException`. Supply such entries through a custom api:security.ldap.context.ContextSettings[] instead.
+
+WARNING: Be careful with `java.naming.referral`. By default JNDI ignores referrals returned by the directory. With `java.naming.referral: follow`, JNDI opens a connection to every server a referral names and reuses the whole environment for it, including the manager DN and password and, during a login, the DN and password the user submitted. Those credentials are therefore sent to whichever server the directory points to. TLS enabled through `java.naming.security.protocol: ssl` also applies to the referral connections, but TLS enabled only through an `ldaps://` server URL does not: a referral to an `ldap://` URL is then followed in clear text. `java.naming.referral: follow-scheme` does not prevent this downgrade: the LDAP provider of the JDK then follows only referrals whose URL starts with `ldap:`, whatever the scheme of the server URL, so `ldaps://` referrals are dropped while `ldap://` referrals are still followed. Only follow referrals when every server the directory can refer to is trusted, and enable TLS through `java.naming.security.protocol`, which is the only setting that keeps every referral connection encrypted.
+
+TIP: To trust the certificate presented by the directory, set the standard Java system properties to the values appropriate for your server.
 ```
 -Djavax.net.ssl.trustStore="<path to truststore file>"
 -Djavax.net.ssl.trustStorePassword="<passphrase for truststore>"
