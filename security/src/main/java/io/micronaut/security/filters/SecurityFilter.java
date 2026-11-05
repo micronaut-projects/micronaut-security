@@ -35,6 +35,8 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
+import io.micronaut.web.router.resource.StaticResourceResolver;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -84,18 +86,50 @@ public class SecurityFilter implements HttpServerFilter {
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
+    @Nullable
+    private final StaticResourceResolver staticResourceResolver;
 
     /**
      * @param securityRules          The list of security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, StaticResourceResolver)}.
      */
+    @Deprecated
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
+        this.staticResourceResolver = null;
+        warnIfNoStaticResourceResolver(securityConfiguration, null);
+    }
+
+    /**
+     * @param securityRules The list of security rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context
+     * @param securityConfiguration The security configuration
+     * @param staticResourceResolver Resolves static resources, used to reject static resources that no security rule covers even when {@code micronaut.security.reject-not-found} is disabled. When {@code null}, the filter fails closed and rejects every request that matches no route, regardless of {@code micronaut.security.reject-not-found}.
+     * @since 3.11.4
+     */
+    @Inject
+    public SecurityFilter(Collection<SecurityRule> securityRules,
+                          Collection<AuthenticationFetcher> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration,
+                          @Nullable StaticResourceResolver staticResourceResolver) {
+        this.securityRules = securityRules;
+        this.authenticationFetchers = authenticationFetchers;
+        this.securityConfiguration = securityConfiguration;
+        this.staticResourceResolver = staticResourceResolver;
+        warnIfNoStaticResourceResolver(securityConfiguration, staticResourceResolver);
+    }
+
+    private static void warnIfNoStaticResourceResolver(SecurityConfiguration securityConfiguration,
+                                                       @Nullable StaticResourceResolver staticResourceResolver) {
+        if (staticResourceResolver == null && !securityConfiguration.isRejectNotFound() && LOG.isWarnEnabled()) {
+            LOG.warn("No StaticResourceResolver is available to the SecurityFilter. Requests that match no route and that no security rule allows are rejected regardless of micronaut.security.reject-not-found, because the filter cannot tell whether the server would serve them as a static resource. Create the filter with a StaticResourceResolver to answer 404 for unknown routes.");
+        }
     }
 
     @Override
@@ -190,13 +224,40 @@ public class SecurityFilter implements HttpServerFilter {
                                 path);
                     }
                     // no rule found for the given request
-                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+                    if (routeMatch == null && !securityConfiguration.isRejectNotFound() && !mayBeStaticResource(request)) {
                         return chain.proceed(request);
                     } else {
                         request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
                         return Mono.error(new AuthorizationException(authentication));
                     }
                 }));
+    }
+
+    /**
+     * A request that matches no route may still be served by the server as a static resource. Such a request is
+     * resolved the same way the server resolves it, so that a static resource that no security rule covers is
+     * rejected instead of being served when {@code micronaut.security.reject-not-found} is disabled.
+     * The Netty runtime resolves static resources from the decoded path and the servlet runtime from the raw path,
+     * so both are checked: a request is rejected when either form resolves, which may turn a 404 of the active
+     * runtime into a 401 or 403 for percent-encoded paths. Without a {@link StaticResourceResolver}, which only
+     * happens with the deprecated constructors, the filter cannot tell and fails closed: every such request is
+     * treated as a possible static resource.
+     *
+     * @param request The request
+     * @return Whether the request may be served as a static resource
+     */
+    private boolean mayBeStaticResource(HttpRequest<?> request) {
+        if (staticResourceResolver == null) {
+            return true;
+        }
+        // The Netty runtime resolves static files from the decoded path, the servlet runtime from the raw path.
+        // Both are checked, so that the filter rejects a superset of what either runtime serves.
+        String rawPath = request.getPath();
+        String decodedPath = request.getUri().getPath();
+        if (decodedPath != null && staticResourceResolver.resolve(decodedPath).isPresent()) {
+            return true;
+        }
+        return !rawPath.equals(decodedPath) && staticResourceResolver.resolve(rawPath).isPresent();
     }
 
     private void logResult(SecurityRuleResult result, String method, String path, Ordered ordered) {
