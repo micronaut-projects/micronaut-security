@@ -19,8 +19,11 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.provider.AuthenticationProvider;
@@ -42,6 +45,7 @@ import reactor.core.scheduler.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
@@ -66,6 +70,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
+    private static final String AUTHENTICATE_METHOD_NAME = "authenticate";
 
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
     private final BeanContext beanContext;
@@ -74,6 +79,8 @@ public class Authenticator<T> {
     private final SecurityConfiguration securityConfiguration;
 
     private final Map<String, Scheduler> executeNameToScheduler = new ConcurrentHashMap<>();
+
+    private final Map<Class<?>, Boolean> blockingAnnotatedProviderClasses = new ConcurrentHashMap<>();
 
     /**
      * @param beanContext Bean Context
@@ -123,12 +130,42 @@ public class Authenticator<T> {
     }
 
     /**
-     * If {@link ExecutorAuthenticationProvider#getExecutorName()} equals `blocking` or `io` returns `true`.
+     * Returns {@code true} if the authentication provider is an {@link ExecutorAuthenticationProvider}, whatever the
+     * executor it names via {@link ExecutorAuthenticationProvider#getExecutorName()}, or if its {@code authenticate}
+     * method or its class is annotated with {@link Blocking}. Such providers declare that they block, so they are never
+     * invoked on the thread that subscribes to the authentication publisher (for example the Netty event loop). Executor
+     * providers are subscribed on the executor they name; {@link Blocking} providers on the {@code blocking} executor.
+     * <p>
+     * The {@link Blocking} annotation is read from the compile-time bean definition metadata, so it is only honoured for
+     * providers created by the bean context (not for instances registered at runtime or constructed by hand).
      * @param authenticationProvider An authentication provider
-     * @return Whether any of the authentication provider is blocking.
+     * @return Whether the authentication provider is blocking.
      */
     protected boolean isImperativeAuthenticationProviderIsBlocking(AuthenticationProvider<?, ?, ?> authenticationProvider) {
-        return authenticationProvider instanceof ExecutorAuthenticationProvider ap && (ap.getExecutorName().equals(TaskExecutors.BLOCKING) || ap.getExecutorName().equals(TaskExecutors.IO));
+        return authenticationProvider instanceof ExecutorAuthenticationProvider || isAnnotatedBlocking(authenticationProvider);
+    }
+
+    private boolean isAnnotatedBlocking(@NonNull AuthenticationProvider<?, ?, ?> authenticationProvider) {
+        if (beanContext == null) {
+            return false;
+        }
+        return blockingAnnotatedProviderClasses.computeIfAbsent(authenticationProvider.getClass(), this::isAnnotatedBlocking);
+    }
+
+    /**
+     * Inspects the bean definitions of the given provider class, without reflection: {@code authenticate} is
+     * {@link io.micronaut.context.annotation.Executable} on {@link AuthenticationProvider}, so every implementation's
+     * {@code authenticate} method is available as an {@link io.micronaut.inject.ExecutableMethod} with its annotations.
+     * @param providerClass The authentication provider class
+     * @return Whether the class, or any of its {@code authenticate} methods, is annotated with {@link Blocking}
+     */
+    private boolean isAnnotatedBlocking(@NonNull Class<?> providerClass) {
+        return beanContext.getBeanDefinitions(providerClass).stream().anyMatch(Authenticator::isAnnotatedBlocking);
+    }
+
+    private static boolean isAnnotatedBlocking(@NonNull BeanDefinition<?> definition) {
+        return definition.getAnnotationMetadata().hasAnnotation(Blocking.class)
+            || definition.findPossibleMethods(AUTHENTICATE_METHOD_NAME).anyMatch(method -> method.hasAnnotation(Blocking.class));
     }
 
     @NonNull
@@ -173,10 +210,9 @@ public class Authenticator<T> {
             providers.addAll(imperativeAuthenticationProviders.stream()
                     .map(imperativeAuthenticationProvider -> {
                         if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap) {
-                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, executeNameToScheduler.computeIfAbsent(ap.getExecutorName(), s ->
-                                    beanContext.findBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))
-                                            .map(Schedulers::fromExecutorService)
-                                            .orElse(null)));
+                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, schedulerFor(ap));
+                        } else if (isAnnotatedBlocking(imperativeAuthenticationProvider)) {
+                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, schedulerFor(imperativeAuthenticationProvider, TaskExecutors.BLOCKING));
                         } else {
                             return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider);
                         }
@@ -184,6 +220,36 @@ public class Authenticator<T> {
         }
         OrderUtil.sort(providers);
         return providers;
+    }
+
+    /**
+     * Resolves the {@link Scheduler} on which an {@link ExecutorAuthenticationProvider} is subscribed. A blocking
+     * provider must never run on the subscribing thread, so when no {@link ExecutorService} bean matches the executor
+     * name the provider declares, the {@link TaskExecutors#BLOCKING} executor is used instead and a warning is logged.
+     * @param authenticationProvider An executor authentication provider
+     * @return The scheduler backed by the executor the provider names, or by the blocking executor as a fallback
+     */
+    @NonNull
+    private Scheduler schedulerFor(@NonNull ExecutorAuthenticationProvider<?, ?, ?> authenticationProvider) {
+        return schedulerFor(authenticationProvider, authenticationProvider.getExecutorName());
+    }
+
+    @NonNull
+    private Scheduler schedulerFor(@NonNull AuthenticationProvider<?, ?, ?> authenticationProvider, @Nullable String executorName) {
+        if (StringUtils.isEmpty(executorName)) {
+            executorName = TaskExecutors.BLOCKING;
+        }
+        return executeNameToScheduler.computeIfAbsent(executorName, name -> findScheduler(name).orElseGet(() -> {
+            LOG.warn("No ExecutorService bean named '{}' found for authentication provider {}. Falling back to the '{}' executor so that the blocking provider does not run on the event loop.",
+                name, authenticationProvider.getClass().getName(), TaskExecutors.BLOCKING);
+            return findScheduler(TaskExecutors.BLOCKING).orElseGet(Schedulers::boundedElastic);
+        }));
+    }
+
+    @NonNull
+    private Optional<Scheduler> findScheduler(@NonNull String executorName) {
+        return beanContext.findBean(ExecutorService.class, Qualifiers.byName(executorName))
+                .map(Schedulers::fromExecutorService);
     }
 
     private Publisher<AuthenticationResponse> authenticate(T request,
