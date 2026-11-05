@@ -23,7 +23,6 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.condition.AbstractCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
@@ -64,12 +63,14 @@ public class PasswordGrantCondition extends AbstractCondition {
 
                     boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(clientConfigurationName));
                     if (!hasAuthenticationMapper) {
-                        hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
+                        // Only a mapper without a qualifier is the global mapper. A mapper registered for another
+                        // client must never map the ID tokens of this one.
+                        hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.none());
                     }
                     if (hasAuthenticationMapper) {
                         return true;
                     } else {
-                        context.fail(failureMsgPrefix + "] because no user details mapper could be found");
+                        context.fail(failureMsgPrefix + "] because no user details mapper named [" + clientConfigurationName + "] and no global user details mapper without a qualifier could be found");
                     }
                 } else {
                     context.fail(failureMsgPrefix + "] because no provider metadata and token validator could be found");

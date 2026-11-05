@@ -27,7 +27,7 @@ If the default implementation is not sufficient, it is possible to override the 
 
 IMPORTANT: You cannot use `micronaut.security.authentication` = `idtoken`, if you wish to use a custom `OpenIdAuthenticationMapper`. You should use  `micronaut.security.authentication` = `cookie` or provide your own implementation of <<loginHandler, Login Handler>> and <<logoutHandler, Logout Handler>>.
 
-To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper[].
+To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper[]. The global mapper is used by every OpenID client without a provider-specific mapper, for both the authorization code flow and the <<password, password grant>>. In the password grant, the global mapper is the `OpenIdAuthenticationMapper` bean without a qualifier (or the one marked `@Primary`).
 
 snippet::io.micronaut.security.oauth2.docs.openid.GlobalOpenIdAuthenticationMapper[tags="clazz"]
 
@@ -41,3 +41,5 @@ snippet::io.micronaut.security.oauth2.docs.openid.OktaAuthenticationMapper[tags=
 <4> The JWT claims are available
 <5> The state object used during OAuth authentication
 <6> An instance of api:security.authentication.AuthenticationResponse[] is returned
+
+NOTE: In the <<password, password grant>>, a provider-specific mapper is only used for the client of that name, never as the global mapper of the other clients. If the only mapper of the application is registered with a `@Named` qualifier, for example because it replaces the default mapper, no password grant authentication provider is created for the clients without a mapper of their own. Register an unqualified (or `@Primary`) global mapper for them, or a named mapper for every client.
