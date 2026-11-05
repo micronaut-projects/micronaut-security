@@ -14,6 +14,7 @@ dependencies {
     compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
     implementation(mn.micronaut.http.client.core)
+    compileOnly(mn.micronaut.http.netty)
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
     implementation(mnReactor.micronaut.reactor)
