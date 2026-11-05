@@ -24,6 +24,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.SearchSettings;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -162,12 +163,20 @@ public class LdapConfiguration implements Toggleable {
          */
         public static final String PREFIX = LdapConfiguration.PREFIX + ".context";
 
+        /**
+         * The default pooled value.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final boolean DEFAULT_POOLED = false;
+
         private static final String DEFAULT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
 
         private String server;
         private String managerDn;
         private String managerPassword;
         private String factory = DEFAULT_FACTORY;
+        private boolean pooled = DEFAULT_POOLED;
+        private PoolConfiguration pool = new PoolConfiguration();
         private Map<String, Object> properties = Collections.emptyMap();
 
         /**
@@ -235,6 +244,51 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
+         * @return Whether the manager context uses the JNDI LDAP connection pool
+         * @since 5.5.2
+         */
+        public boolean isPooled() {
+            return pooled;
+        }
+
+        /**
+         * Sets whether the manager context uses the JNDI LDAP connection pool
+         * ({@code com.sun.jndi.ldap.connect.pool}). The pool is shared by the whole JVM and, unless bounded,
+         * the JDK neither limits its size nor closes idle connections, so a burst of authentication attempts
+         * can leave the directory without free connections for user binds. When pooling is enabled, the pool
+         * is bounded with {@link #getPool()}, whose values are applied as the
+         * {@code com.sun.jndi.ldap.connect.pool.maxsize}, {@code com.sun.jndi.ldap.connect.pool.prefsize} and
+         * {@code com.sun.jndi.ldap.connect.pool.timeout} system properties before the first pooled connection
+         * is opened. Contexts bound with user credentials are never pooled. This is the only supported pooling
+         * switch: a {@code com.sun.jndi.ldap.connect.pool} entry in the additional context properties is ignored.
+         * Default {@value #DEFAULT_POOLED}.
+         *
+         * @param pooled Whether the manager context is pooled
+         * @since 5.5.2
+         */
+        public void setPooled(boolean pooled) {
+            this.pooled = pooled;
+        }
+
+        /**
+         * @return The bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}
+         * @since 5.5.2
+         */
+        public PoolConfiguration getPool() {
+            return pool;
+        }
+
+        /**
+         * Sets the bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}.
+         *
+         * @param pool The pool configuration
+         * @since 5.5.2
+         */
+        public void setPool(PoolConfiguration pool) {
+            this.pool = pool;
+        }
+
+        /**
          * @return Any additional properties
          */
         public Map<String, Object> getProperties() {
@@ -248,6 +302,154 @@ public class LdapConfiguration implements Toggleable {
          */
         public void setProperties(Map<String, Object> properties) {
             this.properties = properties;
+        }
+
+        /**
+         * Bounds of the JNDI LDAP connection pool, applied when {@link ContextConfiguration#isPooled()} is
+         * {@code true}. The pool is shared by the whole JVM: the values are applied as the
+         * {@code com.sun.jndi.ldap.connect.pool.maxsize}, {@code com.sun.jndi.ldap.connect.pool.prefsize} and
+         * {@code com.sun.jndi.ldap.connect.pool.timeout} system properties when the configuration is created.
+         * A value set here always wins. A value not set here keeps the system property if it is already set,
+         * for example on the command line, and otherwise falls back to the default. {@link #getConnectTimeout()}
+         * is applied to the pooled manager context itself, as the {@code com.sun.jndi.ldap.connect.timeout}
+         * JNDI environment property, and bounds the wait for a connection when the pool is saturated.
+         * <p>
+         * The JDK reads these system properties once, when the first pooled JNDI LDAP connection of the JVM is
+         * opened. Values applied after that have no effect.
+         *
+         * @since 5.5.2
+         */
+        @ConfigurationProperties("pool")
+        public static class PoolConfiguration {
+
+            /**
+             * The configuration prefix.
+             */
+            public static final String PREFIX = ContextConfiguration.PREFIX + ".pool";
+
+            /**
+             * The default maximum number of pooled connections per connection identity.
+             */
+            public static final int DEFAULT_MAX_SIZE = 20;
+
+            /**
+             * The default preferred number of pooled connections per connection identity.
+             */
+            public static final int DEFAULT_PREF_SIZE = 5;
+
+            /**
+             * The default time after which an idle pooled connection is closed.
+             */
+            public static final Duration DEFAULT_IDLE_TIMEOUT = Duration.ofMinutes(5);
+
+            /**
+             * The default time a login waits for a pooled connection when the pool is saturated.
+             */
+            public static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(10);
+
+            private @Nullable Integer maxSize;
+            private @Nullable Integer prefSize;
+            private @Nullable Duration idleTimeout;
+            private @Nullable Duration connectTimeout;
+
+            /**
+             * @return The maximum number of pooled connections per connection identity, or null to keep the
+             * {@code com.sun.jndi.ldap.connect.pool.maxsize} system property if set and otherwise use {@value #DEFAULT_MAX_SIZE}
+             */
+            public @Nullable Integer getMaxSize() {
+                return maxSize;
+            }
+
+            /**
+             * Sets the maximum number of connections the pool keeps per connection identity (server, manager DN and
+             * password). Once reached, a login waits for a pooled connection to be released instead of opening a new
+             * one. {@code 0} removes the bound, which lets a burst of login attempts exhaust the connections of the
+             * directory; a negative value is rejected. Default {@value #DEFAULT_MAX_SIZE}, unless the
+             * {@code com.sun.jndi.ldap.connect.pool.maxsize} system property is already set.
+             *
+             * @param maxSize The maximum pool size
+             */
+            public void setMaxSize(@Nullable Integer maxSize) {
+                this.maxSize = requireNonNegative("max-size", maxSize);
+            }
+
+            /**
+             * @return The preferred number of pooled connections per connection identity, or null to keep the
+             * {@code com.sun.jndi.ldap.connect.pool.prefsize} system property if set and otherwise use {@value #DEFAULT_PREF_SIZE}
+             */
+            public @Nullable Integer getPrefSize() {
+                return prefSize;
+            }
+
+            /**
+             * Sets the preferred number of connections the pool keeps per connection identity. Connections released
+             * above this number are closed rather than returned to the pool. A negative value is rejected.
+             * Default {@value #DEFAULT_PREF_SIZE}, unless the {@code com.sun.jndi.ldap.connect.pool.prefsize} system
+             * property is already set.
+             *
+             * @param prefSize The preferred pool size
+             */
+            public void setPrefSize(@Nullable Integer prefSize) {
+                this.prefSize = requireNonNegative("pref-size", prefSize);
+            }
+
+            /**
+             * @return The time after which an idle pooled connection is closed, or null to keep the
+             * {@code com.sun.jndi.ldap.connect.pool.timeout} system property if set and otherwise use 5 minutes
+             */
+            public @Nullable Duration getIdleTimeout() {
+                return idleTimeout;
+            }
+
+            /**
+             * Sets the time after which an idle pooled connection is closed. {@code 0} keeps idle connections open
+             * forever; a negative value is rejected. Default 5 minutes, unless the
+             * {@code com.sun.jndi.ldap.connect.pool.timeout} system property is already set.
+             *
+             * @param idleTimeout The idle timeout
+             */
+            public void setIdleTimeout(@Nullable Duration idleTimeout) {
+                this.idleTimeout = requireNonNegative("idle-timeout", idleTimeout);
+            }
+
+            /**
+             * @return The time a login waits for a pooled connection when the pool is saturated, or null for 10 seconds;
+             * always positive
+             */
+            public @Nullable Duration getConnectTimeout() {
+                return connectTimeout;
+            }
+
+            /**
+             * Sets the time a login waits for a pooled connection to be released when the pool already holds
+             * {@code max-size} connections, and the time allowed to open a new pooled connection. Without it, the
+             * JDK waits indefinitely, so a hung directory operation holding every pooled connection would block
+             * every later login. Applied as the {@code com.sun.jndi.ldap.connect.timeout} JNDI environment property of
+             * the pooled manager context, unless {@link ContextConfiguration#getProperties()} already sets that key.
+             * The JDK waits indefinitely for a value of {@code 0} or less, so such a value is rejected. Default 10 seconds.
+             *
+             * @param connectTimeout The connect timeout
+             */
+            public void setConnectTimeout(@Nullable Duration connectTimeout) {
+                if (connectTimeout != null && (connectTimeout.isNegative() || connectTimeout.isZero())) {
+                    throw new IllegalArgumentException(PREFIX + ".connect-timeout must be positive: " + connectTimeout);
+                }
+                this.connectTimeout = connectTimeout;
+            }
+
+            private static @Nullable Integer requireNonNegative(String name, @Nullable Integer value) {
+                if (value != null && value < 0) {
+                    throw new IllegalArgumentException(PREFIX + "." + name + " must not be negative: " + value);
+                }
+                return value;
+            }
+
+            private static @Nullable Duration requireNonNegative(String name, @Nullable Duration value) {
+                if (value != null && value.isNegative()) {
+                    throw new IllegalArgumentException(PREFIX + "." + name + " must not be negative: " + value);
+                }
+                return value;
+            }
         }
     }
 

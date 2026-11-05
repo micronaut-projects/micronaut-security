@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultContextBuilder implements ContextBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContextBuilder.class);
+    private static final String POOL_PROPERTY = "com.sun.jndi.ldap.connect.pool";
 
     @Override
     public DirContext build(ContextSettings contextSettings) throws NamingException {
@@ -54,16 +55,25 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     private DirContext build(String factory, String server, String user, String password, boolean pooled, Map<String, Object> additionalProperties) throws NamingException {
         Properties props = new Properties();
+        // Additional properties go first so that the keys controlling the bind itself always win:
+        // configuration cannot change the factory, the server, the credentials, the authentication
+        // mechanism or the pooling of a context bound with user credentials.
+        if (!additionalProperties.isEmpty()) {
+            props.putAll(additionalProperties);
+        }
         props.put(Context.INITIAL_CONTEXT_FACTORY, factory);
         props.put(Context.PROVIDER_URL, server);
         props.put(Context.SECURITY_AUTHENTICATION, "simple");
         props.put(Context.SECURITY_PRINCIPAL, user);
         props.put(Context.SECURITY_CREDENTIALS, password);
+        // Pooling is controlled only by the "pooled" flag
+        props.remove(POOL_PROPERTY);
         if (pooled) {
-            props.put("com.sun.jndi.ldap.connect.pool", "true");
-        }
-        if (!additionalProperties.isEmpty()) {
-            props.putAll(additionalProperties);
+            // The JDK pool is unbounded unless its system properties say otherwise, and a context waits
+            // indefinitely for a pooled connection unless its environment bounds the wait
+            LdapConnectionPoolConfigurer.applyDefaults();
+            LdapConnectionPoolConfigurer.applyConnectTimeout(props, null);
+            props.put(POOL_PROPERTY, "true");
         }
         return new InitialDirContext(props);
     }
