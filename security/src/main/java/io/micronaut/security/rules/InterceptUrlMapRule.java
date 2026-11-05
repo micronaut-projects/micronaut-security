@@ -15,12 +15,15 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Head;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
@@ -73,6 +76,14 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
     /**
      * If no configured pattern matches the request, return {@link SecurityRuleResult#UNKNOWN}.
      * Reads the rules in order. The first matched rule will be used for determining authorization.
+     * <p>
+     * Patterns restricted to the request method take precedence over patterns without a method. A HEAD request
+     * matched to the implicit HEAD route the router derives from a {@code @Get} method is additionally subject to
+     * the patterns restricted to GET, unless a pattern restricted to HEAD matches, because the {@code @Get} method
+     * answers it. Likewise, a request that no route matches is subject to the patterns restricted to GET whatever
+     * its method, because static resources are served for any method when no route matches. A HEAD request
+     * matched to an explicitly declared {@code @Head} method is matched like any other request: by the patterns
+     * restricted to HEAD, then by the patterns without a method.
      *
      * @param request The current request
      * @param routeMatch The matched route
@@ -84,13 +95,27 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         final String path = pathForMatching(request);
         final HttpMethod httpMethod = request.getMethod();
 
-        Predicate<InterceptUrlMapPattern> exactMatch = p -> matchesPath(p.getPattern(), path) && p.getHttpMethod().isPresent() && httpMethod.equals(p.getHttpMethod().get());
-        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> matchesPath(p.getPattern(), path) && !p.getHttpMethod().isPresent();
+        Predicate<InterceptUrlMapPattern> pathMatch = p -> matchesPath(p.getPattern(), path);
+        Predicate<InterceptUrlMapPattern> exactMatch = pathMatch.and(p -> httpMethod.equals(p.getHttpMethod().orElse(null)));
+        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = pathMatch.and(p -> !p.getHttpMethod().isPresent());
 
         Optional<InterceptUrlMapPattern> matchedPattern = getPatternList()
                 .stream()
                 .filter(exactMatch)
                 .findFirst();
+
+        // a HEAD request matched to the implicit HEAD route of a @Get method is answered by that method, and a request
+        // no route matches can be answered with a static resource whatever its method, so both are subject to
+        // the patterns restricted to GET unless a pattern restricted to their own method matches
+        if (!matchedPattern.isPresent() && !HttpMethod.GET.equals(httpMethod) && isAnsweredByGetHandler(httpMethod, routeMatch)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No url map pattern exact match found for path [{}] and method [{}]. Searching in patterns restricted to method [{}].", path, httpMethod, HttpMethod.GET);
+            }
+            matchedPattern = getPatternList()
+                    .stream()
+                    .filter(pathMatch.and(p -> HttpMethod.GET.equals(p.getHttpMethod().orElse(null))))
+                    .findFirst();
+        }
 
         // if we don't get an exact match try to find a match by the uri pattern
         if (!matchedPattern.isPresent()) {
@@ -114,6 +139,35 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         return Mono.from(matchedPattern
                 .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
                 .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
+    }
+
+    /**
+     * Whether the request is answered by the handler of a GET request to the same URI: no route matched it, so the
+     * server serves a static resource whatever the method, or it is a HEAD request matched to the implicit HEAD
+     * route the router derives from a {@code @Get} method. A HEAD request matched to an explicitly declared
+     * {@code @Head} method has a handler of its own.
+     *
+     * @param httpMethod The method of the current request
+     * @param routeMatch The matched route. Null if no route matched the request
+     * @return Whether the patterns restricted to GET apply to the request
+     */
+    private static boolean isAnsweredByGetHandler(@NonNull HttpMethod httpMethod, @Nullable RouteMatch<?> routeMatch) {
+        if (routeMatch == null) {
+            return true;
+        }
+        return HttpMethod.HEAD.equals(httpMethod) && isImplicitHead(routeMatch);
+    }
+
+    /**
+     * The router derives an implicit HEAD route from every {@code @Get} method (unless {@code headRoute = false}),
+     * so a HEAD route whose target method is annotated with {@code @Get} and not with {@code @Head} is implicit.
+     *
+     * @param routeMatch The route matched by a HEAD request
+     * @return Whether the route is the implicit HEAD route of a {@code @Get} method
+     */
+    private static boolean isImplicitHead(@NonNull RouteMatch<?> routeMatch) {
+        AnnotationMetadata annotationMetadata = routeMatch.getAnnotationMetadata();
+        return annotationMetadata.hasAnnotation(Get.class) && !annotationMetadata.hasAnnotation(Head.class);
     }
 
     /**
