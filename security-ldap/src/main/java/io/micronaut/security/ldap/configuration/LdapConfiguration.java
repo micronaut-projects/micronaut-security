@@ -18,6 +18,8 @@ package io.micronaut.security.ldap.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.convert.format.MapFormat;
+import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
@@ -245,7 +247,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return Whether the manager context uses the JNDI LDAP connection pool
-         * @since 5.5.2
+         * @since 3.11.4
          */
         public boolean isPooled() {
             return pooled;
@@ -264,7 +266,7 @@ public class LdapConfiguration implements Toggleable {
          * Default {@value #DEFAULT_POOLED}.
          *
          * @param pooled Whether the manager context is pooled
-         * @since 5.5.2
+         * @since 3.11.4
          */
         public void setPooled(boolean pooled) {
             this.pooled = pooled;
@@ -272,7 +274,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return The bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}
-         * @since 5.5.2
+         * @since 3.11.4
          */
         public PoolConfiguration getPool() {
             return pool;
@@ -282,7 +284,7 @@ public class LdapConfiguration implements Toggleable {
          * Sets the bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}.
          *
          * @param pool The pool configuration
-         * @since 5.5.2
+         * @since 3.11.4
          */
         public void setPool(PoolConfiguration pool) {
             this.pool = pool;
@@ -297,10 +299,12 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.
+         * Keys are bound verbatim and flat, so a key such as {@code java.naming.security.protocol} is passed to JNDI
+         * as a single property name instead of being split into nested maps.
          *
          * @param properties The additional properties
          */
-        public void setProperties(Map<String, Object> properties) {
+        public void setProperties(@MapFormat(transformation = MapFormat.MapTransformation.FLAT, keyFormat = StringConvention.RAW) Map<String, Object> properties) {
             this.properties = properties;
         }
 
@@ -317,7 +321,7 @@ public class LdapConfiguration implements Toggleable {
          * The JDK reads these system properties once, when the first pooled JNDI LDAP connection of the JVM is
          * opened. Values applied after that have no effect.
          *
-         * @since 5.5.2
+         * @since 3.11.4
          */
         @ConfigurationProperties("pool")
         public static class PoolConfiguration {

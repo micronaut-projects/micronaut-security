@@ -16,5 +16,6 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.unboundid.ldapsdk)
     testImplementation(libs.junit.jupiter.api)
+    testImplementation(mn.logback)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
