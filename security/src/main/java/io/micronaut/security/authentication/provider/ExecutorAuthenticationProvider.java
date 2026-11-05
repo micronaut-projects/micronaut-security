@@ -30,7 +30,11 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 public interface ExecutorAuthenticationProvider<T, I, S> extends AuthenticationProvider<T, I, S>  {
 
     /**
-     *
+     * The name of the {@link java.util.concurrent.ExecutorService} bean on which
+     * {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} is invoked. Any executor name is honored,
+     * not only {@link TaskExecutors#BLOCKING} or {@link TaskExecutors#IO}; the provider is never invoked on the thread
+     * that subscribes to the authentication publisher, such as the server event loop. If no executor bean with that
+     * name exists, the {@link TaskExecutors#BLOCKING} executor is used instead and a warning is logged.
      * @return The executor name where the code {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} will be executed.
      */
     default String getExecutorName() {
