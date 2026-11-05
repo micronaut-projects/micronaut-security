@@ -16,4 +16,7 @@
 /**
  * Classes related to proxying GET requests to /.well-known/oauth-authorization-server and /.well-known/openid-configuration to an Authorization Server.
  */
+@NullMarked
 package io.micronaut.security.oauth2.proxy;
+
+import org.jspecify.annotations.NullMarked;
