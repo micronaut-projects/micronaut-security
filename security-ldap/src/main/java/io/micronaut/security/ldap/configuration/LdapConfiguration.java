@@ -18,6 +18,8 @@ package io.micronaut.security.ldap.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.convert.format.MapFormat;
+import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
@@ -297,10 +299,12 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.
+         * Keys are bound verbatim and flat, so a key such as {@code java.naming.security.protocol} is passed to JNDI
+         * as a single property name instead of being split into nested maps.
          *
          * @param properties The additional properties
          */
-        public void setProperties(Map<String, Object> properties) {
+        public void setProperties(@MapFormat(transformation = MapFormat.MapTransformation.FLAT, keyFormat = StringConvention.RAW) Map<String, Object> properties) {
             this.properties = properties;
         }
 
