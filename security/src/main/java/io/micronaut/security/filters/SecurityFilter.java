@@ -36,7 +36,6 @@ import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
-import io.micronaut.web.router.resource.StaticResourceResolver;
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -90,13 +89,13 @@ public class SecurityFilter implements HttpServerFilter {
 
     protected final SecurityConfiguration securityConfiguration;
     @Nullable
-    private final StaticResourceResolver staticResourceResolver;
+    private final StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher;
 
     /**
      * @param securityRules          The list of security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
-     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, StaticResourceResolver)}.
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, StaticResourceMatcher)}.
      */
     @Deprecated(forRemoval = true, since = "4.18.2")
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
@@ -105,33 +104,33 @@ public class SecurityFilter implements HttpServerFilter {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
-        this.staticResourceResolver = null;
-        warnIfNoStaticResourceResolver(securityConfiguration, null);
+        this.staticResourceMatcher = null;
+        warnIfNoStaticResourceMatcher(securityConfiguration, null);
     }
 
     /**
      * @param securityRules The list of security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context
      * @param securityConfiguration The security configuration
-     * @param staticResourceResolver Resolves static resources, used to reject static resources that no security rule covers even when {@code micronaut.security.reject-not-found} is disabled. When {@code null}, the filter fails closed and rejects every request that matches no route, regardless of {@code micronaut.security.reject-not-found}.
+     * @param staticResourceMatcher Tells whether the server could serve a request that matches no route as a static resource, used to reject static resources that no security rule covers even when {@code micronaut.security.reject-not-found} is disabled. When {@code null}, the filter fails closed and rejects every request that matches no route, regardless of {@code micronaut.security.reject-not-found}.
      * @since 4.18.2
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
                           Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration,
-                          @Nullable StaticResourceResolver staticResourceResolver) {
+                          @Nullable StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
-        this.staticResourceResolver = staticResourceResolver;
-        warnIfNoStaticResourceResolver(securityConfiguration, staticResourceResolver);
+        this.staticResourceMatcher = staticResourceMatcher;
+        warnIfNoStaticResourceMatcher(securityConfiguration, staticResourceMatcher);
     }
 
-    private static void warnIfNoStaticResourceResolver(SecurityConfiguration securityConfiguration,
-                                                       @Nullable StaticResourceResolver staticResourceResolver) {
-        if (staticResourceResolver == null && !securityConfiguration.isRejectNotFound() && LOG.isWarnEnabled()) {
-            LOG.warn("No StaticResourceResolver is available to the SecurityFilter. Requests that match no route and that no security rule allows are rejected regardless of micronaut.security.reject-not-found, because the filter cannot tell whether the server would serve them as a static resource. Create the filter with a StaticResourceResolver to answer 404 for unknown routes.");
+    private static void warnIfNoStaticResourceMatcher(SecurityConfiguration securityConfiguration,
+                                                      @Nullable StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher) {
+        if (staticResourceMatcher == null && !securityConfiguration.isRejectNotFound() && LOG.isWarnEnabled()) {
+            LOG.warn("No StaticResourceMatcher is available to the SecurityFilter. Requests that match no route and that no security rule allows are rejected regardless of micronaut.security.reject-not-found, because the filter cannot tell whether the server would serve them as a static resource. Create the filter with a StaticResourceMatcher to answer 404 for unknown routes.");
         }
     }
 
@@ -233,12 +232,9 @@ public class SecurityFilter implements HttpServerFilter {
     }
 
     /**
-     * A request that matches no route may still be served by the server as a static resource. Such a request is
-     * resolved the same way the server resolves it, so that a static resource that no security rule covers is
-     * rejected instead of being served when {@code micronaut.security.reject-not-found} is disabled.
-     * The Netty runtime resolves static resources from the decoded path and the servlet runtime from the raw path,
-     * so both are checked: a request is rejected when either form resolves, which may turn a 404 of the active
-     * runtime into a 401 or 403 for percent-encoded paths. Without a {@link StaticResourceResolver}, which only
+     * A request that matches no route may still be served by the server as a static resource. The
+     * {@link StaticResourceMatcher} tells, so that a static resource that no security rule covers is rejected instead
+     * of being served when {@code micronaut.security.reject-not-found} is disabled. Without a matcher, which only
      * happens with the deprecated constructors, the filter cannot tell and fails closed: every such request is
      * treated as a possible static resource.
      *
@@ -246,17 +242,7 @@ public class SecurityFilter implements HttpServerFilter {
      * @return Whether the request may be served as a static resource
      */
     private boolean mayBeStaticResource(HttpRequest<?> request) {
-        if (staticResourceResolver == null) {
-            return true;
-        }
-        // The Netty runtime resolves static files from the decoded path, the servlet runtime from the raw path.
-        // Both are checked, so that the filter rejects a superset of what either runtime serves.
-        String rawPath = request.getPath();
-        String decodedPath = request.getUri().getPath();
-        if (decodedPath != null && staticResourceResolver.resolve(decodedPath).isPresent()) {
-            return true;
-        }
-        return !rawPath.equals(decodedPath) && staticResourceResolver.resolve(rawPath).isPresent();
+        return staticResourceMatcher == null || staticResourceMatcher.isStaticResource(request);
     }
 
     private void logResult(SecurityRuleResult result, String method, String path, Ordered ordered) {
