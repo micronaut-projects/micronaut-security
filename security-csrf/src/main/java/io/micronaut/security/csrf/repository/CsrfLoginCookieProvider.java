@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
 import io.micronaut.security.token.cookie.LoginCookieProvider;
@@ -49,7 +50,34 @@ public class CsrfLoginCookieProvider implements LoginCookieProvider<HttpRequest<
     @Override
     @NonNull
     public Cookie provideCookie(@NonNull HttpRequest<?> request) {
-        String csrfToken = csrfTokenGenerator.generateCsrfToken(request);
+        return csrfCookie(request, csrfTokenGenerator.generateCsrfToken(request));
+    }
+
+    /**
+     * Provides a CSRF Cookie whose token is bound to the authenticated user who is logging in. The cookie is built by
+     * {@link #provideCookie(HttpRequest)}, so that subclasses overriding it to customize the cookie name, path or
+     * attributes keep working, and its value is replaced with a token bound to the authenticated user.
+     * @param request Request
+     * @param authentication The authenticated user's representation
+     * @return A CSRF Cookie
+     * @since 4.18.2
+     */
+    @Override
+    @NonNull
+    public Cookie provideCookie(@NonNull HttpRequest<?> request, @NonNull Authentication authentication) {
+        return provideCookie(request).value(csrfTokenGenerator.generateCsrfToken(request, authentication));
+    }
+
+    /**
+     * Builds the CSRF cookie. Both {@link #provideCookie(HttpRequest)} and {@link #provideCookie(HttpRequest, Authentication)}
+     * delegate to this method, so subclasses can override it to change the cookie name or attributes.
+     * @param request Request
+     * @param csrfToken The CSRF token
+     * @return A CSRF Cookie
+     * @since 4.18.2
+     */
+    @NonNull
+    protected Cookie csrfCookie(@NonNull HttpRequest<?> request, @NonNull String csrfToken) {
         Cookie cookie = Cookie.of(csrfConfiguration.getCookieName(), csrfToken);
         cookie.configure(csrfConfiguration, request.isSecure());
         return cookie;

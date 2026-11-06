@@ -78,7 +78,17 @@ class CsrfDoubleSubmitCookiePatternTest {
         PasswordChangeForm body = new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedWithoutSessionId);
         assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, body, csrfTokenCalculatedWithoutSessionId);
 
-        String message = hmacMessagePayload(FIX_SESSION_ID, randomValue);
+        // CSRF Token with HMAC calculated with the session id but not bound to the authenticated user, request is unauthorized
+        String messageWithoutUser = hmacMessagePayload(FIX_SESSION_ID, "", randomValue);
+        String csrfTokenCalculatedWithoutUser = HMacUtils.base64EncodedHmacSha256(messageWithoutUser, csrfConfiguration.getSecretKey()) + "." + randomValue;
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedWithoutUser), csrfTokenCalculatedWithoutUser);
+
+        // CSRF Token with HMAC bound to the session id and to another user, request is unauthorized
+        String messageForAnotherUser = hmacMessagePayload(FIX_SESSION_ID, "moriarty", randomValue);
+        String csrfTokenCalculatedForAnotherUser = HMacUtils.base64EncodedHmacSha256(messageForAnotherUser, csrfConfiguration.getSecretKey()) + "." + randomValue;
+        assertDenied(client, cookieJwt.getValue(), csrfTokenCookieName, new PasswordChangeForm("sherlock", "evil", csrfTokenCalculatedForAnotherUser), csrfTokenCalculatedForAnotherUser);
+
+        String message = hmacMessagePayload(FIX_SESSION_ID, "sherlock", randomValue);
         hmac = HMacUtils.base64EncodedHmacSha256(message, csrfConfiguration.getSecretKey());
         csrfToken = hmac + "." + randomValue;
         assertOk(client, cookieJwt.getValue(), csrfTokenCookieName, csrfToken);
