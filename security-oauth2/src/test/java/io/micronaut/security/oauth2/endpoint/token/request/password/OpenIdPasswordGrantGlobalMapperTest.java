@@ -74,7 +74,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -202,11 +201,7 @@ class OpenIdPasswordGrantGlobalMapperTest {
             BlockingHttpClient client = httpClient.toBlocking();
             String accessToken = login(client, ADMITTED_USER, PASSWORD);
             assertEquals("alice", client.retrieve(HttpRequest.GET("/").bearerAuth(accessToken)));
-            // A wrong password must never log the user in. The provider's invalid_grant currently surfaces as a
-            // 500 rather than a 401, which is pre-existing behaviour of the password grant provider.
-            HttpClientResponseException e = assertThrows(HttpClientResponseException.class,
-                () -> client.exchange(loginRequest(ADMITTED_USER, "wrong-password-fixture")));
-            assertNotEquals(HttpStatus.OK, e.getStatus());
+            assertLoginUnauthorized(client, ADMITTED_USER, "wrong-password-fixture");
         }
     }
 
