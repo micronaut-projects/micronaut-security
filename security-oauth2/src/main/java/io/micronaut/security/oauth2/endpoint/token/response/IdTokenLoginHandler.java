@@ -16,8 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.token.response;
 
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
 import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
@@ -32,6 +34,8 @@ import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.CookieLoginHandler;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.cookie.LoginCookieProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -61,6 +65,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
     private final List<LoginCookieProvider<HttpRequest<?>>> loginCookieProviders;
+    private TokenConfiguration tokenConfiguration = new TokenConfiguration() { };
 
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
@@ -95,6 +100,22 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     }
 
     /**
+     * Sets the Token Configuration used to name the authentication supplied to the {@link LoginCookieProvider} beans from
+     * the ID token claims. Injected by method rather than by constructor so that subclasses using any constructor get the
+     * application's configuration. Defaults to the default {@code micronaut.security.token.name-key}, {@code sub}.
+     * @param tokenConfiguration Token Configuration
+     * @since 5.5.2
+     * @deprecated Method injection is used only to keep the existing constructors of this class and of its subclasses working.
+     * This method will be removed in the next major release in favour of pure constructor injection, when the
+     * {@code TokenConfiguration} becomes a constructor parameter. Subclasses should not rely on it.
+     */
+    @Deprecated(forRemoval = true, since = "5.5.2")
+    @Inject
+    public final void setTokenConfiguration(@NonNull TokenConfiguration tokenConfiguration) {
+        this.tokenConfiguration = tokenConfiguration;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -108,8 +129,9 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
             jwtCookie.maxAge(cookieExpiration(authentication, request));
         }
         cookies.add(jwtCookie);
+        Authentication tokenAuthentication = idTokenAuthentication(authentication, accessToken);
         for (LoginCookieProvider<HttpRequest<?>> loginCookieProvider : loginCookieProviders) {
-            cookies.add(loginCookieProvider.provideCookie(request));
+            cookies.add(loginCookieProvider.provideCookie(request, tokenAuthentication));
         }
         return cookies;
     }
@@ -120,6 +142,37 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     @Override
     public List<Cookie> getCookies(Authentication authentication, String refreshToken, HttpRequest<?> request) {
         throw new OauthErrorResponseException(ObtainingAuthorizationErrorCode.INVALID_REQUEST, "Cannot refresh a provider token through the oauth endpoint. The token must be refreshed directly with the provider", null);
+    }
+
+    /**
+     * The cookie issued at login carries the ID token, so later requests are named by token based authentication from
+     * its claims: the {@link TokenConfiguration#getNameKey()} claim, falling back to the {@code sub} claim. The
+     * user name returned by the {@code OpenIdAuthenticationMapper} at login (for example qualified with the provider
+     * name) is not carried by the ID token, so the authentication supplied to the {@link LoginCookieProvider} beans is
+     * named after the ID token claims instead.
+     * @param authentication The authenticated user's representation
+     * @param idToken The ID token
+     * @return The authentication named as token based authentication names the user from the ID token, or the supplied
+     * authentication if the ID token cannot be parsed or carries neither claim
+     */
+    @NonNull
+    private Authentication idTokenAuthentication(@NonNull Authentication authentication, @NonNull String idToken) {
+        try {
+            JWTClaimsSet claims = JWTParser.parse(idToken).getJWTClaimsSet();
+            Object name = claims.getClaim(tokenConfiguration.getNameKey());
+            if (name == null) {
+                name = claims.getClaim(Claims.SUBJECT);
+            }
+            if (name == null || name.toString().equals(authentication.getName())) {
+                return authentication;
+            }
+            return Authentication.build(name.toString(), authentication.getRoles(), authentication.getAttributes());
+        } catch (ParseException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Could not parse the ID token to name the authentication supplied to the login cookie providers");
+            }
+            return authentication;
+        }
     }
 
     /**

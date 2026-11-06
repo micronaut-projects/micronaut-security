@@ -16,7 +16,9 @@
 package io.micronaut.security.csrf.generator;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.security.authentication.Authentication;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * CSRF token Generation.
@@ -34,4 +36,18 @@ public interface CsrfTokenGenerator<T> {
      */
     @NonNull
     String generateCsrfToken(@NonNull T request);
+
+    /**
+     * Generates a CSRF Token bound to the supplied authenticated user. Use this method when the request does not carry the
+     * authentication yet, for example while handling a login. The default implementation ignores the authentication and
+     * delegates to {@link #generateCsrfToken(Object)}.
+     * @param request Request
+     * @param authentication The authenticated user's representation or {@code null} for an anonymous request
+     * @return A CSRF Token.
+     * @since 5.5.2
+     */
+    @NonNull
+    default String generateCsrfToken(@NonNull T request, @Nullable Authentication authentication) {
+        return generateCsrfToken(request);
+    }
 }
