@@ -7,7 +7,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
-import io.micronaut.web.router.resource.StaticResourceResolver;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
@@ -23,11 +22,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * A filter created with a deprecated constructor has no {@link StaticResourceResolver} and cannot tell whether the
+ * A filter created with a deprecated constructor has no {@link StaticResourceMatcher} and cannot tell whether the
  * server would serve an unmatched request as a static resource. With {@code micronaut.security.reject-not-found=false}
  * it must fail closed instead of letting such requests through.
  */
-class SecurityFilterNoStaticResourceResolverTest {
+class SecurityFilterNoStaticResourceMatcherTest {
 
     @Test
     @SuppressWarnings("removal")
@@ -46,9 +45,9 @@ class SecurityFilterNoStaticResourceResolverTest {
     }
 
     @Test
-    void unmatchedRequestProceedsWithResolverWhenRejectNotFoundIsDisabled() {
+    void unmatchedRequestProceedsWhenTheMatcherSaysItIsNotAStaticResourceAndRejectNotFoundIsDisabled() {
         SecurityFilter filter = new SecurityFilter(Collections.emptyList(), Collections.emptyList(),
-            rejectNotFoundDisabled(), mock(SecurityFilterConfiguration.class), null, StaticResourceResolver.EMPTY);
+            rejectNotFoundDisabled(), mock(SecurityFilterConfiguration.class), null, request -> false);
         ServerFilterChain chain = chain();
         HttpRequest<?> request = HttpRequest.GET("/exports/protected.txt");
 
@@ -56,6 +55,13 @@ class SecurityFilterNoStaticResourceResolverTest {
 
         assertEquals(HttpStatus.OK, response.status());
         verify(chain).proceed(request);
+    }
+
+    @Test
+    void unmatchedRequestIsRejectedWhenTheMatcherSaysItIsAStaticResourceAndRejectNotFoundIsDisabled() {
+        SecurityFilter filter = new SecurityFilter(Collections.emptyList(), Collections.emptyList(),
+            rejectNotFoundDisabled(), mock(SecurityFilterConfiguration.class), null, request -> true);
+        assertRejected(filter);
     }
 
     private static void assertRejected(SecurityFilter filter) {
