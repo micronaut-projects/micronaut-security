@@ -15,8 +15,11 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Head;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.DefaultRolesFinder;
@@ -25,7 +28,7 @@ import io.micronaut.web.router.RouteAttributes;
 import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.UriRouteInfo;
 import io.micronaut.web.router.UriRouteMatch;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
@@ -193,7 +196,10 @@ class InterceptUrlMapRuleHeadRequestTest {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static <T extends HttpRequest<?>> T headRouted(T request, boolean implicitHead) {
         UriRouteInfo routeInfo = mock(UriRouteInfo.class);
-        when(routeInfo.isImplicitHead()).thenReturn(implicitHead);
+        AnnotationMetadata annotationMetadata = mock(AnnotationMetadata.class);
+        when(annotationMetadata.hasAnnotation(Get.class)).thenReturn(implicitHead);
+        when(annotationMetadata.hasAnnotation(Head.class)).thenReturn(!implicitHead);
+        when(routeInfo.getAnnotationMetadata()).thenReturn(annotationMetadata);
         UriRouteMatch routeMatch = mock(UriRouteMatch.class);
         when(routeMatch.getRouteInfo()).thenReturn(routeInfo);
         RouteAttributes.setRouteMatch(request, routeMatch);

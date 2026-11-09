@@ -15,12 +15,15 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Head;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
@@ -152,7 +155,19 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> 
         }
         return HttpMethod.HEAD.equals(request.getMethod())
             && routeMatch.get().getRouteInfo() instanceof UriRouteInfo<?, ?> uriRouteInfo
-            && uriRouteInfo.isImplicitHead();
+            && isImplicitHead(uriRouteInfo);
+    }
+
+    /**
+     * The router derives an implicit HEAD route from every {@code @Get} method (unless {@code headRoute = false}),
+     * so a HEAD route whose target method is annotated with {@code @Get} and not with {@code @Head} is implicit.
+     *
+     * @param uriRouteInfo The route info of a HEAD route match
+     * @return Whether the route is the implicit HEAD route of a {@code @Get} method
+     */
+    private static boolean isImplicitHead(@NonNull UriRouteInfo<?, ?> uriRouteInfo) {
+        AnnotationMetadata annotationMetadata = uriRouteInfo.getAnnotationMetadata();
+        return annotationMetadata.hasAnnotation(Get.class) && !annotationMetadata.hasAnnotation(Head.class);
     }
 
     /**

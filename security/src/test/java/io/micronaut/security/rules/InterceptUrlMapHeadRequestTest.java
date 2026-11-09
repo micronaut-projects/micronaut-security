@@ -38,8 +38,8 @@ import io.micronaut.security.token.validator.TokenValidator;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -184,14 +184,14 @@ class InterceptUrlMapHeadRequestTest {
             return "public";
         }
 
+        // on Micronaut 4 an implicit HEAD route next to an explicit @Head route for the same URI makes the router
+        // answer 400 (more than one route matched), so the @Get method declares no HEAD route
         @Produces(MediaType.TEXT_PLAIN)
-        @Get("/explicit-head")
+        @Get(value = "/explicit-head", headRoute = false)
         String explicitHead() {
             return "explicit head";
         }
 
-        // same produces as the @Get method, otherwise content negotiation with the Accept header of the request
-        // selects the implicit HEAD route of the @Get method rather than this one
         @Produces(MediaType.TEXT_PLAIN)
         @Head("/explicit-head")
         HttpResponse<?> explicitHeadRoute() {
@@ -209,7 +209,7 @@ class InterceptUrlMapHeadRequestTest {
     @Controller("/reports")
     static class ReportsController {
         @Produces(MediaType.TEXT_PLAIN)
-        @Get("/status")
+        @Get(value = "/status", headRoute = false)
         String status() {
             return "status";
         }
