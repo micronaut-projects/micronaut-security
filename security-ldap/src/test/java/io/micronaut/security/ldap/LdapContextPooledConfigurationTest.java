@@ -7,12 +7,15 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
 import java.time.Duration;
@@ -53,7 +56,7 @@ class LdapContextPooledConfigurationTest {
 
     @Test
     void managerContextIsNotPooledByDefault() {
-        try (ApplicationContext context = ApplicationContext.run(properties(Map.of()), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of()), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             assertFalse(configuration.getContext().isPooled());
             assertFalse(configuration.getManagerSettings().getPooled());
@@ -63,7 +66,7 @@ class LdapContextPooledConfigurationTest {
 
     @Test
     void managerContextPoolingCanBeEnabled() {
-        try (ApplicationContext context = ApplicationContext.run(properties(Map.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             assertTrue(configuration.getContext().isPooled());
             assertTrue(configuration.getManagerSettings().getPooled());
@@ -74,20 +77,20 @@ class LdapContextPooledConfigurationTest {
     @Test
     void pooledManagerContextWaitsAtMostTheConnectTimeout() {
         String connectTimeout = LdapConnectionPoolConfigurer.CONNECT_TIMEOUT_PROPERTY;
-        try (ApplicationContext context = ApplicationContext.run(properties(Map.of()), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of()), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             assertNull(configuration.getContext().getPool().getConnectTimeout());
             assertFalse(configuration.getManagerSettings().getAdditionalProperties().containsKey(connectTimeout), "an unpooled manager context keeps the JDK default");
         }
-        try (ApplicationContext context = ApplicationContext.run(properties(Map.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             assertEquals("10000", configuration.getManagerSettings().getAdditionalProperties().get(connectTimeout), "10 seconds by default");
             assertFalse(configuration.getSettings("uid=riemann,dc=example,dc=com", "password").getAdditionalProperties().containsKey(connectTimeout), "user contexts are not pooled and keep the JDK default");
 
-            configuration.getContext().setProperties(Map.of(connectTimeout, "250"));
+            configuration.getContext().setProperties(TestMaps.of(connectTimeout, "250"));
             assertEquals("250", configuration.getManagerSettings().getAdditionalProperties().get(connectTimeout), "an explicit context property is kept");
         }
-        try (ApplicationContext context = ApplicationContext.run(properties(Map.of(
+        try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of(
                 "micronaut.security.ldap.default.context.pooled", true,
                 "micronaut.security.ldap.default.context.pool.connect-timeout", "2s")), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
@@ -100,14 +103,18 @@ class LdapContextPooledConfigurationTest {
     @SuppressWarnings("unchecked")
     void authenticationWorksWithAndWithoutPooling() {
         for (boolean pooled : new boolean[]{false, true}) {
-            try (ApplicationContext context = ApplicationContext.run(properties(Map.of("micronaut.security.ldap.default.context.pooled", pooled)), "test")) {
-                LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
+            try (ApplicationContext context = ApplicationContext.run(properties(TestMaps.of("micronaut.security.ldap.default.context.pooled", pooled)), "test")) {
+                LdapAuthenticationProvider provider = context.getBean(LdapAuthenticationProvider.class);
 
-                AuthenticationResponse accepted = provider.authenticate(null, request("riemann", "password"));
+                AuthenticationResponse accepted = Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
                 assertTrue(accepted.isAuthenticated(), "pooled=" + pooled);
-                assertEquals("riemann", accepted.getAuthentication().orElseThrow().getName());
+                assertEquals("riemann", accepted.getAuthentication().orElseThrow(AssertionError::new).getName());
 
-                AuthenticationResponse rejected = provider.authenticate(null, request("riemann", "not-the-password"));
+                AuthenticationResponse rejected = Mono.from(provider.authenticate(null, request("riemann", "not-the-password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
                 assertFalse(rejected.isAuthenticated(), "pooled=" + pooled);
                 assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, assertInstanceOf(AuthenticationFailed.class, rejected).getReason());
             }
@@ -115,7 +122,7 @@ class LdapContextPooledConfigurationTest {
     }
 
     private static Map<String, Object> properties(Map<String, Object> extra) {
-        Map<String, Object> properties = new HashMap<>(Map.of(
+        Map<String, Object> properties = new HashMap<>(TestMaps.of(
                 "micronaut.security.ldap.default.enabled", true,
                 "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
                 "micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com",
@@ -127,7 +134,7 @@ class LdapContextPooledConfigurationTest {
     }
 
     private static AuthenticationRequest<String, String> request(String username, String password) {
-        return new AuthenticationRequest<>() {
+        return new AuthenticationRequest<String, String>() {
             @Override
             public String getIdentity() {
                 return username;

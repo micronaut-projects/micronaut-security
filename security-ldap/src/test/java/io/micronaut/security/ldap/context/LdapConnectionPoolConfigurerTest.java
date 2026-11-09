@@ -1,6 +1,7 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.security.ldap.TestMaps;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void poolIsNotConfiguredWhenPoolingIsOff() {
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of()), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of()), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             LdapConfiguration.ContextConfiguration.PoolConfiguration pool = configuration.getContext().getPool();
             assertNull(pool.getMaxSize());
@@ -64,7 +65,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void enablingPoolingBoundsThePoolByDefault() {
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
             context.getBean(LdapConfiguration.class);
             assertEquals("20", System.getProperty(MAX_SIZE_PROPERTY));
             assertEquals("5", System.getProperty(PREF_SIZE_PROPERTY));
@@ -74,7 +75,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void poolBoundsAreConfigurable() {
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of(
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of(
                 "micronaut.security.ldap.default.context.pooled", true,
                 "micronaut.security.ldap.default.context.pool.max-size", 7,
                 "micronaut.security.ldap.default.context.pool.pref-size", 2,
@@ -93,7 +94,7 @@ class LdapConnectionPoolConfigurerTest {
     @Test
     void systemPropertySetOnTheCommandLineIsKeptWhenNotConfigured() {
         System.setProperty(MAX_SIZE_PROPERTY, "50");
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of("micronaut.security.ldap.default.context.pooled", true)), "test")) {
             context.getBean(LdapConfiguration.class);
             assertEquals("50", System.getProperty(MAX_SIZE_PROPERTY));
             assertEquals("5", System.getProperty(PREF_SIZE_PROPERTY));
@@ -105,7 +106,7 @@ class LdapConnectionPoolConfigurerTest {
     void configuredValueReplacesSystemProperty() {
         System.setProperty(MAX_SIZE_PROPERTY, "50");
         System.setProperty(IDLE_TIMEOUT_PROPERTY, "0");
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of(
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of(
                 "micronaut.security.ldap.default.context.pooled", true,
                 "micronaut.security.ldap.default.context.pool.max-size", 7,
                 "micronaut.security.ldap.default.context.pool.idle-timeout", "1m")), "test")) {
@@ -118,12 +119,12 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void negativePoolValuesAreRejected() {
-        for (Map.Entry<String, Object> negative : Map.<String, Object>of(
+        for (Map.Entry<String, Object> negative : TestMaps.of(
                 "micronaut.security.ldap.default.context.pool.max-size", -1,
                 "micronaut.security.ldap.default.context.pool.pref-size", -1,
                 "micronaut.security.ldap.default.context.pool.idle-timeout", "-1s",
                 "micronaut.security.ldap.default.context.pool.connect-timeout", "-5ms").entrySet()) {
-            Map<String, Object> properties = ldap(Map.of("micronaut.security.ldap.default.context.pooled", true, negative.getKey(), negative.getValue()));
+            Map<String, Object> properties = ldap(TestMaps.of("micronaut.security.ldap.default.context.pooled", true, negative.getKey(), negative.getValue()));
             try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
                 RuntimeException e = assertThrows(RuntimeException.class, () -> context.getBean(LdapConfiguration.class), negative.getKey());
                 assertTrue(rootMessage(e).contains("must not be negative") || rootMessage(e).contains("must be positive"), () -> negative.getKey() + ": " + rootMessage(e));
@@ -136,7 +137,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void zeroConnectTimeoutIsRejectedBecauseTheJdkWouldWaitForever() {
-        Map<String, Object> properties = ldap(Map.of(
+        Map<String, Object> properties = ldap(TestMaps.of(
                 "micronaut.security.ldap.default.context.pooled", true,
                 "micronaut.security.ldap.default.context.pool.connect-timeout", "0s"));
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
@@ -147,7 +148,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void disabledConfigurationDoesNotTouchThePool() {
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of(
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of(
                 "micronaut.security.ldap.default.enabled", false,
                 "micronaut.security.ldap.default.context.pooled", true)), "test")) {
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
@@ -160,7 +161,7 @@ class LdapConnectionPoolConfigurerTest {
 
     @Test
     void poolingCanBeExplicitlyUnbounded() {
-        try (ApplicationContext context = ApplicationContext.run(ldap(Map.of(
+        try (ApplicationContext context = ApplicationContext.run(ldap(TestMaps.of(
                 "micronaut.security.ldap.default.context.pooled", true,
                 "micronaut.security.ldap.default.context.pool.max-size", 0)), "test")) {
             context.getBean(LdapConfiguration.class);
@@ -177,7 +178,7 @@ class LdapConnectionPoolConfigurerTest {
     }
 
     private static Map<String, Object> ldap(Map<String, Object> extra) {
-        Map<String, Object> properties = new HashMap<>(Map.of(
+        Map<String, Object> properties = new HashMap<>(TestMaps.of(
                 "micronaut.security.ldap.default.enabled", true,
                 "micronaut.security.ldap.default.context.server", "ldap://localhost:1",
                 "micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com",

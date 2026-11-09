@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.ldap.context;
 
+import io.micronaut.security.ldap.TestMaps;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -33,7 +34,7 @@ class DefaultContextBuilderPoolPropertyTest {
 
     @Test
     void poolKeyInAdditionalPropertiesIsIgnoredWhenNotPooled() throws Exception {
-        assertNull(poolValue(false, Map.of(POOL, "true")));
+        assertNull(poolValue(false, TestMaps.of(POOL, "true")));
     }
 
     @Test
@@ -47,12 +48,12 @@ class DefaultContextBuilderPoolPropertyTest {
             saved.put(property, System.clearProperty(property));
         }
         try {
-            poolValue(false, Map.of());
+            poolValue(false, TestMaps.of());
             for (String property : properties) {
                 assertNull(System.getProperty(property), property + " must not be set for an unpooled context");
             }
             System.setProperty(LdapConnectionPoolConfigurer.MAX_SIZE_PROPERTY, "3");
-            poolValue(true, Map.of());
+            poolValue(true, TestMaps.of());
             assertEquals("3", System.getProperty(LdapConnectionPoolConfigurer.MAX_SIZE_PROPERTY), "an explicit bound is kept");
             assertEquals("5", System.getProperty(LdapConnectionPoolConfigurer.PREF_SIZE_PROPERTY));
             assertEquals("300000", System.getProperty(LdapConnectionPoolConfigurer.IDLE_TIMEOUT_PROPERTY));
@@ -71,14 +72,14 @@ class DefaultContextBuilderPoolPropertyTest {
     @Test
     void pooledContextWaitsAtMostTheConnectTimeoutForAConnection() throws Exception {
         String connectTimeout = LdapConnectionPoolConfigurer.CONNECT_TIMEOUT_PROPERTY;
-        assertNull(environment(false, Map.of()).get(connectTimeout), "an unpooled context keeps the JDK default");
-        assertEquals("10000", environment(true, Map.of()).get(connectTimeout), "a pooled context never waits indefinitely");
-        assertEquals("250", environment(true, Map.of(connectTimeout, "250")).get(connectTimeout), "an explicit value is kept");
+        assertNull(environment(false, TestMaps.of()).get(connectTimeout), "an unpooled context keeps the JDK default");
+        assertEquals("10000", environment(true, TestMaps.of()).get(connectTimeout), "a pooled context never waits indefinitely");
+        assertEquals("250", environment(true, TestMaps.of(connectTimeout, "250")).get(connectTimeout), "an explicit value is kept");
     }
 
     @Test
     void bindKeysCannotBeOverriddenByAdditionalProperties() throws Exception {
-        Hashtable<?, ?> env = environment(false, Map.of(
+        Hashtable<?, ?> env = environment(false, TestMaps.of(
             Context.SECURITY_AUTHENTICATION, "none",
             Context.SECURITY_PRINCIPAL, "cn=someone-else",
             Context.SECURITY_CREDENTIALS, "other",
@@ -94,9 +95,9 @@ class DefaultContextBuilderPoolPropertyTest {
 
     @Test
     void poolKeyIsSetOnlyByThePooledFlag() throws Exception {
-        assertNull(poolValue(false, Map.of()));
-        assertEquals("true", poolValue(true, Map.of()));
-        assertEquals("true", poolValue(true, Map.of(POOL, "false")));
+        assertNull(poolValue(false, TestMaps.of()));
+        assertEquals("true", poolValue(true, TestMaps.of()));
+        assertEquals("true", poolValue(true, TestMaps.of(POOL, "false")));
     }
 
     private static Object poolValue(boolean pooled, Map<String, Object> additional) throws Exception {

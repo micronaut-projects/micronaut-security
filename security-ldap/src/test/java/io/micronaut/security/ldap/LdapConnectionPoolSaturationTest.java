@@ -7,6 +7,7 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import reactor.core.publisher.Mono;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +57,7 @@ class LdapConnectionPoolSaturationTest {
             server.importFromLDIF(true, new LDIFReader(ldif));
         }
         server.startListening();
-        context = ApplicationContext.run(Map.of(
+        context = ApplicationContext.run(TestMaps.of(
                 "micronaut.security.ldap.default.enabled", true,
                 "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
                 "micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com",
@@ -82,7 +85,7 @@ class LdapConnectionPoolSaturationTest {
     void loginFailsFastInsteadOfHangingWhenThePoolIsSaturated() {
         LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
         ContextBuilder builder = context.getBean(ContextBuilder.class);
-        LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
+        LdapAuthenticationProvider provider = context.getBean(LdapAuthenticationProvider.class);
 
         assertTrue(authenticate(provider, "riemann", "password").isAuthenticated(), "sanity check before saturating the pool");
 
@@ -124,8 +127,8 @@ class LdapConnectionPoolSaturationTest {
         assertFalse(authenticate(provider, "riemann", "not-the-password").isAuthenticated());
     }
 
-    private static AuthenticationResponse authenticate(LdapAuthenticationProvider<Object, String, String> provider, String username, String password) {
-        return provider.authenticate(null, new AuthenticationRequest<>() {
+    private static AuthenticationResponse authenticate(LdapAuthenticationProvider provider, String username, String password) {
+        return Mono.from(provider.authenticate(null, new AuthenticationRequest<String, String>() {
             @Override
             public String getIdentity() {
                 return username;
@@ -135,6 +138,8 @@ class LdapConnectionPoolSaturationTest {
             public String getSecret() {
                 return password;
             }
-        });
+        }))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
     }
 }
