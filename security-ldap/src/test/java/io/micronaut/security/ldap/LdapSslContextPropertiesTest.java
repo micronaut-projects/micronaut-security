@@ -16,6 +16,7 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import reactor.core.publisher.Mono;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -81,14 +84,18 @@ class LdapSslContextPropertiesTest {
     @Test
     void sslContextPropertyWithLdapUrlAuthenticatesOverTls() {
         try (ApplicationContext ctx = ApplicationContext.run(tlsViaContextProperties(), "test")) {
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
 
-            AuthenticationResponse response = provider.authenticate(null, request("riemann", "password"));
+            AuthenticationResponse response = Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
             assertTrue(response.isAuthenticated());
             assertEquals("riemann", response.getAuthentication().orElseThrow().getName());
             assertTrue(response.getAuthentication().orElseThrow().getRoles().contains("Mathematicians"));
 
-            AuthenticationResponse rejected = provider.authenticate(null, request("riemann", "wrong-password"));
+            AuthenticationResponse rejected = Mono.from(provider.authenticate(null, request("riemann", "wrong-password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
             assertFalse(rejected.isAuthenticated());
             assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, assertInstanceOf(AuthenticationFailed.class, rejected).getReason());
         }
@@ -99,9 +106,11 @@ class LdapSslContextPropertiesTest {
         Map<String, Object> properties = new HashMap<>(tlsViaContextProperties());
         properties.keySet().removeIf(key -> key.startsWith("micronaut.security.ldap.default.context.properties."));
         try (ApplicationContext ctx = ApplicationContext.run(properties, "test")) {
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
 
-            AuthenticationResponse response = provider.authenticate(null, request("riemann", "password"));
+            AuthenticationResponse response = Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
             assertFalse(response.isAuthenticated());
             assertEquals(AuthenticationFailureReason.UNKNOWN, assertInstanceOf(AuthenticationFailed.class, response).getReason());
         }
@@ -125,8 +134,10 @@ class LdapSslContextPropertiesTest {
                 contextBuilder.close(context);
             }
 
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
-            assertTrue(provider.authenticate(null, request("riemann", "password")).isAuthenticated());
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            assertTrue(Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block().isAuthenticated());
         }
     }
 
@@ -138,13 +149,17 @@ class LdapSslContextPropertiesTest {
         properties.put("micronaut.security.ldap.default.context.properties.java.naming.security.credentials", "ignored");
         properties.put("micronaut.security.ldap.default.context.properties.com.sun.jndi.ldap.connect.pool", "true");
         try (ApplicationContext ctx = ApplicationContext.run(properties, "test")) {
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
 
-            AuthenticationResponse rejected = provider.authenticate(null, request("riemann", "wrong-password"));
+            AuthenticationResponse rejected = Mono.from(provider.authenticate(null, request("riemann", "wrong-password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
             assertFalse(rejected.isAuthenticated());
             assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, assertInstanceOf(AuthenticationFailed.class, rejected).getReason());
 
-            assertTrue(provider.authenticate(null, request("riemann", "password")).isAuthenticated());
+            assertTrue(Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block().isAuthenticated());
         }
     }
 
@@ -158,10 +173,14 @@ class LdapSslContextPropertiesTest {
         appender.start();
         logger.addAppender(appender);
         try (ApplicationContext ctx = ApplicationContext.run(properties, "test")) {
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
             // each login builds a manager context and a user context
-            assertTrue(provider.authenticate(null, request("riemann", "password")).isAuthenticated());
-            assertTrue(provider.authenticate(null, request("riemann", "password")).isAuthenticated());
+            assertTrue(Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block().isAuthenticated());
+            assertTrue(Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block().isAuthenticated());
 
             assertEquals(1, reservedKeyWarnings(appender, "java.naming.security.authentication"));
             assertEquals(1, reservedKeyWarnings(appender, "java.naming.security.credentials"));
@@ -181,8 +200,10 @@ class LdapSslContextPropertiesTest {
             NamingException e = assertThrows(NamingException.class, () -> contextBuilder.build(ctx.getBean(LdapConfiguration.class).getManagerSettings()));
             assertInstanceOf(ClassCastException.class, e.getRootCause());
 
-            LdapAuthenticationProvider<?, Object, Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
-            AuthenticationResponse response = provider.authenticate(null, request("riemann", "password"));
+            LdapAuthenticationProvider<Object> provider = ctx.getBean(LdapAuthenticationProvider.class);
+            AuthenticationResponse response = Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
             assertFalse(response.isAuthenticated());
             assertEquals(AuthenticationFailureReason.UNKNOWN, assertInstanceOf(AuthenticationFailed.class, response).getReason());
         }

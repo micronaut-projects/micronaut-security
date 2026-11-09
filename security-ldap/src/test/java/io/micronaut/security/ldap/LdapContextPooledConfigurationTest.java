@@ -7,12 +7,15 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
 import java.time.Duration;
@@ -101,13 +104,17 @@ class LdapContextPooledConfigurationTest {
     void authenticationWorksWithAndWithoutPooling() {
         for (boolean pooled : new boolean[]{false, true}) {
             try (ApplicationContext context = ApplicationContext.run(properties(Map.of("micronaut.security.ldap.default.context.pooled", pooled)), "test")) {
-                LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
+                LdapAuthenticationProvider<Object> provider = context.getBean(LdapAuthenticationProvider.class);
 
-                AuthenticationResponse accepted = provider.authenticate(null, request("riemann", "password"));
+                AuthenticationResponse accepted = Mono.from(provider.authenticate(null, request("riemann", "password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
                 assertTrue(accepted.isAuthenticated(), "pooled=" + pooled);
                 assertEquals("riemann", accepted.getAuthentication().orElseThrow().getName());
 
-                AuthenticationResponse rejected = provider.authenticate(null, request("riemann", "not-the-password"));
+                AuthenticationResponse rejected = Mono.from(provider.authenticate(null, request("riemann", "not-the-password")))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
                 assertFalse(rejected.isAuthenticated(), "pooled=" + pooled);
                 assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, assertInstanceOf(AuthenticationFailed.class, rejected).getReason());
             }
@@ -127,7 +134,7 @@ class LdapContextPooledConfigurationTest {
     }
 
     private static AuthenticationRequest<String, String> request(String username, String password) {
-        return new AuthenticationRequest<>() {
+        return new AuthenticationRequest<String, String>() {
             @Override
             public String getIdentity() {
                 return username;

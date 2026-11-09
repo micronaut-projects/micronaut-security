@@ -22,7 +22,7 @@ import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.util.Map;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * default.
  *
  * @author Sergio del Amo
- * @since 5.5.2
+ * @since 4.18.2
  */
 @Internal
 @Singleton

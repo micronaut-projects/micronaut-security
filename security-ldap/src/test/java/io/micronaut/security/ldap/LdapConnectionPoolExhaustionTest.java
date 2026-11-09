@@ -9,6 +9,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.context.DefaultLdapSearchService;
 import io.micronaut.security.ldap.context.LdapSearchResult;
@@ -20,6 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import reactor.core.publisher.Mono;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,7 @@ class LdapConnectionPoolExhaustionTest {
 
     private static InMemoryDirectoryServer server;
     private static ApplicationContext context;
-    private static LdapAuthenticationProvider<Object, String, String> authenticationProvider;
+    private static LdapAuthenticationProvider<Object> authenticationProvider;
     private static BlockingLdapSearchService searchService;
 
     @BeforeAll
@@ -125,7 +128,7 @@ class LdapConnectionPoolExhaustionTest {
     }
 
     private static AuthenticationResponse authenticate(String username, String password) {
-        return authenticationProvider.authenticate(null, new AuthenticationRequest<>() {
+        return Mono.from(authenticationProvider.authenticate(null, new AuthenticationRequest<String, String>() {
             @Override
             public String getIdentity() {
                 return username;
@@ -135,7 +138,9 @@ class LdapConnectionPoolExhaustionTest {
             public String getSecret() {
                 return password;
             }
-        });
+        }))
+                .onErrorResume(AuthenticationException.class, failure -> Mono.just(failure.getResponse()))
+                .block();
     }
 
     /**

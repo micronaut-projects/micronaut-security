@@ -247,7 +247,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return Whether the manager context uses the JNDI LDAP connection pool
-         * @since 5.5.2
+         * @since 4.18.2
          */
         public boolean isPooled() {
             return pooled;
@@ -266,7 +266,7 @@ public class LdapConfiguration implements Toggleable {
          * Default {@value #DEFAULT_POOLED}.
          *
          * @param pooled Whether the manager context is pooled
-         * @since 5.5.2
+         * @since 4.18.2
          */
         public void setPooled(boolean pooled) {
             this.pooled = pooled;
@@ -274,7 +274,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return The bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}
-         * @since 5.5.2
+         * @since 4.18.2
          */
         public PoolConfiguration getPool() {
             return pool;
@@ -284,7 +284,7 @@ public class LdapConfiguration implements Toggleable {
          * Sets the bounds of the JNDI LDAP connection pool, applied when {@link #isPooled()} is {@code true}.
          *
          * @param pool The pool configuration
-         * @since 5.5.2
+         * @since 4.18.2
          */
         public void setPool(PoolConfiguration pool) {
             this.pool = pool;
@@ -321,7 +321,7 @@ public class LdapConfiguration implements Toggleable {
          * The JDK reads these system properties once, when the first pooled JNDI LDAP connection of the JVM is
          * opened. Values applied after that have no effect.
          *
-         * @since 5.5.2
+         * @since 4.18.2
          */
         @ConfigurationProperties("pool")
         public static class PoolConfiguration {
