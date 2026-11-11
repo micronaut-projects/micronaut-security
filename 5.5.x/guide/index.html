@@ -399,9 +399,11 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>22.5</strong><span>Custom Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-proxyToAuthServer"><a href="#proxyToAuthServer"><strong>22.6</strong><span>Proxy .well-known requests to Auth Server</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-providerHttpClient"><a href="#providerHttpClient"><strong>22.6</strong><span>HTTP Clients for the Provider</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>22.7</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-proxyToAuthServer"><a href="#proxyToAuthServer"><strong>22.7</strong><span>Proxy .well-known requests to Auth Server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-oauthGuides"><a href="#oauthGuides"><strong>22.8</strong><span>Guides</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-ojdbcExtensions"><a href="#ojdbcExtensions"><strong>23</strong><span>Oracle JDBC Extensions</span></a></div>
         
@@ -439,7 +441,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> 5.5.1 </p>
+        <p><strong>Version:</strong> 5.5.2 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -531,6 +533,116 @@ Micronaut Security 3.x requires Micronaut 3.x.
 
 <div class="paragraph">
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
+</div>
+<div class="sect1">
+<h2 id="_micronaut_security_5_5_breaking_changes">Micronaut Security 5.5 breaking changes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Starting with 5.5.2, issuer claim matching is stricter. Previously, the <code>iss</code> claim was accepted when the expected issuer (<code>micronaut.security.token.jwt.claims-validators.issuer</code>, or <code>micronaut.security.oauth2.clients.<strong>.openid.issuer</code> for <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/DefaultProviderResolver.html">DefaultProviderResolver</a>) merely ended with the claim value once the scheme and trailing slash were removed, so for a configured issuer <code>admin-portal</code> values such as <code>portal</code>, <code>l</code>, <code>/</code>, <code>https://</code> or an empty string passed validation, and for <code><a href="https://idcs-abc.identity.oraclecloud.com" class="bare">https://idcs-abc.identity.oraclecloud.com</a></code> the parent domain <code><a href="https://identity.oraclecloud.com/" class="bare">https://identity.oraclecloud.com/</a></code> did.
+Now the <code>iss</code> claim must be equal to the expected issuer. Suffixes and parent domains are never accepted.
+For <code>micronaut.security.token.jwt.claims-validators.issuer</code> (<a href="../api/io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a>), a value starting with <code>http://</code> or <code>https://</code> is compared after removing the scheme and a single trailing slash; the scheme is now matched case-insensitively (<code>HTTPS://</code> equals <code>https://</code>), while the host, port and path remain case-sensitive as before. The trailing slash is only ignored when the value has no query or fragment, where it is part of that component. Any other value is an opaque <code>StringOrURI</code> and is compared verbatim, so <code>admin-portal/</code> no longer matches <code>admin-portal</code>. Surrounding whitespace in the claim is not ignored.
+If <code>micronaut.security.token.jwt.claims-validators.issuer</code> is present but has no value (for example <code>issuer:</code> in YAML), <a href="../api/io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a> now rejects every token and logs a warning at startup; previously it accepted any <code>iss</code> claim.
+For the OpenID client validators (<a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/DefaultProviderResolver.html">DefaultProviderResolver</a>), the <code>iss</code> claim must be identical to the expected issuer (<code>micronaut.security.oauth2.clients.</strong>.openid.issuer-identifier</code> if set, otherwise <code>openid.issuer</code>), as OpenID Connect Core 1.0 section 3.1.3.7 requires: only the case of the scheme and a single trailing slash (when the issuer has no query or fragment) are tolerated, so an <code>http://</code> claim no longer matches an <code>https://</code> issuer and the host is compared case-sensitively. This is the same comparison <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/IssuerClaimValidator.html">IssuerClaimValidator</a> and the issuer binding of the JWKS use.
+If your provider issues tokens whose <code>iss</code> differs from the configured issuer, configure the exact <code>iss</code> value: <code>claims-validators.issuer</code> for <a href="../api/io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a>, and <code>openid.issuer-identifier</code> for the OpenID client validators (for example <code><a href="https://identity.oraclecloud.com/" class="bare">https://identity.oraclecloud.com/</a></code> for Oracle IDCS, whose tenant specific <code>openid.issuer</code> is only the discovery URL).</p>
+</li>
+<li>
+<p><code>ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(String, String)</code> has been deprecated and now delegates to <code>ClaimsUtils.equalsIgnoringProtocolAndTrailingSlash(String, String)</code>, which implements the rule above.</p>
+</li>
+<li>
+<p>Starting with 5.5.2, when <code>micronaut.security.authentication</code> is set to <code>idtoken</code>, <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> ignores OAuth 2.0 clients configured with <code>micronaut.security.oauth2.clients.*.enabled: false</code>. ID tokens issued to a disabled client no longer authenticate requests as bearer tokens or JWT cookies. The OpenID provider metadata and the JWKS signature configuration of a disabled client are no longer registered. This removes only the trust that client itself contributed: if the claims validator is disabled with <code>micronaut.security.token.jwt.claims-validators.openid-idtoken: false</code>, a token issued to the disabled client is still accepted when an enabled client trusts the same issuer and signing keys, because nothing checks the <code>aud</code> claim. Keep <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>, or an equivalent custom <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>, active to isolate clients that share an OpenID provider. In <code>idtoken</code> authentication mode, unsigned JWTs are now always rejected, including when every OAuth 2.0 client is disabled or none is configured and no JWKS signature configuration exists. <a href="../api/io/micronaut/security/oauth2/DefaultProviderResolver.html">DefaultProviderResolver</a> and the well-known proxy also ignore disabled clients. The constructor <code>DefaultProviderResolver(List&lt;OpenIdClientConfiguration&gt;)</code> has been deprecated. Use <code>DefaultProviderResolver(List&lt;OpenIdClientConfiguration&gt;, Collection&lt;OauthClientConfiguration&gt;)</code> instead.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/ldap/context/AttributesConvertibleValues.html">AttributesConvertibleValues</a> no longer splits a single-valued LDAP attribute at commas when it is read as a collection or an array. Every attribute value is one element. As a result, <a href="../api/io/micronaut/security/ldap/group/DefaultLdapGroupProcessor.html">DefaultLdapGroupProcessor</a> maps an LDAP group named <code>Sales,Marketing</code> to the single role <code>Sales,Marketing</code> instead of the two roles <code>Sales</code> and <code>Marketing</code>. Applications relying on the previous splitting must map such groups themselves with a custom <a href="../api/io/micronaut/security/ldap/group/LdapGroupProcessor.html">LdapGroupProcessor</a>.</p>
+</li>
+<li>
+<p>The <code>toString()</code> of all security events no longer includes the event source. <a href="../api/io/micronaut/security/token/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a>, <a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a> and <a href="../api/io/micronaut/security/event/TokenValidatedEvent.html">TokenValidatedEvent</a> no longer print the token, and the events extending <a href="../api/io/micronaut/security/event/SecurityEvent.html">SecurityEvent</a> (<a href="../api/io/micronaut/security/event/LoginSuccessfulEvent.html">LoginSuccessfulEvent</a>, <a href="../api/io/micronaut/security/event/LoginFailedEvent.html">LoginFailedEvent</a>, <a href="../api/io/micronaut/security/event/LogoutEvent.html">LogoutEvent</a> and <a href="../api/io/micronaut/security/event/TokenValidatedEvent.html">TokenValidatedEvent</a>) no longer print the authentication or response they carry, whose attributes may hold tokens in OAuth 2.0 and OpenID Connect flows. Micronaut Framework logs every published event at <code>DEBUG</code> level with its string representation, which wrote these values to the log. Use <code>getSource()</code> or <code>getRefreshToken()</code> to obtain the value in your listeners.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> no longer includes the token being validated in its <code>WARN</code> log messages. The introspection endpoint and the refresh token grant hand client-supplied tokens, such as other users' access tokens, to the refresh token validator, so the value was being written to the application log. The parse or verification exception is now logged at <code>DEBUG</code> without the token.</p>
+</li>
+<li>
+<p>Log statements no longer include credentials, tokens or claim values: the <code>Authorization</code> header (<a href="../api/io/micronaut/security/token/reader/HttpHeaderTokenReader.html">HttpHeaderTokenReader</a>), undecodable basic auth credentials (<a href="../api/io/micronaut/security/authentication/BasicAuthUtils.html">BasicAuthUtils</a>), JSON Web Tokens verified or rejected by the signature validators and JWKS signatures, the claim set generated by <a href="../api/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html">JWTClaimsSetGenerator</a> (only claim names are logged), the access tokens handled by the client credentials client, and the nonce and claims of an ID token that fails nonce validation. Applications relying on these log messages for troubleshooting no longer see the values.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/TokenAuthenticationFetcher.html">TokenAuthenticationFetcher</a> consults the <a href="../api/io/micronaut/security/token/validator/TokenValidator.html">TokenValidator</a> beans one at a time, in order, and stops at the first validator which authenticates the token. Previously every validator was invoked concurrently for each token, which handed tokens already accepted by the JWT validator to lower precedence validators such as the OpenID provider <code>UserInfo</code> endpoint validator. Lower precedence validators are now only invoked once every preceding validator rejected the token. When the request carries several tokens, for example in a header and a cookie, they are likewise validated one at a time in the order the token readers resolve them.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> no longer compiles every entry of <code>micronaut.security.ip-patterns</code> as a regular expression. An entry made only of hexadecimal digits, dots, colons and <code><strong></code> (for example <code>127.0.0.1</code> or <code>192.168.1.</strong></code>) is now an IP wildcard whose dots and colons match literally. Previously <code>192.168.1.<strong></code> was the regular expression <code>192.168.1.</strong></code>, which also admitted <code>192.168.10.5</code> or <code>192.168.100.5</code>. Entries containing any other character (for example <code>192\.168\.1\.\d+</code>), and entries starting with a dot (for example the "allow all" regular expression <code>.<strong></code>), keep being compiled as regular expressions. A <code></strong></code> in the middle of a wildcard matches within a single address segment (<code>192.168.<strong>.1</code> does not match <code>192.168.2.3.1</code>), while a trailing <code></strong></code> matches the rest of the address. To allow every address use <code>0.0.0.0</code>, <code><strong></code> or <code>.</strong></code>.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/csrf/validator/CsrfTokenValidator.html">CsrfTokenValidator</a> no longer falls through to another <a href="../api/io/micronaut/security/csrf/repository/CsrfTokenRepository.html">CsrfTokenRepository</a> when the token found in a repository does not match the token supplied in the request. Repositories are consulted following their <code>Ordered</code> order and the first repository holding a CSRF token for the request is authoritative. <a href="../api/io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html">SessionCsrfTokenRepository</a> now runs before <a href="../api/io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html">CookieCsrfTokenRepository</a>: with <a href="#session">Session-Based Authentication</a>, a request carrying an HTTP session which holds a CSRF token is only accepted when the supplied token matches the session token; a CSRF cookie does not replace it.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html">DefaultOpenIdAuthenticationMapper</a> qualifies the username with the provider name when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under <code>micronaut.security.oauth2.clients</code>: <code>Authentication.getName()</code> is <code>&lt;provider name&gt;:&lt;sub&gt;</code> instead of <code>&lt;sub&gt;</code>, so that the same subject at two providers never maps to one user. With a single client the username remains the <code>sub</code> claim. The unqualified subject is kept in the <code>sub</code> attribute. The username of authentications created from an ID token with <code>micronaut.security.authentication</code> set to <code>idtoken</code> is not qualified. Applications with several clients which key data on the username must migrate those keys, or set <code>micronaut.security.oauth2.openid.qualify-username-with-provider</code> to <code>false</code> to restore the previous (unsafe) behavior. See <a href="#openid-user-details">User Details Mapping</a>.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html">JWTClaimsSetGenerator</a> now writes the <code>sub</code> claim after the authentication attributes, so the <code>sub</code> claim of a generated JWT is always <code>Authentication.getName()</code>. Previously an authentication attribute named <code>sub</code> replaced the principal name in the token, which turned a provider-qualified username back into the bare subject on every later request.</p>
+</li>
+<li>
+<p>The constructor <code>DefaultOpenIdAuthenticationMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)</code> has been deprecated. Use <code>DefaultOpenIdAuthenticationMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration, OpenIdConfiguration, Collection&lt;OauthClientConfiguration&gt;)</code> instead.</p>
+</li>
+<li>
+<p>Starting with 5.5.2, <code>micronaut.security.token.jwt.signatures.jwks.*.key-type</code> is applied again when verifying token signatures with a remote JSON Web Key Set. Since 3.11.0 the setting had no effect: a token signed with a key of any type in the JWKS was accepted. A JWKS configured with a <code>key-type</code> now only verifies tokens signed with a key of that type. The setting no longer defaults to <code>RSA</code>; unless it is configured, keys of any type are matched, which preserves the previous behavior for applications that do not set it. <code>JwksSignatureConfigurationProperties.DEFAULT_KEYTYPE</code> is deprecated, and <code>JwksSignatureConfiguration.getKeyType()</code> returns <code>null</code> for a JWKS without a configured <code>key-type</code>. The <code>key-type</code> value is case-insensitive and must be one of <code>RSA</code>, <code>EC</code>, <code>OKP</code> or <code>oct</code>; any other value now fails application startup with a <code>ConfigurationException</code>. A key published in the JWKS with an explicit <code>alg</code> is only used to verify tokens whose header declares that algorithm; keys without <code>alg</code> match any algorithm.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html">AbstractEndSessionRequest</a> no longer expands the OpenID provider end session URL as a URI template. The logout parameters are percent-encoded and appended to the query component of the provider URL, preserving any query component it already has. If the provider URL is empty or not a valid URI, <code>getUrl(HttpRequest, Authentication)</code> returns <code>null</code> and <code>/oauth/logout</code> does not redirect, instead of throwing or redirecting to a malformed URL. The provider URL must be an absolute <code>http</code> or <code>https</code> URL with a host and without user information: a relative URL, another scheme, an empty or non-ASCII host, or <code><a href="https://user:password@provider.example/logout" class="bare">https://user:password@provider.example/logout</a></code> now results in this 404 response instead of being passed through. So does a provider URL that is not a strict RFC 3986 URI, for example one with an unencoded space or <code>{</code> in its path. Characters such as <code>{</code> or non-ASCII in the query component of the provider URL are percent-encoded, and a <code>;</code> in it is treated as a parameter separator.</p>
+</li>
+<li>
+<p>A failed retrieval of a remote JSON Web Key Set (connection error, non-2xx response, unparseable body or a JWK Set without keys) is no longer retried for every token. The JWK Set is not requested again until the back-off configured with <code>micronaut.security.token.jwt.signatures.jwks-client.failure-backoff</code> (default 10 seconds) elapses; tokens which cannot be verified by another signature configuration are rejected meanwhile. Set the property to <code>0s</code> to restore the previous behavior. Concurrent requests share one retrieval per signature configuration and url, bounded by <code>micronaut.security.token.jwt.signatures.jwks-client.retrieval-timeout</code> (default 30 seconds); a retrieval which exceeds it is treated as a failure.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwkSetFetcher.html">JwkSetFetcher</a> <code>clearCache(url)</code> now also evicts the JWK Set cached by the caching implementations (the Reactor based one evicts the entries for that url; the Micronaut Cache based one evicts the whole <code>jwks</code> cache, since its entries are keyed by provider name and url) in addition to the AOT optimization and the failure back-off.</p>
+</li>
+<li>
+<p>The constructor <code>DefaultJwkSetFetcher(JwksClient)</code> has been deprecated. Use <code>DefaultJwkSetFetcher(JwksClient, JwksClientConfiguration)</code> instead.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/errors/CookiePriorToLoginPersistence.html">CookiePriorToLoginPersistence</a> only stores the path and query of the request rejected prior to login, and only honours a local path (one starting with a single <code>/</code>) when redirecting after login. Scheme-relative (<code>//host/&#8230;&#8203;</code>) or absolute URIs are ignored and the login handlers fall back to <code>micronaut.security.redirect.login-success</code>.</p>
+</li>
+<li>
+<p>The plain OAuth 2.0 client (<a href="../api/io/micronaut/security/oauth2/client/DefaultOauthClient.html">DefaultOauthClient</a>) now sends the application&#8217;s own callback URL, built with <a href="../api/io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html">OauthRouteUrlBuilder</a>, as the <code>redirect_uri</code> parameter of the authorization code grant token request. Previously the value stored in the <code>state</code> parameter of the authorization response was used, which allowed anyone redirecting the browser to the callback endpoint to choose the <code>redirect_uri</code> sent to the provider and redeem an authorization code issued for a different redirection URI (RFC 6749 sections 4.1.3 and 10.6). The OpenID Connect client already behaved this way.</p>
+</li>
+<li>
+<p>The constructor <code>DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)</code> has been deprecated. Use <code>DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)</code> instead.</p>
+</li>
+<li>
+<p>The constructor <code>OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)</code> has been deprecated. Use <code>OauthCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration, String)</code> instead. A context created with the deprecated constructor no longer sends a <code>redirect_uri</code> parameter to the token endpoint.</p>
+</li>
+<li>
+<p>Starting with 5.5.2, the JSON Web Key Set published at the <code>jwks_uri</code> of an OpenID provider is registered as a signature configuration for request tokens only when <code>micronaut.security.authentication</code> is set to <code>idtoken</code>, as it was before Micronaut Security 4.8.0. In <code>cookie</code>, <code>session</code> and <code>bearer</code> modes, or when the authentication mode is not set, tokens signed by the provider&#8217;s keys, such as ID tokens issued to other clients, no longer authenticate requests. Applications that must accept the provider&#8217;s tokens as request credentials in those modes need to configure the JWKS explicitly with <code>micronaut.security.token.jwt.signatures.jwks.*</code>.</p>
+</li>
+<li>
+<p>The ID token returned by the token endpoint during the authorization code flow is verified exclusively against the issuing provider&#8217;s JWKS. It is no longer accepted when signed by any other signature configuration of the application.</p>
+</li>
+<li>
+<p>Single-valued keys directly under <code>micronaut.security.ldap</code>, such as the global switch <code>micronaut.security.ldap.enabled</code>, no longer create an <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a> named after the key. Previously <code>micronaut.security.ldap.enabled: true</code> created a configuration and an <a href="../api/io/micronaut/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> named <code>enabled</code> with no server, whose failures turned login attempts for unknown usernames into HTTP 500 responses and allowed username enumeration. Only keys with nested properties, for example <code>micronaut.security.ldap.default.*</code>, define LDAP configurations.</p>
+</li>
+<li>
+<p>The HTTP clients Micronaut Security creates to talk to an identity provider (token endpoint, OpenID provider metadata discovery, UserInfo endpoint and JWK Set retrieval) no longer follow redirects, regardless of <code>micronaut.http.client.follow-redirects</code>. A redirect returned by the provider is never followed, so the request fails instead of reaching the redirect target. An <code>HttpClient</code> bean named after an OAuth 2.0 provider is no longer used to call its token endpoint: a client that never follows redirects is created from the service configuration <code>micronaut.http.services.&lt;provider&gt;.*</code>, or from the default client configuration, instead. See <a href="#providerHttpClient">HTTP Clients for the Provider</a>.</p>
+</li>
+<li>
+<p>The constructor <code>OpenIdProviderMetadataFetcherFactory()</code> has been replaced by <code>OpenIdProviderMetadataFetcherFactory(BeanContext, HttpClientConfiguration)</code> and the factory method <code>createOpenIdProviderMetadataFetcher(OpenIdClientConfiguration, HttpClient)</code> by <code>createOpenIdProviderMetadataFetcher(OpenIdClientConfiguration)</code>. The class is internal API.</p>
+</li>
+<li>
+<p>Starting with 5.5.2, the JSON Web Key Set registered for the <code>jwks_uri</code> of an OpenID client is bound to the issuer of that client (the <code>issuer</code> asserted by the provider metadata or, if it asserts none, <code>micronaut.security.oauth2.clients.<strong>.openid.issuer</code>). Tokens whose <code>iss</code> claim is not equal to the issuer (tolerating only the case of the scheme and a trailing slash), or that have no or an empty <code>iss</code> claim, are no longer verified with the keys of that provider, even if their signature validates against one of them. This prevents a key trusted for one provider from signing tokens as another provider. Applications that must verify tokens of a different issuer with a provider&#8217;s keys need to configure the JWKS explicitly with <code>micronaut.security.token.jwt.signatures.jwks.</strong>.url</code>, optionally bound to the expected issuer with <code>micronaut.security.token.jwt.signatures.jwks.*.issuer</code>.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> no longer returns <code>AuthenticationFailureReason.USER_NOT_FOUND</code> when the username does not match any directory entry. It returns <code>CREDENTIALS_DO_NOT_MATCH</code>, the same reason as for a wrong password, and attempts a bind against a decoy DN (a random non-existent entry under the search base, or the entry configured with <code>micronaut.security.ldap.*.search.decoy-dn</code>) so that unknown usernames cannot be enumerated through the failure message and the response-time difference is narrowed. Only the client-side cost is equalised by default; see the <a href="#ldap">LDAP</a> section for configuring a decoy account where directory-side timing matters.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> created by the <code>UserInfo</code> endpoint token validator is bound to the provider which answered. The attribute <code>oauth2Provider</code> is always set to the provider name, and when <code>micronaut.security.oauth2.openid.qualify-username-with-provider</code> is <code>true</code>, or it is not set and more than one enabled OAuth 2.0 client is configured under <code>micronaut.security.oauth2.clients</code>, the username is <code>&lt;provider name&gt;:&lt;sub&gt;</code> instead of <code>&lt;sub&gt;</code>, so that the same subject at two providers never maps to one user. Applications with several clients which key data on <code>Authentication.getName()</code> for <code>UserInfo</code>-validated requests must migrate those keys. Client names under <code>micronaut.security.oauth2.clients</code> containing <code>:</code> are not supported by the configuration binding, and the <code>UserInfo</code> validator additionally rejects them with a <code>ConfigurationException</code> when usernames are qualified, since they would make the qualified name ambiguous. See the <a href="#user-info">UserInfo Endpoint</a> section.</p>
+</li>
+<li>
+<p>With <code>micronaut.security.authentication</code> set to <code>idtoken</code>, <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html">OktaEndSessionEndpoint</a> (used for Okta and Oracle Cloud) only sends as <code>id_token_hint</code> the token which authenticated the request, as recorded in the <a href="../api/io/micronaut/security/context/SecurityContext.html">SecurityContext</a>. Previously, it sent the first token found in the request, which could be an unrelated <code>Authorization: Bearer</code> header added by a gateway rather than the ID token cookie. If no token authenticated the request and the authentication has no <code>openIdToken</code> attribute, no <code>id_token_hint</code> is sent.</p>
+</li>
+<li>
+<p>Starting with 5.5.2, <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/IssuerClaimValidator.html">IssuerClaimValidator</a> requires the <code>iss</code> claim of an ID token to match the issuer expected for the OpenID client in addition to the Issuer Identifier of the provider metadata. The expected issuer is <code>micronaut.security.oauth2.clients.<strong>.openid.issuer</code>, or <code>micronaut.security.oauth2.clients.</strong>.openid.issuer-identifier</code> when set. The comparison is exact, tolerating only the case of the scheme and a trailing slash. Moreover, an <code>issuer</code> announced in the provider&#8217;s discovery document that does not match the expected issuer is discarded (an error is logged) and the expected issuer is used instead, as required by OpenID Connect Discovery 1.0 section 4.3. ID tokens whose <code>iss</code> claim only matched the issuer announced by the provider are now rejected. If the provider issues tokens with an <code>iss</code> that differs from the URL used to fetch the discovery document (for example, discovery over a cluster-internal URL, or Oracle IDCS with a tenant specific <code>issuer</code> and the provider wide issuer <code><a href="https://identity.oraclecloud.com/" class="bare">https://identity.oraclecloud.com/</a></code>), set <code>micronaut.security.oauth2.clients.*.openid.issuer-identifier</code> to the expected <code>iss</code> value.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="_micronaut_security_5_4_breaking_changes">Micronaut Security 5.4 breaking changes</h2>
@@ -1413,6 +1525,21 @@ and then it tries to validate the token via the <a href="../api/io/micronaut/sec
 <img src="../img/tokenAuthenticationFetcher.png" alt="tokenAuthenticationFetcher">
 </div>
 </div>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/token/validator/TokenValidator.html">TokenValidator</a> beans are consulted sequentially, in order. The first validator which authenticates the token wins, and the token is not handed to the remaining validators. A validator is only consulted once every validator preceding it has rejected the token.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Give validators which send the token to a remote service, such as the <a href="#user-info">UserInfo endpoint token validator</a>, the lowest precedence. That way they only receive tokens which no local validator (for example the JWT validator) accepted.
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="tokenReaders"><a class="anchor" href="#tokenReaders"></a>6.1.2.1 Token Readers</h2>
 
@@ -1782,6 +1909,25 @@ ip-patterns = ["127.0.0.1", "192.168.1.*"]</code></pre>
 <div class="paragraph">
 <p>In the previous code, the <a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
 either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
+</div>
+<div class="paragraph">
+<p>Each entry of <code>micronaut.security.ip-patterns</code> is interpreted in one of two ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A pattern made only of hexadecimal digits, dots, colons and <code><strong></code> (for example <code>127.0.0.1</code>, <code>192.168.1.</strong></code> or <code>fe80:*</code>) is an IP wildcard. Dots and colons match literally. A <code><strong></code> inside the pattern matches within one address segment (<code>192.168.</strong>.1</code> matches <code>192.168.2.1</code> but not <code>192.168.2.3.1</code>), and a trailing <code><strong></code> matches the rest of the address, so <code>192.168.1.</strong></code> matches <code>192.168.1.0</code> to <code>192.168.1.255</code> and does not match <code>192.168.10.5</code>. Hexadecimal digits match regardless of case, so <code>FE80:*</code> and <code>fe80:*</code> are equivalent.</p>
+</li>
+<li>
+<p>Any other pattern (for example <code>192\.168\.1\.\d+</code> or <code>^10\.0\.(1|2)\.[0-9]{1,3}$</code>) is compiled as a Java regular expression that must match the whole remote host address. Escape dots as <code>\.</code> in regular expressions; an unescaped dot matches any character. A pattern that contains <code>192.168.1.<strong></code> together with other characters (for example <code>192.168.1.</strong>|10.0.0.1</code>) is a regular expression, not a wildcard. A pattern starting with a dot, such as <code>.*</code>, is always a regular expression.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The special value <code>0.0.0.0</code> (the default) matches every address; <code><strong></code> and the regular expression <code>.</strong></code> do too.</p>
+</div>
+<div class="paragraph">
+<p>The address compared is the one returned by <code>HttpRequest#getRemoteAddress()</code>, the TCP peer, so behind a proxy or load balancer it is the proxy&#8217;s address (<code>X-Forwarded-For</code> is not consulted). IPv6 addresses are compared in their uncompressed form (<code>0:0:0:0:0:0:0:1</code>, not <code>::1</code>).</p>
 </div>
 <div class="paragraph">
 <p>The IP patterns rule never explicitly allows requests, it only rejects requests if the address does not match. There must be other security rules that determine whether a resource should be accessed.</p>
@@ -2194,6 +2340,9 @@ class ExampleController {
 <div class="paragraph">
 <p><code>user</code> is of type <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a></p>
 </div>
+<div class="paragraph">
+<p><code>user</code> is <code>null</code> for anonymous requests. A request is allowed only if the expression evaluates to <code>true</code>. If the expression evaluates to <code>false</code> or to <code>null</code>, for example because it navigates the user with <code>user?.</code> and no user is authenticated, the request is rejected. Later security rules, such as an intercept URL map entry, do not get the chance to allow it.</p>
+</div>
 
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>6.2.3 Intercept URL Map</h2>
 
@@ -2475,6 +2624,30 @@ access = ["isAuthenticated()"]</code></pre>
 <p>accessing <code>/v1/myResource/**</code> with a request that isn&#8217;t GET requires authentication</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Patterns are matched against the request path the router uses to select a route: the percent-encoded path, with each segment decoded. A segment is kept percent-encoded if decoding it would introduce a slash or leave it blank. Thus, a path variable such as <code>x%2Fy</code> or <code>%20</code> cannot skip a fixed-depth pattern such as <code>/admin/*</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When <code>micronaut.server.context-path</code> is set, the patterns are prepended with the context path by default (see <code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code>). Requests for the context root, for example <code>/context</code> and <code>/context/</code>, are matched as the root path <code>/</code> is matched when no context path is set. Thus, root patterns such as <code>/</code> or <code>/*</code> keep protecting the application&#8217;s root route.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -3341,7 +3514,10 @@ However, Micronaut security modules ship with several implementations which you 
 
 
 <div class="paragraph">
-<p>When you set <code>micronaut.security.authentication=idtoken</code>, <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled.</p>
+<p>When you set <code>micronaut.security.authentication=idtoken</code>, <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> and <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a> a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> are enabled. Additionally, a <a href="../api/io/micronaut/security/token/jwt/nimbus/ReactiveJwksSignature.html">ReactiveJwksSignature</a> bean is registered for the <code>jwks_uri</code> of each OpenID provider, so ID tokens issued by the provider can be used as request credentials, and <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> verifies that they were issued to this client. Only enabled OAuth 2.0 clients are considered. A disabled client contributes no provider metadata and no JWKS, but that removes only its own trust: when several clients share the same OpenID provider, only <code>IdTokenClaimsValidator</code> checks that the <code>aud</code> claim names an enabled client, so disabling it with <code>micronaut.security.token.jwt.claims-validators.openid-idtoken: false</code> lets a token issued to a disabled client authenticate through the signing keys of an enabled sibling. ID token authentication never accepts unsigned JWTs: even when every OAuth 2.0 client is disabled, or none is configured, and therefore no JWKS is registered, a token without a signature is rejected.</p>
+</div>
+<div class="paragraph">
+<p>The <code>iss</code> claim of such a token must be identical to the expected issuer of an OpenID client: <code>micronaut.security.oauth2.clients.<strong>.openid.issuer-identifier</code> if set, otherwise <code>micronaut.security.oauth2.clients.</strong>.openid.issuer</code>. Only the case of the scheme and a trailing slash are tolerated; the scheme, host, port and path must match. The same expected issuer is used by <a href="../api/io/micronaut/security/oauth2/ProviderResolver.html">ProviderResolver</a> to resolve the OpenID client of a token from its <code>iss</code> claim.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3396,7 +3572,9 @@ However, Micronaut security modules ship with several implementations which you 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ip-patterns</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"])</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"]). A pattern made only of hexadecimal digits, dots, colons
+ and {@code <strong>} (e.g. {@code 192.168.1.</strong>}) is an IP wildcard whose dots and colons match literally; any other pattern
+ is a regular expression matched against the whole host address.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code></p></td>
@@ -3583,6 +3761,15 @@ Use the API <a href="../api/io/micronaut/security/config/RedirectService.html">R
 </td>
 </tr>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_redirecting_to_the_uri_requested_prior_to_login">Redirecting to the URI requested prior to login</h3>
+<div class="paragraph">
+<p>When <code>micronaut.security.redirect.prior-to-login</code> is <code>true</code>, <a href="../api/io/micronaut/security/errors/CookiePriorToLoginPersistence.html">CookiePriorToLoginPersistence</a> stores the URI of the request that was rejected as unauthorized in an <code>ORIGINAL_URI</code> cookie and the login handlers redirect to it after a successful login instead of to <code>login-success</code>.</p>
+</div>
+<div class="paragraph">
+<p>To prevent an open redirect (CWE-601), only the path and query of the unauthorized request are stored, and only a local path, one that starts with a single <code>/</code>, is honoured when the cookie is read back. A request line such as <code>GET ///evil.example/x</code>, which browsers would follow as a scheme-relative URL to another host, or a planted cookie carrying an absolute or scheme-relative URL, falls back to <code>login-success</code>.</p>
+</div>
 </div>
 
 <h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>10 Reactive Authentication Providers</h1>
@@ -4737,7 +4924,19 @@ url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks
 <p>The previous snippet creates a <a href="../api/io/micronaut/security/token/jwt/nimbus/ReactiveJwksSignature.html">ReactiveJwksSignature</a> bean with a <code>awscognito</code> name qualifier.</p>
 </div>
 <div class="paragraph">
-<p>If you have the <a href="https://docs.micronaut.io/latest/guide/#httpClient">Micronaut HTTP Client</a> on the classpath, then it will be used to retrieve the remote JWK Set. This allows for the configuration settings of the HTTP Client to be applied when fetching the resource. If a named service-specific client exists and the name of the service matches the name of the configured JWKS provider name, then that specific client instance will be used, otherwise a default Http Client instance (with any global configuration settings from <code>micronaut.http.client.*</code> applied) will be used. If the Micronaut HTTP Client is not on the classpath, then the implementation will fall back to the internal resource fetching mechanism of the external JWT library dependency.</p>
+<p>If you have the <a href="https://docs.micronaut.io/latest/guide/#httpClient">Micronaut HTTP Client</a> on the classpath, then it will be used to retrieve the remote JWK Set. This allows for the configuration settings of the HTTP Client to be applied when fetching the resource. If a service-specific client configuration (<code>micronaut.http.services.&lt;name&gt;.<strong></code>) exists whose name matches the configured JWKS provider name, then a client created from that configuration (and its service url) will be used, otherwise a default HTTP Client instance (with any global configuration settings from <code>micronaut.http.client.</strong></code> applied) will be used. If the Micronaut HTTP Client is not on the classpath, then the implementation will fall back to the internal resource fetching mechanism of the external JWT library dependency.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default HTTP Client used to retrieve a remote JWK Set never follows redirects, regardless of <code>micronaut.http.client.follow-redirects</code>. A redirect to another address is treated as a failure to load the JWK Set. A named service-specific client configured for a JWKS provider (<code>micronaut.http.services.&lt;name&gt;.*</code>) only contributes its settings: redirects are never followed, even with <code>follow-redirects: true</code>. Client filters scoped to a service id (<code>@Filter(serviceId = "&lt;name&gt;")</code>) are not applied to the client that retrieves the JWK Set.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>For example, to use an HTTP proxy for the fetching of the JWK Set from the above example:</p>
@@ -4872,7 +5071,209 @@ url = "/eu-west-XXXX/.well-known/jwks.json"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that the same approach will be applied when using a <code>jwks_uri</code> supplied via <a href="#openid-authorization-code">Open ID Connect</a> metadata.</p>
+<p>Note that the same approach will be applied when using a <code>jwks_uri</code> supplied via <a href="#openid-authorization-code">Open ID Connect</a> metadata. Such a JWKS is registered as a signature configuration for request tokens only when <code>micronaut.security.authentication</code> is set to <code>idtoken</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_binding_a_jwks_to_an_issuer">Binding a JWKS to an issuer</h3>
+<div class="paragraph">
+<p>When an application trusts the key sets of several identity providers, a key trusted for one provider must not be able to sign tokens that claim to be issued by another provider. A JWKS can be bound to an issuer with the <code>issuer</code> property. A bound JWKS only verifies tokens whose <code>iss</code> claim is equal to that issuer, tolerating only the case of the scheme and a trailing slash, the same comparison <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/IssuerClaimValidator.html">IssuerClaimValidator</a> applies to ID tokens. A different scheme, suffixes, parent domains and an empty <code>iss</code> never match; tokens issued by anyone else, or without an <code>iss</code> claim, are not verified with its keys, even if their signature validates against one of them.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.signatures.jwks.awscognito.url=https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json
+micronaut.security.token.jwt.signatures.jwks.awscognito.issuer=https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json'
+              issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX'</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks.awscognito]
+url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+issuer = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        signatures {
+          jwks {
+            awscognito {
+              url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+              issuer = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          signatures {
+            jwks {
+              awscognito {
+                url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+                issuer = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "jwks": {
+              "awscognito": {
+                "url": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json",
+                "issuer": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The JWKS created for the <code>jwks_uri</code> of an <a href="#openid-authorization-code">Open ID Connect</a> client is always bound to the issuer of that client (the <code>issuer</code> asserted by the provider metadata or, if it asserts none, <code>micronaut.security.oauth2.clients.*.openid.issuer</code>). If neither <code>openid.issuer</code> is configured nor the provider metadata asserts an issuer (for example <code>fetch-configuration: false</code> with <code>openid.jwks-uri</code>), the JWKS is not bound and the application logs a warning at startup. Always set <code>openid.issuer</code> when several providers are trusted. A JWKS configured explicitly without an <code>issuer</code> verifies tokens regardless of their <code>iss</code> claim.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restricting_the_key_type">Restricting the key type</h3>
+<div class="paragraph">
+<p>By default, every key of the JWKS is used to verify token signatures, whatever its type (<code>kty</code>). If the identity provider publishes keys of several types but tokens must only be accepted when signed with one of them, restrict the JWKS with the <code>key-type</code> property. Only keys of the configured type are then used to verify a token; a token signed with a key of another type is rejected, even if that key is part of the JWKS. The value is case-insensitive and must be <code>RSA</code>, <code>EC</code>, <code>OKP</code> or <code>oct</code>; any other value fails application startup.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.signatures.jwks.awscognito.url=https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json
+micronaut.security.token.jwt.signatures.jwks.awscognito.key-type=RSA</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json'
+              key-type: RSA</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks.awscognito]
+url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+key-type = "RSA"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        signatures {
+          jwks {
+            awscognito {
+              url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+              keyType = "RSA"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          signatures {
+            jwks {
+              awscognito {
+                url = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json"
+                key-type = "RSA"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "jwks": {
+              "awscognito": {
+                "url": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json",
+                "key-type": "RSA"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="paragraph">
 <p>The <a href="https://docs.micronaut.io/latest/guide/#httpClient">Micronaut HTTP Client</a> based implementation can be explicitly disabled in favor of the JWT library&#8217;s internal resource fetching implementation by explicitly setting <code>micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false</code>. For example:</p>
@@ -4983,6 +5384,7 @@ url = "/eu-west-XXXX/.well-known/jwks.json"</code></pre>
     }
   }
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -5124,6 +5526,108 @@ expire-after-write = "24h"</code></pre>
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Failure back-off</strong></p>
+</div>
+<div class="paragraph">
+<p>If a remote JWK Set cannot be retrieved (for example, the connection is refused, the endpoint responds with a non-2xx status or the body cannot be parsed) or the retrieved JWK Set contains no keys, the JWK Set is not requested again until a back-off elapses. While the back-off lasts, tokens which cannot be verified by another signature configuration are rejected without contacting the JWKS endpoint. This prevents an unauthenticated client from triggering one outbound JWKS request (and one error log entry) per request while the authorization server is unavailable.</p>
+</div>
+<div class="paragraph">
+<p>The back-off applies to every <a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwkSetFetcher.html">JwkSetFetcher</a> implementation, including the Micronaut Cache based one. It is keyed by signature configuration name and JWKS url, since each configuration may use its own HTTP client settings, so a failure for one configuration does not prevent another configuration sharing the url from retrieving the JWK Set. You can configure its duration with:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.jwt.signatures.jwks-client.failure-backoff=10s
+micronaut.security.token.jwt.signatures.jwks-client.retrieval-timeout=30s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks-client:
+            failure-backoff: 10s
+            retrieval-timeout: 30s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.jwt.signatures.jwks-client]
+failure-backoff = "10s"
+retrieval-timeout = "30s"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      jwt {
+        signatures {
+          jwksClient {
+            failureBackoff = "10s"
+            retrievalTimeout = "30s"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        jwt {
+          signatures {
+            jwks-client {
+              failure-backoff = "10s"
+              retrieval-timeout = "30s"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "jwks-client": {
+              "failure-backoff": "10s",
+              "retrieval-timeout": "30s"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>failure-backoff</code> defaults to 10 seconds. Set it to <code>0s</code> to disable the back-off and retry the retrieval for every token.</p>
+</div>
+<div class="paragraph">
+<p>Concurrent requests share one retrieval per signature configuration and url. <code>retrieval-timeout</code> (default 30 seconds) bounds that shared retrieval even when the <a href="../api/io/micronaut/security/token/jwt/signature/jwks/JwksClient.html">JwksClient</a> has no timeout of its own, so a retrieval which never completes does not block every token for that configuration. A retrieval which times out counts as a failure and starts the back-off. Set it to <code>0s</code> to disable the timeout.</p>
 </div>
 
 <h2 id="staticJwks"><a class="anchor" href="#staticJwks"></a>11.3.5.1.2 Local JWKS</h2>
@@ -6665,7 +7169,7 @@ audience = "https://api.example.com"</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>iss</code> claim is set to an expected value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>iss</code> claim matches the expected value. For an <code>http://</code>/<code>https://</code> value, the claim must be equal to the configured issuer ignoring only the scheme and a single trailing slash; any other value is compared verbatim. Suffixes and parent domains are not accepted; configure the exact <code>iss</code> value of your tokens.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled when the <code>micronaut.security.token.jwt.claims-validators.issuer</code> property is set.</p></td>
 </tr>
 <tr>
@@ -6681,7 +7185,7 @@ audience = "https://api.example.com"</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>If you are using <code>micronaut.security.authentication: idtoken</code>, <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>, a bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>, is registered in the bean context as well. <code>IdTokenClaimsValidator</code> validates points 2-5 of the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section of the OpenID Connect Spec. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.openid-idtoken</code> to false.</p>
+<p>If you are using <code>micronaut.security.authentication: idtoken</code>, <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>, a bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>, is registered in the bean context as well. <code>IdTokenClaimsValidator</code> validates points 2-5 of the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section of the OpenID Connect Spec. Only enabled OAuth 2.0 clients are considered: an ID token issued to a client configured with <code>micronaut.security.oauth2.clients.*.enabled: false</code> is rejected. You can disable the validator by setting <code>micronaut.security.token.jwt.claims-validators.openid-idtoken</code> to false.</p>
 </div>
 
 <h2 id="render"><a class="anchor" href="#render"></a>11.3.11 Token Render</h2>
@@ -6805,6 +7309,32 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-database-authenti
 <p>LDAP authentication can be globally disabled by setting <code>micronaut.security.ldap.enabled</code> to <code>false</code>, or on a provider
 basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </div>
+<div class="paragraph">
+<p>Each key under <code>micronaut.security.ldap</code> that has nested properties (for example <code>micronaut.security.ldap.default.*</code>) defines one LDAP configuration and one <a href="../api/io/micronaut/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a>. Single-valued keys directly under <code>micronaut.security.ldap</code>, such as the global switch <code>micronaut.security.ldap.enabled</code>, are not configuration names and never create a configuration or a provider.</p>
+</div>
+<div class="sect1">
+<h2 id="_failed_authentication_responses">Failed authentication responses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> does not disclose whether a username exists in the directory. When the search for the username returns no entry, the provider returns the same <a href="../api/io/micronaut/security/authentication/AuthenticationFailureReason.html">AuthenticationFailureReason</a> (<code>CREDENTIALS_DO_NOT_MATCH</code>) it returns for a wrong password, so login responses and <code>WWW-Authenticate</code> challenges carry the same message in both cases.</p>
+</div>
+<div class="paragraph">
+<p>To keep the work done by the application similar as well, the provider performs a bind with the submitted password against a decoy entry. By default the decoy is a random, non-existent entry under the search base (<code>cn=&lt;random uuid&gt;,&lt;search base&gt;</code>), so the directory may log a failed bind for that DN whenever an unknown username is submitted; the random value avoids a fixed fingerprint in audit logs.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Only the client-side cost is equalised. A directory may still answer faster for a non-existent DN than for a wrong password, because it does not check a password hash, update bad-password or lockout counters or apply a password policy delay. Where that difference matters, create a real decoy account with an unmatchable password and set <code>micronaut.security.ldap.default.search.decoy-dn</code> to its DN, for example <code>micronaut.security.ldap.default.search.decoy-dn: uid=decoy,ou=people,dc=example,dc=com</code>. Exclude the decoy account from any account-lockout policy: a locked decoy answers unknown-username binds with a distinct, faster lockout error for the rest of the lockout window, which reopens the gap the decoy is meant to close. Remember too that whatever password a client submits with an unknown username is bound against the decoy entry, so a user who mistypes their username sends their real password to the decoy bind, and the directory may record that failed bind.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 
 <h2 id="configuration"><a class="anchor" href="#configuration"></a>11.4.1 Configuration</h2>
 
@@ -6817,6 +7347,9 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 
 <div class="paragraph">
 <p>The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it&#8217;s own settings and can be enabled or disabled.</p>
+</div>
+<div class="paragraph">
+<p>Each server is configured under its own name, for example <code>micronaut.security.ldap.default.*</code>. A name only becomes a configuration when it has nested properties; a single-valued key directly under <code>micronaut.security.ldap</code>, such as <code>micronaut.security.ldap.enabled</code>, is not a configuration name.</p>
 </div>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
@@ -6900,6 +7433,15 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.decoy-dn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the DN bound, with the supplied password, when a username matches no directory entry, so that an unknown
+ username costs the application the same bind round trip as a wrong password. Defaults to a random non-existent
+ entry under the search base, which equalises only the client-side cost. Point it at a real account with an
+ unmatchable password, excluded from any lockout policy, to also equalise directory-side work (password hashing,
+ bad-password counters).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -7036,7 +7578,7 @@ public class MyContextAuthenticationMapper implements ContextAuthenticationMappe
 <h2 id="_groups">Groups</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default the groups found in LDAP, if enabled, will be returned as is without any processing. No additional groups from any other sources will be added to the list. It is a common requirement to retrieve additional groups from other sources, or to normalize the names of the groups in a specific format.</p>
+<p>By default the groups found in LDAP, if enabled, will be returned as is without any processing. Each value of the group attribute becomes exactly one role, even if it contains a comma: a group named <code>Sales,Marketing</code> results in the single role <code>Sales,Marketing</code>. No additional groups from any other sources will be added to the list. It is a common requirement to retrieve additional groups from other sources, or to normalize the names of the groups in a specific format.</p>
 </div>
 <div class="paragraph">
 <p>To extend this behavior, it is necessary to create your own implementation of <a href="../api/io/micronaut/security/ldap/group/LdapGroupProcessor.html">LdapGroupProcessor</a>. Likely it will be desired to extend the default implementation because it has the logic for querying the groups from LDAP and executes the other methods to process the groups and query for additional groups.</p>
@@ -7922,7 +8464,16 @@ one stored in the user’s session. If they match, the request is approved; othe
 <a href="../api/io/micronaut/security/csrf/CsrfTokenRepository.html">CsrfTokenRepository</a> which fetches the CSRF token from the user&#8217;s HTTP session. Thus, when the application sends new request to the sever with a CSRF token (e.g. in a hidden form field or HTTP Header), the server validates the supplied token against the value stored in the HTTP Session.</p>
 </div>
 <div class="paragraph">
+<p><a href="../api/io/micronaut/security/csrf/session/SessionCsrfTokenRepository.html">SessionCsrfTokenRepository</a> takes precedence over <a href="../api/io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html">CookieCsrfTokenRepository</a>. When a request carries an HTTP session which holds a CSRF token, the supplied token is only validated against the session token; a CSRF cookie present in the request is ignored. This prevents a CSRF cookie planted in the user&#8217;s browser (for example, from a sibling subdomain) from replacing the token stored in the session.</p>
+</div>
+<div class="paragraph">
 <p>You can disable the CSRF Session repository by setting <code>micronaut.security.csrf.repositories.session.enabled</code> to false.</p>
+</div>
+<div class="paragraph">
+<p>The session is authoritative only when it holds a CSRF token. If a request carries an HTTP session without a CSRF token attribute (for example, a session created before CSRF was enabled or by a login path which does not run <a href="../api/io/micronaut/security/csrf/session/CsrfSessionPopulator.html">CsrfSessionPopulator</a>), the next repository, such as <a href="../api/io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html">CookieCsrfTokenRepository</a>, is consulted and a planted CSRF cookie is not neutralized. Make sure every login path which creates a session runs <a href="../api/io/micronaut/security/csrf/session/CsrfSessionPopulator.html">CsrfSessionPopulator</a>. The default <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> does. Setting <code>micronaut.security.csrf.signature-key</code> further limits this case: the HMAC binds the token to the session ID, so a token issued for another session is rejected even when only the cookie repository holds a token.</p>
+</div>
+<div class="paragraph">
+<p>Repositories are consulted following their <code>getOrder()</code> and the first one holding a CSRF token wins. Custom <a href="../api/io/micronaut/security/csrf/repository/CsrfTokenRepository.html">CsrfTokenRepository</a> beans should declare an explicit <code>getOrder()</code>: at the default order of 0 they tie with <a href="../api/io/micronaut/security/csrf/repository/CookieCsrfTokenRepository.html">CookieCsrfTokenRepository</a>, and the order between tied repositories is then unspecified.</p>
 </div>
 
 <h2 id="doubleSubmitCookiePattern"><a class="anchor" href="#doubleSubmitCookiePattern"></a>13.3.2 Double Submit Cookie Pattern</h2>
@@ -8227,6 +8778,12 @@ amount=100&amp;toUser=intended&amp;csrfToken=o24b65486f506e2cd4403caf0d640024</c
 </div>
 <div class="paragraph">
 <p>You can disable it by setting <code>micronaut.security.csrf.token-resolvers.field.enabled=false</code></p>
+</div>
+<div class="paragraph">
+<p>If the form body cannot be decoded (for example, because it contains an invalid percent escape such as <code>%zz</code>), no CSRF token is resolved and the request is rejected like any other request without a valid CSRF token. The raw request body is never logged; the type of the decoding failure is logged at <code>DEBUG</code> level by <code>io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver</code>.</p>
+</div>
+<div class="paragraph">
+<p>A request body larger than <code>micronaut.server.max-request-size</code> is not treated as a missing token: the request is answered with <code>413 Request Entity Too Large</code>.</p>
 </div>
 
 <h2 id="csrfApis"><a class="anchor" href="#csrfApis"></a>13.6 CSRF APIs</h2>
@@ -10923,6 +11480,18 @@ class AuthenticationToStringConverter implements TypeConverter&lt;Authentication
 <div class="paragraph">
 <p>To learn how to listen for events, see the <a href="https://docs.micronaut.io/latest/guide/index.html#contextEvents">Context Events</a> section of the documentation.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Micronaut Framework logs every published event at <code>DEBUG</code> level through the <code>io.micronaut.context.event.ApplicationEventPublisher</code> logger using the event&#8217;s <code>toString()</code>. The events that carry a token (<a href="../api/io/micronaut/security/event/TokenValidatedEvent.html">TokenValidatedEvent</a>, <a href="../api/io/micronaut/security/token/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a> and <a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a>) redact it from their string representation, and the other security events (for example <a href="../api/io/micronaut/security/event/LoginSuccessfulEvent.html">LoginSuccessfulEvent</a> and <a href="../api/io/micronaut/security/event/LogoutEvent.html">LogoutEvent</a>) do not print their source, so that enabling <code>DEBUG</code> logging never writes tokens to the log. Listeners obtain the token through <code>getSource()</code> (or <code>getRefreshToken()</code> for the refresh token event). Avoid logging the token yourself in your listeners.
+</td>
+</tr>
+</table>
+</div>
 
 <h1 id="oauth"><a class="anchor" href="#oauth"></a>22 OAuth 2.0</h1>
 
@@ -11166,6 +11735,18 @@ runtime = [
 </td>
 <td class="content">
 Even though OpenID providers return JWT tokens, that token is not used directly to authorize requests with Micronaut by default. Instead a new token is created if the application is using JWT. This allows for authorization to be standardized across custom authentication providers, normal OAuth 2.0 flows, and OpenID flows. It also allows for purely session based authorization as a result of OpenID authentication. To use the provider token directly, set the authentication mode to <code>idtoken</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Only in <code>idtoken</code> authentication mode is the provider&#8217;s JSON Web Key Set (the <code>jwks_uri</code> of the OpenID metadata) registered as a signature configuration to validate request tokens, and <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> then ensures the token was issued to this client. In any other mode, tokens signed by the provider&#8217;s keys, including ID tokens issued to other clients, are not accepted as request credentials. If your application is a resource server that must accept the provider&#8217;s access tokens, configure the JWKS explicitly with <code>micronaut.security.token.jwt.signatures.jwks.*</code>. The ID token obtained during the authorization code flow is always verified against the issuing provider&#8217;s JWKS.
 </td>
 </tr>
 </table>
@@ -12131,6 +12712,12 @@ To disable a specific client for any given environment, set <code>enabled: false
  Open ID provider asserts as its issuer identifier.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer-identifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value expected in the {@code iss} claim of ID tokens. Set it when it differs from the {@code issuer} used to
+ fetch the discovery document, for example when discovery is fetched over an internal URL. Defaults to {@code issuer}.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.configuration-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The configuration path to discover openid configuration. Default ("/.well-known/openid-configuration").</p></td>
@@ -12373,6 +12960,89 @@ To disable a specific client for any given environment, set <code>enabled: false
 </td>
 <td class="content">
 Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_username">Username</h3>
+<div class="paragraph">
+<p>The default mapper derives the username returned by <code>Authentication.getName()</code> from the <code>sub</code> claim of the ID token. A <code>sub</code> is only unique within the provider which issued it: two different users at two providers may well share the same <code>sub</code>, especially with providers that let users pick an account name or that issue sequential or e-mail based subjects. For that reason:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under <code>micronaut.security.oauth2.clients</code>, the username is the provider name followed by <code>:</code> and the <code>sub</code> claim, for example <code>okta:248289761001</code>. This is the same convention and the same property used for authentications validated through the <a href="#user-info">UserInfo endpoint</a>, so a user has the same name in a browser login and in a bearer request. The unqualified subject remains available in the <code>sub</code> attribute.</p>
+</li>
+<li>
+<p>With a single client the username is the bare <code>sub</code> claim.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Set <code>micronaut.security.oauth2.openid.qualify-username-with-provider</code> to <code>true</code> explicitly in any application which keys data on the username. The automatic rule depends on the clients configured, so adding another client later would otherwise rename every user.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>micronaut.security.authentication</code> set to <code>idtoken</code> is not covered. In that mode the cookie holds the raw ID token and every request after login is authenticated from its claims, so the username is the bare <code>sub</code> claim whatever the property value and the same <code>sub</code> issued by two providers still maps to the same user. When you configure several providers and key data on the username, do not use <code>idtoken</code>; use <code>cookie</code> or <code>session</code>, or derive the key from the <code>iss</code> and <code>sub</code> claims.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The provider name is always available in the <code>oauth2Provider</code> attribute as well. You can force or disable the qualification with <code>micronaut.security.oauth2.openid.qualify-username-with-provider</code>:</p>
+</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.qualify-username-with-provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the username of an authentication built from an OpenID provider response, by the default OpenID authentication mapper at login or by the <code>UserInfo</code> endpoint token validator, is the <code>sub</code> claim qualified with the provider name (<code>providerName:subject</code>) instead of the bare <code>sub</code> claim.
+ The <code>sub</code> claim is only unique within one provider. If not set, the username is qualified only when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under <code>micronaut.security.oauth2.clients</code>. It does not apply when <code>micronaut.security.authentication</code> is <code>idtoken</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Disabling the qualification while several clients are configured lets a user at one provider act as the user with the same <code>sub</code> at another provider in any application that keys data on the username.
 </td>
 </tr>
 </table>
@@ -12621,6 +13291,7 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 <td>An instance of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> is returned</td>
 </tr>
 </table>
+</div>
 </div>
 
 <h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>22.3.1.2.3 Parameters</h2>
@@ -13026,6 +13697,111 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 <div class="paragraph">
 <p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
+</div>
+<div class="sect2">
+<h3 id="_issuer_validation">Issuer validation</h3>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/IssuerClaimValidator.html">IssuerClaimValidator</a> validates the <code>iss</code> claim of the ID token. The expected issuer is <code>micronaut.security.oauth2.clients.<strong>.openid.issuer-identifier</code> if set, otherwise <code>micronaut.security.oauth2.clients.</strong>.openid.issuer</code>. The <code>iss</code> claim must equal it (the only differences tolerated are the case of the scheme and a trailing slash) and must exactly match the Issuer Identifier of the provider metadata.</p>
+</div>
+<div class="paragraph">
+<p>The <code>issuer</code> announced in the provider&#8217;s discovery document is controlled by the provider. Per <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation">OpenID Connect Discovery 1.0 section 4.3</a> it must be identical to the issuer used to retrieve the discovery document. If it does not match the expected issuer, Micronaut Security logs an error, discards the announced issuer and uses the expected issuer as the Issuer Identifier of the provider. Thus, a provider cannot get ID tokens issued by another configured provider accepted by announcing that provider&#8217;s issuer.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>iss</code> claim of the tokens legitimately differs from the URL used to fetch the discovery document, for example because discovery is fetched over a cluster-internal URL while tokens carry the public URL, or with Oracle IDCS, whose tokens carry the provider wide issuer <code><a href="https://identity.oraclecloud.com/" class="bare">https://identity.oraclecloud.com/</a></code>, configure the expected value with <code>issuer-identifier</code>. The same value is the expected <code>iss</code> for <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/ProviderResolver.html">ProviderResolver</a> when <code>micronaut.security.authentication=idtoken</code>:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.oauth2.clients.keycloak.openid.issuer=http://keycloak:8080/realms/app
+micronaut.security.oauth2.clients.keycloak.openid.issuer-identifier=https://sso.example.com/realms/app</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          openid:
+            issuer: http://keycloak:8080/realms/app
+            issuer-identifier: https://sso.example.com/realms/app</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.oauth2.clients.keycloak.openid]
+issuer = "http://keycloak:8080/realms/app"
+issuer-identifier = "https://sso.example.com/realms/app"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    oauth2 {
+      clients {
+        keycloak {
+          openid {
+            issuer = "http://keycloak:8080/realms/app"
+            issuerIdentifier = "https://sso.example.com/realms/app"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      oauth2 {
+        clients {
+          keycloak {
+            openid {
+              issuer = "http://keycloak:8080/realms/app"
+              issuer-identifier = "https://sso.example.com/realms/app"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "keycloak": {
+            "openid": {
+              "issuer": "http://keycloak:8080/realms/app",
+              "issuer-identifier": "https://sso.example.com/realms/app"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you do not fetch the discovery document, set <code>openid.issuer</code> to the expected <code>iss</code> value and <code>openid.fetch-configuration</code> to <code>false</code>, instead of disabling issuer validation. If there is neither a configured issuer nor a discovery document, the provider metadata has no issuer and the validator rejects every token.</p>
+</div>
+<div class="paragraph">
+<p>Issuer validation can be disabled with <code>micronaut.security.oauth2.openid.claims-validation.issuer=false</code>, but doing so removes this protection; prefer <code>issuer-identifier</code>.</p>
+</div>
 </div>
 
 <h2 id="state"><a class="anchor" href="#state"></a>22.3.1.3 State Parameter</h2>
@@ -13887,6 +14663,9 @@ This example above is not intended to be a complete configuration reference
 <p>If any configured OpenID provider supports end session behavior, a route will be registered that responds to <code>/oauth/logout</code> and redirects to the provider to log the user out. A parameter is also sent to the provider that indicates what URL the provider should redirect the user to after logging out. The default URL is <code>/logout</code> which will cause the local authentication to also be cleared and a final redirect issued according to the <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a>.</p>
 </div>
 <div class="paragraph">
+<p>The end session URL advertised by the provider (the <code>end_session_endpoint</code> of its discovery document, or the URL derived from the issuer for providers that do not advertise one) is used as an opaque URI: the logout parameters, such as <code>post_logout_redirect_uri</code> or <code>id_token_hint</code>, are percent-encoded and appended to its query component, and any query component already present in the provider URL is preserved. The provider URL is never expanded as a URI template. The provider URL must be an absolute <code>http</code> or <code>https</code> URL with a host and without user information. If it is empty, takes another form (a relative URL, another scheme, or <code><a href="https://user:password@provider.example/logout" class="bare">https://user:password@provider.example/logout</a></code>) or is not a valid URI, no redirect is issued and <code>/oauth/logout</code> responds with 404.</p>
+</div>
+<div class="paragraph">
 <p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
@@ -13909,6 +14688,12 @@ This example above is not intended to be a complete configuration reference
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.qualify-username-with-provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the username of an authentication built from an OpenID provider response, by the default OpenID authentication mapper at login or by the <code>UserInfo</code> endpoint token validator, is the <code>sub</code> claim qualified with the provider name (<code>providerName:subject</code>) instead of the bare <code>sub</code> claim.
+ The <code>sub</code> claim is only unique within one provider. If not set, the username is qualified only when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under <code>micronaut.security.oauth2.clients</code>. It does not apply when <code>micronaut.security.authentication</code> is <code>idtoken</code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -13964,6 +14749,9 @@ If you are using a custom domain URL for your auth server, instead of inferring 
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>For Okta and Oracle Cloud, <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html">OktaEndSessionEndpoint</a> sends an <code>id_token_hint</code> parameter. It is the ID token obtained during the authorization code flow when that token is available in the authentication attributes. Otherwise, when <code>micronaut.security.authentication</code> is set to <code>idtoken</code>, it is the token which authenticated the current request, that is, the ID token cookie. Other tokens present in the request, such as an <code>Authorization</code> header added by a gateway or reverse proxy, are never sent to the OpenID provider.</p>
 </div>
 <div class="paragraph">
 <p>Before choosing any of the default providers, the endpoint resolver will first look for an <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html">EndSessionEndpoint</a> bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.</p>
@@ -14148,6 +14936,40 @@ Set <code>micronaut.security.oauth2.userinfo.validator</code> to <code>false</co
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_provider_binding">Provider binding</h3>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> created from a <code>UserInfo</code> response is bound to the provider whose <code>UserInfo</code> endpoint answered:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The attribute <code>oauth2Provider</code> (<a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html">OauthAuthenticationMapper</a><code>.PROVIDER_KEY</code>) is always set to the provider name. A value with that key in the <code>UserInfo</code> response is ignored, so <a href="../api/io/micronaut/security/oauth2/ProviderResolver.html">ProviderResolver</a> always resolves the provider which validated the token.</p>
+</li>
+<li>
+<p>The username returned by <code>Authentication.getName()</code> is qualified with the provider name, followed by <code>:</code> and the <code>sub</code> claim, for example <code>okta:248289761001</code>, when <code>micronaut.security.oauth2.openid.qualify-username-with-provider</code> is <code>true</code>. If the property is not set, the username is qualified when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under <code>micronaut.security.oauth2.clients</code>. The <code>sub</code> attribute still holds the unqualified subject. Set the property explicitly if your application keys data on the name, so adding an unrelated client later does not rename every user. The default <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html">OpenIdAuthenticationMapper</a> used at login applies the same rule and the same property, so a user has the same name in a browser login and in a bearer request. See <a href="#openid-user-details">User Details Mapping</a>.</p>
+</li>
+<li>
+<p>Client names under <code>micronaut.security.oauth2.clients</code> must not contain <code>:</code>. Such a name is not supported by the configuration binding, and the <code>UserInfo</code> validator additionally rejects it with a <code>ConfigurationException</code> when usernames are qualified, because the provider <code>alpha</code> with the subject <code>beta:victim</code> and the provider <code>alpha:beta</code> with the subject <code>victim</code> would both be named <code>alpha:beta:victim</code>. The <code>sub</code> claim may contain <code>:</code>, since the provider name is everything before the first <code>:</code> of a qualified name.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A subject is only unique within its issuer. Without this binding, whoever controls one configured provider could answer a <code>UserInfo</code> request with the subject of a user at another configured provider and your application would treat the request as coming from that user.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Only the identity is bound to the provider. Roles are still resolved from the attributes of the <code>UserInfo</code> response (for example by <a href="../api/io/micronaut/security/token/DefaultRolesFinder.html">DefaultRolesFinder</a> reading the <code>roles</code> claim), so a provider you configure is trusted to state the roles of its own users. Only configure providers you trust, and use <code>micronaut.security.token.roles-name</code> or a custom <a href="../api/io/micronaut/security/token/RolesFinder.html">RolesFinder</a> if the claim is not appropriate for a provider.
+</td>
+</tr>
+</table>
+</div>
+</div>
 
 <h2 id="protectedResourceMetadata"><a class="anchor" href="#protectedResourceMetadata"></a>22.4.5 Protected Resource Metadata</h2>
 
@@ -14260,7 +15082,54 @@ Set <code>micronaut.security.oauth2.userinfo.validator</code> to <code>false</co
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
 </div>
 
-<h2 id="proxyToAuthServer"><a class="anchor" href="#proxyToAuthServer"></a>22.6 Proxy .well-known requests to Auth Server</h2>
+<h2 id="providerHttpClient"><a class="anchor" href="#providerHttpClient"></a>22.6 HTTP Clients for the Provider</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.5.x/src/main/docs/guide/oauth/providerHttpClient.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security creates HTTP clients to talk to the identity provider on behalf of your application:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/endpoint/token/request/DefaultTokenEndpointClient.html">DefaultTokenEndpointClient</a> sends the token request (with the client credentials) to the token endpoint.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadataFetcher.html">DefaultOpenIdProviderMetadataFetcher</a> retrieves the OpenID provider metadata from the issuer&#8217;s discovery document.</p>
+</li>
+<li>
+<p>The UserInfo token validator sends the bearer token to the <a href="#user-info">UserInfo endpoint</a>.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/signature/jwks/HttpClientJwksClient.html">HttpClientJwksClient</a> retrieves the <a href="#jwks">JWK Set</a> that verifies the token signatures.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These clients copy the settings of the default HTTP client configuration (<code>micronaut.http.client.<strong></code>), such as timeouts, proxy or SSL settings, but they *never follow redirects</strong>, regardless of <code>micronaut.http.client.follow-redirects</code>. A redirect returned by the provider is never followed: the redirect target is not requested, and since the redirect response is not a valid provider response the operation fails: the token request fails, the provider metadata is not available, the token is not validated against the UserInfo endpoint or the JWK Set is not loaded.</p>
+</div>
+<div class="paragraph">
+<p>Following a redirect from the identity provider would let a malicious or compromised provider make your application send the token request, together with the client credentials, or the user&#8217;s bearer token, to any address your application can reach, such as loopback, internal services or cloud metadata endpoints (Server-Side Request Forgery). The application would then treat whatever JSON it finds at that address as the response of the provider. The OAuth 2.0 and OpenID Connect specifications do not require clients to follow redirects for these endpoints.</p>
+</div>
+<div class="paragraph">
+<p>If the token endpoint of a provider has moved, update the configuration of the provider (<code>micronaut.security.oauth2.clients.<strong>.token.url</code>, <code>micronaut.security.oauth2.clients.</strong>.openid.issuer</code>, etc.) instead of relying on redirects.</p>
+</div>
+<div class="paragraph">
+<p>A named service-specific client configuration (<code>micronaut.http.services.&lt;name&gt;.<strong></code>) whose name matches the provider name (for the token endpoint) or the JWKS provider name (for JWKS retrieval) only contributes its settings: redirects are never followed, even with <code>follow-redirects: true</code>. An <code>HttpClient</code> bean named after the provider is no longer used to call the token endpoint, because its redirect policy cannot be enforced. Micronaut Security creates a client from the named service configuration, or from the default configuration if there is none, with the load balancer of the service, and logs a warning. Use <code>micronaut.http.services.&lt;provider&gt;.</strong></code> to customize the client of a provider.</p>
+</div>
+<div class="paragraph">
+<p>The clients Micronaut Security creates have no client id, so client filters scoped to a service id (<code>@Filter(serviceId = "&lt;provider&gt;")</code>) are not applied to them; client filters without a service id are. A relative endpoint url is resolved against <code>micronaut.http.services.&lt;provider&gt;.url</code>; without such a configuration, configure absolute urls.</p>
+</div>
+<div class="paragraph">
+<p>The programmatic entry points which take an <code>HttpClient</code>, such as <code>ClientCredentialsClient.of(HttpClient, OauthClientConfiguration)</code> or the <code>DefaultTokenEndpointClient(HttpClient)</code> constructor, use the given client as is: the caller is responsible for keeping redirects disabled.</p>
+</div>
+
+<h2 id="proxyToAuthServer"><a class="anchor" href="#proxyToAuthServer"></a>22.7 Proxy .well-known requests to Auth Server</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.5.x/src/main/docs/guide/oauth/proxyToAuthServer.adoc"'>
@@ -14302,7 +15171,7 @@ and <code>/.well-known/openid-configuration</code> <a href="https://openid.net/s
 </tbody>
 </table>
 
-<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>22.7 Guides</h2>
+<h2 id="oauthGuides"><a class="anchor" href="#oauthGuides"></a>22.8 Guides</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/5.5.x/src/main/docs/guide/oauth/oauthGuides.adoc"'>
