@@ -8,6 +8,7 @@ dependencies {
     compileOnly(projects.micronautSecuritySession)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.junit.jupiter.params)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(mnLogging.logback.classic)
     testImplementation(mn.micronaut.http.server.netty)

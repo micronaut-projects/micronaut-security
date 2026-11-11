@@ -10,6 +10,9 @@ dependencies {
     implementation(mnReactor.micronaut.reactor)
     testImplementation(mn.reactor.test)
     testImplementation(projects.micronautSecurityJwt)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
 
     testImplementation(mn.micronaut.http.client)
     testImplementation(mnSerde.micronaut.serde.jackson)
