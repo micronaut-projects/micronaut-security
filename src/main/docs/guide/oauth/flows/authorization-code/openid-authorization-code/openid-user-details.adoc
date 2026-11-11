@@ -19,7 +19,7 @@ NOTE: `micronaut.security.authentication` set to `idtoken` is not covered. In th
 
 The provider name is always available in the `oauth2Provider` attribute as well. You can force or disable the qualification with `micronaut.security.oauth2.openid.qualify-username-with-provider`:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.adoc[]
 
 WARNING: Disabling the qualification while several clients are configured lets a user at one provider act as the user with the same `sub` at another provider in any application that keys data on the username.
 
