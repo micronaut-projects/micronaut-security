@@ -1,0 +1,26 @@
+RFC 7644 does not define a SCIM-specific authentication scheme. Configure Micronaut Security authentication and authorization for the SCIM routes in the same way as the rest of the application. The SCIM controllers intentionally do not choose an authentication mechanism or application role.
+
+For example, an application can allow anonymous discovery while requiring authentication for resource operations:
+
+[configuration]
+----
+micronaut:
+  security:
+    intercept-url-map:
+      - pattern: /scim/v2/ServiceProviderConfig
+        access:
+          - isAnonymous()
+      - pattern: /scim/v2/Schemas/**
+        access:
+          - isAnonymous()
+      - pattern: /scim/v2/ResourceTypes/**
+        access:
+          - isAnonymous()
+      - pattern: /scim/v2/**
+        access:
+          - isAuthenticated()
+----
+
+Route security is only the first authorization layer. Every persistence implementation should use the originating `HttpRequest` in api:security.scim.server.model.ScimRequestContext[] to enforce client, subject, tenant, resource, and attribute-level policy. In particular, do not return an attribute merely because a client names it in `attributes`, and do not accept a write merely because the JSON representation can be deserialized.
+
+Deploy SCIM over TLS, protect bearer tokens and cookies according to their respective standards, avoid logging request bodies that can contain passwords or other personal information, and ensure error details do not disclose resource existence or sensitive values to unauthorized clients.
