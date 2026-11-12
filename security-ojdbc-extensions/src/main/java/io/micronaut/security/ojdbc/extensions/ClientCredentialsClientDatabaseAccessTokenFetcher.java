@@ -140,7 +140,7 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
             try {
                 return HttpClient.create(new URL(key));
             } catch (MalformedURLException e) {
-                throw new ConfigurationException("token URL " + k + " is invalid", e);
+                throw new ConfigurationException("token URL " + k.tokenUrl() + " is invalid", e);
             }
         });
     }
@@ -183,5 +183,13 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
                                                 @NonNull String clientId,
                                                 @NonNull String clientSecret,
                                                 @Nullable String scope) {
+
+        /**
+         * @return The string representation without the client secret.
+         */
+        @Override
+        public String toString() {
+            return "ClientCredentialsClientConfiguration[tokenUrl=" + tokenUrl + ", clientId=" + clientId + ", scope=" + scope + "]";
+        }
     }
 }

@@ -31,11 +31,13 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Implementation of {@link JwksClient} that uses the Nimbus library's built-in {@code com.nimbusds.jose.util.ResourceRetriever} interface.
+ * It never follows redirects.
  *
  *  @author Jeremy Grelle
  *  @since 4.5.0
@@ -46,7 +48,15 @@ public class ResourceRetrieverJwksClient implements JwksClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceRetrieverJwksClient.class);
     private final Scheduler scheduler;
-    private final DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever(0, 0, 0);
+    private final DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever(0, 0, 0) {
+        @Override
+        protected HttpURLConnection openHTTPConnection(URL url) throws IOException {
+            HttpURLConnection connection = super.openHTTPConnection(url);
+            // never follow redirects when retrieving the JWK Set of the identity provider
+            connection.setInstanceFollowRedirects(false);
+            return connection;
+        }
+    };
 
     @Inject
     public ResourceRetrieverJwksClient(@Named(TaskExecutors.BLOCKING) ExecutorService executorService) {
