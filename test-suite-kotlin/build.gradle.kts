@@ -19,6 +19,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityPasswordArgon2Bouncycastle)
     testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
@@ -36,6 +37,7 @@ dependencies {
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
     testImplementation(libs.awaitility)
+    testImplementation(libs.bcpkix)
 }
 tasks.withType<Test> {
     useJUnitPlatform()
