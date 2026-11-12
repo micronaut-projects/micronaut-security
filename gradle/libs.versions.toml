@@ -1,31 +1,32 @@
 [versions]
-managed-nimbus-jose-jwt = "10.9.1"
+managed-nimbus-jose-jwt = "10.10"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
-micronaut = "5.2.3"
-micronaut-platform = "5.1.5"
+micronaut = "5.2.22"
+micronaut-platform = "5.2.5"
 awaitility = "4.3.0"
 geb = "8.0.1"
-selenium = "4.47.0"
+selenium = "4.52.0"
 system-stubs-core = "2.1.8"
-unboundid-ldapsdk = "7.0.5"
-bouncycastle = "1.84"
+unboundid-ldapsdk = "7.0.6"
+bouncycastle = "1.86"
 micronaut-hibernate-validator = "5.1.0"
 micronaut-multitenancy = "6.1.0"
-micronaut-cache = "6.1.1"
-micronaut-reactor = "4.2.0"
-micronaut-serde = "3.1.1"
-micronaut-servlet = "6.1.0"
-micronaut-session = "5.1.0"
-micronaut-views = "6.2.0"
-micronaut-validation = "5.1.0"
-micronaut-test = "5.1.0"
-micronaut-data = "5.1.4"
-micronaut-sql = "7.1.2"
-graalvm-native-buildtools = "1.1.10"
+micronaut-cache = "6.2.0"
+micronaut-reactor = "4.3.0"
+micronaut-serde = "3.2.6"
+micronaut-servlet = "6.2.2"
+micronaut-session = "5.2.0"
+micronaut-views = "6.3.1"
+micronaut-validation = "5.2.1"
+micronaut-test = "5.2.0"
+micronaut-data = "5.2.5"
+micronaut-sql = "7.2.1"
+graalvm-native-buildtools = "1.1.18"
+micronaut-errorprone-no-reflection = "1.0.3" # https://github.com/micronaut-projects/errorprone-no-reflection/releases
 jsonassert = "1.5.3"
-commons-codec = "1.22.1"
+commons-codec = "1.23.0"
 
 [libraries]
 # Core
@@ -48,7 +49,8 @@ managed-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "managed
 managed-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "managed-jjwt" }
 managed-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "managed-jjwt" }
 managed-ojdbc-provider-common = { module = "com.oracle.database.jdbc:ojdbc-provider-common", version.ref = "managed-ojdbc-extensions" }
-
+bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
@@ -56,7 +58,7 @@ selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-d
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
-bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
+
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 jsonassert = { module = 'org.skyscreamer:jsonassert', version.ref = 'jsonassert'}
 commons-codec = {module = 'commons-codec:commons-codec', version.ref = 'commons-codec'}
@@ -66,3 +68,7 @@ testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
+micronaut-errorprone-no-reflection-gradle-plugin = { module = "io.micronaut.errorprone.no-reflection:io.micronaut.errorprone.no-reflection.gradle.plugin", version.ref = "micronaut-errorprone-no-reflection" }
+
+[plugins]
+micronaut-errorprone-no-reflection = { id = "io.micronaut.errorprone.no-reflection", version.ref = "micronaut-errorprone-no-reflection" }
