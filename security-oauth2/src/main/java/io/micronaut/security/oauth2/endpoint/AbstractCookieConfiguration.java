@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.http.cookie.SameSite;
 
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -42,6 +43,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
     protected String cookieName = null;
     protected boolean sessionCookie;
+    protected SameSite cookieSameSite;
 
     /**
      * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
@@ -153,6 +155,21 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      */
     public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
+    }
+
+    @Override
+    public Optional<SameSite> getCookieSameSite() {
+        return Optional.ofNullable(cookieSameSite);
+    }
+
+    /**
+     * Sets the SameSite attribute of the cookie. Default value (null), in which case no SameSite attribute is set. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`. Browsers reject a cookie with `SameSite=None` unless it is also marked `Secure`, so set `cookie-secure` to `true` when using `None` (for example, with `response_mode=form_post`, where the callback is a cross-site POST).
+     *
+     * @param cookieSameSite The SameSite attribute of the cookie
+     * @since 5.4.0
+     */
+    public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
+        this.cookieSameSite = cookieSameSite;
     }
 
 }
