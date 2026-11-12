@@ -1,7 +1,19 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.crypto.RSASSASigner
+import com.nimbusds.jose.jwk.JWKSet
+import com.nimbusds.jose.jwk.RSAKey
+import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWT
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.SignedJWT
+import io.micronaut.context.annotation.Primary
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Order
+import io.micronaut.core.order.Ordered
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.context.ServerRequestContext
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
@@ -9,11 +21,13 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.Claims
-import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
+import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher
+import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator
 import jakarta.inject.Singleton
 import org.jspecify.annotations.NonNull
 import org.jspecify.annotations.Nullable
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 
 import java.time.Instant
@@ -29,17 +43,11 @@ class OpenIdTokenResponseValidatorGenericClaimsValidatorOnceSpec extends Applica
     private static final String ISSUER = 'https://issuer.example.com'
     private static final String CLIENT_ID = 'client-id'
     private static final String NONCE = 'expected-nonce'
+    private static final RSAKey RSA_KEY = new RSAKeyGenerator(2048).keyID('once-spec').algorithm(JWSAlgorithm.RS256).generate()
 
     @Override
     String getSpecName() {
         'OpenIdTokenResponseValidatorGenericClaimsValidatorOnceSpec'
-    }
-
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
-        ]
     }
 
     void setup() {
@@ -84,15 +92,17 @@ class OpenIdTokenResponseValidatorGenericClaimsValidatorOnceSpec extends Applica
     }
 
     private OpenIdTokenResponse tokenResponse() {
-        JwtTokenGenerator tokenGenerator = applicationContext.getBean(JwtTokenGenerator)
+        // since 5.5.2 the ID token is verified exclusively against the JWKS of the provider
+        SignedJWT signedJwt = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(RSA_KEY.keyID).build(), new JWTClaimsSet.Builder()
+                .issuer(ISSUER)
+                .audience(CLIENT_ID)
+                .subject('sherlock')
+                .claim('nonce', NONCE)
+                .expirationTime(Date.from(Instant.now().plusSeconds(3600)))
+                .build())
+        signedJwt.sign(new RSASSASigner(RSA_KEY))
         OpenIdTokenResponse tokenResponse = new OpenIdTokenResponse()
-        tokenResponse.idToken = tokenGenerator.generateToken([
-                iss  : ISSUER,
-                aud  : CLIENT_ID,
-                sub  : 'sherlock',
-                nonce: NONCE,
-                exp  : Instant.now().plusSeconds(3600).epochSecond,
-        ]).get()
+        tokenResponse.idToken = signedJwt.serialize()
         tokenResponse
     }
 
@@ -124,6 +134,23 @@ class OpenIdTokenResponseValidatorGenericClaimsValidatorOnceSpec extends Applica
 
         void reset() {
             requests.clear()
+        }
+    }
+
+    @Singleton
+    @Primary
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Replaces(DefaultJwkSetFetcher)
+    @Requires(property = 'spec.name', value = 'OpenIdTokenResponseValidatorGenericClaimsValidatorOnceSpec')
+    static class StaticJwkSetFetcher implements JwkSetFetcher<JWKSet> {
+
+        @Override
+        Publisher<JWKSet> fetch(String providerName, String url) {
+            Mono.just(new JWKSet(RSA_KEY.toPublicJWK()))
+        }
+
+        @Override
+        void clearCache(String url) {
         }
     }
 }
