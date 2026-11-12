@@ -30,11 +30,12 @@ import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
+import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.NamingException;
+import javax.naming.OperationNotSupportedException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Optional;
@@ -62,7 +63,6 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     private final ContextBuilder contextBuilder;
     private final ContextAuthenticationMapper contextAuthenticationMapper;
     private final LdapGroupProcessor ldapGroupProcessor;
-    private final Scheduler scheduler;
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -70,20 +70,38 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Executor Service
+     * @since 5.4.0
      */
+    public LdapAuthenticationProvider(LdapConfiguration configuration,
+                                      LdapSearchService ldapSearchService,
+                                      ContextBuilder contextBuilder,
+                                      ContextAuthenticationMapper contextAuthenticationMapper,
+                                      LdapGroupProcessor ldapGroupProcessor) {
+        this.configuration = configuration;
+        this.ldapSearchService = ldapSearchService;
+        this.contextBuilder = contextBuilder;
+        this.contextAuthenticationMapper = contextAuthenticationMapper;
+        this.ldapGroupProcessor = ldapGroupProcessor;
+    }
+
+    /**
+     * @param configuration               The configuration to use to authenticate
+     * @param ldapSearchService           The search service
+     * @param contextBuilder              The context builder
+     * @param contextAuthenticationMapper The authentication mapper
+     * @param ldapGroupProcessor          The group processor
+     * @param executorService             Ignored. LDAP authentication runs on the executor named by
+     *                                    {@link #getExecutorName()} ({@link TaskExecutors#BLOCKING}).
+     * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
                                       LdapGroupProcessor ldapGroupProcessor,
                                       @Named(TaskExecutors.IO) ExecutorService executorService) {
-        this.configuration = configuration;
-        this.ldapSearchService = ldapSearchService;
-        this.contextBuilder = contextBuilder;
-        this.contextAuthenticationMapper = contextAuthenticationMapper;
-        this.ldapGroupProcessor = ldapGroupProcessor;
-        this.scheduler = Schedulers.fromExecutorService(executorService);
+        this(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 
     @Override
@@ -128,9 +146,18 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 DirContext userContext = null;
                 try {
                     String dn = result.getDn();
-                    userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                    try {
+                        userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                    } catch (AuthenticationNotSupportedException | OperationNotSupportedException e) {
+                        // The server rejected the user bind itself, so the supplied credentials are not accepted.
+                        debug(LOG, "Server rejected bind for user [{}]. {}", username, e);
+                        return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+                    }
                     if (result.getAttributes() == null) {
-                        result.setAttributes(userContext.getAttributes(dn));
+                        // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
+                        // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
+                        // InvalidNameException is a NamingException and is handled by the enclosing catch.
+                        result.setAttributes(userContext.getAttributes(new LdapName(dn)));
                     }
                 } finally {
                     contextBuilder.close(userContext);
@@ -235,8 +262,14 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         return StringUtils.isEmpty(base) ? rdn : rdn + "," + base;
     }
 
+    /**
+     * No-op. The provider holds no resources that require closing; this method is retained for binary compatibility.
+     *
+     * @deprecated The provider holds no resources that require closing.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     @Override
     public void close() {
-        //No op
+        // No op
     }
 }

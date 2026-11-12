@@ -24,7 +24,6 @@ import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
-import jakarta.inject.Named;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -42,7 +41,6 @@ public class LdapAuthenticationProviderFactory {
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Executor Service
      * @return an {@link LdapAuthenticationProvider} if the corresponding {@link LdapConfiguration} is enabled
      */
     @EachBean(LdapConfiguration.class)
@@ -51,8 +49,28 @@ public class LdapAuthenticationProviderFactory {
                                                                  LdapSearchService ldapSearchService,
                                                                  ContextBuilder contextBuilder,
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
+                                                                 LdapGroupProcessor ldapGroupProcessor) {
+        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
+    }
+
+    /**
+     * @param configuration               The configuration to use to authenticate
+     * @param ldapSearchService           The search service
+     * @param contextBuilder              The context builder
+     * @param contextAuthenticationMapper The authentication mapper
+     * @param ldapGroupProcessor          The group processor
+     * @param executorService             Ignored. LDAP authentication runs on the executor named by
+     *                                    {@link LdapAuthenticationProvider#getExecutorName()} ({@link TaskExecutors#BLOCKING}).
+     * @return an {@link LdapAuthenticationProvider}
+     * @deprecated The executor service is ignored. Use {@link #ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
+     */
+    @Deprecated(since = "5.4.0", forRemoval = true)
+    public LdapAuthenticationProvider ldapAuthenticationProvider(LdapConfiguration configuration,
+                                                                 LdapSearchService ldapSearchService,
+                                                                 ContextBuilder contextBuilder,
+                                                                 ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor,
-                                                                 @Named(TaskExecutors.IO) ExecutorService executorService) {
-        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
+                                                                 ExecutorService executorService) {
+        return ldapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 }
