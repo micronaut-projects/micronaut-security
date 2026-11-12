@@ -24,14 +24,17 @@ import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
+import io.micronaut.security.token.jwt.signature.jwks.JwksClientReactorContext;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureUtils;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
 
 import java.text.ParseException;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -45,6 +48,11 @@ import java.text.ParseException;
  * <p>
  * If the configuration specifies a {@link JwksSignatureConfiguration#getKeyType() key type}, only keys of that type ({@code kty})
  * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
+ * <p>
+ * If the JWT carries a {@code kid} header which is not present in the cached JWKS, and the Reactor context
+ * {@link JwksClientReactorContext} allows it, the JWKS cache is cleared and the JWKS is fetched again at most once
+ * per {@link JwksSignatureConfiguration#getRefreshInterval()} so that key rotations at the authorization server are
+ * picked up without waiting for the cache to expire.
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -55,6 +63,8 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
+    private final long refreshIntervalNanos;
+    private final AtomicLong lastRefreshNanos;
 
     /**
      *
@@ -68,6 +78,9 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
+        this.refreshIntervalNanos = jwksSignatureConfiguration.getRefreshInterval().toNanos();
+        // allow the first refresh straight away
+        this.lastRefreshNanos = new AtomicLong(System.nanoTime() - refreshIntervalNanos);
     }
 
     /**
@@ -84,28 +97,78 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         if (!issuerMatches(jwt)) {
             return Mono.just(false);
         }
-        return Mono.from(jwkSetFetcher.fetch(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl()))
-                .map(jwkSet -> {
-                    try {
-                        boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
+        String providerName = jwksSignatureConfiguration.getName();
+        String url = jwksSignatureConfiguration.getUrl();
+        return Mono.deferContextual(ctx -> Mono.from(jwkSetFetcher.fetch(providerName, url))
+                .flatMap(jwkSet -> {
+                    if (shouldRefresh(ctx, jwt, jwkSet)) {
                         if (LOG.isDebugEnabled()) {
-                            if (result) {
-                                LOG.debug("JWT Signature verified");
-                            } else {
-                                LOG.debug("JWT Signature not verified");
-                                if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
-                                    LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
-                                }
-                            }
+                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Clearing cache and fetching JWKS again", jwt.getHeader().getKeyID(), url);
                         }
-                        return result;
-                    } catch (JOSEException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Error verifying JWT signature", e);
-                        }
-                        return false;
+                        jwkSetFetcher.clearCache(providerName, url);
+                        return Mono.from(jwkSetFetcher.fetch(providerName, url))
+                                .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
                     }
-                });
+                    return Mono.just(verify(jwt, jwkSet));
+                }));
+    }
+
+    /**
+     * @param ctx Reactor context
+     * @param jwt the signed JWT
+     * @param jwkSet the cached JSON Web Key Set
+     * @return Whether the JWKS cache should be cleared and the JWKS fetched again before verifying the JWT.
+     */
+    private boolean shouldRefresh(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
+        String keyId = jwt.getHeader().getKeyID();
+        if (keyId == null) {
+            return false;
+        }
+        if (!ctx.hasKey(JwksClientReactorContext.class) || !ctx.get(JwksClientReactorContext.class).isRefreshOnUnknownKeyId()) {
+            return false;
+        }
+        if (JwksSignatureUtils.containsKeyId(jwkSet, keyId)) {
+            return false;
+        }
+        return tryAcquireRefresh();
+    }
+
+    /**
+     * Rate limits refreshes so that concurrent tokens with an unknown key ID do not stampede the authorization server.
+     * @return {@code true} if the caller is allowed to refresh the JWKS. Only one caller per {@link JwksSignatureConfiguration#getRefreshInterval()} is allowed.
+     */
+    private boolean tryAcquireRefresh() {
+        long now = System.nanoTime();
+        long last = lastRefreshNanos.get();
+        if (now - last < refreshIntervalNanos) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWKS for {} was refreshed less than {} ago. Not refreshing again", jwksSignatureConfiguration.getUrl(), jwksSignatureConfiguration.getRefreshInterval());
+            }
+            return false;
+        }
+        return lastRefreshNanos.compareAndSet(last, now);
+    }
+
+    private boolean verify(SignedJWT jwt, JWKSet jwkSet) {
+        try {
+            boolean result = JwksSignatureUtils.verify(jwt, jwkSet, jwkValidator, jwksSignatureConfiguration.getKeyType());
+            if (LOG.isDebugEnabled()) {
+                if (result) {
+                    LOG.debug("JWT Signature verified");
+                } else {
+                    LOG.debug("JWT Signature not verified");
+                    if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
+                        LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
+                    }
+                }
+            }
+            return result;
+        } catch (JOSEException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error verifying JWT signature", e);
+            }
+            return false;
+        }
     }
 
     /**

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -68,7 +69,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
             context.registerStaticOptimization("AotJwksFetcher", DefaultJwkSetFetcher.Optimizations.class, body -> {
                 body.addStatement("$T configs = new $T()",
                         ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
-                        ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
+                        ParameterizedTypeName.get(ClassName.get(ConcurrentHashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
                 );
                 for (GeneratedFile generatedFile : files) {
                     context.registerGeneratedSourceFile(generatedFile.getJavaFile());
