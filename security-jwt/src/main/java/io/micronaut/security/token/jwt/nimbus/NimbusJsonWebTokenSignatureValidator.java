@@ -72,7 +72,7 @@ class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValid
                 return true;
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT Signature verification failed");
+                LOG.debug("Signature verification failed for {} with signature configuration: {}", JwtLogUtils.describe(jwt), signatureConfiguration);
             }
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
