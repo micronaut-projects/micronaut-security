@@ -16,16 +16,19 @@
 package io.micronaut.security.x509;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Context;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 
 /**
  * Configuration for X.509 authentication.
+ * The bean is created eagerly when the context starts so that an invalid {@code subject-dn-regex} fails the application startup.
  *
  * @author Burt Beckwith
  * @since 3.3
  */
+@Context
 @ConfigurationProperties(X509ConfigurationProperties.PREFIX)
 public class X509ConfigurationProperties implements X509Configuration {
 
@@ -57,10 +60,13 @@ public class X509ConfigurationProperties implements X509Configuration {
 
     /**
      * Set the Subject DN regex. Default value {@value #DEFAULT_SUBJECT_DN_REGEX}.
+     * The regex must contain exactly one capturing group, which is used to extract the name from the certificate subject DN.
      *
      * @param subjectDnRegex the regex
+     * @throws io.micronaut.context.exceptions.ConfigurationException if the regex is not a valid regular expression with exactly one capturing group
      */
     public void setSubjectDnRegex(@NonNull String subjectDnRegex) {
+        X509Utils.compileSubjectDnRegex(subjectDnRegex);
         this.subjectDnRegex = subjectDnRegex;
     }
 
