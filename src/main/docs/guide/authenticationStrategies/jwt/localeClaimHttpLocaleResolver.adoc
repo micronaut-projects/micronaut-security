@@ -1,0 +1,1 @@
+Micronaut Security ships with a bean of type api:http.server.util.locale.HttpLocaleResolver[] that attempts to https://docs.micronaut.io/latest/guide/index.html#localeResolution[resolve the locale] from `locale` claims, as defined in OpenID Connect https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims[Standard Claims].

@@ -21,9 +21,14 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.Claims;
-import io.micronaut.security.token.ClaimsUtils;
+import io.micronaut.security.token.IssuerUtils;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 /**
@@ -36,8 +41,29 @@ import java.util.Optional;
 public class DefaultProviderResolver implements ProviderResolver {
     private final List<OpenIdClientConfiguration> openIdClientConfigurations;
 
+    /**
+     * @param openIdClientConfigurations OpenID client configurations
+     * @param oauthClientConfigurations OAuth 2.0 client configurations. OpenID clients whose OAuth 2.0 client is disabled are ignored.
+     */
+    @Inject
+    public DefaultProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations,
+                                   Collection<OauthClientConfiguration> oauthClientConfigurations) {
+        Set<String> disabled = oauthClientConfigurations.stream()
+            .filter(conf -> !conf.isEnabled())
+            .map(OauthClientConfiguration::getName)
+            .collect(Collectors.toSet());
+        this.openIdClientConfigurations = openIdClientConfigurations.stream()
+            .filter(conf -> !disabled.contains(conf.getName()))
+            .toList();
+    }
+
+    /**
+     * @param openIdClientConfigurations OpenID client configurations
+     * @deprecated Use {@link #DefaultProviderResolver(List, Collection)} instead, which ignores disabled OAuth 2.0 clients.
+     */
+    @Deprecated(since = "5.5.2")
     public DefaultProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
-        this. openIdClientConfigurations =  openIdClientConfigurations;
+        this.openIdClientConfigurations = openIdClientConfigurations;
     }
 
     @Override
@@ -60,15 +86,17 @@ public class DefaultProviderResolver implements ProviderResolver {
     }
 
     /**
-     *
+     * The issuer matches an open id client when it is identical to the expected issuer of the client; only the case of the
+     * scheme and a single trailing slash are tolerated. See {@link IssuerUtils#equivalent(String, String)}.
      * @param issuer Token Issuer
-     * @return {@literal Optional#empty()} if the issuer does not match the issuer of any open id client. If it matches, the open id client is returned wrapped in an optional
+     * @return {@literal Optional#empty()} if the issuer does not match the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) of any open id client. If it matches, the open id client is returned wrapped in an optional
      */
     @NonNull
     protected Optional<String> openIdClientNameWhichMatchesIssuer(@NonNull String issuer) {
         return openIdClientConfigurations.stream()
-                .filter(conf -> conf.getIssuer().isPresent())
-                .filter(conf -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(conf.getIssuer().get().toString(), issuer))
+                .filter(conf -> conf.getIssuerIdentifier()
+                        .map(expectedIssuer -> IssuerUtils.equivalent(expectedIssuer, issuer))
+                        .orElse(false))
                 .map(Named::getName)
                 .findFirst();
     }

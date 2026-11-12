@@ -5,6 +5,9 @@ plugins {
 dependencies {
     compileOnly(mn.micronaut.core.processor)
     implementation(projects.micronautSecurityAnnotations)
+    testImplementation(mn.micronaut.core.processor)
+    testImplementation(mnTest.junit.jupiter.api)
+    testImplementation(mnTest.mockito.core)
 }
 
 micronautBuild {

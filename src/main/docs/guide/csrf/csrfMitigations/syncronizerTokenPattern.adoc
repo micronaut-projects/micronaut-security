@@ -1,4 +1,4 @@
-https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern[Syncronizer Token Pattern].
+https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern[Synchronizer Token Pattern].
 
 ____
 In a synchronized token pattern, the server generates a CSRF token and shares it with the client before returning it,
