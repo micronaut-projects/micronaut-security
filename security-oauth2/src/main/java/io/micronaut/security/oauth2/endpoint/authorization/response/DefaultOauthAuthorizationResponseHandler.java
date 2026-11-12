@@ -29,6 +29,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.validation.Stat
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(beans = { HttpClientRegistry.class, TokenEndpointClient.class })
+@Requires(beans = { HttpClientRegistry.class, TokenEndpointClient.class, OauthRouteUrlBuilder.class })
 @Singleton
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 
@@ -49,6 +51,9 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     private static final String AUTHORIZATION_CODE_MISSING = "Authorization code missing from callback";
 
     private final TokenEndpointClient tokenEndpointClient;
+
+    @Nullable
+    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
     @Nullable
     private final StateValidator stateValidator;
@@ -60,11 +65,30 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      * @param tokenEndpointClient The token endpoint client
      * @param stateValidator      The state validator
      * @param pkcePersistence     The PKCE Persistence
+     * @deprecated Use {@link #DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)}.
+     * A handler created with this constructor does not send the {@code redirect_uri} parameter to the token endpoint.
      */
+    @Deprecated(forRemoval = true, since = "5.5.2")
     public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
                                              @Nullable StateValidator stateValidator,
                                              @Nullable PkcePersistence pkcePersistence) {
+        this(tokenEndpointClient, null, stateValidator, pkcePersistence);
+    }
+
+    /**
+     * @param tokenEndpointClient  The token endpoint client
+     * @param oauthRouteUrlBuilder The OAuth 2.0 route URL builder used to build the {@code redirect_uri} sent to the token endpoint
+     * @param stateValidator       The state validator
+     * @param pkcePersistence      The PKCE Persistence
+     * @since 5.5.2
+     */
+    @Inject
+    public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                                    OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                                    @Nullable StateValidator stateValidator,
+                                                    @Nullable PkcePersistence pkcePersistence) {
         this.tokenEndpointClient = tokenEndpointClient;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
     }
@@ -108,7 +132,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null);
         }
 
-        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, codeVerifier);
+        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration, codeVerifier);
 
         return Flux.from(
                 tokenEndpointClient.sendRequest(context))
