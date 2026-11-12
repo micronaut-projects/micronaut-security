@@ -1,12 +1,18 @@
 Micronaut supports authentication with LDAP out of the box. To get started, add the `security-ldap` dependency to your application.
 
-.build.gradle
-[source,groovy]
-----
-compile "io.micronaut.security:micronaut-security-ldap"
-----
+dependency:micronaut-security-ldap[groupId=io.micronaut.security]
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html[LDAP and Database authentication providers] to see an example.
 
 LDAP authentication can be globally disabled by setting `micronaut.security.ldap.enabled` to `false`, or on a provider
 basis, eg `micronaut.security.ldap.default.enabled: false`.
+
+Each key under `micronaut.security.ldap` that has nested properties (for example `micronaut.security.ldap.default.*`) defines one LDAP configuration and one api:security.ldap.LdapAuthenticationProvider[]. Single-valued keys directly under `micronaut.security.ldap`, such as the global switch `micronaut.security.ldap.enabled`, are not configuration names and never create a configuration or a provider.
+
+== Failed authentication responses
+
+api:security.ldap.LdapAuthenticationProvider[] does not disclose whether a username exists in the directory. When the search for the username returns no entry, the provider returns the same api:security.authentication.AuthenticationFailureReason[] (`CREDENTIALS_DO_NOT_MATCH`) it returns for a wrong password, so login responses and `WWW-Authenticate` challenges carry the same message in both cases.
+
+To keep the work done by the application similar as well, the provider performs a bind with the submitted password against a decoy entry. By default the decoy is a random, non-existent entry under the search base (`cn=<random uuid>,<search base>`), so the directory may log a failed bind for that DN whenever an unknown username is submitted; the random value avoids a fixed fingerprint in audit logs.
+
+IMPORTANT: Only the client-side cost is equalised. A directory may still answer faster for a non-existent DN than for a wrong password, because it does not check a password hash, update bad-password or lockout counters or apply a password policy delay. Where that difference matters, create a real decoy account with an unmatchable password and set `micronaut.security.ldap.default.search.decoy-dn` to its DN, for example `micronaut.security.ldap.default.search.decoy-dn: uid=decoy,ou=people,dc=example,dc=com`. Exclude the decoy account from any account-lockout policy: a locked decoy answers unknown-username binds with a distinct, faster lockout error for the rest of the lockout window, which reopens the gap the decoy is meant to close. Remember too that whatever password a client submits with an unknown username is bound against the decoy entry, so a user who mistypes their username sends their real password to the decoy bind, and the directory may record that failed bind.
