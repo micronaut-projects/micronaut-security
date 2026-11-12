@@ -94,6 +94,7 @@ class WellKnownProxyFilterProceedTest {
 
     private WellKnownProxyFilter newFilter(boolean proxyOauthAuthorizationServer, boolean proxyOpenIdConfiguration) throws MalformedURLException {
         OauthClientConfiguration cfg = mock(OauthClientConfiguration.class);
+        when(cfg.isEnabled()).thenReturn(true);
         when(cfg.isProxyWellKnownOauthAuthorizationServer()).thenReturn(proxyOauthAuthorizationServer);
         when(cfg.isProxyWellKnownOpenidConfiguration()).thenReturn(proxyOpenIdConfiguration);
 

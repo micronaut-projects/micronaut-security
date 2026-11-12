@@ -24,6 +24,8 @@ securityFilter:
       securedExpression: Secured with expressions
     interceptUrlMap: Intercept URL Map
     builtInEndpointsAccess: Built-In Endpoints Security
+    runAs: Run As Annotation
+  staticResourceAuthenticationBypass: Static Resource Authentication Bypass
 exceptionHandlers: 'Exception Handlers'
 endpoints:
   title: Endpoints
@@ -61,6 +63,8 @@ authenticationStrategies:
       bearerToken: Bearer Token Reader
       cookieToken: Cookie Token Reader
     jwtParser: JWT Parser
+    authenticationMapper: Authentication Mapper
+    localeClaimHttpLocaleResolver: Locale Claim HTTP Locale Resolver
     jwtValidation:
       title: JWT Signature Validation
       jwks:
@@ -108,6 +112,15 @@ csrf:
     httpHeaderCsrfTokenResolver: HTTP Header CSRF Token Resolution
     fieldCsrfTokenResolver: Field CSRF Token Resolution
   csrfApis: CSRF APIs
+reporting:
+  title: Reporting API
+  reportingEndpoints: Configuration Reporting Endpoints
+  reportingEndpointProviders: Dynamic Reporting Endpoints
+htmlSanitizer: HTML Sanitizer
+passwordEncoding:
+  title: Password Encoding
+  passwordEncodingArgon2: Argon2id
+  passwordEncodingTck: TCK
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers
@@ -164,8 +177,20 @@ oauth:
     user-info: UserInfo Endpoint
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
+  providerHttpClient: HTTP Clients for the Provider
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
+ojdbcExtensions:
+  title: Oracle JDBC Extensions
+  ojdbcExtensionsInstallation: Oracle JDBC Extensions Installation
+  endUserSecurityContextProvider: End User Security Context Provider
+  applicationAuthorizationAndUserIdentity: Application Authorization and User Identity
+  applicationManagedDataRolesAndAttributes:
+    title: Application Managed Data Roles and Attributes
+    applicationManagedDataRoles: Application Managed Data Roles
+    privilegeEscalation: Privilege Escalation
+    endUserContextAttributes: End User Context Attributes
+  endUserSecurityContextConfiguration: End User Security Context Configuration
 aot:
   title: Ahead-of-time optimizations
   aotConfiguration: Micronaut Security AOT Configuration
