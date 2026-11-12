@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
@@ -50,7 +51,8 @@ class SecurityViewModelProcessorSpec extends Specification {
                 'micronaut.views.freemarker.enabled': false,
                 'micronaut.views.soy.enabled': false,
         ])
-        HttpClient httpClient = HttpClient.create(embeddedServer.URL)
+        HttpClient httpClient = embeddedServer.applicationContext.createBean(HttpClient.class, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
 
         expect:
         embeddedServer.applicationContext.containsBean(BooksController)
@@ -63,7 +65,7 @@ class SecurityViewModelProcessorSpec extends Specification {
 
         when:
         HttpRequest request = HttpRequest.GET("/").basicAuth('john', 'secret')
-        HttpResponse<String> response = httpClient.toBlocking().exchange(request, String)
+        HttpResponse<String> response = client.exchange(request, String)
 
         then:
         response.status() == HttpStatus.OK
@@ -97,7 +99,8 @@ class SecurityViewModelProcessorSpec extends Specification {
                 'micronaut.views.freemarker.enabled': false,
                 'micronaut.views.soy.enabled': false,
         ])
-        HttpClient httpClient = HttpClient.create(embeddedServer.URL)
+        HttpClient httpClient = embeddedServer.applicationContext.createBean(HttpClient.class, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
 
         expect:
         embeddedServer.applicationContext.containsBean(BooksController)
@@ -110,7 +113,7 @@ class SecurityViewModelProcessorSpec extends Specification {
 
         when:
         HttpRequest request = HttpRequest.GET("/").basicAuth('john', 'secret')
-        HttpResponse<String> response = httpClient.toBlocking().exchange(request, String)
+        HttpResponse<String> response = client.exchange(request, String)
 
         then:
         response.status() == HttpStatus.OK
