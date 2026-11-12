@@ -1,6 +1,8 @@
 plugins {
     id "io.micronaut.build.internal.security-base"
     id "io.micronaut.build.internal.module"
+    // Reports reflection in the main sources at compile time: https://github.com/micronaut-projects/errorprone-no-reflection
+    id "io.micronaut.errorprone.no-reflection"
 }
 // The Micronaut build plugins only enable JaCoCo on CI, and they do so in afterEvaluate.
 // Registered after them, so that the coverage verification of test-suite-coverage also has data locally.
@@ -28,3 +30,12 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// Only the NoReflection check is wanted from ErrorProne: its own checks would add warnings to every compilation.
+tasks.withType(JavaCompile).configureEach {
+    options.errorprone.disableAllChecks = true
+}
+
+// Class.getSimpleName needs no reflection registration, and the generated names and log messages read better with it.
+noReflection {
+    allowCalls 'java.lang.Class#getSimpleName'
+}

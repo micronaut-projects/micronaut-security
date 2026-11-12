@@ -3,29 +3,30 @@ managed-nimbus-jose-jwt = "10.10"
 managed-owasp-java-html-sanitizer = "20260313.1"
 managed-jjwt = "0.13.0"
 managed-ojdbc-extensions = "1.1.0" # https://github.com/oracle/ojdbc-extensions/releases
-micronaut = "5.2.15"
-micronaut-platform = "5.2.2"
+micronaut = "5.2.22"
+micronaut-platform = "5.2.5"
 awaitility = "4.3.0"
 geb = "8.0.1"
-selenium = "4.47.0"
+selenium = "4.52.0"
 system-stubs-core = "2.1.8"
-unboundid-ldapsdk = "7.0.5"
+unboundid-ldapsdk = "7.0.6"
 bouncycastle = "1.86"
 micronaut-hibernate-validator = "5.1.0"
 micronaut-multitenancy = "6.1.0"
-micronaut-cache = "6.1.1"
+micronaut-cache = "6.2.0"
 micronaut-reactor = "4.3.0"
-micronaut-serde = "3.2.4"
+micronaut-serde = "3.2.6"
 micronaut-servlet = "6.2.2"
 micronaut-session = "5.2.0"
 micronaut-views = "6.3.1"
 micronaut-validation = "5.2.1"
 micronaut-test = "5.2.0"
-micronaut-data = "5.2.2"
-micronaut-sql = "7.2.0"
-graalvm-native-buildtools = "1.1.14"
+micronaut-data = "5.2.5"
+micronaut-sql = "7.2.1"
+graalvm-native-buildtools = "1.1.18"
+micronaut-errorprone-no-reflection = "1.0.3" # https://github.com/micronaut-projects/errorprone-no-reflection/releases
 jsonassert = "1.5.3"
-commons-codec = "1.22.1"
+commons-codec = "1.23.0"
 
 [libraries]
 # Core
@@ -67,3 +68,7 @@ testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 graalvm-native-buildtools = { module = "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-native-buildtools" }
+micronaut-errorprone-no-reflection-gradle-plugin = { module = "io.micronaut.errorprone.no-reflection:io.micronaut.errorprone.no-reflection.gradle.plugin", version.ref = "micronaut-errorprone-no-reflection" }
+
+[plugins]
+micronaut-errorprone-no-reflection = { id = "io.micronaut.errorprone.no-reflection", version.ref = "micronaut-errorprone-no-reflection" }

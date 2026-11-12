@@ -2,6 +2,11 @@ plugins {
     id("io.micronaut.build.internal.security-module")
 }
 
+noReflection {
+    // SecurityContextHolder is a static holder outside the bean context, so it finds its SecurityContextSupplier through the service loader.
+    allowIn("io.micronaut.security.context.SecurityContextHolder", "SERVICE_LOADING")
+}
+
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
@@ -13,6 +18,7 @@ dependencies {
     api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     api(projects.micronautSecurityAnnotations)
     compileOnly(mn.micronaut.websocket)
+    compileOnly(mn.micronaut.http.client.core)
     compileOnly(mnValidation.micronaut.validation)
     testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
