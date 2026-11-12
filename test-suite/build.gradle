@@ -17,6 +17,7 @@ dependencies {
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.micronautSecurityScimCore)
+    testImplementation(projects.micronautSecurityPasswordArgon2Bouncycastle)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.testSuiteKeycloakDocker)
     testImplementation(mnReactor.micronaut.reactor)
@@ -34,6 +35,7 @@ dependencies {
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
     testImplementation(libs.awaitility)
+    testImplementation(libs.bcpkix)
 }
 
 tasks.named('test') {
