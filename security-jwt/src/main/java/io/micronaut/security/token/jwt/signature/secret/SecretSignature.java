@@ -41,7 +41,19 @@ import java.util.Objects;
 @EachBean(SecretSignatureConfiguration.class)
 public class SecretSignature extends AbstractSignatureConfiguration implements SignatureGeneratorConfiguration {
 
-    private byte[] secret;
+    private volatile byte[] secret;
+
+    /**
+     * Lazily created and reused across calls. {@link MACSigner} is thread-safe.
+     * Reset to {@code null} whenever the secret changes.
+     */
+    private volatile JWSSigner signer;
+
+    /**
+     * Lazily created and reused across calls. {@link MACVerifier} is thread-safe.
+     * Reset to {@code null} whenever the secret changes.
+     */
+    private volatile JWSVerifier verifier;
 
     /**
      *
@@ -69,7 +81,7 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     @Override
     public SignedJWT sign(final JWTClaimsSet claims) throws JOSEException {
-        final JWSSigner signer = new MACSigner(this.secret);
+        final JWSSigner signer = signer();
         final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
         signedJWT.sign(signer);
         return signedJWT;
@@ -77,23 +89,49 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
-        final JWSVerifier verifier = new MACVerifier(this.secret);
-        return jwt.verify(verifier);
+        return jwt.verify(verifier());
     }
 
     /**
      *
+     * <p>Exposing the raw secret as a {@link String} is discouraged; read it from the configuration bean if needed.</p>
      * @return a string build the secret byte[] and UTF_8 charset
+     * @deprecated The secret should not be re-exposed from the shared singleton. Use the configuration bean instead.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public String getSecret() {
         return new String(secret, UTF_8);
     }
 
     /**
      * Sets secret byte[] with a string with UTF_8 charset.
+     * <p>Configure the secret through the corresponding configuration bean and the constructor instead.
+     * These classes are shared singletons used concurrently; mutating them at runtime is not thread-safe.</p>
      * @param secret UTF_8 string
+     * @deprecated Configure the secret via configuration. Mutating a shared singleton at runtime is not thread-safe.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     public void setSecret(final String secret) {
         this.secret = secret.getBytes(UTF_8);
+        this.signer = null;
+        this.verifier = null;
+    }
+
+    private JWSSigner signer() throws JOSEException {
+        JWSSigner result = this.signer;
+        if (result == null) {
+            result = new MACSigner(this.secret);
+            this.signer = result;
+        }
+        return result;
+    }
+
+    private JWSVerifier verifier() throws JOSEException {
+        JWSVerifier result = this.verifier;
+        if (result == null) {
+            result = new MACVerifier(this.secret);
+            this.verifier = result;
+        }
+        return result;
     }
 }

@@ -21,7 +21,6 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.crypto.impl.RSASSAProvider;
 import com.nimbusds.jwt.SignedJWT;
-import org.jspecify.annotations.NonNull;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import java.security.interfaces.RSAPublicKey;
 
@@ -34,7 +33,12 @@ import java.security.interfaces.RSAPublicKey;
  */
 public class RSASignature extends AbstractSignatureConfiguration {
 
-    private RSAPublicKey publicKey;
+    private final RSAPublicKey publicKey;
+
+    /**
+     * Lazily created and reused across calls. {@link RSASSAVerifier} is thread-safe.
+     */
+    private volatile JWSVerifier verifier;
 
     /**
      *
@@ -60,11 +64,15 @@ public class RSASignature extends AbstractSignatureConfiguration {
 
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
-        return verifyWithPublicKey(jwt, this.publicKey);
+        return jwt.verify(verifier());
     }
 
-    private boolean verifyWithPublicKey(final SignedJWT jwt, @NonNull RSAPublicKey publicKey) throws JOSEException {
-        final JWSVerifier verifier = new RSASSAVerifier(publicKey);
-        return jwt.verify(verifier);
+    private JWSVerifier verifier() {
+        JWSVerifier result = this.verifier;
+        if (result == null) {
+            result = new RSASSAVerifier(this.publicKey);
+            this.verifier = result;
+        }
+        return result;
     }
 }
