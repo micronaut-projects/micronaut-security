@@ -83,7 +83,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated claim set: {}", builder.build().toJSONObject());
+            LOG.debug("Generated claim set with claims: {}", builder.build().getClaims().keySet());
         }
         return builder.build().getClaims();
     }
@@ -179,7 +179,6 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param authentication Authenticated user's representation.
      */
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
-        populateSub(builder, authentication);
         authentication.getAttributes().forEach((name, value) -> {
             if (Claims.ALL_CLAIMS.contains(name)) {
                 LOG.debug("Ignoring authentication attribute {} because it collides with a registered claim", name);
@@ -187,6 +186,9 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
                 builder.claim(name, value);
             }
         });
+        // populated after the attributes so that the sub claim is always the principal name: an attribute named sub,
+        // for example the raw subject retained by a mapper which qualifies the username, must not replace the principal.
+        populateSub(builder, authentication);
         String rolesKey = tokenConfiguration.getRolesName();
         if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
             builder.claim(ROLES_KEY, rolesKey);
