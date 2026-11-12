@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import java.text.ParseException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import reactor.core.publisher.Mono;
 
@@ -59,6 +60,8 @@ import reactor.core.publisher.Mono;
 @Singleton
 @Requires(configuration = "io.micronaut.security.token.jwt")
 public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAuthorizationResponseHandler {
+
+    private static final String MESSAGE_ID_TOKEN_VALIDATION_FAILED = "ID token validation failed";
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
 
@@ -163,7 +166,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param openIdTokenResponse OpenID token response
      * @param authenticationMapper The user details mapper
      * @param state State
-     * @return An Authentication response if the open id token could  be validated
+     * @return An Authentication response if the open id token could be validated or an {@link AuthenticationFailed} response if it could not
      * @throws ParseException If the payload of the JWT doesn't represent a valid JSON object and a JWT claims set.
      */
     private Mono<AuthenticationResponse> createAuthenticationResponse(String nonce,
@@ -176,7 +179,16 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
             LOG.trace("Token endpoint returned a success response. Validating the JWT");
         }
         return Mono.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, nonce))
-                .flatMap(jwt -> {
+                .map(Optional::of)
+                .defaultIfEmpty(Optional.empty())
+                .flatMap(jwtOptional -> {
+                    if (jwtOptional.isEmpty()) {
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("Token validation failed for provider [{}]", clientConfiguration.getName());
+                        }
+                        return Mono.just(new AuthenticationFailed(MESSAGE_ID_TOKEN_VALIDATION_FAILED));
+                    }
+                    JWT jwt = jwtOptional.get();
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token validation succeeded. Creating a user details");
                     }
