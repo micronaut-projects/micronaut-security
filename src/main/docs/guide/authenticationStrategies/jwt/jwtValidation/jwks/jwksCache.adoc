@@ -47,3 +47,25 @@ micronaut:
               url: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXX/.well-known/jwks.json'
               refresh-interval: 1m
 ----
+
+**Failure back-off**
+
+If a remote JWK Set cannot be retrieved (for example, the connection is refused, the endpoint responds with a non-2xx status or the body cannot be parsed) or the retrieved JWK Set contains no keys, the JWK Set is not requested again until a back-off elapses. While the back-off lasts, tokens which cannot be verified by another signature configuration are rejected without contacting the JWKS endpoint. This prevents an unauthenticated client from triggering one outbound JWKS request (and one error log entry) per request while the authorization server is unavailable.
+
+The back-off applies to every api:security.token.jwt.signature.jwks.JwkSetFetcher[] implementation, including the Micronaut Cache based one. It is keyed by signature configuration name and JWKS url, since each configuration may use its own HTTP client settings, so a failure for one configuration does not prevent another configuration sharing the url from retrieving the JWK Set. You can configure its duration with:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks-client:
+            failure-backoff: 10s
+            retrieval-timeout: 30s
+----
+
+`failure-backoff` defaults to 10 seconds. Set it to `0s` to disable the back-off and retry the retrieval for every token.
+
+Concurrent requests share one retrieval per signature configuration and url. `retrieval-timeout` (default 30 seconds) bounds that shared retrieval even when the api:security.token.jwt.signature.jwks.JwksClient[] has no timeout of its own, so a retrieval which never completes does not block every token for that configuration. A retrieval which times out counts as a failure and starts the back-off. Set it to `0s` to disable the timeout.

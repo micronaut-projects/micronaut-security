@@ -47,8 +47,10 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
     private final Map<CacheKey, Mono<JwksCacheEntry>> cache = new ConcurrentHashMap<>();
     private final Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations;
 
-    ReactorCacheJwkSetFetcher(JwksClient jwksClient, Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations) {
-        super(jwksClient);
+    ReactorCacheJwkSetFetcher(JwksClient jwksClient,
+                              JwksClientConfiguration jwksClientConfiguration,
+                              Map<String, JwksSignatureConfiguration> jwksSignatureConfigurations) {
+        super(jwksClient, jwksClientConfiguration);
         this.jwksSignatureConfigurations = jwksSignatureConfigurations;
     }
 
@@ -61,16 +63,25 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
                 .map(JwksCacheEntry::jwkSet);
     }
 
+    /**
+     * Clears the cached JWK Set for the given url for every provider, and the failure back-off, so that it is requested again on the next fetch.
+     * @param url The Jwks uri
+     */
     @Override
     public void clearCache(@NonNull String url) {
-        cache.keySet().removeIf(cacheKey -> url.equals(cacheKey.url()));
         super.clearCache(url);
+        cache.keySet().removeIf(cacheKey -> url.equals(cacheKey.url()));
     }
 
+    /**
+     * Clears the cached JWK Set for the given provider name and url, and the failure back-off for the url, so that it is requested again on the next fetch.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
     @Override
     public void clearCache(@Nullable String providerName, @NonNull String url) {
-        cache.remove(new CacheKey(providerName, url));
         super.clearCache(url);
+        cache.remove(new CacheKey(providerName, url));
     }
 
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {

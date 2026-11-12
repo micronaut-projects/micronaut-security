@@ -42,8 +42,8 @@ import org.reactivestreams.Publisher;
 class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     public static final String CACHE_JWKS = "jwks";
 
-    CacheableJwkSetFetcher(JwksClient jwksClient) {
-        super(jwksClient);
+    CacheableJwkSetFetcher(JwksClient jwksClient, JwksClientConfiguration jwksClientConfiguration) {
+        super(jwksClient, jwksClientConfiguration);
     }
 
     @Override
@@ -52,12 +52,21 @@ class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
         return super.fetch(providerName, url);
     }
 
+    /**
+     * Clears the whole {@value #CACHE_JWKS} cache, since cache entries are keyed by provider name and url, together with the failure back-off for the given url.
+     * @param url The Jwks uri
+     */
     @Override
     @CacheInvalidate(all = true)
     public void clearCache(@NonNull String url) {
         super.clearCache(url);
     }
 
+    /**
+     * Clears the {@value #CACHE_JWKS} cache entry for the given provider name and url, together with the failure back-off for the given url.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
     @Override
     @CacheInvalidate
     public void clearCache(@Nullable String providerName, @NonNull String url) {
