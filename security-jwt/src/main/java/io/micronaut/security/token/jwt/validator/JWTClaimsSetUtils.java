@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 
 /**
  * Utils class to instantiate a JWClaimsSet give a map of claims.
@@ -34,7 +34,7 @@ public final class JWTClaimsSetUtils {
      * @param claims JWT claims
      * @return A JWTClaimsSet
      */
-    public static JWTClaimsSet jwtClaimsSetFromClaims(JwtClaims claims) {
+    public static JWTClaimsSet jwtClaimsSetFromClaims(Claims claims) {
         JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder();
         for (String k : claims.names()) {
             claimsSetBuilder.claim(k, claims.get(k));

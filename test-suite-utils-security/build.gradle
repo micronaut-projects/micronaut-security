@@ -1,19 +1,24 @@
 plugins {
     id 'java-library'
     id 'groovy'
-    id "io.micronaut.build.internal.security-tests"
+    id("io.micronaut.build.internal.common")
+    id "io.micronaut.build.internal.security-base"
 }
 
 dependencies {
-    annotationProcessor(platform(mn.micronaut.bom))
     annotationProcessor(mn.micronaut.inject.java)
-    implementation(platform(mn.micronaut.bom))
     api(mn.micronaut.inject)
-    implementation project(":security")
-    implementation(libs.reactor.core)
+    implementation(projects.micronautSecurity)
+    implementation(mnReactor.micronaut.reactor)
+    testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
+spotless {
+    java {
+        targetExclude("**/testutils/**")
+    }
+}
+
+tasks.withType(Checkstyle) {
+    enabled = false
 }

@@ -1,8 +1,12 @@
 package io.micronaut.security.rules
 
-import io.micronaut.core.annotation.NonNull
+import org.jspecify.annotations.NonNull
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.context.ServerContextPathProvider
+import io.micronaut.security.config.DefaultInterceptUrlPatternModifier
+import io.micronaut.security.config.InterceptUrlMapPattern
+import io.micronaut.security.config.InterceptUrlPatternModifier
 import io.micronaut.security.config.DefaultInterceptUrlPatternModifier
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
@@ -43,10 +47,10 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
             getUri() >> new URI('/books')
             getMethod() >> HttpMethod.GET
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null), null)
 
         expect:
-        Mono.from(provider.check(request, null, null)).block() == securityRuleResult
+        Mono.from(provider.check(request, null)).block() == securityRuleResult
 
         where:
         securityRuleResult          | interceptUrlMap                                                                               | description
@@ -61,7 +65,8 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         def securityConfiguration = Stub(SecurityConfiguration) {
             getInterceptUrlMap() >> []
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
+
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null), null)
 
         expect:
         expected == Mono.from(provider.compareRoles(requiredRoles, grantedRoles)).block()

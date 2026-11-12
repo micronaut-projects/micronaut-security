@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import jakarta.inject.Singleton;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Requires(property = DefaultNonceConfiguration.PREFIX + ".persistence", value = DefaultNonceConfiguration.PERSISTENCE_COOKIE, defaultValue = DefaultNonceConfiguration.DEFAULT_PERSISTENCE)
+@Requires(beans = CookieConfiguration.class)
 @Singleton
 public class CookieNoncePersistence implements NoncePersistence {
 

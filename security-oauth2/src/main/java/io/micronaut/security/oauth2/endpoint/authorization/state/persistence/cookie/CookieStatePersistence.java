@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = { StateSerDes.class, CookieStatePersistenceConfiguration.class })
 @Singleton
 public class CookieStatePersistence extends CookiePersistence implements StatePersistence {
 

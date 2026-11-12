@@ -1,6 +1,6 @@
 plugins {
-    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'io.micronaut.minimal.application' version "$micronautGradlePluginVersion"
+    id "com.gradleup.shadow" version "9.6.1"
 }
 
 repositories {
@@ -12,7 +12,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
@@ -22,12 +22,21 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-management")
+    implementation(mn.micronaut.http.client)
+    implementation(mn.micronaut.management)
+    implementation(mnSerde.micronaut.serde.jackson)
+    testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
+    testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 shadowJar {
     archiveBaseName.set('authserver')
     archiveClassifier.set('')
     archiveVersion.set('')
+}
+
+configurations.all {
+    resolutionStrategy {
+        preferProjectModules()
+    }
 }

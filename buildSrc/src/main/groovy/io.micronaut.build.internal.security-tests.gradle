@@ -1,3 +1,19 @@
 plugins {
     id "io.micronaut.build.internal.security-base"
+    id 'java-library'
+    id 'jacoco'
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    testImplementation(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.platform.get()}"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+configurations.configureEach {
+    resolutionStrategy.preferProjectModules()
+}
+// The test suites contribute to the coverage of the published modules, which test-suite-coverage aggregates.
+tasks.withType(Test).configureEach {
+    jacoco.includes = ["io.micronaut.*"]
 }

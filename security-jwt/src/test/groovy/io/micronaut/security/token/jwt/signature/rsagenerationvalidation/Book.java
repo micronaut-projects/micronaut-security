@@ -1,5 +1,8 @@
 package io.micronaut.security.token.jwt.signature.rsagenerationvalidation;
 
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
 public class Book {
     private String title;
 

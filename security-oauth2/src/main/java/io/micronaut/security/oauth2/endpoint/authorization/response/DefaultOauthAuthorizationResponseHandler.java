@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.http.client.HttpClientRegistry;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -27,6 +29,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.validation.Stat
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
@@ -40,12 +43,16 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = { HttpClientRegistry.class, TokenEndpointClient.class, OauthRouteUrlBuilder.class })
 @Singleton
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
 
     private final TokenEndpointClient tokenEndpointClient;
+
+    @Nullable
+    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
     @Nullable
     private final StateValidator stateValidator;
@@ -57,25 +64,32 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      * @param tokenEndpointClient The token endpoint client
      * @param stateValidator      The state validator
      * @param pkcePersistence     The PKCE Persistence
+     * @deprecated Use {@link #DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)}.
+     * A handler created with this constructor does not send the {@code redirect_uri} parameter to the token endpoint.
      */
-    @Inject
-    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+    @Deprecated(forRemoval = true, since = "5.5.2")
+    public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
                                              @Nullable StateValidator stateValidator,
                                              @Nullable PkcePersistence pkcePersistence) {
-        this.tokenEndpointClient = tokenEndpointClient;
-        this.stateValidator = stateValidator;
-        this.pkcePersistence = pkcePersistence;
+        this(tokenEndpointClient, null, stateValidator, pkcePersistence);
     }
 
     /**
-     * @param tokenEndpointClient The token endpoint client
-     * @param stateValidator      The state validator
-     * @deprecated Use {@link DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)} instead.
+     * @param tokenEndpointClient  The token endpoint client
+     * @param oauthRouteUrlBuilder The OAuth 2.0 route URL builder used to build the {@code redirect_uri} sent to the token endpoint
+     * @param stateValidator       The state validator
+     * @param pkcePersistence      The PKCE Persistence
+     * @since 5.5.2
      */
-    @Deprecated
-    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
-                                             @Nullable StateValidator stateValidator) {
-        this(tokenEndpointClient, stateValidator, null);
+    @Inject
+    public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                                    OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                                    @Nullable StateValidator stateValidator,
+                                                    @Nullable PkcePersistence pkcePersistence) {
+        this.tokenEndpointClient = tokenEndpointClient;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this.stateValidator = stateValidator;
+        this.pkcePersistence = pkcePersistence;
     }
 
     @Override
@@ -110,7 +124,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null);
         }
 
-        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, codeVerifier);
+        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration, codeVerifier);
 
         return Flux.from(
                 tokenEndpointClient.sendRequest(context))

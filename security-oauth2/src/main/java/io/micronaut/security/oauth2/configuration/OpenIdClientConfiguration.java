@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -31,6 +31,15 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface OpenIdClientConfiguration extends Named {
+    Boolean DEFAULT_PROTECTED_RESOURCE_METADATA = true;
+
+    /**
+     * @since 5.3.0
+     * @return Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}.
+     */
+    default boolean isFetchConfiguration() {
+        return true;
+    }
 
     /**
      * @return URL that the OpenID provider asserts as its issuer identifier.
@@ -38,10 +47,21 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<URL> getIssuer();
 
     /**
+     * The value expected in the {@code iss} claim of ID tokens, if it differs from the URL used to fetch the discovery document
+     * (for example, when discovery is fetched over an internal URL but the provider issues tokens with its public URL).
+     * Defaults to {@link #getIssuer()}.
+     *
+     * @since 5.5.2
+     * @return The expected issuer identifier.
+     */
+    default Optional<String> getIssuerIdentifier() {
+        return getIssuer().map(URL::toString);
+    }
+
+    /**
      * @return The OpenID configuration path
      */
     String getConfigurationPath();
-
 
     /**
      * @return The JWKS configuration
@@ -81,4 +101,12 @@ public interface OpenIdClientConfiguration extends Named {
      */
     @NonNull
     EndSessionEndpointConfiguration getEndSession();
+
+    /**
+     * @since 4.14.0
+     * @return whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
+     */
+    default boolean isProtectedResourceMetadata() {
+        return DEFAULT_PROTECTED_RESOURCE_METADATA;
+    }
 }

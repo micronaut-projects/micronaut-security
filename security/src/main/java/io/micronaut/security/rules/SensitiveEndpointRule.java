@@ -16,8 +16,9 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.web.router.RouteAttributes;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
@@ -39,6 +40,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import io.micronaut.management.endpoint.EndpointSensitivityHandler;
 
 /**
  * Finds any sensitive endpoints and processes requests that match their
@@ -48,9 +50,9 @@ import reactor.core.publisher.Mono;
  * @author James Kleeh
  * @since 1.0
  */
-@Requires(beans = EndpointSensitivityProcessor.class)
+@Requires(classes = { EndpointSensitivityProcessor.class, HttpRequest.class })
 @Singleton
-public class SensitiveEndpointRule implements SecurityRule {
+public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>>, EndpointSensitivityHandler {
     /**
      * The order of the rule.
      */
@@ -104,11 +106,13 @@ public class SensitiveEndpointRule implements SecurityRule {
     }
 
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
-        if (routeMatch instanceof MethodBasedRouteMatch) {
-            ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
-            if (endpointMethods.containsKey(method)) {
-                return check(request, authentication, method);
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
+        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
+            if (routeMatch instanceof MethodBasedRouteMatch) {
+                ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
+                if (endpointMethods.containsKey(method)) {
+                    return check(request, authentication, method);
+                }
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);

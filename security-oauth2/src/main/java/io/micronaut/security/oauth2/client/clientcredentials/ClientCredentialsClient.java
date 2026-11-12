@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.token.request.DefaultTokenEndpointClient;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
@@ -59,5 +62,17 @@ public interface ClientCredentialsClient {
     @NonNull
     default Publisher<TokenResponse> requestToken(boolean force) {
         return requestToken(null, force);
+    }
+
+    /**
+     * Instantiate a Client Credentials Client to be used in a scenario where you don't have/want or need a Micronaut Bean Context.
+     * @param client HTTP Client. The caller owns the provided client lifecycle and is responsible for closing it.
+     * @param oauthClientConfiguration OAuth Client Configuration
+     * @return A Client Credentials Client
+     * @since 5.1.0
+     */
+    @NonNull
+    static ClientCredentialsClient of(@NonNull HttpClient client, @NonNull OauthClientConfiguration oauthClientConfiguration) {
+        return new DefaultClientCredentialsClient(oauthClientConfiguration, new DefaultTokenEndpointClient(client));
     }
 }

@@ -1,0 +1,3 @@
+When using https://docs.micronaut.io/latest/guide/#websocketServer[WebSocket Servers], you can bind the authenticated user in a method annotated with `@OnMessage` or `@OnOpen`.
+
+snippet::io.micronaut.security.websocket.AuthenticationWebSocketStateBinderSpec[tags="onOpen"]

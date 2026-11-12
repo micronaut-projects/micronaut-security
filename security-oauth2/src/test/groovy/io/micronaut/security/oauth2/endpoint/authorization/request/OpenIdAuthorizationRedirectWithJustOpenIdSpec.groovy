@@ -14,13 +14,14 @@ import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloak.docker.Keycloak
 import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
+import spock.lang.Requires
 
 import java.nio.charset.StandardCharsets
 
-@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
+@Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
     @Override

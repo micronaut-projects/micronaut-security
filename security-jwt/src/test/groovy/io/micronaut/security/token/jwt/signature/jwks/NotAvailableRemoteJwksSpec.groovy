@@ -24,7 +24,8 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
+import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
@@ -47,6 +48,8 @@ class NotAvailableRemoteJwksSpec extends Specification {
                     'spec.name': 'NotAvailableRemoteJwksSpec',
                     'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
                     'micronaut.http.client.read-timeout': '5s',
+                    // a failed JWKS retrieval is not retried until the back-off elapses
+                    'micronaut.security.token.jwt.signatures.jwks-client.failure-backoff': '1s',
             ]
 
         Map<String, Object> authServerConfiguration =
@@ -89,7 +92,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
         then:
-        embeddedServer.applicationContext.containsBean(SignatureConfiguration)
+        embeddedServer.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         when: 'authentication fails since JWKS endpoint is down'
         BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL).toBlocking()
@@ -110,7 +113,10 @@ class NotAvailableRemoteJwksSpec extends Specification {
             authServerClient.exchange(HttpRequest.GET('/keys')).status() == HttpStatus.OK
         }
 
-        when: 'authentication should work since JWKS endpoint is up'
+        when: 'authentication should work since JWKS endpoint is up, once the failure back-off elapses'
+        new PollingConditions(timeout: 10).eventually {
+            assert client.exchange(HttpRequest.GET('/username').bearerAuth(jwt), String).status() == HttpStatus.OK
+        }
         HttpResponse<String> usernameRsp = client.exchange(HttpRequest.GET('/username').bearerAuth(jwt), String)
 
         then:

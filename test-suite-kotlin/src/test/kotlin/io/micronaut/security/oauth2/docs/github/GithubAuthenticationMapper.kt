@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.docs.github
 
 //tag::clazz[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
@@ -11,6 +12,9 @@ import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 @Named("github") // <1>
+//end::clazz[]
+@Requires(property = "docs.classes")
+//tag::clazz[]
 @Singleton
 internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient) // <2>
     : OauthAuthenticationMapper {

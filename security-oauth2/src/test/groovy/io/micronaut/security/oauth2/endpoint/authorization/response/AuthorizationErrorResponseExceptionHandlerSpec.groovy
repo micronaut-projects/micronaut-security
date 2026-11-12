@@ -23,19 +23,6 @@ import spock.lang.Specification
 
 class AuthorizationErrorResponseExceptionHandlerSpec extends Specification {
 
-    void "deprecated constructor does not crash"() {
-        given:
-        def request = Mock(HttpRequest)
-        def authorizationErrorResponse = Mock(AuthorizationErrorResponse)
-        AuthorizationErrorResponseException ex = new AuthorizationErrorResponseException(authorizationErrorResponse)
-
-        when:
-        MutableHttpResponse response = new AuthorizationErrorResponseExceptionHandler().handle(request, ex)
-
-        then:
-        HttpStatus.BAD_REQUEST == response.getStatus()
-    }
-
     void "OAuth 2.0 cancel redirects to login failed"() {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [

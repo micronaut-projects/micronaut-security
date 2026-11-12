@@ -1,0 +1,1 @@
+You can write your own bean of type api:io.micronaut.security.token.reader.TokenReader[]. However, Micronaut Security ships with several built-in beans of type api:io.micronaut.security.token.reader.TokenReader[].

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
@@ -39,14 +38,21 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
+     * The default static resource authentication bypass enable value.
+     */
+    public static final boolean DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS = false;
+
+    /**
      *
      * The pattern the {@link SecurityFilter} should match.
      */
     @NonNull
     @NotBlank
-    private String pattern = Filter.MATCH_ALL_PATTERN;
+    private String pattern = "/**";
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    private boolean staticResourceAuthenticationBypass = DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS;
 
     /**
      * @return true if you want to enable the {@link SecurityFilter}
@@ -54,6 +60,11 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public boolean isStaticResourceAuthenticationBypass() {
+        return staticResourceAuthenticationBypass;
     }
 
     @Override
@@ -68,6 +79,17 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Enables bypassing authentication resolution for anonymous static resources.
+     * Default value {@value #DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS}.
+     *
+     * @param staticResourceAuthenticationBypass Whether the bypass is enabled
+     * @since 5.4.0
+     */
+    public void setStaticResourceAuthenticationBypass(boolean staticResourceAuthenticationBypass) {
+        this.staticResourceAuthenticationBypass = staticResourceAuthenticationBypass;
     }
 
     /**

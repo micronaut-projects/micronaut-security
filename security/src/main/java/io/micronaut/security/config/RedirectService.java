@@ -16,7 +16,7 @@
 package io.micronaut.security.config;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Get redirection URLs combining context path and redirect configuration.

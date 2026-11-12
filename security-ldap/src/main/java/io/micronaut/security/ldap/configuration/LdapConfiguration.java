@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.micronaut.security.ldap.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
@@ -26,14 +27,20 @@ import io.micronaut.security.ldap.context.SearchSettings;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration for LDAP authentication.
+ * <p>
+ * A configuration is created for every name under {@value #PREFIX} that has nested properties. Single-valued keys
+ * directly under the prefix, such as the global switch {@code micronaut.security.ldap.enabled}, are not
+ * configuration names.
  *
  * @author James Kleeh
  * @since 1.0
  */
 @EachProperty(value = LdapConfiguration.PREFIX, primary = "default")
+@Requires(condition = LdapConfigurationCondition.class)
 public class LdapConfiguration implements Toggleable {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".ldap";
@@ -262,6 +269,29 @@ public class LdapConfiguration implements Toggleable {
         private String base = "";
         private String filter = DEFAULT_FILTER;
         private String[] attributes = null;
+        private @Nullable String decoyDn;
+
+        /**
+         * @return The DN of the decoy entry bound when a username matches no entry, or null for a random non-existent entry
+         * @since 5.5.2
+         */
+        public @Nullable String getDecoyDn() {
+            return decoyDn;
+        }
+
+        /**
+         * Sets the DN bound, with the supplied password, when a username matches no directory entry, so that an unknown
+         * username costs the application the same bind round trip as a wrong password. Defaults to a random non-existent
+         * entry under the search base, which equalises only the client-side cost. Point it at a real account with an
+         * unmatchable password, excluded from any lockout policy, to also equalise directory-side work (password hashing,
+         * bad-password counters).
+         *
+         * @param decoyDn The decoy DN
+         * @since 5.5.2
+         */
+        public void setDecoyDn(@Nullable String decoyDn) {
+            this.decoyDn = decoyDn;
+        }
 
         /**
          * @return True if the subtree should be searched

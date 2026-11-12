@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.JWSObject
@@ -18,6 +17,7 @@ import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
@@ -30,19 +30,21 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.json.JsonMapper
 import io.micronaut.runtime.context.scope.Refreshable
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.claims.ClaimsGenerator
+import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -119,6 +121,18 @@ class JwksCacheSpec extends Specification {
         appleEmbeddedServer.isRunning()
         embeddedServer.isRunning()
         0 == totalInvocations(googleEmbeddedServer, appleEmbeddedServer, cognitoEmbeddedServer)
+
+        when:
+        !embeddedServer.getApplicationContext().getBean(CacheableJwkSetFetcher.class)
+
+        then:
+        thrown(NoSuchBeanException)
+
+        when:
+        embeddedServer.getApplicationContext().getBean(ReactorCacheJwkSetFetcher.class);
+
+        then:
+        noExceptionThrown()
 
         when:
         BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)
@@ -252,8 +266,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class GoogleKeysController extends KeysController {
         int invocations = 0
-        GoogleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        GoogleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
@@ -269,8 +283,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class AppleKeysController extends KeysController {
         int invocations = 0
-        AppleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AppleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
@@ -286,8 +300,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class CognitoKeysController extends KeysController {
         int invocations = 0
-        CognitoKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        CognitoKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
@@ -367,7 +381,7 @@ class JwksCacheSpec extends Specification {
     @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
     @Refreshable
     @Singleton
-    @Replaces(JwtTokenGenerator.class)
+    @Replaces(TokenGenerator.class)
     static class JwtTokenGeneratorReplacement extends JwtTokenGenerator {
         JwtTokenGeneratorReplacement(CognitoSignatureConfiguration cognitoSignatureConfiguration,
                                      ClaimsGenerator claimsGenerator) {
@@ -443,7 +457,7 @@ class JwksCacheSpec extends Specification {
     @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
     @Refreshable
     @Singleton
-    @Replaces(JwtTokenGenerator.class)
+    @Replaces(TokenGenerator.class)
     static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
         GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
                                            ClaimsGenerator claimsGenerator) {

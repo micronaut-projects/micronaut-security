@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 package io.micronaut.security.token.jwt.validator;
 
 /**
- * Any {@link JwtTokenValidator} which should be verified for any JWT should implement this interface.
+ * Any {@link JwtClaimsValidator} which should be verified for any JWT should implement this interface.
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> Request
  */
-public interface GenericJwtClaimsValidator extends JwtClaimsValidator {
+public interface GenericJwtClaimsValidator<T> extends JwtClaimsValidator<T> {
 }

@@ -1,0 +1,48 @@
+plugins {
+    id("java-library")
+    id("io.micronaut.build.internal.security-tests")
+}
+
+dependencies {
+    testAnnotationProcessor(mn.micronaut.inject.java)
+
+    testRuntimeOnly(mnLogging.logback.classic)
+
+    testImplementation(mnTest.junit.jupiter.api)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
+
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers.junit.jupiter)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
+    testImplementation(projects.micronautSecurity)
+
+    testAnnotationProcessor(mnData.micronaut.data.processor)
+    testImplementation(mnData.micronaut.data.hibernate.reactive)
+
+    testImplementation(mnSql.vertx.mysql.client)
+    testImplementation(mnSql.mysql.connector.java)
+
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.mysql)
+
+    testImplementation(mnReactor.micronaut.reactor)
+    // Test Fails without this dependency
+    testImplementation(mnReactor.micrometer.context.propagation)
+
+    // https://github.com/testcontainers/testcontainers-java/issues/8798
+    testRuntimeOnly(libs.commons.codec)
+
+    testImplementation(mnTest.junit.jupiter.params)
+}
+tasks.withType<Test> {
+    useJUnitPlatform()
+}

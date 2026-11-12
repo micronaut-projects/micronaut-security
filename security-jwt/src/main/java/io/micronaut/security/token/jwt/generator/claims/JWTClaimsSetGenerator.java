@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,13 @@ package io.micronaut.security.token.jwt.generator.claims;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.env.Environment;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.claims.ClaimsAudienceProvider;
+import io.micronaut.security.token.claims.ClaimsGenerator;
+import io.micronaut.security.token.claims.JtiGenerator;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.time.Instant;
@@ -43,7 +47,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     private static final String ROLES_KEY = "rolesKey";
 
     private final TokenConfiguration tokenConfiguration;
-    private final JwtIdGenerator jwtIdGenerator;
+    private final JtiGenerator jwtIdGenerator;
     private final ClaimsAudienceProvider claimsAudienceProvider;
     private final String appName;
 
@@ -54,7 +58,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param applicationConfiguration The application configuration
      */
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                 @Nullable JwtIdGenerator jwtIdGenerator,
+                                 @Nullable JtiGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                  @Nullable ApplicationConfiguration applicationConfiguration) {
         this.tokenConfiguration = tokenConfiguration;
@@ -79,7 +83,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated claim set: {}", builder.build().toJSONObject());
+            LOG.debug("Generated claim set with claims: {}", builder.build().getClaims().keySet());
         }
         return builder.build().getClaims();
     }
@@ -172,8 +176,10 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param authentication Authenticated user's representation.
      */
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
-        populateSub(builder, authentication);
         authentication.getAttributes().forEach(builder::claim);
+        // populated after the attributes so that the sub claim is always the principal name: an attribute named sub,
+        // for example the raw subject retained by a mapper which qualifies the username, must not replace the principal.
+        populateSub(builder, authentication);
         String rolesKey = tokenConfiguration.getRolesName();
         if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
             builder.claim(ROLES_KEY, rolesKey);
@@ -189,7 +195,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     @Override
     public Map<String, Object> generateClaimsSet(Map<String, ?> oldClaims, Integer expiration) {
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
-        List<String> excludedClaims = Arrays.asList(JwtClaims.EXPIRATION_TIME, JwtClaims.ISSUED_AT, JwtClaims.NOT_BEFORE);
+        List<String> excludedClaims = Arrays.asList(Claims.EXPIRATION_TIME, Claims.ISSUED_AT, Claims.NOT_BEFORE);
         for (String k : oldClaims.keySet()
                 .stream()
                 .filter(p -> !excludedClaims.contains(p))

@@ -1,0 +1,1 @@
+Micronaut Security CSRF resolves a CSRF Token with beans of type api:security.csrf.resolver.CsrfTokenResolver[]

@@ -13,7 +13,6 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.endpoints.introspection.IntrospectionResponse;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,7 @@ class IntrospectionResponseTest {
         BlockingHttpClient client = httpClient.toBlocking();
         URI uri = UriBuilder.of("/introspection").path("response").build();
         String json = client.retrieve(HttpRequest.GET(uri), String.class);
-        assertEquals("{\"active\":false,\"foo\":\"bar\"}", json);
+        assertEquals("{\"foo\":\"bar\",\"active\":false}", json);
     }
 
     @Requires(property = "spec.name", value = "IntrospectionResponseTest")
@@ -45,9 +44,19 @@ class IntrospectionResponseTest {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/response")
         IntrospectionResponse index() {
-            IntrospectionResponse response = new IntrospectionResponse();
-            response.setExtensions(Collections.singletonMap("foo", "bar"));
-            return response;
+            return new IntrospectionResponse(false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.singletonMap("foo", "bar"));
         }
     }
 }

@@ -16,11 +16,11 @@ $ mn create-app my-app --features security-jwt
 
 To use the Micronaut's JWT based authentication capabilities you must have the `security-jwt` dependency on your classpath. For example:
 
-dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
+dependency:io.micronaut.security:micronaut-security-processor[scope='annotationProcessor']
 
 dependency:io.micronaut.security:micronaut-security-jwt[]
 
-NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
+NOTE: The `micronaut-security-processor` dependency is only required to use JSR 250 annotations
 
 The following configuration properties are available to customize JWT based authentication behaviour:
 

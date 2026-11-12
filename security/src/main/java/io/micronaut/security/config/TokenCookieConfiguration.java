@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,4 +25,12 @@ import io.micronaut.http.cookie.CookieConfiguration;
  * @since 2.0.0
  */
 public interface TokenCookieConfiguration extends CookieConfiguration, Toggleable {
+    /**
+     *
+     * @return whether the cookie is a session cookie. A session cookie does not have an expiration date. If set to true, then {@link CookieConfiguration#getCookieMaxAge()} is ignored.
+      * @since 4.12.0
+     */
+    default boolean isSessionCookie() {
+        return false;
+    }
 }

@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
@@ -14,7 +13,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.*
@@ -23,6 +22,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.json.JsonMapper
 import io.micronaut.runtime.ApplicationConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -33,10 +33,11 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
-import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
+import io.micronaut.security.token.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
+import io.micronaut.security.token.claims.JtiGenerator
+import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
+import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
@@ -54,7 +55,7 @@ import java.security.interfaces.RSAPublicKey
 class JwksUriSignatureSpec extends Specification {
     private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureSpec.class)
 
-    void "registering an open id client, creates a JwskUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
+    void "registering an open id client, creates a JwksUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
         given:
         int authServerAPort = SocketUtils.findAvailableTcpPort()
         int authServerBPort = SocketUtils.findAvailableTcpPort()
@@ -97,7 +98,7 @@ class JwksUriSignatureSpec extends Specification {
         new PollingConditions().eventually {
             assert embeddedServer.isRunning()
         }
-        embeddedServer.applicationContext.containsBean(SignatureConfiguration)
+        embeddedServer.applicationContext.containsBean(ReactiveSignatureConfiguration)
 
         when: 'it is possible to get a JWT from the auth server A'
         BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()
@@ -185,10 +186,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerACustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
         Integer port
         AuthServerACustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                    @Nullable JwtIdGenerator jwtIdGenerator,
-                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                                    @Nullable ApplicationConfiguration applicationConfiguration,
-                                    @Value('${micronaut.server.port}') Integer port) {
+                                               @Nullable JtiGenerator jwtIdGenerator,
+                                               @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                               @Nullable ApplicationConfiguration applicationConfiguration,
+                                               @Value('${micronaut.server.port}') Integer port) {
             super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
             this.port = port
         }
@@ -210,10 +211,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBCustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
         Integer port
         AuthServerBCustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                    @Nullable JwtIdGenerator jwtIdGenerator,
-                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                                    @Nullable ApplicationConfiguration applicationConfiguration,
-                                    @Value('${micronaut.server.port}') Integer port) {
+                                               @Nullable JtiGenerator jwtIdGenerator,
+                                               @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                               @Nullable ApplicationConfiguration applicationConfiguration,
+                                               @Value('${micronaut.server.port}') Integer port) {
             super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
             this.port = port
         }
@@ -329,8 +330,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override
@@ -349,8 +350,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerAKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override

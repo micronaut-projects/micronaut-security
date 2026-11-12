@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,40 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
+import io.micronaut.security.oauth2.endpoint.endsession.request.AuthorizationServer;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorMatcher;
 
 import java.net.URL;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
@@ -45,6 +62,7 @@ import java.util.*;
  */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
+@Requires(classes = OutgoingRequestProcessorMatcher.class)
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
 
     /**
@@ -71,12 +89,56 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
     private ClientCredentialsConfigurationProperties clientCredentials;
+    private AuthorizationServer authorizationServer;
+    private boolean proxyWellKnownOauthAuthorizationServer;
+    private boolean proxyWellKnownOpenidConfiguration;
 
     /**
      * @param name The provider name
      */
     public OauthClientConfigurationProperties(@Parameter String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOauthAuthorizationServer() {
+        return proxyWellKnownOauthAuthorizationServer;
+    }
+
+    /**
+     * Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOauthAuthorizationServer Whether a request to /.well-known/oauth-authorization-server should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOauthAuthorizationServer(boolean proxyWellKnownOauthAuthorizationServer) {
+        this.proxyWellKnownOauthAuthorizationServer = proxyWellKnownOauthAuthorizationServer;
+    }
+
+    @Override
+    public boolean isProxyWellKnownOpenidConfiguration() {
+        return proxyWellKnownOpenidConfiguration;
+    }
+
+    /**
+     * Whether a request to /.well-known/openid-configuration should be proxied to the authorization server. Default to false.
+     * @param proxyWellKnownOpenidConfiguration Whether a request to /.well-known/openid-configuration should be proxied to the authorization server.
+     */
+    public void setProxyWellKnownOpenidConfiguration(boolean proxyWellKnownOpenidConfiguration) {
+        this.proxyWellKnownOpenidConfiguration = proxyWellKnownOpenidConfiguration;
+    }
+
+    /**
+     * Micronaut attempts to infer the authorization server used by the client based on the issuer. However, if you are using a custom domain, it may be impossible to infer it.
+     * You can set it explicitly via this property.
+     * @param authorizationServer The authorization server
+     */
+    public void setAuthorizationServer(@Nullable AuthorizationServer authorizationServer) {
+        this.authorizationServer = authorizationServer;
+    }
+
+    @Override
+    @Nullable
+    public AuthorizationServer getAuthorizationServer() {
+        return authorizationServer;
     }
 
     @NonNull
@@ -250,6 +312,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     /**
      * Client credentials configuration.
      */
+    @Requires(classes = OutgoingRequestProcessorMatcher.class)
     @ConfigurationProperties("client-credentials")
     public static class ClientCredentialsConfigurationProperties extends AbstractOutgoingRequestProcessorMatcher implements ClientCredentialsConfiguration {
 
@@ -347,6 +410,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Client credentials http header token propagation configuration.
          */
         @ConfigurationProperties("header-propagation")
+        @Requires(classes = OutgoingRequestProcessorMatcher.class)
         public static class HeaderTokenPropagatorConfigurationProperties implements ClientCredentialsHeaderTokenPropagatorConfiguration {
 
             private String prefix = DEFAULT_PREFIX;
@@ -454,9 +518,12 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     public static class OpenIdClientConfigurationProperties implements OpenIdClientConfiguration {
 
         private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
+        private static final boolean DEFAULT_FETCH_CONFIGURATION = true;
         private final String name;
 
+        private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
         private URL issuer;
+        private String issuerIdentifier;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
         private RegistrationEndpointConfigurationProperties registration;
@@ -464,6 +531,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private AuthorizationEndpointConfigurationProperties authorization;
         private TokenEndpointConfigurationProperties token;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+        private boolean protectedResourceMetadata = DEFAULT_PROTECTED_RESOURCE_METADATA;
 
         /**
          * @param name The provider name
@@ -472,10 +540,37 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.name = name;
         }
 
+        @Override
+        public boolean isFetchConfiguration() {
+            return fetchConfiguration;
+        }
+
+        /**
+         * Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}. Default value: true.
+         *
+         * @param fetchConfiguration Whether the OpenID configuration should be fetched
+         */
+        public void setFetchConfiguration(boolean fetchConfiguration) {
+            this.fetchConfiguration = fetchConfiguration;
+        }
+
         @NonNull
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public boolean isProtectedResourceMetadata() {
+            return protectedResourceMetadata;
+        }
+
+        /**
+         * Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server. Default value: true.
+         * @param protectedResourceMetadata Whether the protected resource metadata endpoint should expose the OpenID issuer as an authorization server.
+         */
+        public void setProtectedResourceMetadata(boolean protectedResourceMetadata) {
+            this.protectedResourceMetadata = protectedResourceMetadata;
         }
 
         @Override
@@ -491,6 +586,25 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setIssuer(@Nullable URL issuer) {
             this.issuer = issuer;
+        }
+
+        @Override
+        public Optional<String> getIssuerIdentifier() {
+            if (issuerIdentifier != null) {
+                return Optional.of(issuerIdentifier);
+            }
+            return OpenIdClientConfiguration.super.getIssuerIdentifier();
+        }
+
+        /**
+         * The value expected in the {@code iss} claim of ID tokens. Set it when it differs from the {@code issuer} used to
+         * fetch the discovery document, for example when discovery is fetched over an internal URL. Defaults to {@code issuer}.
+         *
+         * @param issuerIdentifier The expected issuer identifier
+         * @since 5.5.2
+         */
+        public void setIssuerIdentifier(@Nullable String issuerIdentifier) {
+            this.issuerIdentifier = issuerIdentifier;
         }
 
         @Override
@@ -741,6 +855,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Token endpoint configuration.
          */
         @ConfigurationProperties("token")
+        @Requires(classes = MediaType.class)
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
             private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;

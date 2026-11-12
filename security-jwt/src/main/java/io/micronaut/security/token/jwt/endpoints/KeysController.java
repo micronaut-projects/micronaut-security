@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,25 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import jakarta.inject.Inject;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Endpoint which exposes a JSON Web Key Set built with the JWK provided by {@link io.micronaut.security.token.jwt.endpoints.JwkProvider} beans.
@@ -42,8 +41,9 @@ import reactor.core.publisher.Mono;
  * @since 1.1.0
  * @author Sergio del Amo
  */
+@Requires(classes = { Controller.class })
 @Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(beans = JwkProvider.class)
+@Requires(beans = {JwkProvider.class, JsonMapper.class})
 @Controller("${" + KeysControllerConfigurationProperties.PREFIX + ".path:/keys}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {
@@ -56,22 +56,9 @@ public class KeysController {
     /**
      * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
      * @param jwkProviders a collection of JSON Web Key providers.
-     * @param objectMapper Jackson ObjectMapper used to do serialization.
-     * @deprecated Use {@link #KeysController(Collection, JsonMapper)} instead
-     */
-    @Deprecated
-    public KeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-        this.jwkProviders = jwkProviders;
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
-    }
-
-    /**
-     * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
-     * @param jwkProviders a collection of JSON Web Key providers.
      * @param jsonMapper Jackson ObjectMapper used to do serialization.
      * @since 3.3
      */
-    @Inject
     public KeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
         this.jwkProviders = jwkProviders;
         this.jsonMapper = jsonMapper;
@@ -97,7 +84,7 @@ public class KeysController {
                     // separate branch for that.
                     if (!((Collection<?>) m.getOrDefault("keys", Collections.emptyList())).isEmpty()) {
                         try {
-                            return new String(jsonMapper.writeValueAsBytes(m));
+                            return new String(jsonMapper.writeValueAsBytes(m), StandardCharsets.UTF_8);
                         } catch (IOException e) {
                             if (LOG.isErrorEnabled()) {
                                 LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");

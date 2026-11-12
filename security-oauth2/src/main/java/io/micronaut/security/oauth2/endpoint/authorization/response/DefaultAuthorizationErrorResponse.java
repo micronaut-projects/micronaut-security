@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
@@ -66,17 +66,14 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     static ErrorCode getError(ConvertibleMultiValues<String> responseData) {
         String name = responseData.get(JSON_KEY_ERROR);
-        try {
-            if (name != null) {
-                return AuthorizationErrorCode.valueOf(name.toUpperCase(Locale.ENGLISH));
-            }
-        } catch (IllegalArgumentException e) {
-            LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        ErrorCode errorCode = getError(name);
+        if (errorCode != null) {
+            return errorCode;
         }
         return new ErrorCode() {
             @Override
             public String getErrorCode() {
-                return responseData.get(JSON_KEY_ERROR);
+                return name;
             }
 
             @Override
@@ -84,6 +81,20 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
                 return responseData.get(JSON_KEY_ERROR_DESCRIPTION);
             }
         };
+    }
+
+    @Nullable
+    static ErrorCode getError(@Nullable String name) {
+        if (name != null) {
+            String constantName = name.toUpperCase(Locale.ENGLISH);
+            for (AuthorizationErrorCode errorCode : AuthorizationErrorCode.values()) {
+                if (errorCode.name().equals(constantName)) {
+                    return errorCode;
+                }
+            }
+        }
+        LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        return null;
     }
 
     @Nullable

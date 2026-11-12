@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Parameter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * JSON Web Key Set (JWKS) Signature Configuration properties holder.
@@ -36,8 +37,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      * The default key type.
+     * @deprecated No longer used. Since 5.5.2 no key type is applied unless {@link #setKeyType(KeyType)} is configured, so that keys of any type of the JWKS are matched.
      */
     @SuppressWarnings("WeakerAccess")
+    @Deprecated(forRemoval = true, since = "5.5.2")
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
     /**
@@ -46,15 +49,37 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    @Nullable
+    private final String name;
+
     @NonNull
     private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
 
     private String url;
 
-    private KeyType keyType = DEFAULT_KEYTYPE;
+    @Nullable
+    private KeyType keyType;
+
+    @Nullable
+    private String issuer;
+
+    public JwksSignatureConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
 
     @Override
     @NonNull
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
+     * @return The number of seconds to cache the JWKS.
+     */
+    @Override
+    @NonNull
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public Integer getCacheExpiration() {
         return cacheExpiration;
     }
@@ -62,7 +87,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     /**
      * JWKS cache expiration. Default value {@value #DEFAULT_CACHE_EXPIRATION} seconds.
      * @param cacheExpiration The expiration
+     * @deprecated Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write
      */
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public void setCacheExpiration(Integer cacheExpiration) {
         ArgumentUtils.requireNonNull("cacheExpiration", cacheExpiration);
         this.cacheExpiration = cacheExpiration;
@@ -89,7 +116,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      *
-     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
+     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any type are matched.
      */
     @Override
     @Nullable
@@ -98,10 +125,29 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).
+     * Representation of the kty parameter in a JSON Web Key (JWK). When set, only keys of this type are used to verify token signatures; a token signed with a key of another type is rejected even if that key is part of the JWKS. Default value (null): keys of any type are matched.
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
-    public void setKeyType(KeyType keyType) {
+    public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
+    }
+
+    /**
+     * @return The issuer the key set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 5.5.2
+     */
+    @Override
+    @Nullable
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * Issuer the JSON Web Key Set is bound to. When set, only tokens whose {@code iss} claim matches this issuer are verified with this key set. Default value (null): tokens are verified regardless of their {@code iss} claim.
+     * @param issuer Issuer the JSON Web Key Set is bound to. e.g. https://idp.example.com/
+     * @since 5.5.2
+     */
+    public void setIssuer(@Nullable String issuer) {
+        this.issuer = issuer;
     }
 }

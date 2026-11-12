@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
             return true;
         }
         boolean condition = authorizedParty.equals(clientConfiguration.getClientId());
-        if (!condition && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Authorized party claim does not match [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+        if (!condition && LOG.isDebugEnabled()) {
+            LOG.debug("JWT validation failed for provider [{}]. Authorized party claim does not match [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
         }
 
         return condition;

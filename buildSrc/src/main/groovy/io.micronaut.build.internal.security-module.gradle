@@ -1,4 +1,41 @@
 plugins {
     id "io.micronaut.build.internal.security-base"
     id "io.micronaut.build.internal.module"
+    // Reports reflection in the main sources at compile time: https://github.com/micronaut-projects/errorprone-no-reflection
+    id "io.micronaut.errorprone.no-reflection"
+}
+// The Micronaut build plugins only enable JaCoCo on CI, and they do so in afterEvaluate.
+// Registered after them, so that the coverage verification of test-suite-coverage also has data locally.
+afterEvaluate {
+    tasks.withType(Test).configureEach {
+        jacoco.enabled = true
+    }
+}
+// Predictive test selection runs a subset of the tests, and Develocity does not make it an input of the tests.
+// Without it, running every test is up-to-date after running a subset, and test-suite-coverage verifies the subset.
+tasks.withType(Test).configureEach {
+    inputs.property("predictiveTestSelection", develocity.predictiveTestSelection.enabled.orElse(false))
+}
+dependencies {
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.junit.jupiter.params)
+    testImplementation(mnTest.junit.platform.suite)
+    testImplementation(mnTest.junit.platform.launcher)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testImplementation(mnLogging.logback.classic)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Only the NoReflection check is wanted from ErrorProne: its own checks would add warnings to every compilation.
+tasks.withType(JavaCompile).configureEach {
+    options.errorprone.disableAllChecks = true
+}
+
+// Class.getSimpleName needs no reflection registration, and the generated names and log messages read better with it.
+noReflection {
+    allowCalls 'java.lang.Class#getSimpleName'
 }

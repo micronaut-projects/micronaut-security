@@ -56,6 +56,8 @@ class EchoClientWebSocketSpec extends Specification {
     }
 
     def "check websocket connects"() {
+        expect:
+        wsClient
 
         when:
         TokenGenerator tokenGenerator = embeddedServer.applicationContext.getBean(JwtTokenGenerator)

@@ -4,9 +4,15 @@ You can configure the redirection destinations with:
 
 include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.adoc[]
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties.adoc[]
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties.adoc[]
 
 IMPORTANT: Use the API api:security.config.RedirectService[], which prepends the context path, if defined, to the redirect URLs.
+
+=== Redirecting to the URI requested prior to login
+
+When `micronaut.security.redirect.prior-to-login` is `true`, api:security.errors.CookiePriorToLoginPersistence[] stores the URI of the request that was rejected as unauthorized in an `ORIGINAL_URI` cookie and the login handlers redirect to it after a successful login instead of to `login-success`.
+
+To prevent an open redirect (CWE-601), only the path and query of the unauthorized request are stored, and only a local path, one that starts with a single `/`, is honoured when the cookie is read back. A request line such as `GET ///evil.example/x`, which browsers would follow as a scheme-relative URL to another host, or a planted cookie carrying an absolute or scheme-relative URL, falls back to `login-success`.
 

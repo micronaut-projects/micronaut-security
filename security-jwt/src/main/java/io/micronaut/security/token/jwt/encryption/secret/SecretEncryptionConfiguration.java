@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,15 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
  */
 @EachProperty(JwtConfigurationProperties.PREFIX + ".encryptions.secret")
 public class SecretEncryptionConfiguration {
+    /**
+     * The default base64 value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_BASE64 = false;
     private JWEAlgorithm jweAlgorithm;
     private EncryptionMethod encryptionMethod;
     private String secret;
+    private boolean base64 = DEFAULT_BASE64;
     private final String name;
 
     /**
@@ -88,6 +94,22 @@ public class SecretEncryptionConfiguration {
      */
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    /**
+     * @return true if the secret is Base64 encoded
+     */
+    public boolean isBase64() {
+        return base64;
+    }
+
+    /**
+     * Indicates whether the supplied secret is base64 encoded. Default value {@value #DEFAULT_BASE64}.
+     *
+     * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
+     */
+    public void setBase64(boolean base64) {
+        this.base64 = base64;
     }
 
     /**

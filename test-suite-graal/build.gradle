@@ -10,37 +10,20 @@ dependencies {
     testImplementation(mn.micronaut.json.core)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(mn.micronaut.test.junit5)
-    testImplementation(project(":security"))
+    testImplementation(projects.micronautSecurity)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityPasswordArgon2Bouncycastle)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mnTest.junit.jupiter.engine)
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
-
-tasks.named("check") { task ->
-    def graal = ["jvmci.Compiler", "java.vendor.version", "java.vendor"].any {
-        println "$it ${System.getProperty(it)}"
-        System.getProperty(it)?.toLowerCase(Locale.ENGLISH)?.contains("graal")
-    }
-    if (graal) {
-        task.dependsOn("nativeTest")
-    }
-}
-
-def openGraalModules = [
-        "org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
-        "org.graalvm.nativeimage.builder/com.oracle.svm.core.configure",
-        "org.graalvm.sdk/org.graalvm.nativeimage.impl"
-]
-
 graalvmNative {
-    toolchainDetection = false
-    binaries {
-        all {
-            openGraalModules.each { module ->
-                jvmArgs.add("--add-exports=" + module + "=ALL-UNNAMED")
-            }
-        }
+    metadataRepository {
+        enabled = true
     }
 }

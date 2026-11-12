@@ -1,13 +1,17 @@
 package io.micronaut.security
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.beans.BeanIntrospection
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.ClientAuthentication
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.serde.SerdeIntrospections
 
 class ClientAuthenticationSpec extends EmbeddedServerSpecification {
 
@@ -77,5 +81,35 @@ class ClientAuthenticationSpec extends EmbeddedServerSpecification {
         Authentication auth() {
             Authentication.build('john', ['ROLE_NIGHT_WATCH'], [birthname: 'Aegon'])
         }
+    }
+
+    void "ClientAuthentication is annotated with @Introspected"() {
+        when:
+        BeanIntrospection.getIntrospection(ClientAuthentication)
+
+        then:
+        noExceptionThrown()
+    }
+
+    void "ClientAuthentication is annotated with @Serdeable.Deserializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getDeserializableIntrospection(Argument.of(ClientAuthentication))
+
+        then:
+        noExceptionThrown()
+    }
+
+    void "ClientAuthentication is annotated with @Serdeable.Serializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getSerializableIntrospection(Argument.of(ClientAuthentication))
+
+        then:
+        noExceptionThrown()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,18 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.Nullable;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
-import io.micronaut.security.config.DefaultRedirectService;
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
@@ -30,6 +34,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,49 +46,54 @@ import org.slf4j.LoggerFactory;
  * @author James Kleeh
  * @since 1.4.0
  */
+@Requires(classes = ExceptionHandler.class)
 @Singleton
 public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationExceptionHandler.class);
+    private static final String COMMA_SPACE = ", ";
+
+    private final ErrorResponseProcessor<?> errorResponseProcessor;
 
     private final RedirectConfiguration redirectConfiguration;
+    private final List<WwwAuthenticateChallengeProvider<HttpRequest<?>>> wwwAuthenticateChallengeProviders;
 
     private final RedirectService redirectService;
     private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
-     * Default constructor.
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
-     */
-    @Deprecated
-    public DefaultAuthorizationExceptionHandler() {
-        this(null, null);
-    }
-
-    /**
-     * @param redirectConfiguration Redirect configuration
-     * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
-     */
-    @Deprecated
-    public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this(redirectConfiguration, new DefaultRedirectService(redirectConfiguration, () -> null), priorToLoginPersistence);
-    }
-
-    /**
+     * @param errorResponseProcessor ErrorResponse processor API
      * @param redirectConfiguration Redirect configuration
      * @param redirectService Redirection Service
+     * @param wwwAuthenticateChallengeProviders  WWW-Authenticate Challenges
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
     @Inject
-    @Deprecated
-    public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration,
+    public DefaultAuthorizationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor,
+                                                RedirectConfiguration redirectConfiguration,
                                                 RedirectService redirectService,
+                                                List<WwwAuthenticateChallengeProvider<HttpRequest<?>>> wwwAuthenticateChallengeProviders,
                                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this.errorResponseProcessor = errorResponseProcessor;
         this.redirectConfiguration = redirectConfiguration;
         this.redirectService = redirectService;
         this.priorToLoginPersistence = priorToLoginPersistence;
+        this.wwwAuthenticateChallengeProviders = wwwAuthenticateChallengeProviders;
+    }
+
+    /**
+     * @param errorResponseProcessor ErrorResponse processor API
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirection Service
+     * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
+     * @deprecated Use {@link DefaultAuthorizationExceptionHandler(ErrorResponseProcessor, RedirectConfiguration, RedirectService, List, PriorToLoginPersistence)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "4.14.0")
+    public DefaultAuthorizationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor,
+                                                RedirectConfiguration redirectConfiguration,
+                                                RedirectService redirectService,
+                                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this(errorResponseProcessor, redirectConfiguration, redirectService, Collections.emptyList(), priorToLoginPersistence);
     }
 
     @Override
@@ -96,18 +108,16 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
                         priorToLoginPersistence.onUnauthorized(request, response);
                     }
                     return response;
-                } else {
-                    return httpResponseWithStatus(request, exception);
                 }
+                return httpResponseWithStatus(request, exception);
             } catch (URISyntaxException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error("Rejection redirect URL is invalid", e);
                 }
                 return HttpResponse.serverError();
             }
-        } else {
-            return httpResponseWithStatus(request, exception);
         }
+        return httpResponseWithStatus(request, exception);
     }
 
     /**
@@ -116,8 +126,18 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @return The response to be used when a redirect is not appropriate
      */
     protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest<?> request, AuthorizationException exception) {
-        return HttpResponse.status(exception.isForbidden() ? HttpStatus.FORBIDDEN :
-                    HttpStatus.UNAUTHORIZED);
+        HttpStatus status = exception.isForbidden() ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
+        MutableHttpResponse<?> response = HttpResponse.status(status);
+        if (CollectionUtils.isNotEmpty(wwwAuthenticateChallengeProviders)) {
+            response.header(HttpHeaders.WWW_AUTHENTICATE,
+                String.join(COMMA_SPACE, wwwAuthenticateChallengeProviders.stream()
+                    .map(provider -> provider.getWwwAuthenticateChallenge(request))
+                    .toList()));
+        }
+        return errorResponseProcessor.processResponse(ErrorContext.builder(request)
+            .cause(exception)
+            .errorMessage(status.getReason())
+            .build(), response);
     }
 
     /**
@@ -160,9 +180,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      *
      * @param location The Uri to redirect to
      * @return an HTTP response with the Uri as location
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
-    @Deprecated
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
                 .headers(headers -> headers.location(location));

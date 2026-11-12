@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import org.jspecify.annotations.NonNull;
+
 import java.util.Optional;
 
 /**
@@ -25,10 +26,18 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface SecureEndpointConfiguration extends EndpointConfiguration {
-
     /**
      *
      * @return An optional Authentication Method.
      */
-    Optional<AuthenticationMethod> getAuthMethod();
+    Optional<String> getAuthenticationMethod();
+
+    /**
+     * @return A new secure endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static SecureEndpointConfigurationBuilder builder() {
+        return new SecureEndpointConfigurationBuilder();
+    }
 }

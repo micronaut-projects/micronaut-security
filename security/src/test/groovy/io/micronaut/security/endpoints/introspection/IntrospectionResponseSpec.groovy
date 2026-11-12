@@ -1,17 +1,19 @@
 package io.micronaut.security.endpoints.introspection
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.beans.BeanIntrospection
+import io.micronaut.core.type.Argument
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.serde.ObjectMapper
+import io.micronaut.serde.SerdeIntrospections
 import spock.lang.Issue
 import spock.lang.Shared
 
-import javax.validation.Validator
+import jakarta.validation.Validator
 
 class IntrospectionResponseSpec extends EmbeddedServerSpecification {
 
@@ -21,6 +23,28 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
     @Override
     String getSpecName() {
         'IntrospectionResponseSpec'
+    }
+
+    void "IntrospectionResponse is annotated with @Serdeable.Deserializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getDeserializableIntrospection(Argument.of(IntrospectionResponse))
+
+        then:
+        noExceptionThrown()
+    }
+
+    void "IntrospectionResponse is annotated with @Serdeable.Serializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getSerializableIntrospection(Argument.of(IntrospectionResponse))
+
+        then:
+        noExceptionThrown()
     }
 
     void "IntrospectionResponse is annotated with Introspected"() {
@@ -42,106 +66,116 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
     void "IntrospectionResponse::scope is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.scope = null
 
         then:
+        rsp.scope == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::clientId is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.clientId = null
 
         then:
+        rsp.clientId == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::username is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.username = null
 
         then:
+        rsp.username == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::tokenType is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.tokenType = null
 
         then:
+        rsp.tokenType == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::exp is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.exp = null
 
         then:
+        rsp.exp == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::iat is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.iat = null
 
         then:
+        rsp.iat == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::nbf is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.nbf = null
 
         then:
+        rsp.nbf == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::sub is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.sub = null
 
         then:
+        rsp.sub == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::aud is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.aud = null
 
         then:
+        rsp.aud == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::iss is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.iss = null
+
 
         then:
+        rsp.iss == null
         validator.validate(rsp).isEmpty()
     }
 
     void "IntrospectionResponse::jti is optional"() {
         when:
         IntrospectionResponse rsp = validIntrospectionResponse()
-        rsp.jti = null
 
         then:
         validator.validate(rsp).isEmpty()
     }
 
     static IntrospectionResponse validIntrospectionResponse() {
-        IntrospectionResponse req = new IntrospectionResponse()
-        req.active = true
-        req
+        new IntrospectionResponse(true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
     }
 
     void "verify fields are annotated with JsonProperty"() {
@@ -167,18 +201,19 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
         given:
         ObjectMapper objectMapper = applicationContext.getBean(ObjectMapper)
 
-        IntrospectionResponse response = new IntrospectionResponse()
-        response.active = true
-        response.clientId = "l238j323ds-23ij4"
-        response.tokenType = "access_token"
-        response.username = "jdoe"
-        response.scope = "read write dolphin"
-        response.sub = "Z5O3upPC88QrAjx00dis"
-        response.aud = "https://protected.example.net/resource"
-        response.iss = "https://server.example.com/"
-        response.exp = 1419356238
-        response.iat = 1419350238
-        response.extensions = ["extension_field": "twenty-seven"]
+        IntrospectionResponse response = new IntrospectionResponse(true,
+                "access_token",
+                "read write dolphin",
+                "l238j323ds-23ij4",
+                "jdoe",
+                1419356238,
+                1419350238,
+                null,
+                "Z5O3upPC88QrAjx00dis",
+                "https://protected.example.net/resource",
+                "https://server.example.com/",
+                null,
+                ["extension_field": "twenty-seven"])
 
         when:
         String str = objectMapper.writeValueAsString(response)
@@ -189,20 +224,21 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
 
     void "test anyGetter with instantiated ObjectMapper"() {
         given:
-        ObjectMapper objectMapper = new ObjectMapper()
+        ObjectMapper objectMapper = ObjectMapper.getDefault()
 
-        IntrospectionResponse response = new IntrospectionResponse()
-        response.active = true
-        response.clientId = "l238j323ds-23ij4"
-        response.tokenType = "access_token"
-        response.username = "jdoe"
-        response.scope = "read write dolphin"
-        response.sub = "Z5O3upPC88QrAjx00dis"
-        response.aud = "https://protected.example.net/resource"
-        response.iss = "https://server.example.com/"
-        response.exp = 1419356238
-        response.iat = 1419350238
-        response.extensions = ["extension_field": "twenty-seven"]
+        IntrospectionResponse response = new IntrospectionResponse(true,
+                "access_token",
+                "read write dolphin",
+                "l238j323ds-23ij4",
+                "jdoe",
+                1419356238,
+                1419350238,
+                null,
+                "Z5O3upPC88QrAjx00dis",
+                "https://protected.example.net/resource",
+                "https://server.example.com/",
+                null,
+                ["extension_field": "twenty-seven"])
 
         when:
         String str = objectMapper.writeValueAsString(response)

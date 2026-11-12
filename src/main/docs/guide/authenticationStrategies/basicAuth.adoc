@@ -1,4 +1,6 @@
-Out-of-the-box, Micronaut supports https://tools.ietf.org/html/rfc7617[RFC7617] which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default. You can disable it by setting `micronaut.security.basic-auth.enabled` to `false`.  
+Out-of-the-box, Micronaut supports https://tools.ietf.org/html/rfc7617[RFC7617] which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.
+
+Basic authentication is enabled by default if you have any <<authenticationProviders, Authentication Provider>>. You can disable it by setting `micronaut.security.basic-auth.enabled` to `false`.
 
 The following sequence illustrates the authentication flow:
 
@@ -18,10 +20,6 @@ which attempts to validate them.
 
 The code snippet below illustrates how to send credentials using the `basicAuth` method from https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html[MutableHttpRequest] method:
 
-[source, groovy]
-.Accessing a protected resource using an Authorization request header
-----
-include::{testssecurity}/security/token/basicauth/BasicAuthSpec.groovy[tag=basicAuth, indent=0]
-----
+snippet::io.micronaut.security.docs.basicauth.BasicAuthTest[tags="basicAuth",indent=0,title="Accessing a protected resource using an Authorization request header"]
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-security-basicauth.html[Basic Authentication Micronaut Guide] to learn more.

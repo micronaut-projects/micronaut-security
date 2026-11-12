@@ -4,10 +4,12 @@ image::openid-end-session.svg[]
 
 If any configured OpenID provider supports end session behavior, a route will be registered that responds to `/oauth/logout` and redirects to the provider to log the user out. A parameter is also sent to the provider that indicates what URL the provider should redirect the user to after logging out. The default URL is `/logout` which will cause the local authentication to also be cleared and a final redirect issued according to the api:security.handlers.LogoutHandler[].
 
+The end session URL advertised by the provider (the `end_session_endpoint` of its discovery document, or the URL derived from the issuer for providers that do not advertise one) is used as an opaque URI: the logout parameters, such as `post_logout_redirect_uri` or `id_token_hint`, are percent-encoded and appended to its query component, and any query component already present in the provider URL is preserved. The provider URL is never expanded as a URI template. The provider URL must be an absolute `http` or `https` URL with a host and without user information. If it is empty, takes another form (a relative URL, another scheme, or `https://user:password@provider.example/logout`) or is not a valid URI, no redirect is issued and `/oauth/logout` responds with 404.
+
 All of the above is configurable through `micronaut.security.oauth2.openid`:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.adoc[]
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]
 
 To enable the usage of the `/logout` endpoint, see the section on the <<logout, Logout Endpoint>>.
 
@@ -15,8 +17,12 @@ IMPORTANT: The `get-allowed` configuration option must be set to `true` because 
 
 This library supports end session for Auth0, AWS Cognito, and Okta out of the box. The api:security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver[] is responsible for determining which api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] will be used for a given provider, if any.
 
+WARNING: If you are using a custom domain URL for your auth server, instead of inferring it, you can set the authorization server you use by setting the property `micronaut.security.oauth2.clients.*.authorization-server`.
+
+For Okta and Oracle Cloud, api:security.oauth2.endpoint.endsession.request.OktaEndSessionEndpoint[] sends an `id_token_hint` parameter. It is the ID token obtained during the authorization code flow when that token is available in the authentication attributes. Otherwise, when `micronaut.security.authentication` is set to `idtoken`, it is the token which authenticated the current request, that is, the ID token cookie. Other tokens present in the request, such as an `Authorization` header added by a gateway or reverse proxy, are never sent to the OpenID provider.
+
 Before choosing any of the default providers, the endpoint resolver will first look for an api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.
 
 If for example you are using one of the providers that is supported out of the box and you don't want the end session support, it is possible to disable it per client.
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]

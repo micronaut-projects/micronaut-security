@@ -1,11 +1,13 @@
 package io.micronaut.security.oauth2.grants
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.beans.BeanIntrospection
+import io.micronaut.json.JsonMapper
+import io.micronaut.json.tree.JsonNode
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Shared
 
-import javax.validation.Validator
+import jakarta.validation.Validator
 
 class ClientCredentialsGrantSpec extends ApplicationContextSpecification {
 
@@ -63,6 +65,21 @@ class ClientCredentialsGrantSpec extends ApplicationContextSpecification {
         then:
         json.contains('grant_type')
         json.contains('scope')
+    }
+
+    void snakeCaseStrategyIsUsed() {
+        given:
+        JsonMapper jsonMapper = JsonMapper.createDefault()
+        ClientCredentialsGrant obj = new ClientCredentialsGrant()
+        obj.scope = "scope"
+
+        when:
+        JsonNode jsonNode = jsonMapper.writeValueToTree(obj)
+        then:
+        jsonNode.isObject()
+        2 == jsonNode.size()
+        "scope" == jsonNode.get("scope").getStringValue()
+        "client_credentials" == jsonNode.get("grant_type").getStringValue()
     }
 
     void "grant defaults to client_credentails"() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import org.reactivestreams.Publisher;
@@ -45,7 +45,6 @@ public interface OauthAuthenticationMapper {
      * refresh token returned by the provider.
      */
     String REFRESH_TOKEN_KEY = "refreshToken";
-
 
     /**
      * Convert the token response and state into an authentication response.

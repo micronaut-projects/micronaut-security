@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -26,7 +26,6 @@ import io.micronaut.http.server.exceptions.response.ErrorContext;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,17 +39,16 @@ import java.net.URISyntaxException;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@Requires(classes = ExceptionHandler.class)
+@Requires(beans = ErrorResponseProcessor.class)
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizationErrorResponseExceptionHandler.class);
 
-    @Nullable
     private final RedirectConfiguration redirectConfiguration;
 
-    @Nullable
     private final RedirectService redirectService;
 
-    @Nullable
     private final ErrorResponseProcessor<?> errorResponseProcessor;
 
     /**
@@ -59,23 +57,12 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      * @param redirectService Redirect Service
      * @param errorResponseProcessor Error Response Processor
      */
-    @Inject
-    public AuthorizationErrorResponseExceptionHandler(@Nullable RedirectConfiguration redirectConfiguration,
-                                                      @Nullable RedirectService redirectService,
-                                                      @Nullable ErrorResponseProcessor<?> errorResponseProcessor) {
+    public AuthorizationErrorResponseExceptionHandler(RedirectConfiguration redirectConfiguration,
+                                                      RedirectService redirectService,
+                                                      ErrorResponseProcessor<?> errorResponseProcessor) {
         this.redirectConfiguration = redirectConfiguration;
         this.redirectService = redirectService;
         this.errorResponseProcessor = errorResponseProcessor;
-    }
-
-    /**
-     * Default constructor.
-     *
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
-     */
-    @Deprecated
-    public AuthorizationErrorResponseExceptionHandler() {
-        this(null,  null, null);
     }
 
     @Override

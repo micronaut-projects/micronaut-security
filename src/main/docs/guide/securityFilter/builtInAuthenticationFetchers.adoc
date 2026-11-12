@@ -1,0 +1,13 @@
+You can write your own bean of type api:security.filters.AuthenticationFetcher[]. However, Micronaut Security ships with several built-in authentication fetchers:
+
+|===
+| Bean | Description
+| api:io.micronaut.security.authentication.BasicAuthAuthenticationFetcher[]
+| It parses the credentials from an HTTP Request, which uses Basic Authentication. Then, it invokes every Authentication Provider using the parsed credentials.
+| api:io.micronaut.security.token.TokenAuthenticationFetcher[]
+| It attempts to retrieve a token from the HTTP Request, and then it tries to validate the token.
+| api:io.micronaut.security.session.SessionAuthenticationFetcher[]
+| It attempts to retrieve an api:security.authentication.Authentication[] from an HTTP session.
+| api:io.micronaut.security.x509.X509AuthenticationFetcher[]
+| Creates an api:security.authentication.Authentication[] if an X.509 client certificate is present and a name (CN) can be extracted.
+|===

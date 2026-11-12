@@ -1,5 +1,23 @@
 plugins {
-    id "io.micronaut.build.internal.docs"
-    id "io.micronaut.build.internal.dependency-updates"
-    id "io.micronaut.build.internal.quality-reporting"
+    id "io.micronaut.build.internal.parent"
+}
+
+repositories {
+    mavenCentral()
+}
+
+project(":test-suite-keycloak-docker") {
+    if (System.getenv("SONAR_TOKEN") != null) {
+        sonar {
+            skipProject = true
+        }
+    }
+}
+
+// The Micronaut build plugins only aggregate the tests of the modules in jacocoReport, which is what Sonar reads.
+// The test suites cover those modules too.
+subprojects.each { subproject ->
+    subproject.plugins.withId("io.micronaut.build.internal.security-tests") {
+        dependencies.add("jacocoAggregation", subproject)
+    }
 }

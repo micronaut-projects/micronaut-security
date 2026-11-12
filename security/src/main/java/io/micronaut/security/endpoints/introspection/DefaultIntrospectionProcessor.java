@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -42,9 +43,10 @@ import reactor.core.publisher.Flux;
  * If it cannot authenticate it returns {active: false}
  * @author Sergio del Amo
  * @since 2.1.0
+ * @param <T> Request
  */
 @Singleton
-public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
+public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<T> {
     public static final String CLIENT_ID = "client_id";
     public static final String USERNAME = "username";
     public static final String TOKEN_TYPE = "token_type";
@@ -70,11 +72,11 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
             JWT_ID);
 
     protected static final Logger LOG = LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
-    protected final Collection<TokenValidator> tokenValidators;
+    protected final Collection<TokenValidator<T>> tokenValidators;
     protected final TokenConfiguration tokenConfiguration;
     protected final RefreshTokenValidator refreshTokenValidator;
 
-    public DefaultIntrospectionProcessor(Collection<TokenValidator> tokenValidators,
+    public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
         this.tokenValidators = tokenValidators;
@@ -85,192 +87,192 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                       @NonNull HttpRequest<?> httpRequest) {
+                                                       @NonNull T requestContext) {
         String token = introspectionRequest.getToken();
         return Flux.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(token, httpRequest))
+                .concatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
-                .map(authentication -> createIntrospectionResponse(authentication, httpRequest))
-                .defaultIfEmpty(new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent()))
+                .map(authentication -> createIntrospectionResponse(authentication, requestContext))
+                .defaultIfEmpty(emptyIntrospectionResponse(token))
                 .flux();
+    }
+
+    /**
+     *
+     * Empty response for introspection response.
+     * @param token Token
+     * @return Introspection Response
+     */
+    @NonNull
+    protected IntrospectionResponse emptyIntrospectionResponse(@NonNull String token) {
+        return new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null);
     }
 
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                       @NonNull HttpRequest<?> httpRequest) {
-        return Flux.just(createIntrospectionResponse(authentication, httpRequest));
+                                                       @NonNull T requestContext) {
+        return Flux.just(createIntrospectionResponse(authentication, requestContext));
     }
 
     /**
      * Creates an {@link IntrospectionResponse} for an {@link Authentication}.
      * @param authentication Authentication
-     * @param httpRequest HTTP Request
+     * @param requestContext HTTP Request
      * @return an {@link IntrospectionResponse}
      */
     @NonNull
     public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication,
-                                                             @NonNull HttpRequest<?> httpRequest) {
-        IntrospectionResponse introspectionResponse = new IntrospectionResponse(true);
-        List<String> processedAttributeNames = populateFields(authentication, introspectionResponse);
-        Map<String, Object> extensions = new HashMap<>();
-        for (String k : authentication.getAttributes().keySet()) {
-            if (processedAttributeNames.contains(k)) {
-                continue;
-            }
-            extensions.put(k, authentication.getAttributes().get(k));
-        }
-        if (!extensions.containsKey(tokenConfiguration.getRolesName())) {
-            extensions.put(tokenConfiguration.getRolesName(), authentication.getRoles());
-        }
-        introspectionResponse.setExtensions(extensions);
-        if (introspectionResponse.getUsername() == null) {
-            introspectionResponse.setUsername(authentication.getName());
-        }
-        return introspectionResponse;
+                                                             @NonNull T requestContext) {
+        return new IntrospectionResponse(true,
+            resolveTokenType(authentication).orElse(null),
+            resolveScope(authentication).orElse(null),
+            resolveClientId(authentication).orElse(null),
+            resolveUsername(authentication).orElse(authentication.getName()),
+            resolveExpiration(authentication).orElse(null),
+            resolveIssuedAt(authentication).orElse(null),
+            resolveNotBefore(authentication).orElse(null),
+            resolveSub(authentication),
+            resolveAud(authentication).orElse(null),
+            resolveIssuer(authentication).orElse(null),
+            resolveJwtId(authentication).orElse(null),
+            resolveExtensions(authentication));
     }
 
     /**
      *
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
-     * @return A list of attribute names already processed
+     * @return Introspection response extensions
      */
     @NonNull
-    protected List<String> populateFields(@NonNull Authentication authentication,
-                                          @NonNull IntrospectionResponse introspectionResponse) {
-        populateScope(authentication, introspectionResponse);
-        populateUsername(authentication, introspectionResponse);
-        populateClientId(authentication, introspectionResponse);
-        populateTokenType(authentication, introspectionResponse);
-        populateExpiration(authentication, introspectionResponse);
-        populateIssuedAt(authentication, introspectionResponse);
-        populateSub(authentication, introspectionResponse);
-        populateNotBefore(authentication, introspectionResponse);
-        populateAud(authentication, introspectionResponse);
-        populateIssuer(authentication, introspectionResponse);
-        populateJwtId(authentication, introspectionResponse);
-        return FIELDS_ATTRIBUTE_NAMES;
+    protected Map<String, Object> resolveExtensions(@NonNull Authentication authentication) {
+        Map<String, Object> extensions = new HashMap<>();
+        for (String k : authentication.getAttributes().keySet()) {
+            if (FIELDS_ATTRIBUTE_NAMES.contains(k)) {
+                continue;
+            }
+            Object value = authentication.getAttributes().get(k);
+            if (value != null) {
+                extensions.put(k, value);
+            }
+        }
+        if (!extensions.containsKey(tokenConfiguration.getRolesName())) {
+            extensions.put(tokenConfiguration.getRolesName(), new ArrayList<>(authentication.getRoles()));
+        }
+        return extensions;
     }
 
     /**
      * Populates the introspection response scope.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return the scope
      */
-    protected void populateScope(@NonNull Authentication authentication,
-                                 @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(SCOPE)) {
-            introspectionResponse.setScope(authentication.getAttributes().get(SCOPE).toString());
-        }
+    protected Optional<String> resolveScope(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, SCOPE);
     }
 
     /**
      * Populates the introspection response token type.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return the Token type
      */
-    protected void populateTokenType(@NonNull Authentication authentication,
-                                        @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(TOKEN_TYPE)) {
-            introspectionResponse.setTokenType(authentication.getAttributes().get(TOKEN_TYPE).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveTokenType(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, TOKEN_TYPE);
     }
 
     /**
      * Populates the introspection response client_id.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return client_id value
      */
-    protected void populateClientId(@NonNull Authentication authentication,
-                                       @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(CLIENT_ID)) {
-            introspectionResponse.setClientId(authentication.getAttributes().get(CLIENT_ID).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveClientId(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, CLIENT_ID);
     }
 
     /**
      * Populates the introspection response with aud claim.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return value of aud claim
      */
-    protected void populateAud(@NonNull Authentication authentication,
-                               @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(AUDIENCE)) {
-            introspectionResponse.setAud(authentication.getAttributes().get(AUDIENCE).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveAud(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, AUDIENCE);
     }
 
     /**
      * Populates the introspection response with sub claim.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return value of sub claim
      */
-    protected void populateSub(@NonNull Authentication authentication,
-                               @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(SUBJECT)) {
-            introspectionResponse.setSub(authentication.getAttributes().get(SUBJECT).toString());
-        } else {
-            introspectionResponse.setSub(authentication.getName());
-        }
+    @NonNull
+    protected String resolveSub(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, SUBJECT).orElse(authentication.getName());
     }
 
     /**
      * Populates the introspection response with iss claim.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return value of iss claim
      */
-    protected void populateIssuer(@NonNull Authentication authentication,
-                                     @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(ISSUER)) {
-            introspectionResponse.setIss(authentication.getAttributes().get(ISSUER).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveIssuer(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, ISSUER);
     }
 
     /**
      * Populates the introspection response with jti username.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return the jti claim value
      */
-    protected void populateJwtId(@NonNull Authentication authentication,
-                                    @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(JWT_ID)) {
-            introspectionResponse.setJti(authentication.getAttributes().get(JWT_ID).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveJwtId(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, JWT_ID);
+
     }
 
     /**
      * Populates the introspection response with the username.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return the username
      */
-    protected void populateUsername(@NonNull Authentication authentication,
-                                    @NonNull IntrospectionResponse introspectionResponse) {
-        if (authentication.getAttributes().containsKey(USERNAME)) {
-            introspectionResponse.setUsername(authentication.getAttributes().get(USERNAME).toString());
-        }
+    @NonNull
+    protected Optional<String> resolveUsername(@NonNull Authentication authentication) {
+        return attributeAsString(authentication, USERNAME);
     }
 
     /**
      * Populates the introspection response with the exp claim of authentication.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return the exp claim
      */
-    protected void populateExpiration(@NonNull Authentication authentication,
-                                      @NonNull IntrospectionResponse introspectionResponse) {
-        secondsSinceEpochOfAttribute(EXP, authentication).ifPresent(introspectionResponse::setExp);
+    protected Optional<Long> resolveExpiration(@NonNull Authentication authentication) {
+        return secondsSinceEpochOfAttribute(EXP, authentication);
     }
 
     /**
      *
      * @param attributeName The attribute name e.g. exp nbf iat
      * @param authentication Authentication
-     * @return An empty optional if the authentication attribute is not found or it cannot be transformed to epoch seconds
+     * @return An empty optional if the authentication attribute is not found, is null or it cannot be transformed to epoch seconds
      */
     protected Optional<Long> secondsSinceEpochOfAttribute(@NonNull String attributeName,
                                                           @NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(attributeName)) {
-            Object obj = authentication.getAttributes().get(attributeName);
+        Object obj = authentication.getAttributes().get(attributeName);
+        if (obj != null) {
             if (obj instanceof Long) {
                 return Optional.of((Long) obj);
             } else if (obj instanceof Date) {
@@ -291,21 +293,21 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with the nbf claim of authentication.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return value for nbf claim
      */
-    protected void populateNotBefore(@NonNull Authentication authentication,
-                                     @NonNull IntrospectionResponse introspectionResponse) {
-        secondsSinceEpochOfAttribute(NOT_BEFORE, authentication).ifPresent(introspectionResponse::setNbf);
+    @NonNull
+    protected Optional<Long> resolveNotBefore(@NonNull Authentication authentication) {
+        return secondsSinceEpochOfAttribute(NOT_BEFORE, authentication);
     }
 
     /**
      * Populates the introspection response with the iat claim of authentication.
      * @param authentication Authentication
-     * @param introspectionResponse Introspection Response being populated
+     * @return value for iat claim
      */
-    protected void populateIssuedAt(@NonNull Authentication authentication,
-                                       @NonNull IntrospectionResponse introspectionResponse) {
-        secondsSinceEpochOfAttribute(ISSUED_AT, authentication).ifPresent(introspectionResponse::setIat);
+    @NonNull
+    protected Optional<Long> resolveIssuedAt(@NonNull Authentication authentication) {
+        return secondsSinceEpochOfAttribute(ISSUED_AT, authentication);
     }
 
     /**
@@ -315,5 +317,17 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     public static long toSecondsSinceEpoch(final Date date) {
         return date.getTime() / 1000L;
+    }
+    
+    /**
+     * Resolves an authentication attribute as a String. A {@code null} value is treated the same as an absent key.
+     * @param authentication Authentication
+     * @param attributeName The attribute name
+     * @return The attribute value as a String, or an empty optional if the attribute is absent or null
+     */
+    @NonNull
+    private Optional<String> attributeAsString(@NonNull Authentication authentication,
+                                               @NonNull String attributeName) {
+        return Optional.ofNullable(authentication.getAttributes().get(attributeName)).map(Object::toString);
     }
 }

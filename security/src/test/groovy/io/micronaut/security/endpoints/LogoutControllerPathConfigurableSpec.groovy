@@ -20,6 +20,11 @@ class LogoutControllerPathConfigurableSpec extends EmbeddedServerSpecification {
     }
 
     @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
+    @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
             'micronaut.security.endpoints.logout.path': '/salir',
@@ -45,7 +50,7 @@ class LogoutControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LogoutControllerPathConfigurableSpec')
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
             return HttpResponse.ok()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -33,4 +33,13 @@ public interface OauthAuthorizationEndpointConfiguration extends EndpointConfigu
      */
     @NonNull
     Optional<String> getCodeChallengeMethod();
+
+    /**
+     * @return A new OAuth authorization endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static OauthAuthorizationEndpointConfigurationBuilder builder() {
+        return new OauthAuthorizationEndpointConfigurationBuilder();
+    }
 }

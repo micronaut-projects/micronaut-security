@@ -1,0 +1,49 @@
+plugins {
+    id("io.micronaut.build.internal.security-module")
+}
+
+noReflection {
+    // SecurityContextHolder is a static holder outside the bean context, so it finds its SecurityContextSupplier through the service loader.
+    allowIn("io.micronaut.security.context.SecurityContextHolder", "SERVICE_LOADING")
+}
+
+dependencies {
+    annotationProcessor(mn.micronaut.graal)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
+
+    api(mnSerde.micronaut.serde.api) {
+        exclude(group = "io.micronaut", module = "micronaut-json-core")
+    }
+    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
+    api(projects.micronautSecurityAnnotations)
+    compileOnly(mn.micronaut.websocket)
+    compileOnly(mn.micronaut.http.client.core)
+    compileOnly(mnValidation.micronaut.validation)
+    testImplementation(mnValidation.micronaut.validation)
+    implementation(mnReactor.micronaut.reactor)
+    compileOnly(mnData.micronaut.data.runtime)
+    compileOnly(mn.micronaut.http.server)
+    compileOnly(mn.micronaut.management)
+    compileOnly(mn.jackson.databind)
+
+    testAnnotationProcessor(projects.micronautSecurityProcessor)
+
+    testCompileOnly(mnData.micronaut.data.processor)
+    testCompileOnly(projects.micronautSecurityProcessor)
+
+    testImplementation(mnSql.h2)
+    testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(mnData.micronaut.data.jdbc)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+    testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(mn.snakeyaml)
+    testImplementation(libs.bcpkix)
+    testImplementation(mnTest.mockito.core)
+    testImplementation(libs.jsonassert)
+    testImplementation(libs.awaitility)
+}

@@ -4,10 +4,68 @@ You can configure a remote JWKS as a signature validator:
 
 [configuration]
 ----
-include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamljwksconfig]
 ----
 
-The previous snippet creates a link:{api}/io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html[JwksSignature] bean with a `awscognito` name qualifier.
+The previous snippet creates a link:{api}/io/micronaut/security/token/jwt/nimbus/ReactiveJwksSignature.html[ReactiveJwksSignature] bean with a `awscognito` name qualifier.
+
+If you have the https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] on the classpath, then it will be used to retrieve the remote JWK Set. This allows for the configuration settings of the HTTP Client to be applied when fetching the resource. If a service-specific client configuration (`micronaut.http.services.<name>.*`) exists whose name matches the configured JWKS provider name, then a client created from that configuration (and its service url) will be used, otherwise a default HTTP Client instance (with any global configuration settings from `micronaut.http.client.*` applied) will be used. If the Micronaut HTTP Client is not on the classpath, then the implementation will fall back to the internal resource fetching mechanism of the external JWT library dependency.
+
+IMPORTANT: The default HTTP Client used to retrieve a remote JWK Set never follows redirects, regardless of `micronaut.http.client.follow-redirects`. A redirect to another address is treated as a failure to load the JWK Set. A named service-specific client configured for a JWKS provider (`micronaut.http.services.<name>.*`) only contributes its settings: redirects are never followed, even with `follow-redirects: true`. Client filters scoped to a service id (`@Filter(serviceId = "<name>")`) are not applied to the client that retrieves the JWK Set.
+
+For example, to use an HTTP proxy for the fetching of the JWK Set from the above example:
+
+[configuration]
+----
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlserviceclientconfig]
+----
+
+Note that the same approach will be applied when using a `jwks_uri` supplied via <<openid-authorization-code, Open ID Connect>> metadata. Such a JWKS is registered as a signature configuration for request tokens only when `micronaut.security.authentication` is set to `idtoken`.
+
+### Binding a JWKS to an issuer
+
+When an application trusts the key sets of several identity providers, a key trusted for one provider must not be able to sign tokens that claim to be issued by another provider. A JWKS can be bound to an issuer with the `issuer` property. A bound JWKS only verifies tokens whose `iss` claim is equal to that issuer, tolerating only the case of the scheme and a trailing slash, the same comparison api:security.oauth2.endpoint.token.response.validation.IssuerClaimValidator[] applies to ID tokens. A different scheme, suffixes, parent domains and an empty `iss` never match; tokens issued by anyone else, or without an `iss` claim, are not verified with its keys, even if their signature validates against one of them.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json'
+              issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX'
+----
+
+The JWKS created for the `jwks_uri` of an <<openid-authorization-code, Open ID Connect>> client is always bound to the issuer of that client (the `issuer` asserted by the provider metadata or, if it asserts none, `micronaut.security.oauth2.clients.*.openid.issuer`). If neither `openid.issuer` is configured nor the provider metadata asserts an issuer (for example `fetch-configuration: false` with `openid.jwks-uri`), the JWKS is not bound and the application logs a warning at startup. Always set `openid.issuer` when several providers are trusted. A JWKS configured explicitly without an `issuer` verifies tokens regardless of their `iss` claim.
+
+### Restricting the key type
+
+By default, every key of the JWKS is used to verify token signatures, whatever its type (`kty`). If the identity provider publishes keys of several types but tokens must only be accepted when signed with one of them, restrict the JWKS with the `key-type` property. Only keys of the configured type are then used to verify a token; a token signed with a key of another type is rejected, even if that key is part of the JWKS. The value is case-insensitive and must be `RSA`, `EC`, `OKP` or `oct`; any other value fails application startup.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXXX/.well-known/jwks.json'
+              key-type: RSA
+----
+
+The https://docs.micronaut.io/latest/guide/#httpClient[Micronaut HTTP Client] based implementation can be explicitly disabled in favor of the JWT library's internal resource fetching implementation by explicitly setting `micronaut.security.token.jwt.signatures.jwks-client.http-client.enabled=false`. For example:
+
+[configuration]
+----
+include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlservicefallbackclientconfig]
+----
+
+### Exposing your Application's Json Web Key Set (JKWS)
 
 If you want to expose your own JWK Set, read the <<keys, Keys Controller>> section.
 

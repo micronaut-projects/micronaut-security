@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,17 +41,21 @@ import org.slf4j.LoggerFactory;
  * - The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element.
  * - If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
  * - If an azp (authorized party) Claim is present, the Client SHOULD verify that its client_id is the Claim Value.
+ *
+ * OAuth 2.0 clients configured with {@code micronaut.security.oauth2.clients.*.enabled: false} are ignored, so ID tokens issued to a disabled client are rejected.
  *  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
  *
  * @author Sergio del Amo
  * @since 2.2.0
+ * @param <T> request
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".openid-idtoken", notEquals = StringUtils.FALSE)
 @Singleton
-public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
+public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
+    private static final String EMPTY = "";
 
     protected final Collection<OauthClientConfiguration> oauthClientConfigurations;
 
@@ -61,19 +64,27 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param oauthClientConfigurations OpenId client configurations
      */
     public IdTokenClaimsValidator(Collection<OauthClientConfiguration> oauthClientConfigurations) {
-        this.oauthClientConfigurations = oauthClientConfigurations;
+        this.oauthClientConfigurations = oauthClientConfigurations.stream()
+            .filter(OauthClientConfiguration::isEnabled)
+            .toList();
     }
 
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("issuer claim not present");
+            }
             return false;
         }
         String iss = claimIssuerOptional.get();
 
         Optional<List<String>> audiencesOptional = parseAudiences(claims);
         if (!audiencesOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences claim not present");
+            }
             return false;
         }
         List<String> audiences = audiencesOptional.get();
@@ -85,8 +96,8 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claims JWT Claims
      * @return the iss claim value wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<String> parseIssuerClaim(JwtClaims claims) {
-        return parseClaimString(claims, JwtClaims.ISSUER);
+    protected Optional<String> parseIssuerClaim(Claims claims) {
+        return parseClaimString(claims, Claims.ISSUER);
     }
 
     /**
@@ -95,7 +106,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claimName Claim Name
      * @return the claim value wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<Object> parseClaim(JwtClaims claims, String claimName) {
+    protected Optional<Object> parseClaim(Claims claims, String claimName) {
         Object obj = claims.get(claimName);
         if (obj == null) {
             if (LOG.isTraceEnabled()) {
@@ -112,7 +123,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claimName Claim Name
      * @return the claim value as a String wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<String> parseClaimString(JwtClaims claims, String claimName) {
+    protected Optional<String> parseClaimString(Claims claims, String claimName) {
         return parseClaim(claims, claimName).map(Object::toString);
     }
 
@@ -122,7 +133,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claimName Claim Name
      * @return the claim value as a list of Strings wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<List<String>> parseClaimList(JwtClaims claims, String claimName) {
+    protected Optional<List<String>> parseClaimList(Claims claims, String claimName) {
         Optional<Object> objectOptional = parseClaim(claims, claimName);
         if (!objectOptional.isPresent()) {
             return Optional.empty();
@@ -144,8 +155,8 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claims JWT Claims
      * @return the aud claim value a list of strings wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<List<String>> parseAudiences(JwtClaims claims) {
-        return parseClaimList(claims, JwtClaims.AUDIENCE);
+    protected Optional<List<String>> parseAudiences(Claims claims) {
+        return parseClaimList(claims, Claims.AUDIENCE);
     }
 
     /**
@@ -155,7 +166,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param audiences aud claim as a list of string
      * @return true if an OAuth 2.0 client issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
      */
-    protected boolean validateIssuerAudienceAndAzp(@NonNull JwtClaims claims,
+    protected boolean validateIssuerAudienceAndAzp(@NonNull Claims claims,
                                                    @NonNull String iss,
                                                    @NonNull List<String> audiences) {
         return oauthClientConfigurations.stream().anyMatch(oauthClientConfiguration -> validateIssuerAudienceAndAzp(claims, iss, audiences, oauthClientConfiguration));
@@ -167,12 +178,18 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param iss Issuer claim
      * @param audiences aud claim as a list of string
      * @param oauthClientConfiguration OAuth 2.0 client configuration
-     * @return true if the OAuth 2.0 client OpenID issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
+     * @return false if the OAuth 2.0 client is disabled. Otherwise, true if the OAuth 2.0 client OpenID issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
      */
-    protected boolean validateIssuerAudienceAndAzp(@NonNull JwtClaims claims,
+    protected boolean validateIssuerAudienceAndAzp(@NonNull Claims claims,
                                                    @NonNull String iss,
                                                    @NonNull List<String> audiences,
                                                    @NonNull OauthClientConfiguration oauthClientConfiguration) {
+        if (!oauthClientConfiguration.isEnabled()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("OAuth 2.0 client '{}' is disabled; ID tokens issued to it are not accepted", oauthClientConfiguration.getName());
+            }
+            return false;
+        }
         Optional<OpenIdClientConfiguration> openIdClientConfigurationOptional = oauthClientConfiguration.getOpenid();
         if (openIdClientConfigurationOptional.isPresent()) {
             OpenIdClientConfiguration openIdClientConfiguration = openIdClientConfigurationOptional.get();
@@ -190,21 +207,49 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
      * @return true if the OAuth 2.0 client OpenID issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
      */
-    protected boolean validateIssuerAudienceAndAzp(@NonNull JwtClaims claims,
+    protected boolean validateIssuerAudienceAndAzp(@NonNull Claims claims,
                                                    @NonNull String iss,
                                                    @NonNull List<String> audiences,
                                                    @NonNull String clientId,
                                                    @NonNull OpenIdClientConfiguration openIdClientConfiguration) {
-        if (openIdClientConfiguration.getIssuer().isPresent()) {
-            Optional<URL> issuerOptional = openIdClientConfiguration.getIssuer();
-            if (issuerOptional.isPresent()) {
-                String issuer = issuerOptional.get().toString();
-                return issuer.equalsIgnoreCase(iss) ||
-                        audiences.contains(clientId) &&
-                                validateAzp(claims, clientId, audiences);
+        boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
+        if (!matchesIssuer) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuerIdentifier().orElse(EMPTY), iss);
             }
+            return false;
         }
-        return false;
+
+        boolean audiencesContainsClientId = audiences.contains(clientId);
+        if (!audiencesContainsClientId) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("audiences '{}' does not contain client id '{}'", String.join(" " , audiences), clientId);
+            }
+            return false;
+        }
+        boolean azpValid = validateAzp(claims, clientId, audiences);
+        if (!azpValid) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp not valid");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * The iss claim matches when it is identical to the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}),
+     * as OpenID Connect Core 1.0 section 3.1.3.7 requires. Only the case of the scheme and a single trailing slash are tolerated:
+     * the scheme, host, port and path must match. See {@link IssuerUtils#equivalent(String, String)}.
+     * @param iss Issuer claim
+     * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
+     * @return true wrapped in an Optional if the expected issuer of the OAuth 2.0 client ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) matches the iss claim. Empty Optional if the OpenID Client configuration does not define an issuer.
+     */
+    @NonNull
+    protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
+                                              @NonNull String iss) {
+        return openIdClientConfiguration.getIssuerIdentifier()
+                .map(issuer -> IssuerUtils.equivalent(issuer, iss));
     }
 
     /**
@@ -212,7 +257,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param claims JWT Claims
      * @return the azp claim value wrapped in an {@link Optional}. If not found, an empty {@link Optional} is returned.
      */
-    protected Optional<String> parseAzpClaim(JwtClaims claims) {
+    protected Optional<String> parseAzpClaim(Claims claims) {
         return parseClaimString(claims, AUTHORIZED_PARTY);
     }
 
@@ -223,7 +268,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
      * @param audiences audiences specified in the JWT Claims
      * @return true for single audiences, for multiple audiences returns true azp claim is present and matches OAuth 2.0 client_id
      */
-    protected boolean validateAzp(@NonNull JwtClaims claims,
+    protected boolean validateAzp(@NonNull Claims claims,
                                   @NonNull String clientId,
                                   @NonNull List<String> audiences) {
         if (audiences.size() < 2) {
@@ -234,12 +279,15 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
         }
        Optional<String> azpOptional = parseAzpClaim(claims);
         if (!azpOptional.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("azp claim not present");
+            }
             return false;
         }
         String azp = azpOptional.get();
         boolean result = azp.equalsIgnoreCase(clientId);
-        if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
+        if (!result && LOG.isDebugEnabled()) {
+            LOG.debug("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
         return result;
     }

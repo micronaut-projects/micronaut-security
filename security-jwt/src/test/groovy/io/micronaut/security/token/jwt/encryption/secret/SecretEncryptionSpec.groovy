@@ -6,12 +6,27 @@ import spock.lang.Specification
 
 class SecretEncryptionSpec extends Specification {
 
+    //tag::yamlconfig[]
+    private final static String yamlConfig = """
+micronaut:
+  security:
+    token:
+      jwt:
+        encryptions:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+              jwe-algorithm: dir
+              encryption-method: A256GCM
+"""
+    //end::yamlconfig[]
+
     void "SecretEncryption constructor does not raise exception if jwe algorithm and encryption method set are valid"() {
         given:
         ApplicationContext ctx = ApplicationContext.run([
-                'micronaut.security.token.jwt.encryptions.secret.generator.secret': 'XXX',
+                'micronaut.security.token.jwt.encryptions.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
                 'micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm': 'dir',
-                'micronaut.security.token.jwt.encryptions.secret.generator.encryption-method': 'A128CBC-HS256',
+                'micronaut.security.token.jwt.encryptions.secret.generator.encryption-method': 'A256GCM',
         ])
 
         when:

@@ -2,9 +2,11 @@ package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.http.hateoas.JsonError
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.testutils.EmbeddedServerSpecification
@@ -32,7 +34,7 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
     }
 
     @Unroll
-    void "test invalid authentication with username #username"() {
+    void "test invalid authentication with username #username"(String username, String password, String message) {
         expect:
         applicationContext.getBean(SignatureConfiguration.class)
 
@@ -42,14 +44,23 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
         then:
         thrown(NoSuchBeanException)
 
+
         when:
+        Argument<JsonError> error = Argument.of(JsonError.class)
+        Argument<Void> ok = Argument.of(Void.class)
         def creds = new UsernamePasswordCredentials(username, password)
-        client.exchange(HttpRequest.POST('/login', creds))
+        client.exchange(HttpRequest.POST('/login', creds), ok, error)
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.UNAUTHORIZED
-        e.message == message
+        e.getResponse().getBody(JsonError).isPresent()
+
+        when:
+        JsonError jsonError = e.getResponse().getBody(JsonError).get()
+
+        then:
+        message == jsonError.message
 
         where:
         username          | password  | message

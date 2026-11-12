@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Proof Key for Code Exchange.

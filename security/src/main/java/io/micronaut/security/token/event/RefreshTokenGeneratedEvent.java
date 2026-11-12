@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,5 +54,17 @@ public class RefreshTokenGeneratedEvent extends ApplicationEvent {
      */
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    /**
+     * The string representation never includes the refresh token. Micronaut logs every published
+     * event at DEBUG using its string representation, so exposing it would write the refresh token to the log.
+     *
+     * @return The string representation of the event with the refresh token redacted.
+     * @since 5.5.2
+     */
+    @Override
+    public String toString() {
+        return getClass().getName() + "[source=<redacted>]";
     }
 }

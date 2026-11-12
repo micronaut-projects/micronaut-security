@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
 
@@ -54,19 +54,6 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     @Override
     public SignedJWT sign(JWTClaimsSet claims) throws JOSEException {
         return signWithPrivateKey(claims, this.privateKey, this.kidId);
-    }
-
-    /**
-     *
-     * @param claims The JWT Claims
-     * @param privateKey The EC Private Key
-     * @return A signed JWT
-     * @throws JOSEException thrown in the JWT signing
-     * @deprecated Unused. Use {@link ECSignatureGenerator#signWithPrivateKey(JWTClaimsSet, ECPrivateKey, String) instead}.
-     */
-    @Deprecated
-    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
-        return signWithPrivateKey(claims, privateKey, null);
     }
 
     /**

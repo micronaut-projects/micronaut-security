@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.annotation.Requires;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
@@ -24,18 +25,23 @@ import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
+import io.micronaut.http.client.LoadBalancerResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
+import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,26 +49,66 @@ import org.slf4j.LoggerFactory;
 /**
  * The default implementation of {@link TokenEndpointClient}.
  *
+ * <p>The HTTP clients this class creates never follow redirects. The default client copies the settings of the
+ * {@link HttpClientConfiguration}. If an {@link HttpClientConfiguration} bean named after the provider exists
+ * ({@code micronaut.http.services.<provider>.*}), or an {@link HttpClient} bean named after the provider is declared,
+ * a client is created from that configuration (or from the default configuration when only the client bean exists) with
+ * the load balancer of the service. The named {@link HttpClient} bean itself is not used, because its redirect policy
+ * cannot be enforced.</p>
+ *
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = HttpClientConfiguration.class)
 @Singleton
 public class DefaultTokenEndpointClient implements TokenEndpointClient  {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
-    private final BeanContext beanContext;
+    private final @Nullable BeanContext beanContext;
     private final Supplier<HttpClient> defaultTokenClient;
+    private final @Nullable HttpClientConfiguration defaultClientConfiguration;
     private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
+    private final Set<HttpClient> createdClients = ConcurrentHashMap.newKeySet();
+    private final boolean ownsDefaultClient;
 
     /**
      * @param beanContext The bean context
-     * @param defaultClientConfiguration The default client configuration
+     * @param defaultClientConfiguration The default client configuration. Its settings are copied, but the client created
+     *                                   from it never follows redirects.
      */
-    public DefaultTokenEndpointClient(BeanContext beanContext,
+    public DefaultTokenEndpointClient(@NonNull BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
+        this(beanContext,
+            () -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), new NoRedirectHttpClientConfiguration(defaultClientConfiguration)),
+            defaultClientConfiguration,
+            true);
+    }
+
+    /**
+     * @param beanContext Bean Context
+     * @param defaultTokenClientSupplier Default Token Client Supplier. The caller is responsible for configuring the client so that it does not follow redirects.
+     */
+    public DefaultTokenEndpointClient(@Nullable BeanContext beanContext,
+                                      Supplier<HttpClient> defaultTokenClientSupplier) {
+        this(beanContext, defaultTokenClientSupplier, null, false);
+    }
+
+    private DefaultTokenEndpointClient(@Nullable BeanContext beanContext,
+                                       Supplier<HttpClient> defaultTokenClientSupplier,
+                                       @Nullable HttpClientConfiguration defaultClientConfiguration,
+                                       boolean ownsDefaultClient) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultTokenClient = SupplierUtil.memoized(defaultTokenClientSupplier);
+        this.defaultClientConfiguration = defaultClientConfiguration;
+        this.ownsDefaultClient = ownsDefaultClient;
+    }
+
+    /**
+     * @param client HttpClient. The caller is responsible for configuring the client so that it does not follow redirects.
+     */
+    public DefaultTokenEndpointClient(HttpClient client) {
+        this(null, () -> client);
     }
 
     @NonNull
@@ -95,20 +141,22 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      */
     protected <G, R extends TokenResponse> void secureRequest(@NonNull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
-        List<AuthenticationMethod> authMethodsSupported = requestContext.getEndpoint().getSupportedAuthenticationMethods().orElseGet(() ->
-                Collections.singletonList(AuthenticationMethod.CLIENT_SECRET_BASIC));
+        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported();
+        if (authMethodsSupported == null) {
+            authMethodsSupported = Collections.singleton(AuthenticationMethods.CLIENT_SECRET_BASIC);
+        }
 
         OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
         if (LOG.isTraceEnabled()) {
             LOG.trace("The token endpoint supports [{}] authentication methods", authMethodsSupported);
         }
 
-        if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_BASIC)) {
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
             }
             request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
-        } else if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_POST)) {
+        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
             }
@@ -131,15 +179,76 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     }
 
     /**
-     * Retrieves a client for the given provider.
+     * Retrieves a client for the given provider. The returned client never follows redirects.
+     *
+     * <p>If an {@link HttpClientConfiguration} bean named after the provider exists, or an {@link HttpClient} bean named
+     * after the provider is declared, a client is created from the named configuration (or from the default configuration
+     * when only the client bean exists) with the load balancer of the service. Otherwise, the default client is returned.</p>
      *
      * @param providerName The provider name
      * @return An HTTP client to use to send the request
      */
     protected HttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, provider -> {
-            Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
-            return client.orElseGet(defaultTokenClient);
+            if (beanContext == null) {
+                return defaultClient();
+            }
+            Optional<HttpClientConfiguration> namedConfiguration = beanContext.findBean(HttpClientConfiguration.class, Qualifiers.byName(provider));
+            boolean namedClient = beanContext.containsBean(HttpClient.class, Qualifiers.byName(provider));
+            if (namedConfiguration.isEmpty() && !namedClient) {
+                return defaultClient();
+            }
+            if (namedClient && LOG.isWarnEnabled()) {
+                LOG.warn("The HttpClient bean named [{}] is not used to call the token endpoint of provider [{}]. A client which never follows redirects is created from the {} configuration instead",
+                    provider, provider, namedConfiguration.isPresent() ? "named service" : "default client");
+            }
+            HttpClientConfiguration configuration = namedConfiguration.orElseGet(this::defaultConfiguration);
+            HttpClient client = beanContext.createBean(HttpClient.class, serviceLoadBalancer(provider), new NoRedirectHttpClientConfiguration(configuration));
+            createdClients.add(client);
+            return client;
         });
+    }
+
+    @NonNull
+    private HttpClient defaultClient() {
+        HttpClient client = defaultTokenClient.get();
+        if (ownsDefaultClient) {
+            createdClients.add(client);
+        }
+        return client;
+    }
+
+    /**
+     * Closes the HTTP clients this bean created. A client supplied by the caller is not closed.
+     *
+     * @since 5.5.2
+     */
+    @PreDestroy
+    public void close() {
+        for (HttpClient client : createdClients) {
+            client.close();
+        }
+        createdClients.clear();
+        tokenClients.clear();
+    }
+
+    @NonNull
+    private HttpClientConfiguration defaultConfiguration() {
+        if (defaultClientConfiguration != null) {
+            return defaultClientConfiguration;
+        }
+        return beanContext.getBean(HttpClientConfiguration.class);
+    }
+
+    /**
+     * Resolves the load balancer of the named service, so that a relative token endpoint url is resolved against
+     * {@code micronaut.http.services.<name>.url} as a client named after the provider would.
+     */
+    @NonNull
+    private LoadBalancer serviceLoadBalancer(@NonNull String provider) {
+        return beanContext.findBean(LoadBalancerResolver.class)
+            .flatMap(resolver -> resolver.resolve(provider))
+            .map(LoadBalancer.class::cast)
+            .orElseGet(LoadBalancer::empty);
     }
 }

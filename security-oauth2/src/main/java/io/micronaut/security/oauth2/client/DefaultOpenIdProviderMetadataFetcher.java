@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
@@ -49,7 +49,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
 
     /**
      * @param openIdClientConfiguration OpenID Client Configuration
-     * @param client HTTP Client
+     * @param client HTTP Client. The caller is responsible for configuring the client so that it does not follow redirects.
      */
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
                                                 @Client HttpClient client) {
@@ -76,7 +76,11 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     private Supplier<DefaultOpenIdProviderMetadata> fetch(@NonNull OpenIdClientConfiguration openIdClientConfiguration) {
         return () -> openIdClientConfiguration.getIssuer()
             .map(this::fetch)
-            .orElse(new DefaultOpenIdProviderMetadata());
+            .map(metadata -> {
+                metadata.setName(openIdClientConfiguration.getName());
+                return metadata;
+            })
+            .orElse(new DefaultOpenIdProviderMetadata(openIdClientConfiguration.getName()));
     }
 
     @NonNull
@@ -88,9 +92,15 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
             }
             return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
         } catch (HttpClientException e) {
-            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name qualifier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
         } catch (MalformedURLException e) {
-            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name qualifier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
         }
     }
 

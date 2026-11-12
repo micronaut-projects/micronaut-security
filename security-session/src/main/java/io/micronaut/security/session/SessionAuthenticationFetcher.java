@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.session;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
@@ -23,7 +24,6 @@ import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
 import jakarta.inject.Singleton;
-import java.util.Optional;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -34,8 +34,9 @@ import reactor.core.publisher.Mono;
  * @author Graeme Rocher
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class SessionAuthenticationFetcher implements AuthenticationFetcher {
+public class SessionAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     /**
      * The order of the fetcher.
@@ -44,15 +45,8 @@ public class SessionAuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        return Mono.<Authentication>create(emitter -> {
-            Optional<Session> opt = request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
-            if (opt.isPresent()) {
-                Session session = opt.get();
-                Optional<Authentication> authentication = session.get(SecurityFilter.AUTHENTICATION, Authentication.class);
-                authentication.ifPresent(emitter::success);
-            }
-            emitter.success();
-        });
+        return Mono.defer(() -> Mono.justOrEmpty(request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class)
+                .flatMap(session -> session.get(SecurityFilter.AUTHENTICATION, Authentication.class))));
     }
 
     @Override

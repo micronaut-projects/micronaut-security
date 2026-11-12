@@ -1,18 +1,8 @@
-To enable the `LoginController` you need to have a bean of type api:security.handlers.LoginHandler[]. A custom implementation can, of course, be provided. However, several <<loginHandler, Login Handlers>> implementations are available out of the box.
+To enable the api:io.micronaut.security.endpoints.LoginController[], you need to have a bean of type api:security.handlers.LoginHandler[]. A custom implementation can, of course, be provided. However, several <<loginHandler, Login Handlers>> implementations are available out of the box.
+
+image::loginController.png[]
 
 You can configure the `LoginController` with:
 
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.LoginControllerConfigurationProperties.adoc[]
 
-== Login Endpoint invocation example
-
-[source, bash]
-.Login Endpoint invocation example
-----
-curl -X "POST" "http://localhost:8080/login" \
-     -H 'Content-Type: application/json; charset=utf-8' \
-     -d $'{
-  "username": "euler",
-  "password": "password"
-}'
-----

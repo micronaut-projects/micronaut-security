@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -25,11 +25,9 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
@@ -38,17 +36,24 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link RedirectingLoginHandler} implementation for session based authentication.
+ * On successful authentication, a new session is created and any pre-existing session is invalidated, so that the
+ * session identifier changes when the privilege level changes.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
-public class SessionLoginHandler implements RedirectingLoginHandler {
+public class SessionLoginHandler implements RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SessionLoginHandler.class);
 
     @Nullable
     protected final String loginSuccess;
@@ -60,20 +65,30 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     protected final SessionStore<Session> sessionStore;
 
-    private final PriorToLoginPersistence priorToLoginPersistence;
+    private final PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence;
+
+    private final List<SessionPopulator<HttpRequest<?>>> sessionPopulators;
 
     /**
      * Constructor.
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param priorToLoginPersistence The persistence to store the original url
-     * @deprecated Use {@link SessionLoginHandler(RedirectConfiguration,SessionStore,PriorToLoginPersistence, RedirectService )}.
+     * @param redirectService Redirection Service
+     * @param sessionPopulators Session Populators
      */
-    @Deprecated
+    @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this(redirectConfiguration, sessionStore, priorToLoginPersistence, new DefaultRedirectService(redirectConfiguration, () -> null));
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
+                               RedirectService redirectService,
+                               List<SessionPopulator<HttpRequest<?>>> sessionPopulators) {
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
+        this.redirectConfiguration = redirectConfiguration;
+        this.sessionStore = sessionStore;
+        this.priorToLoginPersistence = priorToLoginPersistence;
+        this.sessionPopulators = sessionPopulators;
     }
 
     /**
@@ -82,17 +97,14 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param sessionStore The session store
      * @param priorToLoginPersistence The persistence to store the original url
      * @param redirectService Redirection Service
+     * @deprecated Use {@link #SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence, RedirectService, List)} instead.
      */
-    @Inject
+    @Deprecated(forRemoval = true, since = "4.11.0")
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence,
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence,
                                RedirectService redirectService) {
-        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
-        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
-        this.redirectConfiguration = redirectConfiguration;
-        this.sessionStore = sessionStore;
-        this.priorToLoginPersistence = priorToLoginPersistence;
+        this(redirectConfiguration, sessionStore, priorToLoginPersistence, redirectService, List.of(new DefaultSessionPopulator<>()));
     }
 
     @Override
@@ -147,8 +159,36 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
         return uriSupplier;
     }
 
+    /**
+     * Saves the authentication in a new session.
+     * @param authentication Authentication
+     * @param request HTTP Request
+     */
     private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, authentication);
+        Session session = createSession(request);
+        sessionPopulators.forEach(sessionPopulator -> sessionPopulator.populateSession(request, authentication, session));
+    }
+
+    /**
+     * Creates a new session for the request. If the request already carries a session, its attributes are migrated
+     * to the new session and the previous session is deleted from the {@link SessionStore}. Issuing a new session
+     * identifier upon authentication protects against session fixation attacks (CWE-384).
+     * @param request HTTP Request
+     * @return A new session stored in the request attributes
+     */
+    @NonNull
+    private Session createSession(@NonNull HttpRequest<?> request) {
+        Optional<Session> previousSession = SessionForRequest.find(request);
+        Session session = SessionForRequest.create(sessionStore, request);
+        previousSession.ifPresent(previous -> {
+            previous.asMap().forEach(session::put);
+            sessionStore.deleteSession(previous.getId()).exceptionally(throwable -> {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not delete the previous session {} after authentication", previous.getId(), throwable);
+                }
+                return false;
+            });
+        });
+        return session;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package io.micronaut.security.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.AuthenticationMode;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      * The default value whether intercept url patterns should be prepended with the context path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = false;
+    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = true;
     /**
      * The default enable value.
      */
@@ -134,7 +134,9 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * Allowed IP patterns. Default value ([{@value #ANYWHERE}])
+     * Allowed IP patterns. Default value ([{@value #ANYWHERE}]). A pattern made only of hexadecimal digits, dots, colons
+     * and {@code *} (e.g. {@code 192.168.1.*}) is an IP wildcard whose dots and colons match literally; any other pattern
+     * is a regular expression matched against the whole host address.
      *
      * @param ipPatterns The IP patterns
      */

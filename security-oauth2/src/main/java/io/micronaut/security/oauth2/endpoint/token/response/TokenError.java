@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 package io.micronaut.security.oauth2.endpoint.token.response;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">Token Error Response</a>
  */
+@Introspected
 public enum TokenError {
 
     INVALID_REQUEST("invalid_request"),
@@ -29,7 +31,7 @@ public enum TokenError {
     UNSUPPORTED_GRANT_TYPE("unsupported_grant_type"),
     INVALID_SCOPE("invalid_scope");
 
-    private String errorCode;
+    private final String errorCode;
 
     /**
      * @param errorCode The error code

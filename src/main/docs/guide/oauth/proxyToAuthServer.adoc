@@ -1,0 +1,15 @@
+You can proxy GET requests to `/.well-known/oauth-authorization-server` https://datatracker.ietf.org/doc/html/rfc8414[RFC8414]
+and `/.well-known/openid-configuration` https://openid.net/specs/openid-connect-discovery-1_0.html[Open ID Connect Discovery] to an authorization server.
+
+image::proxy.svg[]
+
+To proxy set the following configuration properties to `true`:
+
+|===
+|Path to proxy | Property
+| `/.well-known/oauth-authorization-server`
+| `micronaut.security.oauth2.clients.*.proxy-well-known-oauth-authorization-server`
+| `/.well-known/openid-configuration`
+| `micronaut.security.oauth2.clients.*.proxy-well-known-openid-configuration`
+|===
+

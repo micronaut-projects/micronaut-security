@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.MediaType;
 
 /**
@@ -33,4 +33,13 @@ public interface TokenEndpointConfiguration extends SecureEndpointConfiguration 
      */
     @NonNull
     MediaType getContentType();
+
+    /**
+     * @return A new token endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static TokenEndpointConfigurationBuilder builder() {
+        return new TokenEndpointConfigurationBuilder();
+    }
 }

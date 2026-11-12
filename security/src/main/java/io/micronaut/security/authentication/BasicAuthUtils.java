@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpHeaderValues;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -53,7 +53,7 @@ public final class BasicAuthUtils {
             decoded = Base64.getDecoder().decode(credentials);
         } catch (IllegalArgumentException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Error while trying to Base 64 decode: {}", credentials);
+                LOG.debug("Error while trying to Base 64 decode the basic auth credentials");
             }
             return Optional.empty();
         }

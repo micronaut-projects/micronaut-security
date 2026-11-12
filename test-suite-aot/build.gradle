@@ -1,8 +1,7 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
     id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-
+    id "com.gradleup.shadow" version "9.6.1"
 }
 
 repositories {
@@ -14,7 +13,7 @@ application {
 }
 
 micronaut {
-    version = micronautVersion
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {
@@ -28,10 +27,13 @@ micronaut {
 }
 
 dependencies {
-    implementation project(':security-jwt')
-    implementation project(':security-oauth2')
-    aotPlugins(project(':security-aot'))
+    implementation(mn.micronaut.http.client)
+    implementation(mnReactor.micronaut.reactor)
+    annotationProcessor(projects.micronautSecurityProcessor)
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    implementation(mn.micronaut.jackson.databind)
+    aotPlugins(projects.micronautSecurityAot)
 }
 
 version = '0.1'
-

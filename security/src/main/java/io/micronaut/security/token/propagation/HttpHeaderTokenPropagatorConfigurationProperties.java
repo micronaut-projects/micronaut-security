@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package io.micronaut.security.token.propagation;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
 /**
@@ -39,8 +37,8 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
-    private static final String DEFAULT_PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
-    private static final String DEFAULT_HEADER_NAME = HttpHeaders.AUTHORIZATION;
+    private static final String DEFAULT_PREFIX = "Bearer";
+    private static final String DEFAULT_HEADER_NAME = "Authorization";
 
     private String headerPrefix = DEFAULT_PREFIX;
     private String headerName = DEFAULT_HEADER_NAME;

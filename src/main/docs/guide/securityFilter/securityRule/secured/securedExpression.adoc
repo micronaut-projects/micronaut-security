@@ -1,0 +1,7 @@
+In combination with ann:security.annotation.Secured[], you can use https://docs.micronaut.io/4.0.0-M2/guide/#evaluatedExpressions[expressions], introduced in Micronaut Framework 4.0, to access the authenticated user:
+
+snippet::io.micronaut.security.docs.securedexpressions.ExampleController[tags="exampleControllerExpressions"]
+
+`user` is of type api:security.authentication.Authentication[]
+
+`user` is `null` for anonymous requests. A request is allowed only if the expression evaluates to `true`. If the expression evaluates to `false` or to `null`, for example because it navigates the user with `user?.` and no user is authenticated, the request is rejected. Later security rules, such as an intercept URL map entry, do not get the chance to allow it.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * @since 1.2.0
  */
 @Singleton
+@Requires(classes = HttpResponse.class)
 public class DefaultEndSessionController implements EndSessionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEndSessionController.class);

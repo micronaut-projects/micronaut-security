@@ -21,8 +21,7 @@ class ServerAuthTest {
     @Test
     void foo() {
         BlockingHttpClient client = httpClient.toBlocking();
-
-        String expected = "{\"name\":\"testName\",\"attributes\":{\"testKey\":\"testValue\"}}";
+        String expected = "{\"name\":\"testName\",\"attributes\":{\"testKey\":\"testValue\",\"roles\":[]}}";
         String response = client.retrieve(HttpRequest.GET("/serialize"), String.class);
         assertEquals(expected, response);
     }

@@ -1,0 +1,6 @@
+You can specify a path starting with `classpath:` or `file:` to serve a JSON JWKS from anywhere on disk or in the classpath. For example to serve static resources from `src/main/resources/jwks/certs.json`, you would use `classpath:jwks/certs.json` as the path.
+
+[configuration]
+----
+include::{testssecurityjwt}/jwks/StaticJwksSignatureSpec.groovy[indent=0, tag=yamlconfig]
+----

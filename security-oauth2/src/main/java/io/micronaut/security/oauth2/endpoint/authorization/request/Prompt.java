@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ public enum Prompt {
     NONE("none"),
     LOGIN("login"),
     CONSENT("consent"),
-    SELECT_ACCOUNT("select_account");
+    SELECT_ACCOUNT("select_account"),
+    CREATE("create");
 
     private String promptName;
 

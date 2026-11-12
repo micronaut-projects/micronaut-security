@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;

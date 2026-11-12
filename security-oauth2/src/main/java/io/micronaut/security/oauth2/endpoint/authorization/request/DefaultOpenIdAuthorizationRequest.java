@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,20 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultCodeVerifierGenerator;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPkceFactory;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceFactory;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PlainPkceGenerator;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistence;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import jakarta.inject.Inject;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +69,6 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
      * @param idTokenHintResolver  The id token hint provider
      * @param pkceFactory          PKCE Factory
      */
-    @Inject
     public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
                                              @Parameter OauthClientConfiguration oauthConfiguration,
                                              @Parameter OpenIdProviderMetadata openIdProviderMetadata,
@@ -100,67 +89,6 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
         this.loginHintResolver = loginHintResolver;
         this.idTokenHintResolver = idTokenHintResolver;
         this.pkceFactory = pkceFactory;
-    }
-
-    /**
-     * @param request              The original request prior redirect.
-     * @param oauthConfiguration   The OAuth 2.0 configuration
-     * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param stateFactory         The state provider
-     * @param nonceFactory         The nonce provider
-     * @param loginHintResolver    The login hint provider
-     * @param idTokenHintResolver  The id token hint provider
-     * @deprecated use {@link DefaultOpenIdAuthorizationRequest(HttpRequest, OauthClientConfiguration, OpenIdProviderMetadata, OauthRouteUrlBuilder, StateFactory, NonceFactory, LoginHintResolver, IdTokenHintResolver, PkceFactory)} instead.
-     */
-    @Deprecated
-    public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
-                                             @Parameter OauthClientConfiguration oauthConfiguration,
-                                             OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                             @Nullable StateFactory stateFactory,
-                                             @Nullable NonceFactory nonceFactory,
-                                             @Nullable LoginHintResolver loginHintResolver,
-                                             @Nullable IdTokenHintResolver idTokenHintResolver) {
-        this(request,
-            oauthConfiguration,
-            new DefaultOpenIdProviderMetadata(),
-            oauthRouteUrlBuilder,
-            stateFactory,
-            nonceFactory,
-            loginHintResolver,
-            idTokenHintResolver,
-            defaultDefaultPkceFactory());
-    }
-
-    /**
-     * @deprecated Used by deprecated constructor.
-     * @return default PkceFactory
-     */
-    @Deprecated
-    private static PkceFactory defaultDefaultPkceFactory() {
-        return new DefaultPkceFactory(Arrays.asList(
-            new S256PkceGenerator(new DefaultCodeVerifierGenerator(defaultPkceConfiguration())),
-            new PlainPkceGenerator(new DefaultCodeVerifierGenerator(defaultPkceConfiguration()))
-        ), new CookiePkcePersistence(new CookiePkcePersistenceConfiguration()));
-    }
-
-    /**
-     * @deprecated Used by deprecated constructor.
-     * @return default PkceConfigurations
-     */
-    @Deprecated
-    private static PkceConfiguration defaultPkceConfiguration() {
-        return new PkceConfiguration() {
-            @Override
-            public int getEntropy() {
-                return 64;
-            }
-
-            @Override
-            @NonNull
-            public Optional<String> getPersistence() {
-                return Optional.of("cookie");
-            }
-        };
     }
 
     @Override

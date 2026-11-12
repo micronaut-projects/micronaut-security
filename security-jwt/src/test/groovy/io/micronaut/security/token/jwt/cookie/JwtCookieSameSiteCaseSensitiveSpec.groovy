@@ -21,7 +21,7 @@ class JwtCookieSameSiteCaseSensitiveSpec extends Specification {
                 'spec.name': 'JwtCookieSameSiteCaseSensitiveSpec',
                 'micronaut.http.client.followRedirects': false,
                 'micronaut.security.authentication': 'cookie',
-                'micronaut.security.token.jwt.cookie.cookie-same-site': sameSiteValue,
+                'micronaut.security.token.cookie.cookie-same-site': sameSiteValue,
         ])
         ApplicationContext applicationContext = embeddedServer.applicationContext
         HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -61,7 +61,6 @@ public interface RedirectConfiguration extends Toggleable {
      */
     @NonNull
     RefreshRedirectConfiguration getRefresh();
-
 
     /**
      * @return If the user attempted to access a URL while unauthenticated, and was subsequently redirected to

@@ -1,25 +1,23 @@
 plugins {
+    id("io.micronaut.build.internal.security-module")
     id("io.micronaut.build.internal.aot-module")
 }
+
 micronautBuild {
     aot {
-        version.set("1.1.1")
+        version.set("2.0.1")
     }
 }
-micronautBuild {
-    binaryCompatibility {
-        enabled.set(false)
-    }
-}
-dependencies {
-    compileOnly(platform(mn.micronaut.bom))
-    implementation(projects.securityOauth2)
-    implementation(projects.securityJwt)
 
-    testImplementation(mn.spock) {
-        exclude("org.codehaus.groovy", "groovy-all")
-    }
-    testImplementation(platform(mn.micronaut.bom))
+dependencies {
+    annotationProcessor(platform(mn.micronaut.core.bom))
+    compileOnly(platform(mn.micronaut.core.bom))
+    implementation(projects.micronautSecurityOauth2)
+    implementation(projects.micronautSecurityJwt)
+    implementation(mn.micronaut.http.client.jdk)
+    implementation(mnReactor.micronaut.reactor)
+    testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(projects.securityOauth2)
+    testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }

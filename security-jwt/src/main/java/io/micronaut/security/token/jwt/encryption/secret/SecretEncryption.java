@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.nimbusds.jose.crypto.impl.AESCryptoProvider;
 import com.nimbusds.jose.crypto.impl.DirectCryptoProvider;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
+import java.util.Base64;
 
 /**
  * Secret encryption configuration.
@@ -59,7 +60,7 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
             sb.append(" not supported for Secret encryption");
             throw new ConfigurationException(sb.toString());
         }
-        this.secret = secretEncryptionConfiguration.getSecret().getBytes(UTF_8);
+        this.secret = secretEncryptionConfiguration.isBase64() ? Base64.getDecoder().decode(secretEncryptionConfiguration.getSecret()) : secretEncryptionConfiguration.getSecret().getBytes(UTF_8);
         this.method = secretEncryptionConfiguration.getEncryptionMethod();
         this.algorithm = secretEncryptionConfiguration.getJweAlgorithm();
     }

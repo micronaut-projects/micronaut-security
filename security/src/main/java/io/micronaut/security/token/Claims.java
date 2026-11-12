@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,13 @@
  */
 package io.micronaut.security.token;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,6 +31,23 @@ import java.util.Set;
  * @author Sergio del Amo
  */
 public interface Claims {
+    String ISSUER = "iss";
+
+    String SUBJECT = "sub";
+
+    String EXPIRATION_TIME = "exp";
+
+    String NOT_BEFORE = "nbf";
+
+    String ISSUED_AT = "iat";
+
+    String TOKEN_ID = "jti";
+
+    String KEY_ID = "kid";
+
+    String AUDIENCE = "aud";
+
+    List<String> ALL_CLAIMS = Arrays.asList(ISSUER, SUBJECT, EXPIRATION_TIME, NOT_BEFORE, ISSUED_AT, TOKEN_ID, AUDIENCE);
 
     /**
      * Retrieves a value from the claims for the given name.
@@ -49,4 +71,18 @@ public interface Claims {
      * @return {@code false} if the claim does not exist.
      */
     boolean contains(String name);
+
+    /**
+     * @since 5.3.0
+     * @return a map representation of the claims
+     */
+    default @NonNull Map<@NonNull String, @Nullable Object> toMap() {
+        Set<String> names = names();
+        Map<String, Object> attributes = HashMap.newHashMap(names.size());
+        for (String claim : names) {
+            Object claimValue = get(claim);
+            attributes.put(claim, claimValue);
+        }
+        return  attributes;
+    }
 }

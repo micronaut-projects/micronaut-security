@@ -12,7 +12,7 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -45,7 +45,7 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
 
         when:
         String refreshToken = loginRsp.body().refreshToken
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken))
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken, null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)

@@ -10,8 +10,8 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.core.util.CollectionUtils
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpHeaders
@@ -46,12 +46,12 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.BrowserHttpRequest
+import io.micronaut.security.token.Claims
+import io.micronaut.security.token.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.micronaut.security.token.render.AccessRefreshToken
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -228,8 +228,8 @@ class PkceCookieWithS256NoOpenIdNoChallengeMethodSpec extends Specification {
                 return HttpResponse.unprocessableEntity()
             }
             AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(Authentication.build("john", Collections.emptyList(),
-                    CollectionUtils.mapOf(JwtClaims.ISSUER, host + "/oauth2/default",
-                    JwtClaims.AUDIENCE, Collections.singletonList("xxx"),
+                    CollectionUtils.mapOf(Claims.ISSUER, host + "/oauth2/default",
+                    Claims.AUDIENCE, Collections.singletonList("xxx"),
                             OpenIdClaims.CLAIMS_NONCE, nonce))).get()
             OpenIdTokenResponse openIdTokenResponse = new OpenIdTokenResponse()
             openIdTokenResponse.setIdToken(accessRefreshToken.getAccessToken())
@@ -346,6 +346,7 @@ class PkceCookieWithS256NoOpenIdNoChallengeMethodSpec extends Specification {
 
     @Requires(property = "spec.name", value="AuthServerPkceCookieWithS256NoOpenIdNoChallengeMethodSpec")
     @Refreshable
+    @Named("secondary")
     static class SecondarySignatureConfiguration extends AbstractRSASignatureConfiguration {
         SecondarySignatureConfiguration(RS256JsonWebKeyGenerator generator) {
             super(generator.generateJsonWebKey());

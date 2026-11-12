@@ -1,11 +1,11 @@
 package io.micronaut.security.token.jwt.validator
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import reactor.core.publisher.Flux
 import spock.lang.Shared
 import spock.lang.Specification
@@ -32,7 +32,7 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
         Authentication result = authenticate(context, jwt)
         then:
         result
-        result.attributes[JwtClaims.SUBJECT] == "alice"
+        result.attributes[Claims.SUBJECT] == "alice"
 
         cleanup:
         context.close()
@@ -50,7 +50,7 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
 
         then:
         result
-        result.attributes[JwtClaims.SUBJECT] == "alice"
+        result.attributes[Claims.SUBJECT] == "alice"
 
         cleanup:
         context.close()
@@ -68,6 +68,20 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
 
         then:
         !result
+
+        cleanup:
+        context.close()
+    }
+
+    void "issuer is not valid when issuer claim is a parent domain of the configured issuer"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(configuration + [
+            (IssuerJwtClaimsValidator.ISSUER_PROP): "https://svc-a.internal.example.com"
+        ])
+
+        expect:
+        !authenticate(context, generateJwtWithIssuer(context, "https://internal.example.com"))
+        authenticate(context, generateJwtWithIssuer(context, "https://svc-a.internal.example.com/"))
 
         cleanup:
         context.close()
@@ -92,17 +106,20 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
 
     @Nullable
     private static Authentication authenticate(@NonNull ApplicationContext context, @NonNull String jwt) {
-        JwtTokenValidator jwtValidator = context.getBean(JwtTokenValidator.class)
-        Flux.from(jwtValidator.validateToken(jwt, null)).blockFirst()
+        JsonWebTokenValidator jwtValidator = context.getBean(JsonWebTokenValidator.class)
+        JwtAuthenticationFactory jwtAuthenticationFactory = context.getBean(JwtAuthenticationFactory.class)
+        jwtValidator.validate(jwt, null)
+                .flatMap(i -> jwtAuthenticationFactory.createAuthentication(i))
+                .orElse(null)
     }
 
     @NonNull
     private static String generateJwtWithIssuer(ApplicationContext context, @Nullable Object issuer) {
         JwtTokenGenerator jwtGenerator = context.getBean(JwtTokenGenerator.class)
         Map<String, Object> claims = [:]
-        claims[JwtClaims.SUBJECT] = 'alice'
+        claims[Claims.SUBJECT] = 'alice'
         if (issuer != null) {
-            claims[JwtClaims.ISSUER] = issuer
+            claims[Claims.ISSUER] = issuer
         }
         jwtGenerator.generateToken(claims).get()
     }

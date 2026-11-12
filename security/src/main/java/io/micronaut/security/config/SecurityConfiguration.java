@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,12 @@ import java.util.List;
 public interface SecurityConfiguration extends Toggleable, AuthenticationModeConfiguration {
 
     /**
-     * @return a list of IP Regex patterns. e.g. [192.168.1.*]
+     * Each pattern is either an IP wildcard (hexadecimal digits, dots, colons and {@code *}, where dots and colons match
+     * literally, a {@code *} inside the pattern matches within one address segment, a trailing {@code *} matches the
+     * rest of the address and hexadecimal digits match regardless of case) or, if it contains any other character or
+     * starts with a dot, a regular expression matched against the whole host address.
+     *
+     * @return a list of IP patterns. e.g. [127.0.0.1, 192.168.1.*]
      */
     List<String> getIpPatterns();
 
@@ -58,7 +63,5 @@ public interface SecurityConfiguration extends Toggleable, AuthenticationModeCon
      * @since 3.7.2
      * @return Whether the intercept URL patterns should be prepended with context path if defined.
      */
-    default boolean isInterceptUrlMapPrependPatternWithContextPath() {
-        return false;
-    }
+    boolean isInterceptUrlMapPrependPatternWithContextPath();
 }

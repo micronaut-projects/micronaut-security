@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.nimbusds.jose.JWSObject
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
@@ -19,19 +18,20 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.endpoints.TokenRefreshRequest
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.jwt.validator.ReactiveJsonWebTokenValidator
+import io.micronaut.security.token.render.AccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.security.token.validator.TokenValidator
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
@@ -105,7 +105,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
         String originalAccessToken = accessRefreshToken.accessToken
         String refreshToken = accessRefreshToken.refreshToken
-        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN, refreshToken)
         HttpResponse<BearerAccessRefreshToken> refreshRsp = client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), BearerAccessRefreshToken)
 
         then:
@@ -120,24 +120,24 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         accessRefreshToken.accessToken != originalAccessToken
 
         when:
-        TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
+        ReactiveJsonWebTokenValidator tokenValidator = applicationContext.getBean(ReactiveJsonWebTokenValidator.class)
         Map<String, Object> newAccessTokenClaims = Flux.from(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockFirst().getAttributes()
         Map<String, Object> originalAccessTokenClaims = Flux.from(tokenValidator.validateToken(originalAccessToken, null)).blockFirst().getAttributes()
-        List<String> expectedClaims = [JwtClaims.SUBJECT,
-                                       JwtClaims.ISSUED_AT,
-                                       JwtClaims.EXPIRATION_TIME,
-                                       JwtClaims.NOT_BEFORE,
+        List<String> expectedClaims = [Claims.SUBJECT,
+                                       Claims.ISSUED_AT,
+                                       Claims.EXPIRATION_TIME,
+                                       Claims.NOT_BEFORE,
                                        "roles"]
         then:
         expectedClaims.each { String claimName ->
             assert newAccessTokenClaims.containsKey(claimName)
             assert originalAccessTokenClaims.containsKey(claimName)
         }
-        originalAccessTokenClaims.get(JwtClaims.SUBJECT) == newAccessTokenClaims.get(JwtClaims.SUBJECT)
+        originalAccessTokenClaims.get(Claims.SUBJECT) == newAccessTokenClaims.get(Claims.SUBJECT)
         originalAccessTokenClaims.get("roles") == newAccessTokenClaims.get("roles")
-        originalAccessTokenClaims.get(JwtClaims.ISSUED_AT) != newAccessTokenClaims.get(JwtClaims.ISSUED_AT)
-        originalAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME) != newAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME)
-        originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
+        originalAccessTokenClaims.get(Claims.ISSUED_AT) != newAccessTokenClaims.get(Claims.ISSUED_AT)
+        originalAccessTokenClaims.get(Claims.EXPIRATION_TIME) != newAccessTokenClaims.get(Claims.EXPIRATION_TIME)
+        originalAccessTokenClaims.get(Claims.NOT_BEFORE) != newAccessTokenClaims.get(Claims.NOT_BEFORE)
 
         cleanup:
         applicationContext.getBean(InMemoryRefreshTokenPersistence).tokens.clear()
@@ -148,7 +148,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         String refreshToken = 'XXX'
 
         when:
-        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN, refreshToken)
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
         Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
         client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
@@ -201,7 +201,11 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     }
 
     @Unroll
-    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
+    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType,
+                                                                                   String refreshToken,
+                                                                                   String error,
+                                                                                   String errorDescription,
+                                                                                   String paramName) {
         given:
         Map<String, Object> body = new HashMap<>()
         if (grantType) {
@@ -232,14 +236,14 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         then:
         errorResponse.error
-        errorResponse.error == 'invalid_request'
-        errorResponse.errorDescription == 'refresh_token and grant_type are required'
+        errorResponse.error == error
+        errorResponse.errorDescription == errorDescription
 
         where:
-        grantType       | refreshToken
-        'refresh_token' | null
-        null            | 'XXXX'
-
+        grantType       | refreshToken | error                    | errorDescription
+        'refresh_token' | null         | 'invalid_request'        | "refresh_token and grant_type are required"
+        null            | 'XXXX'       | 'invalid_request'        | "refresh_token and grant_type are required"
+        'foo_token'     | 'XXXX'       | 'unsupported_grant_type' | 'grant_type must be refresh_token'
         paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
     }
 
@@ -280,7 +284,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         }
     }
 
-    @Introspected
+    @Serdeable
     static class CustomErrorResponse {
         String error
 

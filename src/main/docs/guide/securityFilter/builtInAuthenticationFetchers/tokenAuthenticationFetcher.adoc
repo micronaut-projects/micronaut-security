@@ -1,0 +1,8 @@
+api:io.micronaut.security.token.TokenAuthenticationFetcher[] attempts to retrieve a token from the HTTP Request via the api:io.micronaut.security.token.reader.TokenResolver[] API,
+and then it tries to validate the token via the api:io.micronaut.security.token.validator.TokenValidator[] API.
+
+image::tokenAuthenticationFetcher.png[]
+
+The api:io.micronaut.security.token.validator.TokenValidator[] beans are consulted sequentially, in order. The first validator which authenticates the token wins, and the token is not handed to the remaining validators. A validator is only consulted once every validator preceding it has rejected the token.
+
+TIP: Give validators which send the token to a remote service, such as the <<user-info, UserInfo endpoint token validator>>, the lowest precedence. That way they only receive tokens which no local validator (for example the JWT validator) accepted.

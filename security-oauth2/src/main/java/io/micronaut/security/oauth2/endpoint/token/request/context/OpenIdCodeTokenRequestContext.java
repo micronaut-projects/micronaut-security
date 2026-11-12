@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -27,8 +27,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import jakarta.inject.Inject;
-
 import java.util.Map;
 
 /**
@@ -53,7 +51,6 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
      * @param clientConfiguration   The client configuration
      * @param codeVerifier            The PKCE code_verify
      */
-    @Inject
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                          OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
@@ -63,21 +60,6 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
         this.authorizationResponse = authorizationResponse;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.codeVerifier = codeVerifier;
-    }
-
-    /**
-     * @param authorizationResponse The authorization response
-     * @param oauthRouteUrlBuilder  The oauth route URL builder
-     * @param tokenEndpoint         The token endpoint
-     * @param clientConfiguration   The client configuration
-     * @deprecated Use {@link OpenIdCodeTokenRequestContext(AuthorizationResponse,OauthRouteUrlBuilder, SecureEndpoint,OauthClientConfiguration,String)} instead.
-     */
-    @Deprecated
-    public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                         OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                         SecureEndpoint tokenEndpoint,
-                                         OauthClientConfiguration clientConfiguration) {
-        this(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration, null);
     }
 
     /**

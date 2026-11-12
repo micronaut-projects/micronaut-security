@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
-import javax.annotation.security.PermitAll
+import jakarta.annotation.security.PermitAll
 
 class PermitAllSpec extends EmbeddedServerSpecification {
     static final String SPEC_NAME_PROPERTY = 'spec.name'
