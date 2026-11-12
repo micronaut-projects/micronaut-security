@@ -183,10 +183,12 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
             endUserSecurityContext = endUserSecurityContext.withAttributes(attributes);
         }
         if (LOG.isDebugEnabled()) {
+            // Attribute values are derived from the authentication and may carry personal data.
+            // Only the attribute names are logged at DEBUG; the values are logged at TRACE above.
             LOG.debug("{} - end user security context resolved with data roles {} and attributes {}",
                 requestInfo.get(),
                 dataRoles != null ? dataRoles : Collections.emptyList(),
-                attributes != null ? attributes : Collections.emptyMap());
+                attributes != null ? attributes.keySet() : Collections.emptySet());
         }
         return endUserSecurityContext;
     }
