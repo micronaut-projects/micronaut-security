@@ -74,7 +74,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
                 && authorization.regionMatches(true, 0, prefix, 0, prefixLength)) {
             return Optional.of(authorization.substring(prefixLength + 1));
         }
-        LOG.debug("{} does not start with {}", authorization, prefix);
+        LOG.debug("{} header does not start with {}", getHeaderName(), prefix);
         return Optional.empty();
     }
 }
