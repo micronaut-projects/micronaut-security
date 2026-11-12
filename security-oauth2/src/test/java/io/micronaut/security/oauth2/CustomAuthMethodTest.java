@@ -30,7 +30,8 @@ class CustomAuthMethodTest {
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class,
                 Map.of(
                         "spec.name", "CustomAuthMethodTest",
-                        "micronaut.security.oauth2.clients.authserver.openid.issuer", "http://localhost:" + authserver.getPort() + "/oauth2/default"
+                        "micronaut.security.oauth2.clients.authserver.openid.issuer", "http://localhost:" + authserver.getPort() + "/oauth2/default",
+                        "micronaut.security.oauth2.clients.authserver.openid.validate-issuer", "false" // the mock discovery document declares a different issuer
                 ));
         OpenIdProviderMetadata openIdProviderMetadata = server.getApplicationContext().getBean(OpenIdProviderMetadata.class);
         assertNotNull(openIdProviderMetadata);

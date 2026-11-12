@@ -26,6 +26,8 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.server.util.locale.HttpLocaleResolver;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
@@ -90,7 +92,12 @@ public class DefaultOauthController implements OauthController {
         return oauthClient;
     }
 
+    /**
+     * Executed on the blocking executor because resolving the OpenID provider metadata may require a blocking fetch of the
+     * OpenID configuration if it could not be fetched at startup.
+     */
     @Override
+    @ExecuteOn(TaskExecutors.BLOCKING)
     public Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received login request for provider [{}]", oauthClient.getName());
@@ -98,7 +105,12 @@ public class DefaultOauthController implements OauthController {
         return oauthClient.authorizationRedirect(request);
     }
 
+    /**
+     * Executed on the blocking executor because resolving the OpenID provider metadata may require a blocking fetch of the
+     * OpenID configuration if it could not be fetched at startup.
+     */
     @Override
+    @ExecuteOn(TaskExecutors.BLOCKING)
     public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());

@@ -2,12 +2,12 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
@@ -43,7 +43,7 @@ class OpenIdProviderMetadataFetcherRedirectTest {
             try (ApplicationContext ctx = ApplicationContext.run(config)) {
                 // rejected path: the discovery document redirects to an internal address
                 OpenIdProviderMetadataFetcher evil = ctx.getBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName("evil"));
-                assertThrows(DisabledBeanException.class, evil::fetch);
+                assertThrows(HttpClientException.class, evil::fetch);
                 assertEquals(0, counter.internalRequests.get(), "The redirect target must not be requested");
 
                 // accepted path: a discovery document served directly is used

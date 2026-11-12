@@ -27,10 +27,14 @@ import org.jspecify.annotations.NonNull;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -66,17 +70,19 @@ public class OpenIdProviderMetadataFetcherFactory {
      * Retrieves OpenID configuration from the provided issuer.
      *
      * @param openIdClientConfiguration The openid client configuration
+     * @param blockingExecutor Executor used to fetch the metadata when it is requested from a non-blocking thread
      * @return The OpenID Provider Metadata Fetcher
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Singleton
     @NonNull
-    public OpenIdProviderMetadataFetcher createOpenIdProviderMetadataFetcher(@Parameter OpenIdClientConfiguration openIdClientConfiguration) {
+    public OpenIdProviderMetadataFetcher createOpenIdProviderMetadataFetcher(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
+                                                                             @Named(TaskExecutors.BLOCKING) ExecutorService blockingExecutor) {
         if (!openIdClientConfiguration.isFetchConfiguration()) {
             throw new DisabledBeanException("OpenID provider metadata fetching is disabled for provider [" +
                 openIdClientConfiguration.getName() + "]");
         }
-        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient.get());
+        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient.get(), DefaultOpenIdProviderMetadataFetcher.RETRY_BACKOFF, blockingExecutor);
     }
 
     /**

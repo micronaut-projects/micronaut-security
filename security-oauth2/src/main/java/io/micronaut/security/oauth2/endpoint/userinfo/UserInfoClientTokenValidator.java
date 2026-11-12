@@ -36,6 +36,8 @@ import reactor.core.publisher.Mono;
 import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * {@link TokenValidator} which uses a remote `UserInfo` endpoint to validate a token.
@@ -49,6 +51,10 @@ import java.util.Map;
  * {@code alpha:beta} with the subject {@code victim} are the same user. Creating a validator which qualifies usernames
  * for a provider whose name contains {@value #PROVIDER_SEPARATOR} fails with a {@link ConfigurationException}.
  * </p>
+ * <p>
+ * The endpoint may be resolved lazily: if the supplier throws (for example because the OpenID provider metadata is not
+ * available yet) the token is not validated by this validator and the resolution is retried on the next validation.
+ * </p>
  */
 @Internal
 final class UserInfoClientTokenValidator implements Closeable, TokenValidator<HttpRequest<?>>, Named {
@@ -58,10 +64,12 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
     static final String PROVIDER_SEPARATOR = ":";
     private static final Logger LOG = LoggerFactory.getLogger(UserInfoClientTokenValidator.class);
     private static final Argument<Map<String, Object>> MAP_ARGUMENT = Argument.mapOf(String.class, Object.class);
-    private final HttpClient httpClient;
-    private final String path;
     private final String name;
     private final boolean qualifyUsername;
+    private final Supplier<Optional<Endpoint>> endpointSupplier;
+    private volatile boolean resolved;
+    @Nullable
+    private Endpoint endpoint;
 
     /**
      * @param name Provider name
@@ -71,15 +79,36 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
      * @throws ConfigurationException if {@code qualifyUsername} is {@code true} and {@code name} contains {@value #PROVIDER_SEPARATOR}
      */
     UserInfoClientTokenValidator(String name, HttpClient httpClient, String path, boolean qualifyUsername) {
+        this(name, new Endpoint(httpClient, path), qualifyUsername);
+    }
+
+    /**
+     * @param name Provider name
+     * @param endpoint The already resolved UserInfo endpoint
+     * @param qualifyUsername Whether to qualify the username with the provider name. See {@link io.micronaut.security.oauth2.configuration.OpenIdConfiguration#getQualifyUsernameWithProvider()}.
+     * @throws ConfigurationException if {@code qualifyUsername} is {@code true} and {@code name} contains {@value #PROVIDER_SEPARATOR}
+     */
+    UserInfoClientTokenValidator(String name, @NonNull Endpoint endpoint, boolean qualifyUsername) {
+        this(name, qualifyUsername, () -> Optional.of(endpoint));
+        this.endpoint = endpoint;
+        this.resolved = true;
+    }
+
+    /**
+     * @param name Provider name
+     * @param qualifyUsername Whether to qualify the username with the provider name. See {@link io.micronaut.security.oauth2.configuration.OpenIdConfiguration#getQualifyUsernameWithProvider()}.
+     * @param endpointSupplier Supplies the UserInfo endpoint. An empty optional means the provider exposes no UserInfo endpoint and is cached; an exception is not cached and the supplier is invoked again on the next validation.
+     * @throws ConfigurationException if {@code qualifyUsername} is {@code true} and {@code name} contains {@value #PROVIDER_SEPARATOR}
+     */
+    UserInfoClientTokenValidator(String name, boolean qualifyUsername, @NonNull Supplier<Optional<Endpoint>> endpointSupplier) {
         if (qualifyUsername && name.contains(PROVIDER_SEPARATOR)) {
             throw new ConfigurationException("OAuth 2.0 client name '" + name + "' must not contain '" + PROVIDER_SEPARATOR
                 + "' because usernames of authentications validated via the UserInfo endpoint are qualified as <provider name>"
                 + PROVIDER_SEPARATOR + "<sub>. Rename the client under micronaut.security.oauth2.clients or set micronaut.security.oauth2.openid.qualify-username-with-provider to false");
         }
         this.name = name;
-        this.httpClient = httpClient;
-        this.path = path;
         this.qualifyUsername = qualifyUsername;
+        this.endpointSupplier = endpointSupplier;
     }
 
     @Override
@@ -89,13 +118,31 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
 
     @Override
     public void close() {
-        httpClient.close();
+        if (resolved && endpoint != null) {
+            endpoint.httpClient().close();
+        }
     }
 
     @Override
     @NonNull
     public Publisher<Authentication> validateToken(@NonNull String token, @Nullable HttpRequest<?> request) {
-        return Mono.from(httpClient.retrieve(HttpRequest.GET(path).bearerAuth(token),
+        Endpoint resolvedEndpoint;
+        try {
+            resolvedEndpoint = endpoint().orElse(null);
+        } catch (RuntimeException e) {
+            // the OpenID provider metadata fetcher logs the underlying failure at ERROR, rate-limited by its back-off
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Token not validated. UserInfo endpoint for client {} could not be resolved: {}", getName(), e.getMessage());
+            }
+            return Mono.empty();
+        }
+        if (resolvedEndpoint == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Token not validated. UserInfo endpoint not set for client {}", getName());
+            }
+            return Mono.empty();
+        }
+        return Mono.from(resolvedEndpoint.httpClient().retrieve(HttpRequest.GET(resolvedEndpoint.path()).bearerAuth(token),
                 MAP_ARGUMENT))
             .flatMap(m -> {
                 Authentication authentication = createAuthentication(m);
@@ -112,6 +159,19 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
                 }
                 return Mono.empty();
             });
+    }
+
+    @NonNull
+    private Optional<Endpoint> endpoint() {
+        if (!resolved) {
+            synchronized (this) {
+                if (!resolved) {
+                    endpoint = endpointSupplier.get().orElse(null);
+                    resolved = true;
+                }
+            }
+        }
+        return Optional.ofNullable(endpoint);
     }
 
     /**
@@ -137,5 +197,13 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
     @Override
     public int getOrder() {
         return LOWEST_PRECEDENCE - 100;
+    }
+
+    /**
+     * A resolved UserInfo endpoint.
+     * @param httpClient HTTP client pointed to the authorization server base URL
+     * @param path UserInfo endpoint path
+     */
+    record Endpoint(@NonNull HttpClient httpClient, @NonNull String path) {
     }
 }

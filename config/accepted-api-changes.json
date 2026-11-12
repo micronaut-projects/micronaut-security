@@ -323,5 +323,25 @@
     "type": "io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition",
     "member": "Method io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition.isEnabled(io.micronaut.context.BeanContext)",
     "reason": "Micronaut generated bean definition, not public API. LdapConfiguration is now annotated with @Requires(condition = LdapConfigurationCondition.class) so the generated definition evaluates its conditions instead of the constant isEnabled override"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.$OpenIdClientFactory$OpenIdConfiguration0$Definition",
+    "member": "Method io.micronaut.security.oauth2.client.$OpenIdClientFactory$OpenIdConfiguration0$Definition.isContextScope()",
+    "reason": "Micronaut generated bean definition, not public API. DefaultOpenIdProviderMetadata is no longer a @Context bean so that a failed fetch of the OpenID configuration can be retried"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcherFactory",
+    "member": "Method io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcherFactory.createOpenIdProviderMetadataFetcher(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration)",
+    "reason": "Internal factory. The method now also receives the blocking executor used to fetch the OpenID configuration when it is requested from a non-blocking thread"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.userinfo.$UserInfoClientFactory$CreateUserInfoClient0$Definition",
+    "member": "Method io.micronaut.security.oauth2.endpoint.userinfo.$UserInfoClientFactory$CreateUserInfoClient0$Definition.instantiate(io.micronaut.context.BeanResolutionContext,io.micronaut.context.BeanContext)",
+    "reason": "Micronaut generated bean definition, not public API. The UserInfo token validator resolves its endpoint lazily and its factory method is now parameterized"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.userinfo.$UserInfoClientFactory$CreateUserInfoClient0$Definition",
+    "member": "Method io.micronaut.security.oauth2.endpoint.userinfo.$UserInfoClientFactory$CreateUserInfoClient0$Definition.isCandidateBean(io.micronaut.core.type.Argument)",
+    "reason": "Micronaut generated bean definition, not public API. The UserInfo token validator resolves its endpoint lazily and its factory method is now parameterized"
   }
 ]

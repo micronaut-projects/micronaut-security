@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.jwt.nimbus.ReactiveJwksSignature;
@@ -28,11 +30,11 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.util.function.Supplier;
 
 /**
  * Factory to create {@link ReactiveJwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -54,24 +56,19 @@ public class JwksUriSignatureFactory {
     private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureFactory.class);
 
     /**
+     * The returned configuration resolves the JWKS URI and the issuer lazily, so that it can be created even if the OpenID provider metadata
+     * could not be fetched yet; the metadata is resolved when the JWKS URI is first needed.
+     *
      * @param openIdClientConfiguration The OpenID client configuration
      * @param openIdProviderMetadata The open id provider metadata
      * @return a {@link JwksSignatureConfiguration} pointed to the jwks_uri exposed via OpenID configuration and bound to the issuer of the OpenID client
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
-    public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
+    public JwksSignatureConfiguration createJwksSignatureConfiguration(@Parameter @Nullable OpenIdClientConfiguration openIdClientConfiguration,
                                                                        @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
-        DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = openIdProviderMetadata.get();
-        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties(defaultOpenIdProviderMetadata.getName());
-        jwksSignatureConfiguration.setUrl(defaultOpenIdProviderMetadata.getJwksUri());
-        String issuer = issuer(openIdClientConfiguration, defaultOpenIdProviderMetadata);
-        if (issuer == null || issuer.isBlank()) {
-            LOG.warn("The JWKS of the OpenID client [{}] is not bound to an issuer because neither 'openid.issuer' is configured nor the provider metadata asserts one. Tokens signed with its keys are accepted whatever their 'iss' claim. Set 'micronaut.security.oauth2.clients.{}.openid.issuer', in particular when several providers are trusted.", defaultOpenIdProviderMetadata.getName(), defaultOpenIdProviderMetadata.getName());
-        } else {
-            jwksSignatureConfiguration.setIssuer(issuer);
-        }
-        return jwksSignatureConfiguration;
+        String name = openIdClientConfiguration != null ? openIdClientConfiguration.getName() : openIdProviderMetadata.get().getName();
+        return new OpenIdProviderMetadataJwksSignatureConfiguration(name, openIdClientConfiguration, SupplierUtil.memoized(openIdProviderMetadata::get));
     }
 
     /**
@@ -91,5 +88,88 @@ public class JwksUriSignatureFactory {
             return asserted;
         }
         return openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null);
+    }
+
+    /**
+     * {@link JwksSignatureConfiguration} backed by the lazily resolved {@link DefaultOpenIdProviderMetadata} of an OpenID provider.
+     */
+    @Internal
+    static final class OpenIdProviderMetadataJwksSignatureConfiguration implements JwksSignatureConfiguration {
+        private final String name;
+        @Nullable
+        private final OpenIdClientConfiguration openIdClientConfiguration;
+        private final Supplier<DefaultOpenIdProviderMetadata> openIdProviderMetadata;
+        private volatile boolean unboundIssuerWarned;
+
+        OpenIdProviderMetadataJwksSignatureConfiguration(String name,
+                                                         @Nullable OpenIdClientConfiguration openIdClientConfiguration,
+                                                         Supplier<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
+            this.name = name;
+            this.openIdClientConfiguration = openIdClientConfiguration;
+            this.openIdProviderMetadata = openIdProviderMetadata;
+        }
+
+        @Override
+        @NonNull
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @return The JWKS URI exposed by the OpenID provider metadata, or {@code null} if the provider does not expose one or its metadata cannot be resolved at the moment.
+         */
+        @Override
+        public String getUrl() {
+            try {
+                return openIdProviderMetadata.get().getJwksUri();
+            } catch (RuntimeException e) {
+                // the fetcher logs the underlying failure at ERROR, rate-limited by its back-off
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("The JWKS URI of provider [{}] is unavailable because its OpenID provider metadata could not be resolved: {}", name, e.getMessage());
+                }
+                return null;
+            }
+        }
+
+        /**
+         * @return {@code null}, keys of any type are matched.
+         */
+        @Override
+        @Nullable
+        public KeyType getKeyType() {
+            return null;
+        }
+
+        @Override
+        @NonNull
+        @Deprecated(forRemoval = true, since = "4.11.0")
+        @SuppressWarnings("removal")
+        public Integer getCacheExpiration() {
+            return JwksSignatureConfigurationProperties.DEFAULT_CACHE_EXPIRATION;
+        }
+
+        /**
+         * @return The issuer the key set is bound to. If the OpenID provider metadata cannot be resolved at the moment, the issuer configured for the OpenID client.
+         */
+        @Override
+        @Nullable
+        public String getIssuer() {
+            String issuer;
+            try {
+                DefaultOpenIdProviderMetadata metadata = openIdProviderMetadata.get();
+                issuer = openIdClientConfiguration != null ? issuer(openIdClientConfiguration, metadata) : metadata.getIssuer();
+            } catch (RuntimeException e) {
+                // without metadata there is no JWKS URI either, so no token is verified with this key set
+                return openIdClientConfiguration != null ? openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null) : null;
+            }
+            if (issuer == null || issuer.isBlank()) {
+                if (!unboundIssuerWarned) {
+                    unboundIssuerWarned = true;
+                    LOG.warn("The JWKS of the OpenID client [{}] is not bound to an issuer because neither 'openid.issuer' is configured nor the provider metadata asserts one. Tokens signed with its keys are accepted whatever their 'iss' claim. Set 'micronaut.security.oauth2.clients.{}.openid.issuer', in particular when several providers are trusted.", name, name);
+                }
+                return null;
+            }
+            return issuer;
+        }
     }
 }
