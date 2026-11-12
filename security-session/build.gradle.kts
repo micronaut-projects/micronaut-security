@@ -18,6 +18,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testImplementation(mnLogging.logback.classic)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
 }

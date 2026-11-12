@@ -42,8 +42,7 @@ class JwtConfigurationPropertiesSchemaTest {
             "base64", false
         ));
         assertDefaults("io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties", Map.of(
-            "cache-expiration", 60,
-            "key-type", "RSA"
+            "cache-expiration", 60
         ));
     }
 }

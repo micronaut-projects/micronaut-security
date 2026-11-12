@@ -19,17 +19,23 @@ import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+import java.time.Duration
+
+import java.util.concurrent.CopyOnWriteArrayList
 
 @Property(name = "spec.name", value = "TokenAuthenticationFetcherSpec")
 @MicronautTest
 class TokenAuthenticationFetcherSpec extends Specification {
 
-    private static final String LOW_PRECEDENCE_VALIDATOR_LATCH = "low-precedence-validator-latch"
-
     @Inject
     TokenAuthenticationFetcher tokenAuthenticationFetcher
+
+    @Inject
+    LowPrecedenceApiKeyTokenValidator lowPrecedenceApiKeyTokenValidator
+
+    def setup() {
+        lowPrecedenceApiKeyTokenValidator.validatedTokens.clear()
+    }
 
     void "beans of type TokenReader are evaluated in order"() {
         when: 'no token no authentication'
@@ -69,16 +75,18 @@ class TokenAuthenticationFetcherSpec extends Specification {
         "bar" == authentication.name
     }
 
-    void "token validator order is preserved when multiple validators authenticate the same token"() {
-        when:
+    void "token validator order is preserved when multiple validators authenticate the same token and the token is not handed to lower precedence validators"() {
+        when: 'the higher precedence validator authenticates the token asynchronously'
         SimpleHttpRequest request = new SimpleHttpRequest(HttpMethod.POST, "/analytics/report", null)
-        request.setAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, new CountDownLatch(1))
         request.headers.add("X-API-KEY", "aaa")
         Authentication authentication = fetchAuthentication(request)
 
         then:
         authentication
         "high-precedence" == authentication.name
+
+        and: 'the lower precedence validator never received the token'
+        lowPrecedenceApiKeyTokenValidator.validatedTokens.isEmpty()
     }
 
     void "lower precedence validator is used when higher precedence validator returns empty"() {
@@ -90,6 +98,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         then:
         authentication
         "baz" == authentication.name
+        ["bbb"] == lowPrecedenceApiKeyTokenValidator.validatedTokens
     }
 
     private Authentication fetchAuthentication(SimpleHttpRequest request) {
@@ -133,14 +142,9 @@ class TokenAuthenticationFetcherSpec extends Specification {
                 return Mono.just(Authentication.build("foo"))
             }
             if (token.equals("aaa")) {
-                return Mono.fromCallable {
-                    CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
-                        .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
-                    if (!latch.await(5, TimeUnit.SECONDS)) {
-                        throw new IllegalStateException("Timed out waiting for the lower precedence validator")
-                    }
-                    Authentication.build("high-precedence")
-                }.subscribeOn(Schedulers.boundedElastic())
+                return Mono.fromCallable { Authentication.build("high-precedence") }
+                    .delayElement(Duration.ofMillis(100))
+                    .subscribeOn(Schedulers.boundedElastic())
             }
             Mono.empty()
         }
@@ -154,14 +158,13 @@ class TokenAuthenticationFetcherSpec extends Specification {
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
     @Singleton
     static class LowPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
+        final List<String> validatedTokens = new CopyOnWriteArrayList<>()
 
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+            validatedTokens.add(token)
             if (token.equals("aaa")) {
-                CountDownLatch latch = request?.getAttribute(LOW_PRECEDENCE_VALIDATOR_LATCH, CountDownLatch)
-                    .orElseThrow { new IllegalStateException("Missing validator coordination latch") }
                 return Mono.just(Authentication.build("low-precedence"))
-                    .doOnNext { latch.countDown() }
             }
             if (token.equals("bbb")) {
                 return Mono.just(Authentication.build("baz"))

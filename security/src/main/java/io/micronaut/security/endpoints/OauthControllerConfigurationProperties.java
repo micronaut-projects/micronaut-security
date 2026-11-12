@@ -67,7 +67,7 @@ public class OauthControllerConfigurationProperties extends ControllerConfigurat
     @Override
     @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
-        super.setEnabled(true);
+        super.setEnabled(enabled);
     }
 
     /**

@@ -528,9 +528,12 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     public static class OpenIdClientConfigurationProperties implements OpenIdClientConfiguration {
 
         private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
+        private static final boolean DEFAULT_FETCH_CONFIGURATION = true;
         private final String name;
 
+        private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
         private URL issuer;
+        private String issuerIdentifier;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
         private RegistrationEndpointConfigurationProperties registration;
@@ -545,6 +548,20 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         OpenIdClientConfigurationProperties(@Parameter String name) {
             this.name = name;
+        }
+
+        @Override
+        public boolean isFetchConfiguration() {
+            return fetchConfiguration;
+        }
+
+        /**
+         * Whether the OpenID configuration should be fetched from the discovery endpoint derived from {@link #getIssuer()} and {@link #getConfigurationPath()}. Default value: true.
+         *
+         * @param fetchConfiguration Whether the OpenID configuration should be fetched
+         */
+        public void setFetchConfiguration(boolean fetchConfiguration) {
+            this.fetchConfiguration = fetchConfiguration;
         }
 
         @NonNull
@@ -580,6 +597,25 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setIssuer(@Nullable URL issuer) {
             this.issuer = issuer;
+        }
+
+        @Override
+        public Optional<String> getIssuerIdentifier() {
+            if (issuerIdentifier != null) {
+                return Optional.of(issuerIdentifier);
+            }
+            return OpenIdClientConfiguration.super.getIssuerIdentifier();
+        }
+
+        /**
+         * The value expected in the {@code iss} claim of ID tokens. Set it when it differs from the {@code issuer} used to
+         * fetch the discovery document, for example when discovery is fetched over an internal URL. Defaults to {@code issuer}.
+         *
+         * @param issuerIdentifier The expected issuer identifier
+         * @since 5.5.2
+         */
+        public void setIssuerIdentifier(@Nullable String issuerIdentifier) {
+            this.issuerIdentifier = issuerIdentifier;
         }
 
         @Override
