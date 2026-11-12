@@ -2,12 +2,12 @@ package io.micronaut.security.oauth2.endpoint.endsession.request
 
 import groovy.transform.AutoImplement
 import io.micronaut.context.annotation.Requires
-import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpParameters
+import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.cookie.Cookies
+import io.micronaut.http.simple.SimpleHttpRequest
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
@@ -57,40 +57,20 @@ class EndSessionEndpointResolverSpec extends ApplicationContextSpecification {
         then:
         endSessionEndpoint instanceof OktaEndSessionEndpoint
 
-        when:
-        def cookies = Stub(Cookies) {
-            getAll() >> []
-            findCookie(_) >> Optional.empty()
-            values() >> []
-            get(_, _) >> Optional.empty()
-        }
-        def httpParameters = Stub(HttpParameters) {
-            getAll(_) >> []
-            get(_) >> null
-            names() >> []
-            values() >> []
-            get(_, _) >> Optional.empty()
-        }
-        def httpHeaders = Stub(HttpHeaders) {
-            getAll(_) >> { args -> args[0] == 'Authorization' ? ['Bearer xxx.yyy.zzz'] : [] }
-            get(_) >>  { args -> args[0] == 'Authorization' ? 'Bearer xxx.yyy.zzz' : null }
-            names() >> ['Authorization']
-            values() >> []
-            findFirst(_) >> { args -> args[0] == 'Authorization' ? Optional.of('Bearer xxx.yyy.zzz') : Optional.empty() }
-        }
-        def authentication = Stub(Authentication) {
-            getAttributes() >> [:]
-        }
-        def request = Stub(HttpRequest) {
-            getCookies() >> cookies
-            getParameters() >> httpParameters
-            getHeaders() >> httpHeaders
-            getUri() >> new URI("http://localhost:8080/")
-        }
-        String url = endSessionEndpoint.getUrl(request, authentication)
+        when: 'a bearer token is present in the request but it did not authenticate the request'
+        HttpRequest<?> request = new SimpleHttpRequest<>(HttpMethod.GET, "http://localhost:8080/oauth/logout", null)
+        request.bearerAuth('xxx.yyy.zzz')
+        String url = endSessionEndpoint.getUrl(request, Authentication.build("sherlock"))
 
-        then:
-        url == 'https://dev-33333.oktapreview.com/oauth2/default/v1/logout?id_token_hint=xxx.yyy.zzz&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogout'
+        then: 'the token is not sent as id_token_hint'
+        url == 'https://dev-33333.oktapreview.com/oauth2/default/v1/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogout'
+
+        when: 'the request was authenticated with an ID token'
+        ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withToken('aaa.bbb.ccc')
+        url = endSessionEndpoint.getUrl(request, Authentication.build("sherlock"))
+
+        then: 'only the token which authenticated the request is sent as id_token_hint'
+        url == 'https://dev-33333.oktapreview.com/oauth2/default/v1/logout?id_token_hint=aaa.bbb.ccc&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogout'
     }
 
     @Requires(property = 'spec.name', value = 'EndSessionEndpointResolverSpec')
