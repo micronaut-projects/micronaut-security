@@ -43,6 +43,9 @@ final class WellKnownProxyFilterCondition implements Condition {
             return null;
         }
         for (OauthClientConfiguration config : oauthClientConfigurations) {
+            if (!config.isEnabled()) {
+                continue;
+            }
             if (config.isProxyWellKnownOpenidConfiguration() || config.isProxyWellKnownOauthAuthorizationServer()) {
                 URL issuer = issuer(config);
                 if (issuer != null) {
