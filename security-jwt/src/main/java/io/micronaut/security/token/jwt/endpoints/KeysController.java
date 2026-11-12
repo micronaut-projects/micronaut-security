@@ -96,7 +96,7 @@ public class KeysController {
     @Get
     @SingleResult
     public Publisher<MutableHttpResponse<String>> keys() {
-        return keysJson().map(this::response);
+        return Mono.from(keysJson()).map(this::response);
     }
 
     @Nullable
@@ -115,7 +115,8 @@ public class KeysController {
         return response;
     }
 
-    private Mono<String> keysJson() {
+    // returns a Publisher, not a Reactor type, so that subclasses compile without Reactor in the classpath
+    private Publisher<String> keysJson() {
         if (jwkProviders.isEmpty()) {
             return Mono.just(EMPTY_KEYS);
         }
