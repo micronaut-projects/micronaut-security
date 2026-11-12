@@ -10,6 +10,15 @@ include::{testssecurity}/security/securityRule/IpPatternSpec.groovy[tag=yamlconf
 In the previous code, the link:{api}/io/micronaut/security/rules/IpPatternsRule.html[IpPatternsRule] rejects traffic not coming
 either `127.0.0.1` or `192.168.1.*` range.
 
+Each entry of `micronaut.security.ip-patterns` is interpreted in one of two ways:
+
+* A pattern made only of hexadecimal digits, dots, colons and `*` (for example `127.0.0.1`, `192.168.1.*` or `fe80:*`) is an IP wildcard. Dots and colons match literally. A `*` inside the pattern matches within one address segment (`192.168.*.1` matches `192.168.2.1` but not `192.168.2.3.1`), and a trailing `*` matches the rest of the address, so `192.168.1.*` matches `192.168.1.0` to `192.168.1.255` and does not match `192.168.10.5`. Hexadecimal digits match regardless of case, so `FE80:*` and `fe80:*` are equivalent.
+* Any other pattern (for example `192\.168\.1\.\d+` or `^10\.0\.(1|2)\.[0-9]{1,3}$`) is compiled as a Java regular expression that must match the whole remote host address. Escape dots as `\.` in regular expressions; an unescaped dot matches any character. A pattern that contains `192.168.1.*` together with other characters (for example `192.168.1.*|10.0.0.1`) is a regular expression, not a wildcard. A pattern starting with a dot, such as `.*`, is always a regular expression.
+
+The special value `0.0.0.0` (the default) matches every address; `*` and the regular expression `.*` do too.
+
+The address compared is the one returned by `HttpRequest#getRemoteAddress()`, the TCP peer, so behind a proxy or load balancer it is the proxy's address (`X-Forwarded-For` is not consulted). IPv6 addresses are compared in their uncompressed form (`0:0:0:0:0:0:0:1`, not `::1`).
+
 The IP patterns rule never explicitly allows requests, it only rejects requests if the address does not match. There must be other security rules that determine whether a resource should be accessed.
 
 If the desired behavior is to allow access to all resources as long as the address matches, create a security rule that executes after this one that returns `ALLOWED`.
