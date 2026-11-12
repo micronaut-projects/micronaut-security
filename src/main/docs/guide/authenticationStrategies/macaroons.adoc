@@ -1,0 +1,63 @@
+== Macaroons
+
+Macaroons are bearer tokens with signed, contextual caveats. Micronaut Security supports first-party Macaroon access tokens through the optional `micronaut-security-macaroons` module.
+
+Add the dependency to your application:
+
+dependency:io.micronaut.security:micronaut-security-macaroons[]
+
+Configure a root secret before using the generator or validator:
+
+[source,yaml]
+----
+micronaut:
+  security:
+    authentication: bearer
+    token:
+      macaroons:
+        secret: ${MACAROON_ROOT_SECRET}
+----
+
+No Macaroon `TokenGenerator` or `TokenValidator` bean is loaded unless `micronaut.security.token.macaroons.secret` is configured. Store the root secret in a secure configuration source and rotate it using your application's normal secret-management process.
+
+The following configuration properties are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.macaroons.MacaroonConfigurationProperties.adoc[]
+
+Generated Macaroons use the existing token generation flow. For example, the built-in bearer login handler can return a Macaroon access token when this module provides the active api:io.micronaut.security.token.generator.TokenGenerator[].
+
+Clients send the serialized Macaroon like any other bearer token:
+
+[source,http]
+----
+Authorization: Bearer <serialized-macaroon>
+----
+
+Validation reuses the existing token reader infrastructure, so the same bearer and cookie token readers can supply Macaroons to the api:io.micronaut.security.token.macaroons.MacaroonTokenValidator[].
+
+== Caveats
+
+Micronaut-generated authentication claims are encoded as first-party caveats and are used to build the resulting api:io.micronaut.security.authentication.Authentication[] only after the Macaroon signature and all caveats are verified. Unknown first-party caveats fail closed by default.
+
+To support application-specific caveats, provide a bean of type api:io.micronaut.security.token.macaroons.MacaroonCaveatVerifier[]:
+
+[source,java]
+----
+@Singleton
+class RequestPathCaveatVerifier implements MacaroonCaveatVerifier {
+    @Override
+    public boolean verify(MacaroonCaveat caveat, HttpRequest<?> request) {
+        return request != null && caveat.getValue().equals("request-path = " + request.getPath());
+    }
+}
+----
+
+The verifier receives Micronaut-owned caveat data, not jmacaroons types. This keeps the underlying library isolated from public application contracts.
+
+== Security Notes
+
+Macaroons are bearer credentials. Protect them in transit, avoid logging serialized token values, and treat theft as equivalent to bearer-token replay until the token expires or the root key is rotated.
+
+The module supports first-party caveats. It does not provide a complete third-party discharge-token design; serialized Macaroons that require third-party discharge tokens are rejected by validation.
+
+The jmacaroons dependency is wrapped behind Micronaut APIs. Application code should use Micronaut's generator, validator, caveat verifier, and authentication factory contracts rather than depending on jmacaroons classes directly.
