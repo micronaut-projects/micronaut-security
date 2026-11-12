@@ -37,7 +37,7 @@ java {
     targetCompatibility = JavaVersion.toVersion("25")
 }
 micronaut {
-    version = "5.1.0-SNAPSHOT"
+    version = libs.versions.micronaut.platform.get()
     runtime("netty")
     testRuntime("junit5")
     processing {

@@ -56,7 +56,7 @@ import jakarta.transaction.Transactional;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -386,7 +386,7 @@ public class DefaultJdbcScimUserService implements ScimUserService {
 
     private static void setAttributes(User user, List<ScimUserAttributeEntity> attributes) {
         Map<ScimUserAttributeKind, List<MultiValuedAttribute>> grouped =
-            new EnumMap<>(ScimUserAttributeKind.class);
+            new HashMap<>();
         for (ScimUserAttributeEntity attribute : attributes) {
             grouped.computeIfAbsent(attribute.attributeKind(), ignored -> new ArrayList<>())
                 .add(toMultiValuedAttribute(attribute));
