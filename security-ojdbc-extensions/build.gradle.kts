@@ -11,7 +11,6 @@ dependencies {
     implementation(mn.micronaut.http.client.core)
     implementation(mnReactor.micronaut.reactor)
     implementation(projects.micronautSecurityOauth2)
-    testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(libs.managed.nimbus.jose.jwt)
     testImplementation(mn.micronaut.http.server.netty)

@@ -182,7 +182,8 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         then:
         !authenticationResponse.isAuthenticated()
         authenticationResponse instanceof AuthenticationFailed
-        AuthenticationFailureReason.USER_NOT_FOUND == ((AuthenticationFailed) authenticationResponse).reason
+        // an unknown username must not be distinguishable from a wrong password
+        AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH == ((AuthenticationFailed) authenticationResponse).reason
 
         cleanup:
         ctx.close()
