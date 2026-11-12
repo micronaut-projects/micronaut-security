@@ -38,11 +38,11 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".signatures.jwks";
 
     /**
-     * The key type used by default before 5.4.0.
-     * @deprecated Not used. Since 5.4.0 no key type is configured by default, and keys of any key type are used to verify signatures.
+     * The default key type.
+     * @deprecated No longer used. Since 5.5.2 no key type is applied unless {@link #setKeyType(KeyType)} is configured, so that keys of any type of the JWKS are matched.
      */
     @SuppressWarnings("WeakerAccess")
-    @Deprecated(forRemoval = true, since = "5.4.0")
+    @Deprecated(forRemoval = true, since = "5.5.2")
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
     /**
@@ -67,6 +67,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     @Nullable
     private KeyType keyType;
+
+    @Nullable
+    private String issuer;
 
     @NonNull
     private Duration refreshInterval = DEFAULT_REFRESH_INTERVAL;
@@ -124,7 +127,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      *
-     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any key type may be used.
+     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any type are matched.
      */
     @Override
     @Nullable
@@ -133,7 +136,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * Key type (the kty parameter of a JSON Web Key, e.g. RSA or EC). If set, only keys of this type are used to verify JWT signatures. By default, it is not set and keys of any key type are used.
+     * Representation of the kty parameter in a JSON Web Key (JWK). When set, only keys of this type are used to verify token signatures; a token signed with a key of another type is rejected even if that key is part of the JWKS. Default value (null): keys of any type are matched.
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
     public void setKeyType(@Nullable KeyType keyType) {
@@ -158,5 +161,24 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     public void setRefreshInterval(@NonNull Duration refreshInterval) {
         ArgumentUtils.requireNonNull("refreshInterval", refreshInterval);
         this.refreshInterval = refreshInterval;
+    }
+
+    /**
+     * @return The issuer the key set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 5.5.2
+     */
+    @Override
+    @Nullable
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * Issuer the JSON Web Key Set is bound to. When set, only tokens whose {@code iss} claim matches this issuer are verified with this key set. Default value (null): tokens are verified regardless of their {@code iss} claim.
+     * @param issuer Issuer the JSON Web Key Set is bound to. e.g. https://idp.example.com/
+     * @since 5.5.2
+     */
+    public void setIssuer(@Nullable String issuer) {
+        this.issuer = issuer;
     }
 }

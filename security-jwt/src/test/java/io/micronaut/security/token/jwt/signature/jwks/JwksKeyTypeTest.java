@@ -64,8 +64,8 @@ class JwksKeyTypeTest {
 
             assertEquals(rsaAccepted, Mono.from(signature.verify(rsaJwt)).block(), "RSA signed token, kid present: " + withKid);
             assertEquals(ecAccepted, Mono.from(signature.verify(ecJwt)).block(), "EC signed token, kid present: " + withKid);
-            assertEquals(rsaAccepted, JwksSignatureUtils.verify(rsaJwt, jwkSet, keyType, new DefaultJwkValidator()));
-            assertEquals(ecAccepted, JwksSignatureUtils.verify(ecJwt, jwkSet, keyType, new DefaultJwkValidator()));
+            assertEquals(rsaAccepted, JwksSignatureUtils.verify(rsaJwt, jwkSet, new DefaultJwkValidator(), keyType));
+            assertEquals(ecAccepted, JwksSignatureUtils.verify(ecJwt, jwkSet, new DefaultJwkValidator(), keyType));
         }
     }
 

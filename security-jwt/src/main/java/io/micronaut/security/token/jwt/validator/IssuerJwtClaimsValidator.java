@@ -26,6 +26,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Validates JWT issuer claim matches a configured value.
+ * <p>
+ * The {@code iss} claim is valid when, ignoring a leading {@code http://}/{@code https://} scheme and a trailing slash,
+ * it is exactly equal to the configured issuer. Suffixes and parent domains of the configured issuer are not accepted.
+ * See {@link ClaimsUtils#equalsIgnoringProtocolAndTrailingSlash(String, String)}.
  *
  * @author Jason Schindler
  * @author Sergio del Amo
@@ -52,12 +56,19 @@ public class IssuerJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T>
             LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: {}", jwtClaimsValidatorConfiguration.getIssuer());
         }
         this.expectedIssuer = jwtClaimsValidatorConfiguration.getIssuer();
+        if (expectedIssuer == null || expectedIssuer.isBlank()) {
+            LOG.warn("{} is set but has no value; every JWT will be rejected until it is set to the expected iss claim", ISSUER_PROP);
+        }
     }
 
     @Override
     public boolean validate(@NonNull Claims claims, @Nullable T request) {
         if (expectedIssuer == null) {
-            return true;
+            // the property is present (the bean exists) but bound to no value: fail closed rather than skip the validation
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("{} has no value; rejecting the token", ISSUER_PROP);
+            }
+            return false;
         }
         Object issuerObject = claims.get(Claims.ISSUER);
         if (issuerObject == null) {
@@ -66,7 +77,7 @@ public class IssuerJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T>
             }
             return false;
         }
-        if (!ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(expectedIssuer, issuerObject.toString())) {
+        if (!ClaimsUtils.equalsIgnoringProtocolAndTrailingSlash(expectedIssuer, issuerObject.toString())) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject);
             }
