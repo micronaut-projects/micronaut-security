@@ -21,7 +21,7 @@ import io.micronaut.http.context.ServerContextPathProvider;
 import jakarta.inject.Singleton;
 
 /**
- * Decorates a {@link }InterceptUrlPattern}. If {@link SecurityConfiguration#isInterceptUrlMapPrependPatternWithContextPath()} is set to true
+ * Decorates a {@link InterceptUrlMapPattern}. If {@link SecurityConfiguration#isInterceptUrlMapPrependPatternWithContextPath()} is set to true
  * the URL patterns are prepended with the server context path if set.
  * @author Sergio del Amo
  * @since 3.7.3
