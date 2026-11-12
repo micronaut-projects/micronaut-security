@@ -118,6 +118,10 @@ reporting:
   reportingEndpoints: Configuration Reporting Endpoints
   reportingEndpointProviders: Dynamic Reporting Endpoints
 htmlSanitizer: HTML Sanitizer
+passwordEncoding:
+  title: Password Encoding
+  passwordEncodingArgon2: Argon2id
+  passwordEncodingTck: TCK
 tokenPropagation: Token Propagation
 tokenendpoints:
   title: Built-In Security Token Controllers
@@ -174,6 +178,7 @@ oauth:
     user-info: UserInfo Endpoint
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
+  providerHttpClient: HTTP Clients for the Provider
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
 ojdbcExtensions:

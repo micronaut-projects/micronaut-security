@@ -1,5 +1,7 @@
 The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it's own settings and can be enabled or disabled.
 
+Each server is configured under its own name, for example `micronaut.security.ldap.default.*`. A name only becomes a configuration when it has nested properties; a single-valued key directly under `micronaut.security.ldap`, such as `micronaut.security.ldap.enabled`, is not a configuration name.
+
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
