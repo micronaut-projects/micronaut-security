@@ -136,6 +136,7 @@ public final class Keycloak {
                 "-s", "redirectUris=[\"http://" + getRedirectUriHost() + "*\", \"http://localhost*\"]",
                 "-s", "publicClient=false",
                 "-s", "directAccessGrantsEnabled=true",
+                "-s", "serviceAccountsEnabled=true",
                 "-s", "attributes={\"post.logout.redirect.uris\": \"+\"}",
                 "-s", "secret=" + clientSecret,
                 "--realm", REALM

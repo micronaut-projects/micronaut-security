@@ -33,4 +33,13 @@ public interface OauthAuthorizationEndpointConfiguration extends EndpointConfigu
      */
     @NonNull
     Optional<String> getCodeChallengeMethod();
+
+    /**
+     * @return A new OAuth authorization endpoint configuration builder.
+     * @since 5.1.0
+     */
+    @NonNull
+    static OauthAuthorizationEndpointConfigurationBuilder builder() {
+        return new OauthAuthorizationEndpointConfigurationBuilder();
+    }
 }
