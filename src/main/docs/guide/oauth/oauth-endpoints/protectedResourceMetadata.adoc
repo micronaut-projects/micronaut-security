@@ -10,3 +10,4 @@ A GET endpoint is exposed in `/.well-known/oauth-protected-resource`. The API to
 api:security.oauth2.metadata.ProtectedResourceMetadataProvider[]
 
 You can create a bean replacement for it if the default implementation does not fit your needs.
+The same provider is used for the `WWW-Authenticate` Bearer challenge: if it returns non-empty `scopes_supported` values for the current request or path-specific metadata, those scopes are emitted as the challenge `scope` parameter.
