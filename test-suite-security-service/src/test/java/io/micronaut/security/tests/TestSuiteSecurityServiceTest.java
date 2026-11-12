@@ -13,6 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Testcontainers(disabledWithoutDocker = true)
 public class TestSuiteSecurityServiceTest {
 
     @ParameterizedTest

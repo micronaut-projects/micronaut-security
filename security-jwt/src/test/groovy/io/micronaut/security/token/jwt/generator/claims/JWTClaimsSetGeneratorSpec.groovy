@@ -39,4 +39,18 @@ class JWTClaimsSetGeneratorSpec extends Specification {
         then:
         claims[Claims.AUDIENCE] == ['https://api.example.com']
     }
+
+    def "sub claim is the principal name even if the attributes contain a sub attribute"() {
+        given:
+        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(new TokenConfiguration() {}, null, null, null)
+        // e.g. an authentication mapper which qualifies the username with the provider name but retains the raw sub
+        Authentication authentication = Authentication.build('provider-a:alice', ['ROLE_USER'], [sub: 'alice', oauth2Provider: 'provider-a'])
+
+        when:
+        Map<String, Object> claims = generator.generateClaims(authentication, 3600)
+
+        then:
+        claims[Claims.SUBJECT] == 'provider-a:alice'
+        claims['oauth2Provider'] == 'provider-a'
+    }
 }
