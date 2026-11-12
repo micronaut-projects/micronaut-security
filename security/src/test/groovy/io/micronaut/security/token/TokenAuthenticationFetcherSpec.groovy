@@ -38,9 +38,13 @@ class TokenAuthenticationFetcherSpec extends Specification {
     @Inject
     TokenValidatedEventListener tokenValidatedEventListener
 
+    @Inject
+    LowPrecedenceApiKeyTokenValidator lowPrecedenceApiKeyTokenValidator
+
     void setup() {
         validatorInvocations.clear()
         tokenValidatedEventListener.events.clear()
+        lowPrecedenceApiKeyTokenValidator.validatedTokens.clear()
     }
 
     void "beans of type TokenReader are evaluated in order"() {
@@ -125,6 +129,9 @@ class TokenAuthenticationFetcherSpec extends Specification {
         request.getAttribute(SecurityFilter.TOKEN, String).get() == "aaa"
         tokenValidatedEventListener.events.size() == 1
         tokenValidatedEventListener.events[0].source == "aaa"
+
+        and: 'the lower precedence validator never received the token'
+        lowPrecedenceApiKeyTokenValidator.validatedTokens.isEmpty()
     }
 
     void "lower precedence validator is used when higher precedence validator returns empty"() {
@@ -137,6 +144,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         authentication
         "baz" == authentication.name
         validatorInvocations.invocations == [new Invocation("high", "bbb"), new Invocation("low", "bbb")]
+        ["bbb"] == lowPrecedenceApiKeyTokenValidator.validatedTokens
     }
 
     private Authentication fetchAuthentication(SimpleHttpRequest request) {
@@ -207,6 +215,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
     @Requires(property = "spec.name", value = "TokenAuthenticationFetcherSpec")
     @Singleton
     static class LowPrecedenceApiKeyTokenValidator implements TokenValidator<HttpRequest<?>> {
+        final List<String> validatedTokens = new CopyOnWriteArrayList<>()
 
         private final ValidatorInvocations invocations
 
@@ -217,6 +226,7 @@ class TokenAuthenticationFetcherSpec extends Specification {
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
             invocations.record("low", token)
+            validatedTokens.add(token)
             if (token.equals("aaa")) {
                 return Mono.just(Authentication.build("low-precedence"))
             }

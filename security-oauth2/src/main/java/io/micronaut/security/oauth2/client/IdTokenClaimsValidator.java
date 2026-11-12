@@ -23,11 +23,10 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.Claims;
-import io.micronaut.security.token.ClaimsUtils;
+import io.micronaut.security.token.IssuerUtils;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import jakarta.inject.Singleton;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +41,8 @@ import org.slf4j.LoggerFactory;
  * - The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element.
  * - If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
  * - If an azp (authorized party) Claim is present, the Client SHOULD verify that its client_id is the Claim Value.
+ *
+ * OAuth 2.0 clients configured with {@code micronaut.security.oauth2.clients.*.enabled: false} are ignored, so ID tokens issued to a disabled client are rejected.
  *  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
  *
  * @author Sergio del Amo
@@ -63,7 +64,9 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
      * @param oauthClientConfigurations OpenId client configurations
      */
     public IdTokenClaimsValidator(Collection<OauthClientConfiguration> oauthClientConfigurations) {
-        this.oauthClientConfigurations = oauthClientConfigurations;
+        this.oauthClientConfigurations = oauthClientConfigurations.stream()
+            .filter(OauthClientConfiguration::isEnabled)
+            .toList();
     }
 
     @Override
@@ -175,12 +178,18 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
      * @param iss Issuer claim
      * @param audiences aud claim as a list of string
      * @param oauthClientConfiguration OAuth 2.0 client configuration
-     * @return true if the OAuth 2.0 client OpenID issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
+     * @return false if the OAuth 2.0 client is disabled. Otherwise, true if the OAuth 2.0 client OpenID issuer matches the iss claim, any of the audiences in the aud claim matches the OAuth 2.0 client_id and for multiple audiencies the azp claim is present and matches OAuth 2.0 client_id
      */
     protected boolean validateIssuerAudienceAndAzp(@NonNull Claims claims,
                                                    @NonNull String iss,
                                                    @NonNull List<String> audiences,
                                                    @NonNull OauthClientConfiguration oauthClientConfiguration) {
+        if (!oauthClientConfiguration.isEnabled()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("OAuth 2.0 client '{}' is disabled; ID tokens issued to it are not accepted", oauthClientConfiguration.getName());
+            }
+            return false;
+        }
         Optional<OpenIdClientConfiguration> openIdClientConfigurationOptional = oauthClientConfiguration.getOpenid();
         if (openIdClientConfigurationOptional.isPresent()) {
             OpenIdClientConfiguration openIdClientConfiguration = openIdClientConfigurationOptional.get();
@@ -206,7 +215,7 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
         boolean matchesIssuer = matchesIssuer(openIdClientConfiguration, iss).orElse(false);
         if (!matchesIssuer) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuer().map(URL::toString).orElse(EMPTY), iss);
+                LOG.debug("configuration issuer '{}' does not match claim issuer '{}'", openIdClientConfiguration.getIssuerIdentifier().orElse(EMPTY), iss);
             }
             return false;
         }
@@ -229,17 +238,18 @@ public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     }
 
     /**
-     *
+     * The iss claim matches when it is identical to the expected issuer ({@link OpenIdClientConfiguration#getIssuerIdentifier()}),
+     * as OpenID Connect Core 1.0 section 3.1.3.7 requires. Only the case of the scheme and a single trailing slash are tolerated:
+     * the scheme, host, port and path must match. See {@link IssuerUtils#equivalent(String, String)}.
      * @param iss Issuer claim
      * @param openIdClientConfiguration OpenID OAuth 2.0 client configuration
-     * @return true wrapped in an Optional if the OAuth 2.0 client OpenID issuer matches the iss claim. Empty Optional of OpenID Client configuration does not define an issuer.
+     * @return true wrapped in an Optional if the expected issuer of the OAuth 2.0 client ({@link OpenIdClientConfiguration#getIssuerIdentifier()}) matches the iss claim. Empty Optional if the OpenID Client configuration does not define an issuer.
      */
     @NonNull
     protected Optional<Boolean> matchesIssuer(@NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                               @NonNull String iss) {
-        return openIdClientConfiguration.getIssuer()
-                .map(URL::toString)
-                .map(issuer -> ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash(issuer, iss));
+        return openIdClientConfiguration.getIssuerIdentifier()
+                .map(issuer -> IssuerUtils.equivalent(issuer, iss));
     }
 
     /**
