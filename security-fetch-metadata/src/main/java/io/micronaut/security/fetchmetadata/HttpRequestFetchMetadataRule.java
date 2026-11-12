@@ -33,7 +33,12 @@ public interface HttpRequestFetchMetadataRule extends FetchMetadataRule<HttpRequ
      */
     @Override
     default FetchMetadataRuleResult check(HttpRequest<?> request) {
-        return check(request, request.getSecFetch());
+        SecFetch secFetch = request.getSecFetch();
+        if (secFetch != null && (secFetch.site() == null || secFetch.mode() == null || secFetch.dest() == null)) {
+            // incomplete or unrecognized Fetch Metadata is not classified by the rules
+            secFetch = null;
+        }
+        return check(request, secFetch);
     }
 
     /**

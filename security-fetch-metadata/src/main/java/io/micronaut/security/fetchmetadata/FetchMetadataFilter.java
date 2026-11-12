@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Server filter that enforces the configured Fetch Metadata request-isolation policy.
@@ -92,9 +93,9 @@ public final class FetchMetadataFilter implements Ordered {
         }
         if (LOG.isDebugEnabled()) {
             SecFetch secFetch = request.getSecFetch();
-            String destination = secFetch != null ? secFetch.dest().toString() : "";
-            String mode = secFetch != null ? secFetch.mode().toString() : "";
-            String site = secFetch != null ? secFetch.site().toString() : "";
+            String destination = secFetch != null ? Objects.toString(secFetch.dest(), "") : "";
+            String mode = secFetch != null ? Objects.toString(secFetch.mode(), "") : "";
+            String site = secFetch != null ? Objects.toString(secFetch.site(), "") : "";
             LOG.debug("request {} {} rejected because no Fetch Metadata rule allowed it. Fetch Metadata(dest: {}, mode: {}, site: {})",
                 request.getMethod(),
                 request.getPath(),
