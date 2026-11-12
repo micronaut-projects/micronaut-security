@@ -180,6 +180,12 @@ oauth:
   providerHttpClient: HTTP Clients for the Provider
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
+scim:
+  title: SCIM Core Schema
+  scimInstallation: Installation
+  scimResources: Resources and Attributes
+  scimExtensions: Schema Extensions
+  scimDiscovery: Discovery Resources
 ojdbcExtensions:
   title: Oracle JDBC Extensions
   ojdbcExtensionsInstallation: Oracle JDBC Extensions Installation
