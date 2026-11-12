@@ -83,12 +83,14 @@ endpoints:
 
         then:
         HttpClientResponseException ex = thrown()
+        ex.status == HttpStatus.INTERNAL_SERVER_ERROR
 
         when:
         Map m = ex.response.body()
 
-        then:
-        m._embedded.errors == [[message: "Internal Server Error: ${SensitiveEndpointRule.NON_REPLACED_SECURITY_ERROR_MESSAGE}"]]
+        then: 'Micronaut Framework 5.2 leaves the exception message out of the response unless micronaut.server.error-response-include-message allows it'
+        m._embedded.errors == [[message: "Internal Server Error"]] ||
+                m._embedded.errors == [[message: "Internal Server Error: ${SensitiveEndpointRule.NON_REPLACED_SECURITY_ERROR_MESSAGE}"]]
     }
 
     @Singleton

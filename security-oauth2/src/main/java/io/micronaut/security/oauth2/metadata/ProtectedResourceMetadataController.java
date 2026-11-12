@@ -26,6 +26,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
 @Internal
+@Requires(beans = ProtectedResourceMetadataProvider.class)
 @Requires(classes = HttpRequest.class)
 @Controller
 class ProtectedResourceMetadataController {
