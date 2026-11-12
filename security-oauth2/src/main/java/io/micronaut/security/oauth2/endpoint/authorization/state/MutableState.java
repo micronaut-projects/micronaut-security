@@ -26,8 +26,13 @@ import java.net.URI;
 public interface MutableState extends State {
 
     /**
+     * The value is ignored by the default implementation and never serialized into the state. Redirecting back to the
+     * original URI after login is handled by {@link io.micronaut.security.errors.PriorToLoginPersistence}.
+     *
      * @param originalUri The original uri
+     * @deprecated The original URI is not part of the state. Use {@link io.micronaut.security.errors.PriorToLoginPersistence} instead.
      */
+    @Deprecated(since = "5.4.0", forRemoval = true)
     void setOriginalUri(URI originalUri);
 
     /**

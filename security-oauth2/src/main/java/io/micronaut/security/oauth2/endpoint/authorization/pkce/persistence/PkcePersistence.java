@@ -16,9 +16,11 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 import java.util.Optional;
 
@@ -38,6 +40,22 @@ public interface PkcePersistence {
      */
     @NonNull
     Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request);
+
+    /**
+     * Retrieves the code verifier which belongs to the login flow identified by the state received in the callback.
+     * Implementations that can hold several in-flight code verifiers (keyed by {@link State#getNonce()}) should
+     * override this method. The default implementation ignores {@code callbackState} and delegates to
+     * {@link #retrieveCodeVerifier(HttpRequest)}.
+     *
+     * @param request The callback request
+     * @param callbackState The state received in the authorization callback, if any
+     * @return The optional PKCE code verifier
+     * @since 5.4.0
+     */
+    @NonNull
+    default Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request, @Nullable State callbackState) {
+        return retrieveCodeVerifier(request);
+    }
 
     /**
      * Persists the PKCE for later retrieval.

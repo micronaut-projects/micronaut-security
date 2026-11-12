@@ -49,7 +49,7 @@ public class DefaultOpenIdAuthorizationResponse extends AbstractAuthorizationRes
     @Override
     public String getNonce() {
         return Optional.ofNullable(noncePersistence)
-                .flatMap(np -> np.retrieveNonce(getCallbackRequest()))
+                .flatMap(np -> np.retrieveNonce(getCallbackRequest(), getState()))
                 .orElse(null);
     }
 }
