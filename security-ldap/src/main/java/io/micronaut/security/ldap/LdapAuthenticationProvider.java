@@ -33,8 +33,11 @@ import org.slf4j.LoggerFactory;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
+import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.NamingException;
+import javax.naming.OperationNotSupportedException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Optional;
@@ -128,9 +131,18 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 DirContext userContext = null;
                 try {
                     String dn = result.getDn();
-                    userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                    try {
+                        userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                    } catch (AuthenticationNotSupportedException | OperationNotSupportedException e) {
+                        // The server rejected the user bind itself, so the supplied credentials are not accepted.
+                        debug(LOG, "Server rejected bind for user [{}]. {}", username, e);
+                        return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+                    }
                     if (result.getAttributes() == null) {
-                        result.setAttributes(userContext.getAttributes(dn));
+                        // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
+                        // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
+                        // InvalidNameException is a NamingException and is handled by the enclosing catch.
+                        result.setAttributes(userContext.getAttributes(new LdapName(dn)));
                     }
                 } finally {
                     contextBuilder.close(userContext);
