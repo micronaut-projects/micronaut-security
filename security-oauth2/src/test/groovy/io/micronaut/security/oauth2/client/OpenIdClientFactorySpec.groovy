@@ -49,6 +49,7 @@ class OpenIdClientFactorySpec extends Specification {
         serverFuture = executor.submit(() -> ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                                           : 'OpenIdClientFactorySpec',
                 'micronaut.security.authentication'                   : 'cookie',
+                'micronaut.server.port'                               : -1,
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
         ]))
 
