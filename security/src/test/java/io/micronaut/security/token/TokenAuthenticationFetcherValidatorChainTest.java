@@ -90,9 +90,9 @@ class TokenAuthenticationFetcherValidatorChainTest {
             .block(Duration.ofSeconds(10));
 
         assertNotNull(authentications);
-        assertEquals(List.of("high-" + SLOW_FIRST, "high-" + FAST_SECOND),
+        assertEquals(List.of("high-" + SLOW_FIRST),
             authentications.stream().map(Authentication::getName).toList(),
-            "the first resolved token must be the first one to authenticate");
+            "the first resolved token must be the only one to authenticate, later tokens are not validated");
     }
 
     @Nullable
