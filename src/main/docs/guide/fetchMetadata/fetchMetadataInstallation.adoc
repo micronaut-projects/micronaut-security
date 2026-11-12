@@ -1,0 +1,5 @@
+Add the Micronaut Security Fetch Metadata dependency:
+
+dependency:micronaut-security-fetch-metadata[groupId=io.micronaut.security]
+
+Adding the dependency enables the Fetch Metadata server filter for every request path by default.
