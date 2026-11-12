@@ -38,7 +38,7 @@ class CookiePriorToLoginPersistenceSpec extends Specification {
         cookie.maxAge == 300
     }
 
-    void "onUnauthorized stores the root path when the request has no path"() {
+    void "onUnauthorized does not store a cookie when the request has no path"() {
         given:
         HttpRequest<?> request = request('http://localhost:8080')
         MutableHttpResponse<?> response = HttpResponse.ok()
@@ -47,7 +47,7 @@ class CookiePriorToLoginPersistenceSpec extends Specification {
         persistence.onUnauthorized(request, response)
 
         then:
-        response.getCookie(COOKIE_NAME).map(Cookie::getValue).orElse(null) == '/'
+        response.getCookie(COOKIE_NAME).isEmpty()
     }
 
     void "a relative path with a query string round-trips and the cookie is cleared"() {
