@@ -11,6 +11,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.runtime.server.EmbeddedServer;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import jakarta.inject.Singleton;
 import org.json.JSONException;
@@ -59,8 +60,8 @@ class ProtectedResourceMetadataProviderPathComponentTest {
     @Singleton
     static class ProtectedResourceMetadataProviderMock extends DefaultProtectedResourceMetadataProvider {
 
-        ProtectedResourceMetadataProviderMock(ApplicationConfiguration applicationConfiguration, HttpHostResolver httpHostResolver, List<OpenIdClientConfiguration> openIdClients) {
-            super(applicationConfiguration, httpHostResolver, openIdClients);
+        ProtectedResourceMetadataProviderMock(ApplicationConfiguration applicationConfiguration, HttpHostResolver httpHostResolver, List<OpenIdClientConfiguration> openIdClients, OauthConfiguration oauthConfiguration) {
+            super(applicationConfiguration, httpHostResolver, openIdClients, oauthConfiguration);
         }
 
         @Override
