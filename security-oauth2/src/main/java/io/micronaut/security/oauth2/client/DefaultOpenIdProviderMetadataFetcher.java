@@ -88,7 +88,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
 
     /**
      * @param openIdClientConfiguration OpenID Client Configuration
-     * @param client HTTP Client
+     * @param client HTTP Client. The caller is responsible for configuring the client so that it does not follow redirects.
      */
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
                                                 @Client HttpClient client) {

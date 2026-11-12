@@ -27,9 +27,13 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
+import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OpenIdConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -38,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -48,11 +53,28 @@ final class UserInfoClientFactory {
     private static final Logger LOG = LoggerFactory.getLogger(UserInfoClientFactory.class);
     private final BeanContext beanContext;
     private final HttpClientConfiguration httpClientConfiguration;
+    private final boolean qualifyUsername;
 
+    /**
+     * @param beanContext Bean context
+     * @param httpClientConfiguration HTTP client configuration
+     * @param oauthClientConfigurations OAuth 2.0 client configurations
+     * @param openIdConfiguration OpenID configuration. If {@link OpenIdConfiguration#getQualifyUsernameWithProvider()}
+     *                            is empty, usernames are qualified when more than one enabled client which can
+     *                            authenticate users is configured.
+     */
     UserInfoClientFactory(BeanContext beanContext,
-                          HttpClientConfiguration httpClientConfiguration) {
+                          HttpClientConfiguration httpClientConfiguration,
+                          List<OauthClientConfiguration> oauthClientConfigurations,
+                          OpenIdConfiguration openIdConfiguration) {
         this.beanContext = beanContext;
-        this.httpClientConfiguration = httpClientConfiguration;
+        // the UserInfo client never follows redirects: the bearer token must only be sent to the configured endpoint
+        this.httpClientConfiguration = new NoRedirectHttpClientConfiguration(httpClientConfiguration);
+        this.qualifyUsername = openIdConfiguration.getQualifyUsernameWithProvider()
+            .orElseGet(() -> oauthClientConfigurations.stream()
+                .filter(OauthClientConfiguration::isEnabled)
+                .filter(c -> c.getGrantType() != GrantType.CLIENT_CREDENTIALS)
+                .count() > 1);
     }
 
     /**
@@ -73,7 +95,7 @@ final class UserInfoClientFactory {
         String configuredUserInfoEndpoint = openIdClientConfiguration == null
             ? null
             : openIdClientConfiguration.getUserInfo().flatMap(EndpointConfiguration::getUrl).orElse(null);
-        return new UserInfoClientTokenValidator(name, () -> {
+        return new UserInfoClientTokenValidator(name, qualifyUsername, () -> {
             String userInfoEndpoint = StringUtils.isEmpty(configuredUserInfoEndpoint)
                 ? metadata.get().getUserinfoEndpoint()
                 : configuredUserInfoEndpoint;
@@ -90,7 +112,7 @@ final class UserInfoClientFactory {
     @EachBean(UserInfoClientTokenValidatorConfiguration.class)
     @Singleton
     UserInfoClientTokenValidator createUserInfoClient(UserInfoClientTokenValidatorConfiguration config) {
-        return new UserInfoClientTokenValidator(config.name(), endpoint(config));
+        return new UserInfoClientTokenValidator(config.name(), endpoint(config), qualifyUsername);
     }
 
     private UserInfoClientTokenValidator.Endpoint endpoint(@NonNull UserInfoClientTokenValidatorConfiguration config) {

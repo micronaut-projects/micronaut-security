@@ -59,6 +59,18 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<URL> getIssuer();
 
     /**
+     * The value expected in the {@code iss} claim of ID tokens, if it differs from the URL used to fetch the discovery document
+     * (for example, when discovery is fetched over an internal URL but the provider issues tokens with its public URL).
+     * Defaults to {@link #getIssuer()}.
+     *
+     * @since 5.5.2
+     * @return The expected issuer identifier.
+     */
+    default Optional<String> getIssuerIdentifier() {
+        return getIssuer().map(URL::toString);
+    }
+
+    /**
      * @return The OpenID configuration path
      */
     String getConfigurationPath();
