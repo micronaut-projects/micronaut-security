@@ -4,6 +4,6 @@ ____
 
 If any bean of type api:security.authentication.WwwAuthenticateChallengeProvider[] is available, Micronaut Security uses them to populate the `WWW-Authenticate` header when a 401 Unauthorized response is returned.
 
-If you have <<basicAuth, basic auth> enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting `micronaut.security.basic-auth.www-authenticate` to `false`.
+If you have <<basicAuth, basic auth>> enabled, an entry for "Basic" authentication scheme is added by default. You can disable it setting `micronaut.security.basic-auth.www-authenticate` to `false`.
 
-If you have <<protectedResourceMetadata, Resource Metadata> enabled, an entry as defined in the https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response[WWW-Authenticate Response] section of RFC9728 is added
+If you have <<protectedResourceMetadata, Resource Metadata>> enabled, an entry as defined in the https://datatracker.ietf.org/doc/html/rfc9728#name-www-authenticate-response[WWW-Authenticate Response] section of RFC9728 is added

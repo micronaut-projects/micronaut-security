@@ -19,6 +19,7 @@ dependencies {
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.micronautSecurityScimCore)
+    testImplementation(projects.micronautSecurityPasswordArgon2Bouncycastle)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.testSuiteKeycloakDocker)
@@ -33,6 +34,7 @@ dependencies {
     testImplementation(mnData.micronaut.data.jdbc)
     testImplementation(mnSql.h2)
     testImplementation(mnSql.micronaut.jdbc.hikari)
+    testImplementation(libs.bcpkix)
 }
 
 
