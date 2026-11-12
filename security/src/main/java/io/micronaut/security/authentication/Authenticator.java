@@ -17,6 +17,7 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.order.OrderUtil;
@@ -34,19 +35,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
@@ -63,27 +65,31 @@ public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
-    private final BeanContext beanContext;
 
     private final List<AuthenticationProvider<T, ?, ?>> imperativeAuthenticationProviders;
     private final SecurityConfiguration securityConfiguration;
 
-    private final Map<String, Scheduler> executeNameToScheduler = new ConcurrentHashMap<>();
+    /**
+     * Every provider, reactive and imperative (adapted to reactive), sorted by order. Built once at construction time so
+     * that no adapter is created, no list sorted and no executor bean looked up per authentication.
+     */
+    private final List<ReactiveAuthenticationProvider<T, ?, ?>> everyProviderSorted;
 
     /**
      * @param beanContext Bean Context
      * @param reactiveAuthenticationProviders A list of available Reactive authentication providers
      * @param authenticationProviders A list of available imperative authentication providers
      * @param securityConfiguration The security configuration
+     * @throws ConfigurationException if an {@link ExecutorAuthenticationProvider} names an executor for which no {@link ExecutorService} bean exists
      */
     public Authenticator(BeanContext beanContext,
                          List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
                          List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
-        this.beanContext = beanContext;
         this.reactiveAuthenticationProviders = reactiveAuthenticationProviders;
         this.securityConfiguration = securityConfiguration;
         this.imperativeAuthenticationProviders = authenticationProviders;
+        this.everyProviderSorted = everyProviderSorted(beanContext, reactiveAuthenticationProviders, authenticationProviders);
     }
 
     /**
@@ -106,7 +112,7 @@ public class Authenticator<T> {
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
             return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
         }
-        return authenticate(requestContext, authenticationRequest, everyProviderSorted());
+        return authenticate(requestContext, authenticationRequest, everyProviderSorted);
     }
 
     /**
@@ -162,23 +168,45 @@ public class Authenticator<T> {
                 : AuthenticationResponse.failure();
     }
 
-    private List<ReactiveAuthenticationProvider<T, ?, ?>> everyProviderSorted() {
-        List<ReactiveAuthenticationProvider<T, ?, ?>> providers = new ArrayList<>(reactiveAuthenticationProviders);
-        if (beanContext != null) {
-            providers.addAll(imperativeAuthenticationProviders.stream()
-                    .map(imperativeAuthenticationProvider -> {
-                        if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap) {
-                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, executeNameToScheduler.computeIfAbsent(ap.getExecutorName(), s ->
-                                    beanContext.findBean(ExecutorService.class, Qualifiers.byName(ap.getExecutorName()))
-                                            .map(Schedulers::fromExecutorService)
-                                            .orElse(null)));
-                        } else {
-                            return new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider);
-                        }
-                    }).toList());
+    /**
+     * Builds the full provider chain: every reactive provider plus every imperative provider adapted to
+     * {@link ReactiveAuthenticationProvider}, sorted by order. An {@link ExecutorAuthenticationProvider} is subscribed
+     * on a {@link Scheduler} backed by the {@link ExecutorService} bean named by {@link ExecutorAuthenticationProvider#getExecutorName()};
+     * the bean is resolved once per executor name.
+     * @param beanContext Bean Context used to resolve executor beans
+     * @param reactiveAuthenticationProviders Reactive authentication providers
+     * @param imperativeAuthenticationProviders Imperative authentication providers
+     * @param <T> Request Context Type
+     * @return An unmodifiable list with every provider sorted by order
+     * @throws ConfigurationException if an {@link ExecutorAuthenticationProvider} names an executor for which no {@link ExecutorService} bean exists
+     */
+    @NonNull
+    private static <T> List<ReactiveAuthenticationProvider<T, ?, ?>> everyProviderSorted(@Nullable BeanContext beanContext,
+                                                                                         @Nullable List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders,
+                                                                                         @Nullable List<AuthenticationProvider<T, ?, ?>> imperativeAuthenticationProviders) {
+        List<ReactiveAuthenticationProvider<T, ?, ?>> providers = new ArrayList<>();
+        if (reactiveAuthenticationProviders != null) {
+            providers.addAll(reactiveAuthenticationProviders);
+        }
+        if (beanContext != null && imperativeAuthenticationProviders != null) {
+            Map<String, Scheduler> executorNameToScheduler = new HashMap<>();
+            for (AuthenticationProvider<T, ?, ?> imperativeAuthenticationProvider : imperativeAuthenticationProviders) {
+                if (imperativeAuthenticationProvider instanceof ExecutorAuthenticationProvider<?, ?, ?> ap) {
+                    String executorName = ap.getExecutorName();
+                    Scheduler scheduler = executorNameToScheduler.computeIfAbsent(executorName, name ->
+                            beanContext.findBean(ExecutorService.class, Qualifiers.byName(name))
+                                    .map(Schedulers::fromExecutorService)
+                                    .orElseThrow(() -> new ConfigurationException("Authentication provider " + ap.getClass().getName()
+                                            + " names executor '" + name + "' but no bean of type " + ExecutorService.class.getName()
+                                            + " named '" + name + "' exists")));
+                    providers.add(new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider, scheduler));
+                } else {
+                    providers.add(new AuthenticationProviderAdapter<>(imperativeAuthenticationProvider));
+                }
+            }
         }
         OrderUtil.sort(providers);
-        return providers;
+        return Collections.unmodifiableList(providers);
     }
 
     private Publisher<AuthenticationResponse> authenticate(T request,
@@ -206,37 +234,49 @@ public class Authenticator<T> {
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
         } else {
-            AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  providers.stream()
-                    .map(auth -> Flux.from(auth.authenticate(request, authenticationRequest)))
-                    .map(sequence -> sequence.switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
-                            .onErrorResume((Function<Throwable, Publisher>) t -> {
-                                lastError.set(t);
+            // Providers may complete on different threads, so failures are recorded by provider index and, when no
+            // provider succeeds, the failure of the first provider in provider order is returned. This mirrors the
+            // imperative ANY path.
+            AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
+            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1, IntStream.range(0, providers.size())
+                    .mapToObj(index -> Flux.from(providers.get(index).authenticate(request, authenticationRequest))
+                            .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                            .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
+                                failures.set(index, failedResponseForThrowable(t));
                                 return Flux.empty();
-                            })
-                            ).toList()
+                            }))
+                    .toList()
                     .toArray(emptyArr));
 
             return authentication.take(1)
-                    .switchIfEmpty(Flux.create(emitter -> {
-                Throwable error = lastError.get();
-                if (error != null) {
-                    if (error instanceof AuthenticationException) {
-                        AuthenticationResponse response = ((AuthenticationException) error).getResponse();
-                        if (response != null) {
-                            emitter.next(response);
-                            emitter.complete();
-                        } else {
-                            emitter.error(error);
-                        }
-                    } else {
-                        emitter.error(error);
-                    }
-                } else {
-                    emitter.complete();
-                }
-            }, FluxSink.OverflowStrategy.ERROR));
+                    .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
         }
+    }
+
+    @Nullable
+    private static AuthenticationResponse firstFailure(@NonNull AtomicReferenceArray<AuthenticationResponse> failures) {
+        for (int i = 0; i < failures.length(); i++) {
+            AuthenticationResponse failure = failures.get(i);
+            if (failure != null) {
+                return failure;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Converts a throwable raised by a provider in the ANY strategy into an {@link AuthenticationResponse}.
+     * An {@link AuthenticationException} carrying a response yields that response; any other throwable yields an
+     * {@link AuthenticationFailed}, as the imperative path does when a provider throws.
+     * @param t Throwable raised by a provider
+     * @return The failed authentication response
+     */
+    @NonNull
+    private static AuthenticationResponse failedResponseForThrowable(@NonNull Throwable t) {
+        if (t instanceof AuthenticationException authenticationException && authenticationException.getResponse() != null) {
+            return authenticationException.getResponse();
+        }
+        return authenticationResponseForThrowable(t);
     }
 
     private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
