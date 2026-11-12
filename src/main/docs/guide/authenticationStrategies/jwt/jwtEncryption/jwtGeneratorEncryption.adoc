@@ -17,16 +17,10 @@ Generate a 2048-bit RSA private + public key pair:
 openssl genrsa -out rsa-2048bit-key-pair.pem 2048
 ----
 
-[source, groovy]
-----
-include::{testssecurityjwt}/signandencrypt/RSAOAEPEncryptionConfiguration.groovy[indent=0, tag=clazz]
-----
+snippet::io.micronaut.security.docs.jwtencryption.RSAOAEPEncryptionConfiguration[tags="clazz"]
 
 - Name Bean `generator` to designate this bean as participant in the JWT Token Generation.
 
 To parse the PEM key, use a collaborator as described in https://connect2id.com/products/nimbus-jose-jwt/openssl-key-generation[OpenSSL key generation].
 
-[source, groovy]
-----
-include::{testssecurityjwt}/signandencrypt/KeyPairProvider.groovy[indent=0, tag=clazz]
-----
+snippet::io.micronaut.security.docs.jwtencryption.KeyPairProvider[tags="clazz"]
