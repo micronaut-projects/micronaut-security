@@ -143,7 +143,8 @@ final class CsrfFilter implements Ordered {
     }
 
     /**
-     * Resolves the CSRF token with the supplied resolver and validates it. A resolver which fails, for example because
+     * Resolves the CSRF token with the supplied resolver and validates it. A null or blank token is skipped, so the
+     * {@link CsrfTokenValidator} is only invoked with a real token. A resolver which fails, for example because
      * the request body cannot be parsed, counts as a failed validation so that the request is rejected instead of
      * answered with a server error. The failure message is not logged because it may contain the raw request body.
      * @param resolver CSRF token resolver
@@ -163,6 +164,9 @@ final class CsrfFilter implements Ordered {
             return CompletableFuture.completedFuture(resolverFailed(resolver.getClass(), new NullPointerException("resolver returned a null future")));
         }
         return tokenFuture.thenApply(csrfToken -> {
+                    if (!hasText(csrfToken)) {
+                        return false;
+                    }
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("CSRF Token resolved");
                     }
@@ -193,9 +197,13 @@ final class CsrfFilter implements Ordered {
         return false;
     }
 
+    private static boolean hasText(@Nullable String csrfToken) {
+        return csrfToken != null && !csrfToken.isBlank();
+    }
+
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (StringUtils.isEmpty(csrfToken)) {
+        if (!hasText(csrfToken)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
@@ -260,7 +268,7 @@ final class CsrfFilter implements Ordered {
                 resolverFailed(tokenResolver.getClass(), e);
                 return null;
             }
-            if (tokenOptional.isPresent()) {
+            if (tokenOptional.isPresent() && hasText(tokenOptional.get())) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
