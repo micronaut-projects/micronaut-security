@@ -42,6 +42,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.TOKEN_URL_PARAMETER;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -153,6 +154,23 @@ class ClientCredentialsClientDatabaseAccessTokenFetcherTest {
             assertEquals(token, cachedToken);
             assertEquals(2, TOKEN_REQUEST_COUNT.get());
         });
+    }
+
+    @Test
+    void clientConfigurationToStringDoesNotExposeTheClientSecret() {
+        String str = new ClientCredentialsClientDatabaseAccessTokenFetcher.ClientCredentialsClientConfiguration(
+                "http://localhost/token", "my-client", "my-secret-test-fixture", "scope").toString();
+        assertFalse(str.contains("my-secret-test-fixture"), () -> "client secret leaked in toString: " + str);
+        assertTrue(str.contains("my-client"));
+        assertTrue(str.contains("http://localhost/token"));
+    }
+
+    @Test
+    void malformedTokenUrlMessageDoesNotExposeTheClientSecret() {
+        Exception exception = assertThrows(Exception.class, () -> FETCHER.fetchDatabaseAccessToken(parameters("not-a-url")));
+        for (Throwable t = exception; t != null; t = t.getCause()) {
+            assertFalse(String.valueOf(t.getMessage()).contains("database secret"));
+        }
     }
 
     @Test
