@@ -31,6 +31,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -83,7 +84,7 @@ public class KeysController {
                     // separate branch for that.
                     if (!((Collection<?>) m.getOrDefault("keys", Collections.emptyList())).isEmpty()) {
                         try {
-                            return new String(jsonMapper.writeValueAsBytes(m));
+                            return new String(jsonMapper.writeValueAsBytes(m), StandardCharsets.UTF_8);
                         } catch (IOException e) {
                             if (LOG.isErrorEnabled()) {
                                 LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");

@@ -33,4 +33,8 @@ micronaut:
 - accessing `/v1/myResource/**` with a GET request does not require authentication
 - accessing `/v1/myResource/**` with a request that isn't GET requires authentication
 
+NOTE: Patterns are matched against the request path the router uses to select a route: the percent-encoded path, with each segment decoded. A segment is kept percent-encoded if decoding it would introduce a slash or leave it blank. Thus, a path variable such as `x%2Fy` or `%20` cannot skip a fixed-depth pattern such as `/admin/*`.
+
+NOTE: When `micronaut.server.context-path` is set, the patterns are prepended with the context path by default (see `micronaut.security.intercept-url-map-prepend-pattern-with-context-path`). Requests for the context root, for example `/context` and `/context/`, are matched as the root path `/` is matched when no context path is set. Thus, root patterns such as `/` or `/*` keep protecting the application's root route.
+
 IMPORTANT: When the ann:security.annotation.Secured[] annotation has a set of roles, the <<secured, SecuredAnnotationRule>> grants access to a user if they have **any** of the roles.
