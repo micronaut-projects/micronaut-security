@@ -45,7 +45,7 @@ public abstract class AuthenticationModeCondition implements Condition {
         final String propertyName = SecurityConfigurationProperties.PREFIX + ".authentication";
         if (!propertyResolver.containsProperty(propertyName)) {
             if (AuthenticationModeConditionLogging.LOG.isDebugEnabled()) {
-                AuthenticationModeConditionLogging.LOG.debug("{}} is not fulfilled because {} is not set.", getClass().getSimpleName(), propertyName);
+                AuthenticationModeConditionLogging.LOG.debug("{} is not fulfilled because {} is not set.", getClass().getSimpleName(), propertyName);
             }
             return false;
         }
