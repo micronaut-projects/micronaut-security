@@ -2,6 +2,11 @@ plugins {
     id("io.micronaut.build.internal.security-module")
 }
 
+noReflection {
+    // SecurityContextHolder is a static holder outside the bean context, so it finds its SecurityContextSupplier through the service loader.
+    allowIn("io.micronaut.security.context.SecurityContextHolder", "SERVICE_LOADING")
+}
+
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
@@ -13,6 +18,7 @@ dependencies {
     api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
     api(projects.micronautSecurityAnnotations)
     compileOnly(mn.micronaut.websocket)
+    compileOnly(mn.micronaut.http.client.core)
     compileOnly(mnValidation.micronaut.validation)
     testImplementation(mnValidation.micronaut.validation)
     implementation(mnReactor.micronaut.reactor)
@@ -22,7 +28,6 @@ dependencies {
     compileOnly(mn.jackson.databind)
 
     testAnnotationProcessor(projects.micronautSecurityProcessor)
-    testAnnotationProcessor(mn.micronaut.inject.java)
 
     testCompileOnly(mnData.micronaut.data.processor)
     testCompileOnly(projects.micronautSecurityProcessor)
@@ -38,12 +43,7 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(mn.snakeyaml)
     testImplementation(libs.bcpkix)
-    testImplementation(mnLogging.logback.classic)
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mnTest.mockito.core)
-    testImplementation(mnTest.junit.jupiter.params)
-    testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(libs.jsonassert)
     testImplementation(libs.awaitility)
 }
