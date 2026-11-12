@@ -6,6 +6,8 @@ Meanwhile, a JWK Set is a JSON object that represents a set of JWKs. The JSON ob
 
 To enable the link:{api}/io/micronaut/security/token/jwt/endpoints/KeysController.html[KeysController] you have to provide at least a bean of type: link:{api}/io/micronaut/security/token/jwt/endpoints/JwkProvider.html[JwkProvider].
 
+The JWKS response carries a `Cache-Control: public, max-age=3600` header so relying parties can cache the key set instead of re-fetching it on every token validation. Tune the `max-age` with `micronaut.security.endpoints.keys.cache-max-age` (a duration, for example `5m`); a value of zero or negative disables the header.
+
 Moreover, you can configure it with:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties.adoc[]

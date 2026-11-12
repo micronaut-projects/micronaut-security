@@ -17,6 +17,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -206,8 +207,8 @@ class JwksCacheTest  {
         @Override
         @Get
         @SingleResult
-        public Publisher<String> keys() {
-            Publisher<String> result = super.keys();
+        public Publisher<MutableHttpResponse<String>> keys() {
+            Publisher<MutableHttpResponse<String>> result = super.keys();
             invocations.incrementAndGet();
             return result;
         }
@@ -225,8 +226,8 @@ class JwksCacheTest  {
         @Override
         @Get
         @SingleResult
-        public Publisher<String> keys() {
-            Publisher<String> result = super.keys();
+        public Publisher<MutableHttpResponse<String>> keys() {
+            Publisher<MutableHttpResponse<String>> result = super.keys();
             invocations.incrementAndGet();
             return result;
         }
@@ -245,8 +246,8 @@ class JwksCacheTest  {
         @Override
         @Get
         @SingleResult
-        public Publisher<String> keys() {
-            Publisher<String> result = super.keys();
+        public Publisher<MutableHttpResponse<String>> keys() {
+            Publisher<MutableHttpResponse<String>> result = super.keys();
             invocations.incrementAndGet();
             return result;
         }
