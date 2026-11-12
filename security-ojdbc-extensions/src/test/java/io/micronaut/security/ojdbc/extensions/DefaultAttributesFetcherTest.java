@@ -25,6 +25,7 @@ import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityCon
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -181,6 +182,76 @@ class DefaultAttributesFetcherTest {
 
         assertEquals(Set.of("hr.employee"), attributes.keySet());
         assertEquals("Sales", attributes.get("hr.employee").getString("department"));
+    }
+
+    @Test
+    void fetchAttributesDoesNotMutateOracleJsonObjectAuthenticationAttributesWhenMerging() {
+        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
+                ATTRIBUTE_NAMES_PARAMETER, "FIRST_ATTRIBUTES, SECOND_ATTRIBUTES");
+        OracleJsonObject firstUserInfo = JSON_FACTORY.createObject();
+        firstUserInfo.put("first_name", "George");
+        firstUserInfo.put("level", 1);
+        OracleJsonObject firstContexts = JSON_FACTORY.createObject();
+        firstContexts.put("scott.user_info", firstUserInfo);
+        OracleJsonObject secondUserInfo = JSON_FACTORY.createObject();
+        secondUserInfo.put("last_name", "Washington");
+        secondUserInfo.put("level", 2);
+        OracleJsonObject secondContexts = JSON_FACTORY.createObject();
+        secondContexts.put("scott.user_info", secondUserInfo);
+        Authentication authentication = Authentication.build("sherlock",
+                Map.of("FIRST_ATTRIBUTES", firstContexts, "SECOND_ATTRIBUTES", secondContexts));
+
+        Map<String, OracleJsonObject> firstRun = fetcher.fetchAttributes(parameters, authentication);
+        Map<String, OracleJsonObject> secondRun = fetcher.fetchAttributes(parameters, authentication);
+
+        for (Map<String, OracleJsonObject> attributes : List.of(firstRun, secondRun)) {
+            assertEquals(Set.of("scott.user_info"), attributes.keySet());
+            OracleJsonObject userInfo = attributes.get("scott.user_info");
+            assertEquals(Set.of("first_name", "last_name", "level"), userInfo.keySet());
+            assertEquals("George", userInfo.getString("first_name"));
+            assertEquals("Washington", userInfo.getString("last_name"));
+            assertEquals(2, userInfo.getInt("level"));
+        }
+
+        OracleJsonObject originalFirstUserInfo = ((OracleJsonObject) authentication.getAttributes().get("FIRST_ATTRIBUTES"))
+                .getObject("scott.user_info");
+        assertSame(firstUserInfo, originalFirstUserInfo);
+        assertEquals(Set.of("first_name", "level"), originalFirstUserInfo.keySet());
+        assertEquals("George", originalFirstUserInfo.getString("first_name"));
+        assertEquals(1, originalFirstUserInfo.getInt("level"));
+
+        OracleJsonObject originalSecondUserInfo = ((OracleJsonObject) authentication.getAttributes().get("SECOND_ATTRIBUTES"))
+                .getObject("scott.user_info");
+        assertSame(secondUserInfo, originalSecondUserInfo);
+        assertEquals(Set.of("last_name", "level"), originalSecondUserInfo.keySet());
+        assertEquals("Washington", originalSecondUserInfo.getString("last_name"));
+        assertEquals(2, originalSecondUserInfo.getInt("level"));
+    }
+
+    @Test
+    void fetchAttributesDoesNotMutateOracleJsonObjectContextValuesWhenMerging() {
+        Map<OracleResourceProvider.Parameter, CharSequence> parameters = Map.of(
+                ATTRIBUTE_NAMES_PARAMETER, "FIRST_ATTRIBUTES, SECOND_ATTRIBUTES");
+        OracleJsonObject firstUserInfo = JSON_FACTORY.createObject();
+        firstUserInfo.put("first_name", "George");
+        OracleJsonObject secondUserInfo = JSON_FACTORY.createObject();
+        secondUserInfo.put("last_name", "Washington");
+        Authentication authentication = Authentication.build("sherlock",
+                Map.of("FIRST_ATTRIBUTES", Map.of("scott.user_info", firstUserInfo),
+                        "SECOND_ATTRIBUTES", Map.of("scott.user_info", secondUserInfo)));
+
+        Map<String, OracleJsonObject> firstRun = fetcher.fetchAttributes(parameters, authentication);
+        Map<String, OracleJsonObject> secondRun = fetcher.fetchAttributes(parameters, authentication);
+
+        for (Map<String, OracleJsonObject> attributes : List.of(firstRun, secondRun)) {
+            OracleJsonObject userInfo = attributes.get("scott.user_info");
+            assertEquals(Set.of("first_name", "last_name"), userInfo.keySet());
+            assertEquals("George", userInfo.getString("first_name"));
+            assertEquals("Washington", userInfo.getString("last_name"));
+        }
+
+        assertEquals(Set.of("first_name"), firstUserInfo.keySet());
+        assertEquals(Set.of("last_name"), secondUserInfo.keySet());
     }
 
     @Test
