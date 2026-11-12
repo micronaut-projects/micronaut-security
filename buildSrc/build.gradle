@@ -9,5 +9,6 @@ repositories {
 
 dependencies {
     implementation(libs.graalvm.native.buildtools)
+    implementation(libs.micronaut.errorprone.no.reflection.gradle.plugin)
     implementation(providers.gradleProperty("micronaut-build-version").map { "io.micronaut.build.internal:micronaut-kotlin-build-plugins:${it}" }.get())
 }
