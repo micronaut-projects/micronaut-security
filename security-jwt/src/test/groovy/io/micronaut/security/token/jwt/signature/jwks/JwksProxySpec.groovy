@@ -126,7 +126,7 @@ class JwksProxySpec extends Specification {
                                 'micronaut.http.services.gateway.url'                       : "http://localhost:${authEmbeddedServer.port}",
                                 'micronaut.http.services.gateway.proxy-type'                : 'http',
                                 'micronaut.http.services.gateway.proxy-address'             : "localhost:${proxyEmbeddedServer.port}",
-                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "/keys",
+                                'micronaut.security.token.jwt.signatures.jwks.gateway.url'  : "http://localhost:${authEmbeddedServer.port}/keys",
                         ],
                         null
                 ],
