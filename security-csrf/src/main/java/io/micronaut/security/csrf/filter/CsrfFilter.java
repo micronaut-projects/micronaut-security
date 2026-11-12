@@ -30,6 +30,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.http.exceptions.ContentLengthExceededException;
 import io.micronaut.http.filter.FilterPatternStyle;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
@@ -150,7 +151,13 @@ final class CsrfFilter implements Ordered {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("CSRF Token resolved via {}", resolver.getClass().getSimpleName());
             }
-            if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+            boolean valid;
+            try {
+                valid = csrfTokenValidator.validateCsrfToken(request, csrfToken);
+            } catch (RuntimeException e) {
+                valid = resolverFailed(csrfTokenValidator.getClass(), e);
+            }
+            if (valid) {
                 return PROCEED;
             }
             return resolveAndValidate(request, index + 1, true);
@@ -158,35 +165,31 @@ final class CsrfFilter implements Ordered {
     }
 
     /**
-     * Resolves a CSRF token with the supplied resolver. A resolver which throws or completes exceptionally is treated as if it had not found a token, so that the request is rejected by this filter instead of failing with a server error.
-     * @param resolver CSRF Token resolver
-     * @param request HTTP Request
+     * Resolves a CSRF token with the supplied resolver. A resolver which fails, for example because the request body
+     * cannot be parsed, is treated as if it had not found a token, so that the request is rejected instead of answered
+     * with a server error. The failure message is not logged because it may contain the raw request body.
+     * @param resolver CSRF token resolver
+     * @param request HTTP request
      * @return A future which completes with the resolved token or {@code null} if the resolver did not find a token or failed.
      */
     @NonNull
     private CompletableFuture<@Nullable String> resolveTokenOrNull(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver,
                                                                    @NonNull HttpRequest<?> request) {
-        CompletableFuture<String> future;
+        CompletableFuture<String> tokenFuture;
         try {
-            future = resolver.resolveToken(request);
+            tokenFuture = resolver.resolveToken(request);
         } catch (RuntimeException e) {
-            logResolverFailure(resolver, e);
+            resolverFailed(resolver.getClass(), e);
             return CompletableFuture.completedFuture(null);
         }
-        if (future == null) {
+        if (tokenFuture == null) {
+            resolverFailed(resolver.getClass(), new NullPointerException("resolver returned a null future"));
             return CompletableFuture.completedFuture(null);
         }
-        return future.exceptionally(e -> {
-            logResolverFailure(resolver, e);
+        return tokenFuture.exceptionally(throwable -> {
+            resolverFailed(resolver.getClass(), throwable);
             return null;
         });
-    }
-
-    private static void logResolverFailure(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver, @NonNull Throwable e) {
-        if (LOG.isDebugEnabled()) {
-            Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
-            LOG.debug("CSRF token resolver {} failed, treating it as no token resolved: {}", resolver.getClass().getName(), cause.getMessage());
-        }
     }
 
     /**
@@ -207,6 +210,28 @@ final class CsrfFilter implements Ordered {
         return unauthorized(request);
     }
 
+    /**
+     * A resolver failure counts as a failed validation. The exception is not logged, only its type, because its message
+     * may contain the raw request body. A request body exceeding the maximum request size is not a validation failure:
+     * the exception is propagated so that the client gets the matching status code. An {@link Error} is propagated as well.
+     * @param resolverClass The class of the resolver or validator which failed
+     * @param throwable The failure
+     * @return {@code false}
+     */
+    private static boolean resolverFailed(@NonNull Class<?> resolverClass, @NonNull Throwable throwable) {
+        Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null ? throwable.getCause() : throwable;
+        if (cause instanceof ContentLengthExceededException contentLengthExceededException) {
+            throw contentLengthExceededException;
+        }
+        if (cause instanceof Error error) {
+            throw error;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Request rejected by the CSRF Filter because {} failed with {}", resolverClass.getSimpleName(), cause.getClass().getName());
+        }
+        return false;
+    }
+
     private static boolean hasText(@Nullable String csrfToken) {
         return csrfToken != null && !csrfToken.isBlank();
     }
@@ -219,7 +244,14 @@ final class CsrfFilter implements Ordered {
             }
             return reactiveUnauthorized(request);
         }
-        if (csrfTokenValidator.validateCsrfToken(request, csrfToken)) {
+        boolean valid;
+        try {
+            valid = csrfTokenValidator.validateCsrfToken(request, csrfToken);
+        } catch (RuntimeException e) {
+            resolverFailed(csrfTokenValidator.getClass(), e);
+            return reactiveUnauthorized(request);
+        }
+        if (valid) {
             return PROCEED;
         }
         if (LOG.isDebugEnabled()) {
@@ -256,10 +288,21 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
+    /**
+     * @param request HTTP request
+     * @return The CSRF token, or {@code null} if no resolver found one or a resolver failed. A failing resolver rejects
+     * the request like a missing token, except for a {@link ContentLengthExceededException}, which is propagated.
+     */
     @Nullable
     private String resolveCsrfToken(@NonNull HttpRequest<?> request) {
         for (CsrfTokenResolver<HttpRequest<?>> tokenResolver : csrfTokenResolvers) {
-            Optional<String> tokenOptional = tokenResolver.resolveToken(request);
+            Optional<String> tokenOptional;
+            try {
+                tokenOptional = tokenResolver.resolveToken(request);
+            } catch (RuntimeException e) {
+                resolverFailed(tokenResolver.getClass(), e);
+                return null;
+            }
             if (tokenOptional.isPresent() && hasText(tokenOptional.get())) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());

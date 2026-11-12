@@ -21,15 +21,20 @@ import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import java.util.Map;
 
 /**
  * A token request context for sending an authorization
  * code grant request to an OAuth 2.0 provider.
+ *
+ * <p>The {@code redirect_uri} parameter of the token request is built from the application's own
+ * callback route via {@link OauthRouteUrlBuilder}, never from the {@code state} parameter received
+ * in the authorization response, which is controlled by the party redirecting the browser to the
+ * callback (see RFC 6749 sections 4.1.3 and 10.6).</p>
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -39,6 +44,9 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     private final AuthorizationResponse authorizationResponse;
 
     @Nullable
+    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
+
+    @Nullable
     private final String codeVerifier;
 
     /**
@@ -46,24 +54,45 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
      * @param tokenEndpoint         The token endpoint
      * @param clientConfiguration   The client configuration
      * @param codeVerifier         The PKCE code_verifier
+     * @deprecated Use {@link #OauthCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration, String)}.
+     * A context created with this constructor does not send the {@code redirect_uri} parameter to the token endpoint.
+     */
+    @Deprecated(forRemoval = true, since = "5.5.2")
+    public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                        SecureEndpoint tokenEndpoint,
+                                        OauthClientConfiguration clientConfiguration,
+                                        @Nullable String codeVerifier) {
+        this(authorizationResponse, null, tokenEndpoint, clientConfiguration, codeVerifier);
+    }
+
+    /**
+     * @param authorizationResponse The authorization response
+     * @param oauthRouteUrlBuilder  The OAuth 2.0 route URL builder used to build the {@code redirect_uri}
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @param codeVerifier          The PKCE code_verifier
+     * @since 5.5.2
      */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                        @Nullable OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                         SecureEndpoint tokenEndpoint,
                                         OauthClientConfiguration clientConfiguration,
                                         @Nullable String codeVerifier) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.codeVerifier = codeVerifier;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
-        State state = authorizationResponse.getState();
         codeGrant.setCodeVerifier(getCodeVerifier());
-        if (state != null && state.getRedirectUri() != null) {
-            codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
+        if (oauthRouteUrlBuilder != null) {
+            codeGrant.setRedirectUri(oauthRouteUrlBuilder
+                .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
         }
         return codeGrant.toMap();
     }
