@@ -526,6 +526,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private boolean fetchConfiguration = DEFAULT_FETCH_CONFIGURATION;
         private URL issuer;
+        private String issuerIdentifier;
         private String configurationPath = DEFAULT_CONFIG_PATH;
 
         @io.micronaut.validation.annotation.URL(regexp = HTTP_OR_HTTPS_URL_REGEX)
@@ -590,6 +591,25 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setIssuer(@Nullable URL issuer) {
             this.issuer = issuer;
+        }
+
+        @Override
+        public Optional<String> getIssuerIdentifier() {
+            if (issuerIdentifier != null) {
+                return Optional.of(issuerIdentifier);
+            }
+            return OpenIdClientConfiguration.super.getIssuerIdentifier();
+        }
+
+        /**
+         * The value expected in the {@code iss} claim of ID tokens. Set it when it differs from the {@code issuer} used to
+         * fetch the discovery document, for example when discovery is fetched over an internal URL. Defaults to {@code issuer}.
+         *
+         * @param issuerIdentifier The expected issuer identifier
+         * @since 5.5.2
+         */
+        public void setIssuerIdentifier(@Nullable String issuerIdentifier) {
+            this.issuerIdentifier = issuerIdentifier;
         }
 
         @Override
