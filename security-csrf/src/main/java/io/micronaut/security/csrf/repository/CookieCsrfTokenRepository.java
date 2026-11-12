@@ -26,6 +26,7 @@ import java.util.Optional;
 
 /**
  * Retrieves a CSRF Token from a Cookie named {@link CsrfConfiguration#getCookieName()}, for example, in a Double Submit Cookie pattern.
+ * This repository is consulted after the HTTP session repository, so that a CSRF cookie is only used when the request does not carry an HTTP session holding a CSRF token.
  * @author Sergio del Amo
  * @since 4.11.0
  */
@@ -33,6 +34,12 @@ import java.util.Optional;
 @Requires(condition = CookieCsrfTokenRepositoryEnabledCondition.class)
 @Singleton
 public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpRequest<?>>  {
+    /**
+     * The order of this repository. It runs after the HTTP session repository.
+     * @since 5.5.2
+     */
+    public static final int ORDER = 0;
+
     private final CsrfConfiguration csrfConfiguration;
 
     /**
@@ -49,5 +56,10 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository<HttpReques
         return request.getCookies()
                 .findCookie(csrfConfiguration.getCookieName())
                 .map(Cookie::getValue);
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }
