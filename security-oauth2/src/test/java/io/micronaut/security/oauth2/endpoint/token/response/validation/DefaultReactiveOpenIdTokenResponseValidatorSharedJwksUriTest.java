@@ -54,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class DefaultReactiveOpenIdTokenResponseValidatorSharedJwksUriTest {
     private static final String SPEC_NAME = "DefaultReactiveOpenIdTokenResponseValidatorSharedJwksUriTest";
+    private static final String NONCE = "nonce-sent-in-the-authorization-request";
 
     private static MockOpenIdProvider provider;
     private static EmbeddedServer server;
@@ -98,8 +99,8 @@ class DefaultReactiveOpenIdTokenResponseValidatorSharedJwksUriTest {
         OpenIdTokenResponse response = new OpenIdTokenResponse();
         response.setAccessToken("access-token");
         response.setTokenType("bearer");
-        response.setIdToken(provider.signedJwt(claims -> claims.subject("sherlock").audience(clientId)));
-        return Mono.from(validator.validate(clientConfiguration, metadata, response, null)).blockOptional();
+        response.setIdToken(provider.signedJwt(claims -> claims.subject("sherlock").audience(clientId).claim("nonce", NONCE)));
+        return Mono.from(validator.validate(clientConfiguration, metadata, response, NONCE)).blockOptional();
     }
 
     @Singleton

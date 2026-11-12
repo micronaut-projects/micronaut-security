@@ -62,6 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DefaultReactiveOpenIdTokenResponseValidatorTest {
     private static final String CLIENT_ID = "relying-party";
     private static final String SECRET = "pleaseChangeThisSecretForANewOne";
+    private static final String NONCE = "nonce-sent-in-the-authorization-request";
 
     private static MockOpenIdProvider provider;
     private static EmbeddedServer server;
@@ -86,7 +87,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
 
     @Test
     void idTokenSignedByTheProviderIsValid() throws ParseException {
-        Optional<JWT> jwt = validate(provider.signedJwt(claims -> claims.subject("sherlock").audience(CLIENT_ID)));
+        Optional<JWT> jwt = validate(provider.signedJwt(claims -> claims.subject("sherlock").audience(CLIENT_ID).claim("nonce", NONCE)));
         assertTrue(jwt.isPresent());
         assertEquals("sherlock", jwt.get().getJWTClaimsSet().getSubject());
     }
@@ -97,7 +98,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
         recorder.requests.clear();
         HttpRequest<?> request = HttpRequest.GET("/oauth/callback/auth");
         Optional<JWT> jwt = ServerRequestContext.with(request, (Supplier<Optional<JWT>>) () ->
-            validate(provider.signedJwt(claims -> claims.subject("sherlock").audience(CLIENT_ID))));
+            validate(provider.signedJwt(claims -> claims.subject("sherlock").audience(CLIENT_ID).claim("nonce", NONCE))));
         assertTrue(jwt.isPresent());
         assertTrue(recorder.requests.stream().anyMatch(r -> r == request));
         assertSame(request, recorder.requests.getLast());
@@ -105,7 +106,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
 
     @Test
     void idTokenSignedWithAKeyTheProviderDoesNotPublishIsRejected() {
-        assertTrue(validate(provider.signedJwtWithUnknownKey(claims -> claims.subject("sherlock").audience(CLIENT_ID))).isEmpty());
+        assertTrue(validate(provider.signedJwtWithUnknownKey(claims -> claims.subject("sherlock").audience(CLIENT_ID).claim("nonce", NONCE))).isEmpty());
     }
 
     @Test
@@ -122,7 +123,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
 
     @Test
     void idTokenIssuedToAnotherClientIsRejected() {
-        assertTrue(validate(provider.signedJwt(claims -> claims.subject("sherlock").audience("other-client"))).isEmpty());
+        assertTrue(validate(provider.signedJwt(claims -> claims.subject("sherlock").audience("other-client").claim("nonce", NONCE))).isEmpty());
     }
 
     @Test
@@ -136,6 +137,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
             .issuer(provider.getIssuer())
             .subject("sherlock")
             .audience(CLIENT_ID)
+            .claim("nonce", NONCE)
             .issueTime(Date.from(now))
             .expirationTime(Date.from(now.plusSeconds(3600)));
     }
@@ -150,7 +152,7 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
         response.setAccessToken("access-token");
         response.setTokenType("bearer");
         response.setIdToken(idToken);
-        return Mono.from(validator.validate(clientConfiguration, metadata, response, null)).blockOptional();
+        return Mono.from(validator.validate(clientConfiguration, metadata, response, NONCE)).blockOptional();
     }
 
     @Singleton
