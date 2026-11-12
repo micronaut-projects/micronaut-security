@@ -19,13 +19,19 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import io.micronaut.security.config.SecurityConfiguration;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Default implementation of {@link RolesFinder}.
@@ -37,13 +43,29 @@ import java.util.Map;
 public class DefaultRolesFinder implements RolesFinder {
 
     private final TokenConfiguration tokenConfiguration;
+    private final boolean rolesCaseSensitive;
 
     /**
      * Constructs a Roles Parser.
      * @param tokenConfiguration General Token Configuration
      */
     public DefaultRolesFinder(TokenConfiguration tokenConfiguration) {
+        this(tokenConfiguration, true);
+    }
+
+    /**
+     * Constructs a Roles Parser.
+     * @param tokenConfiguration General Token Configuration
+     * @param securityConfiguration General Security Configuration
+     */
+    @Inject
+    public DefaultRolesFinder(TokenConfiguration tokenConfiguration, SecurityConfiguration securityConfiguration) {
+        this(tokenConfiguration, securityConfiguration.isRolesCaseSensitive());
+    }
+
+    private DefaultRolesFinder(TokenConfiguration tokenConfiguration, boolean rolesCaseSensitive) {
         this.tokenConfiguration = tokenConfiguration;
+        this.rolesCaseSensitive = rolesCaseSensitive;
     }
 
     /**
@@ -79,5 +101,34 @@ public class DefaultRolesFinder implements RolesFinder {
     @NonNull
     public List<String> resolveRoles(@Nullable Map<String, Object> attributes) {
         return rolesAtObject(attributes != null ? attributes.get(tokenConfiguration.getRolesName()) : null);
+    }
+
+    @Override
+    public boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Collection<String> grantedRoles) {
+        if (rolesCaseSensitive) {
+            return RolesFinder.super.hasAnyRequiredRoles(requiredRoles, grantedRoles);
+        }
+        if (requiredRoles.isEmpty() || grantedRoles.isEmpty()) {
+            return false;
+        }
+        Set<String> normalizedGrantedRoles = new HashSet<>(grantedRoles.size());
+        boolean grantedRolesContainsNull = false;
+        for (String grantedRole : grantedRoles) {
+            if (grantedRole == null) {
+                grantedRolesContainsNull = true;
+            } else {
+                normalizedGrantedRoles.add(grantedRole.toLowerCase(Locale.ROOT));
+            }
+        }
+        for (String requiredRole : requiredRoles) {
+            if (requiredRole == null) {
+                if (grantedRolesContainsNull) {
+                    return true;
+                }
+            } else if (normalizedGrantedRoles.contains(requiredRole.toLowerCase(Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

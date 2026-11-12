@@ -89,6 +89,23 @@ class SecurityConfigurationPropertiesSpec extends Specification {
         config.interceptUrlMap[3].pattern == '/health'
         config.interceptUrlMap[3].access == ['isAnonymous()']
         config.interceptUrlMap[3].httpMethod == HttpMethod.POST
+        config.rolesCaseSensitive
+
+        cleanup:
+        ctx.stop()
+    }
+
+    void "test roles case sensitive configuration"() {
+        given:
+        def ctx = ApplicationContext.run([
+                'micronaut.security.roles-case-sensitive': false
+        ])
+
+        when:
+        SecurityConfigurationProperties config = ctx.getBean(SecurityConfigurationProperties)
+
+        then:
+        !config.rolesCaseSensitive
 
         cleanup:
         ctx.stop()
