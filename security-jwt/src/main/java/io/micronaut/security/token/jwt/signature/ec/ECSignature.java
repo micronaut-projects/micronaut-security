@@ -37,6 +37,11 @@ public class ECSignature extends AbstractSignatureConfiguration {
     private final ECPublicKey publicKey;
 
     /**
+     * Lazily created and reused across calls. {@link ECDSAVerifier} is thread-safe.
+     */
+    private volatile JWSVerifier verifier;
+
+    /**
      *
      * @param config Instance of {@link ECSignatureConfiguration}
      */
@@ -64,7 +69,15 @@ public class ECSignature extends AbstractSignatureConfiguration {
 
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
-        final JWSVerifier verifier = new ECDSAVerifier(this.publicKey);
-        return jwt.verify(verifier);
+        return jwt.verify(verifier());
+    }
+
+    private JWSVerifier verifier() throws JOSEException {
+        JWSVerifier result = this.verifier;
+        if (result == null) {
+            result = new ECDSAVerifier(this.publicKey);
+            this.verifier = result;
+        }
+        return result;
     }
 }
