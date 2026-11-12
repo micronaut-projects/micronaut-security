@@ -323,5 +323,10 @@
     "type": "io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition",
     "member": "Method io.micronaut.security.ldap.configuration.$LdapConfiguration$Definition.isEnabled(io.micronaut.context.BeanContext)",
     "reason": "Micronaut generated bean definition, not public API. LdapConfiguration is now annotated with @Requires(condition = LdapConfigurationCondition.class) so the generated definition evaluates its conditions instead of the constant isEnabled override"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.$OauthClientConfigurationProperties$TokenEndpointConfigurationProperties$Definition",
+    "member": "Method io.micronaut.security.oauth2.configuration.$OauthClientConfigurationProperties$TokenEndpointConfigurationProperties$Definition.isEnabled(io.micronaut.context.BeanContext)",
+    "reason": "Micronaut generated bean definition, not public API. The generated definition changed because TokenEndpointConfigurationProperties now declares the inner client-assertion configuration used for JWT client authentication"
   }
 ]
