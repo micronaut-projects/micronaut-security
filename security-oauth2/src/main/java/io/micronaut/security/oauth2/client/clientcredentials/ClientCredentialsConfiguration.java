@@ -32,6 +32,13 @@ import java.util.Optional;
 public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequestProcessorMatcher {
 
     /**
+     * The default expiration applied to an access token whose token response does not include {@code expires_in}
+     * and whose access token is not a JWT with an {@code exp} claim.
+     * @since 5.4.0
+     */
+    Duration DEFAULT_EXPIRATION = Duration.ofMinutes(5);
+
+    /**
      *
      * @return Scope to be requested in the client credentials request.
      */
@@ -45,6 +52,17 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequ
      */
     @NonNull
     Duration getAdvancedExpiration();
+
+    /**
+     *
+     * @return The amount of time a token obtained via client credentials grant is cached when the token response does not
+     * include {@code expires_in} and the access token is not a JWT with an {@code exp} claim.
+     * @since 5.4.0
+     */
+    @NonNull
+    default Duration getDefaultExpiration() {
+        return DEFAULT_EXPIRATION;
+    }
 
     @NonNull
     Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation();
