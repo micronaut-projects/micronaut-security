@@ -27,9 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Validates the signature of a JSON Web Token using Nimbus JOSE + JWT.
@@ -41,7 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValidator<SignedJWT> {
     private static final Logger LOG = LoggerFactory.getLogger(NimbusJsonWebTokenSignatureValidator.class);
     private final List<SignatureConfiguration> signatures;
-    private final ConcurrentHashMap<JWSAlgorithm, List<SignatureConfiguration>> sortedSignaturesMap = new ConcurrentHashMap<>();
 
     public NimbusJsonWebTokenSignatureValidator(List<SignatureConfiguration> signatures) {
         this.signatures = signatures;
@@ -49,15 +46,23 @@ class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValid
 
     @Override
     public boolean validateSignature(@NonNull SignedJWT signedToken) {
-        List<SignatureConfiguration> sortedSignatures = sortedSignaturesMap.computeIfAbsent(signedToken.getHeader().getAlgorithm(), alg -> {
-            List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatures);
-            sortedConfigs.sort(comparator(alg));
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Sorted signature configurations for algorithm {} : {}", alg, sortedConfigs);
+        // The algorithm comes from the untrusted token header. It must never be used as a key of any
+        // unbounded structure (e.g. a cache), because a client could send a distinct value per request
+        // and exhaust memory. The configuration list is small, so we partition it on every call instead.
+        JWSAlgorithm algorithm = signedToken.getHeader().getAlgorithm();
+        List<SignatureConfiguration> supporting = new ArrayList<>(signatures.size());
+        List<SignatureConfiguration> notSupporting = new ArrayList<>(signatures.size());
+        for (SignatureConfiguration signature : signatures) {
+            if (signature.supports(algorithm)) {
+                supporting.add(signature);
+            } else {
+                notSupporting.add(signature);
             }
-            return sortedConfigs;
-        });
-        return validate(signedToken, sortedSignatures);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Signature configurations supporting algorithm {} : {}", algorithm, supporting);
+        }
+        return validate(signedToken, supporting) || validate(signedToken, notSupporting);
     }
 
     private static boolean validate(SignedJWT jwt, SignatureConfiguration signatureConfiguration) {
@@ -67,7 +72,7 @@ class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValid
                 return true;
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT Signature verification failed: {}", jwt.getParsedString());
+                LOG.debug("JWT Signature verification failed");
             }
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
@@ -84,19 +89,5 @@ class NimbusJsonWebTokenSignatureValidator implements JsonWebTokenSignatureValid
             }
         }
         return false;
-    }
-
-    private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm) {
-        return (sig, otherSig) -> {
-            boolean supports = sig.supports(algorithm);
-            boolean otherSupports = otherSig.supports(algorithm);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
-        };
     }
 }

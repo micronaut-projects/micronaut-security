@@ -19,3 +19,5 @@ Micronaut security classes generate several https://micronaut-projects.github.io
 |===
 
 To learn how to listen for events, see the https://docs.micronaut.io/latest/guide/index.html#contextEvents[Context Events] section of the documentation.
+
+NOTE: Micronaut Framework logs every published event at `DEBUG` level through the `io.micronaut.context.event.ApplicationEventPublisher` logger using the event's `toString()`. The events that carry a token (api:security.event.TokenValidatedEvent[], api:security.token.event.AccessTokenGeneratedEvent[] and api:security.token.event.RefreshTokenGeneratedEvent[]) redact it from their string representation, and the other security events (for example api:security.event.LoginSuccessfulEvent[] and api:security.event.LogoutEvent[]) do not print their source, so that enabling `DEBUG` logging never writes tokens to the log. Listeners obtain the token through `getSource()` (or `getRefreshToken()` for the refresh token event). Avoid logging the token yourself in your listeners.
