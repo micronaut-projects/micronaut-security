@@ -72,6 +72,32 @@ If your provider issues tokens whose `iss` differs from the configured issuer, c
 
 - Starting with 5.5.2, api:security.oauth2.endpoint.token.response.validation.IssuerClaimValidator[] requires the `iss` claim of an ID token to match the issuer expected for the OpenID client in addition to the Issuer Identifier of the provider metadata. The expected issuer is `micronaut.security.oauth2.clients.*.openid.issuer`, or `micronaut.security.oauth2.clients.*.openid.issuer-identifier` when set. The comparison is exact, tolerating only the case of the scheme and a trailing slash. Moreover, an `issuer` announced in the provider's discovery document that does not match the expected issuer is discarded (an error is logged) and the expected issuer is used instead, as required by OpenID Connect Discovery 1.0 section 4.3. ID tokens whose `iss` claim only matched the issuer announced by the provider are now rejected. If the provider issues tokens with an `iss` that differs from the URL used to fetch the discovery document (for example, discovery over a cluster-internal URL, or Oracle IDCS with a tenant specific `issuer` and the provider wide issuer `https://identity.oraclecloud.com/`), set `micronaut.security.oauth2.clients.*.openid.issuer-identifier` to the expected `iss` value.
 
+=== Token cookies default to `SameSite=Lax`
+
+The JWT access token cookie (`micronaut.security.token.cookie`) and the refresh token cookie (`micronaut.security.token.refresh.cookie`) are now issued with the `SameSite=Lax` attribute by default. Previously, no `SameSite` attribute was set.
+
+To keep the previous behaviour or use a different value, set `cookie-same-site` explicitly. Allowed values are `Strict`, `Lax` or `None`:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: None
+      refresh:
+        cookie:
+          cookie-same-site: None
+----
+
+NOTE: `SameSite=None` requires the cookie to also be `Secure`.
+
+The `SameSite` attribute cannot be unset via configuration because the property is bound to the `io.micronaut.http.cookie.SameSite` enum. To omit the attribute, invoke `setCookieSameSite(null)` on the configuration bean, for example via a `BeanCreatedEventListener<TokenCookieConfigurationProperties>`.
+
+=== Warning when token cookies are issued without `Secure`
+
+`cookie-secure` still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the `Secure` attribute over a request that was not detected as secure, api:security.token.cookie.CookieLoginHandler[] now logs a `WARN` once. Behind a TLS-terminating proxy, set `micronaut.security.token.cookie.cookie-secure=true` and `micronaut.security.token.refresh.cookie.cookie-secure=true`, or configure forwarded-header handling so that requests are detected as secure.
+
 == Micronaut Security 5.4 breaking changes
 
 - api:security.session.SessionLoginHandler[] issues a new session on successful login instead of reusing the session present in the request. Attributes of the previous session are migrated to the new session and the previous session is deleted from the session store.
