@@ -1,0 +1,4 @@
+[[IgnoredVulns]]
+id = "GHSA-p53j-g8pw-4w5f"
+ignoreUntil = 2026-08-22
+reason = "org.biscuitsec:biscuit:4.0.1 transitively uses net.i2p.crypto:eddsa:0.3.0. BiscuitTokenValidator rejects non-canonical Ed25519 signatures before Biscuit Java verification, and the regression test covers the malleated revocation-identifier case. Remove this exception when Biscuit Java publishes a dependency path without net.i2p.crypto:eddsa or a fixed verifier is otherwise available."
