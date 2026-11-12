@@ -147,4 +147,14 @@ public interface OauthClientConfiguration extends Toggleable {
     default boolean isProxyWellKnownOpenidConfiguration() {
         return false;
     }
+
+
+    /**
+     * @since 5.1.0
+     * @return A new OAuth client configuration builder.
+     */
+    @NonNull
+    static OauthClientConfigurationBuilder builder() {
+        return new OauthClientConfigurationBuilder();
+    }
 }

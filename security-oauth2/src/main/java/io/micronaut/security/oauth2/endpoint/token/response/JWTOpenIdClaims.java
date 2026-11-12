@@ -19,6 +19,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.functional.ThrowingFunction;
+import io.micronaut.security.token.ProfileClaims;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -105,109 +106,109 @@ public class JWTOpenIdClaims implements OpenIdClaims {
     @Override
     @Nullable
     public String getName() {
-        return getClaim(OpenIdClaims.CLAIMS_NAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_NAME, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getGivenName() {
-        return getClaim(OpenIdClaims.CLAIMS_GIVEN_NAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_GIVEN_NAME, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getFamilyName() {
-        return getClaim(OpenIdClaims.CLAIMS_FAMILY_NAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_FAMILY_NAME, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getMiddleName() {
-        return getClaim(OpenIdClaims.CLAIMS_MIDDLE_NAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_MIDDLE_NAME, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getNickname() {
-        return getClaim(OpenIdClaims.CLAIMS_NICKNAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_NICKNAME, claimsSet::getStringClaim);
     }
 
     @Override
     @Nullable
     public String getPreferredUsername() {
-        return getClaim(OpenIdClaims.CLAIMS_PREFERRED_USERNAME, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_PREFERRED_USERNAME, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getProfile() {
-        return getClaim(OpenIdClaims.CLAIMS_PROFILE, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_PROFILE, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getPicture() {
-        return getClaim(OpenIdClaims.CLAIMS_PICTURE, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_PICTURE, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getWebsite() {
-        return getClaim(OpenIdClaims.CLAIMS_WEBSITE, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_WEBSITE, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getEmail() {
-        return getClaim(OpenIdClaims.CLAIMS_EMAIL, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_EMAIL, claimsSet::getStringClaim);
     }
 
     @Override
     @Nullable
     public Boolean isEmailVerified() {
-        return getClaim(OpenIdClaims.CLAIMS_EMAIL_VERIFIED, claimsSet::getBooleanClaim);
+        return getClaim(ProfileClaims.CLAIM_EMAIL_VERIFIED, claimsSet::getBooleanClaim);
     }
 
     @Nullable
     @Override
     public String getGender() {
-        return getClaim(OpenIdClaims.CLAIMS_GENDER, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_GENDER, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getBirthday() {
-        return getClaim(OpenIdClaims.CLAIMS_BIRTHDATE, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_BIRTHDATE, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getZoneinfo() {
-        return getClaim(OpenIdClaims.CLAIMS_ZONEINFO, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_ZONEINFO, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getLocale() {
-        return getClaim(OpenIdClaims.CLAIMS_LOCALE, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_LOCALE, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public String getPhoneNumber() {
-        return getClaim(OpenIdClaims.CLAIMS_PHONE_NUMBER, claimsSet::getStringClaim);
+        return getClaim(ProfileClaims.CLAIM_PHONE_NUMBER, claimsSet::getStringClaim);
     }
 
     @Nullable
     @Override
     public Boolean isPhoneNumberVerified() {
-        return getClaim(OpenIdClaims.CLAIMS_PHONE_NUMBER_VERIFIED, claimsSet::getBooleanClaim);
+        return getClaim(ProfileClaims.CLAIM_PHONE_NUMBER_VERIFIED, claimsSet::getBooleanClaim);
     }
 
     @Nullable
     @Override
     public Address getAdress() {
-        Object addressClaim = claimsSet.getClaim(OpenIdClaims.CLAIMS_ADDRESS);
+        Object addressClaim = claimsSet.getClaim(ProfileClaims.CLAIM_ADDRESS);
         if (addressClaim instanceof Address) {
             return (Address) addressClaim;
         } else if (addressClaim instanceof Map) {
@@ -220,7 +221,7 @@ public class JWTOpenIdClaims implements OpenIdClaims {
     @Nullable
     @Override
     public Integer getUpdatedAt() {
-        return getClaim(OpenIdClaims.CLAIMS_UPDATED_AT, claimsSet::getIntegerClaim);
+        return getClaim(ProfileClaims.CLAIM_UPDATED_AT, claimsSet::getIntegerClaim);
     }
 
     @Override
