@@ -34,6 +34,7 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.context.ServerRequestContextSecurityContextSupplier;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.security.utils.LoggingUtils;
 import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -42,9 +43,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Security Filter.
@@ -76,21 +74,6 @@ public class SecurityFilter implements HttpServerFilter {
     public static final CharSequence TOKEN = "micronaut.TOKEN";
 
     private static final Logger LOG = LoggerFactory.getLogger(SecurityFilter.class);
-
-    private static final String REDACTED = "<redacted>";
-
-    /**
-     * Suffix (compared case-insensitively) of authentication attribute keys whose values must never be logged.
-     */
-    private static final String SENSITIVE_ATTRIBUTE_KEY_SUFFIX = "token";
-
-    /**
-     * Authentication attribute keys whose values must never be logged.
-     * These mirror {@code OauthAuthenticationMapper.ACCESS_TOKEN_KEY}, {@code OauthAuthenticationMapper.REFRESH_TOKEN_KEY}
-     * and {@code OpenIdAuthenticationMapper.OPENID_TOKEN_KEY} from the {@code micronaut-security-oauth2} module,
-     * which this module cannot depend on.
-     */
-    private static final String[] SENSITIVE_ATTRIBUTE_KEYS = {"accessToken", "refreshToken", "openIdToken"};
 
     /**
      * The order of the Security Filter.
@@ -169,52 +152,8 @@ public class SecurityFilter implements HttpServerFilter {
                                                              HttpRequest<?> request,
                                                              ServerFilterChain chain) {
         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withAuthentication(authentication);
-        logAuthenticationAttributes(authentication);
+        LoggingUtils.logAuthenticationAttributes(LOG, authentication);
         return checkRules(request, chain, authentication);
-    }
-
-    private void logAuthenticationAttributes(@Nullable Authentication authentication) {
-        if (authentication == null) {
-            return;
-        }
-        if (LOG.isTraceEnabled()) {
-            Map<String, Object> attributes = authentication.getAttributes();
-            LOG.trace("Authentication attributes: {}", attributes
-                    .entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + "=>" + redactedAttributeValue(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.joining(", ")));
-        } else if (LOG.isDebugEnabled()) {
-            // Only the keys are logged at DEBUG. Attribute values may contain credentials (e.g. OAuth 2.0 access, refresh and ID tokens).
-            LOG.debug("Authentication attributes: {}", authentication.getAttributes().keySet());
-        }
-    }
-
-    /**
-     * Returns the string representation of an authentication attribute value suitable for logging.
-     * Values whose key names a token are redacted so that credentials are never written to the logs.
-     *
-     * @param key the attribute key
-     * @param value the attribute value
-     * @return the value to log
-     */
-    private static String redactedAttributeValue(String key, @Nullable Object value) {
-        if (value == null) {
-            return "null";
-        }
-        return isSensitiveAttributeKey(key) ? REDACTED : value.toString();
-    }
-
-    private static boolean isSensitiveAttributeKey(String key) {
-        if (key == null) {
-            return false;
-        }
-        for (String sensitiveKey : SENSITIVE_ATTRIBUTE_KEYS) {
-            if (sensitiveKey.equalsIgnoreCase(key)) {
-                return true;
-            }
-        }
-        return key.toLowerCase(Locale.ROOT).endsWith(SENSITIVE_ATTRIBUTE_KEY_SUFFIX);
     }
 
     /**

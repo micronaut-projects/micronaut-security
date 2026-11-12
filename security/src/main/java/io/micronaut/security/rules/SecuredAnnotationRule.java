@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 /**
@@ -49,6 +51,8 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
      */
     public static final Integer ORDER = ConfigurationInterceptUrlMapRule.ORDER - 100;
 
+    private static final Logger LOG = LoggerFactory.getLogger(SecuredAnnotationRule.class);
+
     /**
      *
      * @param rolesFinder Roles Parser
@@ -60,6 +64,10 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
     /**
      * Returns {@link SecurityRuleResult#UNKNOWN} if the {@link Secured} annotation is not
      * found on the method or class, or if the route match is not method based.
+     * <p>
+     * If the {@link Secured} value is an expression, the request is allowed only when the expression evaluates to
+     * {@code true}. An expression that evaluates to {@code null}, for example one that navigates the user with
+     * {@code user?.} for an anonymous request, rejects the request instead of deferring to later rules.
      *
      * @param request The current request
      * @param authentication The authentication, or null if none found
@@ -75,9 +83,13 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
             if (securedAnnotation != null) {
                 if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
                     boolean[] arr = securedAnnotation.booleanValues();
-                    if (arr.length > 0) {
-                        return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+                    if (arr.length == 0) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("@Secured expression for route [{} {}] did not evaluate to a boolean. Rejecting the request", request.getMethodName(), request.getPath());
+                        }
+                        return Mono.just(SecurityRuleResult.REJECTED);
                     }
+                    return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
                 }
                 Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
                 if (optionalValue.isPresent()) {
