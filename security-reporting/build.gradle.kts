@@ -17,6 +17,5 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 micronautBuild {
-    binaryCompatibility.enabledAfter("5.5.0")
     testFramework = TestFramework.JUNIT6
 }
