@@ -35,6 +35,16 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
 public interface StateFactory {
 
     /**
+     * Name of the request attribute under which implementations should expose the {@link State} they built.
+     * Persistence mechanisms for values generated later during the same authorization request (for example the PKCE
+     * code verifier or the OpenID nonce) read this attribute to correlate those values with the state of the login
+     * flow they belong to, so that several in-flight login flows can coexist.
+     *
+     * @since 5.4.0
+     */
+    String REQUEST_ATTRIBUTE_STATE = "micronaut.security.oauth2.state";
+
+    /**
      * @param request The original request prior redirect
      * @param response The authorization redirect response
      * @param authorizationRequest the {@link AuthorizationRequest}
