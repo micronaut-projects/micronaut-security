@@ -1,0 +1,10 @@
+An `EndUserSecurityContext` provided to Oracle JDBC encapsulates two security tokens:
+
+**Database Access Token** This token authorizes a Micronaut application to access the database. The provider requests this token by sending an OAuth 2.0 Client Credentials request to the server token endpoint defined by the parameter:
+
+`datasources.*.data-source-properties.oracle.jdbc.provider.endUserSecurityContext.tokenUrl`
+
+**End User Token** This token identifies the end user of a Micronaut application. It is typically received in the `Authorization` header of an incoming HTTP
+request. Micronaut Security resolves the token with the api:io.micronaut.security.token.reader.TokenResolver[] API. The provider retrieves this token using Micronaut's api:security.context.SecurityContextHolder[].
+
+These two tokens allow Oracle Database to make authorization decisions based on the application user who is accessing data and the application they are using.
