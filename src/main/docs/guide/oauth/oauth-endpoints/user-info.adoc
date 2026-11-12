@@ -11,3 +11,15 @@ However, you can set it also via configuration:
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]
 
 NOTE: Set `micronaut.security.oauth2.userinfo.validator` to `false` to disable `UserInfo` endpoint token validation.
+
+=== Provider binding
+
+The api:security.authentication.Authentication[] created from a `UserInfo` response is bound to the provider whose `UserInfo` endpoint answered:
+
+- The attribute `oauth2Provider` (api:security.oauth2.endpoint.token.response.OauthAuthenticationMapper[]`.PROVIDER_KEY`) is always set to the provider name. A value with that key in the `UserInfo` response is ignored, so api:security.oauth2.ProviderResolver[] always resolves the provider which validated the token.
+- The username returned by `Authentication.getName()` is qualified with the provider name, followed by `:` and the `sub` claim, for example `okta:248289761001`, when `micronaut.security.oauth2.openid.qualify-username-with-provider` is `true`. If the property is not set, the username is qualified when more than one enabled OAuth 2.0 client, other than client-credentials-only clients, is configured under `micronaut.security.oauth2.clients`. The `sub` attribute still holds the unqualified subject. Set the property explicitly if your application keys data on the name, so adding an unrelated client later does not rename every user. The default api:security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper[] used at login applies the same rule and the same property, so a user has the same name in a browser login and in a bearer request. See <<openid-user-details, User Details Mapping>>.
+- Client names under `micronaut.security.oauth2.clients` must not contain `:`. Such a name is not supported by the configuration binding, and the `UserInfo` validator additionally rejects it with a `ConfigurationException` when usernames are qualified, because the provider `alpha` with the subject `beta:victim` and the provider `alpha:beta` with the subject `victim` would both be named `alpha:beta:victim`. The `sub` claim may contain `:`, since the provider name is everything before the first `:` of a qualified name.
+
+A subject is only unique within its issuer. Without this binding, whoever controls one configured provider could answer a `UserInfo` request with the subject of a user at another configured provider and your application would treat the request as coming from that user.
+
+NOTE: Only the identity is bound to the provider. Roles are still resolved from the attributes of the `UserInfo` response (for example by api:security.token.DefaultRolesFinder[] reading the `roles` claim), so a provider you configure is trusted to state the roles of its own users. Only configure providers you trust, and use `micronaut.security.token.roles-name` or a custom api:security.token.RolesFinder[] if the claim is not appropriate for a provider.

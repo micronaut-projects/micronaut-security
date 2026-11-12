@@ -37,8 +37,10 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      * The default key type.
+     * @deprecated No longer used. Since 5.5.2 no key type is applied unless {@link #setKeyType(KeyType)} is configured, so that keys of any type of the JWKS are matched.
      */
     @SuppressWarnings("WeakerAccess")
+    @Deprecated(forRemoval = true, since = "5.5.2")
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
     /**
@@ -55,8 +57,12 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     private String url;
 
-    private KeyType keyType = DEFAULT_KEYTYPE;
-    
+    @Nullable
+    private KeyType keyType;
+
+    @Nullable
+    private String issuer;
+
     public JwksSignatureConfigurationProperties(@Parameter String name) {
         this.name = name;
     }
@@ -110,7 +116,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      *
-     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
+     * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK). {@code null} if keys of any type are matched.
      */
     @Override
     @Nullable
@@ -119,10 +125,29 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * Representation of the kty parameter in a JSON Web Key (JWK). Default value (RSA).
+     * Representation of the kty parameter in a JSON Web Key (JWK). When set, only keys of this type are used to verify token signatures; a token signed with a key of another type is rejected even if that key is part of the JWKS. Default value (null): keys of any type are matched.
      * @param keyType Representation of the kty parameter in a JSON Web Key (JWK).
      */
-    public void setKeyType(KeyType keyType) {
+    public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
+    }
+
+    /**
+     * @return The issuer the key set is bound to, or {@code null} if tokens are verified regardless of their {@code iss} claim.
+     * @since 5.5.2
+     */
+    @Override
+    @Nullable
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * Issuer the JSON Web Key Set is bound to. When set, only tokens whose {@code iss} claim matches this issuer are verified with this key set. Default value (null): tokens are verified regardless of their {@code iss} claim.
+     * @param issuer Issuer the JSON Web Key Set is bound to. e.g. https://idp.example.com/
+     * @since 5.5.2
+     */
+    public void setIssuer(@Nullable String issuer) {
+        this.issuer = issuer;
     }
 }
