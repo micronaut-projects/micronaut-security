@@ -7,6 +7,8 @@ plugins {
 
 dependencies {
     compileOnly(mn.micronaut.inject.groovy)
+    implementation(mn.micronaut.json.core)
+    implementation(mnTest.junit.jupiter.api)
     implementation(mnTest.micronaut.test.spock)
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.http.client)
@@ -24,4 +26,3 @@ spotless {
 tasks.withType(Checkstyle) {
     enabled = false
 }
-

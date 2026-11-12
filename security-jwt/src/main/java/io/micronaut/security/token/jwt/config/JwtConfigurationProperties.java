@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
@@ -49,6 +50,7 @@ public class JwtConfigurationProperties implements JwtConfiguration {
      * Sets whether JWT security is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled True if it is
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

@@ -15,10 +15,11 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
-import org.jspecify.annotations.NonNull;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author Nemanja Mikic
@@ -36,6 +37,7 @@ public class CookiePkcePersistenceConfiguration extends AbstractCookieConfigurat
      * @param cookieName Cookie name
      */
     @Override
+    @Bindable(defaultValue = DEFAULT_COOKIE_NAME)
     public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
     }

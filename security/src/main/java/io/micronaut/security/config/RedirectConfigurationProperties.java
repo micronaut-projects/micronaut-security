@@ -16,9 +16,10 @@
 package io.micronaut.security.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link RedirectConfiguration}.
@@ -98,6 +99,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      *
      * @param loginSuccess The URL
      */
+    @Bindable(defaultValue = DEFAULT_LOGIN_SUCCESS)
     public void setLoginSuccess(@NonNull String loginSuccess) {
         this.loginSuccess = loginSuccess;
     }
@@ -107,6 +109,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      *
      * @param loginFailure The URL
      */
+    @Bindable(defaultValue = DEFAULT_LOGIN_FAILURE)
     public void setLoginFailure(@NonNull String loginFailure) {
         this.loginFailure = loginFailure;
     }
@@ -121,6 +124,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      * URL where the user is redirected after logout. Default value ({@value #DEFAULT_LOGOUT_URL}).
      * @param logout The URL
      */
+    @Bindable(defaultValue = DEFAULT_LOGOUT_URL)
     public void setLogout(@NonNull String logout) {
         if (StringUtils.isNotEmpty(logout)) {
             this.logout = logout;
@@ -178,6 +182,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      *
      * @param priorToLogin Prior to login setting
      */
+    @Bindable(defaultValue = "" + DEFAULT_PRIOR_TO_LOGIN)
     public void setPriorToLogin(boolean priorToLogin) {
         this.priorToLogin = priorToLogin;
     }
@@ -196,6 +201,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      * Sets whether Redirection configuration enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled True if it is
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -235,6 +241,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param url The URL
          */
+        @Bindable(defaultValue = DEFAULT_UNAUTHORIZED)
         public void setUrl(@NonNull String url) {
             if (StringUtils.isNotEmpty(url)) {
                 this.url = url;
@@ -251,6 +258,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param enabled The enabled flag
          */
+        @Bindable(defaultValue = "" + DEFAULT_ENABLED)
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
@@ -291,6 +299,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param url The URL
          */
+        @Bindable(defaultValue = DEFAULT_FORBIDDEN)
         public void setUrl(@NonNull String url) {
             if (StringUtils.isNotEmpty(url)) {
                 this.url = url;
@@ -307,6 +316,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param enabled The enabled flag
          */
+        @Bindable(defaultValue = "" + DEFAULT_ENABLED)
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
@@ -346,6 +356,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param url The URL
          */
+        @Bindable(defaultValue = DEFAULT_REFRESH_URL)
         public void setUrl(@NonNull String url) {
             if (StringUtils.isNotEmpty(url)) {
                 this.url = url;
@@ -362,6 +373,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          *
          * @param enabled The enabled flag
          */
+        @Bindable(defaultValue = "" + DEFAULT_ENABLED)
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }

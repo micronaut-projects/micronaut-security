@@ -16,9 +16,10 @@
 package io.micronaut.security.token.generator;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Access token configuration.
@@ -50,6 +51,7 @@ public class AccessTokenConfigurationProperties implements AccessTokenConfigurat
      * Access token expiration. Default value ({@value #DEFAULT_EXPIRATION}).
      * @param expiration The expiration
      */
+    @Bindable(defaultValue = "" + DEFAULT_EXPIRATION)
     public void setExpiration(Integer expiration) {
         ArgumentUtils.requireNonNull("expiration", expiration);
         this.expiration = expiration;

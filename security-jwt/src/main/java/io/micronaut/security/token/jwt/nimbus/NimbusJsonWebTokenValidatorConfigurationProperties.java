@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.nimbus;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
@@ -68,6 +69,7 @@ class NimbusJsonWebTokenValidatorConfigurationProperties implements NimbusJsonWe
      * Whether the bean {@link NimbusReactiveJsonWebTokenValidator} is enabled. Default value {@value #DEFAULT_REACTIVE_VALIDATOR}.
      * @param reactiveValidator Whether the bean {@link NimbusReactiveJsonWebTokenValidator} is enabled.
      */
+    @Bindable(defaultValue = "" + DEFAULT_REACTIVE_VALIDATOR)
     public void setReactiveValidator(boolean reactiveValidator) {
         this.reactiveValidator = reactiveValidator;
     }
@@ -76,6 +78,7 @@ class NimbusJsonWebTokenValidatorConfigurationProperties implements NimbusJsonWe
      * Whether the bean {@link NimbusJsonWebTokenValidator} is enabled. Default value {@value #DEFAULT_VALIDATOR}.
      * @param validator Whether the bean {@link NimbusJsonWebTokenValidator} is enabled.
      */
+    @Bindable(defaultValue = "" + DEFAULT_VALIDATOR)
     public void setValidator(boolean validator) {
         this.validator = validator;
     }
@@ -89,6 +92,7 @@ class NimbusJsonWebTokenValidatorConfigurationProperties implements NimbusJsonWe
      *  Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor. Default value {@value #DEFAULT_REACTIVE_VALIDATOR_EXECUTE_ON_BLOCKING}.
      * @param  reactiveValidatorExecuteOnBlocking Whether {@link NimbusReactiveJsonWebTokenValidator}  should subscribe on a scheduler created with the blocking task executor.
      */
+    @Bindable(defaultValue = "" + DEFAULT_REACTIVE_VALIDATOR_EXECUTE_ON_BLOCKING)
     public void setReactiveValidatorExecuteOnBlocking(boolean reactiveValidatorExecuteOnBlocking) {
         this.reactiveValidatorExecuteOnBlocking = reactiveValidatorExecuteOnBlocking;
     }

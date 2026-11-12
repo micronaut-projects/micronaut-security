@@ -16,9 +16,10 @@
 package io.micronaut.security.endpoints;
 
 import io.micronaut.core.annotation.Internal;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.MediaType;
+import org.jspecify.annotations.NonNull;
 import java.util.Set;
 
 @Internal
@@ -57,6 +58,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      * Supported content types for POST endpoints. Default Value application/json and application/x-www-form-urlencoded
      * @param postContentTypes supported content types for POST endpoints.
      */
+    @Bindable(defaultValue = "application/json,application/x-www-form-urlencoded")
     public void setPostContentTypes(Set<String> postContentTypes) {
         this.postContentTypes = postContentTypes;
     }
@@ -70,6 +72,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      *
      * @param unsupportedPostContentTypeStatus Status code for unsupported content type. Default to 404
      */
+    @Bindable(defaultValue = "" + DEFAULT_UNSUPPORTED_POST_CONTENT_TYPE_STATUS)
     public void setUnsupportedPostContentTypeStatus(int unsupportedPostContentTypeStatus) {
         this.unsupportedPostContentTypeStatus = unsupportedPostContentTypeStatus;
     }
@@ -93,6 +96,7 @@ abstract class ControllerConfigurationProperties implements ControllerConfigurat
      * Enables the controller.
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

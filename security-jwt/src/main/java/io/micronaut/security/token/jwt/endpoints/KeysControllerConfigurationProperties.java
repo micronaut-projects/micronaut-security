@@ -17,9 +17,10 @@ package io.micronaut.security.token.jwt.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Configures the {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
@@ -66,6 +67,7 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
      * Enables {@link io.micronaut.security.token.jwt.endpoints.KeysController}. Default value {@value #DEFAULT_ENABLED}.
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -74,6 +76,7 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
      * Path to the {@link io.micronaut.security.token.jwt.endpoints.KeysController}. Default value {@value #DEFAULT_PATH}.
      * @param path The path
      */
+    @Bindable(defaultValue = DEFAULT_PATH)
     public void setPath(String path) {
         if (StringUtils.isNotEmpty(path)) {
             this.path = path;

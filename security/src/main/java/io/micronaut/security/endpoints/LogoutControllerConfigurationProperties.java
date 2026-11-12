@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -63,6 +64,7 @@ public class LogoutControllerConfigurationProperties extends ControllerConfigura
      * @param enabled true if it is
      */
     @Override
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
     }
@@ -72,6 +74,7 @@ public class LogoutControllerConfigurationProperties extends ControllerConfigura
      * @param path The path
      */
     @Override
+    @Bindable(defaultValue = DEFAULT_PATH)
     public void setPath(String path) {
         super.setPath(path);
     }
@@ -88,6 +91,7 @@ public class LogoutControllerConfigurationProperties extends ControllerConfigura
     *  Enables HTTP GET invocations of {@link io.micronaut.security.endpoints.LogoutController}. Default value ({@value #DEFAULT_GETALLOWED}).
      * @param getAllowed Whether Http GET should be supported.
     */
+    @Bindable(defaultValue = "" + DEFAULT_GETALLOWED)
     public void setGetAllowed(boolean getAllowed) {
         this.getAllowed = getAllowed;
     }

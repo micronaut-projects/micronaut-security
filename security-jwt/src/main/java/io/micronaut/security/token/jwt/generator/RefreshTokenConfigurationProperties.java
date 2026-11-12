@@ -19,11 +19,12 @@ import com.nimbusds.jose.JWSAlgorithm;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Introspected;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link RefreshTokenConfiguration} to configure {@link SignedRefreshTokenGenerator}.
@@ -75,6 +76,7 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
      *
      * @param enabled True if it is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -84,6 +86,7 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
      *
      * @param jwsAlgorithm JWS Algorithm
      */
+    @Bindable(defaultValue = "HS256")
     public void setJwsAlgorithm(@NonNull JWSAlgorithm jwsAlgorithm) {
         this.jwsAlgorithm = jwsAlgorithm;
     }
@@ -100,6 +103,7 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
      *
      * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
      */
+    @Bindable(defaultValue = "" + DEFAULT_BASE64)
     public void setBase64(boolean base64) {
         this.base64 = base64;
     }

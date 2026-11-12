@@ -18,6 +18,7 @@ package io.micronaut.security.csrf.filter;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.bind.annotation.Bindable;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
@@ -69,6 +70,7 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      *  Filter will only process requests whose method matches any of these methods. Default Value is POST, PUT, DELETE, PATCH.
      * @param methods HTTP methods.
      */
+    @Bindable(defaultValue = "POST,PUT,DELETE,PATCH")
     public void setMethods(@NonNull Set<HttpMethod> methods) {
         this.methods = methods;
     }
@@ -83,6 +85,7 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      * Filter will only process requests whose content type matches any of these content types. Default Value is application/x-www-form-urlencoded, multipart/form-data.
      * @param contentTypes Content Types
      */
+    @Bindable(defaultValue = "application/x-www-form-urlencoded,multipart/form-data")
     public void setContentTypes(@NonNull Set<MediaType> contentTypes) {
         this.contentTypes = contentTypes;
     }
@@ -96,6 +99,7 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      * Whether the filter is enabled. Default value {@value #DEFAULT_ENABLED}.
      * @param enabled Whether the filter is enabled.
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -109,6 +113,7 @@ final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration
      * CSRF filter processes only request paths matching this regular expression. Default Value: {@value #DEFAULT_REGEX_PATTERN}
      * @param regexPattern Regular expression pattern for the filter.
      */
+    @Bindable(defaultValue = DEFAULT_REGEX_PATTERN)
     public void setRegexPattern(String regexPattern) {
         this.regexPattern = regexPattern;
     }
