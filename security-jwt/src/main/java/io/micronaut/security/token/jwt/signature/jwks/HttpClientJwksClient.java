@@ -25,19 +25,22 @@ import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.HttpClientRegistry;
-import io.micronaut.http.client.HttpVersionSelection;
 import io.micronaut.http.client.LoadBalancer;
+import io.micronaut.http.client.LoadBalancerResolver;
 import io.micronaut.http.client.ServiceHttpClientConfiguration;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.client.exceptions.ReadTimeoutException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -49,6 +52,10 @@ import java.util.function.Supplier;
  * name that matches the name used for security configuration (i.e. "micronaut.security.token.jwt.signatures.jwks.foo.*")
  * then that client will be used for the request. Otherwise, a default client will be used.
  *
+ * </p>
+ * <p>
+ * Neither the default client nor a named service-specific client follows redirects: the settings of the
+ * service configuration are copied but {@code micronaut.http.services.foo.follow-redirects} is ignored.
  * </p>
  *  @author Jeremy Grelle
  *  @since 4.5.0
@@ -64,17 +71,18 @@ public class HttpClientJwksClient implements JwksClient {
     private final HttpClientRegistry<HttpClient> clientRegistry;
     private final Supplier<HttpClient> defaultJwkSetClient;
     private final ConcurrentHashMap<String, HttpClient> jwkSetClients = new ConcurrentHashMap<>();
+    private final Set<HttpClient> createdClients = ConcurrentHashMap.newKeySet();
 
     /**
      *
      * @param beanContext BeanContext
      * @param clientRegistry HTTP Client Registry
-     * @param defaultClientConfiguration Default HTTP Client Configuration
+     * @param defaultClientConfiguration Default HTTP Client Configuration. Its settings are copied, but the client created from it never follows redirects.
      */
     public HttpClientJwksClient(BeanContext beanContext, HttpClientRegistry<HttpClient> clientRegistry, HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
         this.clientRegistry = clientRegistry;
-        this.defaultJwkSetClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultJwkSetClient = SupplierUtil.memoized(() -> track(beanContext.createBean(HttpClient.class, LoadBalancer.empty(), new NoRedirectHttpClientConfiguration(defaultClientConfiguration))));
     }
 
     @Override
@@ -113,7 +121,38 @@ public class HttpClientJwksClient implements JwksClient {
         }
         return jwkSetClients.computeIfAbsent(providerName, provider ->
             beanContext.findBean(ServiceHttpClientConfiguration.class, Qualifiers.byName(provider))
-                .map(serviceConfig -> this.clientRegistry.getClient(HttpVersionSelection.forClientConfiguration(serviceConfig), provider, "/"))
+                .map(serviceConfig -> track(beanContext.createBean(HttpClient.class, serviceLoadBalancer(provider), new NoRedirectHttpClientConfiguration(serviceConfig))))
                 .orElseGet(defaultJwkSetClient));
+    }
+
+    /**
+     * Resolves the load balancer of the named service, so that a relative JWKS url is resolved against
+     * {@code micronaut.http.services.<name>.url} as it was when the registry client was used.
+     */
+    @NonNull
+    private LoadBalancer serviceLoadBalancer(@NonNull String provider) {
+        return beanContext.findBean(LoadBalancerResolver.class)
+            .flatMap(resolver -> resolver.resolve(provider))
+            .map(LoadBalancer.class::cast)
+            .orElseGet(LoadBalancer::empty);
+    }
+
+    private HttpClient track(HttpClient client) {
+        createdClients.add(client);
+        return client;
+    }
+
+    /**
+     * Closes the HTTP clients this bean created.
+     *
+     * @since 5.5.2
+     */
+    @PreDestroy
+    public void close() {
+        for (HttpClient client : createdClients) {
+            client.close();
+        }
+        createdClients.clear();
+        jwkSetClients.clear();
     }
 }

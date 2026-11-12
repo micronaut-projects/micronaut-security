@@ -26,8 +26,6 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.TokenCookieConfiguration;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,11 +36,11 @@ import java.util.Optional;
  * Stores the last unauthorized URL in a cookie to redirect back to after
  * logging in.
  *
- * <p>Only the path and query of the original request are persisted, and only a
- * relative, same-origin URI is ever returned from {@link #getOriginalUri(HttpRequest, MutableHttpResponse)}.
- * A cookie value carrying a scheme or an authority (for example one injected from a
- * sibling sub-domain) is discarded so the post-login redirect cannot be turned into
- * an open redirect.</p>
+ * <p>Only the path and query of the unauthorized request are persisted, and only a
+ * local path (one that starts with a single {@code /}) is ever returned by
+ * {@link #getOriginalUri(HttpRequest, MutableHttpResponse)}. A request line such as
+ * {@code GET ///evil.example/x} or a planted cookie must not turn the post-login redirect
+ * into a redirect to another host (CWE-601).</p>
  *
  * @author James Kleeh
  * @since 2.0.0
@@ -51,8 +49,6 @@ import java.util.Optional;
 @Requires(property = RedirectConfigurationProperties.PREFIX + ".prior-to-login", value = StringUtils.TRUE)
 @Singleton
 public class CookiePriorToLoginPersistence implements PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CookiePriorToLoginPersistence.class);
 
     private static final String COOKIE_NAME = "ORIGINAL_URI";
 
@@ -64,7 +60,11 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence<Ht
 
     @Override
     public void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Cookie cookie = Cookie.of(COOKIE_NAME, pathAndQuery(request.getUri()));
+        Optional<String> originalUri = localPathAndQuery(request.getUri());
+        if (originalUri.isEmpty()) {
+            return;
+        }
+        Cookie cookie = Cookie.of(COOKIE_NAME, originalUri.get());
         configure(cookie, request);
         cookie.maxAge(Duration.ofMinutes(5));
         response.cookie(cookie);
@@ -72,15 +72,67 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence<Ht
 
     @Override
     public Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Optional<String> value = request.getCookies().get(COOKIE_NAME, String.class);
-        if (value.isEmpty()) {
+        Optional<Cookie> originalUriCookie = request.getCookies().findCookie(COOKIE_NAME);
+        if (originalUriCookie.isEmpty()) {
             return Optional.empty();
         }
-        Cookie cookie = Cookie.of(COOKIE_NAME, "");
-        configure(cookie, request);
-        cookie.maxAge(0);
-        response.cookie(cookie);
-        return parseRelativeUri(value.get());
+        Cookie expired = Cookie.of(COOKIE_NAME, "");
+        configure(expired, request);
+        expired.maxAge(0);
+        response.cookie(expired);
+        return parseUri(originalUriCookie.get().getValue()).filter(CookiePriorToLoginPersistence::isLocalUri);
+    }
+
+    @NonNull
+    private static Optional<URI> parseUri(@Nullable String value) {
+        if (value == null) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(new URI(value));
+        } catch (URISyntaxException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Extracts the path and query of a request URI when they denote a local path.
+     *
+     * @param uri The request URI
+     * @return The raw path and query, or empty when the path is not a local path
+     */
+    @NonNull
+    private static Optional<String> localPathAndQuery(@NonNull URI uri) {
+        String path = uri.getRawPath();
+        if (!isLocalPath(path)) {
+            return Optional.empty();
+        }
+        String query = uri.getRawQuery();
+        return Optional.of(query == null ? path : path + "?" + query);
+    }
+
+    /**
+     * @param uri A URI
+     * @return Whether the URI is a relative reference to a local path, that is, it has no scheme,
+     * no authority and its path starts with a single {@code /}
+     */
+    private static boolean isLocalUri(@NonNull URI uri) {
+        return uri.getScheme() == null
+            && uri.getRawAuthority() == null
+            && isLocalPath(uri.getRawPath())
+            && isLocalPath(uri.toString());
+    }
+
+    /**
+     * @param path A raw path
+     * @return Whether the path starts with a single {@code /}. A path starting with {@code //} is rejected because
+     * browsers interpret it as a scheme-relative URL pointing to another host.
+     */
+    private static boolean isLocalPath(@Nullable String path) {
+        return path != null
+            && path.startsWith("/")
+            && !path.startsWith("//")
+            && !path.startsWith("/\\");
     }
 
     /**
@@ -95,50 +147,6 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence<Ht
         } else {
             cookie.secure(request.isSecure()).httpOnly(true);
             cookie.path("/");
-        }
-    }
-
-    /**
-     * @param uri The request URI
-     * @return The raw path and query of the URI, never its scheme or authority
-     */
-    @NonNull
-    private static String pathAndQuery(@NonNull URI uri) {
-        String path = uri.getRawPath();
-        StringBuilder sb = new StringBuilder(StringUtils.isEmpty(path) ? "/" : path);
-        String query = uri.getRawQuery();
-        if (query != null) {
-            sb.append('?').append(query);
-        }
-        return sb.toString();
-    }
-
-    /**
-     * @param value The cookie value
-     * @return The value parsed as a relative URI, or empty if the value is absolute, protocol-relative or malformed
-     */
-    @NonNull
-    private static Optional<URI> parseRelativeUri(@NonNull String value) {
-        if (StringUtils.isEmpty(value) || value.startsWith("//") || value.startsWith("\\")) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Ignoring {} cookie value \"{}\": not a relative URI", COOKIE_NAME, value);
-            }
-            return Optional.empty();
-        }
-        try {
-            URI uri = new URI(value);
-            if (uri.getScheme() != null || uri.getRawAuthority() != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Ignoring {} cookie value \"{}\": absolute URIs are not allowed", COOKIE_NAME, value);
-                }
-                return Optional.empty();
-            }
-            return Optional.of(uri);
-        } catch (URISyntaxException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Ignoring {} cookie value \"{}\": {}", COOKIE_NAME, value, e.getMessage());
-            }
-            return Optional.empty();
         }
     }
 }
