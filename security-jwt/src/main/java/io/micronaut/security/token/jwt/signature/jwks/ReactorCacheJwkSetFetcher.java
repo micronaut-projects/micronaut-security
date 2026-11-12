@@ -74,13 +74,13 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
     }
 
     /**
-     * Clears the cached JWK Set for the given provider name and url, and the failure back-off for the url, so that it is requested again on the next fetch.
+     * Clears the cached JWK Set for the given provider name and url. The failure back-off is kept.
      * @param providerName The jwks provider name
      * @param url The Jwks uri
      */
     @Override
     public void clearCache(@Nullable String providerName, @NonNull String url) {
-        super.clearCache(url);
+        super.clearCache(providerName, url);
         cache.remove(new CacheKey(providerName, url));
     }
 

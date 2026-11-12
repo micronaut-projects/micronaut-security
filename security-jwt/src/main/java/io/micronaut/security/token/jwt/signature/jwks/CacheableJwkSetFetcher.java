@@ -63,13 +63,13 @@ class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     }
 
     /**
-     * Clears the {@value #CACHE_JWKS} cache entry for the given provider name and url, together with the failure back-off for the given url.
+     * Clears the {@value #CACHE_JWKS} cache entry for the given provider name and url. The failure back-off is kept.
      * @param providerName The jwks provider name
      * @param url The Jwks uri
      */
     @Override
     @CacheInvalidate
     public void clearCache(@Nullable String providerName, @NonNull String url) {
-        super.clearCache(url);
+        super.clearCache(providerName, url);
     }
 }

@@ -141,6 +141,20 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     /**
+     * Clears the cache for the given provider name and url. If a JWKS was baked at build time for the url, it is discarded and the next call to {@link #fetch(String, String)} loads the JWKS over the network.
+     * <p>
+     * Unlike {@link #clearCache(String)}, the failure back-off is kept: this method is invoked when a token carries an unknown key ID,
+     * and a token must not be able to make a failing JWKS endpoint be requested again before the back-off elapses.
+     * </p>
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
+    @Override
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        optimizations.clear(url);
+    }
+
+    /**
      * Loads the JWK Set unless a previous retrieval for the provider and url failed less than the configured back-off ago.
      * <p>
      * Concurrent callers for the same provider and url share one retrieval. The shared retrieval is deliberately not cancelled when
