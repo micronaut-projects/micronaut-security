@@ -18,3 +18,10 @@ micronaut:
         claims-validators:
           audience: https://api.example.com
 ----
+
+The built-in `JWTClaimsSetGenerator` adds the JWT ID (`jti`) claim when the application provides a bean of type api:io.micronaut.security.token.claims.JtiGenerator[].
+The value returned by `generateJtiClaim()` is used as the case-sensitive unique identifier for the JWT:
+
+snippet::io.micronaut.docs.claimsjti.CustomJtiGenerator[tags="clazz"]
+
+If you are migrating from the old `io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator`, use `io.micronaut.security.token.claims.JtiGenerator` instead.
