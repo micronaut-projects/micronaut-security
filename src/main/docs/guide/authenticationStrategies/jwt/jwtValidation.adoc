@@ -20,3 +20,5 @@ allows you to validate the signature of a JWT token.
 `ReactiveJsonWebTokenSignatureValidator` validates the signature using both api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[] or api:io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration[].
 
 `JsonWebTokenSignatureValidator` validates the signature using beans of type api:io.micronaut.security.token.jwt.signature.SignatureConfiguration[].
+
+WARNING: Unsigned tokens (JWS header `alg=none`) are rejected by default, even when no signature configuration is present, because anyone can forge them. To accept unsigned tokens when no signature configuration is present (for example, in local development), set `micronaut.security.token.jwt.accept-unsigned-tokens` to `true`. When a signature configuration is present, unsigned tokens are always rejected.
