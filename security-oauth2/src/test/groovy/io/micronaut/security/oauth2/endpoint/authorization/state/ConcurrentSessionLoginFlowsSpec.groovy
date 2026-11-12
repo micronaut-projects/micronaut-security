@@ -122,6 +122,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when: 'the first flow is completed with its own state (and the code verifier and nonce of the first flow)'
         response = client.exchange(callback(firstState, sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -130,6 +131,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when: 'the second flow is completed with its own state'
         response = client.exchange(callback(secondState, sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -138,6 +140,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when: 'a state cannot be reused once consumed'
         response = client.exchange(callback(firstState, sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -153,6 +156,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         and:
         response = client.exchange(callback(secondState, sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -160,6 +164,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when:
         response = client.exchange(callback(firstState, sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -181,6 +186,7 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when: 'the oldest flow was evicted, so its callback fails'
         response = client.exchange(callback(states.first(), sessionCookie))
+        sessionCookie = response.cookies.findCookie('SESSION').orElse(sessionCookie)
 
         then:
         HttpStatus.SEE_OTHER == response.status()
@@ -189,7 +195,10 @@ class ConcurrentSessionLoginFlowsSpec extends Specification {
 
         when: 'the remaining flows can all be completed'
         List<String> locations = states.drop(1).collect {
-            client.exchange(callback(it, sessionCookie)).getHeaders().get(HttpHeaders.LOCATION)
+            HttpResponse<?> rsp = client.exchange(callback(it, sessionCookie))
+            // a successful login replaces the session (new session ID); a browser would send the new cookie from then on
+            sessionCookie = rsp.cookies.findCookie('SESSION').orElse(sessionCookie)
+            rsp.getHeaders().get(HttpHeaders.LOCATION)
         }
 
         then:
