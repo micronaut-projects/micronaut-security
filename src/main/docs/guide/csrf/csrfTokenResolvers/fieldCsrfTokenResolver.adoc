@@ -11,3 +11,7 @@ amount=100&toUser=intended&csrfToken=o24b65486f506e2cd4403caf0d640024
 ----
 
 You can disable it by setting `micronaut.security.csrf.token-resolvers.field.enabled=false`
+
+If the form body cannot be decoded (for example, because it contains an invalid percent escape such as `%zz`), no CSRF token is resolved and the request is rejected like any other request without a valid CSRF token. The raw request body is never logged; the type of the decoding failure is logged at `DEBUG` level by `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver`.
+
+A request body larger than `micronaut.server.max-request-size` is not treated as a missing token: the request is answered with `413 Request Entity Too Large`.
