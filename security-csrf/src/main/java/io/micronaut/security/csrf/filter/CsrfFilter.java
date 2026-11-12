@@ -102,10 +102,10 @@ final class CsrfFilter implements Ordered {
     }
 
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
-        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
-            if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
-                return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
-            }
+        // The RouteMatch is owned by the request and is still needed to execute the route, so it must not be closed here.
+        RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
+        if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
+            return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
         }
         return true;
     }
@@ -125,50 +125,89 @@ final class CsrfFilter implements Ordered {
         return true;
     }
 
-    private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(HttpRequest<?> request) {
-        List<CompletableFuture<Boolean>> futures = futureCsrfTokenResolvers.stream()
-                .map(resolver -> resolveAndValidate(resolver, request))
-                .toList();
-        CompletableFuture<?>[] futuresArray = futures.toArray(new CompletableFuture<?>[0]);
-        return  CompletableFuture.allOf(futuresArray)
-                .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
-                .thenApply(validations -> {
-                    if (validations.stream().anyMatch(Boolean::booleanValue)) {
-                        return null;
-                    } else if (LOG.isTraceEnabled()) {
-                        LOG.trace("CSRF Token validation failed");
-                    }
-                    return unauthorized(request);
-                });
+    /**
+     * Resolves CSRF tokens sequentially, in resolver order, and stops at the first token which validates.
+     * Resolvers which may be expensive, such as those which parse the request body, are therefore not invoked if a cheaper resolver which runs before them, such as the HTTP header resolver, already produced a valid token.
+     * @param request HTTP Request
+     * @return A future which completes with {@code null} if a valid token was found; an unauthorized response otherwise.
+     */
+    @NonNull
+    private CompletableFuture<@Nullable HttpResponse<?>> reactiveFilter(@NonNull HttpRequest<?> request) {
+        return resolveAndValidate(request, 0, false);
+    }
+
+    @NonNull
+    private CompletableFuture<@Nullable HttpResponse<?>> resolveAndValidate(@NonNull HttpRequest<?> request,
+                                                                          int index,
+                                                                          boolean tokenFound) {
+        if (index >= futureCsrfTokenResolvers.size()) {
+            return CompletableFuture.completedFuture(rejectRequest(request, tokenFound));
+        }
+        FutureCsrfTokenResolver<HttpRequest<?>> resolver = futureCsrfTokenResolvers.get(index);
+        return resolveTokenOrNull(resolver, request).thenCompose(csrfToken -> {
+            if (!hasText(csrfToken)) {
+                return resolveAndValidate(request, index + 1, tokenFound);
+            }
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("CSRF Token resolved via {}", resolver.getClass().getSimpleName());
+            }
+            boolean valid;
+            try {
+                valid = csrfTokenValidator.validateCsrfToken(request, csrfToken);
+            } catch (RuntimeException e) {
+                valid = resolverFailed(csrfTokenValidator.getClass(), e);
+            }
+            if (valid) {
+                return PROCEED;
+            }
+            return resolveAndValidate(request, index + 1, true);
+        });
     }
 
     /**
-     * Resolves the CSRF token with the supplied resolver and validates it. A resolver which fails, for example because
-     * the request body cannot be parsed, counts as a failed validation so that the request is rejected instead of
-     * answered with a server error. The failure message is not logged because it may contain the raw request body.
+     * Resolves a CSRF token with the supplied resolver. A resolver which fails, for example because the request body
+     * cannot be parsed, is treated as if it had not found a token, so that the request is rejected instead of answered
+     * with a server error. The failure message is not logged because it may contain the raw request body.
      * @param resolver CSRF token resolver
      * @param request HTTP request
-     * @return Whether the token resolved by the resolver is valid
+     * @return A future which completes with the resolved token or {@code null} if the resolver did not find a token or failed.
      */
     @NonNull
-    private CompletableFuture<Boolean> resolveAndValidate(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver,
-                                                          @NonNull HttpRequest<?> request) {
+    private CompletableFuture<@Nullable String> resolveTokenOrNull(@NonNull FutureCsrfTokenResolver<HttpRequest<?>> resolver,
+                                                                   @NonNull HttpRequest<?> request) {
         CompletableFuture<String> tokenFuture;
         try {
             tokenFuture = resolver.resolveToken(request);
         } catch (RuntimeException e) {
-            return CompletableFuture.completedFuture(resolverFailed(resolver.getClass(), e));
+            resolverFailed(resolver.getClass(), e);
+            return CompletableFuture.completedFuture(null);
         }
         if (tokenFuture == null) {
-            return CompletableFuture.completedFuture(resolverFailed(resolver.getClass(), new NullPointerException("resolver returned a null future")));
+            resolverFailed(resolver.getClass(), new NullPointerException("resolver returned a null future"));
+            return CompletableFuture.completedFuture(null);
         }
-        return tokenFuture.thenApply(csrfToken -> {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("CSRF Token resolved");
-                    }
-                    return csrfTokenValidator.validateCsrfToken(request, csrfToken);
-                })
-                .exceptionally(throwable -> resolverFailed(resolver.getClass(), throwable));
+        return tokenFuture.exceptionally(throwable -> {
+            resolverFailed(resolver.getClass(), throwable);
+            return null;
+        });
+    }
+
+    /**
+     * Rejects the request once every resolver has been consulted without producing a valid token.
+     * @param request HTTP Request
+     * @param tokenFound Whether any resolver produced a non-blank token
+     * @return an unauthorized response
+     */
+    @NonNull
+    private HttpResponse<?> rejectRequest(@NonNull HttpRequest<?> request, boolean tokenFound) {
+        if (!tokenFound) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
+            }
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Request rejected by the CSRF Filter because the CSRF Token validation failed");
+        }
+        return unauthorized(request);
     }
 
     /**
@@ -193,9 +232,13 @@ final class CsrfFilter implements Ordered {
         return false;
     }
 
+    private static boolean hasText(@Nullable String csrfToken) {
+        return csrfToken != null && !csrfToken.isBlank();
+    }
+
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (StringUtils.isEmpty(csrfToken)) {
+        if (!hasText(csrfToken)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
@@ -260,7 +303,7 @@ final class CsrfFilter implements Ordered {
                 resolverFailed(tokenResolver.getClass(), e);
                 return null;
             }
-            if (tokenOptional.isPresent()) {
+            if (tokenOptional.isPresent() && hasText(tokenOptional.get())) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
