@@ -23,6 +23,7 @@ import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.condition.OauthClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -36,7 +37,11 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +69,8 @@ public class DefaultOauthClient implements OauthClient {
     private final OauthAuthorizationResponseHandler authorizationResponseHandler;
     private final BeanContext beanContext;
     private final SecureEndpoint tokenEndpoint;
+    @Nullable
+    private final StateValidator stateValidator;
 
     /**
      * @param clientConfiguration The client configuration
@@ -71,18 +78,45 @@ public class DefaultOauthClient implements OauthClient {
      * @param redirectHandler The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
+     * @deprecated Use {@link #DefaultOauthClient(OauthAuthenticationMapper, OauthClientConfiguration, AuthorizationRedirectHandler, OauthAuthorizationResponseHandler, BeanContext, StateValidator)} instead.
      */
+    @Deprecated(since = "5.4.0")
     public DefaultOauthClient(@Parameter OauthAuthenticationMapper authenticationMapper,
                               @Parameter OauthClientConfiguration clientConfiguration,
                               AuthorizationRedirectHandler redirectHandler,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {
+        this(authenticationMapper,
+            clientConfiguration,
+            redirectHandler,
+            authorizationResponseHandler,
+            beanContext,
+            beanContext.findBean(StateValidator.class).orElse(null));
+    }
+
+    /**
+     * @param clientConfiguration The client configuration
+     * @param authenticationMapper The user details mapper
+     * @param redirectHandler The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     * @param stateValidator The state validator, or null if state validation is disabled
+     * @since 5.4.0
+     */
+    @Inject
+    public DefaultOauthClient(@Parameter OauthAuthenticationMapper authenticationMapper,
+                              @Parameter OauthClientConfiguration clientConfiguration,
+                              AuthorizationRedirectHandler redirectHandler,
+                              OauthAuthorizationResponseHandler authorizationResponseHandler,
+                              BeanContext beanContext,
+                              @Nullable StateValidator stateValidator) {
         this.clientConfiguration = clientConfiguration;
         this.authenticationMapper = authenticationMapper;
         this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.tokenEndpoint = clientConfiguration.getTokenEndpoint();
+        this.stateValidator = stateValidator;
     }
 
     @Override
@@ -109,6 +143,18 @@ public class DefaultOauthClient implements OauthClient {
 
         if (isErrorCallback(responseData)) {
             AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);
+            if (stateValidator != null) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Validating state found in the authorization error response from provider [{}]", getName());
+                }
+                try {
+                    stateValidator.validate(request, errorResponse.getState());
+                } catch (InvalidStateException e) {
+                    return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+                }
+            } else if (LOG.isTraceEnabled()) {
+                LOG.trace("Skipping state validation of the authorization error response, no state validator found");
+            }
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
             }
