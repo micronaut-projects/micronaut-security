@@ -42,6 +42,12 @@ public class DefaultJwkValidator implements JwkValidator {
 
     @Override
     public boolean validate(SignedJWT jwt, JWK jwk) {
+        if (!JwksSignatureUtils.isEligibleForVerification(jwk, jwt.getHeader().getAlgorithm())) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWK with Key ID {} is not eligible to verify a {} signature", jwk.getKeyID(), jwt.getHeader().getAlgorithm());
+            }
+            return false;
+        }
         Optional<JWSVerifier> verifier = getVerifier(jwk);
         if (verifier.isPresent()) {
             try {

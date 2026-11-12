@@ -37,6 +37,7 @@ import io.micronaut.security.token.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -162,6 +163,11 @@ class JwksUriSignatureSpec extends Specification {
         and:
         authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
         authServerB.applicationContext.getBean(AuthServerBKeysController).invocations >= 1
+
+        and: 'the JWKS configurations created for the OpenID clients do not restrict the key type'
+        Collection<JwksSignatureConfiguration> jwksSignatureConfigurations = embeddedServer.applicationContext.getBeansOfType(JwksSignatureConfiguration)
+        jwksSignatureConfigurations.size() == 2
+        jwksSignatureConfigurations.every { it.keyType == null }
 
         cleanup:
         authServerA.close()
