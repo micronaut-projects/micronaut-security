@@ -47,7 +47,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
             getUri() >> new URI('/books')
             getMethod() >> HttpMethod.GET
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null), null)
 
         expect:
         Mono.from(provider.check(request, null)).block() == securityRuleResult
@@ -66,7 +66,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
             getInterceptUrlMap() >> []
         }
 
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null), null)
 
         expect:
         expected == Mono.from(provider.compareRoles(requiredRoles, grantedRoles)).block()

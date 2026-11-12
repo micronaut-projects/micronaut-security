@@ -6,7 +6,7 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "8.0.0-M18"
+    id("io.micronaut.build.shared.settings") version "8.1.5"
 }
 
 rootProject.name = 'security-parent'
@@ -16,11 +16,17 @@ include "security"
 include "security-aot"
 include "security-annotations"
 include "security-csrf"
+include "security-reporting"
+include "security-html-sanitizer"
+include "security-password"
+include "security-password-argon2-bouncycastle"
+include "security-password-tck"
 include "security-jwt"
 include "security-processor"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
+include "security-ojdbc-extensions"
 include "test-suite-graal"
 include "test-suite-jwks-cache"
 include "test-suite-groovy"
@@ -30,6 +36,7 @@ include "test-suite-jwt-tck"
 include "test-suite-jwt-nimbus"
 include "test-suite-security-service"
 include "test-suite-http"
+include "test-suite-csrf-no-session"
 include "test-suite-geb"
 include "test-suite-keycloak"
 include "test-suite-keycloak-docker"
@@ -38,12 +45,14 @@ include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
+include "test-suite-python"
 include "test-suite-aot"
 include "test-suite-aot-authserver"
 include "test-suite-serde"
 include "test-suite-ldap"
 include "test-suite-jackson-databind-bean-introspection-module-false"
 include "test-suite-hibernate-validator"
+include "test-suite-coverage"
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {

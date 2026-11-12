@@ -6,10 +6,39 @@
 name: GraalVM Dev CI
 on:
   schedule:
-    - cron: "0 1 * * 1-5" # Mon-Fri at 1am UTC
+    - cron: "0 1 * * 6" # Saturdays at 1am Europe/Madrid; the gate below runs every other Saturday
+      timezone: "Europe/Madrid"
 jobs:
-  build_matrix:
+  should_run:
     if: github.repository != 'micronaut-projects/micronaut-project-template'
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.biweekly.outputs.should_run }}
+    steps:
+      - name: Check biweekly schedule
+        id: biweekly
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          current_date="$(TZ=Europe/Madrid date +%F)"
+          current_day="$(date -u -d "${current_date}" +%s)"
+          anchor_day="$(date -u -d "2026-09-12" +%s)"
+          days_since_anchor=$(( (current_day - anchor_day) / 86400 ))
+          should_run=false
+
+          if (( days_since_anchor >= 0 && days_since_anchor % 14 == 0 )); then
+            should_run=true
+          fi
+
+          echo "Current date: ${current_date}"
+          echo "Days since anchor: ${days_since_anchor}"
+          echo "Run build: ${should_run}"
+          echo "should_run=${should_run}" >> "${GITHUB_OUTPUT}"
+
+  build_matrix:
+    needs: should_run
+    if: github.repository != 'micronaut-projects/micronaut-project-template' && needs.should_run.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     env:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
@@ -18,9 +47,9 @@ jobs:
     outputs:
       matrix: ${{ steps.build-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Build Matrix
-        uses: micronaut-projects/github-actions/graalvm/build-matrix@300bf6db7c062dcba77c90bb90e475df31b2acab # master
+        uses: micronaut-projects/github-actions/graalvm/build-matrix@5f587657fc12601ab92d64d077f99a54c3cbdf78 # master
         id: build-matrix
         with:
           java-version: '25'
@@ -49,9 +78,9 @@ jobs:
           sudo rm -rf /usr/lib/jvm/*
           unset JAVA_HOME
           export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v '/usr/lib/jvm' | paste -sd:)
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Pre-Build Steps
-        uses: micronaut-projects/github-actions/graalvm/pre-build@300bf6db7c062dcba77c90bb90e475df31b2acab # master
+        uses: micronaut-projects/github-actions/graalvm/pre-build@5f587657fc12601ab92d64d077f99a54c3cbdf78 # master
         id: pre-build
         with:
           java: ${{ matrix.java }}
@@ -59,16 +88,17 @@ jobs:
           nativeTestTask: ${{ matrix.native_test_task }}
           gradle-java: '25'
       - name: Build Steps
-        uses: micronaut-projects/github-actions/graalvm/build@300bf6db7c062dcba77c90bb90e475df31b2acab # master
+        uses: micronaut-projects/github-actions/graalvm/build@5f587657fc12601ab92d64d077f99a54c3cbdf78 # master
         id: build
         env:
           GH_TOKEN_PUBLIC_REPOS_READONLY: ${{ secrets.GH_TOKEN_PUBLIC_REPOS_READONLY }}
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GRAALVM_QUICK_BUILD: true
+          NATIVE_IMAGE_OPTIONS: "-H:+ReportExceptionStackTraces"
         with:
           nativeTestTask: ${{ matrix.native_test_task }}
       - name: Post-Build Steps
-        uses: micronaut-projects/github-actions/graalvm/post-build@300bf6db7c062dcba77c90bb90e475df31b2acab # master
+        uses: micronaut-projects/github-actions/graalvm/post-build@5f587657fc12601ab92d64d077f99a54c3cbdf78 # master
         id: post-build
         with:
           java: ${{ matrix.java }}
