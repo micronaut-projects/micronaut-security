@@ -66,7 +66,7 @@ class CsrfConfigurationPropertiesSchemaTest {
         Map<String, Object> methods = map(properties, "methods");
         assertEquals("array", methods.get("type"));
         assertEquals("java.util.Set", methods.get("x-micronaut-javaType"));
-        assertEquals(List.of("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "PATCH", "CUSTOM"),
+        assertEquals(List.of("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "PATCH", "QUERY", "CUSTOM"),
             map(methods, "items").get("enum"));
 
         Map<String, Object> contentTypes = map(properties, "content-types");
