@@ -24,11 +24,16 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.SearchSettings;
+import jakarta.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for LDAP authentication.
@@ -52,6 +57,8 @@ public class LdapConfiguration implements Toggleable {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
+    private static final Logger LOG = LoggerFactory.getLogger(LdapConfiguration.class);
+
     private boolean enabled = DEFAULT_ENABLED;
     private ContextConfiguration context = new ContextConfiguration();
     private SearchConfiguration search = new SearchConfiguration();
@@ -70,6 +77,24 @@ public class LdapConfiguration implements Toggleable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Reports conflicting attribute settings once after configuration binding.
+     */
+    @PostConstruct
+    final void warnAboutExcludedAttributes() {
+        for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
+            String[] requested = search.getAttributes();
+            if (requested != null && Arrays.stream(requested).anyMatch(excluded::equalsIgnoreCase)) {
+                LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
+                    + "Remove it from search.excluded-attributes if the application needs it.", name, excluded);
+            }
+            if (group.isEnabled() && group.getFilterAttribute().filter(excluded::equalsIgnoreCase).isPresent()) {
+                LOG.warn("LDAP configuration [{}] uses groups.filter-attribute [{}], but search.excluded-attributes removes it. "
+                    + "Group resolution requires removing it from search.excluded-attributes and including it in search.attributes when configured.", name, excluded);
+            }
+        }
     }
 
     @Override
@@ -266,7 +291,7 @@ public class LdapConfiguration implements Toggleable {
         /**
          * The attributes stripped from the user search results by default.
          *
-         * @since 5.4.0
+         * @since 5.5.3
          */
         public static final List<String> DEFAULT_EXCLUDED_ATTRIBUTES = List.of("userPassword", "unicodePwd");
 
@@ -369,7 +394,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return The attributes stripped from the search results. Never null.
-         * @since 5.4.0
+         * @since 5.5.3
          */
         public List<String> getExcludedAttributes() {
             return excludedAttributes;
@@ -378,12 +403,13 @@ public class LdapConfiguration implements Toggleable {
         /**
          * Sets the attributes stripped from the user search results before they are exposed to the application.
          * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
+         * Exclusions also apply to explicitly requested attributes; conflicting settings log a warning at startup.
          *
          * @param excludedAttributes The attributes to exclude
-         * @since 5.4.0
+         * @since 5.5.3
          */
-        public void setExcludedAttributes(List<String> excludedAttributes) {
-            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : excludedAttributes;
+        public void setExcludedAttributes(@Nullable List<String> excludedAttributes) {
+            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : List.copyOf(excludedAttributes);
         }
 
         /**

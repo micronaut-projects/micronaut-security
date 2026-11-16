@@ -13,6 +13,10 @@ When `micronaut.security.ldap.*.search.attributes` is not set, the user search r
 
 To avoid exposing password hashes to application code, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. Set the property to an empty list to disable the exclusion, or extend the list to strip additional sensitive attributes.
 
+Exclusions also apply when an attribute is explicitly requested in `search.attributes`. A conflicting setting logs a warning once at startup for that LDAP configuration. If your application needs the attribute, remove it from `search.excluded-attributes`.
+
+This filtering happens after JNDI receives the attributes into process memory; it prevents downstream exposure rather than preventing retrieval. The defaults apply to properties-based user searches. Custom api:security.ldap.context.SearchSettings[] implementations default to no exclusions and must override `getExcludedAttributes()` to opt in.
+
 It is recommended to set `micronaut.security.ldap.*.search.attributes` explicitly to the minimal set of attributes your application needs, for example:
 
 [configuration]
@@ -28,7 +32,7 @@ micronaut:
             - mail
 ----
 
-NOTE: The group search only requests the attribute configured with `micronaut.security.ldap.*.groups.attribute` (`cn` by default). If you set `micronaut.security.ldap.*.groups.filter-attribute`, make sure that attribute is included in `micronaut.security.ldap.*.search.attributes`, since the value is read from the user search result.
+NOTE: The group search only requests the attribute configured with `micronaut.security.ldap.*.groups.attribute` (`cn` by default). If you set `micronaut.security.ldap.*.groups.filter-attribute`, make sure that attribute is included in `micronaut.security.ldap.*.search.attributes` when configured and is absent from `micronaut.security.ldap.*.search.excluded-attributes`, since the value is read from the user search result. A conflict with the exclusion list logs a warning at startup.
 
 TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
 ```

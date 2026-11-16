@@ -56,11 +56,13 @@ public interface SearchSettings {
     /**
      * Attributes that must never be included in the search results, even when the
      * server returns them. Matching is case-insensitive. Useful to keep sensitive
-     * attributes such as {@code userPassword} out of memory and out of the
+     * attributes such as {@code userPassword} out of the
      * {@link LdapSearchResult} handed to downstream code.
+     * The attributes have already been received into process memory by JNDI when they are removed.
+     * The default is empty to preserve the behavior of custom implementations.
      *
      * @return The attribute names to strip from the search results
-     * @since 5.4.0
+     * @since 5.5.3
      */
     default List<String> getExcludedAttributes() {
         return Collections.emptyList();

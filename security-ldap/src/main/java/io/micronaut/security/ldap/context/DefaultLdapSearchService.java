@@ -19,9 +19,10 @@ import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -56,11 +57,7 @@ public class DefaultLdapSearchService implements LdapSearchService {
             ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         }
         NamingEnumeration<SearchResult> results = managerContext.search(settings.getBase(), settings.getFilter(), settings.getArguments(), ctrls);
-        Collection<String> excludedAttributes = settings.getExcludedAttributes();
-        if (CollectionUtils.isEmpty(excludedAttributes)) {
-            return createResults(results);
-        }
-        return createResults(results, excludedAttributes);
+        return createResults(results, settings.getExcludedAttributes());
     }
 
     /**
@@ -71,40 +68,73 @@ public class DefaultLdapSearchService implements LdapSearchService {
      * @throws NamingException If an error occurs
      */
     protected List<LdapSearchResult> createResults(NamingEnumeration<SearchResult> results) throws NamingException {
-        return createResults(results, Collections.emptyList());
-    }
-
-    /**
-     * Builds {@link LdapSearchResult} from the LDAP results, stripping the excluded attributes
-     * before they are wrapped into a {@link LdapSearchResult}.
-     *
-     * @param results            The LDAP results
-     * @param excludedAttributes The attribute names to strip from every result. Matching is case-insensitive
-     * @return The list of {@link LdapSearchResult}
-     * @throws NamingException If an error occurs
-     * @since 5.4.0
-     */
-    protected List<LdapSearchResult> createResults(NamingEnumeration<SearchResult> results, Collection<String> excludedAttributes) throws NamingException {
         List<LdapSearchResult> searchResults = new ArrayList<>();
         while (results.hasMore()) {
             SearchResult result = results.next();
-            Attributes attributes = removeExcludedAttributes(result.getAttributes(), excludedAttributes);
-            String dn = result.getNameInNamespace();
-
-            searchResults.add(new LdapSearchResult(attributes, dn));
+            searchResults.add(new LdapSearchResult(result.getAttributes(), result.getNameInNamespace()));
         }
         return searchResults;
     }
 
     /**
-     * Removes the excluded attributes from the given {@link Attributes}.
+     * Builds {@link LdapSearchResult} from the LDAP results, stripping the excluded attributes
+     * before passing them to the original {@link #createResults(NamingEnumeration)} extension point.
+     *
+     * @param results            The LDAP results
+     * @param excludedAttributes The attribute names to strip from every result. Matching is case-insensitive
+     * @return The list of {@link LdapSearchResult}
+     * @throws NamingException If an error occurs
+     * @since 5.5.3
+     */
+    protected List<LdapSearchResult> createResults(NamingEnumeration<SearchResult> results, Collection<String> excludedAttributes) throws NamingException {
+        if (CollectionUtils.isEmpty(excludedAttributes)) {
+            return createResults(results);
+        }
+        // Filter lazily so existing overrides still receive the enumeration, with sensitive attributes removed.
+        return createResults(new NamingEnumeration<>() {
+            @Override
+            public SearchResult next() throws NamingException {
+                SearchResult result = results.next();
+                removeExcludedAttributes(result.getAttributes(), excludedAttributes);
+                return result;
+            }
+
+            @Override
+            public boolean hasMore() throws NamingException {
+                return results.hasMore();
+            }
+
+            @Override
+            public void close() throws NamingException {
+                results.close();
+            }
+
+            @Override
+            public boolean hasMoreElements() {
+                return results.hasMoreElements();
+            }
+
+            @Override
+            public SearchResult nextElement() {
+                try {
+                    return next();
+                } catch (NamingException e) {
+                    throw new NoSuchElementException(e);
+                }
+            }
+        });
+    }
+
+    /**
+     * Removes the excluded attributes in place from the given {@link Attributes}.
      *
      * @param attributes         The attributes returned by LDAP. May be null
      * @param excludedAttributes The attribute names to remove. Matching is case-insensitive
-     * @return The attributes without the excluded ones
+     * @return The same attributes instance, mutated to remove the excluded ones, or null if attributes is null
      * @throws NamingException If the attribute ids cannot be enumerated
+     * @since 5.5.3
      */
-    protected Attributes removeExcludedAttributes(Attributes attributes, Collection<String> excludedAttributes) throws NamingException {
+    protected @Nullable Attributes removeExcludedAttributes(@Nullable Attributes attributes, Collection<String> excludedAttributes) throws NamingException {
         if (attributes == null || CollectionUtils.isEmpty(excludedAttributes)) {
             return attributes;
         }
