@@ -1,6 +1,12 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 5.6 breaking changes
+
+- api:security.oauth2.endpoint.token.request.DefaultTokenEndpointClient[] now encodes the client id and the client secret as `application/x-www-form-urlencoded` before building the HTTP Basic `Authorization` header sent to the token endpoint, as required by link:https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1[RFC 6749 Section 2.3.1]. Values made only of letters, digits, `.`, `-`, `*` and `_` are sent unchanged. Any other character is now percent-encoded (for example `~` is sent as `%7E` and `+` as `%2B`) and a space is sent as `+`. If your authorization server compares the Basic credentials without decoding them and your client id or secret contains such characters, set the `auth-method` of the token endpoint (`micronaut.security.oauth2.clients.*.token.auth-method`, or `micronaut.security.oauth2.clients.*.openid.token.auth-method` for OpenID providers) to `client_secret_post`.
+
+- api:security.oauth2.endpoint.token.request.DefaultTokenEndpointClient[] no longer sends client credentials when no client secret is configured. Previously `client_secret_basic` sent `Basic base64("<client id>:null")` and `client_secret_post` sent the `client_id` with a `null` `client_secret`. Now only the `client_id` is sent in the request body, as with the `none` authentication method. An explicitly configured empty secret is still sent.
+
 == Micronaut Security 5.5 breaking changes
 
 - Starting with 5.5.2, issuer claim matching is stricter. Previously, the `iss` claim was accepted when the expected issuer (`micronaut.security.token.jwt.claims-validators.issuer`, or `micronaut.security.oauth2.clients.*.openid.issuer` for api:security.oauth2.client.IdTokenClaimsValidator[] and api:security.oauth2.DefaultProviderResolver[]) merely ended with the claim value once the scheme and trailing slash were removed, so for a configured issuer `admin-portal` values such as `portal`, `l`, `/`, `https://` or an empty string passed validation, and for `https://idcs-abc.identity.oraclecloud.com` the parent domain `https://identity.oraclecloud.com/` did.
