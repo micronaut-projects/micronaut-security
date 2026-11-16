@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest(startApplication = false)
 class NimbusJsonWebTokenParserUndecryptableJweTest {
     static final String SIGNATURE_SECRET = "pleaseChangeThisSecretForANewOne";
-    static final String ENCRYPTION_SECRET = "pleaseChangeThisSecretForANewOne";
+    static final String ENCRYPTION_SECRET = "anEncryptionSecretOf32Characters";
     private static final String OTHER_ENCRYPTION_SECRET = "thisIsADifferentSecretOfLength32";
 
     @Test
@@ -66,13 +66,29 @@ class NimbusJsonWebTokenParserUndecryptableJweTest {
     @Test
     void plainJweEncryptedWithDifferentKeyIsNotParsedAndDoesNotThrow(JsonWebTokenParser<JWT> parser,
                                                                      AuthenticationMapper authenticationMapper) throws JOSEException {
-        EncryptedJWT encryptedJWT = new EncryptedJWT(new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A256GCM), claimsSet());
-        encryptedJWT.encrypt(new DirectEncrypter(OTHER_ENCRYPTION_SECRET.getBytes(StandardCharsets.UTF_8)));
-        String token = encryptedJWT.serialize();
+        String token = plainJwe(OTHER_ENCRYPTION_SECRET);
 
         assertTrue(assertDoesNotThrow(() -> parser.parse(token)).isEmpty());
         assertTrue(assertDoesNotThrow(() -> parser.parseClaims(token)).isEmpty());
         assertNull(assertDoesNotThrow(() -> authenticationMapper.of(token)));
+    }
+
+    @Test
+    void plainJweEncryptedWithConfiguredKeyIsParsedAsDecryptedJwe(JsonWebTokenParser<JWT> parser,
+                                                                  AuthenticationMapper authenticationMapper) throws JOSEException {
+        String token = plainJwe(ENCRYPTION_SECRET);
+
+        Optional<JWT> jwt = parser.parse(token);
+        assertTrue(jwt.isPresent());
+        EncryptedJWT encryptedJWT = assertInstanceOf(EncryptedJWT.class, jwt.get());
+        assertEquals(JWEObject.State.DECRYPTED, encryptedJWT.getState());
+
+        Optional<Claims> claims = parser.parseClaims(token);
+        assertTrue(claims.isPresent());
+        assertEquals("1234567890", claims.get().get("sub"));
+
+        Authentication authentication = authenticationMapper.of(token);
+        assertEquals("1234567890", authentication.getName());
     }
 
     @Test
@@ -138,6 +154,12 @@ class NimbusJsonWebTokenParserUndecryptableJweTest {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet());
         signedJWT.sign(new MACSigner(SIGNATURE_SECRET.getBytes(StandardCharsets.UTF_8)));
         return signedJWT;
+    }
+
+    private static String plainJwe(String encryptionSecret) throws JOSEException {
+        EncryptedJWT encryptedJWT = new EncryptedJWT(new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A256GCM), claimsSet());
+        encryptedJWT.encrypt(new DirectEncrypter(encryptionSecret.getBytes(StandardCharsets.UTF_8)));
+        return encryptedJWT.serialize();
     }
 
     private static String nestedJwe(String encryptionSecret) throws JOSEException {

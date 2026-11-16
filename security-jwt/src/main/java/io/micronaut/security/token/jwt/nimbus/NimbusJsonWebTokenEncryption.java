@@ -19,6 +19,7 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
@@ -66,6 +67,10 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
             Optional<SignedJWT> signedJWT = decrypt(jwt, config);
             if (signedJWT.isPresent()) {
                 return signedJWT;
+            }
+            if (jwt.getState() == JWEObject.State.DECRYPTED) {
+                // decrypted but the payload is not a signed JWT. A decrypted JWE cannot be decrypted again.
+                return Optional.empty();
             }
         }
         return Optional.empty();
