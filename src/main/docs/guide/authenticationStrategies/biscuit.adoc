@@ -1,0 +1,102 @@
+Biscuit tokens are bearer credentials with signed facts, rules, checks, and authorization policies. Micronaut Security supports Biscuit access-token validation through the optional `micronaut-security-biscuit` module.
+
+Add the dependency to your application:
+
+dependency:io.micronaut.security:micronaut-security-biscuit[]
+
+Configure bearer authentication, a root public key, and at least one authorization policy:
+
+[source,yaml]
+----
+micronaut:
+  security:
+    authentication: bearer
+    token:
+      biscuit:
+        root-public-key: ${BISCUIT_ROOT_PUBLIC_KEY}
+        policies:
+          - 'allow if resource("/secure"), operation("GET")'
+----
+
+Biscuit validation reuses the existing token reader infrastructure. For example, the bearer reader can supply a serialized Biscuit token to api:io.micronaut.security.token.biscuit.BiscuitTokenValidator[]:
+
+[source,http]
+----
+Authorization: Bearer <serialized-biscuit>
+----
+
+The following configuration properties are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.biscuit.BiscuitConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.token.biscuit.BiscuitConfigurationProperties$RunLimitsConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.token.biscuit.BiscuitConfigurationProperties$AuthenticationConfigurationProperties.adoc[]
+
+== Authorization
+
+Biscuit signature verification is not enough to authenticate a request. The validator only emits api:io.micronaut.security.authentication.Authentication[] after the token is parsed with a trusted root public key and the Biscuit authorizer succeeds.
+
+The validator adds these request facts before configured facts, rules, checks, policies, and customizers run:
+
+* `resource("<request path>")`
+* `operation("<HTTP method>")`
+* `time(<current instant>)`
+
+Configured `facts`, `rules`, `checks`, and `policies` use Biscuit Datalog syntax. Missing root key, malformed token, wrong key, missing policy, deny policy, failed check, exceeded run limit, or revoked token fails closed and returns no authentication.
+
+The default authentication factory queries the authorized authorizer for:
+
+* `principal($name) <- principal($name)`
+* `role($role) <- role($role)`
+
+Set `micronaut.security.token.biscuit.authentication.principal-query` and `micronaut.security.token.biscuit.authentication.roles-query` when your tokens use different facts.
+
+== Customization
+
+Provide a bean of type api:io.micronaut.security.token.biscuit.BiscuitAuthorizerCustomizer[] to add request-specific facts, rules, checks, or policies:
+
+[source,java]
+----
+@Singleton
+class TenantBiscuitAuthorizerCustomizer implements BiscuitAuthorizerCustomizer {
+    @Override
+    public void customize(Authorizer authorizer, Biscuit biscuit, HttpRequest<?> request) throws Error {
+        if (request != null) {
+            request.getHeaders().findFirst("X-Tenant")
+                .ifPresent(tenant -> authorizer.add_fact(
+                    Utils.fact("tenant", List.of(Utils.string(tenant)))
+                ));
+        }
+    }
+}
+----
+
+Provide a bean of type api:io.micronaut.security.token.biscuit.BiscuitAuthenticationFactory[] to replace the default principal and role mapping:
+
+[source,java]
+----
+@Singleton
+class CustomBiscuitAuthenticationFactory implements BiscuitAuthenticationFactory {
+    @Override
+    public Optional<Authentication> createAuthentication(BiscuitAuthenticationContext context) {
+        return Optional.of(Authentication.build("sherlock", List.of("ROLE_DETECTIVE")));
+    }
+}
+----
+
+Provide a bean of type api:io.micronaut.security.token.biscuit.BiscuitRootKeyLocator[] when a single configured root public key is not enough, for example when tokens carry a root key id and your application rotates keys.
+
+== Revocation And Run Limits
+
+Each Biscuit token exposes revocation identifiers. Add revoked identifiers to `micronaut.security.token.biscuit.revoked-identifiers` for static configuration, or provide a api:io.micronaut.security.token.biscuit.BiscuitRevocationChecker[] bean to consult an application-specific revocation store.
+
+The validator applies Biscuit Datalog run limits for maximum facts, maximum iterations, and maximum authorization time. Keep limits low enough to avoid request-time CPU abuse, then raise them only for policies that require more evaluation.
+
+== Security Notes
+
+Biscuit tokens are bearer credentials. Protect them in transit and do not log serialized tokens, private keys, root keys, or full policy data.
+
+The validator rejects non-canonical Ed25519 signatures before invoking Biscuit Java verification. This fail-closed preflight prevents signature malleability from changing signature-derived revocation identifiers while preserving the same authorized token contents.
+
+The module validates existing Biscuit tokens. It does not add token minting, attenuation, discharge-token, or generation endpoints in the first implementation.
+
+The Biscuit Java dependency is used directly by the module SPIs. Review its transitive dependencies and native-image behavior when adding this module to an application with stricter supply-chain or native-image requirements.
