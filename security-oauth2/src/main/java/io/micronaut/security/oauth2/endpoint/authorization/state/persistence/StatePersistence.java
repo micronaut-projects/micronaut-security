@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state.persistence;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -44,4 +45,17 @@ public interface StatePersistence {
      * @param state The state to persist
      */
     void persistState(HttpRequest<?> request, MutableHttpResponse response, State state);
+
+    /**
+     * Clears the persisted state so it cannot be reused. Invoked once the state has been consumed
+     * by an authorization callback, regardless of whether validation succeeded.
+     * Implementations which already remove the state on retrieval do not need to override this method.
+     *
+     * @param request The authorization callback request
+     * @param response The authorization callback response
+     * @since 5.4.0
+     */
+    default void clearState(@NonNull HttpRequest<?> request, @NonNull MutableHttpResponse<?> response) {
+        // no-op by default
+    }
 }
