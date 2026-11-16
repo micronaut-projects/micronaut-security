@@ -19,6 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import reactor.util.annotation.NonNull;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import java.util.Optional;
 
@@ -39,6 +41,19 @@ public class PkceConfigurationProperties implements PkceConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
     public static final String PERSISTENCE_COOKIE = "cookie";
     public static final String PERSISTENCE_SESSION = "session";
+
+    /**
+     * The minimum entropy (in bytes) allowed for the code verifier. 32 bytes produce the 43 character minimum
+     * code verifier length mandated by <a href="https://datatracker.ietf.org/doc/html/rfc7636#section-4.1">RFC 7636 Section 4.1</a>.
+     */
+    public static final int MIN_CODE_VERIFIER_ENTROPY = 32;
+
+    /**
+     * The maximum entropy (in bytes) allowed for the code verifier. 96 bytes produce the 128 character maximum
+     * code verifier length mandated by <a href="https://datatracker.ietf.org/doc/html/rfc7636#section-4.1">RFC 7636 Section 4.1</a>.
+     */
+    public static final int MAX_CODE_VERIFIER_ENTROPY = 96;
+
     private static final String DEFAULT_PERSISTENCE = PERSISTENCE_COOKIE;
 
     /**
@@ -51,12 +66,15 @@ public class PkceConfigurationProperties implements PkceConfiguration {
     private int entropy = DEFAULT_CODE_VERIFIER_ENTROPY;
 
     @Override
+    @Min(MIN_CODE_VERIFIER_ENTROPY)
+    @Max(MAX_CODE_VERIFIER_ENTROPY)
     public int getEntropy() {
         return entropy;
     }
 
     /**
-     * entropy (in bytes) used for the code verifier generation. Default value {@value #DEFAULT_CODE_VERIFIER_ENTROPY}.
+     * Entropy (in bytes) used for the code verifier generation. Must be between {@value #MIN_CODE_VERIFIER_ENTROPY} and {@value #MAX_CODE_VERIFIER_ENTROPY} (inclusive)
+     * so that the Base64 URL-encoded code verifier is between 43 and 128 characters long as required by RFC 7636. Default value {@value #DEFAULT_CODE_VERIFIER_ENTROPY}.
      * @param entropy entropy (in bytes) used for the code verifier.
      */
     public void setEntropy(int entropy) {
