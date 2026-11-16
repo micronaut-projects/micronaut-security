@@ -44,7 +44,7 @@ public class OauthClientCondition extends AbstractCondition {
         if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
             if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                 if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                    return true;
+                    return ClientIdConditionUtils.hasClientId(clientConfiguration, context, failureMsgPrefix);
                 } else {
                     context.fail(failureMsgPrefix + "] because grant type is not authorization code");
                 }

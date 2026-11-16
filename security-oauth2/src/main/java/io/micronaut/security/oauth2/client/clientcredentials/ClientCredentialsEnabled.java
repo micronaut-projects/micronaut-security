@@ -20,6 +20,7 @@ import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.oauth2.client.condition.ClientIdConditionUtils;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.utils.QualifierUtils;
 
@@ -48,7 +49,7 @@ public class ClientCredentialsEnabled implements Condition {
         if (clientConfiguration.isEnabled()) {
             Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
             if (clientCredentialsConfiguration.isEmpty() || clientCredentialsConfiguration.get().isEnabled()) {
-                return true;
+                return ClientIdConditionUtils.hasClientId(clientConfiguration, context, "Client credentials is disabled for the client [" + name);
             } else {
                 context.fail(failureMessage);
                 return false;
