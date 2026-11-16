@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+
+import java.time.Duration;
 
 /**
  * Configuration to enable or disable beans of type {@link JwtClaimsValidator}.
@@ -67,6 +70,17 @@ public interface JwtClaimsValidatorConfiguration {
      * @return Whether `IdTokenClaimsValidator`, which performs some fo the verifications described in OpenID Connect Spec, is enabled. Only applies for `idtoken` authentication mode.
      */
     boolean isOpenidIdtoken();
+
+    /**
+     * The clock skew tolerated when validating time-based claims such as the expiration (exp) and not-before (nbf) claims.
+     *
+     * @return The clock skew. Defaults to {@link Duration#ZERO}.
+     * @since 5.4.0
+     */
+    @NonNull
+    default Duration getClockSkew() {
+        return Duration.ZERO;
+    }
 }
 
 
