@@ -17,6 +17,7 @@ package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.web.router.RouteAttributes;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -144,7 +145,9 @@ final class CsrfFilter implements Ordered {
             return CompletableFuture.completedFuture(rejectRequest(request, tokenFound));
         }
         FutureCsrfTokenResolver<HttpRequest<?>> resolver = futureCsrfTokenResolvers.get(index);
-        return resolveTokenOrNull(resolver, request).thenCompose(csrfToken -> {
+        // A resolver may complete on a thread carrying a different request's context.
+        PropagatedContext context = PropagatedContext.getOrEmpty();
+        return resolveTokenOrNull(resolver, request).thenCompose(csrfToken -> context.propagate(() -> {
             if (!hasText(csrfToken)) {
                 return resolveAndValidate(request, index + 1, tokenFound);
             }
@@ -161,7 +164,7 @@ final class CsrfFilter implements Ordered {
                 return PROCEED;
             }
             return resolveAndValidate(request, index + 1, true);
-        });
+        }));
     }
 
     /**
