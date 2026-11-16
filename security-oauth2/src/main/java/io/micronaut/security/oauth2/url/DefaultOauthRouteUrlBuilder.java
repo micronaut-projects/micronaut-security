@@ -45,6 +45,8 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpReq
     private final HttpHostResolver hostResolver;
     private final String loginUriTemplate;
     private final String callbackUriTemplate;
+    @Nullable
+    private final String baseUrl;
 
     /**
      * @param hostResolver The host resolver
@@ -55,6 +57,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpReq
         this.hostResolver = hostResolver;
         this.loginUriTemplate = oauthConfiguration.getLoginUri();
         this.callbackUriTemplate = oauthConfiguration.getCallbackUri();
+        this.baseUrl = oauthConfiguration.getBaseUrl().orElse(null);
     }
 
     @Override
@@ -116,12 +119,24 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpReq
             if (path.startsWith(HTTP)) {
                 return new URL(path);
             }
-            return UriBuilder.of(hostResolver.resolve(current))
+            return UriBuilder.of(baseUrl(current))
                     .path(path)
                     .build()
                     .toURL();
         } catch (MalformedURLException e) {
             throw new RoutingException("Error building an absolute URL for the path", e);
         }
+    }
+
+    /**
+     * Resolves the base (scheme, host and optional port) of the absolute URL. Returns the configured
+     * {@link OauthConfiguration#getBaseUrl()} when present; otherwise the host resolved from the request.
+     *
+     * @param current The current request
+     * @return The base URL
+     * @since 5.4.0
+     */
+    protected String baseUrl(@Nullable HttpRequest<?> current) {
+        return baseUrl != null ? baseUrl : hostResolver.resolve(current);
     }
 }
