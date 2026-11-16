@@ -44,6 +44,18 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
     private byte[] secret;
 
     /**
+     * Lazily created and reused across calls. {@link MACSigner} is thread-safe.
+     * Reset to {@code null} whenever the secret changes.
+     */
+    private volatile JWSSigner signer;
+
+    /**
+     * Lazily created and reused across calls. {@link MACVerifier} is thread-safe.
+     * Reset to {@code null} whenever the secret changes.
+     */
+    private volatile JWSVerifier verifier;
+
+    /**
      *
      * @param config {@link SecretSignatureConfiguration} configuration
      */
@@ -69,7 +81,7 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     @Override
     public SignedJWT sign(final JWTClaimsSet claims) throws JOSEException {
-        final JWSSigner signer = new MACSigner(this.secret);
+        final JWSSigner signer = signer();
         final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
         signedJWT.sign(signer);
         return signedJWT;
@@ -77,8 +89,7 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
-        final JWSVerifier verifier = new MACVerifier(this.secret);
-        return jwt.verify(verifier);
+        return jwt.verify(verifier());
     }
 
     /**
@@ -95,5 +106,25 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
      */
     public void setSecret(final String secret) {
         this.secret = secret.getBytes(UTF_8);
+        this.signer = null;
+        this.verifier = null;
+    }
+
+    private JWSSigner signer() throws JOSEException {
+        JWSSigner result = this.signer;
+        if (result == null) {
+            result = new MACSigner(this.secret);
+            this.signer = result;
+        }
+        return result;
+    }
+
+    private JWSVerifier verifier() throws JOSEException {
+        JWSVerifier result = this.verifier;
+        if (result == null) {
+            result = new MACVerifier(this.secret);
+            this.verifier = result;
+        }
+        return result;
     }
 }
