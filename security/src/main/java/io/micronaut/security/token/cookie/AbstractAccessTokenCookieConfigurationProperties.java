@@ -125,7 +125,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
 
     /**
      * Sets whether the cookie is secured. Defaults to the secure status of the request.
-     * Behind a TLS-terminating proxy the request may not be detected as secure unless forwarded-header handling is configured; set this explicitly to `true` in such deployments.
+     * Behind a TLS-terminating proxy, set this explicitly to `true`. With the Netty server, forwarded headers do not change the secure status of the request.
      * @param cookieSecure True if the cookie is secure
      */
     public void setCookieSecure(Boolean cookieSecure) {

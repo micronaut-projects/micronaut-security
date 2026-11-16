@@ -76,7 +76,7 @@ If your provider issues tokens whose `iss` differs from the configured issuer, c
 
 The JWT access token cookie (`micronaut.security.token.cookie`) and the refresh token cookie (`micronaut.security.token.refresh.cookie`) are now issued with the `SameSite=Lax` attribute by default. Previously, no `SameSite` attribute was set.
 
-To keep the previous behaviour or use a different value, set `cookie-same-site` explicitly. Allowed values are `Strict`, `Lax` or `None`:
+The `cookie-same-site` setting accepts `Strict`, `Lax` or `None`. Use `None` only when the application requires cross-site token cookies. Unlike omitting the attribute, which allows the browser to apply its default SameSite policy, `None` explicitly permits cookies to be sent with cross-site requests:
 
 [configuration]
 ----
@@ -85,18 +85,22 @@ micronaut:
     token:
       cookie:
         cookie-same-site: None
+        cookie-secure: true
       refresh:
         cookie:
           cookie-same-site: None
+          cookie-secure: true
 ----
 
 NOTE: `SameSite=None` requires the cookie to also be `Secure`.
 
-The `SameSite` attribute cannot be unset via configuration because the property is bound to the `io.micronaut.http.cookie.SameSite` enum. To omit the attribute, invoke `setCookieSameSite(null)` on the configuration bean, for example via a `BeanCreatedEventListener<TokenCookieConfigurationProperties>`.
+To restore the previous omission of the `SameSite` attribute, invoke `setCookieSameSite(null)` on both api:security.token.cookie.TokenCookieConfigurationProperties[] and api:security.token.cookie.RefreshTokenCookieConfigurationProperties[], for example via a `BeanCreatedEventListener` for each configuration bean. Omitting the attribute uses the browser's default SameSite policy; it is not equivalent to `SameSite=None`.
 
 === Warning when token cookies are issued without `Secure`
 
-`cookie-secure` still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the `Secure` attribute over a request that was not detected as secure, api:security.token.cookie.CookieLoginHandler[] now logs a `WARN` once. Behind a TLS-terminating proxy, set `micronaut.security.token.cookie.cookie-secure=true` and `micronaut.security.token.refresh.cookie.cookie-secure=true`, or configure forwarded-header handling so that requests are detected as secure.
+`cookie-secure` still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the `Secure` attribute over a request that was not detected as secure, api:security.token.cookie.CookieLoginHandler[] now logs a `WARN` once. Behind a TLS-terminating proxy, explicitly set `micronaut.security.token.cookie.cookie-secure=true` and `micronaut.security.token.refresh.cookie.cookie-secure=true`.
+
+On the Netty server, `request.isSecure()` checks whether the connection to the application uses TLS. Forwarded headers such as `Forwarded` and `X-Forwarded-Proto`, and the host-resolution settings, do not change that result or add the `Secure` cookie attribute.
 
 == Micronaut Security 5.4 breaking changes
 
