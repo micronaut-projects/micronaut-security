@@ -156,18 +156,20 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         String clientSecret = clientConfiguration.getClientSecret();
         // Only null means unconfigured; empty and space-only secrets are still credentials.
         boolean hasClientSecret = clientSecret != null;
-        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC) && hasClientSecret) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
+        if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
+            if (hasClientSecret) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
+                }
+                // RFC 6749 Section 2.3.1: client_id and client_secret must be form-url-encoded before being used as HTTP Basic credentials
+                request.basicAuth(formUrlEncode(clientConfiguration.getClientId()), formUrlEncode(clientSecret));
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("client_secret_basic authentication is supported but no client secret is configured. Skipping the Authorization header; the client_id will be present in the body");
+                }
+                addClientIdToBody(request, clientConfiguration);
             }
-            // RFC 6749 Section 2.3.1: client_id and client_secret must be form-url-encoded before being used as HTTP Basic credentials
-            request.basicAuth(formUrlEncode(clientConfiguration.getClientId()), formUrlEncode(clientSecret));
-        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("client_secret_basic authentication is supported but no client secret is configured. Skipping the Authorization header; the client_id will be present in the body");
-            }
-            addClientIdToBody(request, clientConfiguration);
-        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST)) {
+        } else if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_POST) && hasClientSecret) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
             }
@@ -176,11 +178,11 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                     .map(SecureGrant.class::cast)
                     .ifPresent(body -> {
                         body.setClientId(clientConfiguration.getClientId());
-                        body.setClientSecret(clientConfiguration.getClientSecret());
+                        body.setClientSecret(clientSecret);
                     });
         } else {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
+                LOG.trace("Unsupported or no authentication method, or no client secret is configured. The client_id will be present in the body");
             }
             addClientIdToBody(request, clientConfiguration);
         }
