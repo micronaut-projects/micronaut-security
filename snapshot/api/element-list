@@ -64,6 +64,8 @@ io.micronaut.security.oauth2.metadata
 io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
 io.micronaut.security.ojdbc.extensions
+io.micronaut.security.password
+io.micronaut.security.password.argon2
 io.micronaut.security.processor
 io.micronaut.security.reporting
 io.micronaut.security.rules
