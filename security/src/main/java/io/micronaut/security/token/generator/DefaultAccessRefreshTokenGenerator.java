@@ -28,6 +28,7 @@ import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.render.AccessRefreshToken;
 import io.micronaut.security.token.render.TokenRenderer;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +56,19 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessRefreshTokenGenerator.class);
 
+    /**
+     * @deprecated Not used anymore.
+     */
+    @Deprecated
+    @Nullable
     protected final BeanContext beanContext;
+
+    @Nullable
     protected final RefreshTokenGenerator refreshTokenGenerator;
+    @Nullable
+    protected final RefreshTokenPersistence refreshTokenPersistence;
+    @Nullable
+    protected final RefreshTokenValidator refreshTokenValidator;
     protected final ClaimsGenerator claimsGenerator;
     protected final AccessTokenConfiguration accessTokenConfiguration;
     protected final TokenRenderer tokenRenderer;
@@ -74,7 +86,9 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @param claimsGenerator                     Claims generator
      * @param refreshTokenGeneratedEventPublisher The Application event publisher for {@link RefreshTokenGeneratedEvent}.
      * @param accessTokenGeneratedEventPublisher The Application event publisher for {@link AccessTokenGeneratedEvent}.
+     * @deprecated Use {@link #DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, RefreshTokenGenerator, RefreshTokenPersistence, RefreshTokenValidator, ClaimsGenerator, ApplicationEventPublisher, ApplicationEventPublisher)} instead.
      */
+    @Deprecated
     public DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
                                               TokenRenderer tokenRenderer,
                                               TokenGenerator tokenGenerator,
@@ -83,11 +97,45 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
                                               ClaimsGenerator claimsGenerator,
                                               ApplicationEventPublisher<RefreshTokenGeneratedEvent> refreshTokenGeneratedEventPublisher,
                                               ApplicationEventPublisher<AccessTokenGeneratedEvent> accessTokenGeneratedEventPublisher) {
+        this(accessTokenConfiguration,
+            tokenRenderer,
+            tokenGenerator,
+            refreshTokenGenerator,
+            beanContext.findBean(RefreshTokenPersistence.class).orElse(null),
+            beanContext.findBean(RefreshTokenValidator.class).orElse(null),
+            claimsGenerator,
+            refreshTokenGeneratedEventPublisher,
+            accessTokenGeneratedEventPublisher);
+    }
+
+    /**
+     * @param accessTokenConfiguration            The access token generator config
+     * @param tokenRenderer                       The token renderer
+     * @param tokenGenerator                      The token generator
+     * @param refreshTokenGenerator               The refresh token generator
+     * @param refreshTokenPersistence             Refresh Token Persistence
+     * @param refreshTokenValidator               Refresh Token Validator
+     * @param claimsGenerator                     Claims generator
+     * @param refreshTokenGeneratedEventPublisher The Application event publisher for {@link RefreshTokenGeneratedEvent}.
+     * @param accessTokenGeneratedEventPublisher The Application event publisher for {@link AccessTokenGeneratedEvent}.
+     */
+    @Inject
+    public DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
+                                              TokenRenderer tokenRenderer,
+                                              TokenGenerator tokenGenerator,
+                                              @Nullable RefreshTokenGenerator refreshTokenGenerator,
+                                              @Nullable RefreshTokenPersistence refreshTokenPersistence,
+                                              @Nullable RefreshTokenValidator refreshTokenValidator,
+                                              ClaimsGenerator claimsGenerator,
+                                              ApplicationEventPublisher<RefreshTokenGeneratedEvent> refreshTokenGeneratedEventPublisher,
+                                              ApplicationEventPublisher<AccessTokenGeneratedEvent> accessTokenGeneratedEventPublisher) {
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.tokenRenderer = tokenRenderer;
         this.tokenGenerator = tokenGenerator;
-        this.beanContext = beanContext;
+        this.beanContext = null;
         this.refreshTokenGenerator = refreshTokenGenerator;
+        this.refreshTokenPersistence = refreshTokenPersistence;
+        this.refreshTokenValidator = refreshTokenValidator;
         this.claimsGenerator = claimsGenerator;
         this.refreshTokenGeneratedEventPublisher = refreshTokenGeneratedEventPublisher;
         this.accessTokenGeneratedEventPublisher = accessTokenGeneratedEventPublisher;
@@ -113,24 +161,22 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      */
     @NonNull
     public Optional<String> generateRefreshToken(@NonNull Authentication authentication) {
-        Optional<String> refreshToken = Optional.empty();
         String msg = "Skipped refresh token generation because no {} implementation is present";
-        if (beanContext.containsBean(RefreshTokenValidator.class)) {
-            if (beanContext.containsBean(RefreshTokenPersistence.class)) {
-                if (refreshTokenGenerator != null) {
-                    String key = refreshTokenGenerator.createKey(authentication);
-                    refreshToken = refreshTokenGenerator.generate(authentication, key);
-                    refreshToken.ifPresent(t -> refreshTokenGeneratedEventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
-                } else {
-                    debug(LOG, msg, RefreshTokenGenerator.class.getName());
-                }
-            } else {
-                debug(LOG, msg, RefreshTokenPersistence.class.getName());
-            }
-        } else {
+        if (refreshTokenValidator == null) {
             debug(LOG, msg, RefreshTokenValidator.class.getName());
+            return Optional.empty();
         }
-
+        if (refreshTokenPersistence == null) {
+            debug(LOG, msg, RefreshTokenPersistence.class.getName());
+            return Optional.empty();
+        }
+        if (refreshTokenGenerator == null) {
+            debug(LOG, msg, RefreshTokenGenerator.class.getName());
+            return Optional.empty();
+        }
+        String key = refreshTokenGenerator.createKey(authentication);
+        Optional<String> refreshToken = refreshTokenGenerator.generate(authentication, key);
+        refreshToken.ifPresent(t -> refreshTokenGeneratedEventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
         return refreshToken;
     }
 
