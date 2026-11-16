@@ -16,6 +16,7 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.security.ldap.LdapAttributeUtils;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,7 +82,8 @@ public class DefaultLdapSearchService implements LdapSearchService {
      * before passing them to the original {@link #createResults(NamingEnumeration)} extension point.
      *
      * @param results            The LDAP results
-     * @param excludedAttributes The attribute names to strip from every result. Matching is case-insensitive
+     * @param excludedAttributes The attribute names to strip from every result. Matching is case-insensitive;
+     *                           names without options also exclude all option variants
      * @return The list of {@link LdapSearchResult}
      * @throws NamingException If an error occurs
      * @since 5.5.3
@@ -129,7 +131,8 @@ public class DefaultLdapSearchService implements LdapSearchService {
      * Removes the excluded attributes in place from the given {@link Attributes}.
      *
      * @param attributes         The attributes returned by LDAP. May be null
-     * @param excludedAttributes The attribute names to remove. Matching is case-insensitive
+     * @param excludedAttributes The attribute names to remove. Matching is case-insensitive;
+     *                           names without options also exclude all option variants
      * @return The same attributes instance, mutated to remove the excluded ones, or null if attributes is null
      * @throws NamingException If the attribute ids cannot be enumerated
      * @since 5.5.3
@@ -158,7 +161,7 @@ public class DefaultLdapSearchService implements LdapSearchService {
 
     private static boolean isExcluded(String attributeId, Collection<String> excludedAttributes) {
         for (String excluded : excludedAttributes) {
-            if (excluded != null && excluded.equalsIgnoreCase(attributeId)) {
+            if (excluded != null && LdapAttributeUtils.matchesExclusion(attributeId, excluded)) {
                 return true;
             }
         }

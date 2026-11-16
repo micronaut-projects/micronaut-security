@@ -60,6 +60,8 @@ public interface SearchSettings {
      * {@link LdapSearchResult} handed to downstream code.
      * The attributes have already been received into process memory by JNDI when they are removed.
      * The default is empty to preserve the behavior of custom implementations.
+     * Excluded names without LDAP options cover all option variants, so {@code userPassword}
+     * also excludes {@code userPassword;binary}.
      *
      * @return The attribute names to strip from the search results
      * @since 5.5.3

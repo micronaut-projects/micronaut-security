@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.ldap.LdapAttributeUtils;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.SearchSettings;
@@ -86,11 +87,11 @@ public class LdapConfiguration implements Toggleable {
     final void warnAboutExcludedAttributes() {
         for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
             String[] requested = search.getAttributes();
-            if (requested != null && Arrays.stream(requested).anyMatch(excluded::equalsIgnoreCase)) {
+            if (requested != null && Arrays.stream(requested).anyMatch(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded))) {
                 LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
                     + "Remove it from search.excluded-attributes if the application needs it.", name, excluded);
             }
-            if (group.isEnabled() && group.getFilterAttribute().filter(excluded::equalsIgnoreCase).isPresent()) {
+            if (group.isEnabled() && group.getFilterAttribute().filter(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded)).isPresent()) {
                 LOG.warn("LDAP configuration [{}] uses groups.filter-attribute [{}], but search.excluded-attributes removes it. "
                     + "Group resolution requires removing it from search.excluded-attributes and including it in search.attributes when configured.", name, excluded);
             }
@@ -403,6 +404,7 @@ public class LdapConfiguration implements Toggleable {
         /**
          * Sets the attributes stripped from the user search results before they are exposed to the application.
          * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
+         * Names without LDAP options also exclude all option variants, such as {@code userPassword;binary}.
          * Exclusions also apply to explicitly requested attributes; conflicting settings log a warning at startup.
          *
          * @param excludedAttributes The attributes to exclude

@@ -6,6 +6,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
+import com.unboundid.ldap.sdk.Modification;
+import com.unboundid.ldap.sdk.ModificationType;
 import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.Authentication;
@@ -77,6 +79,8 @@ class LdapSearchExcludedAttributesTest {
         try (InputStream ldif = LdapSearchExcludedAttributesTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
             server.importFromLDIF(true, new LDIFReader(ldif));
         }
+        server.modify("uid=riemann,dc=example,dc=com", new Modification(
+            ModificationType.ADD, "userPassword;binary", "non-secret-test-fixture"));
         server.startListening();
     }
 
@@ -124,6 +128,22 @@ class LdapSearchExcludedAttributesTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void passwordAttributeOptionsAreExcludedUnlessExclusionsAreCleared(boolean clearExclusions) {
+        Map<String, Object> properties = properties();
+        if (clearExclusions) {
+            properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of());
+        }
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            Set<String> names = lowerCaseAttributeNames(authenticate(context));
+
+            assertTrue(names.contains("uid"));
+            assertEquals(clearExclusions, names.contains("userpassword"));
+            assertEquals(clearExclusions, names.contains("userpassword;binary"));
+        }
+    }
+
     @Test
     void excludedAttributesCanBeExtendedWithAdditionalAttributes() {
         Map<String, Object> properties = properties();
@@ -147,10 +167,11 @@ class LdapSearchExcludedAttributesTest {
         }
     }
 
-    @Test
-    void anExcludedAttributeIsStrippedEvenWhenRequestedExplicitly() {
+    @ParameterizedTest
+    @ValueSource(strings = {"userPassword", "userPassword;BINARY"})
+    void anExcludedAttributeIsStrippedEvenWhenRequestedExplicitly(String requestedAttribute) {
         Map<String, Object> properties = properties();
-        properties.put("micronaut.security.ldap.default.search.attributes", List.of("cn", "userPassword"));
+        properties.put("micronaut.security.ldap.default.search.attributes", List.of("cn", requestedAttribute));
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             assertEquals(Set.of("cn"), lowerCaseAttributeNames(authenticate(context)));
             authenticate(context);
@@ -162,11 +183,12 @@ class LdapSearchExcludedAttributesTest {
         }
     }
 
-    @Test
-    void anExcludedGroupFilterAttributeLogsAStartupWarning() {
+    @ParameterizedTest
+    @ValueSource(strings = {"sn", "sn;lang-en"})
+    void anExcludedGroupFilterAttributeLogsAStartupWarning(String filterAttribute) {
         Map<String, Object> properties = properties();
         properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("SN"));
-        properties.put("micronaut.security.ldap.default.groups.filter-attribute", "sn");
+        properties.put("micronaut.security.ldap.default.groups.filter-attribute", filterAttribute);
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             context.getBean(LdapConfiguration.class);
 
