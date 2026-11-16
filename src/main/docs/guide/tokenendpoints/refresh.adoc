@@ -27,6 +27,45 @@ In addition to the above requirements, each application must provide an implemen
 
 The api:security.token.refresh.RefreshTokenPersistence[] implementation will receive an event when a refresh token is generated and then is responsible for persisting the token along with a link to the user that it was generated for. The user information and the token are both available in the api:security.token.event.RefreshTokenGeneratedEvent[].
 
+WARNING: `RefreshTokenPersistence::persistToken` is an `@EventListener` which is invoked synchronously, on the thread that completed authentication, while the login response is being built. With a reactive authentication provider (or an OAuth 2.0 / OpenID Connect flow) that thread is typically a Netty event loop thread. If your implementation performs blocking I/O, such as a database write, you must offload it. Annotating the method with `@ExecuteOn` has no effect on event listeners; use `@Async(TaskExecutors.BLOCKING)` instead.
+
+[source,java]
+.Blocking refresh token persistence offloaded to the blocking executor
+----
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.Async;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
+import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+
+@Singleton
+class JdbcRefreshTokenPersistence implements RefreshTokenPersistence {
+
+    private final RefreshTokenRepository refreshTokenRepository; // a blocking repository
+
+    JdbcRefreshTokenPersistence(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
+    @Async(TaskExecutors.BLOCKING) // <1>
+    @Override
+    public void persistToken(RefreshTokenGeneratedEvent event) {
+        refreshTokenRepository.save(event.getAuthentication().getName(), event.getRefreshToken()); // <2>
+    }
+
+    @Override
+    public Publisher<Authentication> getAuthentication(String refreshToken) {
+        // ...
+    }
+}
+----
+<1> `@Async` executes the method on the named executor and returns immediately, so the event loop is not blocked.
+<2> Blocking I/O is now safe.
+
+NOTE: Because the persistence is asynchronous, the login response may be sent before the refresh token has been persisted. Exceptions thrown by an `@Async` method are logged and do not fail the login.
+
 ### Refreshing the Token
 
 Micronaut security comes with a controller to allow for the refresh of access tokens. The context loads the api:security.token.jwt.endpoints.OauthController[OauthController] if your context contains beans of type: api:io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator[], api:security.token.refresh.RefreshTokenPersistence[], api:security.token.validator.RefreshTokenValidator[]

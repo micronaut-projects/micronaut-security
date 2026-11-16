@@ -32,6 +32,18 @@ public interface RefreshTokenPersistence {
     /**
      * Persist the refresh token.
      *
+     * <p>This method is an {@link EventListener} and it is invoked <strong>synchronously</strong>, on the
+     * thread that completed authentication, while the login (or token refresh) response is being built.
+     * When the authentication is emitted by a reactive authentication provider (or by an OAuth 2.0 / OpenID
+     * Connect flow), that thread is typically a Netty event loop thread.</p>
+     *
+     * <p>Implementations which perform blocking I/O (for example, a JDBC or JPA write) must not block the
+     * event loop. Offload the work by annotating the implementing method with
+     * {@code @io.micronaut.scheduling.annotation.Async(TaskExecutors.BLOCKING)}, which executes the method on
+     * the blocking executor and returns immediately. Note that {@code @ExecuteOn} has no effect on event
+     * listener methods. When offloaded, the login response may be sent before the refresh token is
+     * persisted.</p>
+     *
      * @param event The refresh token generated event
      */
     @EventListener
