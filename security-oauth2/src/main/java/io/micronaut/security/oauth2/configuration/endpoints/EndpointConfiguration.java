@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import io.micronaut.validation.annotation.URL;
 import java.util.Optional;
 
 /**
@@ -24,9 +25,10 @@ import java.util.Optional;
  * @since 1.2.0
  */
 public interface EndpointConfiguration {
+    String HTTP_OR_HTTPS_URL_REGEX = "(?i)https?://.*";
 
     /**
      * @return The optional endpoint url
      */
-    Optional<String> getUrl();
+    Optional<@URL(regexp = HTTP_OR_HTTPS_URL_REGEX) String> getUrl();
 }

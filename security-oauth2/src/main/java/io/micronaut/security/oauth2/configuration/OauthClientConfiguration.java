@@ -118,7 +118,7 @@ public interface OauthClientConfiguration extends Toggleable {
      */
     default SecureEndpoint getTokenEndpoint() throws ConfigurationException {
         return getToken().map(secureEndpointConfiguration -> new DefaultSecureEndpoint(secureEndpointConfiguration, DEFAULT_AUTH_METHOD))
-                .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
+            .orElseThrow(() -> new ConfigurationException("Oauth client "  + getName() + " requires the token endpoint configuration to be set in configuration"));
     }
 
     /**

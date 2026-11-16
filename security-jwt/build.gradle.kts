@@ -8,8 +8,7 @@ dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
     annotationProcessor(mnValidation.micronaut.validation.processor)
-    api(mnValidation.validation) //  // jakarta.validation:jakarta.validation-api
-    testImplementation(mnValidation.micronaut.validation)
+    api(mnValidation.micronaut.validation)
     api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
     implementation(mnReactor.micronaut.reactor)
