@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Parameter;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 import java.util.Map;
@@ -60,6 +61,11 @@ public abstract class AbstractAuthorizationResponse extends StateAwareAuthorizat
     @Override
     public String getCode() {
         return Objects.requireNonNull(responseData.get(AuthorizationResponse.KEY_CODE));
+    }
+
+    @Override
+    public boolean hasCode() {
+        return StringUtils.hasText(responseData.get(AuthorizationResponse.KEY_CODE));
     }
 
     @NonNull
