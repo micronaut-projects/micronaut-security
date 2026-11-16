@@ -1,0 +1,5 @@
+https://www.rfc-editor.org/rfc/rfc7643[RFC 7643] defines the core schemas and data model for the System for Cross-domain Identity Management (SCIM) 2.0 protocol.
+
+Micronaut Security provides the `micronaut-security-scim-core` module with Micronaut Serialization-compatible Java types for the standard User, Group, enterprise User extension, and discovery resources. You can use these types as controller request and response bodies when building a SCIM client or service provider.
+
+NOTE: This module implements the RFC 7643 data model. It does not register SCIM HTTP routes or implement the operations, filtering, patching, bulk processing, or error responses specified by https://www.rfc-editor.org/rfc/rfc7644[RFC 7644]. Applications remain responsible for those protocol concerns, persistence, authorization, and operation-specific validation.

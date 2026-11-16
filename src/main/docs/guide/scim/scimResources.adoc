@@ -1,0 +1,31 @@
+All top-level SCIM resources extend api:security.scim.core.ScimResource[], which provides the common `schemas`, `id`, `externalId`, and `meta` attributes.
+
+[cols="1,2"]
+|===
+|Type |Purpose
+
+|api:security.scim.core.User[]
+|The RFC 7643 User resource, including names, email addresses, phone numbers, addresses, group memberships, roles, entitlements, photos, instant-messaging addresses, and X.509 certificates.
+
+|api:security.scim.core.Group[]
+|The RFC 7643 Group resource and its member references.
+
+|api:security.scim.core.Name[], api:security.scim.core.Address[], and api:security.scim.core.MultiValuedAttribute[]
+|Reusable complex values contained by a User.
+
+|api:security.scim.core.ResourceReference[]
+|A resource identifier, `$ref`, display value, and type used by User group memberships and Group members.
+
+|api:security.scim.core.Meta[]
+|Service-provider metadata such as creation and modification timestamps, resource location, and version.
+|===
+
+The resource constructors initialize `schemas` with the required primary schema URI from api:security.scim.core.SchemaUris[]. The base class rejects an empty schema list, duplicate or non-absolute schema URIs, and a schema list that omits the resource's primary schema.
+
+The following example constructs a User with standard complex and multi-valued attributes:
+
+snippet::io.micronaut.security.scim.core.docs.ScimCoreExample[tags="user",indent=0]
+
+The `password` attribute on api:security.scim.core.User[] is write-only: Micronaut Serialization accepts it from an inbound representation but does not include it in serialized output.
+
+The model includes Jakarta Validation constraints for structural requirements such as non-blank User names and required discovery fields. Invoke validation at your application boundary. The RFC's mutability, returned, uniqueness, and request-context rules are not an object-model policy engine; a SCIM service provider must enforce the applicable rules for each operation.
