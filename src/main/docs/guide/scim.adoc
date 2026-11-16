@@ -1,0 +1,12 @@
+https://www.rfc-editor.org/rfc/rfc7643[RFC 7643] defines the core schemas and data model for the System for Cross-domain Identity Management (SCIM) 2.0 protocol. https://www.rfc-editor.org/rfc/rfc7644[RFC 7644] defines the HTTP protocol used to provision and manage those resources.
+
+The SCIM implementation is split across these modules:
+
+* `micronaut-security-scim-core` contains Micronaut Serialization-compatible Java types for Users, Groups, schema extensions, and discovery resources.
+* `micronaut-security-scim-http-services` contains the RFC 7644 protocol types, parsed filter model, and persistence-neutral service contracts.
+* `micronaut-security-scim-http-server` registers RFC 7644 server routes backed by those service contracts.
+* `micronaut-security-scim-data` contains normalized Micronaut Data entities for Users, Groups, memberships, multi-valued attributes, and extensions.
+* `micronaut-security-scim-data-jdbc` contains JDBC repositories for those entities.
+* `micronaut-security-scim-data-jdbc-http-services` is an optional adapter that implements the User and Group service contracts with the JDBC repositories.
+
+The HTTP server separates protocol processing from application policy. Micronaut Security handles routing, request and response messages, SCIM media types, filter parsing, status codes, conditional GET, and SCIM error bodies. Applications can implement the service contracts directly or opt into the JDBC adapter. Authorization, tenant isolation, schema policy, credential handling, and application-specific persistence rules remain application concerns.
