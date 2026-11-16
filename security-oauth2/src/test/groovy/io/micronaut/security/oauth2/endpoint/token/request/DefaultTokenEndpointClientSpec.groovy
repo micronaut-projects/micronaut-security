@@ -41,20 +41,30 @@ class DefaultTokenEndpointClientSpec extends Specification {
         sentRequest.body.get()['client_secret'] == null
     }
 
-    void "client_secret_basic with a #description client secret sends no Authorization header and client_id in the body"() {
+    void "client_secret_basic preserves a #description client secret"() {
         when:
         send('my-client', secret, AuthenticationMethods.CLIENT_SECRET_BASIC)
+
+        then:
+        decodedBasicCredentials() == expected
+        !sentRequest.body.get().containsKey('client_id')
+        !sentRequest.body.get().containsKey('client_secret')
+
+        where:
+        description    | secret | expected
+        'empty'        | ''     | 'my-client:'
+        'single-space' | ' '    | 'my-client:+'
+        'space-only'   | '   '  | 'my-client:+++'
+    }
+
+    void "client_secret_basic with a null client secret sends no Authorization header and client_id in the body"() {
+        when:
+        send('my-client', null, AuthenticationMethods.CLIENT_SECRET_BASIC)
 
         then:
         !sentRequest.headers.contains(HttpHeaders.AUTHORIZATION)
         sentRequest.body.get()['client_id'] == 'my-client'
         !sentRequest.body.get().containsKey('client_secret')
-
-        where:
-        description | secret
-        'null'      | null
-        'empty'     | ''
-        'blank'     | '   '
     }
 
     void "client_secret_basic without a client secret falls through to none even when client_secret_post is also supported"() {

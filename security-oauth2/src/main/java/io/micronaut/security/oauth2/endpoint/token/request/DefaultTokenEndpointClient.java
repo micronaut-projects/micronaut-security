@@ -154,7 +154,8 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         }
 
         String clientSecret = clientConfiguration.getClientSecret();
-        boolean hasClientSecret = clientSecret != null && !clientSecret.isBlank();
+        // Only null means unconfigured; empty and space-only secrets are still credentials.
+        boolean hasClientSecret = clientSecret != null;
         if (authMethodsSupported.contains(AuthenticationMethods.CLIENT_SECRET_BASIC) && hasClientSecret) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
