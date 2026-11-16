@@ -1,0 +1,69 @@
+Micronaut Security supports the `private_key_jwt` client authentication method (https://datatracker.ietf.org/doc/html/rfc7523[RFC 7523], https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication[OpenID Connect Core]) at the token endpoint. Instead of a client secret, the client sends a short-lived JWT (`client_assertion`) signed with its private key, together with `client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer`. Neither a client secret nor an `Authorization` header is sent.
+
+NOTE: Local signing requires the `micronaut-security-jwt` module on the classpath.
+
+dependency:micronaut-security-jwt[groupId="io.micronaut.security"]
+
+== Local signing
+
+Set `token.authentication-method` to `private_key_jwt` and configure the private key under `token.client-assertion`:
+
+[configuration]
+----
+micronaut:
+  security:
+    oauth2:
+      clients:
+        companyauthserver:
+          client-id: 'XXX'
+          grant-type: client_credentials
+          token:
+            url: "https://foo.bar/token"
+            authentication-method: private_key_jwt
+            client-assertion:
+              private-key: "file:/run/secrets/client-assertion.pem"
+              key-id: 'my-key-id'
+              algorithm: ES256
+              lifetime: 60s
+              audience: "https://foo.bar"
+----
+
+- `private-key` is a PEM-encoded private key, inline or loaded from a `classpath:` or `file:` resource. PKCS#8 (`BEGIN PRIVATE KEY`), PKCS#1 (`BEGIN RSA PRIVATE KEY`) and SEC1 (`BEGIN EC PRIVATE KEY`) formats are supported.
+- `key-id` is sent as the `kid` header of the client assertion.
+- `algorithm` is an RSA (`RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`) or EC (`ES256`, `ES384`, `ES512`, `ES256K`) JWS algorithm. Default `RS256`.
+- `lifetime` is the validity of the client assertion. Default `60s`.
+- `audience` specifies the authorization server's issuer identifier for non-OpenID clients. For OpenID Connect clients, it defaults to `openid.issuer-identifier` (or `openid.issuer` when no separate identifier is configured). When both are configured, they must match exactly.
+
+Each token request uses a new client assertion with the client id as `iss` and `sub` claims and a unique `jti` claim.
+
+IMPORTANT: https://www.rfc-editor.org/rfc/rfc10070.html#section-4[RFC 10070] requires the authorization server's issuer identifier as the sole `aud` claim value. The token endpoint URL is no longer used as a fallback. Configure an issuer identifier before migrating existing `private_key_jwt` clients; requests fail if it is missing or conflicts with `audience`.
+
+WARNING: Keep the private key out of source control. Load it from a secret store or a file instead of inlining it in configuration files.
+
+== Remote signing
+
+To sign the client assertion with a key which never leaves a KMS or HSM, set `token.client-assertion.remote-signing-enabled` to `true` and provide a bean of type api:security.oauth2.endpoint.token.request.clientauth.ClientAssertionGenerator[] named after the client:
+
+[source,java]
+----
+@Singleton
+@Named("companyauthserver")
+class KmsClientAssertionGenerator implements ClientAssertionGenerator {
+    @Override
+    public Publisher<String> generateAssertion(String clientId, String issuerIdentifier) {
+        return Mono.fromCallable(() -> signWithKms(clientId, issuerIdentifier)); // <1>
+    }
+}
+----
+
+<1> Build the JWT claims (`iss`, `sub`, `aud`, `exp`, `iat`, `jti`), using `issuerIdentifier` as the sole audience, and sign them with the remote key named by `token.client-assertion.key-name`.
+
+Existing implementations of `ClientAssertionGenerator` must treat the second argument as the issuer identifier, not the token endpoint URL. The Java method descriptor is unchanged.
+
+The returned `Publisher` must be cold and emit the serialized signed JWT.
+
+== OpenID Connect clients
+
+api:security.oauth2.endpoint.token.request.DefaultTokenEndpointClient[] authenticates with a client assertion when the token endpoint supports `private_key_jwt` and a api:security.oauth2.endpoint.token.request.clientauth.ClientAssertionGenerator[] bean named after the client exists. For OpenID Connect clients, the supported authentication methods come from the discovery document (`token_endpoint_auth_methods_supported`) unless `openid.token.authentication-method` is configured. Configure the client assertion under `token.client-assertion` as shown above.
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$TokenEndpointConfigurationProperties$ClientAssertionConfigurationProperties.adoc[]

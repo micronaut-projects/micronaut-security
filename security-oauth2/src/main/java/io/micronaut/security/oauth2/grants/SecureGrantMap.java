@@ -48,4 +48,14 @@ public class SecureGrantMap extends HashMap<String, String> implements SecureGra
     public void setClientSecret(String clientSecret) {
         put(KEY_CLIENT_SECRET, clientSecret);
     }
+
+    @Override
+    public void setClientAssertion(String clientAssertion) {
+        put(KEY_CLIENT_ASSERTION, clientAssertion);
+    }
+
+    @Override
+    public void setClientAssertionType(String clientAssertionType) {
+        put(KEY_CLIENT_ASSERTION_TYPE, clientAssertionType);
+    }
 }
