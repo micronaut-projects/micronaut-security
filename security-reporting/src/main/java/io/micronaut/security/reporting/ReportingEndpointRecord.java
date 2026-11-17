@@ -26,20 +26,20 @@ import java.net.URI;
  *
  * @param name endpoint name referenced by reporting policies; must be a Structured Fields
  * dictionary key matching {@code [a-z*][a-z0-9_\-.*]*}
- * @param url absolute or relative endpoint URI
+ * @param url absolute or relative endpoint URI; must not be empty
  * @since 5.4.0
  */
 @Introspected
 record ReportingEndpointRecord(String name, URI url) implements ReportingEndpoint {
     /**
-     * Validates the endpoint name.
+     * Validates the endpoint name and URL.
      *
      * @throws IllegalArgumentException when the name is not a valid Structured Fields
      * dictionary key (RFC 8941), because such a name would make user agents discard the
-     * whole {@code Reporting-Endpoints} header
+     * whole {@code Reporting-Endpoints} header, or when the URL is missing or empty
      */
     ReportingEndpointRecord {
-        ReportingEndpointNames.require(name);
+        ReportingEndpointUtils.require(name, url);
     }
 
     @Override

@@ -55,10 +55,7 @@ public record ReportingEndpoints(Collection<ReportingEndpoint> endpoints) {
      */
     public ReportingEndpoints {
         for (ReportingEndpoint endpoint : endpoints) {
-            ReportingEndpointNames.require(endpoint.getName());
-            if (!ReportingEndpointUtils.isValid(endpoint)) {
-                throw new IllegalArgumentException("Reporting endpoint \"" + endpoint.getName() + "\" has no URL");
-            }
+            ReportingEndpointUtils.require(endpoint.getName(), endpoint.getUrl());
         }
         endpoints = endpoints.stream().sorted(ENDPOINT_COMPARATOR).toList();
     }

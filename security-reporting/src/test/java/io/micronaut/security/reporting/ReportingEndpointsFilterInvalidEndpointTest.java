@@ -95,28 +95,20 @@ class ReportingEndpointsFilterInvalidEndpointTest {
 
     @Test
     void warnsForEachRejectedProviderEndpointWithoutLoggingItsName() {
-        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
-        ListAppender<ILoggingEvent> appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
-        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", PROVIDER_SPEC));
+        try (CapturedWarnings captured = new CapturedWarnings();
+             EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", PROVIDER_SPEC));
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             BlockingHttpClient client = httpClient.toBlocking();
 
             client.exchange(HttpRequest.GET("/invalid-name?tenant=Acme"));
             client.exchange(HttpRequest.GET("/invalid-name?tenant=Other"));
 
-            List<String> warnings = appender.list.stream()
-                .filter(event -> event.getLevel() == Level.WARN)
-                .map(ILoggingEvent::getFormattedMessage)
-                .toList();
+            List<String> warnings = captured.messages();
             assertEquals(2, warnings.size(), warnings.toString());
             for (String warning : warnings) {
                 assertTrue(warning.contains(TenantReportingEndpointProvider.class.getName()), warning);
                 assertFalse(warning.contains("Acme") || warning.contains("Other"), warning);
             }
-        } finally {
-            logger.detachAppender(appender);
         }
     }
 
@@ -146,11 +138,7 @@ class ReportingEndpointsFilterInvalidEndpointTest {
 
     @Test
     void aProviderThatContributesNothingIsSkippedWithoutAWarning() {
-        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
-        ListAppender<ILoggingEvent> appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
-        try {
+        try (CapturedWarnings captured = new CapturedWarnings()) {
             ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
                 List.of(endpoint("network")), List.of(request -> null));
             MutableHttpResponse<?> response = HttpResponse.ok();
@@ -158,19 +146,13 @@ class ReportingEndpointsFilterInvalidEndpointTest {
             filter.filter(HttpRequest.GET("/"), response);
 
             assertEquals("network=\"/reports/network\"", response.getHeaders().get(ReportingEndpoints.HEADER_NAME));
-            assertTrue(appender.list.isEmpty(), appender.list.toString());
-        } finally {
-            logger.detachAppender(appender);
+            assertTrue(captured.messages().isEmpty(), captured.messages().toString());
         }
     }
 
     @Test
     void warnsOnceForAStaticEndpointThatIsOmitted() {
-        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
-        ListAppender<ILoggingEvent> appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
-        try {
+        try (CapturedWarnings captured = new CapturedWarnings()) {
             ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
                 List.of(endpoint("Csp"), endpoint("network")), List.of());
             MutableHttpResponse<?> first = HttpResponse.ok();
@@ -181,14 +163,9 @@ class ReportingEndpointsFilterInvalidEndpointTest {
 
             assertEquals("network=\"/reports/network\"", first.getHeaders().get(ReportingEndpoints.HEADER_NAME));
             assertEquals("network=\"/reports/network\"", second.getHeaders().get(ReportingEndpoints.HEADER_NAME));
-            List<String> warnings = appender.list.stream()
-                .filter(event -> event.getLevel() == Level.WARN)
-                .map(ILoggingEvent::getFormattedMessage)
-                .toList();
+            List<String> warnings = captured.messages();
             assertEquals(1, warnings.size(), warnings.toString());
             assertTrue(warnings.get(0).contains("\"Csp\""), warnings.get(0));
-        } finally {
-            logger.detachAppender(appender);
         }
     }
 
@@ -200,6 +177,29 @@ class ReportingEndpointsFilterInvalidEndpointTest {
 
             assertEquals(HttpStatus.OK, response.status());
             assertNull(response.header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    /** Captures the warnings {@link ReportingEndpointsFilter} logs while it is open. */
+    private static final class CapturedWarnings implements AutoCloseable {
+        private final Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
+        private final ListAppender<ILoggingEvent> appender = new ListAppender<>();
+
+        CapturedWarnings() {
+            appender.start();
+            logger.addAppender(appender);
+        }
+
+        List<String> messages() {
+            return appender.list.stream()
+                .filter(event -> event.getLevel() == Level.WARN)
+                .map(ILoggingEvent::getFormattedMessage)
+                .toList();
+        }
+
+        @Override
+        public void close() {
+            logger.detachAppender(appender);
         }
     }
 

@@ -58,9 +58,9 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
      */
     public ReportingEndpointConfiguration(@Parameter String name) {
         String key = name.toLowerCase(Locale.ROOT);
-        if (!ReportingEndpointNames.isValid(key)) {
+        if (!ReportingEndpointUtils.isValidName(key)) {
             throw new ConfigurationException("Invalid reporting endpoint name in property " + PREFIX + "." + name + ": "
-                + ReportingEndpointNames.describeInvalid(key));
+                + ReportingEndpointUtils.describeInvalidName(key));
         }
         this.name = key;
     }

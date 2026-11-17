@@ -118,7 +118,7 @@ class ReportingEndpointConfigurationTest {
     private static void assertConfigurationMessageNamesTheProperty(ConfigurationException e, String name) {
         String expectedProperty = ReportingEndpointConfiguration.PREFIX + "." + name;
         assertTrue(e.getMessage().contains(expectedProperty), e.getMessage());
-        assertTrue(e.getMessage().contains(ReportingEndpointNames.KEY_GRAMMAR), e.getMessage());
+        assertTrue(e.getMessage().contains(ReportingEndpointUtils.KEY_GRAMMAR), e.getMessage());
     }
 
     private static Map<String, Object> endpointProperty(String name) {

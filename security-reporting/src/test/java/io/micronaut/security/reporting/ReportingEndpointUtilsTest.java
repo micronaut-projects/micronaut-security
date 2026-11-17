@@ -20,7 +20,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportingEndpointUtilsTest {
@@ -48,6 +50,19 @@ class ReportingEndpointUtilsTest {
     void rejectsAMissingOrEmptyUrl() {
         assertFalse(ReportingEndpointUtils.isValid(endpoint("csp", null)));
         assertFalse(ReportingEndpointUtils.isValid(endpoint("csp", URI.create(""))));
+    }
+
+    @Test
+    void requireRejectsAnInvalidNameBeforeAMissingUrl() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+            () -> ReportingEndpointUtils.require("Csp", null));
+
+        assertTrue(e.getMessage().contains(ReportingEndpointUtils.KEY_GRAMMAR), e.getMessage());
+    }
+
+    @Test
+    void requireAcceptsAValidNameAndUrl() {
+        assertDoesNotThrow(() -> ReportingEndpointUtils.require("csp", URL));
     }
 
     @SuppressWarnings("NullAway")

@@ -66,7 +66,7 @@ final class ReportingEndpointsFilter {
                 validEndpoints.add(endpoint);
             } else {
                 LOG.warn("Ignoring the reporting endpoint named \"{}\" ({}): it needs a URL and a name that is a valid Structured Fields dictionary key (RFC 8941) matching {}",
-                    endpoint.getName(), endpoint.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
+                    endpoint.getName(), endpoint.getClass().getName(), ReportingEndpointUtils.KEY_GRAMMAR);
             }
         }
         this.reportingEndpoints = List.copyOf(validEndpoints);
@@ -90,7 +90,7 @@ final class ReportingEndpointsFilter {
                 } else if (endpoint != null) {
                     // The rejected name may derive from the request, so it is not logged.
                     LOG.warn("Ignoring the reporting endpoint supplied by {}: it has no URL, or its name is not a valid Structured Fields dictionary key (RFC 8941) matching {}",
-                        provider.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
+                        provider.getClass().getName(), ReportingEndpointUtils.KEY_GRAMMAR);
                 }
             }
             if (!endpoints.isEmpty()) {
