@@ -41,7 +41,16 @@ class ReportingEndpointRecordTest {
             () -> new ReportingEndpointRecord(name, URL));
 
         assertTrue(e.getMessage().contains("\"" + name + "\""), e.getMessage());
-        assertTrue(e.getMessage().contains(ReportingEndpointNames.KEY_GRAMMAR), e.getMessage());
+        assertTrue(e.getMessage().contains(ReportingEndpointUtils.KEY_GRAMMAR), e.getMessage());
+    }
+
+    @Test
+    void rejectsAMissingOrEmptyUrl() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+            () -> new ReportingEndpointRecord("csp", null));
+
+        assertTrue(e.getMessage().contains("\"csp\""), e.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> new ReportingEndpointRecord("csp", URI.create("")));
     }
 
     @Test

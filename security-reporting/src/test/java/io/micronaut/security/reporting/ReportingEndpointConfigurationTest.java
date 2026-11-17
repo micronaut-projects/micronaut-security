@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -102,10 +103,22 @@ class ReportingEndpointConfigurationTest {
         }
     }
 
+    @Test
+    void anEntryWithoutAUrlIsNotAValidEndpoint() {
+        // "uri" is a typo for "url", so the entry exists but has no endpoint URI.
+        String property = ReportingEndpointConfiguration.PREFIX + ".csp.uri";
+        try (ApplicationContext context = ApplicationContext.run(Map.of(property, "/csp/report"))) {
+            Collection<ReportingEndpoint> endpoints = context.getBeansOfType(ReportingEndpoint.class);
+
+            assertEquals(1, endpoints.size());
+            assertFalse(ReportingEndpointUtils.isValid(endpoints.iterator().next()));
+        }
+    }
+
     private static void assertConfigurationMessageNamesTheProperty(ConfigurationException e, String name) {
         String expectedProperty = ReportingEndpointConfiguration.PREFIX + "." + name;
         assertTrue(e.getMessage().contains(expectedProperty), e.getMessage());
-        assertTrue(e.getMessage().contains(ReportingEndpointNames.KEY_GRAMMAR), e.getMessage());
+        assertTrue(e.getMessage().contains(ReportingEndpointUtils.KEY_GRAMMAR), e.getMessage());
     }
 
     private static Map<String, Object> endpointProperty(String name) {

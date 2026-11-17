@@ -45,15 +45,17 @@ public record ReportingEndpoints(Collection<ReportingEndpoint> endpoints) {
      *
      * <p>Every endpoint name must be a Structured Fields dictionary key matching
      * {@code [a-z*][a-z0-9_\-.*]*}; a name outside that grammar would make user agents discard
-     * the whole header, so it is rejected here instead of being serialized.</p>
+     * the whole header, so it is rejected here instead of being serialized. Every endpoint must
+     * also have a URL that is not empty.</p>
      *
      * @param endpoints endpoints to advertise
-     * @throws IllegalArgumentException when an endpoint name is not a valid dictionary key
+     * @throws IllegalArgumentException when an endpoint name is not a valid dictionary key, or
+     * an endpoint has no URL
      * @since 5.4.0
      */
     public ReportingEndpoints {
         for (ReportingEndpoint endpoint : endpoints) {
-            ReportingEndpointNames.require(endpoint.getName());
+            ReportingEndpointUtils.require(endpoint.getName(), endpoint.getUrl());
         }
         endpoints = endpoints.stream().sorted(ENDPOINT_COMPARATOR).toList();
     }

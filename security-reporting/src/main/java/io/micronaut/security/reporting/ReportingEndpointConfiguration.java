@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Locale;
@@ -31,7 +32,7 @@ import java.util.Locale;
  *
  * <p>The entry name becomes a Structured Fields dictionary key in the {@code Reporting-Endpoints}
  * header, so it is lower-cased and must then match {@code [a-z*][a-z0-9_\-.*]*}; any other name
- * fails at startup.</p>
+ * fails at startup. An entry without a {@code url} is logged and omitted from the header.</p>
  *
  * @since 5.4.0
  */
@@ -43,7 +44,7 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
 
     private final String name;
 
-    private URI url;
+    private @Nullable URI url;
 
     /**
      * Creates a named endpoint configuration.
@@ -56,10 +57,10 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
      * @since 5.4.0
      */
     public ReportingEndpointConfiguration(@Parameter String name) {
-        String key = name == null ? null : name.toLowerCase(Locale.ROOT);
-        if (!ReportingEndpointNames.isValid(key)) {
-            throw new ConfigurationException("Invalid value for property " + PREFIX + "." + name + ": "
-                + ReportingEndpointNames.describeInvalid(key));
+        String key = name.toLowerCase(Locale.ROOT);
+        if (!ReportingEndpointUtils.isValidName(key)) {
+            throw new ConfigurationException("Invalid reporting endpoint name in property " + PREFIX + "." + name + ": "
+                + ReportingEndpointUtils.describeInvalidName(key));
         }
         this.name = key;
     }
@@ -75,7 +76,8 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if the required {@code url} property was not configured
+     * <p>Returns {@code null} when the required {@code url} property was not configured; the
+     * response filter omits such an endpoint.</p>
      */
     @Override
     public URI getUrl() {
