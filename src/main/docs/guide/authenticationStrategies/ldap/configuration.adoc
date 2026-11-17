@@ -34,7 +34,7 @@ The default list covers the two most common password attributes only. If the man
 
 Exclusions also apply when an attribute is explicitly requested in `search.attributes`. A conflicting setting logs a warning once at startup for that LDAP configuration. If your application needs the attribute, remove it from `search.excluded-attributes`.
 
-This filtering happens after JNDI receives the attributes into process memory; it prevents downstream exposure rather than preventing retrieval. The defaults apply to properties-based user searches. Custom api:security.ldap.context.SearchSettings[] implementations default to no exclusions and must override `getExcludedAttributes()` to opt in.
+This filtering happens after JNDI receives the attributes into process memory; it prevents downstream exposure rather than preventing retrieval. The defaults apply to properties-based user searches. Custom api:security.ldap.context.SearchSettings[] implementations default to no exclusions and must override `getExcludedAttributes()` to opt in. The exclusions are applied by api:security.ldap.context.DefaultLdapSearchService[]; a custom api:security.ldap.context.LdapSearchService[] that does not extend it must strip the attributes itself.
 
 It is recommended to set `micronaut.security.ldap.*.search.attributes` explicitly to the minimal set of attributes your application needs, for example:
 

@@ -83,10 +83,13 @@ public class LdapConfiguration implements Toggleable {
     }
 
     /**
-     * Reports conflicting attribute settings once after configuration binding.
+     * Reports conflicting attribute settings once after configuration binding. Disabled configurations are not checked.
      */
     @PostConstruct
     final void warnAboutExcludedAttributes() {
+        if (!enabled) {
+            return;
+        }
         String[] requested = search.getAttributes();
         Optional<String> groupFilterAttribute = group.isEnabled() ? group.getFilterAttribute() : Optional.empty();
         for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
