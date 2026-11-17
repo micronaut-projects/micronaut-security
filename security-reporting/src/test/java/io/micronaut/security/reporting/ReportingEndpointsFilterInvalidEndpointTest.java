@@ -145,6 +145,26 @@ class ReportingEndpointsFilterInvalidEndpointTest {
     }
 
     @Test
+    void aProviderThatContributesNothingIsSkippedWithoutAWarning() {
+        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
+                List.of(endpoint("network")), List.of(request -> null));
+            MutableHttpResponse<?> response = HttpResponse.ok();
+
+            filter.filter(HttpRequest.GET("/"), response);
+
+            assertEquals("network=\"/reports/network\"", response.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertTrue(appender.list.isEmpty(), appender.list.toString());
+        } finally {
+            logger.detachAppender(appender);
+        }
+    }
+
+    @Test
     void warnsOnceForAStaticEndpointThatIsOmitted() {
         Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();

@@ -64,7 +64,7 @@ final class ReportingEndpointsFilter {
         for (ReportingEndpoint endpoint : reportingEndpoints) {
             if (ReportingEndpointUtils.isValid(endpoint)) {
                 validEndpoints.add(endpoint);
-            } else if (LOG.isWarnEnabled()) {
+            } else {
                 LOG.warn("Ignoring the reporting endpoint named \"{}\" ({}): it needs a URL and a name that is a valid Structured Fields dictionary key (RFC 8941) matching {}",
                     endpoint.getName(), endpoint.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
             }
@@ -85,12 +85,9 @@ final class ReportingEndpointsFilter {
             List<ReportingEndpoint> endpoints = new ArrayList<>(reportingEndpoints);
             for (ReportingEndpointProvider provider : reportingEndpointProviders) {
                 ReportingEndpoint endpoint = provider.reportingEndpoint(request);
-                if (endpoint == null) {
-                    continue;
-                }
                 if (ReportingEndpointUtils.isValid(endpoint)) {
                     endpoints.add(endpoint);
-                } else if (LOG.isWarnEnabled()) {
+                } else if (endpoint != null) {
                     // The rejected name may derive from the request, so it is not logged.
                     LOG.warn("Ignoring the reporting endpoint supplied by {}: it has no URL, or its name is not a valid Structured Fields dictionary key (RFC 8941) matching {}",
                         provider.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
