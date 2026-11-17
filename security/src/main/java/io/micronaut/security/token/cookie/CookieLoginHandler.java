@@ -39,7 +39,7 @@ import java.util.Optional;
  * For a successful login a cookie is added to the response with a token.
  *
  * @author Sergio del Amo
- * @since 2.0.0
+ * @since 3.2.0
  */
 public abstract class CookieLoginHandler implements RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 

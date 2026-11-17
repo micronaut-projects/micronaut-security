@@ -45,6 +45,7 @@ include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
+include 'security-paseto'
 include "test-suite-python"
 include "test-suite-aot"
 include "test-suite-aot-authserver"
@@ -70,3 +71,4 @@ micronautBuild {
     importMicronautCatalog("micronaut-validation")
     importMicronautCatalog("micronaut-hibernate-validator")
 }
+

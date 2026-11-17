@@ -20,8 +20,8 @@ import org.jspecify.annotations.NonNull;
 /**
  * Configuration for access tokens.
  *
- * @author James Kleeh
- * @since 2.0.0
+ * @author Sergio del Amo
+ * @since 3.2.0
  */
 @FunctionalInterface
 public interface AccessTokenConfiguration {
