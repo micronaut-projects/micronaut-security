@@ -93,7 +93,7 @@ class ReportingEndpointsFilterInvalidNameTest {
     }
 
     @Test
-    void warnsOncePerProviderWithoutLoggingTheRejectedName() {
+    void warnsForEachRejectedProviderEndpointWithoutLoggingItsName() {
         Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
@@ -109,9 +109,11 @@ class ReportingEndpointsFilterInvalidNameTest {
                 .filter(event -> event.getLevel() == Level.WARN)
                 .map(ILoggingEvent::getFormattedMessage)
                 .toList();
-            assertEquals(1, warnings.size(), warnings.toString());
-            assertTrue(warnings.get(0).contains(TenantReportingEndpointProvider.class.getName()), warnings.get(0));
-            assertFalse(warnings.get(0).contains("Acme"), warnings.get(0));
+            assertEquals(2, warnings.size(), warnings.toString());
+            for (String warning : warnings) {
+                assertTrue(warning.contains(TenantReportingEndpointProvider.class.getName()), warning);
+                assertFalse(warning.contains("Acme") || warning.contains("Other"), warning);
+            }
         } finally {
             logger.detachAppender(appender);
         }

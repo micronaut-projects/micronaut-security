@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Advertises configured Reporting API endpoints on matching HTTP responses.
@@ -39,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>Endpoint names must be Structured Fields dictionary keys and endpoints must have a URL. An
  * endpoint failing either check, whether static or request-specific, is omitted, so that it can
  * neither fail the response nor make user agents discard the whole header. A warning is logged once per static endpoint and
- * once per provider type, so that request-derived names cannot flood the log.</p>
+ * each time a provider supplies such an endpoint.</p>
  */
 @Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)
@@ -50,7 +48,6 @@ final class ReportingEndpointsFilter {
 
     private final List<ReportingEndpoint> reportingEndpoints;
     private final List<ReportingEndpointProvider> reportingEndpointProviders;
-    private final Set<Class<?>> warnedProviders = ConcurrentHashMap.newKeySet();
 
     /**
      * Creates the filter from every static endpoint and request-specific endpoint provider.
@@ -93,10 +90,9 @@ final class ReportingEndpointsFilter {
                 }
                 if (ReportingEndpointUtils.isValid(endpoint)) {
                     endpoints.add(endpoint);
-                } else if (warnedProviders.add(provider.getClass())) {
-                    // The rejected name may derive from the request, so it is not logged, and
-                    // the warning is emitted once per provider type rather than per request.
-                    LOG.warn("Ignoring reporting endpoints supplied by {} that have no URL or whose name is not a valid Structured Fields dictionary key (RFC 8941) matching {}. This warning is logged once.",
+                } else if (LOG.isWarnEnabled()) {
+                    // The rejected name may derive from the request, so it is not logged.
+                    LOG.warn("Ignoring the reporting endpoint supplied by {}: it has no URL, or its name is not a valid Structured Fields dictionary key (RFC 8941) matching {}",
                         provider.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
                 }
             }
