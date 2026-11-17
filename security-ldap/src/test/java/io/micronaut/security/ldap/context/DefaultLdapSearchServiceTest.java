@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,8 +26,8 @@ class DefaultLdapSearchServiceTest {
     private final DefaultLdapSearchService service = new DefaultLdapSearchService();
 
     @Test
-    void removingExcludedAttributesFromNullAttributesReturnsNull() throws NamingException {
-        assertNull(service.removeExcludedAttributes(null, List.of("userPassword")));
+    void removingExcludedAttributesFromNullAttributesDoesNothing() {
+        assertDoesNotThrow(() -> service.removeExcludedAttributes(null, List.of("userPassword")));
     }
 
     @Test
@@ -38,9 +38,8 @@ class DefaultLdapSearchServiceTest {
         attributes.put("userPassword;binary", "non-secret-test-fixture");
         attributes.put("userPasswordHistory", "kept because only the name prefix matches");
 
-        Attributes result = service.removeExcludedAttributes(attributes, Arrays.asList("unicodepwd", null, "userPassword"));
+        service.removeExcludedAttributes(attributes, Arrays.asList("unicodepwd", null, "userPassword"));
 
-        assertSame(attributes, result);
         assertEquals(Set.of("cn", "userPasswordHistory"), new AttributesConvertibleValues(attributes).names());
     }
 

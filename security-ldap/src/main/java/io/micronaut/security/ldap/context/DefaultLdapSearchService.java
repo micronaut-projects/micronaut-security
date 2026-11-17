@@ -98,16 +98,15 @@ public class DefaultLdapSearchService implements LdapSearchService {
     /**
      * Removes the excluded attributes in place from the given {@link Attributes}.
      *
-     * @param attributes         The attributes returned by LDAP. May be null
+     * @param attributes         The attributes returned by LDAP, which this method mutates. Nothing happens if null
      * @param excludedAttributes The attribute names to remove. Matching is case-insensitive;
      *                           names without options also exclude all option variants
-     * @return The same attributes instance, mutated to remove the excluded ones, or null if attributes is null
      * @throws NamingException If the attribute ids cannot be enumerated
      * @since 5.6.0
      */
-    protected @Nullable Attributes removeExcludedAttributes(@Nullable Attributes attributes, Collection<String> excludedAttributes) throws NamingException {
+    protected void removeExcludedAttributes(@Nullable Attributes attributes, Collection<String> excludedAttributes) throws NamingException {
         if (attributes == null || CollectionUtils.isEmpty(excludedAttributes)) {
-            return attributes;
+            return;
         }
         List<String> idsToRemove = new ArrayList<>();
         NamingEnumeration<String> ids = attributes.getIDs();
@@ -124,7 +123,6 @@ public class DefaultLdapSearchService implements LdapSearchService {
         for (String id : idsToRemove) {
             attributes.remove(id);
         }
-        return attributes;
     }
 
     private static boolean isExcluded(String attributeId, Collection<String> excludedAttributes) {
