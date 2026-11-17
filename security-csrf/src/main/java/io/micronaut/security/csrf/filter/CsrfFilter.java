@@ -212,7 +212,7 @@ final class CsrfFilter implements Ordered {
 
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (!StringUtils.hasText(csrfToken)) {
+        if (csrfToken == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
