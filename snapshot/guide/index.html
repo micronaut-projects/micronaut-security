@@ -535,6 +535,18 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
 <div class="sect1">
+<h2 id="_micronaut_security_5_6_breaking_changes">Micronaut Security 5.6 breaking changes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Reporting API endpoint names are validated against the HTTP Structured Fields dictionary key grammar: they start with a lowercase ASCII letter or <code><strong></code> and contain only lowercase letters, digits, <code>_</code>, <code>-</code>, <code>.</code> or <code></strong></code>. A browser discards the whole <code>Reporting-Endpoints</code> header when one key is outside that grammar. The application now fails to start when an entry under <code>micronaut.security.reporting-endpoints</code> has an invalid name. A configuration entry without a <code>url</code>, and an endpoint contributed by a <a href="../api/io/micronaut/security/reporting/ReportingEndpoint.html">ReportingEndpoint</a> or <a href="../api/io/micronaut/security/reporting/ReportingEndpointProvider.html">ReportingEndpointProvider</a> bean with an invalid name or without a URL, is left out of the header and logged at <code>WARN</code>; previously a missing URL failed every response carrying the header. The constructor of <a href="../api/io/micronaut/security/reporting/ReportingEndpoints.html">ReportingEndpoints</a> throws <code>IllegalArgumentException</code> for such an endpoint. When two endpoints share a name, the response filter now advertises only the first one and logs the other at <code>WARN</code>; endpoints from configuration or beans come before those from providers. Previously both were serialized and the browser used the last one.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_micronaut_security_5_5_breaking_changes">Micronaut Security 5.5 breaking changes</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -8978,6 +8990,22 @@ url = "https://reports.example.com/network"</code></pre>
 <p>The name of each configuration entry is a reporting group. Browser features refer to that name when selecting a destination. Group names must be valid HTTP Structured Fields dictionary keys: they start with a lowercase ASCII letter or <code><strong></code> and contain only lowercase letters, digits, <code>_</code>, <code>-</code>, <code>.</code>, or <code></strong></code>.</p>
 </div>
 <div class="paragraph">
+<p>A browser discards the whole <code>Reporting-Endpoints</code> header when one of its keys is outside that grammar, so the module never serializes an endpoint it cannot advertise:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The application fails to start when a configuration entry has an invalid name.</p>
+</li>
+<li>
+<p>A configuration entry without a <code>url</code> is left out of the header, and the module logs a warning that names the entry.</p>
+</li>
+<li>
+<p>A <code>ReportingEndpoint</code> bean with an invalid name or without a URL is also left out and logged.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>The Reporting API specification defines an endpoint value as a URI-reference. Therefore, it can be absolute or relative. The browser resolves a relative reference against the URL of the response that supplied the header. After resolution, the endpoint must be <a href="https://w3c.github.io/webappsec-secure-contexts/#is-origin-trustworthy">potentially trustworthy</a>; browsers ignore non-secure endpoints.</p>
 </div>
 <div class="paragraph">
@@ -9020,7 +9048,10 @@ url = "https://reports.example.com/network"</code></pre>
 <p>You can provide a bean of type <a href="../api/io/micronaut/security/reporting/ReportingEndpointProvider.html">ReportingEndpointProvider</a> for dynamic registering reporting endpoints.</p>
 </div>
 <div class="paragraph">
-<p>The filter combines provider results with endpoints declared in configuration. A provider can return <code>null</code> when it does not contribute an endpoint for a particular request. Endpoint group names must remain unique after all configured and provider-generated endpoints are combined.</p>
+<p>The filter combines provider results with endpoints declared in configuration. A provider can return <code>null</code> when it does not contribute an endpoint for a particular request. Endpoint group names must remain unique after all configured and provider-generated endpoints are combined. When two endpoints share a name, the filter keeps the first one and logs a warning for the other. Endpoints declared in configuration or as beans come before provider endpoints, so a provider cannot replace them.</p>
+</div>
+<div class="paragraph">
+<p>An endpoint returned by a provider must also have a valid group name and a URL. The filter leaves out an endpoint that fails either check and logs a warning naming the provider, so the response is still served with the remaining endpoints.</p>
 </div>
 
 <h1 id="htmlSanitizer"><a class="anchor" href="#htmlSanitizer"></a>15 HTML Sanitizer</h1>
