@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +64,26 @@ class TokenCookieConfigurationTest {
 
             RefreshTokenCookieConfiguration refreshTokenCookieConfiguration = ctx.getBean(RefreshTokenCookieConfiguration.class);
             assertEquals(SameSite.Lax, refreshTokenCookieConfiguration.getCookieSameSite().orElse(null));
+        }
+    }
+
+    @Test
+    void refreshTokenCookieMaxAgeDefaultsToThirtyDays() {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.authentication", "cookie"))) {
+            assertEquals(Duration.ofDays(30), ctx.getBean(RefreshTokenCookieConfiguration.class).getCookieMaxAge().orElse(null));
+            assertFalse(ctx.getBean(AccessTokenCookieConfiguration.class).getCookieMaxAge().isPresent());
+        }
+    }
+
+    @Test
+    void refreshTokenCookieMaxAgeCanBeOverriddenAndIsIgnoredForSessionCookies() {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.authentication", "cookie",
+            "micronaut.security.token.refresh.cookie.cookie-max-age", "5m"))) {
+            assertEquals(Duration.ofMinutes(5), ctx.getBean(RefreshTokenCookieConfiguration.class).getCookieMaxAge().orElse(null));
+        }
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.authentication", "cookie",
+            "micronaut.security.token.refresh.cookie.session-cookie", "true"))) {
+            assertFalse(ctx.getBean(RefreshTokenCookieConfiguration.class).getCookieMaxAge().isPresent());
         }
     }
 

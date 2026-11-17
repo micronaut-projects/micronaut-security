@@ -51,8 +51,6 @@ import java.util.Optional;
 @Singleton
 public class TokenCookieLoginHandler extends CookieLoginHandler {
 
-    private static final Duration DEFAULT_REFRESH_TOKEN_COOKIE_MAX_AGE = Duration.ofDays(30);
-
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
     protected final AccessTokenConfiguration accessTokenConfiguration;
@@ -173,7 +171,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
         refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
         warnIfInsecureCookie(refreshCookie, request);
         if (!refreshTokenCookieConfiguration.isSessionCookie()) {
-            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElse(DEFAULT_REFRESH_TOKEN_COOKIE_MAX_AGE));
+            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElse(RefreshTokenCookieConfigurationProperties.DEFAULT_COOKIEMAXAGE));
         }
         return Optional.of(refreshCookie);
     }
