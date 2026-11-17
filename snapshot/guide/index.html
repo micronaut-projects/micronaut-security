@@ -540,6 +540,9 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <div class="ulist">
 <ul>
 <li>
+<p>To stop buffering request bodies it does not need, the CSRF filter now resolves tokens sequentially. Previously, whenever the <a href="../api/io/micronaut/security/csrf/resolver/FieldCsrfTokenResolver.html">FieldCsrfTokenResolver</a> was enabled (the default), the filter ran every resolver for every protected request, so each form submission had its whole body read and held in memory before a valid CSRF token in the HTTP header was considered. Every form submission therefore cost the server memory proportional to its body, up to <code>micronaut.server.max-request-size</code>, even when the body was not needed to validate the request. The filter now consults the <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> and <a href="../api/io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html">FutureCsrfTokenResolver</a> beans one at a time, in order, and accepts the request at the first token which validates, so the body is not parsed when the HTTP header carries a valid CSRF token. A resolver which does not find a token, which throws, or whose token does not validate, no longer rejects the request by itself: the next resolver is consulted, and the request is rejected when no resolver yields a valid token. Previously, when no <code>FutureCsrfTokenResolver</code> bean was registered (for example with <code>micronaut.security.csrf.token-resolvers.field.enabled=false</code>), the first resolver which threw, or which yielded a token which did not validate, rejected the request.</p>
+</li>
+<li>
 <p>Reporting API endpoint names are validated against the HTTP Structured Fields dictionary key grammar: they start with a lowercase ASCII letter or <code><strong></code> and contain only lowercase letters, digits, <code>_</code>, <code>-</code>, <code>.</code> or <code></strong></code>. A browser discards the whole <code>Reporting-Endpoints</code> header when one key is outside that grammar. The application now fails to start when an entry under <code>micronaut.security.reporting-endpoints</code> has an invalid name. A configuration entry without a <code>url</code>, and an endpoint contributed by a <a href="../api/io/micronaut/security/reporting/ReportingEndpoint.html">ReportingEndpoint</a> or <a href="../api/io/micronaut/security/reporting/ReportingEndpointProvider.html">ReportingEndpointProvider</a> bean with an invalid name or without a URL, is left out of the header and logged at <code>WARN</code>; previously a missing URL failed every response carrying the header. The constructor of <a href="../api/io/micronaut/security/reporting/ReportingEndpoints.html">ReportingEndpoints</a> throws <code>IllegalArgumentException</code> for such an endpoint. When two endpoints share a name, the response filter now advertises only the first one and logs the other at <code>WARN</code>; endpoints from configuration or beans come before those from providers. Previously both were serialized and the browser used the last one.</p>
 </li>
 </ul>
@@ -8611,7 +8614,16 @@ runtime = [
 <div class="paragraph">
 <p>The core of Micronaut Security CSRF implementation is <code>io.micronaut.security.csrf.filter.CsrfFilter</code>.
 A <a href="https://docs.micronaut.io/latest/guide/#filters">Server Filter</a> which attempts to resolve a CSRF Token with
-every bean of type <a href="../api/io/micronaut/security/csrf/resolvers/CsrfTokenResolver.html">CsrfTokenResolver</a> and validates it with beans of type <a href="../api/io/micronaut/security/csrf/validator/CsrfTokenValidator.html">CsrfTokenValidator</a>.</p>
+the beans of type <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> and <a href="../api/io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html">FutureCsrfTokenResolver</a>, and validates it with a bean of type <a href="../api/io/micronaut/security/csrf/validator/CsrfTokenValidator.html">CsrfTokenValidator</a>.</p>
+</div>
+<div class="paragraph">
+<p>The filter consults the <a href="#csrfTokenResolvers">resolvers</a> one at a time, in their order, and stops at the first token which validates.
+A resolver which does not find a token, which fails, or whose token does not validate, does not reject the request by itself: the filter moves on to the next resolver.
+The request is rejected when no resolver yields a valid token.</p>
+</div>
+<div class="paragraph">
+<p>The HTTP header resolver runs before the form field resolver. Hence, the request body is not parsed when the HTTP header carries a valid token.
+A request without a valid token in the HTTP header still has its body parsed, up to <code>micronaut.server.max-request-size</code>, to look for the token in a form field.</p>
 </div>
 <div class="paragraph">
 <p>The following configuration options are available for the CSRF Filter:</p>
@@ -8963,7 +8975,7 @@ signature-key = "pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Y
 
 
 <div class="paragraph">
-<p>Micronaut Security CSRF resolves a CSRF Token with beans of type <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a></p>
+<p>Micronaut Security CSRF resolves a CSRF Token with beans of type <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> and <a href="../api/io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html">FutureCsrfTokenResolver</a>.</p>
 </div>
 
 <h2 id="httpHeaderCsrfTokenResolver"><a class="anchor" href="#httpHeaderCsrfTokenResolver"></a>13.5.1 HTTP Header CSRF Token Resolution</h2>
@@ -9013,7 +9025,7 @@ It is recommended to use a custom HTTP Header Name. By using a custom HTTP Heade
 
 
 <div class="paragraph">
-<p>Micronaut Security CSRF ships a <code>io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver</code> an implementation of <a href="../api/io/micronaut/security/csrf/resolver/CsrfTokenResolver.html">CsrfTokenResolver</a> which looks for a CSRF Token in a Request&#8217;s  form-url-encoded field.</p>
+<p>Micronaut Security CSRF ships a <code>io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver</code> an implementation of <a href="../api/io/micronaut/security/csrf/resolver/FutureCsrfTokenResolver.html">FutureCsrfTokenResolver</a> which looks for a CSRF Token in a Request&#8217;s  form-url-encoded field.</p>
 </div>
 <div class="listingblock">
 <div class="content">
