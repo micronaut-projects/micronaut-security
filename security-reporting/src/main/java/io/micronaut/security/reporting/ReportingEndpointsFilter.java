@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.reporting;
 
-import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
@@ -35,14 +34,13 @@ import java.util.List;
  * {@link ReportingEndpoint} beans and request-specific {@link ReportingEndpointProvider} beans
  * contribute entries; when neither contributes an endpoint, the filter omits the header.</p>
  *
- * <p>Endpoint names must be Structured Fields dictionary keys. A static endpoint with an invalid
- * name fails at startup, because the filter is created eagerly. A request-specific endpoint with an invalid name is
- * logged and omitted, so that a misbehaving provider cannot fail the response.</p>
+ * <p>Endpoint names must be Structured Fields dictionary keys. An endpoint with an invalid name,
+ * whether static or request-specific, is logged and omitted, so that it can neither fail the
+ * response nor make user agents discard the whole header.</p>
  */
 @Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)
 @ServerFilter("${" + ReportingEndpointsFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
-@Context
 @Internal
 final class ReportingEndpointsFilter {
     private static final Logger LOG = LoggerFactory.getLogger(ReportingEndpointsFilter.class);
@@ -53,17 +51,24 @@ final class ReportingEndpointsFilter {
     /**
      * Creates the filter from every static endpoint and request-specific endpoint provider.
      *
+     * <p>Static endpoints whose name is not a valid Structured Fields dictionary key (RFC 8941)
+     * are logged once here and omitted.</p>
+     *
      * @param reportingEndpoints static endpoints to advertise
      * @param reportingEndpointProviders request-specific endpoint providers
-     * @throws IllegalArgumentException when a static endpoint name is not a valid Structured
-     * Fields dictionary key (RFC 8941)
      */
     ReportingEndpointsFilter(List<ReportingEndpoint> reportingEndpoints,
                              List<ReportingEndpointProvider> reportingEndpointProviders) {
+        List<ReportingEndpoint> validEndpoints = new ArrayList<>(reportingEndpoints.size());
         for (ReportingEndpoint endpoint : reportingEndpoints) {
-            ReportingEndpointNames.require(endpoint.getName());
+            if (ReportingEndpointNames.isValid(endpoint.getName())) {
+                validEndpoints.add(endpoint);
+            } else if (LOG.isWarnEnabled()) {
+                LOG.warn("Ignoring the reporting endpoint {}: {}",
+                    endpoint.getClass().getName(), ReportingEndpointNames.describeInvalid(endpoint.getName()));
+            }
         }
-        this.reportingEndpoints = List.copyOf(reportingEndpoints);
+        this.reportingEndpoints = List.copyOf(validEndpoints);
         this.reportingEndpointProviders = List.copyOf(reportingEndpointProviders);
     }
 

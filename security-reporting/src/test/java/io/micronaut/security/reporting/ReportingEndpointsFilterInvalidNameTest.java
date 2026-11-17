@@ -17,7 +17,6 @@ package io.micronaut.security.reporting;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -30,13 +29,10 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportingEndpointsFilterInvalidNameTest {
     private static final String PROVIDER_SPEC = "ReportingEndpointsFilterInvalidNameTest.provider";
@@ -73,21 +69,27 @@ class ReportingEndpointsFilterInvalidNameTest {
     }
 
     @Test
-    void rejectsAStaticEndpointWithAnInvalidNameWhenTheFilterIsCreated() {
-        ReportingEndpoint invalid = endpoint("Csp");
+    void omitsAStaticEndpointBeanWithAnInvalidNameWithoutFailingTheResponse() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", STATIC_SPEC,
+                ReportingEndpointConfiguration.PREFIX + ".csp.url", "/csp/report"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<?> response = httpClient.toBlocking().exchange(HttpRequest.GET("/invalid-static-name"));
 
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-            () -> new ReportingEndpointsFilter(List.of(invalid), List.of()));
-
-        assertTrue(e.getMessage().contains("\"Csp\""), e.getMessage());
+            assertEquals(HttpStatus.OK, response.status());
+            assertEquals("csp=\"/csp/report\"", response.header(ReportingEndpoints.HEADER_NAME));
+        }
     }
 
     @Test
-    void failsStartupForAStaticEndpointBeanWithAnInvalidName() {
-        BeanInstantiationException e = assertThrows(BeanInstantiationException.class,
-            () -> ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", STATIC_SPEC)).close());
+    void omitsTheHeaderWhenTheOnlyStaticEndpointHasAnInvalidName() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", STATIC_SPEC));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<?> response = httpClient.toBlocking().exchange(HttpRequest.GET("/invalid-static-name"));
 
-        assertTrue(e.getMessage().contains("\"Csp\""), e.getMessage());
+            assertEquals(HttpStatus.OK, response.status());
+            assertNull(response.header(ReportingEndpoints.HEADER_NAME));
+        }
     }
 
     private static ReportingEndpoint endpoint(String name) {
@@ -119,6 +121,15 @@ class ReportingEndpointsFilterInvalidNameTest {
         @Override
         public ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
             return endpoint(request.getParameters().get("tenant"));
+        }
+    }
+
+    @Requires(property = "spec.name", value = STATIC_SPEC)
+    @Controller("/invalid-static-name")
+    static final class StaticTestController {
+        @Get
+        String index() {
+            return "ok";
         }
     }
 
