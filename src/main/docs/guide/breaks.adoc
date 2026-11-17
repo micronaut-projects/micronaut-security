@@ -41,9 +41,7 @@ micronaut:
           cookie-same-site: ''
 ----
 
-A key left without a value, such as `cookie-same-site:` or `cookie-same-site: ~` in YAML, is an empty value as well and also omits the attribute. Whenever `cookie-same-site` is empty, an `INFO` message naming the property is logged at startup.
-
-A `cookie-same-site` value other than `Strict`, `Lax`, `None` (case-insensitive) or an empty value now fails application startup with a `ConfigurationException`. Previously, an unrecognized value was silently ignored and the `SameSite` attribute omitted.
+A key left without a value, such as `cookie-same-site:` or `cookie-same-site: ~` in YAML, is an empty value as well. As before, a value other than `Strict`, `Lax` or `None` (case-insensitive) is not rejected: it also omits the `SameSite` attribute.
 
 === Warning when token cookies are issued without `Secure`
 

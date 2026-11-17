@@ -141,7 +141,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. Set it to an empty value to omit the `SameSite` attribute, which is logged at startup. Any other value fails application startup with a configuration error.
+     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. An empty or unrecognized value omits the `SameSite` attribute.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
