@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * whose keys must match {@code [a-z*][a-z0-9_\-.*]*}. A key outside that grammar makes user
  * agents discard the whole header, so names are rejected before a header is rendered.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Internal
 final class ReportingEndpointNames {

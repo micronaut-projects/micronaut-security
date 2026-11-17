@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Advertises configured Reporting API endpoints on matching HTTP responses.
@@ -35,8 +37,9 @@ import java.util.List;
  * contribute entries; when neither contributes an endpoint, the filter omits the header.</p>
  *
  * <p>Endpoint names must be Structured Fields dictionary keys. An endpoint with an invalid name,
- * whether static or request-specific, is logged and omitted, so that it can neither fail the
- * response nor make user agents discard the whole header.</p>
+ * whether static or request-specific, is omitted, so that it can neither fail the response nor
+ * make user agents discard the whole header. A warning is logged once per static endpoint and
+ * once per provider type, so that request-derived names cannot flood the log.</p>
  */
 @Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)
@@ -47,6 +50,7 @@ final class ReportingEndpointsFilter {
 
     private final List<ReportingEndpoint> reportingEndpoints;
     private final List<ReportingEndpointProvider> reportingEndpointProviders;
+    private final Set<Class<?>> warnedProviders = ConcurrentHashMap.newKeySet();
 
     /**
      * Creates the filter from every static endpoint and request-specific endpoint provider.
@@ -89,9 +93,10 @@ final class ReportingEndpointsFilter {
                 }
                 if (ReportingEndpointNames.isValid(endpoint.getName())) {
                     endpoints.add(endpoint);
-                } else if (LOG.isWarnEnabled()) {
-                    // The rejected name may derive from the request, so it is not logged.
-                    LOG.warn("Ignoring the reporting endpoint supplied by {}: its name is not a valid Structured Fields dictionary key (RFC 8941); it must match {}",
+                } else if (warnedProviders.add(provider.getClass())) {
+                    // The rejected name may derive from the request, so it is not logged, and
+                    // the warning is emitted once per provider type rather than per request.
+                    LOG.warn("Ignoring reporting endpoints supplied by {} whose name is not a valid Structured Fields dictionary key (RFC 8941); it must match {}. This warning is logged once.",
                         provider.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
                 }
             }

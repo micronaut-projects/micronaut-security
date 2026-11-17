@@ -15,6 +15,10 @@
  */
 package io.micronaut.security.reporting;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
@@ -27,12 +31,16 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportingEndpointsFilterInvalidNameTest {
     private static final String PROVIDER_SPEC = "ReportingEndpointsFilterInvalidNameTest.provider";
@@ -54,6 +62,31 @@ class ReportingEndpointsFilterInvalidNameTest {
             HttpResponse<?> valid = client.exchange(HttpRequest.GET("/invalid-name?tenant=acme"));
 
             assertEquals("acme=\"/reports/acme\", csp=\"/csp/report\"", valid.header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    @Test
+    void warnsOncePerProviderWithoutLoggingTheRejectedName() {
+        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", PROVIDER_SPEC));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+
+            client.exchange(HttpRequest.GET("/invalid-name?tenant=Acme"));
+            client.exchange(HttpRequest.GET("/invalid-name?tenant=Other"));
+
+            List<String> warnings = appender.list.stream()
+                .filter(event -> event.getLevel() == Level.WARN)
+                .map(ILoggingEvent::getFormattedMessage)
+                .toList();
+            assertEquals(1, warnings.size(), warnings.toString());
+            assertTrue(warnings.get(0).contains(TenantReportingEndpointProvider.class.getName()), warnings.get(0));
+            assertFalse(warnings.get(0).contains("Acme"), warnings.get(0));
+        } finally {
+            logger.detachAppender(appender);
         }
     }
 
