@@ -1731,6 +1731,10 @@ on behalf of an authenticated Micronaut Security user.</div>
 <dd>
 <div class="block">The default cache expiration.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_COOKIEMAXAGE" class="member-name-link">DEFAULT_COOKIEMAXAGE</a> - Static variable in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default maximum age of the refresh token cookie.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_COOKIENAME" class="member-name-link">DEFAULT_COOKIENAME</a> - Static variable in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default cookie name.</div>
@@ -8602,6 +8606,10 @@ submit an authorization callback request.</div>
 <dd>
 <div class="block">Sets the maximum age of the cookie.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge(Duration)</a> - Method in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the maximum age of the cookie.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieName(java.lang.String)" class="member-name-link">setCookieName(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>
 <div class="block">Cookie Name.</div>
@@ -10352,6 +10360,11 @@ the order they are declared.</div>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/Display.html#WAP" class="member-name-link">WAP</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/Display.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">Display</a></dt>
 <dd>
 <div class="block">The Authorization Server SHOULD display the authentication and consent UI consistent with a "feature phone" type display.</div>
+</dd>
+<dt><a href="io/micronaut/security/token/cookie/CookieLoginHandler.html#warnIfInsecureCookie(io.micronaut.http.cookie.Cookie,io.micronaut.http.HttpRequest)" class="member-name-link">warnIfInsecureCookie(Cookie, HttpRequest)</a> - Method in class io.micronaut.security.token.cookie.<a href="io/micronaut/security/token/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.cookie">CookieLoginHandler</a></dt>
+<dd>
+<div class="block">Logs a warning, once per handler instance, when a token cookie is about to be issued without the <code>Secure</code> attribute
+over a request that was not detected as secure.</div>
 </dd>
 <dt><a href="io/micronaut/security/authentication/Authentication.html#withAttributes(java.util.Map)" class="member-name-link">withAttributes(Map)</a> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
 <dd>

@@ -544,6 +544,241 @@ Micronaut Security 3.x requires Micronaut 3.x.
 </li>
 </ul>
 </div>
+<div class="sect2">
+<h3 id="_token_cookies_default_to_samesitelax">Token cookies default to <code>SameSite=Lax</code></h3>
+<div class="paragraph">
+<p>The JWT access token cookie (<code>micronaut.security.token.cookie</code>) and the refresh token cookie (<code>micronaut.security.token.refresh.cookie</code>) are issued with the <code>SameSite=Lax</code> attribute by default starting with 5.6.0. Previously, no <code>SameSite</code> attribute was set.</p>
+</div>
+<div class="paragraph">
+<p>This change mitigates cross-site request forgery (CSRF). Without the attribute, the handling of the cookie is left to the browser, and browsers that do not treat such cookies as <code>Lax</code> send them with every cross-site request. A malicious site could then trigger authenticated requests, such as a form <code>POST</code>, on behalf of a logged-in user. With <code>SameSite=Lax</code>, the browser sends the token cookies with same-site requests and with top-level navigations that use a safe HTTP method such as <code>GET</code>, but not with cross-site subrequests or cross-site <code>POST</code> requests.</p>
+</div>
+<div class="paragraph">
+<p>The <code>cookie-same-site</code> setting accepts <code>Strict</code>, <code>Lax</code> or <code>None</code>. Use <code>None</code> only when the application requires cross-site token cookies. Unlike omitting the attribute, which allows the browser to apply its default SameSite policy, <code>None</code> explicitly permits cookies to be sent with cross-site requests:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.cookie.cookie-same-site=None
+micronaut.security.token.cookie.cookie-secure=true
+micronaut.security.token.refresh.cookie.cookie-same-site=None
+micronaut.security.token.refresh.cookie.cookie-secure=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: None
+        cookie-secure: true
+      refresh:
+        cookie:
+          cookie-same-site: None
+          cookie-secure: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.cookie]
+cookie-same-site = "None"
+cookie-secure = true
+
+[micronaut.security.token.refresh.cookie]
+cookie-same-site = "None"
+cookie-secure = true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      cookie {
+        cookieSameSite = "None"
+        cookieSecure = true
+      }
+      refresh {
+        cookie {
+          cookieSameSite = "None"
+          cookieSecure = true
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        cookie {
+          cookie-same-site = "None"
+          cookie-secure = true
+        }
+        refresh {
+          cookie {
+            cookie-same-site = "None"
+            cookie-secure = true
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "cookie": {
+          "cookie-same-site": "None",
+          "cookie-secure": true
+        },
+        "refresh": {
+          "cookie": {
+            "cookie-same-site": "None",
+            "cookie-secure": true
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>SameSite=None</code> requires the cookie to also be <code>Secure</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To restore the previous omission of the <code>SameSite</code> attribute, set <code>cookie-same-site</code> to an empty value. Omitting the attribute uses the browser&#8217;s default SameSite policy; it is not equivalent to <code>SameSite=None</code>.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.security.token.cookie.cookie-same-site=
+micronaut.security.token.refresh.cookie.cookie-same-site=</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: ''
+      refresh:
+        cookie:
+          cookie-same-site: ''</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.security.token.cookie]
+cookie-same-site = ""
+
+[micronaut.security.token.refresh.cookie]
+cookie-same-site = ""</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  security {
+    token {
+      cookie {
+        cookieSameSite = ""
+      }
+      refresh {
+        cookie {
+          cookieSameSite = ""
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    security {
+      token {
+        cookie {
+          cookie-same-site = ""
+        }
+        refresh {
+          cookie {
+            cookie-same-site = ""
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "cookie": {
+          "cookie-same-site": ""
+        },
+        "refresh": {
+          "cookie": {
+            "cookie-same-site": ""
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>A key left without a value, such as <code>cookie-same-site:</code> or <code>cookie-same-site: ~</code> in YAML, is an empty value as well. As before, a value other than <code>Strict</code>, <code>Lax</code> or <code>None</code> (case-insensitive) is not rejected: it also omits the <code>SameSite</code> attribute.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_warning_when_token_cookies_are_issued_without_secure">Warning when token cookies are issued without <code>Secure</code></h3>
+<div class="paragraph">
+<p><code>cookie-secure</code> still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the <code>Secure</code> attribute over a request that was not detected as secure, <a href="../api/io/micronaut/security/token/cookie/CookieLoginHandler.html">CookieLoginHandler</a> logs a <code>WARN</code> once starting with 5.6.0. Behind a TLS-terminating proxy, explicitly set <code>micronaut.security.token.cookie.cookie-secure=true</code> and <code>micronaut.security.token.refresh.cookie.cookie-secure=true</code>.</p>
+</div>
+<div class="paragraph">
+<p>On the Netty server, <code>request.isSecure()</code> checks whether the connection to the application uses TLS. Forwarded headers such as <code>Forwarded</code> and <code>X-Forwarded-Proto</code>, and the host-resolution settings, do not change that result or add the <code>Secure</code> cookie attribute.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_refresh_token_cookie_default_maximum_age">Refresh token cookie default maximum age</h3>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/token/cookie/RefreshTokenCookieConfigurationProperties.html">RefreshTokenCookieConfigurationProperties</a> now declares the 30 day default of <code>micronaut.security.token.refresh.cookie.cookie-max-age</code>, so <code>getCookieMaxAge()</code> returns it when the setting is not configured. Previously it returned an empty <code>Optional</code> and <a href="../api/io/micronaut/security/token/cookie/TokenCookieLoginHandler.html">TokenCookieLoginHandler</a> applied the default. The refresh token cookie issued is unchanged.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1669,7 +1904,8 @@ Give validators which send the token to a remote service, such as the <a href="#
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.
+ Behind a TLS-terminating proxy, set this explicitly to <code>true</code>. With the Netty server, forwarded headers do not change the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-max-age</code></p></td>
@@ -1679,7 +1915,7 @@ Give validators which send the token to a remote service, such as the <a href="#
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-same-site</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/http/cookie/SameSite.html">SameSite</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value <code>Lax</code>. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>. An empty or unrecognized value omits the <code>SameSite</code> attribute.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.enabled</code></p></td>
@@ -4694,7 +4930,8 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.
+ Behind a TLS-terminating proxy, set this explicitly to <code>true</code>. With the Netty server, forwarded headers do not change the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-max-age</code></p></td>
@@ -4704,7 +4941,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.cookie-same-site</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/http/cookie/SameSite.html">SameSite</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value <code>Lax</code>. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>. An empty or unrecognized value omits the <code>SameSite</code> attribute.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.cookie.enabled</code></p></td>
