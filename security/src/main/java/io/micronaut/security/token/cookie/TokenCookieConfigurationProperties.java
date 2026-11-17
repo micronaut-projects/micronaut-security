@@ -25,6 +25,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import java.util.Optional;
 
@@ -134,5 +135,13 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
      */
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
+    }
+
+    /**
+     * Logs at startup that the cookie is issued without the {@code SameSite} attribute if the same-site setting is empty.
+     */
+    @PostConstruct
+    final void logCookieSameSiteOmitted() {
+        logIfCookieSameSiteOmitted(COOKIE_SAME_SITE_PROPERTY);
     }
 }

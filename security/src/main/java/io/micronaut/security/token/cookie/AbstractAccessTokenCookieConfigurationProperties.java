@@ -18,9 +18,12 @@ package io.micronaut.security.token.cookie;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.TokenCookieConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -44,6 +47,8 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = SameSite.Lax;
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractAccessTokenCookieConfigurationProperties.class);
 
     protected String cookieDomain;
     protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
@@ -143,7 +148,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. Set it to an empty value to omit the `SameSite` attribute. Any other value fails with a configuration error.
+     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. Set it to an empty value to omit the `SameSite` attribute, which is logged at startup. Any other value fails with a configuration error.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
@@ -160,7 +165,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      * @since 5.6.0
      */
     protected static void validateCookieSameSite(@NonNull String property, @Nullable String value) {
-        if (value == null || value.isBlank()) {
+        if (!StringUtils.hasText(value)) {
             return;
         }
         for (SameSite sameSite : SameSite.values()) {
@@ -170,5 +175,18 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
         }
         throw new ConfigurationException("Invalid value '" + value + "' for " + property
                 + ". Allowed values: Strict, Lax or None. Use an empty value to omit the SameSite attribute.");
+    }
+
+    /**
+     * Logs that the cookie will be issued without the {@code SameSite} attribute if no same-site setting is configured,
+     * which happens when the configuration property is set to an empty value.
+     *
+     * @param property The name of the configuration property
+     * @since 5.6.0
+     */
+    protected final void logIfCookieSameSiteOmitted(@NonNull String property) {
+        if (cookieSameSite == null) {
+            LOG.info("{} is empty. The cookie will be issued without the SameSite attribute.", property);
+        }
     }
 }
