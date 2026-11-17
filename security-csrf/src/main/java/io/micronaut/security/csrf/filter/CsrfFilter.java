@@ -164,7 +164,7 @@ final class CsrfFilter implements Ordered {
             return CompletableFuture.completedFuture(resolverFailed(resolver.getClass(), new NullPointerException("resolver returned a null future")));
         }
         return tokenFuture.thenApply(csrfToken -> {
-                    if (!hasText(csrfToken)) {
+                    if (!StringUtils.hasText(csrfToken)) {
                         return false;
                     }
                     if (LOG.isTraceEnabled()) {
@@ -197,13 +197,9 @@ final class CsrfFilter implements Ordered {
         return false;
     }
 
-    private static boolean hasText(@Nullable String csrfToken) {
-        return csrfToken != null && !csrfToken.isBlank();
-    }
-
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
-        if (!hasText(csrfToken)) {
+        if (!StringUtils.hasText(csrfToken)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Request rejected by the {} because no CSRF Token found", this.getClass().getSimpleName());
             }
@@ -268,7 +264,7 @@ final class CsrfFilter implements Ordered {
                 resolverFailed(tokenResolver.getClass(), e);
                 return null;
             }
-            if (tokenOptional.isPresent() && hasText(tokenOptional.get())) {
+            if (tokenOptional.isPresent() && StringUtils.hasText(tokenOptional.get())) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
