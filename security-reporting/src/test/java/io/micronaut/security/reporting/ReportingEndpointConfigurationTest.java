@@ -20,7 +20,6 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -33,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -104,33 +104,15 @@ class ReportingEndpointConfigurationTest {
     }
 
     @Test
-    void failsBeanCreationWhenTheUrlIsMissing() {
+    void anEntryWithoutAUrlIsNotAValidEndpoint() {
         // "uri" is a typo for "url", so the entry exists but has no endpoint URI.
         String property = ReportingEndpointConfiguration.PREFIX + ".csp.uri";
         try (ApplicationContext context = ApplicationContext.run(Map.of(property, "/csp/report"))) {
-            BeanInstantiationException e = assertThrows(BeanInstantiationException.class,
-                () -> context.getBeansOfType(ReportingEndpoint.class));
+            Collection<ReportingEndpoint> endpoints = context.getBeansOfType(ReportingEndpoint.class);
 
-            assertTrue(e.getMessage().contains(ReportingEndpointConfiguration.PREFIX + ".csp.url"), e.getMessage());
+            assertEquals(1, endpoints.size());
+            assertFalse(ReportingEndpointUtils.isValid(endpoints.iterator().next()));
         }
-    }
-
-    @Test
-    void failsServerStartupWhenTheUrlIsMissing() {
-        String property = ReportingEndpointConfiguration.PREFIX + ".csp.uri";
-
-        BeanInstantiationException e = assertThrows(BeanInstantiationException.class,
-            () -> ApplicationContext.run(EmbeddedServer.class, Map.of(property, "/csp/report")).close());
-
-        assertTrue(e.getMessage().contains(ReportingEndpointConfiguration.PREFIX + ".csp.url"), e.getMessage());
-    }
-
-    @Test
-    void getUrlFailsWhenTheUrlWasNeverSet() {
-        ReportingEndpointConfiguration configuration = new ReportingEndpointConfiguration("csp");
-
-        assertThrows(ConfigurationException.class, configuration::validate);
-        assertThrows(IllegalStateException.class, configuration::getUrl);
     }
 
     private static void assertConfigurationMessageNamesTheProperty(ConfigurationException e, String name) {

@@ -19,8 +19,6 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
-import jakarta.annotation.PostConstruct;
-import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Locale;
@@ -33,7 +31,7 @@ import java.util.Locale;
  *
  * <p>The entry name becomes a Structured Fields dictionary key in the {@code Reporting-Endpoints}
  * header, so it is lower-cased and must then match {@code [a-z*][a-z0-9_\-.*]*}; any other name
- * fails at startup. An entry without a {@code url} also fails at startup.</p>
+ * fails at startup. An entry without a {@code url} is logged and omitted from the header.</p>
  *
  * @since 5.4.0
  */
@@ -45,7 +43,7 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
 
     private final String name;
 
-    private @Nullable URI url;
+    private URI url;
 
     /**
      * Creates a named endpoint configuration.
@@ -75,30 +73,13 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
     }
 
     /**
-     * Rejects an entry whose required {@code url} property was not configured.
-     *
-     * <p>Without this check the endpoint would have no URI to serialize, and the failure would
-     * surface on every response instead of at startup.</p>
-     *
-     * @throws ConfigurationException when the {@code url} property is missing
-     */
-    @PostConstruct
-    void validate() {
-        if (url == null) {
-            throw new ConfigurationException("Missing required property " + PREFIX + "." + name + ".url");
-        }
-    }
-
-    /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if the required {@code url} property was not configured
+     * <p>Returns {@code null} when the required {@code url} property was not configured; the
+     * response filter omits such an endpoint.</p>
      */
     @Override
     public URI getUrl() {
-        if (url == null) {
-            throw new IllegalStateException("Missing required property " + PREFIX + "." + name + ".url");
-        }
         return url;
     }
 

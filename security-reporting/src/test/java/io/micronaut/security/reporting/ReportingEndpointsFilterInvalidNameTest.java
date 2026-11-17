@@ -66,6 +66,33 @@ class ReportingEndpointsFilterInvalidNameTest {
     }
 
     @Test
+    void omitsAConfiguredEndpointWithoutAUrlWithoutFailingTheResponse() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", PROVIDER_SPEC,
+                ReportingEndpointConfiguration.PREFIX + ".network.uri", "/typo",
+                ReportingEndpointConfiguration.PREFIX + ".csp.url", "/csp/report"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<?> response = httpClient.toBlocking().exchange(HttpRequest.GET("/invalid-name?tenant=acme"));
+
+            assertEquals(HttpStatus.OK, response.status());
+            assertEquals("acme=\"/reports/acme\", csp=\"/csp/report\"", response.header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    @Test
+    void omitsTheHeaderWhenTheOnlyConfiguredEndpointHasNoUrl() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", STATIC_SPEC,
+                ReportingEndpointConfiguration.PREFIX + ".network.uri", "/typo"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<?> response = httpClient.toBlocking().exchange(HttpRequest.GET("/invalid-static-name"));
+
+            assertEquals(HttpStatus.OK, response.status());
+            assertNull(response.header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    @Test
     void warnsOncePerProviderWithoutLoggingTheRejectedName() {
         Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();

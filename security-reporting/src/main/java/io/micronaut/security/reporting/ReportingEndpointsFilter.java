@@ -36,9 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link ReportingEndpoint} beans and request-specific {@link ReportingEndpointProvider} beans
  * contribute entries; when neither contributes an endpoint, the filter omits the header.</p>
  *
- * <p>Endpoint names must be Structured Fields dictionary keys. An endpoint with an invalid name,
- * whether static or request-specific, is omitted, so that it can neither fail the response nor
- * make user agents discard the whole header. A warning is logged once per static endpoint and
+ * <p>Endpoint names must be Structured Fields dictionary keys and endpoints must have a URL. An
+ * endpoint failing either check, whether static or request-specific, is omitted, so that it can
+ * neither fail the response nor make user agents discard the whole header. A warning is logged once per static endpoint and
  * once per provider type, so that request-derived names cannot flood the log.</p>
  */
 @Requires(classes = ServerFilter.class)
@@ -55,8 +55,8 @@ final class ReportingEndpointsFilter {
     /**
      * Creates the filter from every static endpoint and request-specific endpoint provider.
      *
-     * <p>Static endpoints whose name is not a valid Structured Fields dictionary key (RFC 8941)
-     * are logged once here and omitted.</p>
+     * <p>Static endpoints whose name is not a valid Structured Fields dictionary key (RFC 8941),
+     * or that have no URL, are logged once here and omitted.</p>
      *
      * @param reportingEndpoints static endpoints to advertise
      * @param reportingEndpointProviders request-specific endpoint providers
@@ -65,11 +65,11 @@ final class ReportingEndpointsFilter {
                              List<ReportingEndpointProvider> reportingEndpointProviders) {
         List<ReportingEndpoint> validEndpoints = new ArrayList<>(reportingEndpoints.size());
         for (ReportingEndpoint endpoint : reportingEndpoints) {
-            if (ReportingEndpointNames.isValid(endpoint.getName())) {
+            if (ReportingEndpointUtils.isValid(endpoint)) {
                 validEndpoints.add(endpoint);
             } else if (LOG.isWarnEnabled()) {
-                LOG.warn("Ignoring the reporting endpoint {}: {}",
-                    endpoint.getClass().getName(), ReportingEndpointNames.describeInvalid(endpoint.getName()));
+                LOG.warn("Ignoring the reporting endpoint named \"{}\" ({}): it needs a URL and a name that is a valid Structured Fields dictionary key (RFC 8941) matching {}",
+                    endpoint.getName(), endpoint.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
             }
         }
         this.reportingEndpoints = List.copyOf(validEndpoints);
@@ -91,12 +91,12 @@ final class ReportingEndpointsFilter {
                 if (endpoint == null) {
                     continue;
                 }
-                if (ReportingEndpointNames.isValid(endpoint.getName())) {
+                if (ReportingEndpointUtils.isValid(endpoint)) {
                     endpoints.add(endpoint);
                 } else if (warnedProviders.add(provider.getClass())) {
                     // The rejected name may derive from the request, so it is not logged, and
                     // the warning is emitted once per provider type rather than per request.
-                    LOG.warn("Ignoring reporting endpoints supplied by {} whose name is not a valid Structured Fields dictionary key (RFC 8941); it must match {}. This warning is logged once.",
+                    LOG.warn("Ignoring reporting endpoints supplied by {} that have no URL or whose name is not a valid Structured Fields dictionary key (RFC 8941) matching {}. This warning is logged once.",
                         provider.getClass().getName(), ReportingEndpointNames.KEY_GRAMMAR);
                 }
             }

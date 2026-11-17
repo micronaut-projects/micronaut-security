@@ -94,6 +94,27 @@ class ReportingEndpointsTest {
     }
 
     @Test
+    void rejectsAnEndpointWithoutAUrl() {
+        ReportingEndpoint invalid = new ReportingEndpoint() {
+            @Override
+            public String getName() {
+                return "csp";
+            }
+
+            @Override
+            @SuppressWarnings("NullAway")
+            public URI getUrl() {
+                return null;
+            }
+        };
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+            () -> new ReportingEndpoints(List.of(invalid)));
+
+        assertTrue(e.getMessage().contains("\"csp\""), e.getMessage());
+    }
+
+    @Test
     void makesADefensiveCopyOfTheEndpointCollection() {
         List<ReportingEndpoint> mutableEndpoints = new ArrayList<>();
         mutableEndpoints.add(endpoint("first", "/first"));
