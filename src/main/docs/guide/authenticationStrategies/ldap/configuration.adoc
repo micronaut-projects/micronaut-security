@@ -32,7 +32,7 @@ Surrounding whitespace in an entry is ignored, so a comma-separated value such a
 
 The default list covers the two most common password attributes only. If the manager account can read other credential attributes in your directory, such as `authPassword`, `sambaNTPassword`, `sambaLMPassword`, `krbPrincipalKey` or `pwdHistory`, add them.
 
-Exclusions also apply when an attribute is explicitly requested in `search.attributes`. A conflicting setting logs a warning once, when the authentication provider for that LDAP configuration is created. If your application needs the attribute, remove it from `search.excluded-attributes`.
+Exclusions also apply when an attribute is explicitly requested in `search.attributes`. A conflicting setting logs a warning once, when that LDAP configuration is loaded. If your application needs the attribute, remove it from `search.excluded-attributes`.
 
 This filtering happens after JNDI receives the attributes into process memory; it prevents downstream exposure rather than preventing retrieval. The defaults apply to properties-based user searches. Custom api:security.ldap.context.SearchSettings[] implementations default to no exclusions and must override `getExcludedAttributes()` to opt in. The exclusions are applied by api:security.ldap.context.DefaultLdapSearchService[]; a custom api:security.ldap.context.LdapSearchService[] that does not extend it must strip the attributes itself.
 
@@ -51,7 +51,7 @@ micronaut:
             - mail
 ----
 
-NOTE: The group search only requests the attribute configured with `micronaut.security.ldap.*.groups.attribute` (`cn` by default). If you set `micronaut.security.ldap.*.groups.filter-attribute`, make sure that attribute is included in `micronaut.security.ldap.*.search.attributes` when configured and is absent from `micronaut.security.ldap.*.search.excluded-attributes`, since the value is read from the user search result. A conflict with the exclusion list logs a warning when the authentication provider is created.
+NOTE: The group search only requests the attribute configured with `micronaut.security.ldap.*.groups.attribute` (`cn` by default). If you set `micronaut.security.ldap.*.groups.filter-attribute`, make sure that attribute is included in `micronaut.security.ldap.*.search.attributes` when configured and is absent from `micronaut.security.ldap.*.search.excluded-attributes`, since the value is read from the user search result. When the value is missing, the group search falls back to the user's DN. A conflict with the exclusion list logs a warning when the configuration is loaded.
 
 TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
 ```

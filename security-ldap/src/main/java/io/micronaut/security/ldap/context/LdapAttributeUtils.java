@@ -23,7 +23,7 @@ import org.jspecify.annotations.NullMarked;
  */
 @Internal
 @NullMarked
-public final class LdapAttributeUtils {
+final class LdapAttributeUtils {
 
     private LdapAttributeUtils() {
     }
@@ -36,7 +36,7 @@ public final class LdapAttributeUtils {
      * @param excludedAttribute The excluded attribute name or description
      * @return Whether the exclusion matches
      */
-    public static boolean matchesExclusion(String attributeId, String excludedAttribute) {
+    static boolean matchesExclusion(String attributeId, String excludedAttribute) {
         if (excludedAttribute.equalsIgnoreCase(attributeId)) {
             return true;
         }

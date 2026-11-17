@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LdapSearchExcludedAttributesTest {
 
     private static InMemoryDirectoryServer server;
-    private final Logger logger = (Logger) LoggerFactory.getLogger(LdapAuthenticationProviderFactory.class);
+    private final Logger logger = (Logger) LoggerFactory.getLogger("io.micronaut.security.ldap.context.ExcludedAttributesConflictListener");
     private ListAppender<ILoggingEvent> appender;
     private @Nullable Level previousLevel;
 
@@ -186,12 +186,13 @@ class LdapSearchExcludedAttributesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"sn", "sn;lang-en"})
-    void anExcludedGroupFilterAttributeLogsAStartupWarning(String filterAttribute) {
+    void anExcludedGroupFilterAttributeLogsAWarningAndTheGroupSearchFallsBackToTheDn(String filterAttribute) {
         Map<String, Object> properties = properties();
         properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("SN"));
         properties.put("micronaut.security.ldap.default.groups.filter-attribute", filterAttribute);
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
-            context.getBean(LdapAuthenticationProvider.class);
+            // The helper asserts the roles, which are resolved here by the user's DN because the filter attribute is stripped.
+            authenticate(context);
 
             assertEquals(1, appender.list.size());
             assertEquals(Level.WARN, appender.list.getFirst().getLevel());
