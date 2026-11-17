@@ -89,17 +89,16 @@ class ReportingEndpointConfigurationTest {
     }
 
     @Test
-    void failsBeanCreationForANameOutsideTheKeyGrammar() {
+    void failsStartupForANameOutsideTheKeyGrammar() {
         // Micronaut hyphenates most property keys ("my endpoint" becomes "my-endpoint"), but a
-        // quote passes through verbatim and must be rejected when the bean is created.
+        // quote passes through verbatim and must be rejected when the application starts.
         String name = "end\"point";
-        try (ApplicationContext context = ApplicationContext.run(endpointProperty(name))) {
-            BeanInstantiationException e = assertThrows(BeanInstantiationException.class,
-                () -> context.getBeansOfType(ReportingEndpoint.class));
 
-            assertInstanceOf(ConfigurationException.class, e.getCause());
-            assertConfigurationMessageNamesTheProperty((ConfigurationException) e.getCause(), name);
-        }
+        BeanInstantiationException e = assertThrows(BeanInstantiationException.class,
+            () -> ApplicationContext.run(endpointProperty(name)).close());
+
+        assertInstanceOf(ConfigurationException.class, e.getCause());
+        assertConfigurationMessageNamesTheProperty((ConfigurationException) e.getCause(), name);
     }
 
     private static void assertConfigurationMessageNamesTheProperty(ConfigurationException e, String name) {
