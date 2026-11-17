@@ -36,8 +36,8 @@ import java.util.List;
  *
  * <p>Endpoint names must be Structured Fields dictionary keys and endpoints must have a URL. An
  * endpoint failing either check, whether static or request-specific, is omitted, so that it can
- * neither fail the response nor make user agents discard the whole header. A warning is logged once per static endpoint and
- * each time a provider supplies such an endpoint.</p>
+ * neither fail the response nor make user agents discard the whole header. A warning is logged
+ * once per static endpoint and each time a provider supplies such an endpoint.</p>
  */
 @Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)

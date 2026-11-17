@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Locale;
@@ -43,7 +44,7 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
 
     private final String name;
 
-    private URI url;
+    private @Nullable URI url;
 
     /**
      * Creates a named endpoint configuration.
@@ -58,7 +59,7 @@ final class ReportingEndpointConfiguration implements ReportingEndpoint {
     public ReportingEndpointConfiguration(@Parameter String name) {
         String key = name == null ? null : name.toLowerCase(Locale.ROOT);
         if (!ReportingEndpointNames.isValid(key)) {
-            throw new ConfigurationException("Invalid value for property " + PREFIX + "." + name + ": "
+            throw new ConfigurationException("Invalid reporting endpoint name in property " + PREFIX + "." + name + ": "
                 + ReportingEndpointNames.describeInvalid(key));
         }
         this.name = key;

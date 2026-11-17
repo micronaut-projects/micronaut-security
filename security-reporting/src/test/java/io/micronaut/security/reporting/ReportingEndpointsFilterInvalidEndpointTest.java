@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.BlockingHttpClient;
@@ -42,9 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ReportingEndpointsFilterInvalidNameTest {
-    private static final String PROVIDER_SPEC = "ReportingEndpointsFilterInvalidNameTest.provider";
-    private static final String STATIC_SPEC = "ReportingEndpointsFilterInvalidNameTest.static";
+class ReportingEndpointsFilterInvalidEndpointTest {
+    private static final String PROVIDER_SPEC = "ReportingEndpointsFilterInvalidEndpointTest.provider";
+    private static final String STATIC_SPEC = "ReportingEndpointsFilterInvalidEndpointTest.static";
 
     @Test
     void omitsAProviderEndpointWithAnInvalidNameWithoutFailingTheResponse() {
@@ -140,6 +141,34 @@ class ReportingEndpointsFilterInvalidNameTest {
 
             assertEquals(HttpStatus.OK, response.status());
             assertEquals("csp=\"/csp/report\"", response.header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    @Test
+    void warnsOnceForAStaticEndpointThatIsOmitted() {
+        Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
+                List.of(endpoint("Csp"), endpoint("network")), List.of());
+            MutableHttpResponse<?> first = HttpResponse.ok();
+            MutableHttpResponse<?> second = HttpResponse.ok();
+
+            filter.filter(HttpRequest.GET("/"), first);
+            filter.filter(HttpRequest.GET("/"), second);
+
+            assertEquals("network=\"/reports/network\"", first.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertEquals("network=\"/reports/network\"", second.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            List<String> warnings = appender.list.stream()
+                .filter(event -> event.getLevel() == Level.WARN)
+                .map(ILoggingEvent::getFormattedMessage)
+                .toList();
+            assertEquals(1, warnings.size(), warnings.toString());
+            assertTrue(warnings.get(0).contains("\"Csp\""), warnings.get(0));
+        } finally {
+            logger.detachAppender(appender);
         }
     }
 
