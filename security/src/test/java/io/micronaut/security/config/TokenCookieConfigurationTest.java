@@ -6,7 +6,6 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -21,11 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@MicronautTest(startApplication = false)
 class TokenCookieConfigurationTest {
 
     @Test
-    void iSessionCookieDefaultsToFalse() {
+    void sessionCookieDefaultsToFalseAndIgnoresMaxAgeWhenTrue() {
         try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.authentication", "cookie",
             "micronaut.security.token.cookie.cookie-max-age", "5m"
         ))) {
