@@ -22,10 +22,16 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
+import io.micronaut.security.ldap.context.LdapAttributeUtils;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create an LDAP authentication provider if the configuration is enabled.
@@ -35,6 +41,8 @@ import java.util.concurrent.ExecutorService;
  */
 @Factory
 public class LdapAuthenticationProviderFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LdapAuthenticationProviderFactory.class);
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -53,6 +61,27 @@ public class LdapAuthenticationProviderFactory {
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor,
                                                                  @Named(TaskExecutors.IO) ExecutorService executorService) {
+        warnAboutExcludedAttributes(configuration);
         return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
+    }
+
+    /**
+     * Reports attribute settings that conflict with the exclusion list, once per enabled configuration.
+     */
+    private static void warnAboutExcludedAttributes(LdapConfiguration configuration) {
+        LdapConfiguration.SearchConfiguration search = configuration.getSearch();
+        LdapConfiguration.GroupConfiguration groups = configuration.getGroups();
+        String[] requested = search.getAttributes();
+        Optional<String> groupFilterAttribute = groups.isEnabled() ? groups.getFilterAttribute() : Optional.empty();
+        for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
+            if (requested != null && Arrays.stream(requested).anyMatch(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded))) {
+                LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
+                    + "Remove it from search.excluded-attributes if the application needs it.", configuration.getName(), excluded);
+            }
+            if (groupFilterAttribute.filter(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded)).isPresent()) {
+                LOG.warn("LDAP configuration [{}] uses groups.filter-attribute [{}], but search.excluded-attributes removes it. "
+                    + "Group resolution requires removing it from search.excluded-attributes and including it in search.attributes when configured.", configuration.getName(), excluded);
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LdapSearchExcludedAttributesTest {
 
     private static InMemoryDirectoryServer server;
-    private final Logger logger = (Logger) LoggerFactory.getLogger(LdapConfiguration.class);
+    private final Logger logger = (Logger) LoggerFactory.getLogger(LdapAuthenticationProviderFactory.class);
     private ListAppender<ILoggingEvent> appender;
     private @Nullable Level previousLevel;
 
@@ -191,7 +191,7 @@ class LdapSearchExcludedAttributesTest {
         properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("SN"));
         properties.put("micronaut.security.ldap.default.groups.filter-attribute", filterAttribute);
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
-            context.getBean(LdapConfiguration.class);
+            context.getBean(LdapAuthenticationProvider.class);
 
             assertEquals(1, appender.list.size());
             assertEquals(Level.WARN, appender.list.getFirst().getLevel());
@@ -245,6 +245,7 @@ class LdapSearchExcludedAttributesTest {
         properties.put("micronaut.security.ldap.default.groups.filter-attribute", "unicodePwd");
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             assertFalse(context.getBean(LdapConfiguration.class).isEnabled());
+            assertTrue(context.getBeansOfType(LdapAuthenticationProvider.class).isEmpty());
 
             assertTrue(appender.list.isEmpty(), () -> "unexpected warnings: " + appender.list);
         }
