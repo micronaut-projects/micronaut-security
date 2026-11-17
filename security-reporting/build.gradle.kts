@@ -5,7 +5,9 @@ plugins {
 }
 dependencies {
     api(mn.micronaut.http)
-    implementation(mnValidation.validation) // jakarta.validation:jakarta.validation-api, only used internally
+    // Only used internally (@NotBlank on a package-private class). Kept as api so that consumers relying
+    // on it transitively keep compiling; change to implementation in 6.0.0 (audit finding L67).
+    api(mnValidation.validation)
     annotationProcessor(mnValidation.micronaut.validation.processor)
     testImplementation(mnValidation.micronaut.validation)
     testImplementation(mn.micronaut.http.client)
