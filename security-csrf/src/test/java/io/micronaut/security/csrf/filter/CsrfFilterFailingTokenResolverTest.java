@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -36,16 +37,20 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
 import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
+import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A {@link FutureCsrfTokenResolver} which fails, either by returning a failed future, by returning a null future or by throwing, must not make
@@ -53,6 +58,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class CsrfFilterFailingTokenResolverTest {
     private static final String SPEC_NAME = "CsrfFilterFailingTokenResolverTest";
+    private static final String RECORDING_VALIDATOR = "csrf-filter-failing-token-resolver-test.recording-validator";
 
     @Test
     void failingResolversRejectTheRequestInsteadOfServerError() {
@@ -62,6 +68,23 @@ class CsrfFilterFailingTokenResolverTest {
             HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
                 () -> client.retrieve(formPost()));
             assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+        }
+    }
+
+    @Test
+    void failingResolversDoNotLeadToTheValidatorBeingInvoked() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                RECORDING_VALIDATOR, StringUtils.TRUE,
+                "micronaut.security.redirect.enabled", StringUtils.FALSE,
+                "micronaut.security.csrf.signature-key", "test-fixture-not-a-secret-csrf-signature-key"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+            RecordingCsrfTokenValidator validator = server.getApplicationContext().getBean(RecordingCsrfTokenValidator.class);
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                () -> client.retrieve(formPost()));
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+            assertTrue(validator.tokens.isEmpty());
         }
     }
 
@@ -138,6 +161,20 @@ class CsrfFilterFailingTokenResolverTest {
         @NonNull
         public CompletableFuture<String> resolveToken(@NonNull HttpRequest<?> request) {
             throw new IllegalStateException("test-fixture resolver failure");
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(property = RECORDING_VALIDATOR, value = StringUtils.TRUE)
+    @Primary
+    @Singleton
+    static class RecordingCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
+        final List<String> tokens = new CopyOnWriteArrayList<>();
+
+        @Override
+        public boolean validateCsrfToken(@NonNull HttpRequest<?> request, @NonNull String token) {
+            tokens.add(token);
+            return false;
         }
     }
 
