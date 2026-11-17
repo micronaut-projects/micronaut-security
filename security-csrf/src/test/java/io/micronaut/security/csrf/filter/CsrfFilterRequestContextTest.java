@@ -41,6 +41,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * A {@link FutureCsrfTokenResolver} may complete on a thread which carries the context of a different request. The
+ * resolvers consulted afterwards, the validator and the rejection handler must still see the request being filtered.
+ */
 class CsrfFilterRequestContextTest {
 
     @ParameterizedTest

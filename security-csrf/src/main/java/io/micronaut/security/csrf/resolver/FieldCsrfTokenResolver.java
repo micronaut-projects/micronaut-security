@@ -86,6 +86,11 @@ final class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpReques
         });
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
     /**
      * The exception message of a body parsing failure may contain the raw request body, so only the exception type is logged.
      * @param throwable Body parsing failure
