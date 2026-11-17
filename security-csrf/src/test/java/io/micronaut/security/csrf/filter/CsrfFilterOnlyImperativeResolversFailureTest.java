@@ -31,57 +31,78 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.http.cookie.Cookie;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.csrf.CsrfConfiguration;
+import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
+import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
+import java.util.Optional;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * With the field resolver disabled only imperative {@link CsrfTokenResolver} beans are registered. One which resolves
- * a blank token is skipped: the {@link CsrfTokenValidator} never sees the blank token and the next resolver is consulted.
+ * With the field resolver disabled only imperative {@link CsrfTokenResolver} beans are registered. One which throws is
+ * treated like a resolver which found no token, exactly as when a {@link FutureCsrfTokenResolver} is registered: the
+ * request is rejected with an unauthorized response instead of a server error, unless another resolver yields a valid token.
+ * A {@link CsrfTokenValidator} which throws rejects the request as well.
  */
-class CsrfFilterImperativeBlankTokenTest {
-    private static final String SPEC_NAME = "CsrfFilterImperativeBlankTokenTest";
-    private static final String VALID_TOKEN = "valid-csrf-token";
+class CsrfFilterOnlyImperativeResolversFailureTest {
+    private static final String SPEC_NAME = "CsrfFilterOnlyImperativeResolversFailureTest";
+    private static final String THROWING_VALIDATOR = "csrf-filter-only-imperative-resolvers-failure-test.throwing-validator";
 
     @Test
-    void blankTokenIsRejectedWithoutInvokingTheValidator() {
+    void throwingResolverRejectsTheRequest() {
         try (EmbeddedServer server = startServer();
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             BlockingHttpClient client = httpClient.toBlocking();
-            RecordingCsrfTokenValidator validator = server.getApplicationContext().getBean(RecordingCsrfTokenValidator.class);
             HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
                 () -> client.retrieve(formPost()));
             assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
-            assertTrue(validator.tokens.isEmpty());
         }
     }
 
     @Test
-    void blankTokenDoesNotPreventTheNextResolverFromProvidingAValidToken() {
+    void throwingResolverDoesNotPreventAValidHeaderTokenFromBeingAccepted() {
         try (EmbeddedServer server = startServer();
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             BlockingHttpClient client = httpClient.toBlocking();
-            RecordingCsrfTokenValidator validator = server.getApplicationContext().getBean(RecordingCsrfTokenValidator.class);
             CsrfConfiguration csrfConfiguration = server.getApplicationContext().getBean(CsrfConfiguration.class);
-            // the blank resolver is ordered first; the header resolver is consulted next
-            HttpRequest<?> request = formPost().header(csrfConfiguration.getHeaderName(), VALID_TOKEN);
+            CsrfTokenGenerator<HttpRequest<?>> generator = server.getApplicationContext().getBean(CsrfTokenGenerator.class);
+            String csrfToken = generator.generateCsrfToken(formPost());
+            HttpRequest<?> request = formPost()
+                .header(csrfConfiguration.getHeaderName(), csrfToken)
+                .cookie(Cookie.of(csrfConfiguration.getCookieName(), csrfToken));
             assertEquals("payout", client.retrieve(request));
-            assertEquals(List.of(VALID_TOKEN), validator.tokens);
+        }
+    }
+
+    @Test
+    void throwingValidatorRejectsTheRequest() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                THROWING_VALIDATOR, StringUtils.TRUE,
+                "micronaut.security.redirect.enabled", StringUtils.FALSE,
+                "micronaut.security.csrf.token-resolvers.field.enabled", StringUtils.FALSE,
+                "micronaut.security.csrf.signature-key", "test-fixture-not-a-secret-csrf-signature-key"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+            CsrfConfiguration csrfConfiguration = server.getApplicationContext().getBean(CsrfConfiguration.class);
+            ThrowingCsrfTokenValidator validator = server.getApplicationContext().getBean(ThrowingCsrfTokenValidator.class);
+            HttpRequest<?> request = formPost().header(csrfConfiguration.getHeaderName(), "any-csrf-token");
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class, () -> client.retrieve(request));
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+            assertEquals(1, validator.invocations.get());
         }
     }
 
@@ -100,8 +121,9 @@ class CsrfFilterImperativeBlankTokenTest {
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(missingProperty = THROWING_VALIDATOR)
     @Singleton
-    static class BlankCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
+    static class ThrowingCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
         @Override
         public int getOrder() {
             return Integer.MIN_VALUE;
@@ -110,20 +132,21 @@ class CsrfFilterImperativeBlankTokenTest {
         @Override
         @NonNull
         public Optional<String> resolveToken(@NonNull HttpRequest<?> request) {
-            return Optional.of("  ");
+            throw new IllegalStateException("test-fixture resolver failure");
         }
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(property = THROWING_VALIDATOR, value = StringUtils.TRUE)
     @Primary
     @Singleton
-    static class RecordingCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
-        final List<String> tokens = new CopyOnWriteArrayList<>();
+    static class ThrowingCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
+        final AtomicInteger invocations = new AtomicInteger();
 
         @Override
         public boolean validateCsrfToken(@NonNull HttpRequest<?> request, @NonNull String token) {
-            tokens.add(token);
-            return VALID_TOKEN.equals(token);
+            invocations.incrementAndGet();
+            throw new IllegalStateException("test-fixture validator failure");
         }
     }
 
