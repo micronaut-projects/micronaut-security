@@ -51,11 +51,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * With the field resolver disabled the CSRF filter uses its imperative path. A {@link CsrfTokenResolver} which resolves
+ * With the field resolver disabled only imperative {@link CsrfTokenResolver} beans are registered. One which resolves
  * a blank token is skipped: the {@link CsrfTokenValidator} never sees the blank token and the next resolver is consulted.
  */
-class CsrfFilterImperativeBlankTokenTest {
-    private static final String SPEC_NAME = "CsrfFilterImperativeBlankTokenTest";
+class CsrfFilterOnlyImperativeResolversBlankTokenTest {
+    private static final String SPEC_NAME = "CsrfFilterOnlyImperativeResolversBlankTokenTest";
     private static final String VALID_TOKEN = "valid-csrf-token";
 
     @Test

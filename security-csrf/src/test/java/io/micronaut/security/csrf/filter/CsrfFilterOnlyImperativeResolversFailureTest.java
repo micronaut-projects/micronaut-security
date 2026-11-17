@@ -46,20 +46,20 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * With the field resolver disabled the CSRF filter uses its imperative path. A {@link CsrfTokenResolver} which throws
- * or a {@link CsrfTokenValidator} which throws must reject the request like the reactive path does, instead of answering
- * with a server error.
+ * With the field resolver disabled only imperative {@link CsrfTokenResolver} beans are registered. One which throws is
+ * treated like a resolver which found no token, exactly as when a {@link FutureCsrfTokenResolver} is registered: the
+ * request is rejected with an unauthorized response instead of a server error, unless another resolver yields a valid token.
+ * A {@link CsrfTokenValidator} which throws rejects the request as well.
  */
-class CsrfFilterImperativeFailureTest {
-    private static final String SPEC_NAME = "CsrfFilterImperativeFailureTest";
-    private static final String THROWING_VALIDATOR = "csrf-filter-imperative-failure-test.throwing-validator";
+class CsrfFilterOnlyImperativeResolversFailureTest {
+    private static final String SPEC_NAME = "CsrfFilterOnlyImperativeResolversFailureTest";
+    private static final String THROWING_VALIDATOR = "csrf-filter-only-imperative-resolvers-failure-test.throwing-validator";
 
     @Test
     void throwingResolverRejectsTheRequest() {
@@ -80,12 +80,10 @@ class CsrfFilterImperativeFailureTest {
             CsrfConfiguration csrfConfiguration = server.getApplicationContext().getBean(CsrfConfiguration.class);
             CsrfTokenGenerator<HttpRequest<?>> generator = server.getApplicationContext().getBean(CsrfTokenGenerator.class);
             String csrfToken = generator.generateCsrfToken(formPost());
-            // the throwing resolver is ordered first, so it fails the request: fail closed even with a valid token
             HttpRequest<?> request = formPost()
                 .header(csrfConfiguration.getHeaderName(), csrfToken)
                 .cookie(Cookie.of(csrfConfiguration.getCookieName(), csrfToken));
-            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class, () -> client.retrieve(request));
-            assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+            assertEquals("payout", client.retrieve(request));
         }
     }
 
