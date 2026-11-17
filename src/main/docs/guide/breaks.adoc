@@ -9,6 +9,8 @@ This section will document breaking changes that may happen during milestone or 
 
 The JWT access token cookie (`micronaut.security.token.cookie`) and the refresh token cookie (`micronaut.security.token.refresh.cookie`) are issued with the `SameSite=Lax` attribute by default starting with 5.6.0. Previously, no `SameSite` attribute was set.
 
+This change mitigates cross-site request forgery (CSRF). Without the attribute, the handling of the cookie is left to the browser, and browsers that do not treat such cookies as `Lax` send them with every cross-site request. A malicious site could then trigger authenticated requests, such as a form `POST`, on behalf of a logged-in user. With `SameSite=Lax`, the browser sends the token cookies with same-site requests and with top-level navigations that use a safe HTTP method such as `GET`, but not with cross-site subrequests or cross-site `POST` requests.
+
 The `cookie-same-site` setting accepts `Strict`, `Lax` or `None`. Use `None` only when the application requires cross-site token cookies. Unlike omitting the attribute, which allows the browser to apply its default SameSite policy, `None` explicitly permits cookies to be sent with cross-site requests:
 
 [configuration]
