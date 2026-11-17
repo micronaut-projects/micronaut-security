@@ -49,6 +49,10 @@ A key left without a value, such as `cookie-same-site:` or `cookie-same-site: ~`
 
 On the Netty server, `request.isSecure()` checks whether the connection to the application uses TLS. Forwarded headers such as `Forwarded` and `X-Forwarded-Proto`, and the host-resolution settings, do not change that result or add the `Secure` cookie attribute.
 
+=== Refresh token cookie default maximum age
+
+api:security.token.cookie.RefreshTokenCookieConfigurationProperties[] now declares the 30 day default of `micronaut.security.token.refresh.cookie.cookie-max-age`, so `getCookieMaxAge()` returns it when the setting is not configured. Previously it returned an empty `Optional` and api:security.token.cookie.TokenCookieLoginHandler[] applied the default. The refresh token cookie issued is unchanged.
+
 == Micronaut Security 5.5 breaking changes
 
 - Starting with 5.5.2, issuer claim matching is stricter. Previously, the `iss` claim was accepted when the expected issuer (`micronaut.security.token.jwt.claims-validators.issuer`, or `micronaut.security.oauth2.clients.*.openid.issuer` for api:security.oauth2.client.IdTokenClaimsValidator[] and api:security.oauth2.DefaultProviderResolver[]) merely ended with the claim value once the scheme and trailing slash were removed, so for a configured issuer `admin-portal` values such as `portal`, `l`, `/`, `https://` or an empty string passed validation, and for `https://idcs-abc.identity.oraclecloud.com` the parent domain `https://identity.oraclecloud.com/` did.
