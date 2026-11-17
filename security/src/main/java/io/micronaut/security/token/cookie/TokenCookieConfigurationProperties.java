@@ -60,6 +60,8 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = "/";
 
+    private static final String COOKIE_SAME_SITE_PROPERTY = PREFIX + ".cookie-same-site";
+
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -77,8 +79,8 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
      */
     @Inject
     public TokenCookieConfigurationProperties(
-            @Nullable @Property(name = PREFIX + ".cookie-same-site") String cookieSameSite) {
-        validateCookieSameSite(PREFIX + ".cookie-same-site", cookieSameSite);
+            @Nullable @Property(name = COOKIE_SAME_SITE_PROPERTY) String cookieSameSite) {
+        validateCookieSameSite(COOKIE_SAME_SITE_PROPERTY, cookieSameSite);
     }
 
     /**

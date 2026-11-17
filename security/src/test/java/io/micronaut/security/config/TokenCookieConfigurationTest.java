@@ -123,9 +123,11 @@ class TokenCookieConfigurationTest {
         "micronaut.security.token.cookie.cookie-same-site|bogus",
         "micronaut.security.token.cookie.cookie-same-site|null",
         "micronaut.security.token.cookie.cookie-same-site|Lax,Strict",
+        "micronaut.security.token.cookie.cookie-same-site|' Lax '",
         "micronaut.security.token.refresh.cookie.cookie-same-site|bogus",
         "micronaut.security.token.refresh.cookie.cookie-same-site|null",
         "micronaut.security.token.refresh.cookie.cookie-same-site|Lax,Strict",
+        "micronaut.security.token.refresh.cookie.cookie-same-site|' Lax '",
     })
     void unrecognizedSameSiteFailsStartupWithConfigurationException(String property, String value) {
         Map<String, Object> configuration = Map.of("micronaut.security.authentication", "cookie", property, value);

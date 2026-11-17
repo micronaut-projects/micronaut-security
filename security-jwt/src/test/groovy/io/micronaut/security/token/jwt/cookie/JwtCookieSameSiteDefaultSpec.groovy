@@ -47,12 +47,10 @@ class JwtCookieSameSiteDefaultSpec extends EmbeddedServerSpecification {
 
         then:
         cookies.size() == 2
-        cookies[0].contains('JWT=')
-        cookies[0].contains('SameSite=Lax')
-        cookies[0].contains('HTTPOnly')
-        cookies[1].contains('JWT_REFRESH_TOKEN=')
-        cookies[1].contains('SameSite=Lax')
-        cookies[1].contains('HTTPOnly')
+        cookies.any { it.startsWith('JWT=') }
+        cookies.any { it.startsWith('JWT_REFRESH_TOKEN=') }
+        cookies.every { it.contains('SameSite=Lax') }
+        cookies.every { it.contains('HTTPOnly') }
     }
 
     @Requires(property = "spec.name", value = "JwtCookieSameSiteDefaultSpec")

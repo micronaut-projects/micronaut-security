@@ -195,8 +195,8 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
         }
         if (insecureCookieWarned.compareAndSet(false, true)) {
             LOG.warn("Token cookie '{}' is being issued without the Secure attribute over a request that was not detected as secure. "
-                    + "If the application runs behind a TLS-terminating proxy, set micronaut.security.token.cookie.cookie-secure=true "
-                    + "(and micronaut.security.token.refresh.cookie.cookie-secure=true). "
+                    + "If the application runs behind a TLS-terminating proxy, set " + TokenCookieConfigurationProperties.PREFIX + ".cookie-secure=true "
+                    + "(and " + RefreshTokenCookieConfigurationProperties.PREFIX + ".cookie-secure=true). "
                     + "This warning is logged only once.", cookie.getName());
         }
     }

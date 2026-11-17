@@ -163,9 +163,8 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
         if (value == null || value.isBlank()) {
             return;
         }
-        String candidate = value.trim();
         for (SameSite sameSite : SameSite.values()) {
-            if (sameSite.name().equalsIgnoreCase(candidate)) {
+            if (sameSite.name().equalsIgnoreCase(value)) {
                 return;
             }
         }

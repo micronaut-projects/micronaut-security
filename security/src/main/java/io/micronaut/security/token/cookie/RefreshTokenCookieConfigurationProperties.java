@@ -63,6 +63,8 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
+    private static final String COOKIE_SAME_SITE_PROPERTY = PREFIX + ".cookie-same-site";
+
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -86,9 +88,9 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     @Inject
     public RefreshTokenCookieConfigurationProperties(
             @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath,
-            @Nullable @Property(name = PREFIX + ".cookie-same-site") String cookieSameSite) {
+            @Nullable @Property(name = COOKIE_SAME_SITE_PROPERTY) String cookieSameSite) {
         this(oauthControllerPath);
-        validateCookieSameSite(PREFIX + ".cookie-same-site", cookieSameSite);
+        validateCookieSameSite(COOKIE_SAME_SITE_PROPERTY, cookieSameSite);
     }
 
     /**
