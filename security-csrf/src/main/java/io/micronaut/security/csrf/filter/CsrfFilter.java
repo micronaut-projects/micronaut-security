@@ -169,7 +169,7 @@ final class CsrfFilter implements Ordered {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("CSRF Token resolved");
                     }
-                    return csrfTokenValidator.validateCsrfToken(request, csrfToken);
+                    return isValid(request, csrfToken);
                 })
                 .exceptionally(throwable -> resolverFailed(resolver.getClass(), throwable));
     }
@@ -196,6 +196,20 @@ final class CsrfFilter implements Ordered {
         return false;
     }
 
+    /**
+     * Validates the token. A validator which throws counts as a failed validation, reported under the validator class.
+     * @param request HTTP request
+     * @param csrfToken A non-blank CSRF token
+     * @return Whether the token is valid
+     */
+    private boolean isValid(@NonNull HttpRequest<?> request, @NonNull String csrfToken) {
+        try {
+            return csrfTokenValidator.validateCsrfToken(request, csrfToken);
+        } catch (RuntimeException e) {
+            return resolverFailed(csrfTokenValidator.getClass(), e);
+        }
+    }
+
     private CompletableFuture<@Nullable HttpResponse<?>> imperativeFilter(HttpRequest<?> request) {
         String csrfToken = resolveCsrfToken(request);
         if (!StringUtils.hasText(csrfToken)) {
@@ -204,14 +218,7 @@ final class CsrfFilter implements Ordered {
             }
             return reactiveUnauthorized(request);
         }
-        boolean valid;
-        try {
-            valid = csrfTokenValidator.validateCsrfToken(request, csrfToken);
-        } catch (RuntimeException e) {
-            resolverFailed(csrfTokenValidator.getClass(), e);
-            return reactiveUnauthorized(request);
-        }
-        if (valid) {
+        if (isValid(request, csrfToken)) {
             return PROCEED;
         }
         if (LOG.isDebugEnabled()) {
@@ -250,8 +257,9 @@ final class CsrfFilter implements Ordered {
 
     /**
      * @param request HTTP request
-     * @return The CSRF token, or {@code null} if no resolver found one or a resolver failed. A failing resolver rejects
-     * the request like a missing token, except for a {@link ContentLengthExceededException}, which is propagated.
+     * @return The first non-blank CSRF token, or {@code null} if no resolver found one or a resolver failed. A resolver
+     * which yields a blank token is skipped. A failing resolver rejects the request like a missing token, except for a
+     * {@link ContentLengthExceededException}, which is propagated.
      */
     @Nullable
     private String resolveCsrfToken(@NonNull HttpRequest<?> request) {

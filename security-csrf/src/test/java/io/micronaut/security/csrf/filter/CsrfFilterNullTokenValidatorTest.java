@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -56,7 +55,6 @@ class CsrfFilterNullTokenValidatorTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.TEXT_HTML);
         HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.retrieve(request));
-        assertNotEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
         assertEquals(0, validator.invocations.get());
     }
