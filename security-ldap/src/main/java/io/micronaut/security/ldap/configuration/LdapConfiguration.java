@@ -22,9 +22,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.ldap.LdapAttributeUtils;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
+import io.micronaut.security.ldap.context.LdapAttributeUtils;
 import io.micronaut.security.ldap.context.SearchSettings;
 import jakarta.annotation.PostConstruct;
 import java.util.Arrays;
@@ -87,13 +87,14 @@ public class LdapConfiguration implements Toggleable {
      */
     @PostConstruct
     final void warnAboutExcludedAttributes() {
+        String[] requested = search.getAttributes();
+        Optional<String> groupFilterAttribute = group.isEnabled() ? group.getFilterAttribute() : Optional.empty();
         for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
-            String[] requested = search.getAttributes();
             if (requested != null && Arrays.stream(requested).anyMatch(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded))) {
                 LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
                     + "Remove it from search.excluded-attributes if the application needs it.", name, excluded);
             }
-            if (group.isEnabled() && group.getFilterAttribute().filter(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded)).isPresent()) {
+            if (groupFilterAttribute.filter(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded)).isPresent()) {
                 LOG.warn("LDAP configuration [{}] uses groups.filter-attribute [{}], but search.excluded-attributes removes it. "
                     + "Group resolution requires removing it from search.excluded-attributes and including it in search.attributes when configured.", name, excluded);
             }

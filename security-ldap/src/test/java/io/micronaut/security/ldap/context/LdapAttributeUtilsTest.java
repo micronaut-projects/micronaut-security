@@ -1,4 +1,4 @@
-package io.micronaut.security.ldap;
+package io.micronaut.security.ldap.context;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

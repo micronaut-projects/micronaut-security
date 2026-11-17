@@ -16,7 +16,6 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.security.ldap.LdapAttributeUtils;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,38 +92,7 @@ public class DefaultLdapSearchService implements LdapSearchService {
             return createResults(results);
         }
         // Filter lazily so existing overrides still receive the enumeration, with sensitive attributes removed.
-        return createResults(new NamingEnumeration<>() {
-            @Override
-            public SearchResult next() throws NamingException {
-                SearchResult result = results.next();
-                removeExcludedAttributes(result.getAttributes(), excludedAttributes);
-                return result;
-            }
-
-            @Override
-            public boolean hasMore() throws NamingException {
-                return results.hasMore();
-            }
-
-            @Override
-            public void close() throws NamingException {
-                results.close();
-            }
-
-            @Override
-            public boolean hasMoreElements() {
-                return results.hasMoreElements();
-            }
-
-            @Override
-            public SearchResult nextElement() {
-                try {
-                    return next();
-                } catch (NamingException e) {
-                    throw new NoSuchElementException(e);
-                }
-            }
-        });
+        return createResults(new ExcludingNamingEnumeration(results, excludedAttributes));
     }
 
     /**
@@ -166,5 +134,50 @@ public class DefaultLdapSearchService implements LdapSearchService {
             }
         }
         return false;
+    }
+
+    /**
+     * Strips the excluded attributes from each result as it is read from the delegate.
+     */
+    private final class ExcludingNamingEnumeration implements NamingEnumeration<SearchResult> {
+
+        private final NamingEnumeration<SearchResult> results;
+        private final Collection<String> excludedAttributes;
+
+        ExcludingNamingEnumeration(NamingEnumeration<SearchResult> results, Collection<String> excludedAttributes) {
+            this.results = results;
+            this.excludedAttributes = excludedAttributes;
+        }
+
+        @Override
+        public SearchResult next() throws NamingException {
+            SearchResult result = results.next();
+            removeExcludedAttributes(result.getAttributes(), excludedAttributes);
+            return result;
+        }
+
+        @Override
+        public boolean hasMore() throws NamingException {
+            return results.hasMore();
+        }
+
+        @Override
+        public void close() throws NamingException {
+            results.close();
+        }
+
+        @Override
+        public boolean hasMoreElements() {
+            return results.hasMoreElements();
+        }
+
+        @Override
+        public SearchResult nextElement() {
+            try {
+                return next();
+            } catch (NamingException e) {
+                throw new NoSuchElementException(e);
+            }
+        }
     }
 }

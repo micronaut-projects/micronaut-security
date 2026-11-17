@@ -107,10 +107,10 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties(), "test")) {
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertTrue(names.contains("uid"));
-            assertTrue(names.contains("cn"));
-            assertTrue(names.contains("sn"));
-            assertFalse(names.contains("userpassword"));
+            assertReturned(names, "uid");
+            assertReturned(names, "cn");
+            assertReturned(names, "sn");
+            assertStripped(names, "userpassword");
             assertTrue(appender.list.isEmpty());
         }
     }
@@ -124,8 +124,8 @@ class LdapSearchExcludedAttributesTest {
 
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertTrue(names.contains("uid"));
-            assertTrue(names.contains("userpassword"));
+            assertReturned(names, "uid");
+            assertReturned(names, "userpassword");
         }
     }
 
@@ -139,9 +139,9 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertTrue(names.contains("uid"));
-            assertEquals(clearExclusions, names.contains("userpassword"));
-            assertEquals(clearExclusions, names.contains("userpassword;binary"));
+            assertReturned(names, "uid");
+            assertEquals(clearExclusions, names.contains("userpassword"), () -> "userpassword in " + names);
+            assertEquals(clearExclusions, names.contains("userpassword;binary"), () -> "userpassword;binary in " + names);
         }
     }
 
@@ -152,10 +152,10 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertTrue(names.contains("uid"));
-            assertTrue(names.contains("cn"));
-            assertFalse(names.contains("sn"));
-            assertFalse(names.contains("userpassword"));
+            assertReturned(names, "uid");
+            assertReturned(names, "cn");
+            assertStripped(names, "sn");
+            assertStripped(names, "userpassword");
         }
     }
 
@@ -210,9 +210,9 @@ class LdapSearchExcludedAttributesTest {
 
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertTrue(names.contains("uid"));
-            assertFalse(names.contains("sn"));
-            assertFalse(names.contains("userpassword"));
+            assertReturned(names, "uid");
+            assertStripped(names, "sn");
+            assertStripped(names, "userpassword");
         }
     }
 
@@ -223,8 +223,8 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             Set<String> names = lowerCaseAttributeNames(authenticate(context));
 
-            assertFalse(names.contains("sn"));
-            assertTrue(names.contains("userpassword"));
+            assertStripped(names, "sn");
+            assertReturned(names, "userpassword");
         }
     }
 
@@ -247,7 +247,14 @@ class LdapSearchExcludedAttributesTest {
 
         assertEquals(List.of("userPassword"), search.getExcludedAttributes());
         assertThrows(UnsupportedOperationException.class, () -> search.getExcludedAttributes().clear());
+    }
+
+    @Test
+    void aNullListClearsTheExclusions() {
+        LdapConfiguration.SearchConfiguration search = new LdapConfiguration.SearchConfiguration();
+
         search.setExcludedAttributes(null);
+
         assertTrue(search.getExcludedAttributes().isEmpty());
     }
 
@@ -309,6 +316,14 @@ class LdapSearchExcludedAttributesTest {
         assertEquals("riemann", authentication.getName());
         assertEquals(Set.of("Mathematicians"), Set.copyOf(authentication.getRoles()));
         return authentication;
+    }
+
+    private static void assertReturned(Set<String> names, String attribute) {
+        assertTrue(names.contains(attribute), () -> "expected [" + attribute + "] to be returned, got " + names);
+    }
+
+    private static void assertStripped(Set<String> names, String attribute) {
+        assertFalse(names.contains(attribute), () -> "expected [" + attribute + "] to be stripped, got " + names);
     }
 
     private static Set<String> lowerCaseAttributeNames(Authentication authentication) {
