@@ -86,7 +86,7 @@ public class DefaultLdapSearchService implements LdapSearchService {
      *                           names without options also exclude all option variants
      * @return The list of {@link LdapSearchResult}
      * @throws NamingException If an error occurs
-     * @since 5.5.3
+     * @since 5.6.0
      */
     protected List<LdapSearchResult> createResults(NamingEnumeration<SearchResult> results, Collection<String> excludedAttributes) throws NamingException {
         if (CollectionUtils.isEmpty(excludedAttributes)) {
@@ -135,7 +135,7 @@ public class DefaultLdapSearchService implements LdapSearchService {
      *                           names without options also exclude all option variants
      * @return The same attributes instance, mutated to remove the excluded ones, or null if attributes is null
      * @throws NamingException If the attribute ids cannot be enumerated
-     * @since 5.5.3
+     * @since 5.6.0
      */
     protected @Nullable Attributes removeExcludedAttributes(@Nullable Attributes attributes, Collection<String> excludedAttributes) throws NamingException {
         if (attributes == null || CollectionUtils.isEmpty(excludedAttributes)) {

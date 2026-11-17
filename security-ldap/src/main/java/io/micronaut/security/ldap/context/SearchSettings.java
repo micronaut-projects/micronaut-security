@@ -64,7 +64,7 @@ public interface SearchSettings {
      * also excludes {@code userPassword;binary}.
      *
      * @return The attribute names to strip from the search results
-     * @since 5.5.3
+     * @since 5.6.0
      */
     default List<String> getExcludedAttributes() {
         return Collections.emptyList();

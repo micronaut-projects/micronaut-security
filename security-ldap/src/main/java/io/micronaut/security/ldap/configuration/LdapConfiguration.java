@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.LdapAttributeUtils;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -292,7 +294,7 @@ public class LdapConfiguration implements Toggleable {
         /**
          * The attributes stripped from the user search results by default.
          *
-         * @since 5.5.3
+         * @since 5.6.0
          */
         public static final List<String> DEFAULT_EXCLUDED_ATTRIBUTES = List.of("userPassword", "unicodePwd");
 
@@ -395,7 +397,7 @@ public class LdapConfiguration implements Toggleable {
 
         /**
          * @return The attributes stripped from the search results. Never null.
-         * @since 5.5.3
+         * @since 5.6.0
          */
         public List<String> getExcludedAttributes() {
             return excludedAttributes;
@@ -406,12 +408,18 @@ public class LdapConfiguration implements Toggleable {
          * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
          * Names without LDAP options also exclude all option variants, such as {@code userPassword;binary}.
          * Exclusions also apply to explicitly requested attributes; conflicting settings log a warning at startup.
+         * Setting this property replaces the default list, so repeat the defaults when adding attributes.
+         * Entries are attribute names, not OIDs; surrounding whitespace is ignored and blank entries are dropped.
          *
          * @param excludedAttributes The attributes to exclude
-         * @since 5.5.3
+         * @since 5.6.0
          */
         public void setExcludedAttributes(@Nullable List<String> excludedAttributes) {
-            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : List.copyOf(excludedAttributes);
+            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : excludedAttributes.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(StringUtils::isNotEmpty)
+                .toList();
         }
 
         /**

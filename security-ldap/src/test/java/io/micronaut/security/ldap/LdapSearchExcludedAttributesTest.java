@@ -34,6 +34,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -197,6 +198,43 @@ class LdapSearchExcludedAttributesTest {
             assertTrue(appender.list.getFirst().getFormattedMessage().contains("groups.filter-attribute [SN]"));
             assertTrue(appender.list.getFirst().getFormattedMessage().contains("search.excluded-attributes"));
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"sn,userPassword", "sn, userPassword", " sn , userPassword ,"})
+    void aCommaSeparatedValueIsTrimmedBeforeMatching(String excludedAttributes) {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.search.excluded-attributes", excludedAttributes);
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            assertEquals(List.of("sn", "userPassword"), context.getBean(LdapConfiguration.class).getSearch().getExcludedAttributes());
+
+            Set<String> names = lowerCaseAttributeNames(authenticate(context));
+
+            assertTrue(names.contains("uid"));
+            assertFalse(names.contains("sn"));
+            assertFalse(names.contains("userpassword"));
+        }
+    }
+
+    @Test
+    void replacingTheListDropsTheDefaults() {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("sn"));
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            Set<String> names = lowerCaseAttributeNames(authenticate(context));
+
+            assertFalse(names.contains("sn"));
+            assertTrue(names.contains("userpassword"));
+        }
+    }
+
+    @Test
+    void blankAndNullEntriesAreDropped() {
+        LdapConfiguration.SearchConfiguration search = new LdapConfiguration.SearchConfiguration();
+
+        search.setExcludedAttributes(Arrays.asList(" userPassword ", "", "  ", null));
+
+        assertEquals(List.of("userPassword"), search.getExcludedAttributes());
     }
 
     @Test
