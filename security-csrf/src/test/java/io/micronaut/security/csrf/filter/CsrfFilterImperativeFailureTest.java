@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -37,6 +38,7 @@ import io.micronaut.security.csrf.CsrfConfiguration;
 import io.micronaut.security.csrf.generator.CsrfTokenGenerator;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
 import io.micronaut.security.csrf.resolver.FutureCsrfTokenResolver;
+import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import java.util.Optional;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Singleton;
@@ -45,6 +47,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -53,9 +56,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * With the field resolver disabled only imperative {@link CsrfTokenResolver} beans are registered. One which throws is
  * treated like a resolver which found no token, exactly as when a {@link FutureCsrfTokenResolver} is registered: the
  * request is rejected with an unauthorized response instead of a server error, unless another resolver yields a valid token.
+ * A {@link CsrfTokenValidator} which throws rejects the request as well.
  */
 class CsrfFilterImperativeFailureTest {
     private static final String SPEC_NAME = "CsrfFilterImperativeFailureTest";
+    private static final String THROWING_VALIDATOR = "csrf-filter-imperative-failure-test.throwing-validator";
 
     @Test
     void throwingResolverRejectsTheRequest() {
@@ -83,6 +88,25 @@ class CsrfFilterImperativeFailureTest {
         }
     }
 
+    @Test
+    void throwingValidatorRejectsTheRequest() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                THROWING_VALIDATOR, StringUtils.TRUE,
+                "micronaut.security.redirect.enabled", StringUtils.FALSE,
+                "micronaut.security.csrf.token-resolvers.field.enabled", StringUtils.FALSE,
+                "micronaut.security.csrf.signature-key", "test-fixture-not-a-secret-csrf-signature-key"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+            CsrfConfiguration csrfConfiguration = server.getApplicationContext().getBean(CsrfConfiguration.class);
+            ThrowingCsrfTokenValidator validator = server.getApplicationContext().getBean(ThrowingCsrfTokenValidator.class);
+            HttpRequest<?> request = formPost().header(csrfConfiguration.getHeaderName(), "any-csrf-token");
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class, () -> client.retrieve(request));
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+            assertEquals(1, validator.invocations.get());
+        }
+    }
+
     private static EmbeddedServer startServer() {
         return ApplicationContext.run(EmbeddedServer.class, Map.of(
             "spec.name", SPEC_NAME,
@@ -98,6 +122,7 @@ class CsrfFilterImperativeFailureTest {
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(missingProperty = THROWING_VALIDATOR)
     @Singleton
     static class ThrowingCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>> {
         @Override
@@ -109,6 +134,20 @@ class CsrfFilterImperativeFailureTest {
         @NonNull
         public Optional<String> resolveToken(@NonNull HttpRequest<?> request) {
             throw new IllegalStateException("test-fixture resolver failure");
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(property = THROWING_VALIDATOR, value = StringUtils.TRUE)
+    @Primary
+    @Singleton
+    static class ThrowingCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
+        final AtomicInteger invocations = new AtomicInteger();
+
+        @Override
+        public boolean validateCsrfToken(@NonNull HttpRequest<?> request, @NonNull String token) {
+            invocations.incrementAndGet();
+            throw new IllegalStateException("test-fixture validator failure");
         }
     }
 
