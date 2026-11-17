@@ -45,7 +45,6 @@ import io.micronaut.web.router.UriRouteMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -257,18 +256,18 @@ final class CsrfFilter implements Ordered {
     @Nullable
     private String resolveCsrfToken(@NonNull HttpRequest<?> request) {
         for (CsrfTokenResolver<HttpRequest<?>> tokenResolver : csrfTokenResolvers) {
-            Optional<String> tokenOptional;
+            String csrfToken;
             try {
-                tokenOptional = tokenResolver.resolveToken(request);
+                csrfToken = tokenResolver.resolveToken(request).orElse(null);
             } catch (RuntimeException e) {
                 resolverFailed(tokenResolver.getClass(), e);
                 return null;
             }
-            if (tokenOptional.isPresent() && StringUtils.hasText(tokenOptional.get())) {
+            if (StringUtils.hasText(csrfToken)) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
                 }
-                return tokenOptional.get();
+                return csrfToken;
             }
         }
         if (LOG.isTraceEnabled()) {
