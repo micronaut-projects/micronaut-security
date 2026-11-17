@@ -38,10 +38,10 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     public static final boolean DEFAULT_HTTPONLY = true;
 
     /**
-     * The default same-site setting for the JWT cookie.
+     * The default same-site setting for the JWT cookie. Defaults to {@link SameSite#Lax} since 5.6.0; previously no default was set.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final SameSite DEFAULT_COOKIESAMESITE = null;
+    public static final SameSite DEFAULT_COOKIESAMESITE = SameSite.Lax;
 
     protected String cookieDomain;
     protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
@@ -125,6 +125,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
 
     /**
      * Sets whether the cookie is secured. Defaults to the secure status of the request.
+     * Behind a TLS-terminating proxy, set this explicitly to `true`. With the Netty server, forwarded headers do not change the secure status of the request.
      * @param cookieSecure True if the cookie is secure
      */
     public void setCookieSecure(Boolean cookieSecure) {
@@ -140,11 +141,10 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`.
+     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. An empty or unrecognized value omits the `SameSite` attribute.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
         this.cookieSameSite = cookieSameSite;
     }
-
 }
