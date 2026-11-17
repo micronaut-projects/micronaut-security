@@ -9,7 +9,6 @@ import io.micronaut.context.env.yaml.YamlPropertySourceLoader;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
-import io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties;
 import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -166,7 +165,7 @@ class TokenCookieConfigurationTest {
                       %s
             """.formatted(yamlEntry, yamlEntry);
         Map<String, Object> configuration = new YamlPropertySourceLoader().read("test", new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)));
-        Logger logger = (Logger) LoggerFactory.getLogger(AbstractAccessTokenCookieConfigurationProperties.class);
+        Logger logger = (Logger) LoggerFactory.getLogger("io.micronaut.security.token.cookie.TokenCookieSameSiteValidator");
         Level previousLevel = logger.getLevel();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();

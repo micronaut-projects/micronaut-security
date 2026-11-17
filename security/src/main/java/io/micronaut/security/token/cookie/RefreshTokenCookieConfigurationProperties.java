@@ -16,7 +16,6 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Secondary;
@@ -27,8 +26,6 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.endpoints.OauthControllerConfigurationProperties;
-import jakarta.annotation.PostConstruct;
-import jakarta.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -41,7 +38,6 @@ import java.util.Optional;
 @Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
 @Secondary
-@Context
 public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";
@@ -64,8 +60,6 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
-    private static final String COOKIE_SAME_SITE_PROPERTY = PREFIX + ".cookie-same-site";
-
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -78,20 +72,6 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
         if (oauthControllerPath != null) {
             cookiePath = oauthControllerPath;
         }
-    }
-
-    /**
-     * @param oauthControllerPath The path for the oauth controller
-     * @param cookieSameSite The configured same-site setting of the cookie
-     * @throws io.micronaut.context.exceptions.ConfigurationException if the same-site setting is not empty and it is not `Strict`, `Lax` or `None`
-     * @since 5.6.0
-     */
-    @Inject
-    public RefreshTokenCookieConfigurationProperties(
-            @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath,
-            @Nullable @Property(name = COOKIE_SAME_SITE_PROPERTY) String cookieSameSite) {
-        this(oauthControllerPath);
-        validateCookieSameSite(COOKIE_SAME_SITE_PROPERTY, cookieSameSite);
     }
 
     /**
@@ -144,14 +124,6 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      */
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
-    }
-
-    /**
-     * Logs at startup that the cookie is issued without the {@code SameSite} attribute if the same-site setting is empty.
-     */
-    @PostConstruct
-    final void logCookieSameSiteOmitted() {
-        logIfCookieSameSiteOmitted(COOKIE_SAME_SITE_PROPERTY);
     }
 
 }
