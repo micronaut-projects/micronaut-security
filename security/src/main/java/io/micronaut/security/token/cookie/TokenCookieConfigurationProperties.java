@@ -16,6 +16,8 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Context;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -23,6 +25,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
+import jakarta.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -34,6 +37,7 @@ import java.util.Optional;
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(TokenCookieConfigurationProperties.PREFIX)
+@Context
 public class TokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements AccessTokenCookieConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".cookie";
@@ -59,6 +63,23 @@ public class TokenCookieConfigurationProperties extends AbstractAccessTokenCooki
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
+
+    /**
+     * Constructor.
+     */
+    public TokenCookieConfigurationProperties() {
+    }
+
+    /**
+     * @param cookieSameSite The configured same-site setting of the cookie
+     * @throws io.micronaut.context.exceptions.ConfigurationException if the same-site setting is not empty and it is not `Strict`, `Lax` or `None`
+     * @since 5.6.0
+     */
+    @Inject
+    public TokenCookieConfigurationProperties(
+            @Nullable @Property(name = PREFIX + ".cookie-same-site") String cookieSameSite) {
+        validateCookieSameSite(PREFIX + ".cookie-same-site", cookieSameSite);
+    }
 
     /**
      * Whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).

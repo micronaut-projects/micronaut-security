@@ -16,6 +16,7 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Secondary;
@@ -26,6 +27,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.endpoints.OauthControllerConfigurationProperties;
+import jakarta.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -38,6 +40,7 @@ import java.util.Optional;
 @Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
 @Secondary
+@Context
 public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";
@@ -72,6 +75,20 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
         if (oauthControllerPath != null) {
             cookiePath = oauthControllerPath;
         }
+    }
+
+    /**
+     * @param oauthControllerPath The path for the oauth controller
+     * @param cookieSameSite The configured same-site setting of the cookie
+     * @throws io.micronaut.context.exceptions.ConfigurationException if the same-site setting is not empty and it is not `Strict`, `Lax` or `None`
+     * @since 5.6.0
+     */
+    @Inject
+    public RefreshTokenCookieConfigurationProperties(
+            @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath,
+            @Nullable @Property(name = PREFIX + ".cookie-same-site") String cookieSameSite) {
+        this(oauthControllerPath);
+        validateCookieSameSite(PREFIX + ".cookie-same-site", cookieSameSite);
     }
 
     /**

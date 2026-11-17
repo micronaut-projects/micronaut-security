@@ -1,54 +1,40 @@
 package io.micronaut.security.token.jwt.cookie
 
-import io.micronaut.context.annotation.Requires
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
-import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
-import jakarta.inject.Singleton
+import io.micronaut.context.ApplicationContext
+import io.micronaut.context.exceptions.ConfigurationException
+import io.micronaut.runtime.server.EmbeddedServer
+import spock.lang.Specification
+import spock.lang.Unroll
 
-class JwtCookieSameSiteInvalidSpec extends EmbeddedServerSpecification {
+class JwtCookieSameSiteInvalidSpec extends Specification {
 
-    @Override
-    String getSpecName() {
-        'JwtCookieSameSiteInvalidSpec'
-    }
-
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.http.client.followRedirects': false,
+    @Unroll
+    void "application fails to start with a ConfigurationException if #property has an invalid value"(String property) {
+        when:
+        ApplicationContext.run(EmbeddedServer, [
+                'spec.name': 'JwtCookieSameSiteInvalidSpec',
                 'micronaut.security.authentication': 'cookie',
-                'micronaut.security.token.cookie.cookie-max-age': '5m',
-                'micronaut.security.token.cookie.cookie-same-site': 'nonesense',
-                'micronaut.security.redirect.login-failure': '/login/authFailed',
+                (property): 'nonesense',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+        ]).close()
+
+        then:
+        Exception e = thrown()
+        ConfigurationException cause = rootCause(e) as ConfigurationException
+        cause.message.contains(property)
+        cause.message.contains('nonesense')
+
+        where:
+        property << [
+                'micronaut.security.token.cookie.cookie-same-site',
+                'micronaut.security.token.refresh.cookie.cookie-same-site',
         ]
     }
 
-    void "test same-site cookie setting cannot have invalid value"() {
-        when:
-        HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-        HttpResponse loginRsp = client.exchange(loginRequest, String)
-
-        then:
-        noExceptionThrown()
-
-        when:
-        String cookie = loginRsp.getHeaders().get('Set-Cookie')
-
-        then:
-        cookie.contains('SameSite') == false
-    }
-
-    @Requires(property = "spec.name", value = "JwtCookieSameSiteInvalidSpec")
-    @Singleton
-    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider  {
-        AuthenticationProviderUserPassword() {
-            super([new SuccessAuthenticationScenario( "sherlock")])
+    private static Throwable rootCause(Throwable t) {
+        while (!(t instanceof ConfigurationException) && t.cause != null) {
+            t = t.cause
         }
+        t
     }
 }

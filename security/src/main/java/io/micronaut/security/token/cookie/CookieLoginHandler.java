@@ -187,14 +187,14 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler<Http
      *
      * @param cookie The cookie about to be issued
      * @param request The current request
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected void warnIfInsecureCookie(Cookie cookie, HttpRequest<?> request) {
         if (cookie.isSecure() || request.isSecure()) {
             return;
         }
-        if (insecureCookieWarned.compareAndSet(false, true) && LOG.isWarnEnabled()) {
-            LOG.warn("Token cookie '{}' is being issued without the Secure attribute because the request was not detected as secure. "
+        if (insecureCookieWarned.compareAndSet(false, true)) {
+            LOG.warn("Token cookie '{}' is being issued without the Secure attribute over a request that was not detected as secure. "
                     + "If the application runs behind a TLS-terminating proxy, set micronaut.security.token.cookie.cookie-secure=true "
                     + "(and micronaut.security.token.refresh.cookie.cookie-secure=true). "
                     + "This warning is logged only once.", cookie.getName());

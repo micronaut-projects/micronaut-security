@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.token.cookie;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.TokenCookieConfiguration;
 
@@ -38,7 +40,7 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     public static final boolean DEFAULT_HTTPONLY = true;
 
     /**
-     * The default same-site setting for the JWT cookie. Defaults to {@link SameSite#Lax} since 5.4.0; prior to 5.4.0 no default was set.
+     * The default same-site setting for the JWT cookie. Defaults to {@link SameSite#Lax} since 5.6.0; previously no default was set.
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = SameSite.Lax;
@@ -141,11 +143,33 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. Set to `null` to omit the `SameSite` attribute.
+     * Sets the same-site setting of the cookie. Default value `Lax`. Allowed values: `Strict`, `Lax` or `None`. Set it to an empty value to omit the `SameSite` attribute. Any other value fails with a configuration error.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
         this.cookieSameSite = cookieSameSite;
     }
 
+    /**
+     * Verifies that the configured same-site value is either empty or one of the {@link SameSite} values.
+     * An unrecognized value would otherwise be silently converted to {@code null} and the {@code SameSite} attribute omitted.
+     *
+     * @param property The name of the configuration property
+     * @param value The configured value. {@code null} or empty if not set or set to an empty value.
+     * @throws ConfigurationException if the value is not empty and it is not a {@link SameSite} value
+     * @since 5.6.0
+     */
+    protected static void validateCookieSameSite(@NonNull String property, @Nullable String value) {
+        if (value == null || value.isBlank()) {
+            return;
+        }
+        String candidate = value.trim();
+        for (SameSite sameSite : SameSite.values()) {
+            if (sameSite.name().equalsIgnoreCase(candidate)) {
+                return;
+            }
+        }
+        throw new ConfigurationException("Invalid value '" + value + "' for " + property
+                + ". Allowed values: Strict, Lax or None. Use an empty value to omit the SameSite attribute.");
+    }
 }
