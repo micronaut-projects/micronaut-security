@@ -45,4 +45,9 @@ final class FutureCsrfTokenResolverAdapter<T> implements FutureCsrfTokenResolver
     public int getOrder() {
         return csrfTokenResolver.getOrder();
     }
+
+    @Override
+    public String toString() {
+        return csrfTokenResolver.getClass().getSimpleName();
+    }
 }
