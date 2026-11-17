@@ -25,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Advertises configured Reporting API endpoints on matching HTTP responses.
@@ -38,6 +40,10 @@ import java.util.List;
  * endpoint failing either check, whether static or request-specific, is omitted, so that it can
  * neither fail the response nor make user agents discard the whole header. A warning is logged
  * once per static endpoint and each time a provider supplies such an endpoint.</p>
+ *
+ * <p>Endpoint names are dictionary keys, so they must be unique. When two endpoints share a name
+ * the first one is kept and the other is logged and omitted. Static endpoints come before
+ * request-specific ones, so a provider cannot replace a static endpoint.</p>
  */
 @Requires(classes = ServerFilter.class)
 @Requires(condition = ReportingEndpointsFilterCondition.class)
@@ -47,13 +53,15 @@ final class ReportingEndpointsFilter {
     private static final Logger LOG = LoggerFactory.getLogger(ReportingEndpointsFilter.class);
 
     private final List<ReportingEndpoint> reportingEndpoints;
+    private final Set<String> reportingEndpointNames;
     private final List<ReportingEndpointProvider> reportingEndpointProviders;
 
     /**
      * Creates the filter from every static endpoint and request-specific endpoint provider.
      *
      * <p>Static endpoints whose name is not a valid Structured Fields dictionary key (RFC 8941),
-     * or that have no URL, are logged once here and omitted.</p>
+     * or that have no URL, are logged once here and omitted. So is a static endpoint whose name
+     * an earlier static endpoint already uses.</p>
      *
      * @param reportingEndpoints static endpoints to advertise
      * @param reportingEndpointProviders request-specific endpoint providers
@@ -61,15 +69,20 @@ final class ReportingEndpointsFilter {
     ReportingEndpointsFilter(List<ReportingEndpoint> reportingEndpoints,
                              List<ReportingEndpointProvider> reportingEndpointProviders) {
         List<ReportingEndpoint> validEndpoints = new ArrayList<>(reportingEndpoints.size());
+        Set<String> names = new HashSet<>();
         for (ReportingEndpoint endpoint : reportingEndpoints) {
-            if (ReportingEndpointUtils.isValid(endpoint)) {
-                validEndpoints.add(endpoint);
-            } else {
+            if (!ReportingEndpointUtils.isValid(endpoint)) {
                 LOG.warn("Ignoring the reporting endpoint named \"{}\" ({}): it needs a URL and a name that is a valid Structured Fields dictionary key (RFC 8941) matching {}",
                     endpoint.getName(), endpoint.getClass().getName(), ReportingEndpointUtils.KEY_GRAMMAR);
+            } else if (names.add(endpoint.getName())) {
+                validEndpoints.add(endpoint);
+            } else {
+                LOG.warn("Ignoring the reporting endpoint named \"{}\" ({}): another endpoint already uses that name",
+                    endpoint.getName(), endpoint.getClass().getName());
             }
         }
         this.reportingEndpoints = List.copyOf(validEndpoints);
+        this.reportingEndpointNames = Set.copyOf(names);
         this.reportingEndpointProviders = List.copyOf(reportingEndpointProviders);
     }
 
@@ -83,10 +96,17 @@ final class ReportingEndpointsFilter {
     void filter(HttpRequest<?> request, MutableHttpResponse<?> response) {
         if (!response.getHeaders().contains(ReportingEndpoints.HEADER_NAME)) {
             List<ReportingEndpoint> endpoints = new ArrayList<>(reportingEndpoints);
+            Set<String> names = new HashSet<>(reportingEndpointNames);
             for (ReportingEndpointProvider provider : reportingEndpointProviders) {
                 ReportingEndpoint endpoint = provider.reportingEndpoint(request);
                 if (ReportingEndpointUtils.isValid(endpoint)) {
-                    endpoints.add(endpoint);
+                    if (names.add(endpoint.getName())) {
+                        endpoints.add(endpoint);
+                    } else {
+                        // The name passed the key grammar, so it is safe to log.
+                        LOG.warn("Ignoring the reporting endpoint named \"{}\" supplied by {}: another endpoint already uses that name",
+                            endpoint.getName(), provider.getClass().getName());
+                    }
                 } else if (endpoint != null) {
                     // The rejected name may derive from the request, so it is not logged.
                     LOG.warn("Ignoring the reporting endpoint supplied by {}: it has no URL, or its name is not a valid Structured Fields dictionary key (RFC 8941) matching {}",

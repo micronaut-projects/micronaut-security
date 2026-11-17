@@ -180,6 +180,55 @@ class ReportingEndpointsFilterInvalidEndpointTest {
         }
     }
 
+    @Test
+    void keepsTheFirstStaticEndpointWhenTwoShareAName() {
+        try (CapturedWarnings captured = new CapturedWarnings()) {
+            ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
+                List.of(endpoint("csp", "/first"), endpoint("csp", "/second")), List.of());
+            MutableHttpResponse<?> response = HttpResponse.ok();
+
+            filter.filter(HttpRequest.GET("/"), response);
+
+            assertEquals("csp=\"/first\"", response.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertEquals(1, captured.messages().size(), captured.messages().toString());
+            assertTrue(captured.messages().get(0).contains("\"csp\""), captured.messages().get(0));
+        }
+    }
+
+    @Test
+    void aProviderCannotReplaceAStaticEndpoint() {
+        try (CapturedWarnings captured = new CapturedWarnings()) {
+            ReportingEndpointsFilter filter = new ReportingEndpointsFilter(
+                List.of(endpoint("csp", "/static")), List.of(request -> endpoint("csp", "/provider")));
+            MutableHttpResponse<?> first = HttpResponse.ok();
+            MutableHttpResponse<?> second = HttpResponse.ok();
+
+            filter.filter(HttpRequest.GET("/"), first);
+            filter.filter(HttpRequest.GET("/"), second);
+
+            assertEquals("csp=\"/static\"", first.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertEquals("csp=\"/static\"", second.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertEquals(2, captured.messages().size(), captured.messages().toString());
+        }
+    }
+
+    @Test
+    void keepsTheFirstProviderEndpointWhenTwoProvidersShareAName() {
+        try (CapturedWarnings captured = new CapturedWarnings()) {
+            ReportingEndpointsFilter filter = new ReportingEndpointsFilter(List.of(), List.of(
+                request -> endpoint("tenant", "/first"),
+                request -> endpoint("tenant", "/second"),
+                request -> endpoint("other", "/other")));
+            MutableHttpResponse<?> response = HttpResponse.ok();
+
+            filter.filter(HttpRequest.GET("/"), response);
+
+            assertEquals("other=\"/other\", tenant=\"/first\"",
+                response.getHeaders().get(ReportingEndpoints.HEADER_NAME));
+            assertEquals(1, captured.messages().size(), captured.messages().toString());
+        }
+    }
+
     /** Captures the warnings {@link ReportingEndpointsFilter} logs while it is open. */
     private static final class CapturedWarnings implements AutoCloseable {
         private final Logger logger = (Logger) LoggerFactory.getLogger(ReportingEndpointsFilter.class);
@@ -201,6 +250,20 @@ class ReportingEndpointsFilterInvalidEndpointTest {
         public void close() {
             logger.detachAppender(appender);
         }
+    }
+
+    private static ReportingEndpoint endpoint(String name, String url) {
+        return new ReportingEndpoint() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public URI getUrl() {
+                return URI.create(url);
+            }
+        };
     }
 
     private static ReportingEndpoint endpoint(String name) {
