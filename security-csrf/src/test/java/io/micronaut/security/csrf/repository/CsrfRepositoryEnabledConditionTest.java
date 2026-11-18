@@ -9,16 +9,20 @@ import io.micronaut.security.csrf.session.SessionCsrfTokenRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CsrfRepositoryEnabledConditionTest {
+
+    private static final String COOKIE = "cookie";
+    private static final String SESSION = "session";
 
     private ListAppender<ILoggingEvent> appender;
     private Logger logger;
@@ -40,72 +44,90 @@ class CsrfRepositoryEnabledConditionTest {
     @Test
     void bothKeysUnsetKeepsBothRepositoriesEnabled() {
         try (ApplicationContext ctx = ApplicationContext.run()) {
-            assertTrue(ctx.containsBean(CookieCsrfTokenRepository.class));
-            assertTrue(ctx.containsBean(SessionCsrfTokenRepository.class));
+            assertBothEnabled(ctx);
         }
         assertTrue(warnings().isEmpty());
     }
 
-    @Test
-    void canonicalKeyFalseDisablesRepositoryCookie() {
-        canonicalKeyFalseDisablesRepository("cookie");
-    }
-
-    @Test
-    void canonicalKeyFalseDisablesRepositorySession() {
-        canonicalKeyFalseDisablesRepository("session");
-    }
-
-    private void canonicalKeyFalseDisablesRepository(String name) {
-        appender.list.clear();
-        try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.csrf.repositories." + name + ".enabled", false))) {
-            assertEquals(!"cookie".equals(name), ctx.containsBean(CookieCsrfTokenRepository.class));
-            assertEquals(!"session".equals(name), ctx.containsBean(SessionCsrfTokenRepository.class));
+    @ParameterizedTest
+    @ValueSource(strings = {COOKIE, SESSION})
+    void canonicalKeyFalseDisablesRepository(String name) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(name), false))) {
+            assertOnlyDisabled(ctx, name);
         }
         assertTrue(warnings().isEmpty());
     }
 
-    @Test
-    void legacyKeyFalseDisablesRepositoryAndLogsWarningCookie() {
-        legacyKeyFalseDisablesRepositoryAndLogsWarning("cookie");
-    }
-
-    @Test
-    void legacyKeyFalseDisablesRepositoryAndLogsWarningSession() {
-        legacyKeyFalseDisablesRepositoryAndLogsWarning("session");
-    }
-
-    private void legacyKeyFalseDisablesRepositoryAndLogsWarning(String name) {
-        appender.list.clear();
-        try (ApplicationContext ctx = ApplicationContext.run(Map.of("micronaut.security.csrf.repository." + name + ".enabled", false))) {
-            assertEquals(!"cookie".equals(name), ctx.containsBean(CookieCsrfTokenRepository.class));
-            assertEquals(!"session".equals(name), ctx.containsBean(SessionCsrfTokenRepository.class));
-            assertFalse(ctx.getBeansOfType(CsrfTokenRepository.class).isEmpty());
+    @ParameterizedTest
+    @ValueSource(strings = {COOKIE, SESSION})
+    void legacyKeyFalseDisablesRepositoryAndLogsWarning(String name) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(legacyKey(name), false))) {
+            assertOnlyDisabled(ctx, name);
         }
-        List<String> warnings = warnings();
-        assertEquals(1, warnings.size(), warnings.toString());
-        assertEquals("Configuration property [micronaut.security.csrf.repository." + name + ".enabled] is deprecated. Use [micronaut.security.csrf.repositories." + name + ".enabled] instead.", warnings.get(0));
+        assertEquals(List.of(deprecationWarning(name)), warnings());
     }
 
-    @Test
-    void canonicalKeyTrueOverridesLegacyKeyFalseCookie() {
-        canonicalKeyTrueOverridesLegacyKeyFalse("cookie");
+    @ParameterizedTest
+    @ValueSource(strings = {COOKIE, SESSION})
+    void legacyKeyTrueKeepsRepositoryEnabledAndLogsWarning(String name) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(legacyKey(name), true))) {
+            assertBothEnabled(ctx);
+        }
+        assertEquals(List.of(deprecationWarning(name)), warnings());
     }
 
-    @Test
-    void canonicalKeyTrueOverridesLegacyKeyFalseSession() {
-        canonicalKeyTrueOverridesLegacyKeyFalse("session");
-    }
-
-    private void canonicalKeyTrueOverridesLegacyKeyFalse(String name) {
-        appender.list.clear();
+    @ParameterizedTest
+    @ValueSource(strings = {COOKIE, SESSION})
+    void canonicalKeyTrueOverridesLegacyKeyFalse(String name) {
         try (ApplicationContext ctx = ApplicationContext.run(Map.of(
-            "micronaut.security.csrf.repositories." + name + ".enabled", true,
-            "micronaut.security.csrf.repository." + name + ".enabled", false))) {
-            assertTrue(ctx.containsBean(CookieCsrfTokenRepository.class));
-            assertTrue(ctx.containsBean(SessionCsrfTokenRepository.class));
+            canonicalKey(name), true,
+            legacyKey(name), false))) {
+            assertBothEnabled(ctx);
         }
         assertTrue(warnings().isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {COOKIE, SESSION})
+    void canonicalKeyFalseOverridesLegacyKeyTrue(String name) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(
+            canonicalKey(name), false,
+            legacyKey(name), true))) {
+            assertOnlyDisabled(ctx, name);
+        }
+        assertTrue(warnings().isEmpty());
+    }
+
+    @Test
+    void warningIsLoggedOncePerApplicationContext() {
+        for (int i = 0; i < 2; i++) {
+            try (ApplicationContext ctx = ApplicationContext.run(Map.of(legacyKey(COOKIE), false))) {
+                assertOnlyDisabled(ctx, COOKIE);
+            }
+        }
+        assertEquals(List.of(deprecationWarning(COOKIE), deprecationWarning(COOKIE)), warnings());
+    }
+
+    private static String canonicalKey(String name) {
+        return "micronaut.security.csrf.repositories." + name + ".enabled";
+    }
+
+    private static String legacyKey(String name) {
+        return "micronaut.security.csrf.repository." + name + ".enabled";
+    }
+
+    private static String deprecationWarning(String name) {
+        return "Configuration property [" + legacyKey(name) + "] is deprecated. Use [" + canonicalKey(name) + "] instead.";
+    }
+
+    private static void assertBothEnabled(ApplicationContext ctx) {
+        assertTrue(ctx.containsBean(CookieCsrfTokenRepository.class));
+        assertTrue(ctx.containsBean(SessionCsrfTokenRepository.class));
+    }
+
+    private static void assertOnlyDisabled(ApplicationContext ctx, String name) {
+        assertEquals(!COOKIE.equals(name), ctx.containsBean(CookieCsrfTokenRepository.class));
+        assertEquals(!SESSION.equals(name), ctx.containsBean(SessionCsrfTokenRepository.class));
     }
 
     private List<String> warnings() {
