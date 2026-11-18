@@ -64,9 +64,8 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
                                                 SecureEndpoint tokenEndpoint,
                                                 OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
-        ClientCredentialsGrant clientCredentialsGrant = new ClientCredentialsGrant();
-        clientCredentialsGrant.setScope(scope);
-        this.grant = clientCredentialsGrant;
+        this.grant = new ClientCredentialsGrant();
+        this.grant.setScope(scope);
         this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
     }
 
@@ -74,9 +73,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
      * @param clientConfiguration The client configuration
      */
     public ClientCredentialsTokenRequestContext(OauthClientConfiguration clientConfiguration) {
-        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
-        this.grant = new ClientCredentialsGrant();
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
+        this(null, clientConfiguration);
     }
 
     /**
@@ -84,10 +81,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
      * @param clientConfiguration The client configuration
      */
     public ClientCredentialsTokenRequestContext(String scope, OauthClientConfiguration clientConfiguration) {
-        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
-        this.grant = new ClientCredentialsGrant();
-        this.grant.setScope(scope);
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
+        this(scope, clientConfiguration.getTokenEndpoint(), clientConfiguration);
     }
 
     @Override
