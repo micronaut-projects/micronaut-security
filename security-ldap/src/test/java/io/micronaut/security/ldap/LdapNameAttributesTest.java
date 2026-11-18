@@ -91,7 +91,7 @@ class LdapNameAttributesTest {
     @ParameterizedTest(name = "wrong password is rejected for {2}")
     @MethodSource("users")
     @SuppressWarnings("unchecked")
-    void wrongPasswordIsRejectedWithoutFetchingAttributes(String ldif, String username, String dn, String cn) throws Exception {
+    void wrongPasswordIsRejectedWithoutFetchingAttributes(String ldif, String username, String dn) throws Exception {
         try (ApplicationContext context = startContext(ldif)) {
             LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
             NullAttributesLdapSearchService searchService = context.getBean(NullAttributesLdapSearchService.class);
