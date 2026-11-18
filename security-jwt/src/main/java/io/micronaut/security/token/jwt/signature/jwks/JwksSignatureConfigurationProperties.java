@@ -53,6 +53,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     /**
      * The default minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     * @since 5.5.3
      */
     @SuppressWarnings("WeakerAccess")
     public static final Duration DEFAULT_REFRESH_INTERVAL = Duration.ofSeconds(30);
@@ -146,6 +147,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     /**
      *
      * @return Minimum interval between two JWKS refreshes triggered by a token whose key ID is not present in the cached JWKS.
+     * @since 5.5.3
      */
     @Override
     @NonNull
@@ -158,6 +160,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      * This property sets the minimum interval between two such refreshes. Default value 30 seconds.
      * A zero or negative interval disables the rate limit.
      * @param refreshInterval Minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     * @since 5.5.3
      */
     public void setRefreshInterval(@NonNull Duration refreshInterval) {
         ArgumentUtils.requireNonNull("refreshInterval", refreshInterval);

@@ -57,7 +57,7 @@ public interface JwksSignatureConfiguration extends Named {
     /**
      * Minimum interval between two forced refreshes of the cached JWKS triggered by a token whose {@code kid} is not present in the cached key set.
      * @return The minimum interval between two refreshes triggered by an unknown key ID.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @NonNull
     default Duration getRefreshInterval() {

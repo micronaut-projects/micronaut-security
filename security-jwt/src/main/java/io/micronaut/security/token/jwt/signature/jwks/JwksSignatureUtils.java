@@ -145,7 +145,7 @@ public final class JwksSignatureUtils {
      * @param jwkSet A JSON Web Key Set
      * @param keyId A Key ID
      * @return Whether the JSON Web Key Set contains a key with the given Key ID.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     public static boolean containsKeyId(@Nullable JWKSet jwkSet, @NonNull String keyId) {
         return jwkSet != null && jwkSet.getKeyByKeyId(keyId) != null;

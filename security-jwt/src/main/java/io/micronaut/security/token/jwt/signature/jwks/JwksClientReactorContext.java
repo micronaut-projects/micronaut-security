@@ -46,7 +46,7 @@ public final class JwksClientReactorContext {
 
     /**
      * @return Whether a JWKS signature configuration may clear its cache and fetch the JWKS again when the token key ID is not present in the cached JWKS.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     public boolean isRefreshOnUnknownKeyId() {
         return refreshOnUnknownKeyId.get();
@@ -54,7 +54,7 @@ public final class JwksClientReactorContext {
 
     /**
      * Allow JWKS signature configurations to refresh the cached JWKS when the token key ID is not present in the cached JWKS.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     public void allowRefreshOnUnknownKeyId() {
         refreshOnUnknownKeyId.set(true);
