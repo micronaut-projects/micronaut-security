@@ -16,11 +16,13 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -105,6 +107,23 @@ class AuthenticatorAnyStrategyFailureTest {
                 new SecurityConfigurationProperties());
 
         assertFailure(AuthenticationFailureReason.USER_NOT_FOUND, authenticate(authenticator));
+    }
+
+    @Test
+    void aSecondSubscriptionDoesNotSeeTheFailuresOfTheFirst() {
+        AtomicInteger calls = new AtomicInteger();
+        ReactiveAuthenticationProvider<Object, Object, Object> failsThenStaysSilent = (requestContext, authenticationRequest) ->
+                Mono.defer(() -> calls.getAndIncrement() == 0
+                        ? Mono.just(AuthenticationResponse.failure(AuthenticationFailureReason.USER_NOT_FOUND))
+                        : Mono.empty());
+        Authenticator<Object> authenticator = new Authenticator<>(ctx,
+                List.of(failsThenStaysSilent),
+                List.of(),
+                new SecurityConfigurationProperties());
+        Mono<AuthenticationResponse> response = Mono.from(authenticator.authenticate(null, new UsernamePasswordCredentials("sherlock", "password")));
+
+        assertFailure(AuthenticationFailureReason.USER_NOT_FOUND, response.block(TIMEOUT));
+        assertNull(response.block(TIMEOUT));
     }
 
     private static AuthenticationResponse authenticate(Authenticator<Object> authenticator) {

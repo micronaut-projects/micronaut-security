@@ -61,6 +61,8 @@ import java.util.stream.IntStream;
 @Singleton
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
+    @SuppressWarnings("unchecked")
+    private static final Flux<AuthenticationResponse>[] EMPTY_FLUX_ARRAY = new Flux[0];
 
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
     private final BeanContext beanContext;
@@ -190,7 +192,6 @@ public class Authenticator<T> {
         if (LOG.isDebugEnabled()) {
             LOG.debug(providers.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-        Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
             return Flux.mergeDelayError(1,
@@ -201,29 +202,42 @@ public class Authenticator<T> {
                                         .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")))
                             )
                             .toList()
-                    .toArray(emptyArr))
+                    .toArray(EMPTY_FLUX_ARRAY))
                     .last()
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
-        } else {
-            // Providers may complete on different threads, so failures are recorded by provider index and, when no
-            // provider succeeds, the failure of the first provider in provider order is returned. This mirrors the
-            // imperative ANY path. Each provider is invoked inside a defer so that a provider which throws instead of
-            // returning a publisher is recorded as a failure as well.
+        }
+        return authenticateAny(request, authenticationRequest, providers);
+    }
+
+    /**
+     * Providers may complete on different threads, so failures are recorded by provider index and, when no provider
+     * succeeds, the failure of the first provider in provider order is returned. This mirrors the imperative ANY path.
+     * The failures are held per subscription, so subscribing again never observes the failures of an earlier attempt.
+     * Each provider is invoked inside a defer so that a provider which throws instead of returning a publisher is
+     * recorded as a failure as well.
+     * @param request The request context
+     * @param authenticationRequest The authentication request
+     * @param providers The providers, in provider order
+     * @return The first successful response or, if every provider fails, the failure of the first provider
+     */
+    private Flux<AuthenticationResponse> authenticateAny(T request,
+                                                         AuthenticationRequest authenticationRequest,
+                                                         List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
+        return Flux.defer(() -> {
             AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1, IntStream.range(0, providers.size())
-                    .mapToObj(index -> Flux.defer(() -> Flux.from(providers.get(index).authenticate(request, authenticationRequest)))
+            List<Flux<AuthenticationResponse>> attempts = IntStream.range(0, providers.size())
+                    .<Flux<AuthenticationResponse>>mapToObj(index -> Flux.defer(() -> Flux.from(providers.get(index).authenticate(request, authenticationRequest)))
                             .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
                             .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
                                 failures.set(index, failedResponseForThrowable(t));
                                 return Flux.empty();
                             }))
-                    .toList()
-                    .toArray(emptyArr));
-
-            return authentication.take(1)
+                    .toList();
+            return Flux.mergeDelayError(1, attempts.toArray(EMPTY_FLUX_ARRAY))
+                    .take(1)
                     .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
-        }
+        });
     }
 
     @Nullable
