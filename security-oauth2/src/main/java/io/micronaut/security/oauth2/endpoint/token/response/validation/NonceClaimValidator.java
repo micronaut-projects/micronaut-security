@@ -87,8 +87,8 @@ public class NonceClaimValidator {
         String nonceClaim = claims.getNonce();
         if (nonce == null) {
             if (nonceExpected) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Nonce validation failed: a nonce was sent in the authorization request but no persisted nonce could be retrieved at callback time");
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Nonce validation failed for provider [{}]: a nonce was sent in the authorization request but no persisted nonce could be retrieved at callback time", clientConfiguration.getName());
                 }
                 return false;
             }
