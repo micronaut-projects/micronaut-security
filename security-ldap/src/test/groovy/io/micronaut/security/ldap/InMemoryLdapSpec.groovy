@@ -9,7 +9,6 @@ import io.micronaut.core.io.ResourceResolver
 import io.micronaut.http.HttpVersion
 import io.micronaut.http.ssl.SslBuilder
 import io.micronaut.http.ssl.SslConfiguration
-import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import spock.lang.Specification
