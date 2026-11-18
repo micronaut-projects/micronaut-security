@@ -116,7 +116,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     /**
-     * The Secret Key that is used to calculate an HMAC as part of a CSRF token generation. Set it with the `signature-key` property. It is exposed by {@link #getSecretKey()}. Default Value `null`.
+     * The Secret Key that is used to calculate an HMAC as part of a CSRF token generation. It is exposed by `CsrfConfiguration#getSecretKey()`. Default Value `null`.
      * @param signatureKey The Secret Key that is used to calculate an HMAC as part of a CSRF token generation.
      */
     public void setSignatureKey(@Nullable String signatureKey) {
