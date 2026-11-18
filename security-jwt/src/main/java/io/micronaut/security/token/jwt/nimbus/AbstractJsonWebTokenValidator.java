@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.PlainJWT;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
@@ -45,11 +44,10 @@ abstract class AbstractJsonWebTokenValidator<R> {
     }
 
     /**
-     * @param plainJWT Unsigned JWT
-     * @return Whether the unsigned JWT should be accepted
+     * @return Whether an unsigned JWT should be accepted
      * @see UnsignedJwtPolicy
      */
-    protected boolean validateSignature(PlainJWT plainJWT) {
+    protected boolean acceptsUnsignedJwt() {
         return unsignedJwtPolicy.acceptsUnsignedJwt();
     }
 

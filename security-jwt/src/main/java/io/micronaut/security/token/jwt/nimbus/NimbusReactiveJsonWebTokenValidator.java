@@ -97,8 +97,8 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
     }
 
     private Mono<Boolean> validateSignature(JWT jwt) {
-        if (jwt instanceof PlainJWT plainJWT) {
-            return Mono.just(validateSignature(plainJWT));
+        if (jwt instanceof PlainJWT) {
+            return Mono.just(acceptsUnsignedJwt());
 
         } else if (jwt instanceof SignedJWT signedJWT) {
             return Mono.from(signatureValidator.validateSignature(signedJWT));

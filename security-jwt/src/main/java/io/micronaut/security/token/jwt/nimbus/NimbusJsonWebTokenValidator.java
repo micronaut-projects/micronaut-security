@@ -71,8 +71,8 @@ class NimbusJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> im
     }
 
     private boolean validateSignature(JWT jwt) {
-        if (jwt instanceof PlainJWT plainJWT) {
-            return validateSignature(plainJWT);
+        if (jwt instanceof PlainJWT) {
+            return acceptsUnsignedJwt();
 
         } else if (jwt instanceof SignedJWT signedJWT) {
             return signatureValidator.validateSignature(signedJWT);
