@@ -136,4 +136,23 @@ class LoggingUtilsTest {
         assertEquals(1, appender.list.size());
         assertTrue(appender.list.get(0).getFormattedMessage().startsWith(MESSAGE_PREFIX));
     }
+
+    @Test
+    void sanitizeReplacesTheCharactersThatBreakALine() {
+        assertEquals("alice__INFO forged_entry__", LoggingUtils.sanitize("alice\r\nINFO forged\tentry\u2028\u2029"));
+        assertEquals("a_b_c", LoggingUtils.sanitize("a\u0000b\u0085c"));
+    }
+
+    @Test
+    void sanitizeReturnsAValueWithoutControlCharactersUnchanged() {
+        String value = "uid=José Ñandú,dc=example,dc=com";
+
+        assertEquals(value, LoggingUtils.sanitize(value));
+        assertEquals("", LoggingUtils.sanitize(""));
+    }
+
+    @Test
+    void sanitizeAcceptsNull() {
+        assertEquals(null, LoggingUtils.sanitize(null));
+    }
 }
