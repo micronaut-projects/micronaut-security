@@ -54,7 +54,7 @@ class CookiePriorToLoginPersistenceTest {
         MutableHttpResponse<?> response = HttpResponse.ok();
         persistence.onUnauthorized(new SimpleHttpRequest<>(HttpMethod.GET, requestUri, null), response);
         Optional<Cookie> cookie = response.getCookie(COOKIE_NAME);
-        assertTrue(cookie.isPresent());
+        assertTrue(cookie.isPresent(), () -> requestUri + " should be persisted");
         assertEquals(expectedCookieValue, cookie.get().getValue());
     }
 
@@ -63,7 +63,7 @@ class CookiePriorToLoginPersistenceTest {
         MutableHttpResponse<?> response = HttpResponse.ok();
         persistence.onUnauthorized(new SimpleHttpRequest<>(HttpMethod.GET, "/secured", null), response);
         Optional<Cookie> cookie = response.getCookie(COOKIE_NAME);
-        assertTrue(cookie.isPresent());
+        assertTrue(cookie.isPresent(), "a local path should be persisted");
         assertTrue(cookie.get().isHttpOnly());
         assertEquals("/", cookie.get().getPath());
         assertEquals(300, cookie.get().getMaxAge());
@@ -96,7 +96,7 @@ class CookiePriorToLoginPersistenceTest {
     void getOriginalUriReturnsLocalPaths(String cookieValue) {
         MutableHttpResponse<?> response = HttpResponse.ok();
         Optional<URI> originalUri = persistence.getOriginalUri(loginRequest(cookieValue), response);
-        assertTrue(originalUri.isPresent());
+        assertTrue(originalUri.isPresent(), () -> cookieValue + " should be returned");
         assertEquals(cookieValue, originalUri.get().toString());
         assertCookieCleared(response);
     }
