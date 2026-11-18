@@ -18,6 +18,7 @@ package io.micronaut.security.token;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -60,7 +61,7 @@ public class DefaultRolesFinder implements RolesFinder {
         }
 
         String separator = tokenConfiguration.getRolesSeparator();
-        if (rolesObject instanceof CharSequence && separator != null && !separator.isEmpty()) {
+        if (rolesObject instanceof CharSequence && StringUtils.isNotEmpty(separator)) {
             return splitRoles(rolesObject.toString(), separator);
         }
 
@@ -88,19 +89,19 @@ public class DefaultRolesFinder implements RolesFinder {
     private static List<String> splitRoles(@NonNull String value, @NonNull String separator) {
         List<String> roles = new ArrayList<>();
         int start = 0;
-        while (start <= value.length()) {
-            int index = value.indexOf(separator, start);
-            int end = index == -1 ? value.length() : index;
-            String role = value.substring(start, end).trim();
-            if (!role.isEmpty()) {
-                roles.add(role);
-            }
-            if (index == -1) {
-                break;
-            }
+        for (int index = value.indexOf(separator); index != -1; index = value.indexOf(separator, start)) {
+            addRole(roles, value.substring(start, index));
             start = index + separator.length();
         }
+        addRole(roles, value.substring(start));
         return roles;
+    }
+
+    private static void addRole(@NonNull List<String> roles, @NonNull String entry) {
+        String role = entry.trim();
+        if (!role.isEmpty()) {
+            roles.add(role);
+        }
     }
 
     @Override
