@@ -207,13 +207,13 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
         given:
         RotatingKeys keys = keys()
         keys.reset()
-        EmbeddedServer server = startServer(['micronaut.security.token.jwt.signatures.jwks.rotating.refresh-interval': '1s'])
+        EmbeddedServer server = startServer(['micronaut.security.token.jwt.signatures.jwks.rotating.refresh-interval': '0s'])
         HttpClient httpClient = server.applicationContext.createBean(HttpClient, server.URL)
         BlockingHttpClient client = httpClient.toBlocking()
         String unknownToken = sign(generateKey('unknown-kid'))
 
         expect:
-        server.applicationContext.getBean(JwksSignatureConfiguration).refreshInterval.toSeconds() == 1
+        server.applicationContext.getBean(JwksSignatureConfiguration).refreshInterval.isZero()
 
         when:
         hello(client, sign(keys.current))
@@ -222,17 +222,10 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
         then:
         keys.invocations.get() == 2
 
-        when: 'another request with an unknown kid arrives within the refresh interval'
+        when: 'another request with an unknown kid arrives'
         hello(client, unknownToken)
 
-        then:
-        keys.invocations.get() == 2
-
-        when: 'the refresh interval elapses'
-        sleep(1_500)
-        hello(client, unknownToken)
-
-        then: 'the JWKS may be refreshed again'
+        then: 'the JWKS is refreshed again, unlike with the default interval, because a zero interval disables the rate limit'
         keys.invocations.get() == 3
 
         cleanup:

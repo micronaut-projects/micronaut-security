@@ -23,7 +23,9 @@ import reactor.core.publisher.Sinks;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.LongSupplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -88,6 +90,24 @@ class ReactiveJwksSignatureRefreshTest {
     }
 
     @Test
+    void unknownKeyIdRefreshesAgainOnceTheRefreshIntervalElapses() {
+        StubJwkSetFetcher fetcher = new StubJwkSetFetcher(new JWKSet(CACHED_KEY.toPublicJWK()));
+        AtomicLong nanoTime = new AtomicLong();
+        ReactiveJwksSignature signature = signature(fetcher, Duration.ofSeconds(30), nanoTime::get);
+
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertEquals(1, fetcher.refreshes.get());
+
+        nanoTime.addAndGet(Duration.ofSeconds(29).toNanos());
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertEquals(1, fetcher.refreshes.get());
+
+        nanoTime.addAndGet(Duration.ofSeconds(1).toNanos());
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertEquals(2, fetcher.refreshes.get());
+    }
+
+    @Test
     void refreshIntervalTooLongToBeExpressedInNanosecondsAllowsTheFirstRefreshOnly() {
         StubJwkSetFetcher fetcher = new StubJwkSetFetcher(new JWKSet(CACHED_KEY.toPublicJWK()));
         ReactiveJwksSignature signature = signature(fetcher, Duration.ofSeconds(Long.MAX_VALUE));
@@ -121,10 +141,14 @@ class ReactiveJwksSignatureRefreshTest {
     }
 
     private static ReactiveJwksSignature signature(JwkSetFetcher<JWKSet> fetcher, Duration refreshInterval) {
+        return signature(fetcher, refreshInterval, System::nanoTime);
+    }
+
+    private static ReactiveJwksSignature signature(JwkSetFetcher<JWKSet> fetcher, Duration refreshInterval, LongSupplier nanoTime) {
         JwksSignatureConfigurationProperties configuration = new JwksSignatureConfigurationProperties("test");
         configuration.setUrl(URL);
         configuration.setRefreshInterval(refreshInterval);
-        return new ReactiveJwksSignature(configuration, new DefaultJwkValidator(), fetcher);
+        return new ReactiveJwksSignature(configuration, new DefaultJwkValidator(), fetcher, nanoTime);
     }
 
     private static boolean verify(ReactiveJwksSignature signature, SignedJWT jwt) {

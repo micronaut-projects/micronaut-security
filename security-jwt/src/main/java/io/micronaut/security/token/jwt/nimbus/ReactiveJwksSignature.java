@@ -27,6 +27,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksClientReactorContext;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureUtils;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.LongSupplier;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -70,6 +72,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
     private final long refreshIntervalNanos;
     private final AtomicLong lastRefreshNanos;
+    private final LongSupplier nanoTime;
     private final AtomicReference<Mono<JWKSet>> refreshInFlight = new AtomicReference<>();
 
     /**
@@ -78,15 +81,31 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      * @param jwkValidator JWK Validator to be used.
      * @param jwkSetFetcher Json Web Key Set fetcher
      */
+    @Inject
     public ReactiveJwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                                  JwkValidator jwkValidator,
                                  JwkSetFetcher<JWKSet> jwkSetFetcher) {
+        this(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher, System::nanoTime);
+    }
+
+    /**
+     * Constructor with an explicit monotonic clock, for tests.
+     * @param jwksSignatureConfiguration JSON Web Key Set configuration.
+     * @param jwkValidator JWK Validator to be used.
+     * @param jwkSetFetcher Json Web Key Set fetcher
+     * @param nanoTime Monotonic clock in nanoseconds, see {@link System#nanoTime()}
+     */
+    ReactiveJwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
+                          JwkValidator jwkValidator,
+                          JwkSetFetcher<JWKSet> jwkSetFetcher,
+                          LongSupplier nanoTime) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
+        this.nanoTime = nanoTime;
         this.refreshIntervalNanos = toNanosSaturated(jwksSignatureConfiguration.getRefreshInterval());
         // allow the first refresh straight away
-        this.lastRefreshNanos = new AtomicLong(System.nanoTime() - refreshIntervalNanos);
+        this.lastRefreshNanos = new AtomicLong(nanoTime.getAsLong() - refreshIntervalNanos);
     }
 
     /**
@@ -182,7 +201,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      * @return {@code true} if the caller is allowed to refresh the JWKS. Only one caller per {@link JwksSignatureConfiguration#getRefreshInterval()} is allowed.
      */
     private boolean tryAcquireRefresh() {
-        long now = System.nanoTime();
+        long now = nanoTime.getAsLong();
         long last = lastRefreshNanos.get();
         if (now - last < refreshIntervalNanos) {
             if (LOG.isDebugEnabled()) {
@@ -196,7 +215,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     /**
      * @param duration The refresh interval
      * @return The interval in nanoseconds: zero if it is negative, and capped so that neither the conversion nor the subtractions
-     * of {@link System#nanoTime()} values it is compared with overflow. An interval which exceeds the cap never elapses in practice.
+     * of monotonic clock values it is compared with overflow. An interval which exceeds the cap never elapses in practice.
      */
     private static long toNanosSaturated(Duration duration) {
         if (duration.isNegative()) {
