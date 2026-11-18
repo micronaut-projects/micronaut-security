@@ -54,6 +54,7 @@ public interface TokenConfiguration extends Toggleable {
 
     /**
      * Separator which will be used for splitting the roles before processing the {@link io.micronaut.security.authentication.Authentication}.
+     * The separator is matched literally, it is not a regular expression. A {@code null} or empty separator does not split the roles.
      *
      * @return The separator used for splitting the users roles
      */
