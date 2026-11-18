@@ -202,6 +202,33 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         ]]
     }
 
+    void "an OpenID provider without a JWKS URL is skipped"() {
+        when:
+        generate()
+
+        then:
+        assertThatGeneratedSources {
+            doesNotCreateInitializer()
+            assert generatedClasses.size() == 2
+            hasClass("AotJwksFetcher") {
+                containingSources "configs.put(\"${keysUrl}\", AotJwkSetFetcher0::create);"
+            }
+            hasClass("AotJwkSetFetcher0") {
+                containingSources KID_AOT
+            }
+            compiles()
+        }
+
+        where:
+        contextProperties << [[
+                'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
+                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
+                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
+                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
+                'micronaut.security.oauth2.clients.y.openid.authorization.url': 'https://idp.example.com/authorize',
+        ]]
+    }
+
     void "a JWKS URL is baked by another source sharing it when the first source cannot retrieve the JWKS"() {
         when:
         generate()
