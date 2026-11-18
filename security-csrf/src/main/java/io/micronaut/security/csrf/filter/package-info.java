@@ -18,4 +18,7 @@
  * @author Sergio del Amo
  * @since 4.11.0
  */
+@NullMarked
 package io.micronaut.security.csrf.filter;
+
+import org.jspecify.annotations.NullMarked;

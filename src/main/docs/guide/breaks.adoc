@@ -3,7 +3,61 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 5.6 breaking changes
 
+- To stop buffering request bodies it does not need, the CSRF filter now resolves tokens sequentially. Previously, whenever the api:security.csrf.resolver.FieldCsrfTokenResolver[] was enabled (the default), the filter ran every resolver for every protected request, so each form submission had its whole body read and held in memory before a valid CSRF token in the HTTP header was considered. Every form submission therefore cost the server memory proportional to its body, up to `micronaut.server.max-request-size`, even when the body was not needed to validate the request. The filter now consults the api:security.csrf.resolver.CsrfTokenResolver[] and api:security.csrf.resolver.FutureCsrfTokenResolver[] beans one at a time, in order, and accepts the request at the first token which validates, so the body is not parsed when the HTTP header carries a valid CSRF token. A resolver which does not find a token, which throws, or whose token does not validate, no longer rejects the request by itself: the next resolver is consulted, and the request is rejected when no resolver yields a valid token. Previously, when no `FutureCsrfTokenResolver` bean was registered (for example with `micronaut.security.csrf.token-resolvers.field.enabled=false`), the first resolver which threw, or which yielded a token which did not validate, rejected the request.
+
+- Reporting API endpoint names are validated against the HTTP Structured Fields dictionary key grammar: they start with a lowercase ASCII letter or `*` and contain only lowercase letters, digits, `_`, `-`, `.` or `*`. A browser discards the whole `Reporting-Endpoints` header when one key is outside that grammar. The application now fails to start when an entry under `micronaut.security.reporting-endpoints` has an invalid name. A configuration entry without a `url`, and an endpoint contributed by a api:security.reporting.ReportingEndpoint[] or api:security.reporting.ReportingEndpointProvider[] bean with an invalid name or without a URL, is left out of the header and logged at `WARN`; previously a missing URL failed every response carrying the header. The constructor of api:security.reporting.ReportingEndpoints[] throws `IllegalArgumentException` for such an endpoint. When two endpoints share a name, the response filter now advertises only the first one and logs the other at `WARN`; endpoints from configuration or beans come before those from providers. Previously both were serialized and the browser used the last one.
+
 - api:security.ldap.LdapAuthenticationProvider[] returns `AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH` instead of `UNKNOWN` when the directory rejects the bind of the user with a `javax.naming.AuthenticationNotSupportedException` or a `javax.naming.OperationNotSupportedException`, for example LDAP result code 53 (`unwillingToPerform`). A `javax.naming.AuthenticationException` thrown by anything other than that bind, such as the search performed with the manager context, now returns `UNKNOWN` instead of `CREDENTIALS_DO_NOT_MATCH`. See the <<ldap, LDAP>> section.
+
+=== Token cookies default to `SameSite=Lax`
+
+The JWT access token cookie (`micronaut.security.token.cookie`) and the refresh token cookie (`micronaut.security.token.refresh.cookie`) are issued with the `SameSite=Lax` attribute by default starting with 5.6.0. Previously, no `SameSite` attribute was set.
+
+This change mitigates cross-site request forgery (CSRF). Without the attribute, the handling of the cookie is left to the browser, and browsers that do not treat such cookies as `Lax` send them with every cross-site request. A malicious site could then trigger authenticated requests, such as a form `POST`, on behalf of a logged-in user. With `SameSite=Lax`, the browser sends the token cookies with same-site requests and with top-level navigations that use a safe HTTP method such as `GET`, but not with cross-site subrequests or cross-site `POST` requests.
+
+The `cookie-same-site` setting accepts `Strict`, `Lax` or `None`. Use `None` only when the application requires cross-site token cookies. Unlike omitting the attribute, which allows the browser to apply its default SameSite policy, `None` explicitly permits cookies to be sent with cross-site requests:
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: None
+        cookie-secure: true
+      refresh:
+        cookie:
+          cookie-same-site: None
+          cookie-secure: true
+----
+
+NOTE: `SameSite=None` requires the cookie to also be `Secure`.
+
+To restore the previous omission of the `SameSite` attribute, set `cookie-same-site` to an empty value. Omitting the attribute uses the browser's default SameSite policy; it is not equivalent to `SameSite=None`.
+
+[configuration]
+----
+micronaut:
+  security:
+    token:
+      cookie:
+        cookie-same-site: ''
+      refresh:
+        cookie:
+          cookie-same-site: ''
+----
+
+A key left without a value, such as `cookie-same-site:` or `cookie-same-site: ~` in YAML, is an empty value as well. As before, a value other than `Strict`, `Lax` or `None` (case-insensitive) is not rejected: it also omits the `SameSite` attribute.
+
+=== Warning when token cookies are issued without `Secure`
+
+`cookie-secure` still defaults to the secure status of the request, so plain HTTP local development keeps working. However, if a login issues a token cookie without the `Secure` attribute over a request that was not detected as secure, api:security.token.cookie.CookieLoginHandler[] logs a `WARN` once starting with 5.6.0. Behind a TLS-terminating proxy, explicitly set `micronaut.security.token.cookie.cookie-secure=true` and `micronaut.security.token.refresh.cookie.cookie-secure=true`.
+
+On the Netty server, `request.isSecure()` checks whether the connection to the application uses TLS. Forwarded headers such as `Forwarded` and `X-Forwarded-Proto`, and the host-resolution settings, do not change that result or add the `Secure` cookie attribute.
+
+=== Refresh token cookie default maximum age
+
+api:security.token.cookie.RefreshTokenCookieConfigurationProperties[] now declares the 30 day default of `micronaut.security.token.refresh.cookie.cookie-max-age`, so `getCookieMaxAge()` returns it when the setting is not configured. Previously it returned an empty `Optional` and api:security.token.cookie.TokenCookieLoginHandler[] applied the default. The refresh token cookie issued is unchanged.
 
 == Micronaut Security 5.5 breaking changes
 
