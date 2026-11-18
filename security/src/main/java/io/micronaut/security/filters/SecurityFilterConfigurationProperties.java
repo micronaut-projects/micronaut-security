@@ -19,8 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
@@ -44,16 +44,17 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public static final boolean DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS = false;
 
     /**
-     * The value of the {@code micronaut.security.filter.pattern} property.
+     * The pattern the {@link SecurityFilter} should match.
      */
-    @Nullable
-    private String pattern;
+    @NonNull
+    @NotBlank
+    private String pattern = Filter.MATCH_ALL_PATTERN;
 
     /**
-     * The value of the deprecated {@code micronaut.security.filter.path} property.
+     * Whether {@code micronaut.security.filter.pattern} was set, in which case the deprecated
+     * {@code micronaut.security.filter.path} must not override it.
      */
-    @Nullable
-    private String path;
+    private boolean patternSet;
 
     private boolean enabled = DEFAULT_ENABLED;
 
@@ -75,10 +76,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     @Override
     @NonNull
     public String getPattern() {
-        if (pattern != null) {
-            return pattern;
-        }
-        return path != null ? path : Filter.MATCH_ALL_PATTERN;
+        return this.pattern;
     }
 
     /**
@@ -109,6 +107,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public void setPattern(@NonNull String pattern) {
         if (StringUtils.isNotEmpty(pattern)) {
             this.pattern = pattern;
+            this.patternSet = true;
         }
     }
 
@@ -121,8 +120,8 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public void setPath(@NonNull String path) {
-        if (StringUtils.isNotEmpty(path)) {
-            this.path = path;
+        if (!patternSet && StringUtils.isNotEmpty(path)) {
+            this.pattern = path;
         }
     }
 }
