@@ -100,16 +100,7 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
         final JWEAlgorithm algorithm = header.getAlgorithm();
         final EncryptionMethod method = header.getEncryptionMethod();
-        return (sig, otherSig) -> {
-            boolean supports = sig.supports(algorithm, method);
-            boolean otherSupports = otherSig.supports(algorithm, method);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
-        };
+        // false sorts before true: configurations supporting the header are tried first
+        return Comparator.comparing(config -> !config.supports(algorithm, method));
     }
 }
