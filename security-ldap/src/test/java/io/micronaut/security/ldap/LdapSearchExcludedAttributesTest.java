@@ -289,6 +289,19 @@ class LdapSearchExcludedAttributesTest {
     }
 
     @Test
+    void anExcludedGroupFilterAttributeDoesNotLogAWarningWhenGroupsAreDisabled() {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.groups.enabled", false);
+        properties.put("micronaut.security.ldap.default.groups.filter-attribute", "sn");
+        properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("sn"));
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            assertTrue(context.getBean(LdapConfiguration.class).isEnabled());
+
+            assertTrue(appender.list.isEmpty(), () -> "unexpected warnings: " + appender.list);
+        }
+    }
+
+    @Test
     void excludedAttributesAreDefensivelyCopied() {
         LdapConfiguration.SearchConfiguration search = new LdapConfiguration.SearchConfiguration();
         List<String> excluded = new ArrayList<>(List.of("userPassword"));
