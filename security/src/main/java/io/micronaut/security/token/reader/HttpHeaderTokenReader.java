@@ -59,9 +59,12 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     }
 
     /**
+     * Removes the prefix returned by {@link #getPrefix()} and the single space after it from the header value.
+     * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * If the prefix is {@code null} or empty, the whole header value is the token.
      *
      * @param authorization Authorization header value
-     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
+     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'. Empty if the value does not start with the prefix and a space.
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         final String prefix = getPrefix();
