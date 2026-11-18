@@ -36,12 +36,14 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HexFormat;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -141,15 +143,14 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      * Computes the instant at which the access token expires. It is invoked once, when the token response is cached.
      *
      * @param tokenResponse Token Response
-     * @return The expiration derived from {@code expires_in} if present, otherwise from the {@code exp} claim if the access token is a JWT,
-     * otherwise the current instant plus {@link ClientCredentialsConfiguration#getDefaultExpiration()}.
+     * @return The expiration returned by {@link #expirationDate(TokenResponse)} or, if it is empty, the current instant plus
+     * {@link ClientCredentialsConfiguration#getDefaultExpiration()}.
      * @since 5.4.0
      */
     @NonNull
     protected Instant expiresAt(@NonNull TokenResponse tokenResponse) {
-        return tokenResponse.getExpiresInDate()
+        return expirationDate(tokenResponse)
             .map(Date::toInstant)
-            .or(() -> jwtExpirationDate(tokenResponse).map(Date::toInstant))
             .orElseGet(() -> clock.instant().plus(defaultExpiration()));
     }
 
@@ -187,10 +188,13 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     /**
      *
      * @param tokenResponse Token Response
-     * @return The expiration date from the exp claim in the access token is a JWT or the expiration date calculated from the expiresIn
+     * @return The earlier of the expiration date calculated from {@code expires_in} and the {@code exp} claim if the access token is a JWT,
+     * the one which is present if only one is, or an empty optional if the token response carries no expiration.
      */
     protected Optional<Date> expirationDate(@NonNull TokenResponse tokenResponse) {
-        return jwtExpirationDate(tokenResponse).or(tokenResponse::getExpiresInDate);
+        return Stream.of(tokenResponse.getExpiresInDate(), jwtExpirationDate(tokenResponse))
+            .flatMap(Optional::stream)
+            .min(Comparator.naturalOrder());
     }
 
     @NonNull

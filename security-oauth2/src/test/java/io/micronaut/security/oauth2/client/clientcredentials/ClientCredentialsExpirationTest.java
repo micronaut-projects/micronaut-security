@@ -138,6 +138,37 @@ class ClientCredentialsExpirationTest {
     }
 
     @Test
+    void expClaimEarlierThanExpiresInWins() {
+        assertRefreshedAfterTwoMinutes(Duration.ofMinutes(2), 3600);
+    }
+
+    @Test
+    void expiresInEarlierThanExpClaimWins() {
+        assertRefreshedAfterTwoMinutes(Duration.ofHours(1), 120);
+    }
+
+    private void assertRefreshedAfterTwoMinutes(Duration jwtLifetime, int expiresIn) {
+        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(() -> {
+            TokenResponse tokenResponse = jwtToken(jwtLifetime);
+            tokenResponse.setExpiresIn(expiresIn);
+            return tokenResponse;
+        });
+        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
+            .advancedExpiration(NO_ADVANCED_EXPIRATION)
+            .build());
+
+        String accessToken = requestAccessToken(client);
+
+        clock.advance(Duration.ofSeconds(110));
+        assertEquals(accessToken, requestAccessToken(client));
+        assertEquals(1, tokenEndpoint.requests());
+
+        clock.advance(Duration.ofSeconds(20));
+        assertNotEquals(accessToken, requestAccessToken(client));
+        assertEquals(2, tokenEndpoint.requests());
+    }
+
+    @Test
     void forcedRequestBypassesTheCache() {
         StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
         ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder().build());
