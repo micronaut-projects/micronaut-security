@@ -50,9 +50,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
  * <p>
  * If the JWT carries a {@code kid} header which is not present in the cached JWKS, and the Reactor context
- * {@link JwksClientReactorContext} allows it, the JWKS cache is cleared and the JWKS is fetched again at most once
+ * {@link JwksClientReactorContext} allows it, the JWKS is fetched again at most once
  * per {@link JwksSignatureConfiguration#getRefreshInterval()} so that key rotations at the authorization server are
- * picked up without waiting for the cache to expire.
+ * picked up without waiting for the cache to expire. The cached JWKS is replaced only if it can be retrieved.
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -103,10 +103,10 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
                 .flatMap(jwkSet -> {
                     if (shouldRefresh(ctx, jwt, jwkSet)) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Clearing cache and fetching JWKS again", JwtLogUtils.sanitize(jwt.getHeader().getKeyID()), url);
+                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Fetching JWKS again", JwtLogUtils.sanitize(jwt.getHeader().getKeyID()), url);
                         }
-                        jwkSetFetcher.clearCache(providerName, url);
-                        return Mono.from(jwkSetFetcher.fetch(providerName, url))
+                        // if the JWKS cannot be retrieved, the cached JWKS is kept
+                        return Mono.from(jwkSetFetcher.refresh(providerName, url))
                                 .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
                     }
                     return Mono.just(verify(jwt, jwkSet));
@@ -117,7 +117,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      * @param ctx Reactor context
      * @param jwt the signed JWT
      * @param jwkSet the cached JSON Web Key Set
-     * @return Whether the JWKS cache should be cleared and the JWKS fetched again before verifying the JWT.
+     * @return Whether the JWKS should be fetched again before verifying the JWT.
      */
     private boolean shouldRefresh(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
         String keyId = jwt.getHeader().getKeyID();

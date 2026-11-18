@@ -67,6 +67,10 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
      */
     private final Map<FetchKey, Long> failures = new ConcurrentHashMap<>();
     private final Map<FetchKey, Mono<JWKSet>> inFlight = new ConcurrentHashMap<>();
+    /**
+     * JWK Sets retrieved by {@link #refresh(String, String)} which {@link #fetch(String, String)} hands over to the cache of a subclass instead of requesting them again.
+     */
+    private final Map<FetchKey, JWKSet> refreshed = new ConcurrentHashMap<>();
 
     /**
      * @param jwksClient JWKS Client
@@ -123,10 +127,41 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
         if (url == null) {
             return Mono.empty();
         }
+        JWKSet refreshedJwkSet = refreshed.get(new FetchKey(providerName, url));
+        if (refreshedJwkSet != null) {
+            return Mono.just(refreshedJwkSet);
+        }
         Optional<Publisher<JWKSet>> optionalJWKSetPublisher = optimizations.findJwkSet(url)
                 .map(Supplier::get)
                 .map(Mono::just);
         return optionalJWKSetPublisher.orElseGet(() -> load(providerName, url));
+    }
+
+    /**
+     * Retrieves the JWK Set over the network, bypassing the cache and the JWKS baked at build time, unless the url is backing off.
+     * <p>
+     * The cached JWK Set (and the JWKS baked at build time) is only replaced if the retrieval succeeds. If it fails, or the url is backing off,
+     * the cache is left untouched: this method is invoked when a token carries an unknown key ID, and a token must not be able to evict
+     * a JWK Set which verifies other tokens while the JWKS endpoint is unavailable.
+     * </p>
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The JWK Set which was retrieved, or empty if it could not be retrieved.
+     * @since 5.5.3
+     */
+    @Override
+    @NonNull
+    @SingleResult
+    public Publisher<JWKSet> refresh(@Nullable String providerName, @NonNull String url) {
+        FetchKey key = new FetchKey(providerName, url);
+        return Mono.from(load(providerName, url))
+            .flatMap(jwkSet -> {
+                // clearCache and fetch are the methods caching subclasses decorate: the entry is evicted and stored again with the JWK Set just retrieved
+                refreshed.put(key, jwkSet);
+                clearCache(providerName, url);
+                return Mono.from(fetch(providerName, url))
+                    .doFinally(signal -> refreshed.remove(key, jwkSet));
+            });
     }
 
     /**
