@@ -74,8 +74,8 @@ If your provider issues tokens whose `iss` differs from the configured issuer, c
 
 === Deprecations
 
-- The configuration property `micronaut.security.csrf.repository.cookie.enabled` is deprecated. Use `micronaut.security.csrf.repositories.cookie.enabled` instead. The deprecated property is still honored when `micronaut.security.csrf.repositories.cookie.enabled` is not set, and a warning is logged.
-- The configuration property `micronaut.security.csrf.repository.session.enabled` is accepted as a deprecated alias of `micronaut.security.csrf.repositories.session.enabled`, with the same precedence rules.
+- Starting with 5.5.3, `micronaut.security.csrf.repositories.cookie.enabled` and `micronaut.security.csrf.repositories.session.enabled` are the configuration properties to disable the CSRF cookie and session repositories. The singular forms `micronaut.security.csrf.repository.cookie.enabled` and `micronaut.security.csrf.repository.session.enabled` are deprecated. A deprecated property is honored only when its `repositories` counterpart is not set, and a warning is logged.
+- Before 5.5.3, the cookie repository only read `micronaut.security.csrf.repository.cookie.enabled` and the session repository only read `micronaut.security.csrf.repositories.session.enabled`; the other spelling was silently ignored. If your configuration sets `micronaut.security.csrf.repositories.cookie.enabled` or `micronaut.security.csrf.repository.session.enabled` to `false`, that repository is now disabled.
 
 == Micronaut Security 5.4 breaking changes
 
