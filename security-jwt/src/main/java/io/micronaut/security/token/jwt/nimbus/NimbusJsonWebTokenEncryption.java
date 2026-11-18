@@ -19,10 +19,12 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenEncryption;
 import jakarta.inject.Singleton;
@@ -65,37 +67,37 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptionConfigurationList);
         sortedConfigs.sort(comparator(header));
         for (EncryptionConfiguration config: sortedConfigs) {
-            if (decrypts(jwt, config)) {
+            SignedJWT signedJWT = decrypt(jwt, config);
+            if (signedJWT != null) {
+                return Optional.of(signedJWT);
+            }
+            if (jwt.getState() == JWEObject.State.DECRYPTED) {
                 // A decrypted JWE cannot be decrypted again, so the remaining configurations are not tried.
-                return nestedSignedJwt(jwt);
+                break;
             }
         }
         return Optional.empty();
     }
 
-    private static boolean decrypts(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
+    @Nullable
+    private static SignedJWT decrypt(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Using encryption configuration: {}", config);
         }
         try {
             config.decrypt(jwt);
-            return true;
+            SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
+            if (signedJWT == null && LOG.isDebugEnabled()) {
+                LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
+            }
+            return signedJWT;
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
                 // The exception message echoes the token's header, so only its type is logged.
                 LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one: {}", config, e.getClass().getSimpleName());
             }
-            return false;
+            return null;
         }
-    }
-
-    @NonNull
-    private static Optional<SignedJWT> nestedSignedJwt(@NonNull EncryptedJWT jwt) {
-        SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
-        if (signedJWT == null && LOG.isDebugEnabled()) {
-            LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
-        }
-        return Optional.ofNullable(signedJWT);
     }
 
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
