@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HttpHeaderTokenPropagatorTest {
 
     private static final String TOKEN = "xyz";
+    private static final String BASIC_CREDENTIALS = "Basic dXNlcjpwYXNz";
 
     private static HttpHeaderTokenPropagator propagator(String prefix) {
         HttpHeaderTokenPropagatorConfigurationProperties configuration = new HttpHeaderTokenPropagatorConfigurationProperties();
@@ -92,7 +93,7 @@ class HttpHeaderTokenPropagatorTest {
     @Test
     void writingReplacesHeaderWhichCarriesAnotherScheme() {
         HttpHeaderTokenPropagator propagator = propagator("Bearer");
-        MutableHttpRequest<?> request = requestWithAuthorization("Basic dXNlcjpwYXNz");
+        MutableHttpRequest<?> request = requestWithAuthorization(BASIC_CREDENTIALS);
 
         propagator.writeToken(request, TOKEN);
 
@@ -104,14 +105,14 @@ class HttpHeaderTokenPropagatorTest {
         HttpHeaderTokenPropagatorConfigurationProperties configuration = new HttpHeaderTokenPropagatorConfigurationProperties();
         configuration.setHeaderName("X-Token");
         HttpHeaderTokenPropagator propagator = new HttpHeaderTokenPropagator(configuration);
-        MutableHttpRequest<?> request = requestWithAuthorization("Basic dXNlcjpwYXNz");
+        MutableHttpRequest<?> request = requestWithAuthorization(BASIC_CREDENTIALS);
 
         assertEquals(Optional.empty(), propagator.findToken(request));
 
         propagator.writeToken(request, TOKEN);
 
         assertEquals(List.of("Bearer xyz"), request.getHeaders().getAll("X-Token"));
-        assertEquals(List.of("Basic dXNlcjpwYXNz"), authorizationHeaders(request));
+        assertEquals(List.of(BASIC_CREDENTIALS), authorizationHeaders(request));
         assertEquals(Optional.of(TOKEN), propagator.findToken(request));
     }
 

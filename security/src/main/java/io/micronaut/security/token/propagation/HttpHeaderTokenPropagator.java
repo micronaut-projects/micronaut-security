@@ -35,6 +35,8 @@ import java.util.Optional;
 @Singleton
 public class HttpHeaderTokenPropagator implements TokenPropagator {
 
+    private static final char PREFIX_SEPARATOR = ' ';
+
     protected final HttpHeaderTokenPropagatorConfiguration configuration;
 
     /**
@@ -78,7 +80,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
         if (prefix == null) {
             return token;
         }
-        return prefix + " " + token;
+        return prefix + PREFIX_SEPARATOR + token;
     }
 
     /**
@@ -93,13 +95,17 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
         if (prefix == null) {
             return Optional.of(authorization);
         }
-        final int prefixLength = prefix.length();
-        if (authorization.length() > prefixLength
-                && authorization.regionMatches(true, 0, prefix, 0, prefixLength)
-                && authorization.charAt(prefixLength) == ' ') {
-            return Optional.of(authorization.substring(prefixLength + 1));
+        if (startsWithPrefixAndSeparator(authorization, prefix)) {
+            return Optional.of(authorization.substring(prefix.length() + 1));
         }
         return Optional.empty();
+    }
+
+    private static boolean startsWithPrefixAndSeparator(String authorization, String prefix) {
+        final int prefixLength = prefix.length();
+        return authorization.length() > prefixLength
+                && authorization.regionMatches(true, 0, prefix, 0, prefixLength)
+                && authorization.charAt(prefixLength) == PREFIX_SEPARATOR;
     }
 
     /**
