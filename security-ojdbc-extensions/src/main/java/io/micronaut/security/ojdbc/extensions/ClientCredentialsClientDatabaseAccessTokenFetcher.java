@@ -36,6 +36,8 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.CLIENT_ID_PARAMETER;
 import static io.micronaut.security.ojdbc.extensions.MicronautEndUserSecurityContextProvider.CLIENT_SECRET_PARAMETER;
@@ -54,6 +56,8 @@ import static io.micronaut.security.ojdbc.extensions.OracleResourceProviderParam
 public class ClientCredentialsClientDatabaseAccessTokenFetcher implements DatabaseAccessTokenFetcher, AutoCloseable {
     private final Map<String, HttpClient> httpClientMap = new ConcurrentHashMap<>();
     private final Map<ClientCredentialsClientConfiguration, ClientCredentialsClient> clientCredentialsClientMap = new ConcurrentHashMap<>();
+    // creating clients and closing them exclude each other: otherwise a client created while closing could be cached with an HTTP client which was just closed
+    private final Lock clientsLock = new ReentrantLock();
 
     /**
      * Creates a database access token fetcher.
@@ -129,10 +133,19 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
                                                               @NonNull String clientSecret,
                                                               @Nullable String scope) {
         ClientCredentialsClientConfiguration clientCredentialsClientConfiguration = new ClientCredentialsClientConfiguration(tokenUrl, clientId, clientSecret, scope);
-        return clientCredentialsClientMap.computeIfAbsent(clientCredentialsClientConfiguration, k -> {
-            HttpClient httpClient = oauthClientCredentialsHttpClient(k);
-            return ClientCredentialsClient.of(httpClient, oauthClientConfiguration(k));
-        });
+        ClientCredentialsClient client = clientCredentialsClientMap.get(clientCredentialsClientConfiguration);
+        if (client != null) {
+            return client;
+        }
+        clientsLock.lock();
+        try {
+            return clientCredentialsClientMap.computeIfAbsent(clientCredentialsClientConfiguration, k -> {
+                HttpClient httpClient = oauthClientCredentialsHttpClient(k);
+                return ClientCredentialsClient.of(httpClient, oauthClientConfiguration(k));
+            });
+        } finally {
+            clientsLock.unlock();
+        }
     }
 
     private HttpClient oauthClientCredentialsHttpClient(ClientCredentialsClientConfiguration k) {
@@ -147,18 +160,24 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
 
     /**
      * Closes the HTTP clients created by this fetcher and clears the cached clients.
-     * The fetcher remains usable; a subsequent fetch creates new clients.
+     * The fetcher remains usable; a subsequent fetch creates new clients. A fetch which is in flight
+     * while the fetcher is closed may fail.
      *
      * @since 5.4.0
      */
     @Override
     public void close() {
-        clientCredentialsClientMap.clear();
-        Iterator<HttpClient> iterator = httpClientMap.values().iterator();
-        while (iterator.hasNext()) {
-            HttpClient httpClient = iterator.next();
-            iterator.remove();
-            httpClient.close();
+        clientsLock.lock();
+        try {
+            clientCredentialsClientMap.clear();
+            Iterator<HttpClient> iterator = httpClientMap.values().iterator();
+            while (iterator.hasNext()) {
+                HttpClient httpClient = iterator.next();
+                iterator.remove();
+                httpClient.close();
+            }
+        } finally {
+            clientsLock.unlock();
         }
     }
 
