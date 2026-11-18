@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.propagation;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -26,8 +27,9 @@ import io.micronaut.core.util.Toggleable;
 public interface HttpHeaderTokenPropagatorConfiguration  extends Toggleable {
 
     /**
-     * @return a Prefix before the token in the header value. E.g. Bearer.
+     * @return a Prefix before the token in the header value. E.g. Bearer. {@code null} or blank if the header value is the token, without a prefix.
      */
+    @Nullable
     String getPrefix();
 
     /**

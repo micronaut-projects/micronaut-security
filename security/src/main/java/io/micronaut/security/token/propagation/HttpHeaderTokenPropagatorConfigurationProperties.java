@@ -58,8 +58,8 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
     }
 
     /**
-     * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
-     * @param headerPrefix preffix before the header value
+     * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}). It is matched case-insensitively and separated from the token by a single space. A blank value means the header value is the token, without a prefix.
+     * @param headerPrefix prefix before the token in the header value
      */
     public void setPrefix(String headerPrefix) {
         this.headerPrefix = headerPrefix;
