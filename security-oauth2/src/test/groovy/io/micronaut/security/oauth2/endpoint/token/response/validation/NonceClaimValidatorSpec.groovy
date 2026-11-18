@@ -62,10 +62,10 @@ class NonceClaimValidatorSpec extends ApplicationContextSpecification {
                                                                                                                              String nonceClaim,
                                                                                                                              boolean expected) {
         given:
-        applicationContext.containsBean(NonceFactory)
         NonceClaimValidator validator = applicationContext.getBean(NonceClaimValidator)
 
         expect:
+        applicationContext.containsBean(NonceFactory)
         expected == validator.validate(claims(nonceClaim), clientConfiguration(), providerMetadata(), persistedNonce)
 
         where:
@@ -75,6 +75,37 @@ class NonceClaimValidatorSpec extends ApplicationContextSpecification {
         'abc'          | null       || false
         null           | 'abc'      || false
         null           | null       || false
+    }
+
+    @SuppressWarnings('GrDeprecatedAPIUsage')
+    void "the deprecated no-argument constructor behaves as if no nonce factory is present"() {
+        given:
+        NonceClaimValidator validator = new NonceClaimValidator()
+
+        expect:
+        validator.validate(claims(null), clientConfiguration(), providerMetadata(), null)
+        validator.validate(claims('abc'), clientConfiguration(), providerMetadata(), 'abc')
+        !validator.validate(claims('abc'), clientConfiguration(), providerMetadata(), null)
+        !validator.validate(claims(null), clientConfiguration(), providerMetadata(), 'abc')
+    }
+
+    @Unroll("without a nonce sent: nonce factory present #nonceFactoryPresent and nonce claim #nonceClaim => #expected")
+    void "a flow which never sends a nonce passes only if the ID token carries no nonce claim"(boolean nonceFactoryPresent,
+                                                                                              String nonceClaim,
+                                                                                              boolean expected) {
+        given:
+        NonceFactory nonceFactory = nonceFactoryPresent ? new DefaultNonceFactory(Stub(NoncePersistence)) : null
+        NonceClaimValidator validator = new NonceClaimValidator(nonceFactory)
+
+        expect:
+        expected == validator.validateWithoutNonce(claims(nonceClaim), clientConfiguration(), providerMetadata())
+
+        where:
+        nonceFactoryPresent | nonceClaim || expected
+        true                | null       || true
+        true                | 'abc'      || false
+        false               | null       || true
+        false               | 'abc'      || false
     }
 
     private static OpenIdClaims claims(String nonceClaim) {
