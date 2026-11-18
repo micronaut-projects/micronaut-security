@@ -64,6 +64,9 @@ import java.util.stream.IntStream;
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
+    @SuppressWarnings("unchecked")
+    private static final Flux<AuthenticationResponse>[] NO_RESPONSES = new Flux[0];
+
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
 
     private final List<AuthenticationProvider<T, ?, ?>> imperativeAuthenticationProviders;
@@ -110,9 +113,13 @@ public class Authenticator<T> {
             LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
-            return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
+            return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders));
         }
-        return authenticate(requestContext, authenticationRequest, everyProviderSorted);
+        return authenticateReactive(requestContext, authenticationRequest, everyProviderSorted);
+    }
+
+    private boolean isAllStrategy() {
+        return securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL;
     }
 
     /**
@@ -135,22 +142,21 @@ public class Authenticator<T> {
     @NonNull
     private AuthenticationResponse authenticate(@NonNull T requestContext,
                                                 @NonNull AuthenticationRequest<?, ?> authenticationRequest,
-                                                @NonNull List<AuthenticationProvider<T, ?, ?>> authenticationProviders,
-                                                @Nullable SecurityConfiguration securityConfiguration) {
-        if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
+                                                @NonNull List<AuthenticationProvider<T, ?, ?>> authenticationProviders) {
+        if (isAllStrategy()) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        List<AuthenticationResponse> responses = new ArrayList<>();
+        AuthenticationResponse firstFailure = null;
         for (AuthenticationProvider<T, ?, ?> provider : authenticationProviders) {
             AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
             if (response.isAuthenticated()) {
                 return response;
             }
-            responses.add(response);
+            if (firstFailure == null) {
+                firstFailure = response;
+            }
         }
-        return responses.stream()
-                        .findFirst()
-                        .orElseGet(AuthenticationResponse::failure);
+        return firstFailure != null ? firstFailure : AuthenticationResponse.failure();
     }
 
     @NonNull
@@ -209,48 +215,52 @@ public class Authenticator<T> {
         return Collections.unmodifiableList(providers);
     }
 
-    private Publisher<AuthenticationResponse> authenticate(T request,
-                                                           AuthenticationRequest authenticationRequest,
-                                                           List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
-        if (providers == null) {
-            return Flux.empty();
-        }
+    private Publisher<AuthenticationResponse> authenticateReactive(T request,
+                                                                   AuthenticationRequest authenticationRequest,
+                                                                   List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(providers.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-        Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
-        if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
+        return isAllStrategy()
+                ? authenticateAllReactive(request, authenticationRequest, providers)
+                : authenticateAnyReactive(request, authenticationRequest, providers);
+    }
 
-            return Flux.mergeDelayError(1,
-                            providers.stream()
-                            .map(provider ->
-                                Flux.from(provider.authenticate(request, authenticationRequest))
-                                        .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
-                                        .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")))
-                            )
-                            .toList()
-                    .toArray(emptyArr))
-                    .last()
-                    .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
-                    .flux();
-        } else {
-            // Providers may complete on different threads, so failures are recorded by provider index and, when no
-            // provider succeeds, the failure of the first provider in provider order is returned. This mirrors the
-            // imperative ANY path.
-            AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1, IntStream.range(0, providers.size())
-                    .mapToObj(index -> Flux.from(providers.get(index).authenticate(request, authenticationRequest))
-                            .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
-                            .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
-                                failures.set(index, failedResponseForThrowable(t));
-                                return Flux.empty();
-                            }))
-                    .toList()
-                    .toArray(emptyArr));
+    private Publisher<AuthenticationResponse> authenticateAllReactive(T request,
+                                                                      AuthenticationRequest authenticationRequest,
+                                                                      List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
+        Flux<AuthenticationResponse>[] responses = providers.stream()
+                .map(provider -> Flux.from(provider.authenticate(request, authenticationRequest))
+                        .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                        .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected"))))
+                .toList()
+                .toArray(NO_RESPONSES);
+        return Flux.mergeDelayError(1, responses)
+                .last()
+                .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
+                .flux();
+    }
 
-            return authentication.take(1)
-                    .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
-        }
+    /**
+     * Providers may complete on different threads, so failures are recorded by provider index and, when no provider
+     * succeeds, the failure of the first provider in provider order is returned. This mirrors the imperative ANY path.
+     */
+    private Publisher<AuthenticationResponse> authenticateAnyReactive(T request,
+                                                                      AuthenticationRequest authenticationRequest,
+                                                                      List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
+        AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
+        Flux<AuthenticationResponse>[] responses = IntStream.range(0, providers.size())
+                .mapToObj(index -> Flux.from(providers.get(index).authenticate(request, authenticationRequest))
+                        .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                        .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
+                            failures.set(index, failedResponseForThrowable(t));
+                            return Flux.empty();
+                        }))
+                .toList()
+                .toArray(NO_RESPONSES);
+        return Flux.mergeDelayError(1, responses)
+                .take(1)
+                .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
     }
 
     @Nullable
