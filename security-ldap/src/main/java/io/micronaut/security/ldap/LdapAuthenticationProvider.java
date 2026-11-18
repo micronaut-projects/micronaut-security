@@ -128,48 +128,13 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 LdapSearchResult result = optionalResult.get();
                 debug(LOG, "User found in context [{}]. Attempting to bind.", result.getDn());
 
-                DirContext userContext = null;
-                try {
-                    String dn = result.getDn();
-                    try {
-                        userContext = contextBuilder.build(configuration.getSettings(dn, password));
-                    } catch (javax.naming.AuthenticationException | AuthenticationNotSupportedException | OperationNotSupportedException e) {
-                        // The server rejected the user bind itself, so the supplied credentials are not accepted.
-                        // Only this bind says anything about the credentials: the same exceptions thrown by the
-                        // manager context are a problem of the directory or its configuration.
-                        debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", username, e.getClass().getSimpleName(), e.getMessage());
-                        return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
-                    }
-                    if (result.getAttributes() == null) {
-                        // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
-                        // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
-                        // InvalidNameException is a NamingException and is handled by the enclosing catch.
-                        result.setAttributes(userContext.getAttributes(new LdapName(dn)));
-                    }
-                } finally {
-                    contextBuilder.close(userContext);
+                if (!bindUser(result, username, password)) {
+                    return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                 }
 
                 debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
 
-                Set<String> groups = Collections.emptySet();
-
-                LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
-                if (groupSettings.isEnabled()) {
-                    groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
-                        Object[] params = new Object[]{
-                                groupSettings.getFilterAttribute()
-                                        .map(attr -> result.getAttributes().getValue(attr))
-                                        .orElse(result.getDn())
-                        };
-                        return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
-                    });
-
-
-                    debug(LOG, "Group search returned [{}] for user [{}]", groups, username);
-                } else {
-                    debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
-                }
+                Set<String> groups = groups(managerContext, result, username);
 
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", username, groups);
@@ -191,6 +156,58 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         } finally {
             contextBuilder.close(managerContext);
         }
+    }
+
+    /**
+     * Binds as the user found by the search and, if the result carries no attributes, fetches them with that bind.
+     *
+     * @param result   The entry found for the username
+     * @param username The username, for logging
+     * @param password The password to bind with
+     * @return false if the directory rejected the bind, which means the credentials are not accepted
+     * @throws NamingException for any failure that is not a rejection of the bind
+     */
+    private boolean bindUser(LdapSearchResult result, String username, String password) throws NamingException {
+        String dn = result.getDn();
+        DirContext userContext = null;
+        try {
+            try {
+                userContext = contextBuilder.build(configuration.getSettings(dn, password));
+            } catch (javax.naming.AuthenticationException | AuthenticationNotSupportedException | OperationNotSupportedException e) {
+                // The server rejected the user bind itself, so the supplied credentials are not accepted.
+                // Only this bind says anything about the credentials: the same exceptions thrown by the
+                // manager context are a problem of the directory or its configuration.
+                debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", username, e.getClass().getSimpleName(), e.getMessage());
+                return false;
+            }
+            if (result.getAttributes() == null) {
+                // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
+                // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
+                // InvalidNameException is a NamingException and is handled by the caller.
+                result.setAttributes(userContext.getAttributes(new LdapName(dn)));
+            }
+            return true;
+        } finally {
+            contextBuilder.close(userContext);
+        }
+    }
+
+    private Set<String> groups(DirContext managerContext, LdapSearchResult result, String username) throws NamingException {
+        LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
+        if (!groupSettings.isEnabled()) {
+            debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
+            return Collections.emptySet();
+        }
+        Set<String> groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
+            Object[] params = new Object[]{
+                    groupSettings.getFilterAttribute()
+                            .map(attr -> result.getAttributes().getValue(attr))
+                            .orElse(result.getDn())
+            };
+            return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
+        });
+        debug(LOG, "Group search returned [{}] for user [{}]", groups, username);
+        return groups;
     }
 
     /**
