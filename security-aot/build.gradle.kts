@@ -19,5 +19,7 @@ dependencies {
     testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(mnTest.junit.jupiter.engine)
     testImplementation(mnSerde.micronaut.serde.jackson)
 }
