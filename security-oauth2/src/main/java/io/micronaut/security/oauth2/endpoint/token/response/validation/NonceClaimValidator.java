@@ -58,7 +58,7 @@ public class NonceClaimValidator {
      *
      * @deprecated Use {@link #NonceClaimValidator(NonceFactory)} instead.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.5.3", forRemoval = true)
     public NonceClaimValidator() {
         this(null);
     }
@@ -66,6 +66,7 @@ public class NonceClaimValidator {
     /**
      * @param nonceFactory The nonce factory. If present, the authorization request always carries a nonce and a
      *                     missing persisted nonce at callback time is a validation failure.
+     * @since 5.5.3
      */
     @Inject
     public NonceClaimValidator(@Nullable NonceFactory nonceFactory) {
