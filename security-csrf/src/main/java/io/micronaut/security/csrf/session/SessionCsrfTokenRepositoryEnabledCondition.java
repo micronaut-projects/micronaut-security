@@ -26,10 +26,7 @@ import io.micronaut.security.csrf.repository.CsrfRepositoryEnabledCondition;
  */
 @Internal
 public final class SessionCsrfTokenRepositoryEnabledCondition extends CsrfRepositoryEnabledCondition {
-    /**
-     * Repository name used in the configuration key.
-     */
-    public static final String REPOSITORY_NAME = "session";
+    private static final String REPOSITORY_NAME = "session";
 
     /**
      * Constructor.

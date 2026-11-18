@@ -25,10 +25,7 @@ import io.micronaut.core.annotation.Internal;
  */
 @Internal
 public final class CookieCsrfTokenRepositoryEnabledCondition extends CsrfRepositoryEnabledCondition {
-    /**
-     * Repository name used in the configuration key.
-     */
-    public static final String REPOSITORY_NAME = "cookie";
+    private static final String REPOSITORY_NAME = "cookie";
 
     /**
      * Constructor.

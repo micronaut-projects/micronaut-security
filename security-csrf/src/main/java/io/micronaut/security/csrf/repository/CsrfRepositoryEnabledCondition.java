@@ -51,26 +51,8 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
      * @param repositoryName The repository name used in the configuration key. E.g. {@code cookie}.
      */
     protected CsrfRepositoryEnabledCondition(@NonNull String repositoryName) {
-        this.canonicalKey = canonicalKey(repositoryName);
-        this.legacyKey = legacyKey(repositoryName);
-    }
-
-    /**
-     * @param repositoryName The repository name
-     * @return The canonical configuration key to enable or disable the repository.
-     */
-    @NonNull
-    public static String canonicalKey(@NonNull String repositoryName) {
-        return CsrfConfiguration.PREFIX + ".repositories." + repositoryName + ".enabled";
-    }
-
-    /**
-     * @param repositoryName The repository name
-     * @return The deprecated configuration key to enable or disable the repository.
-     */
-    @NonNull
-    public static String legacyKey(@NonNull String repositoryName) {
-        return CsrfConfiguration.PREFIX + ".repository." + repositoryName + ".enabled";
+        this.canonicalKey = CsrfConfiguration.PREFIX + ".repositories." + repositoryName + ".enabled";
+        this.legacyKey = CsrfConfiguration.PREFIX + ".repository." + repositoryName + ".enabled";
     }
 
     @Override
