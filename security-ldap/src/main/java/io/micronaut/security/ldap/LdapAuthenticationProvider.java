@@ -72,7 +72,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
@@ -96,7 +96,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      *                                    {@link #getExecutorName()} ({@link TaskExecutors#BLOCKING}).
      * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
                                       ContextBuilder contextBuilder,
@@ -288,7 +288,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      *
      * @deprecated The provider holds no resources that require closing.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     @Override
     public void close() {
         // No op

@@ -64,7 +64,7 @@ public class LdapAuthenticationProviderFactory {
      * @return an {@link LdapAuthenticationProvider}
      * @deprecated The executor service is ignored. Use {@link #ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public LdapAuthenticationProvider ldapAuthenticationProvider(LdapConfiguration configuration,
                                                                  LdapSearchService ldapSearchService,
                                                                  ContextBuilder contextBuilder,
