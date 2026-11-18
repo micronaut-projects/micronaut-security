@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonBlocking;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
@@ -28,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -206,8 +206,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     }
 
     private static boolean isNonBlockingThread() {
-        Thread thread = Thread.currentThread();
-        return thread instanceof NonBlocking || thread instanceof reactor.core.scheduler.NonBlocking;
+        return Schedulers.isInNonBlockingThread();
     }
 
     @NonNull
