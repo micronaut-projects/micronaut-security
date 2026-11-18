@@ -91,7 +91,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @param refreshTokenValidator Refresh token validator
      * @deprecated Use {@link #DefaultIntrospectionProcessor(Collection, TokenConfiguration, RefreshTokenValidator, RefreshTokenPersistence)} instead.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
@@ -103,7 +103,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @param tokenConfiguration Token configuration
      * @param refreshTokenValidator Refresh token validator
      * @param refreshTokenPersistence Refresh token persistence, consulted to detect revoked refresh tokens
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @Inject
     public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
@@ -143,7 +143,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @param token Token
      * @param requestContext Request context
      * @return Introspection Response
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @NonNull
     protected Mono<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
@@ -181,7 +181,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
 
     /**
      * @return An {@link IntrospectionResponse} with {@code active: false} and no other fields.
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @NonNull
     protected IntrospectionResponse inactiveIntrospectionResponse() {
@@ -195,7 +195,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @return Introspection Response
      * @deprecated Only used when there is no {@link RefreshTokenPersistence} bean. Override {@link #introspectRefreshToken(String, Object)} instead, which also consults {@link RefreshTokenPersistence}.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     @NonNull
     protected IntrospectionResponse emptyIntrospectionResponse(@NonNull String token) {
         return introspectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent());
