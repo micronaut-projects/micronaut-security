@@ -30,7 +30,9 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 public interface ExecutorAuthenticationProvider<T, I, S> extends AuthenticationProvider<T, I, S>  {
 
     /**
-     *
+     * The name must be constant and match the name of an {@link java.util.concurrent.ExecutorService} bean. The executor is
+     * resolved once, when the {@link io.micronaut.security.authentication.Authenticator} is created, which fails with a
+     * {@link io.micronaut.context.exceptions.ConfigurationException} if no such bean exists.
      * @return The executor name where the code {@link AuthenticationProvider#authenticate(Object, AuthenticationRequest)} will be executed.
      */
     default String getExecutorName() {
