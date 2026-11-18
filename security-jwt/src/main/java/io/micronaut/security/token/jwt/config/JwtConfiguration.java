@@ -38,7 +38,7 @@ public interface JwtConfiguration extends Toggleable {
      * Unsigned tokens can be forged by anyone, so this should only be enabled for local development or testing.
      * When a signature configuration is present, unsigned tokens are always rejected regardless of this flag.
      * @return {@code true} if unsigned tokens should be accepted when no signature configuration exists. Defaults to {@code false}.
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isAcceptUnsignedTokens() {
         return false;

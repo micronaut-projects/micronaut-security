@@ -70,7 +70,7 @@ public class JwtConfigurationProperties implements JwtConfiguration {
      * Sets whether unsigned JWTs (JWS header {@code alg=none}) are accepted when no signature configuration is present.
      * Unsigned tokens can be forged by anyone; enable this only for local development or testing. Default value ({@value #DEFAULT_ACCEPT_UNSIGNED_TOKENS}).
      * @param acceptUnsignedTokens True to accept unsigned tokens when no signature configuration is present
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public void setAcceptUnsignedTokens(boolean acceptUnsignedTokens) {
         this.acceptUnsignedTokens = acceptUnsignedTokens;
