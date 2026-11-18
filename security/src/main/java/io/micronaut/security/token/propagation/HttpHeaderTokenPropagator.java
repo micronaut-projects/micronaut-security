@@ -55,7 +55,8 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a JWT token in a HTTP request. A header which carries no token, such as {@code Bearer}
+     * followed only by whitespace, is treated as if the token was not found.
      * @param request The request to look for the token in
      * @return if the JWT token is found it is returned, empty if not
      */
@@ -63,7 +64,8 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     public Optional<String> findToken(HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
-        return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
+        return authorizationHeader.flatMap(this::extractTokenFromAuthorization)
+                .filter(StringUtils::hasText);
     }
 
     /**

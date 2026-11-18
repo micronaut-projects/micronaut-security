@@ -67,6 +67,17 @@ class HttpHeaderTokenPropagatorTest {
         assertEquals(Optional.empty(), propagator("Bearer").findToken(requestWithAuthorization(headerValue)));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"Bearer ", "Bearer   "})
+    void headerValueWithPrefixButBlankTokenHasNoToken(String headerValue) {
+        assertEquals(Optional.empty(), propagator("Bearer").findToken(requestWithAuthorization(headerValue)));
+    }
+
+    @Test
+    void emptyHeaderValueHasNoTokenWhenNoPrefixIsConfigured() {
+        assertEquals(Optional.empty(), propagator("").findToken(requestWithAuthorization("")));
+    }
+
     @Test
     void writingOntoRequestWhichAlreadyCarriesHeaderLeavesExactlyOneHeader() {
         HttpHeaderTokenPropagator propagator = propagator("Bearer");
