@@ -35,6 +35,8 @@ import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
 
 import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,6 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @EachBean(JwksSignatureConfiguration.class)
 public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<SignedJWT> {
     private static final Logger LOG = LoggerFactory.getLogger(ReactiveJwksSignature.class);
+    private static final long MAX_REFRESH_INTERVAL_NANOS = Long.MAX_VALUE / 2;
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
@@ -81,7 +84,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
-        this.refreshIntervalNanos = jwksSignatureConfiguration.getRefreshInterval().toNanos();
+        this.refreshIntervalNanos = toNanosSaturated(jwksSignatureConfiguration.getRefreshInterval());
         // allow the first refresh straight away
         this.lastRefreshNanos = new AtomicLong(System.nanoTime() - refreshIntervalNanos);
     }
@@ -178,6 +181,21 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
             return false;
         }
         return lastRefreshNanos.compareAndSet(last, now);
+    }
+
+    /**
+     * @param duration The refresh interval
+     * @return The interval in nanoseconds: zero if it is negative, and capped so that neither the conversion nor the subtractions
+     * of {@link System#nanoTime()} values it is compared with overflow. An interval which exceeds the cap never elapses in practice.
+     */
+    private static long toNanosSaturated(Duration duration) {
+        if (duration.isNegative()) {
+            return 0;
+        }
+        if (duration.getSeconds() >= TimeUnit.NANOSECONDS.toSeconds(MAX_REFRESH_INTERVAL_NANOS)) {
+            return MAX_REFRESH_INTERVAL_NANOS;
+        }
+        return duration.toNanos();
     }
 
     private boolean verify(SignedJWT jwt, JWKSet jwkSet) {

@@ -88,6 +88,26 @@ class ReactiveJwksSignatureRefreshTest {
     }
 
     @Test
+    void refreshIntervalTooLongToBeExpressedInNanosecondsAllowsTheFirstRefreshOnly() {
+        StubJwkSetFetcher fetcher = new StubJwkSetFetcher(new JWKSet(CACHED_KEY.toPublicJWK()));
+        ReactiveJwksSignature signature = signature(fetcher, Duration.ofSeconds(Long.MAX_VALUE));
+
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertEquals(1, fetcher.refreshes.get());
+    }
+
+    @Test
+    void negativeRefreshIntervalDisablesTheRateLimit() {
+        StubJwkSetFetcher fetcher = new StubJwkSetFetcher(new JWKSet(CACHED_KEY.toPublicJWK()));
+        ReactiveJwksSignature signature = signature(fetcher, Duration.ofSeconds(-1));
+
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertFalse(verify(signature, signedJwt(ROTATED_KEY)));
+        assertEquals(2, fetcher.refreshes.get());
+    }
+
+    @Test
     void unknownKeyIdDoesNotRefreshUnlessTheReactorContextAllowsIt() {
         StubJwkSetFetcher fetcher = new StubJwkSetFetcher(new JWKSet(CACHED_KEY.toPublicJWK()));
         ReactiveJwksSignature signature = signature(fetcher);
@@ -97,9 +117,13 @@ class ReactiveJwksSignatureRefreshTest {
     }
 
     private static ReactiveJwksSignature signature(JwkSetFetcher<JWKSet> fetcher) {
+        return signature(fetcher, Duration.ofHours(1));
+    }
+
+    private static ReactiveJwksSignature signature(JwkSetFetcher<JWKSet> fetcher, Duration refreshInterval) {
         JwksSignatureConfigurationProperties configuration = new JwksSignatureConfigurationProperties("test");
         configuration.setUrl(URL);
-        configuration.setRefreshInterval(Duration.ofHours(1));
+        configuration.setRefreshInterval(refreshInterval);
         return new ReactiveJwksSignature(configuration, new DefaultJwkValidator(), fetcher);
     }
 
