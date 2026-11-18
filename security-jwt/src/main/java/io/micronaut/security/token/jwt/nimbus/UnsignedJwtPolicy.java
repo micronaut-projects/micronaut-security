@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Singleton
 final class UnsignedJwtPolicy {
     private static final Logger LOG = LoggerFactory.getLogger(UnsignedJwtPolicy.class);
-    private static final String ACCEPT_UNSIGNED_TOKENS_PROPERTY = JwtConfigurationProperties.PREFIX + ".accept-unsigned-tokens";
 
     private final boolean noSignatures;
     private final boolean accepted;
@@ -53,7 +52,7 @@ final class UnsignedJwtPolicy {
         this.accepted = noSignatures && jwtConfiguration.isAcceptUnsignedTokens();
         if (accepted) {
             LOG.warn("{} is true and no signature configuration is present: unsigned JWTs (alg=none) are accepted. "
-                    + "Unsigned tokens can be forged by anyone. Do not enable this in production.", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+                    + "Unsigned tokens can be forged by anyone. Do not enable this in production.", JwtConfigurationProperties.ACCEPT_UNSIGNED_TOKENS);
         }
     }
 
@@ -62,7 +61,7 @@ final class UnsignedJwtPolicy {
      */
     boolean acceptsUnsignedJwt() {
         if (accepted) {
-            LOG.debug("JWT is not signed, no signature configurations and {} is true -> verified", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+            LOG.debug("JWT is not signed, no signature configurations and {} is true -> verified", JwtConfigurationProperties.ACCEPT_UNSIGNED_TOKENS);
             return true;
         }
         if (!noSignatures) {
@@ -70,9 +69,9 @@ final class UnsignedJwtPolicy {
         } else if (rejectionWarned.compareAndSet(false, true)) {
             LOG.warn("Rejected an unsigned JWT (alg=none) because no signature configuration is present. "
                     + "Configure a signature (e.g. micronaut.security.token.jwt.signatures.secret.generator.secret) "
-                    + "or set {} to true to accept unsigned tokens (not recommended). This warning is logged once.", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+                    + "or set {} to true to accept unsigned tokens (not recommended). This warning is logged once.", JwtConfigurationProperties.ACCEPT_UNSIGNED_TOKENS);
         } else {
-            LOG.debug("Rejected an unsigned JWT because no signature configuration is present and {} is false", ACCEPT_UNSIGNED_TOKENS_PROPERTY);
+            LOG.debug("Rejected an unsigned JWT because no signature configuration is present and {} is false", JwtConfigurationProperties.ACCEPT_UNSIGNED_TOKENS);
         }
         return false;
     }

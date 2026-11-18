@@ -39,6 +39,12 @@ public class JwtConfigurationProperties implements JwtConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
+     * The name of the property which controls whether unsigned tokens are accepted.
+     * @since 5.6.0
+     */
+    public static final String ACCEPT_UNSIGNED_TOKENS = PREFIX + ".accept-unsigned-tokens";
+
+    /**
      * The default accept unsigned tokens value.
      */
     @SuppressWarnings("WeakerAccess")

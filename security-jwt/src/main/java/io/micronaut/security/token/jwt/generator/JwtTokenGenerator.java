@@ -61,11 +61,11 @@ public class JwtTokenGenerator implements TokenGenerator {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
         this.claimsGenerator = claimsGenerator;
-        if (signatureConfiguration == null && LOG.isWarnEnabled()) {
+        if (signatureConfiguration == null) {
             LOG.warn("No SignatureGeneratorConfiguration bean qualified with @Named(\"generator\") is present. "
                     + "JwtTokenGenerator will emit unsigned JWTs (alg=none), which can be forged by anyone and are rejected by the "
-                    + "token validators unless {}.accept-unsigned-tokens is true. Configure a signature, "
-                    + "e.g. micronaut.security.token.jwt.signatures.secret.generator.secret", JwtConfigurationProperties.PREFIX);
+                    + "token validators unless {} is true. Configure a signature, "
+                    + "e.g. micronaut.security.token.jwt.signatures.secret.generator.secret", JwtConfigurationProperties.ACCEPT_UNSIGNED_TOKENS);
         }
     }
 
