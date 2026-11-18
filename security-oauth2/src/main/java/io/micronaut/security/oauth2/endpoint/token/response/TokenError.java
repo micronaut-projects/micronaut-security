@@ -68,67 +68,67 @@ public enum TokenError {
 
     /**
      * RFC 6749 Section 4.1.2.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     ACCESS_DENIED("access_denied"),
 
     /**
      * RFC 6749 Section 4.1.2.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     UNSUPPORTED_RESPONSE_TYPE("unsupported_response_type"),
 
     /**
      * RFC 6749 Section 4.1.2.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     SERVER_ERROR("server_error"),
 
     /**
      * RFC 6749 Section 4.1.2.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     TEMPORARILY_UNAVAILABLE("temporarily_unavailable"),
 
     /**
      * RFC 6750 Section 3.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     INVALID_TOKEN("invalid_token"),
 
     /**
      * RFC 6750 Section 3.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     INSUFFICIENT_SCOPE("insufficient_scope"),
 
     /**
      * RFC 7009 Section 2.2.1.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     UNSUPPORTED_TOKEN_TYPE("unsupported_token_type"),
 
     /**
      * RFC 8628 Section 3.5.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     AUTHORIZATION_PENDING("authorization_pending"),
 
     /**
      * RFC 8628 Section 3.5.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     SLOW_DOWN("slow_down"),
 
     /**
      * RFC 8628 Section 3.5.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     EXPIRED_TOKEN("expired_token"),
 
     /**
      * Any error code which is not modelled by this enum. See {@link TokenErrorResponse#getErrorCode()} for the raw value.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     UNKNOWN("unknown");
 
@@ -146,7 +146,7 @@ public enum TokenError {
      *
      * @param errorCode The error code as returned by the authorization server, for example {@code invalid_grant}.
      * @return The matching {@link TokenError} or {@link #UNKNOWN} if no constant matches.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @JsonCreator
     @NonNull
@@ -169,7 +169,7 @@ public enum TokenError {
 
     /**
      * @return The error code, for example {@code invalid_grant}.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @NonNull
     public String getErrorCode() {

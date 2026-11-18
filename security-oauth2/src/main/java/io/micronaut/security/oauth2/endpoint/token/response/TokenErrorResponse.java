@@ -68,7 +68,7 @@ public class TokenErrorResponse {
 
     /**
      * @return The raw error code as returned by the authorization server, for example {@code invalid_grant} or a vendor specific code.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @Nullable
     @JsonProperty("error")
@@ -79,7 +79,7 @@ public class TokenErrorResponse {
     /**
      * Sets the raw error code and resolves {@link #getError()} from it.
      * @param errorCode The raw error code as returned by the authorization server
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @JsonProperty("error")
     public void setErrorCode(@Nullable String errorCode) {
