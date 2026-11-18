@@ -38,6 +38,9 @@ class HttpHeaderTokenReaderSpec extends Specification {
         'Bearer  x'      | Optional.of(' x')       | 'consumes exactly one space after the prefix'
         'Bearer x y'     | Optional.of('x y')      | 'keeps the rest of the header untouched'
         'Basic x'        | Optional.empty()        | 'rejects a different prefix'
+        'Bearer\tx'      | Optional.empty()        | 'rejects a tab as the separator'
+        ' Bearer x'      | Optional.empty()        | 'rejects leading whitespace before the prefix'
+        'x Bearer y'     | Optional.empty()        | 'rejects a prefix that is not at the start'
     }
 
     void "prefix matching does not fold look-alike characters through upper case"(String prefix, String authorization, Optional<String> expected) {
