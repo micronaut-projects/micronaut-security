@@ -147,10 +147,8 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                // Log only the claim names: claim values may be null and may contain PII.
-                LOG.debug("tokenGenerator failed to generate access token for claims: {}", claims.keySet());
-            }
+            // Log only the claim names: claim values may be null and may contain PII.
+            debug(LOG, "tokenGenerator failed to generate access token for claims: {}", claims.keySet());
             return Optional.empty();
         }
         String accessToken = optionalAccessToken.get();
