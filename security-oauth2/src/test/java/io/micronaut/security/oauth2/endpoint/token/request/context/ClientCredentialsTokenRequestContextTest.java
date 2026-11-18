@@ -4,18 +4,25 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.grants.SecureGrant;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
+import io.micronaut.security.oauth2.endpoint.token.request.DefaultTokenEndpointClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientCredentialsTokenRequestContextTest {
@@ -46,20 +53,44 @@ class ClientCredentialsTokenRequestContextTest {
     }
 
     @Test
-    void configuredClientSecretIsUsedWhenSecuredWithClientSecretPost() {
+    void clientSecretPostSendsTheConfiguredCredentialsInTheBody() {
         OauthClientConfiguration configuration = configuration("client-secret-post-client", null,
-            Map.of("grant_type", "password", "client_secret", "x", "audience", "api"));
+            AuthenticationMethods.CLIENT_SECRET_POST,
+            Map.of("grant_type", "password", "client_secret", "x", "client_id", "evil", "audience", "api"));
 
-        Map<String, String> grant = new ClientCredentialsTokenRequestContext(configuration).getGrant();
-        // DefaultTokenEndpointClient does this for client_secret_post
-        ((SecureGrant) grant).setClientId(configuration.getClientId());
-        ((SecureGrant) grant).setClientSecret(configuration.getClientSecret());
+        MutableHttpRequest<Map<String, String>> request = new SecuringTokenEndpointClient()
+            .secured(new ClientCredentialsTokenRequestContext(configuration));
 
         assertEquals(Map.of(
             "grant_type", "client_credentials",
             "client_id", "client-id",
             "client_secret", "configured-secret",
-            "audience", "api"), grant);
+            "audience", "api"), request.getBody().orElseThrow());
+        assertFalse(request.getHeaders().contains(HttpHeaders.AUTHORIZATION));
+    }
+
+    @Test
+    void clientSecretBasicKeepsCredentialsOutOfTheBody() {
+        OauthClientConfiguration configuration = configuration("client-secret-basic-client", null,
+            AuthenticationMethods.CLIENT_SECRET_BASIC,
+            Map.of("client_secret", "x", "client_id", "evil", "audience", "api"));
+
+        MutableHttpRequest<Map<String, String>> request = new SecuringTokenEndpointClient()
+            .secured(new ClientCredentialsTokenRequestContext(configuration));
+
+        assertEquals(Map.of("grant_type", "client_credentials", "audience", "api"), request.getBody().orElseThrow());
+        String credentials = Base64.getEncoder().encodeToString("client-id:configured-secret".getBytes(StandardCharsets.UTF_8));
+        assertEquals("Basic " + credentials, request.getHeaders().get(HttpHeaders.AUTHORIZATION));
+    }
+
+    @Test
+    void additionalRequestParamsCannotOverrideScopeRequestedWithAnExplicitEndpoint() {
+        OauthClientConfiguration configuration = configuration("explicit-endpoint-client", "read",
+            Map.of("scope", "admin", "audience", "api"));
+
+        Map<String, String> grant = new ClientCredentialsTokenRequestContext("read", configuration.getTokenEndpoint(), configuration).getGrant();
+
+        assertEquals(Map.of("grant_type", "client_credentials", "scope", "read", "audience", "api"), grant);
     }
 
     @Test
@@ -121,12 +152,32 @@ class ClientCredentialsTokenRequestContextTest {
     }
 
     private static OauthClientConfiguration configuration(String name, String scope, Map<String, String> additionalRequestParams) {
+        return configuration(name, scope, null, additionalRequestParams);
+    }
+
+    private static OauthClientConfiguration configuration(String name, String scope, String authenticationMethod, Map<String, String> additionalRequestParams) {
         return OauthClientConfiguration.builder()
             .name(name)
             .clientId("client-id")
             .clientSecret("configured-secret")
-            .token("https://auth.example.com/token")
+            .token("https://auth.example.com/token", authenticationMethod)
             .clientCredentials(scope, Duration.ofSeconds(30), additionalRequestParams)
             .build();
+    }
+
+    /**
+     * Exposes how {@link DefaultTokenEndpointClient} secures a client credentials request, without sending it.
+     */
+    private static final class SecuringTokenEndpointClient extends DefaultTokenEndpointClient {
+
+        SecuringTokenEndpointClient() {
+            super(null, () -> null);
+        }
+
+        MutableHttpRequest<Map<String, String>> secured(ClientCredentialsTokenRequestContext context) {
+            MutableHttpRequest<Map<String, String>> request = HttpRequest.POST(context.getEndpoint().getUrl(), context.getGrant());
+            secureRequest(request, context);
+            return request;
+        }
     }
 }
