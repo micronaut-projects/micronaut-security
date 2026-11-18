@@ -65,7 +65,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
 
     /**
      * Minimum time between two fetch attempts after a failed fetch.
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static final Duration RETRY_BACKOFF = Duration.ofSeconds(5);
 
@@ -99,7 +99,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
      * @param client HTTP Client
      * @param retryBackoff Minimum time between two fetch attempts after a failed fetch
      * @param blockingExecutor Executor used to fetch the metadata when {@link #fetch()} is invoked from a non-blocking thread. If {@code null}, such invocations fail without scheduling a fetch.
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
                                                 HttpClient client,

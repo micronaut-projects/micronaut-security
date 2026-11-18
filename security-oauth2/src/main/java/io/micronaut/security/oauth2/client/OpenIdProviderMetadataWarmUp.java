@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Internal
 @Singleton

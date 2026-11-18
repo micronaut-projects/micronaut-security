@@ -561,7 +561,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * Whether the `issuer` returned by the OpenID configuration must match the configured issuer, ignoring a trailing slash and the case of the scheme, as required by OpenID Connect Discovery 1.0. Set it to false for providers known to return a different issuer. Default value: true.
+         * Whether the `issuer` returned by the OpenID configuration must match the configured `issuer` or, if set, `issuer-identifier`, ignoring a trailing slash and the case of the scheme, as required by OpenID Connect Discovery 1.0. If the provider asserts a different issuer, prefer setting `issuer-identifier`; set this to false only to skip the validation. Default value: true.
          *
          * @param validateIssuer Whether the issuer returned by the OpenID configuration must match the configured issuer
          */
