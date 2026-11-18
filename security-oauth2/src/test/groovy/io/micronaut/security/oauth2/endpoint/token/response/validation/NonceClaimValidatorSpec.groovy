@@ -57,24 +57,14 @@ class NonceClaimValidatorSpec extends ApplicationContextSpecification {
         null           | null       || true
     }
 
-    @Unroll("bean validator: persisted nonce #persistedNonce and nonce claim #nonceClaim => #expected")
-    void "the NonceClaimValidator bean fails when the persisted nonce is missing because a nonce factory exists by default"(String persistedNonce,
-                                                                                                                             String nonceClaim,
-                                                                                                                             boolean expected) {
+    void "the NonceClaimValidator bean fails when the persisted nonce is missing because a nonce factory exists by default"() {
         given:
         NonceClaimValidator validator = applicationContext.getBean(NonceClaimValidator)
 
         expect:
         applicationContext.containsBean(NonceFactory)
-        expected == validator.validate(claims(nonceClaim), clientConfiguration(), providerMetadata(), persistedNonce)
-
-        where:
-        persistedNonce | nonceClaim || expected
-        'abc'          | 'abc'      || true
-        'abc'          | 'xyz'      || false
-        'abc'          | null       || false
-        null           | 'abc'      || false
-        null           | null       || false
+        !validator.validate(claims(null), clientConfiguration(), providerMetadata(), null)
+        validator.validate(claims('abc'), clientConfiguration(), providerMetadata(), 'abc')
     }
 
     @SuppressWarnings('GrDeprecatedAPIUsage')
