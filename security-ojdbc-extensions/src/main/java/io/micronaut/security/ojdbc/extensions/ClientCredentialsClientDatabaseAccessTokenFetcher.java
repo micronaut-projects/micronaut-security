@@ -163,7 +163,7 @@ public class ClientCredentialsClientDatabaseAccessTokenFetcher implements Databa
      * The fetcher remains usable; a subsequent fetch creates new clients. A fetch which is in flight
      * while the fetcher is closed may fail.
      *
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @Override
     public void close() {

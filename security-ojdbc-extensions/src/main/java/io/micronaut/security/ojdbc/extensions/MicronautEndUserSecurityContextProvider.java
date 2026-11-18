@@ -149,7 +149,7 @@ public final class MicronautEndUserSecurityContextProvider extends AbstractResou
      * Releases resources held by the fetchers, such as the HTTP clients used to request database access tokens.
      *
      * @throws Exception if a fetcher fails to close
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @Override
     public void close() throws Exception {

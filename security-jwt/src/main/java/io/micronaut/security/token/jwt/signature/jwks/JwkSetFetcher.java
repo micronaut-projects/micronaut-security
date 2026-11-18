@@ -50,7 +50,7 @@ public interface JwkSetFetcher<T> {
      * The default implementation delegates to {@link #clearCache(String)}.
      * @param providerName The jwks provider name
      * @param url The Jwks uri
-     * @since 5.4.0
+     * @since 5.5.3
      */
     default void clearCache(@Nullable String providerName, @NonNull String url) {
         clearCache(url);
