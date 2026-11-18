@@ -93,12 +93,31 @@ class ClientCredentialsTokenRequestContextTest {
         context.getGrant();
         context.getGrant();
 
-        List<ILoggingEvent> warnings = appender.list.stream()
-            .filter(event -> event.getLevel() == Level.WARN)
-            .filter(event -> event.getFormattedMessage().contains("warn-once-client"))
-            .toList();
+        List<String> warnings = warnings("warn-once-client");
         assertEquals(1, warnings.size());
-        assertTrue(warnings.get(0).getFormattedMessage().contains("[grant_type]"));
+        assertTrue(warnings.get(0).contains("[grant_type]"));
+    }
+
+    @Test
+    void ignoredKeyWarningNamesTheReasonAndNeverTheValue() {
+        OauthClientConfiguration configuration = configuration("warn-reason-client", "read",
+            Map.of("client_secret", "leaked-secret", "scope", "leaked-scope"));
+
+        new ClientCredentialsTokenRequestContext("read", configuration).getGrant();
+
+        List<String> warnings = warnings("warn-reason-client");
+        assertEquals(2, warnings.size());
+        assertTrue(warnings.stream().anyMatch(message -> message.contains("[client_secret]") && message.contains("reserved")));
+        assertTrue(warnings.stream().anyMatch(message -> message.contains("[scope]") && message.contains("already sets it")));
+        assertTrue(warnings.stream().noneMatch(message -> message.contains("leaked")));
+    }
+
+    private List<String> warnings(String clientName) {
+        return appender.list.stream()
+            .filter(event -> event.getLevel() == Level.WARN)
+            .map(ILoggingEvent::getFormattedMessage)
+            .filter(message -> message.contains(clientName))
+            .toList();
     }
 
     private static OauthClientConfiguration configuration(String name, String scope, Map<String, String> additionalRequestParams) {

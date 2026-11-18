@@ -95,8 +95,10 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         Map<String, String> grantMap = grant.toMap();
         for (Map.Entry<String, String> entry : additionalRequestParams.entrySet()) {
             String key = entry.getKey();
-            if (RESERVED_KEYS.contains(key) || grantMap.containsKey(key)) {
-                warnIgnoredKey(key);
+            if (RESERVED_KEYS.contains(key)) {
+                warnIgnoredKey(key, "it is reserved for the client credentials grant and client authentication");
+            } else if (grantMap.containsKey(key)) {
+                warnIgnoredKey(key, "the request already sets it");
             } else {
                 grantMap.put(key, entry.getValue());
             }
@@ -104,9 +106,12 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         return grantMap;
     }
 
-    private void warnIgnoredKey(String key) {
+    /**
+     * Logs the ignored key, never its value, which could be a credential.
+     */
+    private void warnIgnoredKey(String key, String reason) {
         if (LOG.isWarnEnabled() && WARNED.add(clientConfiguration.getName() + '\u0000' + key)) {
-            LOG.warn("Ignoring additional request parameter [{}] for OAuth 2.0 client [{}]. It is reserved and cannot override the client credentials grant.", key, clientConfiguration.getName());
+            LOG.warn("Ignoring additional request parameter [{}] for OAuth 2.0 client [{}] because {}.", key, clientConfiguration.getName(), reason);
         }
     }
 
