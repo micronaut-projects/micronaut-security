@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.reader;
 
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         final String prefix = getPrefix();
-        if (prefix == null || prefix.isEmpty()) {
+        if (StringUtils.isEmpty(prefix)) {
             return Optional.of(authorization);
         }
         final int prefixLength = prefix.length();
