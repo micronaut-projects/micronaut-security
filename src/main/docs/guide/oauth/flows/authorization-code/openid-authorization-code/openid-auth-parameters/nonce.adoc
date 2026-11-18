@@ -43,7 +43,7 @@ There are several interfaces that implementations can be provided for to overrid
 |===
 |Interface |Responsibility |Default Implementation
 |api:security.oauth2.endpoint.nonce.NonceFactory[] |Builds a `java.lang.String` nonce value |api:security.oauth2.endpoint.nonce.DefaultNonceFactory[]
-| api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] |  Validates an OpenID token response (including the nonce). | api:security.oauth2.endpoint.token.response.validation.DefaultOpenIdTokenResponseValidator[]
+| api:security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator[] |  Validates an OpenID token response (including the nonce). | `DefaultReactiveOpenIdTokenResponseValidator`
 | |Validates the nonce claim in the token response |api:security.oauth2.endpoint.token.response.validation.NonceClaimValidator[]
 |api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] |Stores the nonce to be retrieved later to allow validation |api:security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence[]
 |===
