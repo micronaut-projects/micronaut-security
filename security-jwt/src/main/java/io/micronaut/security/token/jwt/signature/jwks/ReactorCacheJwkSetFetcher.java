@@ -29,6 +29,7 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 /**
@@ -84,8 +85,37 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
         cache.remove(new CacheKey(providerName, url));
     }
 
+    /**
+     * Retrieves the JWK Set and replaces the cached JWK Set for the provider name and url with it.
+     * The cached JWK Set is left untouched if the retrieval emits nothing.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The JWK Set just retrieved, or empty if it cannot be retrieved or the url is backing off.
+     */
+    @Override
+    @NonNull
+    @SingleResult
+    public Publisher<JWKSet> refresh(@Nullable String providerName, @NonNull String url) {
+        CacheKey k = new CacheKey(providerName, url);
+        return Mono.from(super.refresh(providerName, url))
+            .doOnNext(jwkSet -> cache.put(k, jwksCacheEntry(k, jwkSet)));
+    }
+
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
-        return Mono.defer(() -> Mono.from(super.fetch(cacheKey.providerName, cacheKey.url())))
+        return jwksCacheEntry(cacheKey, null);
+    }
+
+    /**
+     * @param cacheKey The provider name and Jwks uri
+     * @param initial A JWK Set which was just retrieved and is served until it expires, or {@code null} to fetch it on the first subscription
+     * @return A cache entry which fetches the JWK Set again once it expires
+     */
+    private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey, @Nullable JWKSet initial) {
+        AtomicReference<JWKSet> retrieved = new AtomicReference<>(initial);
+        return Mono.defer(() -> {
+                JWKSet jwkSet = retrieved.getAndSet(null);
+                return jwkSet != null ? Mono.just(jwkSet) : Mono.from(super.fetch(cacheKey.providerName, cacheKey.url()));
+            })
             .defaultIfEmpty(new JWKSet())
             .map(jwksSet -> instantiateCacheEntry(cacheKey, jwksSet))
             .cacheInvalidateIf(JwksCacheEntry::isExpired);

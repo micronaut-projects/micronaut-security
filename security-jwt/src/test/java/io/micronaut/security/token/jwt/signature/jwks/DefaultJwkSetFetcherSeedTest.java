@@ -79,6 +79,41 @@ class DefaultJwkSetFetcherSeedTest {
     }
 
     @Test
+    void refreshWhichFailsKeepsTheSeed() throws Exception {
+        JWKSet seeded = jwkSet("seed");
+        AtomicInteger networkFetches = new AtomicInteger();
+        JwksClient jwksClient = (providerName, url) -> {
+            networkFetches.incrementAndGet();
+            return Mono.error(new IllegalStateException("authorization server is down"));
+        };
+        DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+
+        assertNull(Mono.from(fetcher.refresh("provider", URL)).block());
+        assertEquals(1, networkFetches.get());
+
+        assertNotNull(Mono.from(fetcher.fetch("provider", URL)).block().getKeyByKeyId("seed"));
+        assertEquals(1, networkFetches.get());
+    }
+
+    @Test
+    void refreshWhichSucceedsDiscardsTheSeed() throws Exception {
+        JWKSet seeded = jwkSet("seed");
+        JWKSet remote = jwkSet("remote");
+        AtomicInteger networkFetches = new AtomicInteger();
+        JwksClient jwksClient = (providerName, url) -> {
+            networkFetches.incrementAndGet();
+            return Mono.just(remote.toString());
+        };
+        DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+
+        assertNotNull(Mono.from(fetcher.refresh("provider", URL)).block().getKeyByKeyId("remote"));
+        assertEquals(1, networkFetches.get());
+        assertTrue(optimizations.findJwkSet(URL).isEmpty());
+    }
+
+    @Test
     void clearCacheOnUnknownUrlIsNoOpAndUrlsWithoutSeedAlwaysGoToNetwork() throws Exception {
         JWKSet seeded = jwkSet("seed");
         JWKSet remote = jwkSet("remote");

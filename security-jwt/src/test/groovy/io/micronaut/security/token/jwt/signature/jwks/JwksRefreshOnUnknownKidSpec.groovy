@@ -12,6 +12,7 @@ import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
@@ -160,6 +161,48 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
         MICRONAUT_CACHE | 'micronaut cache'
     }
 
+    void "a refresh which fails keeps the cached JWKS, so tokens signed with a cached key are still accepted (#description)"(Map<String, Object> cacheConfig, String description) {
+        given:
+        RotatingKeys keys = keys()
+        keys.reset()
+        EmbeddedServer server = startServer(cacheConfig)
+        HttpClient httpClient = server.applicationContext.createBean(HttpClient, server.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
+        String token = sign(keys.current)
+        String unknownToken = sign(generateKey('unknown-kid'))
+
+        when: 'JWKS are warmed up'
+        hello(client, token)
+
+        then:
+        keys.invocations.get() == 1
+
+        when: 'the authorization server becomes unavailable and a token with an unknown kid arrives'
+        keys.failing = true
+        HttpStatus unknownStatus = hello(client, unknownToken)
+
+        then: 'the token is rejected after one failed attempt to fetch the JWKS again'
+        unknownStatus == HttpStatus.UNAUTHORIZED
+        keys.invocations.get() == 2
+
+        when: 'a token signed with the cached key is used'
+        HttpStatus status = hello(client, token)
+
+        then: 'it is still accepted with the cached JWKS, without contacting the authorization server'
+        status == HttpStatus.OK
+        keys.invocations.get() == 2
+
+        cleanup:
+        keys.failing = false
+        httpClient.close()
+        server.close()
+
+        where:
+        cacheConfig     | description
+        REACTOR_CACHE   | 'reactor cache'
+        MICRONAUT_CACHE | 'micronaut cache'
+    }
+
     void "the refresh interval is configurable"() {
         given:
         RotatingKeys keys = keys()
@@ -277,6 +320,7 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
     static class RotatingKeys {
         final AtomicInteger invocations = new AtomicInteger()
         volatile RSAKey current = generateKey('kid-0')
+        volatile boolean failing = false
         private int generation = 0
 
         RSAKey rotate() {
@@ -286,6 +330,7 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
 
         void reset() {
             invocations.set(0)
+            failing = false
             rotate()
         }
     }
@@ -302,9 +347,9 @@ class JwksRefreshOnUnknownKidSpec extends Specification {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Produces(MediaType.APPLICATION_JSON)
         @Get
-        String index() {
+        HttpResponse<String> index() {
             keys.invocations.incrementAndGet()
-            new JWKSet(keys.current.toPublicJWK()).toString()
+            keys.failing ? HttpResponse.<String>serverError() : HttpResponse.ok(new JWKSet(keys.current.toPublicJWK()).toString())
         }
     }
 }

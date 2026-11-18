@@ -154,7 +154,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * When a JWT carries a {@code kid} header which is not present in the cached JWKS, the JWKS cache is cleared and the JWKS is fetched again.
+     * When a JWT carries a {@code kid} header which is not present in the cached JWKS, the JWKS is fetched again and, if the retrieval succeeds, replaces the cached JWKS.
      * This property sets the minimum interval between two such refreshes. Default value 30 seconds.
      * @param refreshInterval Minimum interval between two JWKS refreshes triggered by an unknown key ID.
      */

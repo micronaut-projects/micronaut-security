@@ -18,10 +18,12 @@ package io.micronaut.security.token.jwt.signature.jwks;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.cache.annotation.CacheConfig;
 import io.micronaut.cache.annotation.CacheInvalidate;
+import io.micronaut.cache.annotation.CachePut;
 import io.micronaut.cache.annotation.Cacheable;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.async.annotation.SingleResult;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -71,5 +73,20 @@ class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     @CacheInvalidate
     public void clearCache(@Nullable String providerName, @NonNull String url) {
         super.clearCache(providerName, url);
+    }
+
+    /**
+     * Retrieves the JWK Set and replaces the {@value #CACHE_JWKS} cache entry for the provider name and url with it.
+     * The entry is left untouched if the retrieval emits nothing.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The JWK Set just retrieved, or empty if it cannot be retrieved or the url is backing off.
+     */
+    @Override
+    @CachePut
+    @NonNull
+    @SingleResult
+    public Publisher<JWKSet> refresh(@Nullable String providerName, @NonNull String url) {
+        return super.refresh(providerName, url);
     }
 }

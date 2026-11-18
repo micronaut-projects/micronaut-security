@@ -27,6 +27,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksClientReactorContext;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureUtils;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import reactor.util.context.ContextView;
 
 import java.text.ParseException;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -50,9 +52,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * are used to verify a token. A token signed with a key of another type is not verified, even if that key is part of the key set.
  * <p>
  * If the JWT carries a {@code kid} header which is not present in the cached JWKS, and the Reactor context
- * {@link JwksClientReactorContext} allows it, the JWKS cache is cleared and the JWKS is fetched again at most once
+ * {@link JwksClientReactorContext} allows it, the JWKS is fetched again at most once
  * per {@link JwksSignatureConfiguration#getRefreshInterval()} so that key rotations at the authorization server are
- * picked up without waiting for the cache to expire.
+ * picked up without waiting for the cache to expire. The cached JWKS is only replaced if that retrieval succeeds.
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -65,6 +67,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
     private final long refreshIntervalNanos;
     private final AtomicLong lastRefreshNanos;
+    private final AtomicReference<Mono<JWKSet>> refreshInFlight = new AtomicReference<>();
 
     /**
      *
@@ -101,15 +104,16 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         String url = jwksSignatureConfiguration.getUrl();
         return Mono.deferContextual(ctx -> Mono.from(jwkSetFetcher.fetch(providerName, url))
                 .flatMap(jwkSet -> {
-                    if (shouldRefresh(ctx, jwt, jwkSet)) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Clearing cache and fetching JWKS again", jwt.getHeader().getKeyID(), url);
-                        }
-                        jwkSetFetcher.clearCache(providerName, url);
-                        return Mono.from(jwkSetFetcher.fetch(providerName, url))
-                                .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
+                    if (!isKeyIdUnknown(ctx, jwt, jwkSet)) {
+                        return Mono.just(verify(jwt, jwkSet));
                     }
-                    return Mono.just(verify(jwt, jwkSet));
+                    Mono<JWKSet> refresh = refresh(providerName, url, jwt.getHeader().getKeyID());
+                    if (refresh == null) {
+                        return Mono.just(verify(jwt, jwkSet));
+                    }
+                    // a failed refresh emits nothing and the cached JWKS, which does not contain the key ID, rejects the token
+                    return refresh.defaultIfEmpty(jwkSet)
+                            .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
                 }));
     }
 
@@ -117,9 +121,9 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
      * @param ctx Reactor context
      * @param jwt the signed JWT
      * @param jwkSet the cached JSON Web Key Set
-     * @return Whether the JWKS cache should be cleared and the JWKS fetched again before verifying the JWT.
+     * @return Whether the JWT carries a key ID which is not in the cached JSON Web Key Set and the Reactor context allows fetching the JWKS again.
      */
-    private boolean shouldRefresh(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
+    private boolean isKeyIdUnknown(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
         String keyId = jwt.getHeader().getKeyID();
         if (keyId == null) {
             return false;
@@ -127,10 +131,37 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         if (!ctx.hasKey(JwksClientReactorContext.class) || !ctx.get(JwksClientReactorContext.class).isRefreshOnUnknownKeyId()) {
             return false;
         }
-        if (JwksSignatureUtils.containsKeyId(jwkSet, keyId)) {
-            return false;
+        return !JwksSignatureUtils.containsKeyId(jwkSet, keyId);
+    }
+
+    /**
+     * Starts a refresh of the JWKS if the rate limit allows it, or joins the refresh another token already started.
+     * Joining matters when the authorization server rotates its keys: every token signed with the new key which arrives while the JWKS
+     * is being retrieved is verified against the retrieved keys instead of being rejected by the rate limit.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @param keyId The key ID which is not in the cached JWKS
+     * @return The JWKS being retrieved, or {@code null} if no refresh is in flight and the rate limit does not allow starting one.
+     */
+    @Nullable
+    private Mono<JWKSet> refresh(@Nullable String providerName, String url, String keyId) {
+        Mono<JWKSet> inFlight = refreshInFlight.get();
+        if (inFlight != null) {
+            return inFlight;
         }
-        return tryAcquireRefresh();
+        if (!tryAcquireRefresh()) {
+            return null;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Fetching JWKS again", keyId, url);
+        }
+        // cache() shares the retrieval with the tokens joining it and keeps it running if the token which started it is cancelled
+        Mono<JWKSet> refresh = Mono.defer(() -> Mono.from(jwkSetFetcher.refresh(providerName, url)))
+                .doFinally(signal -> refreshInFlight.set(null))
+                .cache();
+        // published before anybody subscribes, so that doFinally always clears it afterwards
+        refreshInFlight.set(refresh);
+        return refresh;
     }
 
     /**

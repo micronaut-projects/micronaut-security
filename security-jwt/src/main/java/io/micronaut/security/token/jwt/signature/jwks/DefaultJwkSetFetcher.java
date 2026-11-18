@@ -155,6 +155,21 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     /**
+     * Retrieves the JWK Set over the network, subject to the failure back-off. A JWKS baked at build time for the url is only discarded
+     * once the retrieval succeeds, so a failing retrieval leaves the keys in use untouched.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The JWK Set just retrieved, or empty if it cannot be retrieved or the url is backing off.
+     */
+    @Override
+    @NonNull
+    @SingleResult
+    public Publisher<JWKSet> refresh(@Nullable String providerName, @NonNull String url) {
+        return Mono.from(load(providerName, url))
+            .doOnNext(jwkSet -> optimizations.clear(url));
+    }
+
+    /**
      * Loads the JWK Set unless a previous retrieval for the provider and url failed less than the configured back-off ago.
      * <p>
      * Concurrent callers for the same provider and url share one retrieval. The shared retrieval is deliberately not cancelled when
