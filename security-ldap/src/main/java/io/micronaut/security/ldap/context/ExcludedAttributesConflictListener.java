@@ -23,6 +23,7 @@ import jakarta.inject.Singleton;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,14 +52,18 @@ final class ExcludedAttributesConflictListener implements BeanCreatedEventListen
         String[] requested = search.getAttributes();
         Optional<String> groupFilterAttribute = groups.isEnabled() ? groups.getFilterAttribute() : Optional.empty();
         for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
-            if (requested != null && Arrays.stream(requested).anyMatch(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded))) {
+            if (requested != null && Arrays.stream(requested).anyMatch(attribute -> matches(attribute, excluded))) {
                 LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
                     + "Remove it from search.excluded-attributes if the application needs it.", configuration.getName(), excluded);
             }
-            if (groupFilterAttribute.filter(attribute -> LdapAttributeUtils.matchesExclusion(attribute, excluded)).isPresent()) {
+            if (groupFilterAttribute.filter(attribute -> matches(attribute, excluded)).isPresent()) {
                 LOG.warn("LDAP configuration [{}] uses groups.filter-attribute [{}], but search.excluded-attributes removes it. "
                     + "Group resolution requires removing it from search.excluded-attributes and including it in search.attributes when configured.", configuration.getName(), excluded);
             }
         }
+    }
+
+    private static boolean matches(@Nullable String attribute, String excluded) {
+        return attribute != null && LdapAttributeUtils.matchesExclusion(attribute, excluded);
     }
 }
