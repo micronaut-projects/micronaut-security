@@ -95,7 +95,7 @@ public class TokenErrorResponse {
      * @param errorDescription The error description
      */
     @JsonProperty("error_description")
-    public void setErrorDescription(String errorDescription) {
+    public void setErrorDescription(@Nullable String errorDescription) {
         this.errorDescription = errorDescription;
     }
 
@@ -112,7 +112,7 @@ public class TokenErrorResponse {
      * @param errorUri The error uri
      */
     @JsonProperty("error_uri")
-    public void setErrorUri(String errorUri) {
+    public void setErrorUri(@Nullable String errorUri) {
         this.errorUri = errorUri;
     }
 
