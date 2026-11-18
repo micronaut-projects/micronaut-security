@@ -25,9 +25,6 @@ import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.jwt.config.JwtConfiguration;
-import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory;
@@ -61,15 +58,13 @@ class NimbusReactiveJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidat
 
     NimbusReactiveJsonWebTokenValidator(
             List<GenericJwtClaimsValidator<R>> claimsValidators,
-            List<SignatureConfiguration> imperativeSignatureConfigurations,
-            List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations,
             JsonWebTokenParser<JWT> jsonWebTokenParser,
             ReactiveJsonWebTokenSignatureValidator<SignedJWT> signatureValidator,
             JwtAuthenticationFactory jwtAuthenticationFactory,
             @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
             NimbusJsonWebTokenValidatorConfiguration nimbusJsonWebTokenValidatorConfiguration,
-            JwtConfiguration jwtConfiguration) {
-        super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations, jwtConfiguration);
+            UnsignedJwtPolicy unsignedJwtPolicy) {
+        super(claimsValidators, unsignedJwtPolicy);
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
