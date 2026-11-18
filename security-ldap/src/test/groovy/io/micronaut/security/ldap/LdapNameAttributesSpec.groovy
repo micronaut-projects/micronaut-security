@@ -50,8 +50,8 @@ class LdapNameAttributesSpec extends InMemoryLdapSpec {
         searchService.lastResult.attributes.get("cn", String).get() == cn
 
         cleanup:
-        ctx.close()
-        s.shutDown(true)
+        ctx?.close()
+        s?.shutDown(true)
 
         where:
         ldif         | username    | dn                                | cn
