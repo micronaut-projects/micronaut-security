@@ -2,8 +2,6 @@ package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.inject.qualifiers.Qualifiers;
-import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import static io.micronaut.security.ldap.LdapTestSupport.MANAGER_DN;
 import static io.micronaut.security.ldap.LdapTestSupport.request;
@@ -213,8 +210,7 @@ class LdapUsernameEnumerationTest {
                 context.getBean(LdapSearchService.class),
                 context.getBean(ContextBuilder.class),
                 context.getBean(ContextAuthenticationMapper.class),
-                context.getBean(LdapGroupProcessor.class),
-                context.getBean(ExecutorService.class, Qualifiers.byName(TaskExecutors.IO))) {
+                context.getBean(LdapGroupProcessor.class)) {
             @Override
             protected AuthenticationResponse rejectUnknownUser(Object requestContext, AuthenticationRequest<String, String> authenticationRequest) {
                 seen.add(authenticationRequest.getIdentity());
@@ -238,8 +234,7 @@ class LdapUsernameEnumerationTest {
                 context.getBean(LdapSearchService.class),
                 contextBuilder,
                 context.getBean(ContextAuthenticationMapper.class),
-                context.getBean(LdapGroupProcessor.class),
-                context.getBean(ExecutorService.class, Qualifiers.byName(TaskExecutors.IO)));
+                context.getBean(LdapGroupProcessor.class));
     }
 
     private static class RecordingContextBuilder implements ContextBuilder {

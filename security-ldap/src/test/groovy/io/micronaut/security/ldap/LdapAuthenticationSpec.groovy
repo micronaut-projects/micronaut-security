@@ -10,9 +10,7 @@ import io.micronaut.security.ldap.configuration.LdapConfiguration
 import io.micronaut.security.ldap.context.ContextBuilder
 import io.micronaut.security.ldap.context.LdapSearchService
 import io.micronaut.security.ldap.group.LdapGroupProcessor
-import io.micronaut.scheduling.TaskExecutors
 
-import java.util.concurrent.ExecutorService
 
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
@@ -267,8 +265,7 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 ctx.getBean(LdapSearchService),
                 contextBuilder,
                 ctx.getBean(ContextAuthenticationMapper),
-                ctx.getBean(LdapGroupProcessor),
-                ctx.getBean(ExecutorService, Qualifiers.byName(TaskExecutors.IO)))
+                ctx.getBean(LdapGroupProcessor))
 
         when:
         AuthenticationResponse authenticationResponse = authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", ""))
