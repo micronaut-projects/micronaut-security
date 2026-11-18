@@ -1,16 +1,13 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSimpleBindRequest;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.ResultCode;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
-import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class LdapBindResultCodeTest {
 
-    private static final String MANAGER_DN = "cn=admin,dc=example,dc=com";
     private static final String USER = "riemann";
     private static final String USER_DN = "uid=riemann,dc=example,dc=com";
 
@@ -47,9 +42,7 @@ class LdapBindResultCodeTest {
 
     @BeforeAll
     static void setup() throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials(MANAGER_DN, "password");
-        config.addInMemoryOperationInterceptor(new InMemoryOperationInterceptor() {
+        server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
             @Override
             public void processSimpleBindRequest(InMemoryInterceptedSimpleBindRequest request) throws LDAPException {
                 ResultCode resultCode = BIND_RESULTS.get(request.getRequest().getBindDN());
@@ -59,18 +52,7 @@ class LdapBindResultCodeTest {
                 }
             }
         });
-        server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapBindResultCodeTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
-        server.startListening();
-        context = ApplicationContext.run(Map.of(
-                "micronaut.security.ldap.default.enabled", true,
-                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-                "micronaut.security.ldap.default.context.managerDn", MANAGER_DN,
-                "micronaut.security.ldap.default.context.managerPassword", "password",
-                "micronaut.security.ldap.default.search.base", "dc=example,dc=com"
-        ), "test");
+        context = ApplicationContext.run(LdapTestSupport.properties(server), "test");
     }
 
     @AfterAll
@@ -114,7 +96,7 @@ class LdapBindResultCodeTest {
             "53, unwillingToPerform",
     })
     void resultCodeOfTheManagerBindNeverBlamesTheCredentials(int resultCode, String name) {
-        BIND_RESULTS.put(MANAGER_DN, ResultCode.valueOf(resultCode));
+        BIND_RESULTS.put(LdapTestSupport.MANAGER_DN, ResultCode.valueOf(resultCode));
 
         assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()), name);
     }
@@ -132,16 +114,6 @@ class LdapBindResultCodeTest {
     @SuppressWarnings("unchecked")
     private static AuthenticationResponse authenticate() {
         LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-        return provider.authenticate(null, new AuthenticationRequest<>() {
-            @Override
-            public String getIdentity() {
-                return USER;
-            }
-
-            @Override
-            public String getSecret() {
-                return "password";
-            }
-        });
+        return provider.authenticate(null, LdapTestSupport.request(USER));
     }
 }

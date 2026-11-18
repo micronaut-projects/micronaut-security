@@ -1,14 +1,11 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
-import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.DefaultContextBuilder;
@@ -30,7 +27,6 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 import javax.naming.ServiceUnavailableException;
 import javax.naming.directory.DirContext;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -48,28 +44,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LdapBindFailureReasonTest {
 
     private static final String SPEC_NAME = "LdapBindFailureReasonTest";
-    private static final String MANAGER_DN = "cn=admin,dc=example,dc=com";
 
     private static InMemoryDirectoryServer server;
     private static ApplicationContext context;
 
     @BeforeAll
     static void setup() throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials(MANAGER_DN, "password");
-        server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapBindFailureReasonTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
-        server.startListening();
-        context = ApplicationContext.run(Map.of(
-                "spec.name", SPEC_NAME,
-                "micronaut.security.ldap.default.enabled", true,
-                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-                "micronaut.security.ldap.default.context.managerDn", MANAGER_DN,
-                "micronaut.security.ldap.default.context.managerPassword", "password",
-                "micronaut.security.ldap.default.search.base", "dc=example,dc=com"
-        ), "test");
+        server = LdapTestSupport.startServer("basic.ldif");
+        context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test");
     }
 
     @AfterAll
@@ -154,17 +136,7 @@ class LdapBindFailureReasonTest {
     @SuppressWarnings("unchecked")
     private static AuthenticationResponse authenticate() {
         LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-        return provider.authenticate(null, new AuthenticationRequest<>() {
-            @Override
-            public String getIdentity() {
-                return "riemann";
-            }
-
-            @Override
-            public String getSecret() {
-                return "password";
-            }
-        });
+        return provider.authenticate(null, LdapTestSupport.request("riemann"));
     }
 
     /**
@@ -180,7 +152,7 @@ class LdapBindFailureReasonTest {
 
         @Override
         public DirContext build(ContextSettings contextSettings) throws NamingException {
-            NamingException exception = MANAGER_DN.equals(contextSettings.getDn()) ? managerException : userException;
+            NamingException exception = LdapTestSupport.MANAGER_DN.equals(contextSettings.getDn()) ? managerException : userException;
             if (exception != null) {
                 throw exception;
             }

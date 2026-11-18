@@ -1,13 +1,10 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.convert.value.ConvertibleValues;
-import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.context.AttributesConvertibleValues;
 import io.micronaut.security.ldap.context.DefaultLdapSearchService;
@@ -20,7 +17,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LdapNameAttributesTest {
 
     private static final String SPEC_NAME = "LdapNameAttributesTest";
-    private static final String MANAGER_DN = "cn=admin,dc=example,dc=com";
 
     @ParameterizedTest(name = "attributes are fetched with the user context for DN {2}")
     @CsvSource(quoteCharacter = '\'', value = {
@@ -46,18 +41,11 @@ class LdapNameAttributesTest {
     })
     @SuppressWarnings("unchecked")
     void attributesAreFetchedWithTheUserContextWhenTheSearchResultHasNone(String ldif, String username, String dn, String cn) throws Exception {
-        InMemoryDirectoryServer server = startServer(ldif);
-        try (ApplicationContext context = ApplicationContext.run(Map.of(
-                "spec.name", SPEC_NAME,
-                "micronaut.security.ldap.default.enabled", true,
-                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-                "micronaut.security.ldap.default.context.managerDn", MANAGER_DN,
-                "micronaut.security.ldap.default.context.managerPassword", "password",
-                "micronaut.security.ldap.default.search.base", "dc=example,dc=com"
-        ), "test")) {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer(ldif);
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test")) {
             LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
 
-            AuthenticationResponse response = provider.authenticate(null, request(username));
+            AuthenticationResponse response = provider.authenticate(null, LdapTestSupport.request(username));
 
             assertTrue(response.isAuthenticated());
             assertEquals(username, response.getAuthentication().orElseThrow().getName());
@@ -69,31 +57,6 @@ class LdapNameAttributesTest {
         } finally {
             server.shutDown(true);
         }
-    }
-
-    private static InMemoryDirectoryServer startServer(String ldifPath) throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials(MANAGER_DN, "password");
-        InMemoryDirectoryServer server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapNameAttributesTest.class.getClassLoader().getResourceAsStream(ldifPath)) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
-        server.startListening();
-        return server;
-    }
-
-    private static AuthenticationRequest<String, String> request(String username) {
-        return new AuthenticationRequest<>() {
-            @Override
-            public String getIdentity() {
-                return username;
-            }
-
-            @Override
-            public String getSecret() {
-                return "password";
-            }
-        };
     }
 
     /**
