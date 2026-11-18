@@ -106,35 +106,45 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         String providerName = jwksSignatureConfiguration.getName();
         String url = jwksSignatureConfiguration.getUrl();
         return Mono.deferContextual(ctx -> Mono.from(jwkSetFetcher.fetch(providerName, url))
-                .flatMap(jwkSet -> {
-                    if (!isKeyIdUnknown(ctx, jwt, jwkSet)) {
-                        return Mono.just(verify(jwt, jwkSet));
-                    }
-                    Mono<JWKSet> refresh = refresh(providerName, url, jwt.getHeader().getKeyID());
-                    if (refresh == null) {
-                        return Mono.just(verify(jwt, jwkSet));
-                    }
-                    // a failed refresh emits nothing and the cached JWKS, which does not contain the key ID, rejects the token
-                    return refresh.defaultIfEmpty(jwkSet)
-                            .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
-                }));
+                .flatMap(jwkSet -> isKeyIdUnknown(jwt, jwkSet)
+                        ? verifyUnknownKeyId(ctx, jwt, jwkSet)
+                        : Mono.just(verify(jwt, jwkSet))));
     }
 
     /**
+     * @param jwt the signed JWT
+     * @param jwkSet the cached JSON Web Key Set
+     * @return Whether the JWT carries a key ID which is not in the cached JSON Web Key Set.
+     */
+    private static boolean isKeyIdUnknown(SignedJWT jwt, JWKSet jwkSet) {
+        String keyId = jwt.getHeader().getKeyID();
+        return keyId != null && !JwksSignatureUtils.containsKeyId(jwkSet, keyId);
+    }
+
+    /**
+     * Verifies a JWT whose key ID is not in the cached JSON Web Key Set. If the Reactor context does not allow a refresh yet, it is told
+     * that the key ID is unknown, so that the token is verified again with a refresh allowed if no other signature configuration verifies it.
      * @param ctx Reactor context
      * @param jwt the signed JWT
      * @param jwkSet the cached JSON Web Key Set
-     * @return Whether the JWT carries a key ID which is not in the cached JSON Web Key Set and the Reactor context allows fetching the JWKS again.
+     * @return whether the signed JWT is verified, against the JWKS fetched again if a refresh is allowed and succeeds
      */
-    private boolean isKeyIdUnknown(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
-        String keyId = jwt.getHeader().getKeyID();
-        if (keyId == null) {
-            return false;
+    private Mono<Boolean> verifyUnknownKeyId(ContextView ctx, SignedJWT jwt, JWKSet jwkSet) {
+        JwksClientReactorContext jwksClientReactorContext = ctx.getOrDefault(JwksClientReactorContext.class, null);
+        if (jwksClientReactorContext == null) {
+            return Mono.just(verify(jwt, jwkSet));
         }
-        if (!ctx.hasKey(JwksClientReactorContext.class) || !ctx.get(JwksClientReactorContext.class).isRefreshOnUnknownKeyId()) {
-            return false;
+        if (!jwksClientReactorContext.isRefreshOnUnknownKeyId()) {
+            jwksClientReactorContext.markKeyIdUnknown();
+            return Mono.just(verify(jwt, jwkSet));
         }
-        return !JwksSignatureUtils.containsKeyId(jwkSet, keyId);
+        Mono<JWKSet> refresh = refresh(jwksSignatureConfiguration.getName(), jwksSignatureConfiguration.getUrl(), jwt.getHeader().getKeyID());
+        if (refresh == null) {
+            return Mono.just(verify(jwt, jwkSet));
+        }
+        // a failed refresh emits nothing and the cached JWKS, which does not contain the key ID, rejects the token
+        return refresh.defaultIfEmpty(jwkSet)
+                .map(refreshedJwkSet -> verify(jwt, refreshedJwkSet));
     }
 
     /**

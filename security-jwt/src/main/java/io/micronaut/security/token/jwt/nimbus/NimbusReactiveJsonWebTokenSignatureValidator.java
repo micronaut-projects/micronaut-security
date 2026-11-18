@@ -43,10 +43,10 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
     }
 
     /**
-     * Validates the signature against every signature configuration. If none of them verifies the token and the token
-     * carries a {@code kid} header, the signature configurations are given a second chance with
-     * {@link JwksClientReactorContext#allowRefreshOnUnknownKeyId()} so that JWKS based configurations may refresh their
-     * cached JWKS if the key ID is unknown to them.
+     * Validates the signature against every signature configuration. If none of them verifies the token and a JWKS based
+     * configuration reported that the {@code kid} header of the token is not in its cached JWKS, the signature configurations
+     * are given a second chance with {@link JwksClientReactorContext#allowRefreshOnUnknownKeyId()} so that those
+     * configurations may refresh their cached JWKS. A token which no refresh can help is verified only once.
      * @param signedToken The signed token
      * @return Whether the signature could be verified. Empty if no signature configuration verified the token.
      */
@@ -54,11 +54,10 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
     @SingleResult
     public Publisher<Boolean> validateSignature(@NonNull SignedJWT signedToken) {
         JwksClientReactorContext jwksClientReactorContext = new JwksClientReactorContext();
-        Mono<Boolean> verified = verify(signedToken, jwksClientReactorContext);
-        if (signedToken.getHeader().getKeyID() == null) {
-            return verified;
-        }
-        return verified.switchIfEmpty(Mono.defer(() -> {
+        return verify(signedToken, jwksClientReactorContext).switchIfEmpty(Mono.defer(() -> {
+            if (!jwksClientReactorContext.isKeyIdUnknown()) {
+                return Mono.empty();
+            }
             jwksClientReactorContext.allowRefreshOnUnknownKeyId();
             return verify(signedToken, jwksClientReactorContext);
         }));
