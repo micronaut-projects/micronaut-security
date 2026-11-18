@@ -276,7 +276,20 @@ public class Authenticator<T> {
         if (t instanceof AuthenticationException authenticationException && authenticationException.getResponse() != null) {
             return authenticationException.getResponse();
         }
+        logUnexpectedProviderError(t);
         return authenticationResponseForThrowable(t);
+    }
+
+    /**
+     * A provider raising anything other than an {@link AuthenticationException} is reported as a failed authentication to
+     * the caller, so it is logged here; otherwise an outage, such as an unreachable user store, would be indistinguishable
+     * from wrong credentials.
+     * @param t Throwable raised by a provider
+     */
+    private static void logUnexpectedProviderError(@NonNull Throwable t) {
+        if (!(t instanceof AuthenticationException) && LOG.isWarnEnabled()) {
+            LOG.warn("An authentication provider raised an unexpected error. It is treated as a failed authentication", t);
+        }
     }
 
     private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
@@ -294,6 +307,7 @@ public class Authenticator<T> {
         try {
             return provider.authenticate(requestContext, authenticationRequest);
         } catch (Exception t) {
+            logUnexpectedProviderError(t);
             return authenticationResponseForThrowable(t);
         }
     }
