@@ -81,6 +81,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     protected static final Logger LOG = LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
     protected final Collection<TokenValidator<T>> tokenValidators;
     protected final TokenConfiguration tokenConfiguration;
+    @Nullable
     protected final RefreshTokenValidator refreshTokenValidator;
     @Nullable
     protected final RefreshTokenPersistence refreshTokenPersistence;
@@ -170,7 +171,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
 
     private static void logRefreshTokenPersistenceError(Throwable t) {
         if (t instanceof OauthErrorResponseException e) {
-            // The documented way for a RefreshTokenPersistence to reject a revoked or unknown refresh token.
+            // The OAuth 2.0 error a RefreshTokenPersistence emits to reject a revoked or unknown refresh token.
             if (LOG.isDebugEnabled()) {
                 LOG.debug("RefreshTokenPersistence rejected the refresh token with {}. Reporting it inactive", e.getError());
             }

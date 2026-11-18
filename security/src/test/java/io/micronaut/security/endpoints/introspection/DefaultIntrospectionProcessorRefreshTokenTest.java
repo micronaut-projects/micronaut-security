@@ -64,7 +64,7 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
     @Test
     void refreshTokenIsInactiveWhenPersistenceEmitsAnError() {
-        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
             @Override
             public Publisher<Authentication> getAuthentication(String refreshToken) {
                 return Mono.error(new IllegalStateException("database down"));
@@ -77,7 +77,7 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
     @Test
     void refreshTokenIsInactiveWhenPersistenceThrowsInsteadOfEmittingAnError() {
-        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
             @Override
             public Publisher<Authentication> getAuthentication(String refreshToken) {
                 throw new IllegalStateException("database down");
@@ -91,7 +91,7 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     @Test
     void unexpectedPersistenceFailureIsLoggedAtWarnWithItsCause() {
         IllegalStateException failure = new IllegalStateException("database down");
-        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
             @Override
             public Publisher<Authentication> getAuthentication(String refreshToken) {
                 return Mono.error(failure);
@@ -109,7 +109,7 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
     @Test
     void revocationSignalledWithOauthErrorResponseExceptionIsInactiveAndLoggedAtDebugWithoutTheToken() {
-        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
             @Override
             public Publisher<Authentication> getAuthentication(String refreshToken) {
                 return Mono.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "refresh token " + refreshToken + " revoked", null));
@@ -270,7 +270,7 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         }
     }
 
-    abstract static class FailingRefreshTokenPersistence implements RefreshTokenPersistence {
+    abstract static class NonPersistingRefreshTokenPersistence implements RefreshTokenPersistence {
         @Override
         public void persistToken(RefreshTokenGeneratedEvent event) {
         }
