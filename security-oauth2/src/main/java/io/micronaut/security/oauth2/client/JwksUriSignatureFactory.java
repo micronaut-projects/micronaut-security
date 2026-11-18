@@ -87,7 +87,12 @@ public class JwksUriSignatureFactory {
         if (asserted != null && !asserted.isBlank()) {
             return asserted;
         }
-        return openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null);
+        return configuredIssuer(openIdClientConfiguration);
+    }
+
+    @Nullable
+    private static String configuredIssuer(@Nullable OpenIdClientConfiguration openIdClientConfiguration) {
+        return openIdClientConfiguration == null ? null : openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null);
     }
 
     /**
@@ -160,7 +165,7 @@ public class JwksUriSignatureFactory {
                 issuer = openIdClientConfiguration != null ? issuer(openIdClientConfiguration, metadata) : metadata.getIssuer();
             } catch (RuntimeException e) {
                 // without metadata there is no JWKS URI either, so no token is verified with this key set
-                return openIdClientConfiguration != null ? openIdClientConfiguration.getIssuer().map(URL::toString).orElse(null) : null;
+                return configuredIssuer(openIdClientConfiguration);
             }
             if (issuer == null || issuer.isBlank()) {
                 if (!unboundIssuerWarned) {
