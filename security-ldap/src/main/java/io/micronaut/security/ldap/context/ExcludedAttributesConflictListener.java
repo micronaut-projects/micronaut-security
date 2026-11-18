@@ -21,8 +21,9 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import jakarta.inject.Singleton;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,9 @@ final class ExcludedAttributesConflictListener implements BeanCreatedEventListen
         LdapConfiguration.GroupConfiguration groups = configuration.getGroups();
         String[] requested = search.getAttributes();
         Optional<String> groupFilterAttribute = groups.isEnabled() ? groups.getFilterAttribute() : Optional.empty();
-        for (String excluded : new HashSet<>(search.getExcludedAttributes())) {
+        Set<String> excludedAttributes = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        excludedAttributes.addAll(search.getExcludedAttributes());
+        for (String excluded : excludedAttributes) {
             if (requested != null && Arrays.stream(requested).anyMatch(attribute -> matches(attribute, excluded))) {
                 LOG.warn("LDAP configuration [{}] requests search attribute [{}], but search.excluded-attributes removes it. "
                     + "Remove it from search.excluded-attributes if the application needs it.", configuration.getName(), excluded);
