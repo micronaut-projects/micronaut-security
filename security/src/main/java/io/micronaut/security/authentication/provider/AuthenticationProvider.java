@@ -26,10 +26,11 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 /**
  * Defines an API to authenticate a user with the given request.
  *
- * <p>If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
- * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
- * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
- * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
+ * <p>The authenticator does not offload implementations of this interface to another thread. If your implementation is
+ * blocking (e.g. it fetches user credentials from a database in a blocking way), implement
+ * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead. With the default
+ * {@link ExecutorAuthenticationProvider#getExecutorName()}, the authenticator runs it on the
+ * {@link io.micronaut.scheduling.TaskExecutors#BLOCKING} executor, so that it does not block the main reactive chain of execution.
  * Annotating {@code authenticate} with {@code @Blocking} has no effect on how the authenticator schedules the provider.</p>
  *
  * @since 4.5.0
