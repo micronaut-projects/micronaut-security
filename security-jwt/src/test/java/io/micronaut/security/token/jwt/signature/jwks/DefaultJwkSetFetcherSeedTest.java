@@ -35,7 +35,7 @@ class DefaultJwkSetFetcherSeedTest {
             return Mono.just(remote.toString());
         };
         DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
-        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations);
 
         // the baked JWKS is used as the initial seed
         JWKSet first = Mono.from(fetcher.fetch("provider", URL)).block();
@@ -68,7 +68,7 @@ class DefaultJwkSetFetcherSeedTest {
             return Mono.just(remote.toString());
         };
         DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
-        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations);
 
         assertNotNull(Mono.from(fetcher.fetch("provider", URL)).block().getKeyByKeyId("seed"));
         assertEquals(0, networkFetches.get());
@@ -87,7 +87,7 @@ class DefaultJwkSetFetcherSeedTest {
             return Mono.error(new IllegalStateException("authorization server is down"));
         };
         DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
-        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations);
 
         assertNull(Mono.from(fetcher.refresh("provider", URL)).block());
         assertEquals(1, networkFetches.get());
@@ -106,7 +106,7 @@ class DefaultJwkSetFetcherSeedTest {
             return Mono.just(remote.toString());
         };
         DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
-        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations);
 
         assertNotNull(Mono.from(fetcher.refresh("provider", URL)).block().getKeyByKeyId("remote"));
         assertEquals(1, networkFetches.get());
@@ -123,7 +123,7 @@ class DefaultJwkSetFetcherSeedTest {
             return Mono.just(remote.toString());
         };
         DefaultJwkSetFetcher.Optimizations optimizations = new DefaultJwkSetFetcher.Optimizations(Map.of(URL, (Supplier<JWKSet>) () -> seeded));
-        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations) { };
+        DefaultJwkSetFetcher fetcher = new DefaultJwkSetFetcher(jwksClient, optimizations);
 
         fetcher.clearCache(OTHER_URL);
         assertNotNull(Mono.from(fetcher.fetch("provider", OTHER_URL)).block().getKeyByKeyId("remote"));

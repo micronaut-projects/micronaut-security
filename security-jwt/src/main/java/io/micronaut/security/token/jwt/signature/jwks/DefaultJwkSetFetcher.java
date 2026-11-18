@@ -78,11 +78,11 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     /**
+     * Constructor with explicit AOT optimizations, for tests.
      * @param jwksClient JWKS Client
      * @param optimizations AOT optimizations used as an initial seed for the JWKS of each url.
-     * @since 5.4.0
      */
-    protected DefaultJwkSetFetcher(JwksClient jwksClient, Optimizations optimizations) {
+    DefaultJwkSetFetcher(JwksClient jwksClient, Optimizations optimizations) {
         this(jwksClient, new JwksClientConfigurationProperties(), System::nanoTime, optimizations);
     }
 
