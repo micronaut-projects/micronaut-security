@@ -127,6 +127,19 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         assertEquals(List.of("key-a"), persistence.lookups);
     }
 
+    @Test
+    @SuppressWarnings("removal")
+    void withoutPersistenceASubclassOverridingEmptyIntrospectionResponseIsStillHonoured() {
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator(), null) {
+            @Override
+            protected IntrospectionResponse emptyIntrospectionResponse(String token) {
+                return createIntrospectionResponse(Authentication.build("from-override"), HttpRequest.GET("/token_info"));
+            }
+        };
+
+        assertEquals("from-override", introspect(processor, SIGNED_A).getUsername());
+    }
+
     private static DefaultIntrospectionProcessor<HttpRequest<?>> processor(List<TokenValidator<HttpRequest<?>>> tokenValidators,
                                                                             @Nullable RefreshTokenValidator refreshTokenValidator,
                                                                             @Nullable RefreshTokenPersistence persistence) {
