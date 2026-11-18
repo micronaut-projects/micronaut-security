@@ -17,13 +17,13 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonBlocking;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.token.IssuerUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -33,7 +33,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +53,7 @@ import java.util.function.Supplier;
  * </p>
  * <p>
  * When the client configuration declares an issuer and {@link OpenIdClientConfiguration#isValidateIssuer()} is {@code true}, the {@code issuer}
- * of the discovery document must match the configured issuer, ignoring a trailing slash and the case of the scheme, as required by
+ * of the discovery document must match the configured issuer or, if set, the configured {@link OpenIdClientConfiguration#getIssuerIdentifier() issuer identifier}, ignoring a trailing slash and the case of the scheme, as required by
  * <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation">OpenID Connect Discovery 1.0, Section 4.3</a>.
  * </p>
  *
@@ -191,7 +190,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                 try {
                     fetchBlocking();
                 } catch (RuntimeException e) {
-                    // already logged and remembered by fetchBlocking
+                    // remembered by fetchBlocking: it is rethrown to callers within the back-off and reported as the last failure afterwards
                 } finally {
                     backgroundFetchInFlight.set(false);
                 }
@@ -253,30 +252,22 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
         }
         String expected = configuredIssuer.get().toString();
         String discovered = result.getIssuer();
-        if (discovered == null || !normalizeIssuer(discovered).equals(normalizeIssuer(expected))) {
-            throw new ConfigurationException("The issuer [" + discovered + "] returned by the OpenID configuration of provider [" + openIdClientConfiguration.getName()
-                + "] does not match the configured issuer [" + expected + "]. OpenID Connect Discovery 1.0 requires both values to be identical. "
-                + "Fix the issuer configuration, or set micronaut.security.oauth2.clients." + openIdClientConfiguration.getName() + ".openid.validate-issuer to false to skip this validation.");
+        if (IssuerUtils.equivalent(expected, discovered)) {
+            return;
         }
-    }
-
-    /**
-     * Normalizes an issuer for comparison: trailing slashes are removed and the scheme is lower-cased. Nothing else is altered.
-     * @param issuer The issuer
-     * @return The normalized issuer
-     */
-    @Internal
-    @NonNull
-    static String normalizeIssuer(@NonNull String issuer) {
-        String result = issuer.trim();
-        while (result.endsWith("/")) {
-            result = result.substring(0, result.length() - 1);
+        // an explicitly configured issuer identifier declares the issuer the provider is expected to assert,
+        // for example when the discovery document is fetched over an internal URL
+        Optional<String> issuerIdentifier = openIdClientConfiguration.getIssuerIdentifier();
+        if (issuerIdentifier.isPresent() && IssuerUtils.equivalent(issuerIdentifier.get(), discovered)) {
+            return;
         }
-        int schemeSeparator = result.indexOf("://");
-        if (schemeSeparator > 0) {
-            result = result.substring(0, schemeSeparator).toLowerCase(Locale.ROOT) + result.substring(schemeSeparator);
-        }
-        return result;
+        String name = openIdClientConfiguration.getName();
+        throw new ConfigurationException("The issuer [" + discovered + "] returned by the OpenID configuration of provider [" + name
+            + "] does not match the configured issuer [" + expected + "]"
+            + issuerIdentifier.filter(identifier -> !identifier.equals(expected)).map(identifier -> " nor the configured issuer identifier [" + identifier + "]").orElse("")
+            + ". OpenID Connect Discovery 1.0 requires the returned issuer to be identical to the issuer used for discovery. "
+            + "Fix the issuer configuration, set micronaut.security.oauth2.clients." + name + ".openid.issuer-identifier to the issuer the provider asserts, "
+            + "or set micronaut.security.oauth2.clients." + name + ".openid.validate-issuer to false to skip this validation.");
     }
 
     /**

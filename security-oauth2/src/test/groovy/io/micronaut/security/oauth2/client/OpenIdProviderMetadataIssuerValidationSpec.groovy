@@ -19,7 +19,6 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
 
@@ -57,6 +56,7 @@ class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
         cause.message.contains(configuredIssuer)
         cause.message.contains('[okta]')
         cause.message.contains('micronaut.security.oauth2.clients.okta.openid.validate-issuer')
+        cause.message.contains('micronaut.security.oauth2.clients.okta.openid.issuer-identifier')
 
         when: 'login is attempted'
         httpClient = server.applicationContext.createBean(HttpClient, server.URL, new DefaultHttpClientConfiguration(followRedirects: false))
@@ -93,8 +93,9 @@ class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
         ])
         DefaultOpenIdProviderMetadata metadata = server.applicationContext.getBean(DefaultOpenIdProviderMetadata, Qualifiers.byName('okta'))
 
-        then: 'the discovered issuer is used'
-        metadata.issuer == MismatchingOpenIdConfigurationController.DISCOVERED_ISSUER
+        then: 'the metadata resolves, and the announced issuer is still replaced by the configured one'
+        metadata.issuer == "http://localhost:${authServerPort}/oauth2/default"
+        metadata.jwksUri == MismatchingOpenIdConfigurationController.DISCOVERED_ISSUER + '/v1/keys'
 
         when: 'login is attempted'
         httpClient = server.applicationContext.createBean(HttpClient, server.URL, new DefaultHttpClientConfiguration(followRedirects: false))
@@ -108,25 +109,6 @@ class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
         httpClient?.close()
         server?.close()
         authServer.close()
-    }
-
-    @Unroll
-    void "discovered issuer #discovered #verb configured issuer #configured"(String discovered, String configured, boolean matches, String verb) {
-        expect:
-        (DefaultOpenIdProviderMetadataFetcher.normalizeIssuer(discovered) == DefaultOpenIdProviderMetadataFetcher.normalizeIssuer(configured)) == matches
-
-        where:
-        discovered                            | configured                          | matches
-        'https://example.com'                 | 'https://example.com'               | true
-        'https://example.com/'                | 'https://example.com'               | true
-        'https://example.com'                 | 'https://example.com/'              | true
-        'HTTPS://example.com'                 | 'https://example.com'               | true
-        'https://example.com/realms/master/'  | 'https://example.com/realms/master' | true
-        'https://example.com/realms/master'   | 'https://example.com/realms/other'  | false
-        'https://example.com'                 | 'https://example.com/oauth2/default'| false
-        'http://example.com'                  | 'https://example.com'               | false
-        'https://Example.com'                 | 'https://example.com'               | false
-        verb = matches ? 'matches' : 'does not match'
     }
 
     private static ConfigurationException configurationException(Throwable t) {

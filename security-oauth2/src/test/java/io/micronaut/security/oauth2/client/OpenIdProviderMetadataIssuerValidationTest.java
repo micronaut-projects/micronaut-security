@@ -4,6 +4,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -29,6 +31,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -42,6 +46,7 @@ class OpenIdProviderMetadataIssuerValidationTest {
     private static final String ALPHA = "alpha";
     private static final String BETA = "beta";
     private static final String GAMMA = "gamma";
+    private static final String DELTA = "delta";
     private static final String PUBLIC_ISSUER = "https://sso.example.com/oauth2/default";
 
     private static EmbeddedServer alphaProvider;
@@ -61,10 +66,13 @@ class OpenIdProviderMetadataIssuerValidationTest {
         Map<String, Object> configuration = new HashMap<>();
         configuration.put("spec.name", SPEC_NAME);
         configuration.put("micronaut.security.oauth2.clients." + ALPHA + ".openid.issuer", issuer(alphaProvider));
+        // alpha skips the validation of the discovered issuer; delta, pointed to the same provider, does not
+        configuration.put("micronaut.security.oauth2.clients." + ALPHA + ".openid.validate-issuer", false);
+        configuration.put("micronaut.security.oauth2.clients." + DELTA + ".openid.issuer", issuer(alphaProvider));
         configuration.put("micronaut.security.oauth2.clients." + BETA + ".openid.issuer", issuer(betaProvider));
         configuration.put("micronaut.security.oauth2.clients." + GAMMA + ".openid.issuer", issuer(internalProvider));
         configuration.put("micronaut.security.oauth2.clients." + GAMMA + ".openid.issuer-identifier", PUBLIC_ISSUER);
-        for (String provider : List.of(ALPHA, BETA, GAMMA)) {
+        for (String provider : List.of(ALPHA, BETA, GAMMA, DELTA)) {
             configuration.put("micronaut.security.oauth2.clients." + provider + ".client-id", provider + "-client");
             configuration.put("micronaut.security.oauth2.clients." + provider + ".client-secret", "test-fixture-not-a-secret");
         }
@@ -86,7 +94,20 @@ class OpenIdProviderMetadataIssuerValidationTest {
     }
 
     @Test
-    void discoveredIssuerNotMatchingTheConfiguredIssuerIsReplacedByTheConfiguredIssuer() {
+    void discoveredIssuerNotMatchingTheConfiguredIssuerIsRejected() {
+        BeanInstantiationException e = assertThrows(BeanInstantiationException.class, () -> metadata(DELTA));
+        Throwable cause = e;
+        while (cause != null && !(cause instanceof ConfigurationException)) {
+            cause = cause.getCause();
+        }
+        assertNotNull(cause, "a ConfigurationException is expected in the cause chain");
+        assertTrue(cause.getMessage().contains(issuer(betaProvider)));
+        assertTrue(cause.getMessage().contains(issuer(alphaProvider)));
+        assertTrue(cause.getMessage().contains("[" + DELTA + "]"));
+    }
+
+    @Test
+    void withoutValidationDiscoveredIssuerNotMatchingTheConfiguredIssuerIsReplacedByTheConfiguredIssuer() {
         assertEquals(issuer(alphaProvider), metadata(ALPHA).getIssuer());
         // the rest of the discovery document is still used
         assertEquals(issuer(betaProvider) + "/keys", metadata(ALPHA).getJwksUri());
