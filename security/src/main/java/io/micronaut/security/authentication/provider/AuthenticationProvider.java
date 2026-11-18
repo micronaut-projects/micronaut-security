@@ -25,6 +25,13 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 
 /**
  * Defines an API to authenticate a user with the given request.
+ *
+ * <p>If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
+ * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
+ * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
+ * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
+ * Annotating {@code authenticate} with {@code @Blocking} has no effect on how the authenticator schedules the provider.</p>
+ *
  * @since 4.5.0
  * @param <T> Request Context Type
  * @param <I> Authentication Request Identity Type
@@ -37,11 +44,7 @@ public interface AuthenticationProvider<T, I, S> extends Ordered {
      * Authenticates a user with the given request.
      * If authenticated successfully return {@link AuthenticationResponse#success(String)}.
      * If not authenticated return {@link AuthenticationResponse#failure()}.
-     * If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
-     * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
-     * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
-     * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
-     * Annotating the overridden method with {@code @Blocking} has no effect on how the authenticator schedules the provider.
+     * Blocking implementations must follow the guidance in the {@link AuthenticationProvider type documentation}.
      * @param requestContext The context request (typically an HTTP Request).
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
@@ -54,11 +57,7 @@ public interface AuthenticationProvider<T, I, S> extends Ordered {
      * Authenticates a user with the given request.
      * If authenticated successfully return {@link AuthenticationResponse#success(String)}.
      * If not authenticated return {@link AuthenticationResponse#failure()}.
-     * If your implementation is blocking (e.g. it fetches user credentials from a database in a blocking way), implement
-     * {@link ExecutorAuthenticationProvider} (or {@link HttpRequestExecutorAuthenticationProvider}) instead and return from
-     * {@link ExecutorAuthenticationProvider#getExecutorName()} the name of the executor where the code should run
-     * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING} by default), so that it does not block the main reactive chain of execution.
-     * Annotating the overridden method with {@code @Blocking} has no effect on how the authenticator schedules the provider.
+     * Blocking implementations must follow the guidance in the {@link AuthenticationProvider type documentation}.
      * @param authRequest The credentials to authenticate
      * @return An {@link AuthenticationResponse} indicating either success or failure.
      */
