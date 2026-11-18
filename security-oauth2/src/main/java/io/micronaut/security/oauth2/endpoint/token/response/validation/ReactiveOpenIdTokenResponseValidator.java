@@ -63,7 +63,7 @@ public interface ReactiveOpenIdTokenResponseValidator<T> {
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
      * @return A non-empty publisher if the ID Token access response is considered valid
-     * @since 5.5.3
+     * @since 5.6.0
      */
     @SingleResult
     @NonNull

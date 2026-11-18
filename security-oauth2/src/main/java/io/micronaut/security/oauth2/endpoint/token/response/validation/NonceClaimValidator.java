@@ -60,7 +60,7 @@ public class NonceClaimValidator {
      *
      * @deprecated Use {@link #NonceClaimValidator(NonceFactory)} instead.
      */
-    @Deprecated(since = "5.5.3", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public NonceClaimValidator() {
         this(null);
     }
@@ -68,7 +68,7 @@ public class NonceClaimValidator {
     /**
      * @param nonceFactory The nonce factory. If present, the authorization request always carries a nonce and a
      *                     missing persisted nonce at callback time is a validation failure.
-     * @since 5.5.3
+     * @since 5.6.0
      */
     @Inject
     public NonceClaimValidator(@Nullable NonceFactory nonceFactory) {
@@ -107,7 +107,7 @@ public class NonceClaimValidator {
      * @param clientConfiguration OAuth 2.0 Client Configuration
      * @param providerMetadata OpenID Connect provider metadata
      * @return Whether the JWT Claims pass validation or not.
-     * @since 5.5.3
+     * @since 5.6.0
      */
     public boolean validateWithoutNonce(OpenIdClaims claims,
                                         OauthClientConfiguration clientConfiguration,
