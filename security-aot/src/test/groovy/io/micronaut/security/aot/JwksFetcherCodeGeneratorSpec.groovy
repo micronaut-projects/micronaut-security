@@ -29,12 +29,25 @@ import spock.lang.Shared
 
 class JwksFetcherCodeGeneratorSpec extends AbstractSourceGeneratorSpec {
 
-    static final String JWKS = new JWKSet(new RSAKeyGenerator(2048)
-            .keyID('aot')
-            .algorithm(JWSAlgorithm.RS256)
-            .keyUse(KeyUse.SIGNATURE)
-            .generate()
-            .toPublicJWK()).toString()
+    static final String JWKS = jwks('aot')
+
+    static final String OTHER_JWKS = jwks('other')
+
+    /**
+     * The key ID as it appears in the generated Java string literal holding the JWKS.
+     */
+    static final String KID_AOT = /\"kid\":\"aot\"/
+
+    static final String KID_OTHER = /\"kid\":\"other\"/
+
+    private static String jwks(String keyId) {
+        new JWKSet(new RSAKeyGenerator(2048)
+                .keyID(keyId)
+                .algorithm(JWSAlgorithm.RS256)
+                .keyUse(KeyUse.SIGNATURE)
+                .generate()
+                .toPublicJWK()).toString()
+    }
 
     @AutoCleanup
     @Shared
@@ -122,14 +135,14 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
             doesNotCreateInitializer()
             assert generatedClasses.size() == 3
             hasClass("AotJwksFetcher") {
-                containingSources "configs.put(\"${keysUrl}\", "
-                containingSources "configs.put(\"${otherKeysUrl}\", "
+                containingSources "configs.put(\"${keysUrl}\", AotJwkSetFetcher0::create);"
+                containingSources "configs.put(\"${otherKeysUrl}\", AotJwkSetFetcher1::create);"
             }
             hasClass("AotJwkSetFetcher0") {
-                containingSources 'public static JWKSet create()'
+                containingSources KID_AOT
             }
             hasClass("AotJwkSetFetcher1") {
-                containingSources 'public static JWKSet create()'
+                containingSources KID_OTHER
             }
             compiles()
         }
@@ -278,7 +291,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         @Get("/other-keys")
         @Secured(SecurityRule.IS_ANONYMOUS)
         String otherKeys() {
-            JWKS
+            OTHER_JWKS
         }
     }
 
