@@ -105,7 +105,13 @@ final class UserInfoClientFactory {
                 }
                 return Optional.empty();
             }
-            return Optional.of(endpoint(createUserInfoClientWithUrl(userInfoEndpoint, name)));
+            try {
+                return Optional.of(endpoint(createUserInfoClientWithUrl(userInfoEndpoint, name)));
+            } catch (DisabledBeanException e) {
+                // a malformed URL does not fix itself: report it once and stop resolving the endpoint
+                LOG.error("Tokens are not validated with the UserInfo endpoint of {}. {}", name, e.getMessage());
+                return Optional.empty();
+            }
         });
     }
 
