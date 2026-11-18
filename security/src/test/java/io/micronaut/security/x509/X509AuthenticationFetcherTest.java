@@ -1,5 +1,6 @@
 package io.micronaut.security.x509;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,8 +12,12 @@ import java.security.cert.X509Certificate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class X509AuthenticationFetcherTest {
+
+    private static final String PROPERTY = X509ConfigurationProperties.PREFIX + ".subject-dn-regex";
 
     /**
      * Certificate whose subject DN is {@code CN=x509test}.
@@ -45,6 +50,24 @@ class X509AuthenticationFetcherTest {
     })
     void nameIsEmptyIfTheCapturingGroupIsBlank(String regex) {
         assertEquals(Optional.empty(), extractName(regex));
+    }
+
+    @Test
+    void nameIsEmptyIfTheCapturingGroupDoesNotTakePartInTheMatch() {
+        assertEquals(Optional.empty(), extractName("OU=(.*?)(?:,|$)|CN="));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "CN=.*?(?:,|$)",
+            "(CN)=(.*?)(?:,|$)",
+            "CN=(.*?"
+    })
+    void aCustomConfigurationWithAnInvalidRegexIsRejected(String regex) {
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> new X509AuthenticationFetcher(configuration(regex)));
+
+        assertTrue(e.getMessage().contains(PROPERTY));
+        assertTrue(e.getMessage().contains(regex));
     }
 
     private static Optional<String> extractName(String regex) {
