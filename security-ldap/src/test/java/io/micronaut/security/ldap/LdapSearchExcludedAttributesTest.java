@@ -265,6 +265,18 @@ class LdapSearchExcludedAttributesTest {
     }
 
     @Test
+    void aRequestedAttributeWithSurroundingWhitespaceStillLogsTheConflict() {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.search.attributes", "cn, userPassword");
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            assertTrue(context.getBean(LdapConfiguration.class).isEnabled());
+
+            assertEquals(1, appender.list.size(), () -> "warnings: " + appender.list);
+            assertTrue(appender.list.getFirst().getFormattedMessage().contains("requests search attribute [userPassword]"));
+        }
+    }
+
+    @Test
     void excludedAttributesAreDefensivelyCopied() {
         LdapConfiguration.SearchConfiguration search = new LdapConfiguration.SearchConfiguration();
         List<String> excluded = new ArrayList<>(List.of("userPassword"));

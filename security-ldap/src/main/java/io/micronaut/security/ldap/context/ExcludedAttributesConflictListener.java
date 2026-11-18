@@ -64,6 +64,6 @@ final class ExcludedAttributesConflictListener implements BeanCreatedEventListen
     }
 
     private static boolean matches(@Nullable String attribute, String excluded) {
-        return attribute != null && LdapAttributeUtils.matchesExclusion(attribute, excluded);
+        return attribute != null && LdapAttributeUtils.matchesExclusion(attribute.trim(), excluded);
     }
 }
