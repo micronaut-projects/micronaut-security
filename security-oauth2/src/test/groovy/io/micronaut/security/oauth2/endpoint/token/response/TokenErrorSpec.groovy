@@ -1,14 +1,15 @@
 package io.micronaut.security.oauth2.endpoint.token.response
 
 import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
 import spock.lang.Specification
 
 class TokenErrorSpec extends Specification {
 
-    void "TokenError #expected is deserializable from #json"(String json, TokenError expected) {
-        setup:
-        ObjectMapper objectMapper = ObjectMapper.getDefault()
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
 
+    void "TokenError #expected is deserializable from #json"(String json, TokenError expected) {
         expect:
         expected == objectMapper.readValue(json, TokenError)
 
@@ -36,9 +37,6 @@ class TokenErrorSpec extends Specification {
     }
 
     void "TokenError serializes to its error code"() {
-        setup:
-        ObjectMapper objectMapper = ObjectMapper.getDefault()
-
         expect:
         '"temporarily_unavailable"' == objectMapper.writeValueAsString(TokenError.TEMPORARILY_UNAVAILABLE)
         '"unknown"' == objectMapper.writeValueAsString(TokenError.UNKNOWN)

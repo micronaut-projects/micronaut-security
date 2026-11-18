@@ -177,8 +177,7 @@ public enum TokenError {
     }
 
     /**
-     *
-     * @return An errorCode code.
+     * @return The error code, for example {@code invalid_grant}.
      */
     @Override
     @JsonValue

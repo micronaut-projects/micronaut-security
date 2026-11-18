@@ -55,6 +55,10 @@ abstract class AbstractTokenErrorResponseJacksonTest {
     void tokenErrorDeserializesUnknownCodesToUnknown() throws IOException {
         assertEquals(TokenError.INVALID_TOKEN, jsonMapper.readValue("\"invalid_token\"", TokenError.class));
         assertEquals(TokenError.UNKNOWN, jsonMapper.readValue("\"some_vendor_code\"", TokenError.class));
+    }
+
+    @Test
+    void tokenErrorSerializesToItsErrorCode() throws IOException {
         assertEquals("\"invalid_token\"", jsonMapper.writeValueAsString(TokenError.INVALID_TOKEN));
     }
 

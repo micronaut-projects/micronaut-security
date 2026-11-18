@@ -2,12 +2,16 @@ package io.micronaut.security.oauth2.endpoint.token.response
 
 import io.micronaut.json.JsonMapper
 import io.micronaut.json.tree.JsonNode
+import spock.lang.Shared
 import spock.lang.Specification
 
 class TokenErrorResponseSpec extends Specification {
+
+    @Shared
+    JsonMapper jsonMapper = JsonMapper.createDefault()
+
     void snakeCaseStrategyIsUsed() {
         given:
-        JsonMapper jsonMapper = JsonMapper.createDefault()
         TokenErrorResponse obj = new TokenErrorResponse()
         obj.error = TokenError.INVALID_CLIENT
         obj.errorUri = "errorUri"
@@ -25,7 +29,6 @@ class TokenErrorResponseSpec extends Specification {
 
     void "raw error code is serialized under error"() {
         given:
-        JsonMapper jsonMapper = JsonMapper.createDefault()
         TokenErrorResponse obj = new TokenErrorResponse()
         obj.errorCode = "some_vendor_code"
 
@@ -41,7 +44,6 @@ class TokenErrorResponseSpec extends Specification {
 
     void "error=#code deserializes to #expected keeping the raw code"(String code, TokenError expected) {
         given:
-        JsonMapper jsonMapper = JsonMapper.createDefault()
         String json = '{"error":"' + code + '","error_description":"desc","error_uri":"https://example.com/errors"}'
 
         when:
@@ -64,10 +66,7 @@ class TokenErrorResponseSpec extends Specification {
         'Invalid_Grant'           | TokenError.INVALID_GRANT
     }
 
-    void "a body without error does not fail to deserialize and toString is null safe"() {
-        given:
-        JsonMapper jsonMapper = JsonMapper.createDefault()
-
+    void "a body without error does not fail to deserialize"() {
         when:
         TokenErrorResponse response = jsonMapper.readValue('{"error_description":"desc"}', TokenErrorResponse)
 
@@ -76,13 +75,11 @@ class TokenErrorResponseSpec extends Specification {
         response.errorCode == null
         response.errorDescription == "desc"
         response.toString() == "error: null, errorDescription: desc, errorUri: null"
+    }
 
-        when:
-        String s = new TokenErrorResponse().toString()
-
-        then:
-        noExceptionThrown()
-        s == "error: null, errorDescription: null, errorUri: null"
+    void "toString is null safe"() {
+        expect:
+        new TokenErrorResponse().toString() == "error: null, errorDescription: null, errorUri: null"
     }
 
     void "setError keeps the raw error code in sync"() {
