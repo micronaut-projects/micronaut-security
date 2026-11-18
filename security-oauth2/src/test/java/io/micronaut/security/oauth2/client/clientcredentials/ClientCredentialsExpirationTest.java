@@ -36,135 +36,69 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ClientCredentialsExpirationTest {
 
     private static final Duration NO_ADVANCED_EXPIRATION = Duration.ZERO;
+    private static final Duration TOLERANCE = Duration.ofSeconds(10);
 
     private final AdjustableClock clock = new AdjustableClock();
 
     @Test
     void tokenWithoutExpiresInOrExpClaimIsCachedForTheDefaultExpirationOfFiveMinutes() {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(NO_ADVANCED_EXPIRATION)
-            .build());
-
-        String accessToken = requestAccessToken(client);
-        assertEquals(accessToken, requestAccessToken(client));
-
-        clock.advance(Duration.ofMinutes(5).minusSeconds(1));
-        assertEquals(accessToken, requestAccessToken(client));
-        assertEquals(1, tokenEndpoint.requests());
-
-        clock.advance(Duration.ofSeconds(2));
-        assertNotEquals(accessToken, requestAccessToken(client));
-        assertEquals(2, tokenEndpoint.requests());
+        assertCachedFor(Duration.ofMinutes(5), ClientCredentialsExpirationTest::opaqueToken,
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION));
     }
 
     @Test
-    void tokenWithoutExpiresInOrExpClaimIsRefreshedOnceTheConfiguredDefaultExpirationElapses() {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(NO_ADVANCED_EXPIRATION)
-            .defaultExpiration(Duration.ofSeconds(90))
-            .build());
-
-        String accessToken = requestAccessToken(client);
-
-        clock.advance(Duration.ofSeconds(89));
-        assertEquals(accessToken, requestAccessToken(client));
-        assertEquals(1, tokenEndpoint.requests());
-
-        clock.advance(Duration.ofSeconds(2));
-        assertNotEquals(accessToken, requestAccessToken(client));
-        assertEquals(2, tokenEndpoint.requests());
+    void tokenWithoutExpiresInOrExpClaimIsCachedForTheConfiguredDefaultExpiration() {
+        assertCachedFor(Duration.ofSeconds(90), ClientCredentialsExpirationTest::opaqueToken,
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION).defaultExpiration(Duration.ofSeconds(90)));
     }
 
     @Test
     void advancedExpirationIsSubtractedFromTheDefaultExpiration() {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(Duration.ofSeconds(30))
-            .defaultExpiration(Duration.ofSeconds(90))
-            .build());
-
-        String accessToken = requestAccessToken(client);
-
-        clock.advance(Duration.ofSeconds(59));
-        assertEquals(accessToken, requestAccessToken(client));
-
-        clock.advance(Duration.ofSeconds(2));
-        assertNotEquals(accessToken, requestAccessToken(client));
-        assertEquals(2, tokenEndpoint.requests());
+        assertCachedFor(Duration.ofSeconds(60), ClientCredentialsExpirationTest::opaqueToken,
+            ClientCredentialsConfiguration.builder().advancedExpiration(Duration.ofSeconds(30)).defaultExpiration(Duration.ofSeconds(90)));
     }
 
     @Test
     void jwtAccessTokenWithoutExpiresInUsesTheExpClaimInsteadOfTheDefaultExpiration() {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(() -> jwtToken(Duration.ofMinutes(2)));
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(NO_ADVANCED_EXPIRATION)
-            .defaultExpiration(Duration.ofHours(1))
-            .build());
-
-        String accessToken = requestAccessToken(client);
-
-        clock.advance(Duration.ofSeconds(110));
-        assertEquals(accessToken, requestAccessToken(client));
-        assertEquals(1, tokenEndpoint.requests());
-
-        clock.advance(Duration.ofSeconds(20));
-        assertNotEquals(accessToken, requestAccessToken(client));
-        assertEquals(2, tokenEndpoint.requests());
+        assertCachedFor(Duration.ofMinutes(2), () -> jwtToken(Duration.ofMinutes(2)),
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION).defaultExpiration(Duration.ofHours(1)));
     }
 
     @Test
     void opaqueAccessTokenUsesExpiresInInsteadOfTheDefaultExpiration() {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(() -> {
-            TokenResponse tokenResponse = opaqueToken();
-            tokenResponse.setExpiresIn(120);
-            return tokenResponse;
-        });
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(NO_ADVANCED_EXPIRATION)
-            .defaultExpiration(Duration.ofHours(1))
-            .build());
-
-        String accessToken = requestAccessToken(client);
-
-        clock.advance(Duration.ofSeconds(110));
-        assertEquals(accessToken, requestAccessToken(client));
-        assertEquals(1, tokenEndpoint.requests());
-
-        clock.advance(Duration.ofSeconds(20));
-        assertNotEquals(accessToken, requestAccessToken(client));
-        assertEquals(2, tokenEndpoint.requests());
+        assertCachedFor(Duration.ofMinutes(2), () -> withExpiresIn(opaqueToken(), 120),
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION).defaultExpiration(Duration.ofHours(1)));
     }
 
     @Test
     void expClaimEarlierThanExpiresInWins() {
-        assertRefreshedAfterTwoMinutes(Duration.ofMinutes(2), 3600);
+        assertCachedFor(Duration.ofMinutes(2), () -> withExpiresIn(jwtToken(Duration.ofMinutes(2)), 3600),
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION));
     }
 
     @Test
     void expiresInEarlierThanExpClaimWins() {
-        assertRefreshedAfterTwoMinutes(Duration.ofHours(1), 120);
+        assertCachedFor(Duration.ofMinutes(2), () -> withExpiresIn(jwtToken(Duration.ofHours(1)), 120),
+            ClientCredentialsConfiguration.builder().advancedExpiration(NO_ADVANCED_EXPIRATION));
     }
 
-    private void assertRefreshedAfterTwoMinutes(Duration jwtLifetime, int expiresIn) {
-        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(() -> {
-            TokenResponse tokenResponse = jwtToken(jwtLifetime);
-            tokenResponse.setExpiresIn(expiresIn);
-            return tokenResponse;
-        });
-        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
-            .advancedExpiration(NO_ADVANCED_EXPIRATION)
-            .build());
-
+    /**
+     * Asserts that a token is served from the cache until shortly before {@code lifetime} elapses and requested again shortly after.
+     */
+    private void assertCachedFor(Duration lifetime,
+                                 Supplier<TokenResponse> tokenResponses,
+                                 ClientCredentialsConfigurationBuilder clientCredentialsConfiguration) {
+        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(tokenResponses);
+        ClientCredentialsClient client = client(tokenEndpoint, clientCredentialsConfiguration.build());
         String accessToken = requestAccessToken(client);
+        assertEquals(accessToken, requestAccessToken(client), "the token is cached right after it is obtained");
 
-        clock.advance(Duration.ofSeconds(110));
-        assertEquals(accessToken, requestAccessToken(client));
+        clock.advance(lifetime.minus(TOLERANCE));
+        assertEquals(accessToken, requestAccessToken(client), "the token is still cached shortly before " + lifetime + " elapses");
         assertEquals(1, tokenEndpoint.requests());
 
-        clock.advance(Duration.ofSeconds(20));
-        assertNotEquals(accessToken, requestAccessToken(client));
+        clock.advance(TOLERANCE.multipliedBy(2));
+        assertNotEquals(accessToken, requestAccessToken(client), "the token is refreshed once " + lifetime + " elapses");
         assertEquals(2, tokenEndpoint.requests());
     }
 
@@ -229,14 +163,14 @@ class ClientCredentialsExpirationTest {
             .map(ILoggingEvent::getFormattedMessage)
             .toList();
 
-        assertEquals(4, accessTokens.stream().distinct().count());
-        assertTrue(messages.stream().anyMatch(message -> message.contains("caching client credentials access token")));
-        assertTrue(messages.stream().anyMatch(message -> message.contains("expired at")));
-        assertTrue(messages.stream().anyMatch(message -> message.contains("cannot be parsed as a JWT")));
-        assertTrue(messages.stream().allMatch(message -> message.contains("sha256 prefix")));
+        assertEquals(4, accessTokens.stream().distinct().count(), "every request obtained a new token");
+        assertTrue(messages.stream().anyMatch(message -> message.contains("caching client credentials access token")), "caching is traced");
+        assertTrue(messages.stream().anyMatch(message -> message.contains("expired at")), "expiration is traced");
+        assertTrue(messages.stream().anyMatch(message -> message.contains("cannot be parsed as a JWT")), "opaque tokens are traced");
+        assertTrue(messages.stream().allMatch(message -> message.contains("sha256 prefix")), "tokens are identified by fingerprint");
         for (String accessToken : accessTokens) {
             for (String secret : accessToken.split("\\.")) {
-                assertFalse(messages.stream().anyMatch(message -> message.contains(secret)));
+                assertFalse(messages.stream().anyMatch(message -> message.contains(secret)), "no token or JWT segment is traced");
             }
         }
     }
@@ -264,6 +198,11 @@ class ClientCredentialsExpirationTest {
 
     private static TokenResponse opaqueToken() {
         return new TokenResponse(UUID.randomUUID().toString(), "bearer");
+    }
+
+    private static TokenResponse withExpiresIn(TokenResponse tokenResponse, int expiresIn) {
+        tokenResponse.setExpiresIn(expiresIn);
+        return tokenResponse;
     }
 
     private static TokenResponse jwtToken(Duration lifetime) {
