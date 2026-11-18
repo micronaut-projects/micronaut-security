@@ -7,18 +7,26 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.convert.value.ConvertibleValues;
+import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.AttributesConvertibleValues;
+import io.micronaut.security.ldap.context.ContextBuilder;
+import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.DefaultLdapSearchService;
 import io.micronaut.security.ldap.context.LdapSearchResult;
+import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.context.SearchSettings;
+import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,6 +38,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -96,6 +105,50 @@ class LdapNameAttributesTest {
             assertNotNull(result);
             assertEquals(dn, result.getDn());
             assertNull(result.getAttributes());
+        }
+    }
+
+    @Test
+    void malformedDnIsAnUnknownFailureRatherThanAnException() throws Exception {
+        try (ApplicationContext context = startContext("basic.ldif")) {
+            ContextBuilder contextBuilder = context.getBean(ContextBuilder.class);
+            LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
+            // binds every user as the manager, so that the malformed DN reaches the attribute lookup
+            ContextBuilder bindsAsManager = new ContextBuilder() {
+                @Override
+                public DirContext build(ContextSettings contextSettings) throws NamingException {
+                    return contextBuilder.build(configuration.getManagerSettings());
+                }
+
+                @Override
+                public DirContext build(String factory, String server, String user, String password, boolean pooled) throws NamingException {
+                    return contextBuilder.build(factory, server, user, password, pooled);
+                }
+
+                @Override
+                public void close(DirContext dirContext) {
+                    contextBuilder.close(dirContext);
+                }
+            };
+            LdapSearchService malformedDn = new DefaultLdapSearchService() {
+                @Override
+                public Optional<LdapSearchResult> searchFirst(DirContext managerContext, SearchSettings settings) {
+                    return Optional.of(new NullAttributesLdapSearchResult("not-a-distinguished-name"));
+                }
+            };
+            LdapAuthenticationProvider<Object, String, String> provider = new LdapAuthenticationProvider<>(
+                configuration,
+                malformedDn,
+                bindsAsManager,
+                context.getBean(ContextAuthenticationMapper.class),
+                context.getBean(LdapGroupProcessor.class),
+                context.getBean(ExecutorService.class, Qualifiers.byName(TaskExecutors.IO)));
+
+            AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials("riemann", "password"));
+
+            assertFalse(response.isAuthenticated());
+            assertEquals(AuthenticationFailureReason.UNKNOWN,
+                assertInstanceOf(AuthenticationFailed.class, response).getReason());
         }
     }
 
