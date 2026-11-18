@@ -4,7 +4,6 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.context.exceptions.ConfigurationException
-import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -24,11 +23,8 @@ class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
 
     void "the issuer of the discovery document must match the configured issuer"() {
         given: 'an authorization server whose discovery document declares a different issuer'
-        int authServerPort = SocketUtils.findAvailableTcpPort()
-        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
-                'micronaut.server.port': authServerPort,
-                'spec.name'            : 'AuthServerOpenIdProviderMetadataIssuerValidationSpec',
-        ])
+        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, ['spec.name': 'AuthServerOpenIdProviderMetadataIssuerValidationSpec'])
+        int authServerPort = authServer.port
         String configuredIssuer = "http://localhost:${authServerPort}/oauth2/default"
         HttpClient httpClient = null
         EmbeddedServer server = null
@@ -74,11 +70,8 @@ class OpenIdProviderMetadataIssuerValidationSpec extends Specification {
 
     void "issuer validation can be skipped with validate-issuer"() {
         given: 'an authorization server whose discovery document declares a different issuer'
-        int authServerPort = SocketUtils.findAvailableTcpPort()
-        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
-                'micronaut.server.port': authServerPort,
-                'spec.name'            : 'AuthServerOpenIdProviderMetadataIssuerValidationSpec',
-        ])
+        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, ['spec.name': 'AuthServerOpenIdProviderMetadataIssuerValidationSpec'])
+        int authServerPort = authServer.port
         HttpClient httpClient = null
         EmbeddedServer server = null
 

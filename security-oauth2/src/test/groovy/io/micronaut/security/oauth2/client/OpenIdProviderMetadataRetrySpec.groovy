@@ -2,9 +2,7 @@ package io.micronaut.security.oauth2.client
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.BeanProvider
-import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -30,11 +28,8 @@ class OpenIdProviderMetadataRetrySpec extends Specification {
 
     void "a transient discovery failure at startup does not permanently disable the OpenID provider"() {
         given: 'an authorization server whose discovery endpoint fails for the first two requests'
-        int authServerPort = SocketUtils.findAvailableTcpPort()
-        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
-                'micronaut.server.port': authServerPort,
-                'spec.name'            : 'AuthServerOpenIdProviderMetadataRetrySpec',
-        ])
+        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, ['spec.name': 'AuthServerOpenIdProviderMetadataRetrySpec'])
+        int authServerPort = authServer.port
         FlakyOpenIdConfigurationController controller = authServer.applicationContext.getBean(FlakyOpenIdConfigurationController)
         controller.failures = 2
         HttpClient httpClient = null
@@ -97,11 +92,8 @@ class OpenIdProviderMetadataRetrySpec extends Specification {
 
     void "metadata requested from a non-blocking thread is fetched in the background"() {
         given: 'an authorization server whose discovery endpoint fails for the first request'
-        int authServerPort = SocketUtils.findAvailableTcpPort()
-        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
-                'micronaut.server.port': authServerPort,
-                'spec.name'            : 'AuthServerOpenIdProviderMetadataRetrySpec',
-        ])
+        EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, ['spec.name': 'AuthServerOpenIdProviderMetadataRetrySpec'])
+        int authServerPort = authServer.port
         FlakyOpenIdConfigurationController controller = authServer.applicationContext.getBean(FlakyOpenIdConfigurationController)
         controller.failures = 1
         String issuer = "http://localhost:${authServerPort}/oauth2/default"
@@ -168,10 +160,10 @@ class OpenIdProviderMetadataRetrySpec extends Specification {
     static class FlakyOpenIdConfigurationController {
         final AtomicInteger invocations = new AtomicInteger()
         volatile int failures = 0
-        private final String issuer
+        private final EmbeddedServer embeddedServer
 
-        FlakyOpenIdConfigurationController(@Property(name = 'micronaut.server.port') int port) {
-            this.issuer = "http://localhost:${port}/oauth2/default"
+        FlakyOpenIdConfigurationController(EmbeddedServer embeddedServer) {
+            this.embeddedServer = embeddedServer
         }
 
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -180,6 +172,7 @@ class OpenIdProviderMetadataRetrySpec extends Specification {
             if (invocations.incrementAndGet() <= failures) {
                 return HttpResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
             }
+            String issuer = "http://localhost:${embeddedServer.port}/oauth2/default"
             HttpResponse.ok('{"issuer":"' + issuer + '","authorization_endpoint":"' + issuer + '/v1/authorize","token_endpoint":"' + issuer + '/v1/token","jwks_uri":"' + issuer + '/v1/keys","response_types_supported":["code"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported":["RS256"]}')
         }
     }
