@@ -36,9 +36,6 @@ import org.jspecify.annotations.Nullable;
 public class TokenErrorResponse {
 
     @Nullable
-    private TokenError error;
-
-    @Nullable
     private String errorCode;
 
     @Nullable
@@ -53,16 +50,15 @@ public class TokenErrorResponse {
     @Nullable
     @JsonIgnore
     public TokenError getError() {
-        return error;
+        return errorCode == null ? null : TokenError.of(errorCode);
     }
 
     /**
-     * Sets the error and the raw error code to the code of the supplied {@link TokenError}.
+     * Sets the raw error code to the code of the supplied {@link TokenError}.
      * @param error The error code
      */
     @JsonIgnore
     public void setError(@Nullable TokenError error) {
-        this.error = error;
         this.errorCode = error == null ? null : error.getErrorCode();
     }
 
@@ -77,14 +73,13 @@ public class TokenErrorResponse {
     }
 
     /**
-     * Sets the raw error code and resolves {@link #getError()} from it.
+     * Sets the raw error code. {@link #getError()} is resolved from it.
      * @param errorCode The raw error code as returned by the authorization server
      * @since 5.5.3
      */
     @JsonProperty("error")
     public void setErrorCode(@Nullable String errorCode) {
         this.errorCode = errorCode;
-        this.error = errorCode == null ? null : TokenError.of(errorCode);
     }
 
     /**
