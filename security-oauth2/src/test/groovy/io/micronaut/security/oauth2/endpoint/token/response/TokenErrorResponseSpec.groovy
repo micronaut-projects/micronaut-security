@@ -61,6 +61,7 @@ class TokenErrorResponseSpec extends Specification {
         'temporarily_unavailable' | TokenError.TEMPORARILY_UNAVAILABLE
         'slow_down'               | TokenError.SLOW_DOWN
         'some_vendor_code'        | TokenError.UNKNOWN
+        'Invalid_Grant'           | TokenError.INVALID_GRANT
     }
 
     void "a body without error does not fail to deserialize and toString is null safe"() {
@@ -100,5 +101,18 @@ class TokenErrorResponseSpec extends Specification {
         then:
         response.errorCode == null
         response.error == null
+    }
+
+    void "setError replaces a raw error code set previously"() {
+        given:
+        TokenErrorResponse response = new TokenErrorResponse()
+        response.errorCode = "some_vendor_code"
+
+        when:
+        response.error = TokenError.INVALID_SCOPE
+
+        then:
+        response.errorCode == "invalid_scope"
+        response.error == TokenError.INVALID_SCOPE
     }
 }

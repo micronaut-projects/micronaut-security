@@ -5,15 +5,6 @@ import spock.lang.Specification
 
 class TokenErrorSpec extends Specification {
 
-    void "TokenError should be deserializable from a string"() {
-        setup:
-        ObjectMapper objectMapper = ObjectMapper.getDefault()
-        when:
-        def deserializationResult = objectMapper.readValue('"unauthorized_client"', TokenError)
-        then:
-        deserializationResult == TokenError.UNAUTHORIZED_CLIENT
-    }
-
     void "TokenError #expected is deserializable from #json"(String json, TokenError expected) {
         setup:
         ObjectMapper objectMapper = ObjectMapper.getDefault()
@@ -53,14 +44,28 @@ class TokenErrorSpec extends Specification {
         '"unknown"' == objectMapper.writeValueAsString(TokenError.UNKNOWN)
     }
 
-    void "TokenError.of resolves known codes and falls back to UNKNOWN"() {
+    void "TokenError.of(#code) resolves to #expected"(String code, TokenError expected) {
         expect:
-        TokenError.of("invalid_token") == TokenError.INVALID_TOKEN
-        TokenError.of("Invalid_Token") == TokenError.INVALID_TOKEN
-        TokenError.of("some_vendor_code") == TokenError.UNKNOWN
-        TokenError.of("") == TokenError.UNKNOWN
-        TokenError.of(null) == TokenError.UNKNOWN
-        TokenError.INVALID_TOKEN.errorCode == "invalid_token"
-        TokenError.INVALID_TOKEN.toString() == "invalid_token"
+        TokenError.of(code) == expected
+
+        where:
+        code               | expected
+        "invalid_token"    | TokenError.INVALID_TOKEN
+        "Invalid_Token"    | TokenError.INVALID_TOKEN
+        "INVALID_TOKEN"    | TokenError.INVALID_TOKEN
+        "some_vendor_code" | TokenError.UNKNOWN
+        " invalid_token"   | TokenError.UNKNOWN
+        ""                 | TokenError.UNKNOWN
+        null               | TokenError.UNKNOWN
+    }
+
+    void "every TokenError resolves from its own error code"(TokenError tokenError) {
+        expect:
+        TokenError.of(tokenError.errorCode) == tokenError
+        tokenError.toString() == tokenError.errorCode
+        tokenError.errorCode == tokenError.errorCode.toLowerCase(Locale.ROOT)
+
+        where:
+        tokenError << TokenError.values()
     }
 }

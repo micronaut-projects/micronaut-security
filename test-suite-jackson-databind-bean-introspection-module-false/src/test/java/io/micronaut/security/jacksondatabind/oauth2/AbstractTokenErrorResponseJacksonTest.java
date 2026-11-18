@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,7 +26,8 @@ abstract class AbstractTokenErrorResponseJacksonTest {
         "invalid_token,INVALID_TOKEN",
         "temporarily_unavailable,TEMPORARILY_UNAVAILABLE",
         "slow_down,SLOW_DOWN",
-        "some_vendor_code,UNKNOWN"
+        "some_vendor_code,UNKNOWN",
+        "Invalid_Grant,INVALID_GRANT"
     })
     void errorCodesDeserializeKeepingTheRawCode(String code, TokenError expected) throws IOException {
         String json = "{\"error\":\"" + code + "\",\"error_description\":\"desc\",\"error_uri\":\"https://example.com/errors\"}";
@@ -48,7 +48,6 @@ abstract class AbstractTokenErrorResponseJacksonTest {
         assertNull(response.getError());
         assertNull(response.getErrorCode());
         assertEquals("desc", response.getErrorDescription());
-        assertDoesNotThrow(response::toString);
         assertEquals("error: null, errorDescription: desc, errorUri: null", response.toString());
     }
 
@@ -60,7 +59,7 @@ abstract class AbstractTokenErrorResponseJacksonTest {
     }
 
     @Test
-    void serializationUsesSnakeCaseAndTheRawErrorCode() throws IOException {
+    void serializationUsesSnakeCase() throws IOException {
         TokenErrorResponse response = new TokenErrorResponse();
         response.setError(TokenError.INVALID_CLIENT);
         response.setErrorDescription("errorDescription");
@@ -73,10 +72,16 @@ abstract class AbstractTokenErrorResponseJacksonTest {
         assertEquals("invalid_client", jsonNode.get("error").getStringValue());
         assertEquals("errorDescription", jsonNode.get("error_description").getStringValue());
         assertEquals("errorUri", jsonNode.get("error_uri").getStringValue());
+    }
 
+    @Test
+    void serializationWritesTheRawErrorCode() throws IOException {
         TokenErrorResponse vendor = new TokenErrorResponse();
         vendor.setErrorCode("some_vendor_code");
+
         JsonNode vendorNode = jsonMapper.writeValueToTree(vendor);
+
+        assertEquals(1, vendorNode.size());
         assertEquals("some_vendor_code", vendorNode.get("error").getStringValue());
         assertEquals(TokenError.UNKNOWN, vendor.getError());
     }
