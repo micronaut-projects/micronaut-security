@@ -208,10 +208,11 @@ public class Authenticator<T> {
         } else {
             // Providers may complete on different threads, so failures are recorded by provider index and, when no
             // provider succeeds, the failure of the first provider in provider order is returned. This mirrors the
-            // imperative ANY path.
+            // imperative ANY path. Each provider is invoked inside a defer so that a provider which throws instead of
+            // returning a publisher is recorded as a failure as well.
             AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
             Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1, IntStream.range(0, providers.size())
-                    .mapToObj(index -> Flux.from(providers.get(index).authenticate(request, authenticationRequest))
+                    .mapToObj(index -> Flux.defer(() -> Flux.from(providers.get(index).authenticate(request, authenticationRequest)))
                             .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
                             .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
                                 failures.set(index, failedResponseForThrowable(t));

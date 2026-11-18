@@ -8,6 +8,7 @@ import io.micronaut.security.authentication.provider.ReactiveAuthenticationProvi
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.reactivestreams.Publisher;
@@ -91,6 +92,19 @@ class AuthenticatorAnyStrategyFailureTest {
 
         assertTrue(rsp.isAuthenticated());
         assertEquals("sherlock", rsp.getAuthentication().orElseThrow().getName());
+    }
+
+    @Test
+    void aReactiveProviderThrowingInsteadOfReturningAPublisherIsTreatedAsAFailure() {
+        ReactiveAuthenticationProvider<Object, Object, Object> throwsOnCall = (requestContext, authenticationRequest) -> {
+            throw new IllegalStateException("boom");
+        };
+        Authenticator<Object> authenticator = new Authenticator<>(ctx,
+                List.of(new ReactiveProvider(failing(AuthenticationFailureReason.USER_NOT_FOUND)), throwsOnCall),
+                List.of(),
+                new SecurityConfigurationProperties());
+
+        assertFailure(AuthenticationFailureReason.USER_NOT_FOUND, authenticate(authenticator));
     }
 
     private static AuthenticationResponse authenticate(Authenticator<Object> authenticator) {
