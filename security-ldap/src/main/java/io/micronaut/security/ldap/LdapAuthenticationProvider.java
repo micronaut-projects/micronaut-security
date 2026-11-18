@@ -133,8 +133,10 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                     String dn = result.getDn();
                     try {
                         userContext = contextBuilder.build(configuration.getSettings(dn, password));
-                    } catch (AuthenticationNotSupportedException | OperationNotSupportedException e) {
+                    } catch (javax.naming.AuthenticationException | AuthenticationNotSupportedException | OperationNotSupportedException e) {
                         // The server rejected the user bind itself, so the supplied credentials are not accepted.
+                        // Only this bind says anything about the credentials: the same exceptions thrown by the
+                        // manager context are a problem of the directory or its configuration.
                         debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", username, e.getClass().getSimpleName(), e.getMessage());
                         return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                     }
@@ -185,11 +187,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             }
         } catch (NamingException e) {
             debug(LOG, "Failed to authenticate with user [{}].  {}", username, e);
-            if (e instanceof javax.naming.AuthenticationException) {
-                return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
-            } else {
-                return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
-            }
+            return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         } finally {
             contextBuilder.close(managerContext);
         }

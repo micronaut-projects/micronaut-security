@@ -9,6 +9,9 @@ import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.ldap.context.ContextSettings
 import io.micronaut.security.ldap.context.DefaultContextBuilder
+import io.micronaut.security.ldap.context.DefaultLdapSearchService
+import io.micronaut.security.ldap.context.LdapSearchResult
+import io.micronaut.security.ldap.context.SearchSettings
 import jakarta.inject.Singleton
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -55,6 +58,7 @@ class LdapBindFailureReasonSpec extends InMemoryLdapSpec {
 
     def cleanup() {
         ctx.getBean(FailingContextBuilder).reset()
+        ctx.getBean(FailingLdapSearchService).exception = null
     }
 
     void "#exception.class.simpleName during the #phase bind yields #reason"() {
@@ -85,6 +89,27 @@ class LdapBindFailureReasonSpec extends InMemoryLdapSpec {
         'manager' | new AuthenticationNotSupportedException("not supported")         || AuthenticationFailureReason.UNKNOWN
         'manager' | new OperationNotSupportedException("[LDAP: error code 53]")      || AuthenticationFailureReason.UNKNOWN
         'manager' | new CommunicationException("connection refused")                 || AuthenticationFailureReason.UNKNOWN
+    }
+
+    void "#exception.class.simpleName while searching with the manager context yields UNKNOWN"() {
+        given:
+        ctx.getBean(FailingLdapSearchService).exception = exception
+        LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
+
+        when:
+        AuthenticationResponse response = authenticate(authenticationProvider, "riemann")
+
+        then:
+        !response.authenticated
+        response instanceof AuthenticationFailed
+        ((AuthenticationFailed) response).reason == AuthenticationFailureReason.UNKNOWN
+
+        where:
+        exception << [
+                new javax.naming.AuthenticationException("referral bind rejected"),
+                new AuthenticationNotSupportedException("not supported"),
+                new OperationNotSupportedException("[LDAP: error code 53]"),
+        ]
     }
 
     void "the user is authenticated when no bind fails"() {
@@ -121,6 +146,25 @@ class LdapBindFailureReasonSpec extends InMemoryLdapSpec {
                 throw exception
             }
             super.build(contextSettings)
+        }
+    }
+
+    /**
+     * Delegates to the default search service unless an exception has been configured for the user search.
+     */
+    @Requires(property = "spec.name", value = "LdapBindFailureReasonSpec")
+    @Replaces(DefaultLdapSearchService)
+    @Singleton
+    static class FailingLdapSearchService extends DefaultLdapSearchService {
+
+        NamingException exception
+
+        @Override
+        Optional<LdapSearchResult> searchFirst(DirContext managerContext, SearchSettings settings) throws NamingException {
+            if (exception != null) {
+                throw exception
+            }
+            super.searchFirst(managerContext, settings)
         }
     }
 }
