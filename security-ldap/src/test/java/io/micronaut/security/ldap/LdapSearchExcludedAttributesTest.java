@@ -177,10 +177,8 @@ class LdapSearchExcludedAttributesTest {
             assertEquals(Set.of("cn"), lowerCaseAttributeNames(authenticate(context)));
             authenticate(context);
 
-            assertEquals(1, appender.list.size(), "the conflict must be logged once, not on every authentication");
-            assertEquals(Level.WARN, appender.list.getFirst().getLevel());
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("requests search attribute [userPassword]"));
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("search.excluded-attributes"));
+            // The conflict must be logged once, not on every authentication.
+            assertSingleWarning("requests search attribute [userPassword]", "search.excluded-attributes");
         }
     }
 
@@ -194,10 +192,7 @@ class LdapSearchExcludedAttributesTest {
             // The helper asserts the roles, which are resolved here by the user's DN because the filter attribute is stripped.
             authenticate(context);
 
-            assertEquals(1, appender.list.size());
-            assertEquals(Level.WARN, appender.list.getFirst().getLevel());
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("groups.filter-attribute [SN]"));
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("search.excluded-attributes"));
+            assertSingleWarning("groups.filter-attribute [SN]", "search.excluded-attributes");
         }
     }
 
@@ -259,8 +254,7 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             assertTrue(context.getBean(LdapConfiguration.class).isEnabled());
 
-            assertEquals(1, appender.list.size(), () -> "warnings: " + appender.list);
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("requests search attribute [userPassword]"));
+            assertSingleWarning("requests search attribute [userPassword]");
         }
     }
 
@@ -271,8 +265,7 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             assertTrue(context.getBean(LdapConfiguration.class).isEnabled());
 
-            assertEquals(1, appender.list.size(), () -> "warnings: " + appender.list);
-            assertTrue(appender.list.getFirst().getFormattedMessage().contains("requests search attribute [userPassword]"));
+            assertSingleWarning("requests search attribute [userPassword]");
         }
     }
 
@@ -284,7 +277,7 @@ class LdapSearchExcludedAttributesTest {
         try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
             assertTrue(context.getBean(LdapConfiguration.class).isEnabled());
 
-            assertEquals(1, appender.list.size(), () -> "warnings: " + appender.list);
+            assertSingleWarning("requests search attribute [userPassword]");
         }
     }
 
@@ -380,6 +373,16 @@ class LdapSearchExcludedAttributesTest {
         assertEquals("riemann", authentication.getName());
         assertEquals(Set.of("Mathematicians"), Set.copyOf(authentication.getRoles()));
         return authentication;
+    }
+
+    private void assertSingleWarning(String... messageFragments) {
+        assertEquals(1, appender.list.size(), () -> "warnings: " + appender.list);
+        ILoggingEvent warning = appender.list.getFirst();
+        assertEquals(Level.WARN, warning.getLevel());
+        for (String fragment : messageFragments) {
+            assertTrue(warning.getFormattedMessage().contains(fragment),
+                () -> "expected [" + fragment + "] in: " + warning.getFormattedMessage());
+        }
     }
 
     private static void assertReturned(Set<String> names, String attribute) {
