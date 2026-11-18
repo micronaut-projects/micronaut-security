@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.Internal;
  * Condition to enable {@link CookieCsrfTokenRepository} via {@code micronaut.security.csrf.repositories.cookie.enabled}.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.5.3
  */
 @Internal
 public final class CookieCsrfTokenRepositoryEnabledCondition extends CsrfRepositoryEnabledCondition {

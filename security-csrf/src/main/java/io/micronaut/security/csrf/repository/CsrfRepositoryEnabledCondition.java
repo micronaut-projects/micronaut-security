@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * When neither key is set, the repository is enabled.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.5.3
  */
 @Internal
 public abstract class CsrfRepositoryEnabledCondition implements Condition {

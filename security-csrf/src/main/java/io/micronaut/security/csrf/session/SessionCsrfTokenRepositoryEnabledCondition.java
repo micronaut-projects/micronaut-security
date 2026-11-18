@@ -22,7 +22,7 @@ import io.micronaut.security.csrf.repository.CsrfRepositoryEnabledCondition;
  * Condition to enable {@link SessionCsrfTokenRepository} via {@code micronaut.security.csrf.repositories.session.enabled}.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.5.3
  */
 @Internal
 public final class SessionCsrfTokenRepositoryEnabledCondition extends CsrfRepositoryEnabledCondition {
