@@ -21,6 +21,7 @@ import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.simple.SimpleHttpRequest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -57,6 +58,17 @@ class CookiePriorToLoginPersistenceTest {
         assertEquals(expectedCookieValue, cookie.get().getValue());
     }
 
+    @Test
+    void onUnauthorizedPersistsAShortLivedHttpOnlyCookie() {
+        MutableHttpResponse<?> response = HttpResponse.ok();
+        persistence.onUnauthorized(new SimpleHttpRequest<>(HttpMethod.GET, "/secured", null), response);
+        Optional<Cookie> cookie = response.getCookie(COOKIE_NAME);
+        assertTrue(cookie.isPresent());
+        assertTrue(cookie.get().isHttpOnly());
+        assertEquals("/", cookie.get().getPath());
+        assertEquals(300, cookie.get().getMaxAge());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
         "////evil.example/x",
@@ -73,7 +85,11 @@ class CookiePriorToLoginPersistenceTest {
     @ValueSource(strings = {
         "/secured",
         "/secured?foo=bar",
+        "/secured/",
+        "/a/b/c?x=1&y=2",
         "/",
+        // an absolute URI in the query does not change where the redirect points to
+        "/secured?redirect=https://evil.example",
         // percent-encoded slashes stay encoded in the Location header and are therefore a local path
         "/%2F/evil.example"
     })
@@ -91,16 +107,32 @@ class CookiePriorToLoginPersistenceTest {
         "///evil.example/x",
         "////evil.example/x",
         "https://evil.example/x",
+        "http://evil.example/x",
+        "HTTPS://evil.example/x",
+        "http:/evil.example/x",
         "evil.example/x",
         "javascript:alert(1)",
+        "mailto:someone@evil.example",
         "/\\evil.example",
-        "/has space"
+        "\\evil.example/x",
+        "\\\\evil.example/x",
+        "/has space",
+        ":::",
+        ""
     })
     void getOriginalUriIgnoresNonLocalValues(String cookieValue) {
         MutableHttpResponse<?> response = HttpResponse.ok();
         Optional<URI> originalUri = persistence.getOriginalUri(loginRequest(cookieValue), response);
         assertFalse(originalUri.isPresent(), () -> cookieValue + " must be ignored");
         assertCookieCleared(response);
+    }
+
+    @Test
+    void getOriginalUriIsEmptyAndSetsNoCookieWithoutAnOriginalUriCookie() {
+        MutableHttpResponse<?> response = HttpResponse.ok();
+        Optional<URI> originalUri = persistence.getOriginalUri(new SimpleHttpRequest<>(HttpMethod.POST, "/login", null), response);
+        assertFalse(originalUri.isPresent());
+        assertFalse(response.getCookie(COOKIE_NAME).isPresent(), "there is no cookie to expire");
     }
 
     private static MutableHttpRequest<?> loginRequest(String cookieValue) {
