@@ -27,7 +27,7 @@ import org.jspecify.annotations.NonNull;
  * Utility methods for X.509 authentication.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Internal
 public final class X509Utils {
