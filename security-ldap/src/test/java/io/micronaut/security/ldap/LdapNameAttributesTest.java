@@ -69,7 +69,8 @@ class LdapNameAttributesTest {
 
             assertTrue(response.isAuthenticated());
             assertEquals(username, response.getAuthentication().orElseThrow().getName());
-            LdapSearchResult result = searchService.lastResult.orElseThrow();
+            LdapSearchResult result = searchService.lastResult;
+            assertNotNull(result);
             assertEquals(dn, result.getDn());
             ConvertibleValues<Object> attributes = result.getAttributes();
             assertNotNull(attributes);
@@ -91,7 +92,8 @@ class LdapNameAttributesTest {
             assertFalse(response.isAuthenticated());
             assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH,
                 assertInstanceOf(AuthenticationFailed.class, response).getReason());
-            LdapSearchResult result = searchService.lastResult.orElseThrow();
+            LdapSearchResult result = searchService.lastResult;
+            assertNotNull(result);
             assertEquals(dn, result.getDn());
             assertNull(result.getAttributes());
         }
@@ -132,13 +134,14 @@ class LdapNameAttributesTest {
     @Singleton
     static class NullAttributesLdapSearchService extends DefaultLdapSearchService {
 
-        private Optional<LdapSearchResult> lastResult = Optional.empty();
+        private @Nullable LdapSearchResult lastResult;
 
         @Override
         public Optional<LdapSearchResult> searchFirst(DirContext managerContext, SearchSettings settings) throws NamingException {
             lastResult = super.searchFirst(managerContext, settings)
-                .map(result -> new NullAttributesLdapSearchResult(result.getDn()));
-            return lastResult;
+                .map(result -> new NullAttributesLdapSearchResult(result.getDn()))
+                .orElse(null);
+            return Optional.ofNullable(lastResult);
         }
     }
 
