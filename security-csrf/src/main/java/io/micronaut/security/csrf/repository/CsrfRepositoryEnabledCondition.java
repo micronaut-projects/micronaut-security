@@ -42,7 +42,6 @@ import java.util.WeakHashMap;
  */
 @Internal
 public abstract class CsrfRepositoryEnabledCondition implements Condition {
-    private static final Logger LOG = LoggerFactory.getLogger(CsrfRepositoryEnabledCondition.class);
     private static final Map<BeanContext, Set<String>> WARNED = Collections.synchronizedMap(new WeakHashMap<>());
 
     private final String canonicalKey;
@@ -97,8 +96,13 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
         synchronized (WARNED) {
             firstTime = WARNED.computeIfAbsent(beanContext, k -> new HashSet<>()).add(legacyKey);
         }
-        if (firstTime && LOG.isWarnEnabled()) {
-            LOG.warn("Configuration property [{}] is deprecated. Use [{}] instead.", legacyKey, canonicalKey);
+        if (firstTime && CsrfRepositoryEnabledConditionLogging.LOG.isWarnEnabled()) {
+            CsrfRepositoryEnabledConditionLogging.LOG.warn("Configuration property [{}] is deprecated. Use [{}] instead.", legacyKey, canonicalKey);
         }
+    }
+
+    // GraalVM support: Use an inner class for logging to avoid build time initialization of logger
+    private static final class CsrfRepositoryEnabledConditionLogging {
+        private static final Logger LOG = LoggerFactory.getLogger(CsrfRepositoryEnabledCondition.class);
     }
 }
