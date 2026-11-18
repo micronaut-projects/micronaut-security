@@ -12,3 +12,13 @@ sn: Doe
 cn: John/Doe
 userpassword: password
 
+dn: cn=Jane \"JD\" Doe,dc=example,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: janedoe
+sn: Doe
+cn: Jane "JD" Doe
+userpassword: password
+

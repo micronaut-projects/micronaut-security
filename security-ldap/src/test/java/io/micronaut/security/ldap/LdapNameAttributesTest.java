@@ -99,7 +99,8 @@ class LdapNameAttributesTest {
 
     private static Stream<Arguments> users() {
         return Stream.of(
-            Arguments.of("slash.ldif", "johndoe", "cn=John/Doe,dc=example,dc=com", "John/Doe"),
+            Arguments.of("special-characters-dn.ldif", "johndoe", "cn=John/Doe,dc=example,dc=com", "John/Doe"),
+            Arguments.of("special-characters-dn.ldif", "janedoe", "cn=Jane \\\"JD\\\" Doe,dc=example,dc=com", "Jane \"JD\" Doe"),
             Arguments.of("basic.ldif", "riemann", "uid=riemann,dc=example,dc=com", "riemann")
         );
     }
