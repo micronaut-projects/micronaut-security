@@ -82,7 +82,7 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
             return true;
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
+                LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one: {}", config, e.getMessage());
             }
             return false;
         }
