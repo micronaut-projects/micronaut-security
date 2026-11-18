@@ -114,15 +114,15 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
 
     /**
      * Pattern the {@link SecurityFilter} should match.
-     * @param pattern The pattern
+     * @param path The pattern
      * @deprecated Use {@link #setPattern(String)} and the {@code micronaut.security.filter.pattern} property instead.
      * The {@code micronaut.security.filter.path} property populates {@link #getPattern()} only if {@code micronaut.security.filter.pattern} is not set,
      * and it does not change which routes the {@link SecurityFilter} intercepts.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
-    public void setPath(@NonNull String pattern) {
-        if (StringUtils.isNotEmpty(pattern)) {
-            this.path = pattern;
+    public void setPath(@NonNull String path) {
+        if (StringUtils.isNotEmpty(path)) {
+            this.path = path;
         }
     }
 }
