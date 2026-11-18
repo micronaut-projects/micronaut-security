@@ -151,7 +151,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 return rejectUnknownUser(requestContext, authenticationRequest);
             }
         } catch (NamingException e) {
-            debug(LOG, "Failed to authenticate with user [{}].  {}", username, e);
+            debug(LOG, "Failed to authenticate with user [{}]. Encountered {}: {}", username, e.getClass().getSimpleName(), e.getMessage());
             return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         } finally {
             contextBuilder.close(managerContext);
