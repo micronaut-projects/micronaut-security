@@ -103,7 +103,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
                 .flatMap(jwkSet -> {
                     if (shouldRefresh(ctx, jwt, jwkSet)) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Clearing cache and fetching JWKS again", jwt.getHeader().getKeyID(), url);
+                            LOG.debug("JWT key ID {} not found in cached JWKS for {}. Clearing cache and fetching JWKS again", JwtLogUtils.sanitize(jwt.getHeader().getKeyID()), url);
                         }
                         jwkSetFetcher.clearCache(providerName, url);
                         return Mono.from(jwkSetFetcher.fetch(providerName, url))
@@ -158,7 +158,7 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
                 } else {
                     LOG.debug("Signature not verified for {}", JwtLogUtils.describe(jwt));
                     if (!JwksSignatureUtils.supports(jwt.getHeader().getAlgorithm(), jwkSet)) {
-                        LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", jwt.getHeader().getAlgorithm(), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
+                        LOG.debug("JWT Signature algorithm {} not supported by JWK Set. {} ", JwtLogUtils.sanitize(jwt.getHeader().getAlgorithm().getName()), JwksSignatureUtils.supportedAlgorithmsMessage(jwkSet));
                     }
                 }
             }
