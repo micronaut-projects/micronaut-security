@@ -62,6 +62,7 @@ public interface SearchSettings {
      * The default is empty to preserve the behavior of custom implementations.
      * Excluded names without LDAP options cover all option variants, so {@code userPassword}
      * also excludes {@code userPassword;binary}.
+     * Option order is ignored. The names and OIDs of {@code userPassword} and {@code unicodePwd} are treated as aliases.
      *
      * @return The attribute names to strip from the search results
      * @since 5.6.0

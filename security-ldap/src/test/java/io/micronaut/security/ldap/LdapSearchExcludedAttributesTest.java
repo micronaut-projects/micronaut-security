@@ -76,12 +76,24 @@ class LdapSearchExcludedAttributesTest {
     static void setup() throws Exception {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
         config.addAdditionalBindCredentials("cn=admin,dc=example,dc=com", "password");
+        // Keep the password's numeric ID in search responses while allowing this fixture user to bind.
+        config.addAdditionalBindCredentials("uid=oid-user,dc=example,dc=com", "password");
         server = new InMemoryDirectoryServer(config);
         try (InputStream ldif = LdapSearchExcludedAttributesTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
             server.importFromLDIF(true, new LDIFReader(ldif));
         }
         server.modify("uid=riemann,dc=example,dc=com", new Modification(
             ModificationType.ADD, "userPassword;binary", "non-secret-test-fixture"));
+        server.modify("uid=riemann,dc=example,dc=com", new Modification(
+            ModificationType.ADD, "userPassword;binary;x-review", "non-secret-test-fixture"));
+        server.add(
+            "dn: uid=oid-user,dc=example,dc=com",
+            "objectClass: inetOrgPerson",
+            "uid: oid-user",
+            "cn: OID User",
+            "sn: User",
+            "2.5.4.35: password"
+        );
         server.startListening();
     }
 
@@ -145,6 +157,35 @@ class LdapSearchExcludedAttributesTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void aPasswordReturnedAsAnOidIsExcludedUnlessExclusionsAreCleared(boolean clearExclusions) {
+        Map<String, Object> properties = properties();
+        if (clearExclusions) {
+            properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of());
+        }
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            Set<String> names = lowerCaseAttributeNames(authenticate(context, "oid-user", Set.of()));
+
+            assertReturned(names, "uid");
+            assertStripped(names, "userpassword");
+            assertEquals(clearExclusions, names.contains("2.5.4.35"), () -> "2.5.4.35 in " + names);
+        }
+    }
+
+    @Test
+    void aQualifiedExclusionMatchesReorderedOptionsWithoutRemovingOtherVariants() {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.search.excluded-attributes", List.of("userPassword;x-review;binary"));
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            Set<String> names = lowerCaseAttributeNames(authenticate(context));
+
+            assertStripped(names, "userpassword;binary;x-review");
+            assertReturned(names, "userpassword");
+            assertReturned(names, "userpassword;binary");
+        }
+    }
+
     @Test
     void excludedAttributesCanBeExtendedWithAdditionalAttributes() {
         Map<String, Object> properties = properties();
@@ -169,7 +210,7 @@ class LdapSearchExcludedAttributesTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"userPassword", "userPassword;BINARY"})
+    @ValueSource(strings = {"userPassword", "userPassword;BINARY", "2.5.4.35"})
     void anExcludedAttributeIsStrippedEvenWhenRequestedExplicitly(String requestedAttribute) {
         Map<String, Object> properties = properties();
         properties.put("micronaut.security.ldap.default.search.attributes", List.of("cn", requestedAttribute));
@@ -193,6 +234,17 @@ class LdapSearchExcludedAttributesTest {
             authenticate(context);
 
             assertSingleWarning("groups.filter-attribute [SN]", "search.excluded-attributes");
+        }
+    }
+
+    @Test
+    void aGroupFilterUsingAnExcludedPasswordOidLogsAWarning() {
+        Map<String, Object> properties = properties();
+        properties.put("micronaut.security.ldap.default.groups.filter-attribute", "2.5.4.35");
+        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
+            authenticate(context);
+
+            assertSingleWarning("groups.filter-attribute [userPassword]", "search.excluded-attributes");
         }
     }
 
@@ -363,15 +415,19 @@ class LdapSearchExcludedAttributesTest {
         ));
     }
 
-    @SuppressWarnings("unchecked")
     private static Authentication authenticate(ApplicationContext context) {
+        return authenticate(context, "riemann", Set.of("Mathematicians"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Authentication authenticate(ApplicationContext context, String username, Set<String> expectedRoles) {
         LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-        AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials("riemann", "password"));
+        AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials(username, "password"));
 
         assertTrue(response.isAuthenticated());
         Authentication authentication = response.getAuthentication().orElseThrow();
-        assertEquals("riemann", authentication.getName());
-        assertEquals(Set.of("Mathematicians"), Set.copyOf(authentication.getRoles()));
+        assertEquals(username, authentication.getName());
+        assertEquals(expectedRoles, Set.copyOf(authentication.getRoles()));
         return authentication;
     }
 

@@ -11,7 +11,7 @@ include::{includedir}configurationProperties/io.micronaut.security.ldap.configur
 
 When `micronaut.security.ldap.*.search.attributes` is not set, the user search requests every attribute the manager account is allowed to read. The attributes are then exposed to your api:security.ldap.ContextAuthenticationMapper[] and api:security.ldap.group.LdapGroupProcessor[] implementations through the api:security.ldap.context.LdapSearchResult[].
 
-To avoid exposing password hashes to application code, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. An excluded name without LDAP options also excludes all its option variants: for example, `userPassword` excludes `userPassword;binary`. An exclusion containing options matches the full attribute description case-insensitively. Set the property to an empty list to disable the exclusion.
+To avoid exposing password hashes to application code, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. An excluded name without LDAP options also excludes all its option variants: for example, `userPassword` excludes `userPassword;binary`. An exclusion containing options matches the same attribute type and option set, regardless of option order. Set the property to an empty list to disable the exclusion.
 
 Setting `search.excluded-attributes` replaces the default list; it does not add to it. To strip additional attributes, repeat the defaults:
 
@@ -28,7 +28,7 @@ micronaut:
             - sambaNTPassword
 ----
 
-Surrounding whitespace in an entry is ignored, so a comma-separated value such as `userPassword, unicodePwd` in an environment variable works as expected. Exclusions match attribute names, not OIDs: list `userPassword`, not `2.5.4.35`.
+Surrounding whitespace in an entry is ignored, so a comma-separated value such as `userPassword, unicodePwd` in an environment variable works as expected. Both attribute names and numeric OIDs may be listed. The default password attribute names are treated as aliases of their OIDs: `userPassword` matches `2.5.4.35`, and `unicodePwd` matches `1.2.840.113556.1.4.90`, in either direction and with any LDAP options. Other schema aliases are not resolved automatically; list each identifier your directory returns when needed.
 
 The default list covers the two most common password attributes only. If the manager account can read other credential attributes in your directory, such as `authPassword`, `sambaNTPassword`, `sambaLMPassword`, `krbPrincipalKey` or `pwdHistory`, add them.
 

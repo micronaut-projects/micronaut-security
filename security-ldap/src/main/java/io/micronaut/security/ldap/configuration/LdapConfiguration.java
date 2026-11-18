@@ -381,9 +381,10 @@ public class LdapConfiguration implements Toggleable {
          * Sets the attributes stripped from the user search results before they are exposed to the application.
          * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
          * Names without LDAP options also exclude all option variants, such as {@code userPassword;binary}.
+         * Option order is ignored. The names and OIDs of {@code userPassword} and {@code unicodePwd} are treated as aliases.
          * Exclusions also apply to explicitly requested attributes; conflicting settings log a warning when the configuration is loaded.
          * Setting this property replaces the default list, so repeat the defaults when adding attributes.
-         * Entries are attribute names, not OIDs; surrounding whitespace is ignored and blank entries are dropped.
+         * Entries may be attribute names or OIDs; surrounding whitespace is ignored and blank entries are dropped.
          *
          * @param excludedAttributes The attributes to exclude
          * @since 5.6.0
