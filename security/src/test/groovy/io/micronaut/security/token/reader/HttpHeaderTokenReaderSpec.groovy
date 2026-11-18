@@ -51,11 +51,11 @@ class HttpHeaderTokenReaderSpec extends Specification {
         reader.extractTokenFromAuthorization(authorization) == expected
 
         where:
-        prefix  | authorization       | expected
-        'Basic' | 'BASIC x'           | Optional.of('x')
-        'Basic' | 'Baſıc x' | Optional.empty() // long s and dotless i upper-case to S and I
-        'Token' | 'ToKen x'      | Optional.of('x') // the Kelvin sign lower-cases to k, as it did before
-        'Tökén' | 'TÖKÉN x'           | Optional.of('x')
+        prefix  | authorization           | expected
+        'Basic' | 'BASIC x'               | Optional.of('x')
+        'Basic' | 'Ba\u017F\u0131c x'     | Optional.empty() // long s and dotless i upper-case to S and I
+        'Token' | 'To\u212Aen x'          | Optional.of('x') // the Kelvin sign lower-cases to k, as it did before
+        'Tökén' | 'TÖKÉN x'               | Optional.of('x')
     }
 
     void "a very long token round-trips unchanged"() {
