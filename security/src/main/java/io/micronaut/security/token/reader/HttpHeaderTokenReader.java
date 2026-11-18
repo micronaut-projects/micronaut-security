@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.token.reader;
 
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +62,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     /**
      * Removes the prefix returned by {@link #getPrefix()} and the single space after it from the header value.
      * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * A prefix which already ends with a space is not followed by another one.
      * If the prefix is {@code null} or empty, the whole header value is the token.
      *
      * @param authorization Authorization header value
@@ -69,35 +70,10 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         final String prefix = getPrefix();
-        if (StringUtils.isEmpty(prefix)) {
-            return Optional.of(authorization);
+        Optional<String> token = HeaderValuePrefixUtils.removePrefix(authorization, prefix);
+        if (token.isEmpty()) {
+            LOG.debug("{} header does not start with {}", getHeaderName(), prefix);
         }
-        final int prefixLength = prefix.length();
-        if (authorization.length() > prefixLength
-                && authorization.charAt(prefixLength) == ' '
-                && startsWithIgnoreCase(authorization, prefix)) {
-            return Optional.of(authorization.substring(prefixLength + 1));
-        }
-        LOG.debug("{} header does not start with {}", getHeaderName(), prefix);
-        return Optional.empty();
-    }
-
-    /**
-     * Compares characters by their lower-case form only. {@link String#regionMatches(boolean, int, String, int, int)}
-     * also folds through upper case, which would accept look-alikes such as {@code "Baſıc"} for {@code "Basic"}.
-     *
-     * @param value  The value to test. It must be at least as long as the prefix.
-     * @param prefix The expected prefix
-     * @return Whether the value starts with the prefix, ignoring case
-     */
-    private static boolean startsWithIgnoreCase(String value, String prefix) {
-        for (int i = 0; i < prefix.length(); i++) {
-            char expected = prefix.charAt(i);
-            char actual = value.charAt(i);
-            if (expected != actual && Character.toLowerCase(expected) != Character.toLowerCase(actual)) {
-                return false;
-            }
-        }
-        return true;
+        return token;
     }
 }

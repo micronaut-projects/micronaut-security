@@ -58,6 +58,15 @@ class HttpHeaderTokenReaderSpec extends Specification {
         'Tökén' | 'TÖKÉN x'               | Optional.of('x')
     }
 
+    void "a prefix ending with a space is not followed by another space"() {
+        given:
+        HttpHeaderTokenReader reader = new StubHttpHeaderTokenReader('Authorization', 'Bearer ')
+
+        expect:
+        reader.extractTokenFromAuthorization('Bearer x') == Optional.of('x')
+        reader.extractTokenFromAuthorization('Bearerx') == Optional.empty()
+    }
+
     void "a very long token round-trips unchanged"() {
         given:
         String token = (('a'..'z') + ('A'..'Z') + ('0'..'9') + ['-', '_', '.']).join('') * 100

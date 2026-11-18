@@ -24,6 +24,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsEnabled;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import java.util.Optional;
 
 /**
@@ -81,16 +82,13 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
+     * Removes the configured prefix and the space after it from the header value. The prefix is compared ignoring case.
+     *
      * @param authorization Authorization header value
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = prefix();
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        }
-        return Optional.empty();
+        return HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix());
     }
 
     @NonNull

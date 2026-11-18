@@ -20,6 +20,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
@@ -83,22 +84,13 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
+     * Removes the configured prefix and the space after it from the header value. The prefix is compared ignoring case.
+     *
      * @param authorization Authorization header value
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
-        }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            return Optional.empty();
-        }
+        return HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix());
     }
 
     /**
