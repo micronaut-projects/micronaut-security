@@ -17,6 +17,7 @@ package io.micronaut.security.x509;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
@@ -109,9 +110,10 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
 
     /**
      * Extracts the name from the certificate using the subject DN regex.
+     * A blank name, or a capturing group which does not take part in the match, is treated as no name.
      *
      * @param certificate the client certificate
-     * @return the name if found
+     * @return the name if found and not blank
      */
     @NonNull
     protected Optional<String> extractName(@NonNull X509Certificate certificate) {
@@ -121,6 +123,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequ
         if (!matcher.find()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(matcher.group(1));
+        String name = matcher.group(1);
+        return StringUtils.hasText(name) ? Optional.of(name) : Optional.empty();
     }
 }
