@@ -140,17 +140,17 @@ public class Authenticator<T> {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        List<AuthenticationResponse> responses = new ArrayList<>();
+        AuthenticationResponse firstFailure = null;
         for (AuthenticationProvider<T, ?, ?> provider : authenticationProviders) {
             AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
             if (response.isAuthenticated()) {
                 return response;
             }
-            responses.add(response);
+            if (firstFailure == null) {
+                firstFailure = response;
+            }
         }
-        return responses.stream()
-                        .findFirst()
-                        .orElseGet(AuthenticationResponse::failure);
+        return firstFailure != null ? firstFailure : AuthenticationResponse.failure();
     }
 
     @NonNull
