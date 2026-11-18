@@ -155,4 +155,9 @@ class LoggingUtilsTest {
     void sanitizeAcceptsNull() {
         assertEquals(null, LoggingUtils.sanitize(null));
     }
+
+    @Test
+    void sanitizeReplacesTheCharactersThatBreakALineInEachValue() {
+        assertEquals(java.util.List.of("staff", "admins__forged"), LoggingUtils.sanitizeAll(java.util.List.of("staff", "admins\r\nforged")));
+    }
 }

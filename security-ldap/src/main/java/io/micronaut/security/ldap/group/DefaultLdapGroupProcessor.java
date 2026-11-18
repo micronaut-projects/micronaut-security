@@ -57,7 +57,7 @@ public class DefaultLdapGroupProcessor implements LdapGroupProcessor {
                     });
 
             if (LOG.isTraceEnabled()) {
-                LOG.trace("The following groups were found for [{}]: {}", LoggingUtils.sanitize(result.getDn()), groupSet);
+                LOG.trace("The following groups were found for [{}]: {}", LoggingUtils.sanitize(result.getDn()), LoggingUtils.sanitizeAll(groupSet));
             }
         }
 

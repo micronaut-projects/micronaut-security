@@ -47,6 +47,7 @@ import java.util.concurrent.ExecutorService;
 
 import static io.micronaut.security.utils.LoggingUtils.debug;
 import static io.micronaut.security.utils.LoggingUtils.sanitize;
+import static io.micronaut.security.utils.LoggingUtils.sanitizeAll;
 
 /**
  * Authenticates against an LDAP server using the configuration provided through
@@ -140,7 +141,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 Set<String> groups = groups(managerContext, result, loggableUsername);
 
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, groups);
+                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, sanitizeAll(groups));
                 }
 
                 AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
@@ -209,7 +210,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             };
             return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
         });
-        debug(LOG, "Group search returned [{}] for user [{}]", groups, loggableUsername);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Group search returned [{}] for user [{}]", sanitizeAll(groups), loggableUsername);
+        }
         return groups;
     }
 

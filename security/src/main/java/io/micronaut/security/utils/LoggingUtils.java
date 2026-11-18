@@ -20,6 +20,8 @@ import io.micronaut.security.authentication.Authentication;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -88,6 +90,17 @@ public final class LoggingUtils {
             }
         }
         return value;
+    }
+
+    /**
+     * Sanitizes each value with {@link #sanitize(String)}.
+     *
+     * @param values the values to log
+     * @return the sanitized values, in the iteration order of the collection
+     * @since 5.6.0
+     */
+    public static List<String> sanitizeAll(final Collection<String> values) {
+        return values.stream().map(LoggingUtils::sanitize).toList();
     }
 
     private static boolean breaksLine(char c) {
