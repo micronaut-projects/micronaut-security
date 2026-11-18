@@ -124,10 +124,13 @@ public class ReactiveJwksSignature implements ReactiveSignatureConfiguration<Sig
         if (keyId == null) {
             return false;
         }
-        if (!ctx.hasKey(JwksClientReactorContext.class) || !ctx.get(JwksClientReactorContext.class).isRefreshOnUnknownKeyId()) {
+        if (!ctx.hasKey(JwksClientReactorContext.class) || JwksSignatureUtils.containsKeyId(jwkSet, keyId)) {
             return false;
         }
-        if (JwksSignatureUtils.containsKeyId(jwkSet, keyId)) {
+        JwksClientReactorContext jwksClientReactorContext = ctx.get(JwksClientReactorContext.class);
+        if (!jwksClientReactorContext.isRefreshOnUnknownKeyId()) {
+            // no refresh yet: another signature configuration may verify the token. Report it so that the token is verified again allowing the refresh.
+            jwksClientReactorContext.markKeyIdUnknown();
             return false;
         }
         return tryAcquireRefresh();

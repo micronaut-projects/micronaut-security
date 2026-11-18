@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class JwksClientReactorContext {
     private final AtomicBoolean tokenVerified = new AtomicBoolean(false);
     private final AtomicBoolean refreshOnUnknownKeyId = new AtomicBoolean(false);
+    private final AtomicBoolean keyIdUnknown = new AtomicBoolean(false);
 
     /**
      * @return Whether the token has already been verified by any configured signature.
@@ -57,5 +58,21 @@ public final class JwksClientReactorContext {
      */
     public void allowRefreshOnUnknownKeyId() {
         refreshOnUnknownKeyId.set(true);
+    }
+
+    /**
+     * @return Whether a JWKS signature configuration reported that the token key ID is not present in its cached JWKS.
+     * @since 5.5.3
+     */
+    public boolean isKeyIdUnknown() {
+        return keyIdUnknown.get();
+    }
+
+    /**
+     * Reports that the token key ID is not present in the cached JWKS of a signature configuration, so a refresh of that JWKS may verify the token.
+     * @since 5.5.3
+     */
+    public void markKeyIdUnknown() {
+        keyIdUnknown.set(true);
     }
 }

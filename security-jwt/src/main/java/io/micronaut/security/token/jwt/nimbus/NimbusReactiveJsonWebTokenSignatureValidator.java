@@ -43,8 +43,8 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
     }
 
     /**
-     * Validates the signature against every signature configuration. If none of them verifies the token and the token
-     * carries a {@code kid} header, the signature configurations are given a second chance with
+     * Validates the signature against every signature configuration. If none of them verifies the token and a JWKS based
+     * configuration reported that the {@code kid} header of the token is not present in its cached JWKS, the signature configurations are given a second chance with
      * {@link JwksClientReactorContext#allowRefreshOnUnknownKeyId()} so that JWKS based configurations may refresh their
      * cached JWKS if the key ID is unknown to them.
      * @param signedToken The signed token
@@ -59,6 +59,10 @@ class NimbusReactiveJsonWebTokenSignatureValidator implements ReactiveJsonWebTok
             return verified;
         }
         return verified.switchIfEmpty(Mono.defer(() -> {
+            if (!jwksClientReactorContext.isKeyIdUnknown()) {
+                // every JWKS knows the key ID, or there is no JWKS: verifying again would only repeat the work
+                return Mono.empty();
+            }
             jwksClientReactorContext.allowRefreshOnUnknownKeyId();
             return verify(signedToken, jwksClientReactorContext);
         }));
