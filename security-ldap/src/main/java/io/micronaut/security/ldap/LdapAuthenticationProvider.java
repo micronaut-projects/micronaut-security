@@ -124,12 +124,12 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
 
             if (optionalResult.isPresent()) {
                 LdapSearchResult result = optionalResult.get();
-                debug(LOG, "User found in context [{}]. Attempting to bind.", result.getDn());
+                String dn = result.getDn();
+                debug(LOG, "User found in context [{}]. Attempting to bind.", dn);
 
                 DirContext userContext = null;
                 try {
-                    String dn = result.getDn();
-                    userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                    userContext = contextBuilder.build(configuration.getSettings(dn, password));
                     if (result.getAttributes() == null) {
                         // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
                         // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
@@ -140,7 +140,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                     contextBuilder.close(userContext);
                 }
 
-                debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
+                debug(LOG, "Successfully bound user [{}]. Attempting to retrieve groups.", dn);
 
                 Set<String> groups = Collections.emptySet();
 
