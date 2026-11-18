@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import io.micronaut.security.token.config.TokenConfiguration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -96,6 +97,12 @@ class DefaultRolesFinderTest {
     void collectionClaimIsNotModifiedByTheSeparator() {
         assertEquals(List.of("ADMIN, USER", " VIEWER"),
                 rolesFinder(",").resolveRoles(Map.of(ROLES, List.of("ADMIN, USER", " VIEWER"))));
+    }
+
+    @Test
+    void nullElementsOfACollectionClaimAreSkipped() {
+        assertEquals(List.of("ADMIN", "USER"),
+                rolesFinder(",").resolveRoles(Map.of(ROLES, Arrays.asList("ADMIN", null, "USER"))));
     }
 
     @Test

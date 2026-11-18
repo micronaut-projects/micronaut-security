@@ -50,7 +50,7 @@ public class DefaultRolesFinder implements RolesFinder {
      * @param rolesObject Object containing the roles
      * @return if the supplied object is {@literal null} it returns an empty list,<br />
      *         if it is a String and the {@link io.micronaut.security.token.config.TokenConfiguration#getRolesSeparator()} is not null or empty then it will be split by the literal separator, each role trimmed and empty entries dropped, and returned as a list,<br />
-     *         if it is an iterable, it returns a list of each element {@link Object#toString()},<br />
+     *         if it is an iterable, it returns a list of each non-null element {@link Object#toString()},<br />
      *         else it returns {@link Object#toString()}
      */
     @NonNull
@@ -67,7 +67,9 @@ public class DefaultRolesFinder implements RolesFinder {
         if (rolesObject instanceof Iterable) {
             List<String> roles = new ArrayList<>();
             for (Object o : ((Iterable<?>) rolesObject)) {
-                roles.add(o.toString());
+                if (o != null) {
+                    roles.add(o.toString());
+                }
             }
             return roles;
         }
