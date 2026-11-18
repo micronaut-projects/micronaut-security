@@ -44,14 +44,14 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     protected abstract String getHeaderName();
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a token in a HTTP request.
      * @param request The request to look for the token in
-     * @return if the JWT token is found it is returned, empty if not
+     * @return if the token is found it is returned, empty if not
      */
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Looking for bearer token in {} header", getHeaderName());
+            LOG.debug("Looking for token in {} header", getHeaderName());
         }
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(getHeaderName());

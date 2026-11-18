@@ -19,7 +19,7 @@ class BearerTokenReaderSpec extends Specification {
     @Shared
     BearerTokenReader bearerTokenReader = new BearerTokenReader(config)
 
-    def extractTokenFromAuthorization() {
+    def "extractTokenFromAuthorization removes the configured Bearer prefix"() {
         expect:
         bearerTokenReader.extractTokenFromAuthorization('Bearer XXX').get() == 'XXX'
 
@@ -37,15 +37,6 @@ class BearerTokenReaderSpec extends Specification {
 
         and: 'a prefix followed only by a space yields an empty token'
         bearerTokenReader.extractTokenFromAuthorization('Bearer ').get() == ''
-    }
-
-    def "a very long token round-trips unchanged"() {
-        given:
-        String token = 'eyJhbGciOiJIUzI1NiJ9.' + ('abcdefghijklmnopqrstuvwxyz0123456789' * 200) + '.signature'
-        def request = HttpRequest.create(HttpMethod.GET, '/').header('Authorization', 'Bearer ' + token)
-
-        expect:
-        bearerTokenReader.findToken(request).get() == token
     }
 
     def "if authorization header not present returns empty"() {

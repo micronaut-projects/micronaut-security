@@ -8,7 +8,10 @@ import spock.lang.Specification
 class HttpHeaderTokenReaderSpec extends Specification {
 
     @Shared
-    HttpHeaderTokenReader tokenReader = new StubHttpHeaderTokenReader('Header', 'Prefix');
+    HttpHeaderTokenReader tokenReader = new StubHttpHeaderTokenReader('Header', 'Prefix')
+
+    @Shared
+    HttpHeaderTokenReader bearerTokenReader = new StubHttpHeaderTokenReader('Authorization', 'Bearer')
 
     def "findToken parsing is case insensitive"() {
         given:
@@ -17,9 +20,6 @@ class HttpHeaderTokenReaderSpec extends Specification {
         expect:
         tokenReader.findToken(request).get() == 'XXX'
     }
-
-    @Shared
-    HttpHeaderTokenReader bearerTokenReader = new StubHttpHeaderTokenReader('Authorization', 'Bearer')
 
     void "extractTokenFromAuthorization #description"(String authorization, Optional<String> expected, String description) {
         expect:
@@ -81,8 +81,8 @@ class HttpHeaderTokenReaderSpec extends Specification {
     }
 
     private class StubHttpHeaderTokenReader extends HttpHeaderTokenReader {
-        String headerName;
-        String prefix;
+        String headerName
+        String prefix
 
         StubHttpHeaderTokenReader(String headerName, String prefix) {
             this.headerName = headerName
