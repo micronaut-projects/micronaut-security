@@ -39,9 +39,11 @@ import javax.lang.model.element.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -86,38 +88,51 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
      * The runtime optimisation ({@link DefaultJwkSetFetcher.Optimizations}) is looked up by URL, not by name.
      * Keying by URL ensures that a {@link JwksSignatureConfiguration} and an {@link OpenIdProviderMetadata}
      * sharing the same name but pointing at different URLs are both baked, while several sources sharing
-     * one URL are fetched and baked only once.
+     * one URL are baked only once.
      *
      * @param context The AOT context
-     * @return A map of JWKS URL to the name of the first source that declared it, in discovery order
+     * @return A map of JWKS URL to the names of the sources that declared it, both in discovery order
      */
     @NonNull
-    private Map<String, String> jwksUrls(@NonNull AOTContext context) {
-        Map<String, String> urls = new LinkedHashMap<>();
+    private Map<String, Set<String>> jwksUrls(@NonNull AOTContext context) {
+        Map<String, Set<String>> urls = new LinkedHashMap<>();
         AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context).stream()
             .filter(config -> StringUtils.isNotEmpty(config.getUrl()))
-            .forEach(config -> urls.putIfAbsent(config.getUrl(), config.getName()));
+            .forEach(config -> urls.computeIfAbsent(config.getUrl(), url -> new LinkedHashSet<>()).add(config.getName()));
         AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
             .filter(metadata -> StringUtils.isNotEmpty(metadata.getJwksUri()))
-            .forEach(metadata -> urls.putIfAbsent(metadata.getJwksUri(), metadata.getName()));
+            .forEach(metadata -> urls.computeIfAbsent(metadata.getJwksUri(), url -> new LinkedHashSet<>()).add(metadata.getName()));
         return urls;
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
-        Map<String, String> urls = jwksUrls(context);
+        Map<String, Set<String>> urls = jwksUrls(context);
         JwksClient jwksClient = AOTContextUtils.getBean(JwksClient.class, context);
         List<GeneratedFile> result = new ArrayList<>();
-        int count = 0;
-        for (Map.Entry<String, String> entry: urls.entrySet()) {
-            String url = entry.getKey();
-            String providerName = entry.getValue();
-            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, providerName, url, count);
-            if (generatedFile.isPresent()) {
-                result.add(generatedFile.get());
-                count++;
-            }
+        for (Map.Entry<String, Set<String>> entry: urls.entrySet()) {
+            generatedFile(context, jwksClient, entry.getValue(), entry.getKey(), result.size())
+                .ifPresent(result::add);
         }
         return result;
+    }
+
+    /**
+     * The provider name selects the HTTP client settings used to reach the URL, so a source whose client cannot
+     * retrieve the JWKS must not prevent another source sharing the URL from baking it: the JWKS of the first
+     * source able to retrieve it is baked.
+     */
+    private Optional<GeneratedFile> generatedFile(AOTContext aotContext,
+                                        JwksClient jwksClient,
+                                        Set<String> providerNames,
+                                        String url,
+                                        int count) {
+        for (String providerName : providerNames) {
+            Optional<GeneratedFile> generatedFile = generatedFile(aotContext, jwksClient, providerName, url, count);
+            if (generatedFile.isPresent()) {
+                return generatedFile;
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<GeneratedFile> generatedFile(AOTContext aotContext,

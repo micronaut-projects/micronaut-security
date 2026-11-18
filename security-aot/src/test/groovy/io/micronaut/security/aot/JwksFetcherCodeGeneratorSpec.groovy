@@ -9,6 +9,8 @@ import io.micronaut.aot.core.AOTCodeGenerator
 import io.micronaut.aot.core.codegen.AbstractSourceGeneratorSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.MediaType
@@ -18,6 +20,10 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.jwt.signature.jwks.JwksClient
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 
@@ -179,6 +185,34 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         ]]
     }
 
+    void "a JWKS URL is baked by another source sharing it when the first source cannot retrieve the JWKS"() {
+        when:
+        generate()
+
+        then:
+        assertThatGeneratedSources {
+            doesNotCreateInitializer()
+            assert generatedClasses.size() == 2
+            hasClass("AotJwksFetcher") {
+                containingSources "configs.put(\"${keysUrl}\", AotJwkSetFetcher0::create);"
+            }
+            hasClass("AotJwkSetFetcher0") {
+                containingSources 'public static JWKSet create()'
+            }
+            compiles()
+        }
+
+        where:
+        contextProperties << [[
+                'spec.unreachable-provider'                                : 'x',
+                'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
+                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
+                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
+                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
+                'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : keysUrl,
+        ]]
+    }
+
     @Requires(property = 'spec.name', value = 'EmbeddedServerJwksFetcherCodeGeneratorSpec')
     @Controller
     static class KeysController {
@@ -195,6 +229,23 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         @Secured(SecurityRule.IS_ANONYMOUS)
         String otherKeys() {
             JWKS
+        }
+    }
+
+    /**
+     * Simulates a provider whose HTTP client settings cannot reach the JWKS endpoint.
+     */
+    @Requires(property = 'spec.unreachable-provider')
+    @Replaces(JwksClient)
+    @Singleton
+    static class UnreachableProviderJwksClient implements JwksClient {
+
+        @Property(name = 'spec.unreachable-provider')
+        String unreachableProvider
+
+        @Override
+        Publisher<String> load(String providerName, String url) {
+            providerName == unreachableProvider ? Mono.<String>empty() : Mono.just(JWKS)
         }
     }
 }
