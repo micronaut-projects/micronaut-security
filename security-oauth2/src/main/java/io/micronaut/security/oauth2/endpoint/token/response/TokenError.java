@@ -21,6 +21,12 @@ import io.micronaut.core.annotation.Introspected;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * Error codes an authorization server may return in an error response.
  *
@@ -132,10 +138,13 @@ public enum TokenError {
      */
     UNKNOWN("unknown");
 
+    private static final Map<String, TokenError> BY_ERROR_CODE = Arrays.stream(values())
+        .collect(Collectors.toUnmodifiableMap(TokenError::getErrorCode, Function.identity()));
+
     private final String errorCode;
 
     /**
-     * @param errorCode The error code
+     * @param errorCode The lower case error code
      */
     TokenError(String errorCode) {
         this.errorCode = errorCode;
@@ -143,6 +152,7 @@ public enum TokenError {
 
     /**
      * Resolves a {@link TokenError} from its error code. Unrecognised (or null) codes resolve to {@link #UNKNOWN} instead of throwing.
+     * The match is case-insensitive.
      *
      * @param errorCode The error code as returned by the authorization server, for example {@code invalid_grant}.
      * @return The matching {@link TokenError} or {@link #UNKNOWN} if no constant matches.
@@ -154,17 +164,7 @@ public enum TokenError {
         if (errorCode == null) {
             return UNKNOWN;
         }
-        for (TokenError tokenError : values()) {
-            if (tokenError.errorCode.equals(errorCode)) {
-                return tokenError;
-            }
-        }
-        for (TokenError tokenError : values()) {
-            if (tokenError.errorCode.equalsIgnoreCase(errorCode)) {
-                return tokenError;
-            }
-        }
-        return UNKNOWN;
+        return BY_ERROR_CODE.getOrDefault(errorCode.toLowerCase(Locale.ROOT), UNKNOWN);
     }
 
     /**
