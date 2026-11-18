@@ -40,6 +40,21 @@ class HttpHeaderTokenReaderSpec extends Specification {
         'Basic x'        | Optional.empty()        | 'rejects a different prefix'
     }
 
+    void "prefix matching does not fold look-alike characters through upper case"(String prefix, String authorization, Optional<String> expected) {
+        given:
+        HttpHeaderTokenReader reader = new StubHttpHeaderTokenReader('Authorization', prefix)
+
+        expect:
+        reader.extractTokenFromAuthorization(authorization) == expected
+
+        where:
+        prefix  | authorization       | expected
+        'Basic' | 'BASIC x'           | Optional.of('x')
+        'Basic' | 'Baſıc x' | Optional.empty() // long s and dotless i upper-case to S and I
+        'Token' | 'ToKen x'      | Optional.of('x') // the Kelvin sign lower-cases to k, as it did before
+        'Tökén' | 'TÖKÉN x'           | Optional.of('x')
+    }
+
     void "a very long token round-trips unchanged"() {
         given:
         String token = (('a'..'z') + ('A'..'Z') + ('0'..'9') + ['-', '_', '.']).join('') * 100
