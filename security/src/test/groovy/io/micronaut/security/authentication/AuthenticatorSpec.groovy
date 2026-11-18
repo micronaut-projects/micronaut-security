@@ -206,7 +206,7 @@ class AuthenticatorSpec extends Specification {
         def creds = new UsernamePasswordCredentials('admin', 'admin')
         AuthenticationResponse rsp = Flux.from(authenticator.authenticate(null, creds)).blockFirst()
 
-        then: //The last error is returned
+        then: 'the response of the last provider is returned'
         rsp.authentication
         rsp.authentication.isPresent()
         rsp.authentication.get().name == "b"
