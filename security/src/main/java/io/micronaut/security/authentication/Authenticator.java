@@ -99,16 +99,20 @@ public class Authenticator<T> {
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && CollectionUtils.isEmpty(imperativeAuthenticationProviders)) {
             return Mono.empty();
         }
-        if (LOG.isDebugEnabled() && imperativeAuthenticationProviders != null) {
-            LOG.debug(imperativeAuthenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
-        if (LOG.isDebugEnabled() && reactiveAuthenticationProviders != null) {
-            LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
+        logProviders("Imperative authentication providers", imperativeAuthenticationProviders);
+        logProviders("Reactive authentication providers", reactiveAuthenticationProviders);
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
             return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
         }
         return authenticate(requestContext, authenticationRequest, everyProviderSorted());
+    }
+
+    private static void logProviders(String description, @Nullable List<?> providers) {
+        if (LOG.isDebugEnabled() && providers != null) {
+            LOG.debug("{}: {}", description, providers.stream()
+                    .map(provider -> provider.getClass().getName())
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
     /**
@@ -189,9 +193,7 @@ public class Authenticator<T> {
         if (providers == null) {
             return Flux.empty();
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(providers.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
+        logProviders("Authentication providers in provider order", providers);
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
             return Flux.mergeDelayError(1,
