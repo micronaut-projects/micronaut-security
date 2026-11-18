@@ -110,7 +110,7 @@ final class CsrfFilter implements Ordered {
         boolean matches = PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), uri);
         if (!matches) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Request uri {} does not match fitler regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
+                LOG.trace("Request uri {} does not match filter regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
             }
             return false;
         }
