@@ -73,7 +73,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     protected String headerValue(String token) {
         StringBuilder sb = new StringBuilder();
         String prefix = configuration.getPrefix();
-        if (prefix != null) {
+        if (StringUtils.isNotEmpty(prefix)) {
             sb.append(prefix);
             if (!prefix.endsWith(" ")) {
                 sb.append(" ");

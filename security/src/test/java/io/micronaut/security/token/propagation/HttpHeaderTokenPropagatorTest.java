@@ -33,6 +33,19 @@ class HttpHeaderTokenPropagatorTest {
         }
     }
 
+    @Test
+    void emptyPrefixWritesAndReadsTheTokenAlone() {
+        for (String prefix : new String[] {"", null}) {
+            HttpHeaderTokenPropagator propagator = propagator(prefix);
+            MutableHttpRequest<?> request = HttpRequest.GET("/");
+
+            propagator.writeToken(request, "XXX");
+
+            assertEquals("XXX", request.getHeaders().get("Authorization"));
+            assertEquals(Optional.of("XXX"), propagator.findToken(request));
+        }
+    }
+
     private static HttpHeaderTokenPropagator propagator(String prefix) {
         HttpHeaderTokenPropagatorConfigurationProperties configuration = new HttpHeaderTokenPropagatorConfigurationProperties();
         configuration.setPrefix(prefix);
