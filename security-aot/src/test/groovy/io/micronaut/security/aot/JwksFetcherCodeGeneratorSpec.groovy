@@ -74,6 +74,20 @@ class JwksFetcherCodeGeneratorSpec extends AbstractSourceGeneratorSpec {
         return new JwksFetcherCodeGenerator()
     }
 
+    /**
+     * An OpenID client whose provider metadata is configured manually instead of being fetched from the provider.
+     */
+    private static Map<String, Object> openIdClient(String name, Map<String, Object> openIdProperties) {
+        String prefix = "micronaut.security.oauth2.clients.${name}"
+        Map<String, Object> properties = [
+                ("${prefix}.client-id".toString())                 : 'XXX',
+                ("${prefix}.client-secret".toString())             : 'YYY',
+                ("${prefix}.openid.fetch-configuration".toString()): false,
+        ]
+        openIdProperties.each { key, value -> properties["${prefix}.openid.${key}".toString()] = value }
+        properties
+    }
+
     String getServerUrl() {
         "http://localhost:$embeddedServer.port".toString()
     }
@@ -150,11 +164,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         where:
         contextProperties << [[
                 'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
-                'micronaut.security.oauth2.clients.x.client-id'            : 'XXX',
-                'micronaut.security.oauth2.clients.x.client-secret'        : 'YYY',
-                'micronaut.security.oauth2.clients.x.openid.fetch-configuration': false,
-                'micronaut.security.oauth2.clients.x.openid.jwks-uri'      : otherKeysUrl,
-        ]]
+        ] + openIdClient('x', ['jwks-uri': otherKeysUrl])]
     }
 
     void "a JWKS URL shared by a JwksSignatureConfiguration and an OpenID provider is baked only once"() {
@@ -195,11 +205,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         where:
         contextProperties << [[
                 'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
-                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
-                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
-                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
-                'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : keysUrl,
-        ]]
+        ] + openIdClient('y', ['jwks-uri': keysUrl])]
     }
 
     void "an OpenID provider without a JWKS URL is skipped"() {
@@ -222,11 +228,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         where:
         contextProperties << [[
                 'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
-                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
-                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
-                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
-                'micronaut.security.oauth2.clients.y.openid.authorization.url': 'https://idp.example.com/authorize',
-        ]]
+        ] + openIdClient('y', ['authorization.url': 'https://idp.example.com/authorize'])]
     }
 
     void "a JWKS URL is baked by another source sharing it when the first source cannot retrieve the JWKS"() {
@@ -250,11 +252,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
         contextProperties << [[
                 'spec.unreachable-provider'                                : 'x',
                 'micronaut.security.token.jwt.signatures.jwks.x.url'       : keysUrl,
-                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
-                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
-                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
-                'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : keysUrl,
-        ]]
+        ] + openIdClient('y', ['jwks-uri': keysUrl])]
     }
 
     void "a relative JWKS URL declared by a single source is baked"() {
@@ -296,11 +294,7 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
                 'micronaut.http.services.x.url'                            : serverUrl,
                 'micronaut.http.services.y.url'                            : serverUrl,
                 'micronaut.security.token.jwt.signatures.jwks.x.url'       : '/keys',
-                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
-                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
-                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
-                'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : '/keys',
-        ]]
+        ] + openIdClient('y', ['jwks-uri': '/keys'])]
     }
 
     @Requires(property = 'spec.name', value = 'EmbeddedServerJwksFetcherCodeGeneratorSpec')
