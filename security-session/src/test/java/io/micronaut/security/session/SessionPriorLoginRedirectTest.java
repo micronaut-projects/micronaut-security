@@ -102,7 +102,11 @@ class SessionPriorLoginRedirectTest {
     @ParameterizedTest
     @ValueSource(strings = {
         "https://evil.example/x",
-        "//evil.example/x"
+        "//evil.example/x",
+        "///evil.example/x",
+        "/\\evil.example/x",
+        "evil.example/x",
+        "javascript:alert(1)"
     })
     void plantedOriginalUriCookieIsIgnoredAndCleared(String plantedValue) {
         HttpResponse<?> login = login(plantedValue);
