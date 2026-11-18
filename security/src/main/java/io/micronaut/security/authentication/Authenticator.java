@@ -253,17 +253,20 @@ public class Authenticator<T> {
 
     /**
      * Converts a throwable raised by a provider into an {@link AuthenticationResponse}, on both the imperative and the
-     * reactive paths. An {@link AuthenticationException} carrying a response yields that response; any other throwable
-     * yields an {@link AuthenticationFailed}.
+     * reactive paths. An {@link AuthenticationException} is a deliberate rejection, so its response, or failing that
+     * its message, is returned. Any other throwable is an unexpected error: it is logged and answered with a failure
+     * that does not carry the throwable's message, because that message can reach the client in the HTTP response.
      * @param t Throwable raised by a provider
      * @return The failed authentication response
      */
     @NonNull
     private static AuthenticationResponse failedResponseForThrowable(@NonNull Throwable t) {
-        if (t instanceof AuthenticationException authenticationException && authenticationException.getResponse() != null) {
-            return authenticationException.getResponse();
+        if (t instanceof AuthenticationException authenticationException) {
+            AuthenticationResponse response = authenticationException.getResponse();
+            return response != null ? response : new AuthenticationFailed(authenticationException.getMessage());
         }
-        return authenticationResponseForThrowable(t);
+        LOG.error("An authentication provider failed with an unexpected error. Authentication rejected", t);
+        return AuthenticationResponse.failure();
     }
 
     private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {

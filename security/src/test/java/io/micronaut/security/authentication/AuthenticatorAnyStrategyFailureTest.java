@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,15 +72,15 @@ class AuthenticatorAnyStrategyFailureTest {
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    void whenTheFirstProviderThrowsAnAuthenticationFailedIsReturnedInsteadOfAnError(ProviderType type) {
+    void whenTheFirstProviderThrowsAFailureWithoutTheErrorMessageIsReturnedInsteadOfAnError(ProviderType type) {
         Authenticator<Object> authenticator = type.authenticator(
                 throwing(new RuntimeException("boom")).after(SLOW),
                 failing(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH));
 
         AuthenticationResponse rsp = authenticate(authenticator);
 
-        assertFailure(AuthenticationFailureReason.CUSTOM, rsp);
-        assertEquals("boom", rsp.getMessage().orElse(null));
+        assertFailure(AuthenticationFailureReason.UNKNOWN, rsp);
+        assertFalse(rsp.getMessage().orElse("").contains("boom"), "the message of an unexpected error must not be exposed");
     }
 
     @ParameterizedTest
@@ -89,6 +90,17 @@ class AuthenticatorAnyStrategyFailureTest {
                 throwing(AuthenticationResponse.exception(AuthenticationFailureReason.ACCOUNT_LOCKED)));
 
         assertFailure(AuthenticationFailureReason.ACCOUNT_LOCKED, authenticate(authenticator));
+    }
+
+    @ParameterizedTest
+    @EnumSource(ProviderType.class)
+    void whenAProviderThrowsAnAuthenticationExceptionWithoutAResponseItsMessageIsReturned(ProviderType type) {
+        Authenticator<Object> authenticator = type.authenticator(throwing(new AuthenticationException("rejected")));
+
+        AuthenticationResponse rsp = authenticate(authenticator);
+
+        assertFailure(AuthenticationFailureReason.CUSTOM, rsp);
+        assertEquals("rejected", rsp.getMessage().orElse(null));
     }
 
     @ParameterizedTest
