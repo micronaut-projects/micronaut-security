@@ -25,10 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base {@link Condition} to enable or disable a CSRF token repository.
@@ -92,10 +92,8 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
     }
 
     private void warnLegacyKey(BeanContext beanContext) {
-        boolean firstTime;
-        synchronized (WARNED) {
-            firstTime = WARNED.computeIfAbsent(beanContext, k -> new HashSet<>()).add(legacyKey);
-        }
+        // the condition is evaluated several times per bean context
+        boolean firstTime = WARNED.computeIfAbsent(beanContext, k -> ConcurrentHashMap.newKeySet()).add(legacyKey);
         if (firstTime && CsrfRepositoryEnabledConditionLogging.LOG.isWarnEnabled()) {
             CsrfRepositoryEnabledConditionLogging.LOG.warn("Configuration property [{}] is deprecated. Use [{}] instead.", legacyKey, canonicalKey);
         }
