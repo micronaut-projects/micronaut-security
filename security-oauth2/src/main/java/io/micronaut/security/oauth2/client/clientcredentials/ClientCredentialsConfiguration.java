@@ -34,7 +34,7 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequ
     /**
      * The default expiration applied to an access token whose token response does not include {@code expires_in}
      * and whose access token is not a JWT with an {@code exp} claim.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     Duration DEFAULT_EXPIRATION = Duration.ofMinutes(5);
 
@@ -57,7 +57,7 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequ
      *
      * @return The amount of time a token obtained via client credentials grant is cached when the token response does not
      * include {@code expires_in} and the access token is not a JWT with an {@code exp} claim.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @NonNull
     default Duration getDefaultExpiration() {

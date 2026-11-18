@@ -253,7 +253,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      *
      * @param tokenResponse The token response
      * @param expiresAt The instant at which the access token expires
-     * @since 5.4.0
+     * @since 5.5.3
      */
     protected record CachedTokenResponse(@NonNull TokenResponse tokenResponse, @NonNull Instant expiresAt) {
     }

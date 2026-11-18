@@ -375,7 +375,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          *                          does not include {@code expires_in} and the access token is not a JWT with an {@code exp} claim.
          *                          It should be greater than {@code advanced-expiration}; otherwise such tokens are requested again on
          *                          every call. Default value (5 minutes).
-         * @since 5.4.0
+         * @since 5.5.3
          */
         public void setDefaultExpiration(@NonNull Duration defaultExpiration) {
             this.defaultExpiration = defaultExpiration;

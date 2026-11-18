@@ -87,7 +87,7 @@ public final class ClientCredentialsConfigurationBuilder {
      *
      * @param defaultExpiration The default expiration duration.
      * @return This builder.
-     * @since 5.4.0
+     * @since 5.5.3
      */
     @NonNull
     public ClientCredentialsConfigurationBuilder defaultExpiration(@NonNull Duration defaultExpiration) {
