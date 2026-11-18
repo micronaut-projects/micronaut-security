@@ -2,6 +2,8 @@ package io.micronaut.security.token.jwt.nimbus;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -12,6 +14,7 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -101,6 +104,29 @@ class NimbusJsonWebTokenEncryptionTest {
         jwt.encrypt(new DirectEncrypter(SECRET.getBytes(StandardCharsets.UTF_8)));
 
         assertTrue(encryption.decrypt(EncryptedJWT.parse(jwt.serialize())).isEmpty());
+    }
+
+    @Test
+    void decryptDoesNotLogTokenControlledText() throws Exception {
+        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(secretEncryption(SECRET)));
+        String header = Base64URL.encode("{\"alg\":\"x\\nFORGED\",\"enc\":\"A256GCM\"}").toString();
+        EncryptedJWT jwt = EncryptedJWT.parse(header + "..AAAA.AAAA.AAAA");
+        Logger logger = (Logger) LoggerFactory.getLogger(NimbusJsonWebTokenEncryption.class);
+        Level original = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            logger.setLevel(Level.DEBUG);
+
+            assertTrue(encryption.decrypt(jwt).isEmpty());
+        } finally {
+            logger.setLevel(original);
+            logger.detachAppender(appender);
+        }
+        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption fails")), messages::toString);
+        assertTrue(messages.stream().noneMatch(message -> message.contains("FORGED")), messages::toString);
     }
 
     private static EncryptedJWT encryptedSignedJwt(String secret) throws Exception {
