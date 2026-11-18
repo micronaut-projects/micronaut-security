@@ -128,7 +128,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 LdapSearchResult result = optionalResult.get();
                 debug(LOG, "User found in context [{}]. Attempting to bind.", result.getDn());
 
-                if (!bindUser(result, username, password)) {
+                if (!bindUserAndLoadAttributes(result, username, password)) {
                     return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                 }
 
@@ -167,7 +167,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @return false if the directory rejected the bind, which means the credentials are not accepted
      * @throws NamingException for any failure that is not a rejection of the bind
      */
-    private boolean bindUser(LdapSearchResult result, String username, String password) throws NamingException {
+    private boolean bindUserAndLoadAttributes(LdapSearchResult result, String username, String password) throws NamingException {
         String dn = result.getDn();
         DirContext userContext = null;
         try {
