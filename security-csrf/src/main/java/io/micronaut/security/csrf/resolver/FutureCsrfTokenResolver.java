@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.resolver;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.CollectionUtils;
@@ -35,16 +36,16 @@ public interface FutureCsrfTokenResolver<T> extends Ordered {
     /**
      *
      * @param request The Request. Maybe an HTTP Request.
-     * @return A CSRF token or an empty Optional if the token cannot be resolved.
+     * @return A future which completes with the CSRF token, or with {@code null} if the token cannot be resolved.
      */
     @NonNull
-    CompletableFuture<String> resolveToken(@NonNull T request);
+    CompletableFuture<@Nullable String> resolveToken(@NonNull T request);
 
     /**
      *
      * @param resolvers Imperative CSRF Token Resolvers
      * @param futureCsrfTokenResolvers Reactive CSRF Token Resolvers
-     * @return Returns a List of {@link FutureCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to imperative.
+     * @return Returns a List of {@link FutureCsrfTokenResolver} instances containing every reactive resolver plus the imperative resolvers adapted to {@link FutureCsrfTokenResolver}.
      * @param <T> request type
      */
     @NonNull
