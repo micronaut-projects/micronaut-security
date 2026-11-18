@@ -225,7 +225,7 @@ class UserInfoClientTokenValidatorProviderBindingTest {
     void providerNameContainingTheSeparatorIsRejectedWhenUsernamesAreQualified() {
         // provider "alpha:beta" with subject "victim" would otherwise get the same name as provider "alpha" with subject "beta:victim"
         ConfigurationException ex = assertThrows(ConfigurationException.class,
-            () -> new UserInfoClientTokenValidator("alpha:beta", HttpClient.create(providerA.getURL()), "/userinfo", true));
+            () -> new UserInfoClientTokenValidator("alpha:beta", new UserInfoClientTokenValidator.Endpoint(HttpClient.create(providerA.getURL()), "/userinfo"), true));
         assertTrue(ex.getMessage().contains("'alpha:beta'"), ex.getMessage());
         assertTrue(ex.getMessage().contains(QUALIFY_USERNAME_PROPERTY), ex.getMessage());
     }
@@ -233,7 +233,7 @@ class UserInfoClientTokenValidatorProviderBindingTest {
     @Test
     void providerNameContainingTheSeparatorIsAcceptedWhenUsernamesAreNotQualified() {
         try (UserInfoClientTokenValidator validator = assertDoesNotThrow(
-            () -> new UserInfoClientTokenValidator("alpha:beta", HttpClient.create(providerA.getURL()), "/userinfo", false))) {
+            () -> new UserInfoClientTokenValidator("alpha:beta", new UserInfoClientTokenValidator.Endpoint(HttpClient.create(providerA.getURL()), "/userinfo"), false))) {
             assertEquals("alpha:beta", validator.getName());
         }
     }

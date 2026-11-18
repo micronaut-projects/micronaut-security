@@ -73,17 +73,6 @@ final class UserInfoClientTokenValidator implements Closeable, TokenValidator<Ht
 
     /**
      * @param name Provider name
-     * @param httpClient HTTP client pointing to the authorization server
-     * @param path UserInfo endpoint path
-     * @param qualifyUsername Whether to qualify the username with the provider name. See {@link io.micronaut.security.oauth2.configuration.OpenIdConfiguration#getQualifyUsernameWithProvider()}.
-     * @throws ConfigurationException if {@code qualifyUsername} is {@code true} and {@code name} contains {@value #PROVIDER_SEPARATOR}
-     */
-    UserInfoClientTokenValidator(String name, HttpClient httpClient, String path, boolean qualifyUsername) {
-        this(name, new Endpoint(httpClient, path), qualifyUsername);
-    }
-
-    /**
-     * @param name Provider name
      * @param endpoint The already resolved UserInfo endpoint
      * @param qualifyUsername Whether to qualify the username with the provider name. See {@link io.micronaut.security.oauth2.configuration.OpenIdConfiguration#getQualifyUsernameWithProvider()}.
      * @throws ConfigurationException if {@code qualifyUsername} is {@code true} and {@code name} contains {@value #PROVIDER_SEPARATOR}
