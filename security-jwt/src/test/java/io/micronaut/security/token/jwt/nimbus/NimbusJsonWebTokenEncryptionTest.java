@@ -93,6 +93,16 @@ class NimbusJsonWebTokenEncryptionTest {
         assertEquals(List.of("supported", "unsupported"), attempts);
     }
 
+    @Test
+    void decryptReturnsEmptyWhenThePayloadIsNotASignedJwt() throws Exception {
+        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(
+            List.of(secretEncryption(SECRET), secretEncryption(OTHER_SECRET)));
+        EncryptedJWT jwt = new EncryptedJWT(header(), claims());
+        jwt.encrypt(new DirectEncrypter(SECRET.getBytes(StandardCharsets.UTF_8)));
+
+        assertTrue(encryption.decrypt(EncryptedJWT.parse(jwt.serialize())).isEmpty());
+    }
+
     private static EncryptedJWT encryptedSignedJwt(String secret) throws Exception {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims());
         signedJWT.sign(new MACSigner(SECRET));

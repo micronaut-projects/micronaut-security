@@ -65,35 +65,36 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptionConfigurationList);
         sortedConfigs.sort(comparator(header));
         for (EncryptionConfiguration config: sortedConfigs) {
-            Optional<SignedJWT> signedJWT = decrypt(jwt, config);
-            if (signedJWT.isPresent()) {
-                return signedJWT;
+            if (decrypts(jwt, config)) {
+                // A decrypted JWE cannot be decrypted again, so the remaining configurations are not tried.
+                return nestedSignedJwt(jwt);
             }
         }
         return Optional.empty();
     }
 
-    @NonNull
-    private Optional<SignedJWT> decrypt(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
+    private static boolean decrypts(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Using encryption configuration: {}", config);
         }
         try {
             config.decrypt(jwt);
-            SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
-            if (signedJWT == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
-                }
-                return Optional.empty();
-            }
-            return Optional.of(signedJWT);
+            return true;
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
             }
-            return Optional.empty();
+            return false;
         }
+    }
+
+    @NonNull
+    private static Optional<SignedJWT> nestedSignedJwt(@NonNull EncryptedJWT jwt) {
+        SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
+        if (signedJWT == null && LOG.isDebugEnabled()) {
+            LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
+        }
+        return Optional.ofNullable(signedJWT);
     }
 
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
