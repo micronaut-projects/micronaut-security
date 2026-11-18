@@ -32,6 +32,8 @@ import org.jspecify.annotations.NonNull;
 @Internal
 public final class X509Utils {
 
+    private static final String SUBJECT_DN_REGEX_PROPERTY = X509ConfigurationProperties.PREFIX + ".subject-dn-regex";
+
     private X509Utils() {
     }
 
@@ -50,12 +52,16 @@ public final class X509Utils {
         try {
             pattern = Pattern.compile(subjectDnRegex, CASE_INSENSITIVE);
         } catch (PatternSyntaxException e) {
-            throw new ConfigurationException("Invalid value \"" + subjectDnRegex + "\" for " + X509ConfigurationProperties.PREFIX + ".subject-dn-regex: " + e.getMessage(), e);
+            throw new ConfigurationException(invalidSubjectDnRegexMessage(subjectDnRegex, e.getMessage()), e);
         }
         int groupCount = pattern.matcher("").groupCount();
         if (groupCount != 1) {
-            throw new ConfigurationException("Invalid value \"" + subjectDnRegex + "\" for " + X509ConfigurationProperties.PREFIX + ".subject-dn-regex: the regular expression must contain exactly one capturing group but contains " + groupCount);
+            throw new ConfigurationException(invalidSubjectDnRegexMessage(subjectDnRegex, "the regular expression must contain exactly one capturing group but contains " + groupCount));
         }
         return pattern;
+    }
+
+    private static String invalidSubjectDnRegexMessage(String subjectDnRegex, String reason) {
+        return "Invalid value \"" + subjectDnRegex + "\" for " + SUBJECT_DN_REGEX_PROPERTY + ": " + reason;
     }
 }
