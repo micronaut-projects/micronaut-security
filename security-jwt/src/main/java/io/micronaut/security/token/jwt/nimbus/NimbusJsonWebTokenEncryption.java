@@ -19,6 +19,7 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
@@ -55,8 +56,10 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating encrypted JWT");
         }
-        if (LOG.isDebugEnabled() && encryptionConfigurationList.isEmpty()) {
-            LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+        if (encryptionConfigurationList.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+            }
             return Optional.empty();
         }
         final JWEHeader header = jwt.getHeader();
@@ -66,6 +69,10 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
             Optional<SignedJWT> signedJWT = decrypt(jwt, config);
             if (signedJWT.isPresent()) {
                 return signedJWT;
+            }
+            if (jwt.getState() == JWEObject.State.DECRYPTED) {
+                // decrypted but the payload is not a signed JWT. A decrypted JWE cannot be decrypted again.
+                return Optional.empty();
             }
         }
         return Optional.empty();
