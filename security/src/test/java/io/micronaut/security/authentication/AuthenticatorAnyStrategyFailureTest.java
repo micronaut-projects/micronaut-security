@@ -84,6 +84,15 @@ class AuthenticatorAnyStrategyFailureTest {
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
+    void whenAProviderThrowsAnAuthenticationExceptionItsResponseIsReturned(ProviderType type) {
+        Authenticator<Object> authenticator = type.authenticator(
+                throwing(AuthenticationResponse.exception(AuthenticationFailureReason.ACCOUNT_LOCKED)));
+
+        assertFailure(AuthenticationFailureReason.ACCOUNT_LOCKED, authenticate(authenticator));
+    }
+
+    @ParameterizedTest
+    @EnumSource(ProviderType.class)
     void aLaterSuccessfulProviderStillWins(ProviderType type) {
         Authenticator<Object> authenticator = type.authenticator(
                 failing(AuthenticationFailureReason.USER_NOT_FOUND),

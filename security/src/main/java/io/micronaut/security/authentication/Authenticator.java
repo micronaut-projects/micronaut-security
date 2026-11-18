@@ -252,9 +252,9 @@ public class Authenticator<T> {
     }
 
     /**
-     * Converts a throwable raised by a provider in the ANY strategy into an {@link AuthenticationResponse}.
-     * An {@link AuthenticationException} carrying a response yields that response; any other throwable yields an
-     * {@link AuthenticationFailed}, as the imperative path does when a provider throws.
+     * Converts a throwable raised by a provider into an {@link AuthenticationResponse}, on both the imperative and the
+     * reactive paths. An {@link AuthenticationException} carrying a response yields that response; any other throwable
+     * yields an {@link AuthenticationFailed}.
      * @param t Throwable raised by a provider
      * @return The failed authentication response
      */
@@ -281,7 +281,7 @@ public class Authenticator<T> {
         try {
             return provider.authenticate(requestContext, authenticationRequest);
         } catch (Exception t) {
-            return authenticationResponseForThrowable(t);
+            return failedResponseForThrowable(t);
         }
     }
 
