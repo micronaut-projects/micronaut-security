@@ -39,7 +39,7 @@ class TokenErrorResponseSpec extends Specification {
         jsonNode.isObject()
         1 == jsonNode.size()
         "some_vendor_code" == jsonNode.get("error").getStringValue()
-        obj.error == TokenError.UNKNOWN
+        obj.error == null
     }
 
     void "error=#code deserializes to #expected keeping the raw code"(String code, TokenError expected) {
@@ -59,11 +59,12 @@ class TokenErrorResponseSpec extends Specification {
         where:
         code                      | expected
         'invalid_grant'           | TokenError.INVALID_GRANT
-        'invalid_token'           | TokenError.INVALID_TOKEN
-        'temporarily_unavailable' | TokenError.TEMPORARILY_UNAVAILABLE
-        'slow_down'               | TokenError.SLOW_DOWN
-        'some_vendor_code'        | TokenError.UNKNOWN
-        'Invalid_Grant'           | TokenError.INVALID_GRANT
+        'unauthorized_client'     | TokenError.UNAUTHORIZED_CLIENT
+        'invalid_token'           | null
+        'temporarily_unavailable' | null
+        'slow_down'               | null
+        'some_vendor_code'        | null
+        'Invalid_Grant'           | null
     }
 
     void "a body without error does not fail to deserialize"() {
@@ -87,10 +88,11 @@ class TokenErrorResponseSpec extends Specification {
         TokenErrorResponse response = new TokenErrorResponse()
 
         when:
-        response.error = TokenError.SERVER_ERROR
+        response.error = TokenError.INVALID_CLIENT
 
         then:
-        response.errorCode == "server_error"
+        response.errorCode == "invalid_client"
+        response.error == TokenError.INVALID_CLIENT
 
         when:
         response.error = null

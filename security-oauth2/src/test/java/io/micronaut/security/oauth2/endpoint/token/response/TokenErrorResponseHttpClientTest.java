@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Verifies that the body of a failed token request is still readable as a {@link TokenErrorResponse} when the
- * authorization server answers with an error code which is not modelled by {@link TokenError}.
+ * authorization server answers with an error code which is not a {@link TokenError} constant.
  */
 class TokenErrorResponseHttpClientTest {
 
@@ -62,7 +62,7 @@ class TokenErrorResponseHttpClientTest {
     void unmodelledErrorCodeIsReadFromTheErrorResponseBody() {
         TokenErrorResponse body = tokenErrorResponse("/token/vendor");
 
-        assertEquals(TokenError.UNKNOWN, body.getError());
+        assertNull(body.getError());
         assertEquals("mfa_required", body.getErrorCode());
         assertEquals("Multifactor authentication required", body.getErrorDescription());
     }

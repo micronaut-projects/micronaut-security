@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>The {@code error} member is exposed twice: {@link #getErrorCode()} returns the raw error code exactly as sent by
  * the authorization server, and {@link #getError()} returns it resolved to a {@link TokenError} constant
- * ({@link TokenError#UNKNOWN} when the code is not modelled).</p>
+ * ({@code null} when the code is not one of the constants).</p>
  *
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">RFC 6749 Access Token Error Response</a>
  *
@@ -45,12 +45,17 @@ public class TokenErrorResponse {
     private String errorUri;
 
     /**
-     * @return The error code resolved to a {@link TokenError}, {@link TokenError#UNKNOWN} if the code is not modelled, or {@code null} if the response carried no error code.
+     * @return The error code resolved to a {@link TokenError}, or {@code null} if the response carried no error code or a code which is not a {@link TokenError} constant. See {@link #getErrorCode()} for the raw value.
      */
     @Nullable
     @JsonIgnore
     public TokenError getError() {
-        return errorCode == null ? null : TokenError.of(errorCode);
+        for (TokenError tokenError : TokenError.values()) {
+            if (tokenError.toString().equals(errorCode)) {
+                return tokenError;
+            }
+        }
+        return null;
     }
 
     /**
@@ -59,7 +64,7 @@ public class TokenErrorResponse {
      */
     @JsonIgnore
     public void setError(@Nullable TokenError error) {
-        this.errorCode = error == null ? null : error.getErrorCode();
+        this.errorCode = error == null ? null : error.toString();
     }
 
     /**

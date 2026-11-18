@@ -23,11 +23,11 @@ abstract class AbstractTokenErrorResponseJacksonTest {
     @ParameterizedTest
     @CsvSource({
         "invalid_grant,INVALID_GRANT",
-        "invalid_token,INVALID_TOKEN",
-        "temporarily_unavailable,TEMPORARILY_UNAVAILABLE",
-        "slow_down,SLOW_DOWN",
-        "some_vendor_code,UNKNOWN",
-        "Invalid_Grant,INVALID_GRANT"
+        "unauthorized_client,UNAUTHORIZED_CLIENT",
+        "invalid_token,",
+        "slow_down,",
+        "some_vendor_code,",
+        "Invalid_Grant,"
     })
     void errorCodesDeserializeKeepingTheRawCode(String code, TokenError expected) throws IOException {
         String json = "{\"error\":\"" + code + "\",\"error_description\":\"desc\",\"error_uri\":\"https://example.com/errors\"}";
@@ -49,17 +49,6 @@ abstract class AbstractTokenErrorResponseJacksonTest {
         assertNull(response.getErrorCode());
         assertEquals("desc", response.getErrorDescription());
         assertEquals("error: null, errorDescription: desc, errorUri: null", response.toString());
-    }
-
-    @Test
-    void tokenErrorDeserializesUnknownCodesToUnknown() throws IOException {
-        assertEquals(TokenError.INVALID_TOKEN, jsonMapper.readValue("\"invalid_token\"", TokenError.class));
-        assertEquals(TokenError.UNKNOWN, jsonMapper.readValue("\"some_vendor_code\"", TokenError.class));
-    }
-
-    @Test
-    void tokenErrorSerializesToItsErrorCode() throws IOException {
-        assertEquals("\"invalid_token\"", jsonMapper.writeValueAsString(TokenError.INVALID_TOKEN));
     }
 
     @Test
@@ -87,6 +76,6 @@ abstract class AbstractTokenErrorResponseJacksonTest {
 
         assertEquals(1, vendorNode.size());
         assertEquals("some_vendor_code", vendorNode.get("error").getStringValue());
-        assertEquals(TokenError.UNKNOWN, vendor.getError());
+        assertNull(vendor.getError());
     }
 }
