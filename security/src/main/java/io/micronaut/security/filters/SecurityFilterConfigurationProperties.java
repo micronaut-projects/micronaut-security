@@ -96,7 +96,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED.
      * The {@link SecurityFilter} route pattern is resolved from the {@code micronaut.security.filter.pattern} property.
      * @param pattern The pattern
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public void setPattern(@NonNull String pattern) {
         if (StringUtils.isNotEmpty(pattern)) {
@@ -110,7 +110,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * @deprecated Use {@link #setPattern(String)} and the {@code micronaut.security.filter.pattern} property instead.
      * The {@code micronaut.security.filter.path} property populates {@link #getPattern()} but does not change which routes the {@link SecurityFilter} intercepts.
      */
-    @Deprecated(since = "5.4.0", forRemoval = true)
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public void setPath(@NonNull String pattern) {
         setPattern(pattern);
     }
