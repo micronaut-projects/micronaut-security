@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -56,6 +57,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
     protected final Map<String, Publisher<CachedTokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    private final Clock clock;
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -63,8 +65,20 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      */
     public AbstractClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
                                            @NonNull TokenEndpointClient tokenEndpointClient) {
+        this(oauthClientConfiguration, tokenEndpointClient, Clock.systemUTC());
+    }
+
+    /**
+     * @param tokenEndpointClient The token endpoint client
+     * @param oauthClientConfiguration The client configuration
+     * @param clock The clock used to decide whether a cached token is expired
+     */
+    AbstractClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
+                                    @NonNull TokenEndpointClient tokenEndpointClient,
+                                    @NonNull Clock clock) {
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.tokenEndpointClient = tokenEndpointClient;
+        this.clock = clock;
     }
 
     /**
@@ -136,7 +150,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         return tokenResponse.getExpiresInDate()
             .map(Date::toInstant)
             .or(() -> jwtExpirationDate(tokenResponse).map(Date::toInstant))
-            .orElseGet(() -> Instant.now().plus(defaultExpiration()));
+            .orElseGet(() -> clock.instant().plus(defaultExpiration()));
     }
 
     /**
@@ -158,7 +172,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      * @since 5.4.0
      */
     protected boolean isExpired(@NonNull Instant expiresAt) {
-        return expiresAt.minus(advancedExpiration()).isBefore(Instant.now());
+        return expiresAt.minus(advancedExpiration()).isBefore(clock.instant());
     }
 
     /**
