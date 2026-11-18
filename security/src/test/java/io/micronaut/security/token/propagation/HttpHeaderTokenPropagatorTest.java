@@ -100,6 +100,32 @@ class HttpHeaderTokenPropagatorTest {
     }
 
     @Test
+    void customHeaderNameIsWrittenAndReadInsteadOfAuthorization() {
+        HttpHeaderTokenPropagatorConfigurationProperties configuration = new HttpHeaderTokenPropagatorConfigurationProperties();
+        configuration.setHeaderName("X-Token");
+        HttpHeaderTokenPropagator propagator = new HttpHeaderTokenPropagator(configuration);
+        MutableHttpRequest<?> request = requestWithAuthorization("Basic dXNlcjpwYXNz");
+
+        assertEquals(Optional.empty(), propagator.findToken(request));
+
+        propagator.writeToken(request, TOKEN);
+
+        assertEquals(List.of("Bearer xyz"), request.getHeaders().getAll("X-Token"));
+        assertEquals(List.of("Basic dXNlcjpwYXNz"), authorizationHeaders(request));
+        assertEquals(Optional.of(TOKEN), propagator.findToken(request));
+    }
+
+    @Test
+    void tokenWithInnerSpacesRoundTrips() {
+        HttpHeaderTokenPropagator propagator = propagator("Bearer");
+        MutableHttpRequest<?> request = HttpRequest.GET("/");
+
+        propagator.writeToken(request, "a b");
+
+        assertEquals(Optional.of("a b"), propagator.findToken(request));
+    }
+
+    @Test
     void prefixWithTrailingSpaceWritesAndReadsSingleSeparator() {
         HttpHeaderTokenPropagator propagator = propagator("Bearer ");
         MutableHttpRequest<?> request = HttpRequest.GET("/");
