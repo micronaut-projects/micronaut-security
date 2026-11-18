@@ -30,6 +30,8 @@ For propagation via an HTTP Header, you can configure:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties.adoc[]
 
+NOTE: A request which already carries a token in the configured header, with the configured prefix, is left untouched. Any other value in that header, for example `Authorization: Basic ...` when the prefix is `Bearer`, is replaced by the propagated token. Exclude such requests from propagation with the `micronaut.security.token.propagation.uri-regex` or `micronaut.security.token.propagation.service-id-regex` settings.
+
 Token propagation requires *Context Propagation* dependencies, as explained in https://docs.micronaut.io/latest/guide/#reactorContextPropagation[Reactor context propagation] section.
 
 dependency:context-propagation[groupId=io.micrometer]

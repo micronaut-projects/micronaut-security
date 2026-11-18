@@ -45,7 +45,8 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
-     * Writes the token to the request.
+     * Writes the token to the request. The header is set, not added: a value the request already carries
+     * under the configured header name, whichever its scheme, is replaced so that exactly one header results.
      * @param request The {@link MutableHttpRequest} instance
      * @param token A token ( e.g. JWT token, basic auth token...)
      */

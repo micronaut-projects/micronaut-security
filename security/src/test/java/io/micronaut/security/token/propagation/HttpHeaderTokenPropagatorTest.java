@@ -90,6 +90,16 @@ class HttpHeaderTokenPropagatorTest {
     }
 
     @Test
+    void writingReplacesHeaderWhichCarriesAnotherScheme() {
+        HttpHeaderTokenPropagator propagator = propagator("Bearer");
+        MutableHttpRequest<?> request = requestWithAuthorization("Basic dXNlcjpwYXNz");
+
+        propagator.writeToken(request, TOKEN);
+
+        assertEquals(List.of("Bearer xyz"), authorizationHeaders(request));
+    }
+
+    @Test
     void prefixWithTrailingSpaceWritesAndReadsSingleSeparator() {
         HttpHeaderTokenPropagator propagator = propagator("Bearer ");
         MutableHttpRequest<?> request = HttpRequest.GET("/");
