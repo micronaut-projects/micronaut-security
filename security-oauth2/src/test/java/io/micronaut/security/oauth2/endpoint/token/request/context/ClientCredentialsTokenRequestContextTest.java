@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -115,7 +116,8 @@ class ClientCredentialsTokenRequestContextTest {
 
     @Test
     void ignoredKeyWarningIsLoggedOncePerClient() {
-        OauthClientConfiguration configuration = configuration("warn-once-client", null,
+        String clientName = uniqueClientName("warn-once-client");
+        OauthClientConfiguration configuration = configuration(clientName, null,
             Map.of("grant_type", "password", "audience", "api"));
 
         new ClientCredentialsTokenRequestContext(configuration).getGrant();
@@ -124,23 +126,31 @@ class ClientCredentialsTokenRequestContextTest {
         context.getGrant();
         context.getGrant();
 
-        List<String> warnings = warnings("warn-once-client");
+        List<String> warnings = warnings(clientName);
         assertEquals(1, warnings.size());
         assertTrue(warnings.get(0).contains("[grant_type]"));
     }
 
     @Test
     void ignoredKeyWarningNamesTheReasonAndNeverTheValue() {
-        OauthClientConfiguration configuration = configuration("warn-reason-client", "read",
+        String clientName = uniqueClientName("warn-reason-client");
+        OauthClientConfiguration configuration = configuration(clientName, "read",
             Map.of("client_secret", "leaked-secret", "scope", "leaked-scope"));
 
         new ClientCredentialsTokenRequestContext("read", configuration).getGrant();
 
-        List<String> warnings = warnings("warn-reason-client");
+        List<String> warnings = warnings(clientName);
         assertEquals(2, warnings.size());
         assertTrue(warnings.stream().anyMatch(message -> message.contains("[client_secret]") && message.contains("reserved")));
         assertTrue(warnings.stream().anyMatch(message -> message.contains("[scope]") && message.contains("already sets it")));
         assertTrue(warnings.stream().noneMatch(message -> message.contains("leaked")));
+    }
+
+    /**
+     * Warnings are logged once per client name for the lifetime of the JVM, so a rerun in the same JVM needs a new name.
+     */
+    private static String uniqueClientName(String prefix) {
+        return prefix + '-' + UUID.randomUUID();
     }
 
     private List<String> warnings(String clientName) {
