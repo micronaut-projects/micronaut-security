@@ -332,7 +332,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private HeaderTokenPropagatorConfigurationProperties headerPropagation;
 
-        private Map<String, String> additonalRequestParams = Collections.emptyMap();
+        private Map<String, String> additionalRequestParams = Collections.emptyMap();
 
         @NonNull
         @Override
@@ -415,7 +415,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         @NonNull
         public Map<String, String> getAdditionalRequestParams() {
-            return additonalRequestParams;
+            return additionalRequestParams;
         }
 
         /**
@@ -423,7 +423,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * @param additionalRequestParams Map of additional request parameters to include in client-credentials flow
          */
         public void setAdditionalRequestParams(@MapFormat(transformation = MapFormat.MapTransformation.FLAT) Map<String, String> additionalRequestParams) {
-            this.additonalRequestParams = additionalRequestParams;
+            this.additionalRequestParams = additionalRequestParams;
         }
 
         /**
