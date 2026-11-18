@@ -132,10 +132,10 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 try {
                     String dn = result.getDn();
                     try {
-                        userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                        userContext = contextBuilder.build(configuration.getSettings(dn, password));
                     } catch (AuthenticationNotSupportedException | OperationNotSupportedException e) {
                         // The server rejected the user bind itself, so the supplied credentials are not accepted.
-                        debug(LOG, "Server rejected bind for user [{}]. {}", username, e);
+                        debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", username, e.getClass().getSimpleName(), e.getMessage());
                         return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                     }
                     if (result.getAttributes() == null) {
