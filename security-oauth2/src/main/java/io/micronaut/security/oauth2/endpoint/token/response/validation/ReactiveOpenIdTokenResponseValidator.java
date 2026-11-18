@@ -54,7 +54,10 @@ public interface ReactiveOpenIdTokenResponseValidator<T> {
      *
      * <p>The default implementation delegates to
      * {@link #validate(OauthClientConfiguration, OpenIdProviderMetadata, OpenIdTokenResponse, String)} with a
-     * {@code null} nonce.</p>
+     * {@code null} nonce. An implementation which validates the nonce with {@link NonceClaimValidator} must override
+     * this method and call
+     * {@link NonceClaimValidator#validateWithoutNonce(io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata)};
+     * otherwise the {@code null} nonce is rejected when nonce support is enabled.</p>
      *
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
