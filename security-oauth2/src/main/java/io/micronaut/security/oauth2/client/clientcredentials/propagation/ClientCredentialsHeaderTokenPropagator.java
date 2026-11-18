@@ -76,9 +76,7 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = prefix();
-        sb.append(token);
-        return sb.toString();
+        return HeaderValuePrefixUtils.addPrefix(token, configuration.getPrefix());
     }
 
     /**
@@ -88,20 +86,7 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        return HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix());
-    }
-
-    @NonNull
-    private StringBuilder prefix() {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            if (!prefix.endsWith(SPACE)) {
-                sb.append(SPACE);
-            }
-        }
-        return sb;
+        return Optional.ofNullable(HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix()));
     }
 
     /**

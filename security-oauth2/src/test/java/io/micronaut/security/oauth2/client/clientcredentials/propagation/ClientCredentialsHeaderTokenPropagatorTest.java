@@ -34,6 +34,19 @@ class ClientCredentialsHeaderTokenPropagatorTest {
         }
     }
 
+    @Test
+    void emptyPrefixWritesAndReadsTheTokenAlone() {
+        for (String prefix : new String[] {"", null}) {
+            ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
+            MutableHttpRequest<?> request = HttpRequest.GET("/");
+
+            propagator.writeToken(request, "XXX");
+
+            assertEquals("XXX", request.getHeaders().get("Authorization"));
+            assertEquals(Optional.of("XXX"), propagator.findToken(request));
+        }
+    }
+
     private static ClientCredentialsHeaderTokenPropagator propagator(String prefix) {
         OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties configuration =
             new OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties();

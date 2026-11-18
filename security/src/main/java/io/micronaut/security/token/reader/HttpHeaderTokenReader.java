@@ -70,10 +70,10 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         final String prefix = getPrefix();
-        Optional<String> token = HeaderValuePrefixUtils.removePrefix(authorization, prefix);
-        if (token.isEmpty()) {
+        final String token = HeaderValuePrefixUtils.removePrefix(authorization, prefix);
+        if (token == null) {
             LOG.debug("{} header does not start with {}", getHeaderName(), prefix);
         }
-        return token;
+        return Optional.ofNullable(token);
     }
 }

@@ -71,16 +71,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = new StringBuilder();
-        String prefix = configuration.getPrefix();
-        if (StringUtils.isNotEmpty(prefix)) {
-            sb.append(prefix);
-            if (!prefix.endsWith(" ")) {
-                sb.append(" ");
-            }
-        }
-        sb.append(token);
-        return sb.toString();
+        return HeaderValuePrefixUtils.addPrefix(token, configuration.getPrefix());
     }
 
     /**
@@ -90,7 +81,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        return HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix());
+        return Optional.ofNullable(HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix()));
     }
 
     /**

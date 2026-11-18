@@ -19,10 +19,8 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Optional;
-
 /**
- * Utility methods to remove a prefix, such as {@code Bearer}, from an HTTP header value.
+ * Utility methods to add a prefix, such as {@code Bearer}, to an HTTP header value or remove it.
  *
  * @author Sergio del Amo
  * @since 5.5.3
@@ -43,11 +41,12 @@ public final class HeaderValuePrefixUtils {
      *
      * @param headerValue The header value. e.g. {@code Bearer XXX}
      * @param prefix The prefix before the token. e.g. {@code Bearer}
-     * @return The token, e.g. {@code XXX}. Empty if the header value does not start with the prefix and a space.
+     * @return The token, e.g. {@code XXX}. {@code null} if the header value does not start with the prefix and a space.
      */
-    public static Optional<String> removePrefix(String headerValue, @Nullable String prefix) {
+    @Nullable
+    public static String removePrefix(String headerValue, @Nullable String prefix) {
         if (StringUtils.isEmpty(prefix)) {
-            return Optional.of(headerValue);
+            return headerValue;
         }
         final int prefixLength = prefix.length();
         final boolean prefixEndsWithSpace = prefix.charAt(prefixLength - 1) == SPACE;
@@ -55,9 +54,24 @@ public final class HeaderValuePrefixUtils {
         if (headerValue.length() >= tokenStart
                 && (prefixEndsWithSpace || headerValue.charAt(prefixLength) == SPACE)
                 && startsWithIgnoreCase(headerValue, prefix)) {
-            return Optional.of(headerValue.substring(tokenStart));
+            return headerValue.substring(tokenStart);
         }
-        return Optional.empty();
+        return null;
+    }
+
+    /**
+     * Adds the prefix and a space before the token. A prefix which already ends with a space is not followed by another one.
+     * If the prefix is {@code null} or empty, the token is returned as is.
+     *
+     * @param token The token. e.g. {@code XXX}
+     * @param prefix The prefix before the token. e.g. {@code Bearer}
+     * @return The header value. e.g. {@code Bearer XXX}
+     */
+    public static String addPrefix(String token, @Nullable String prefix) {
+        if (StringUtils.isEmpty(prefix)) {
+            return token;
+        }
+        return prefix.charAt(prefix.length() - 1) == SPACE ? prefix + token : prefix + SPACE + token;
     }
 
     /**
