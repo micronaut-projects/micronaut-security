@@ -33,9 +33,12 @@ import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwksClient;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import javax.lang.model.element.Modifier;
+import java.net.URI;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -58,6 +61,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
      * AOT Module ID.
      */
     public static final String SECURITY_AOT_JWKS_MODULE_ID = "micronaut.security.jwks";
+    private static final Logger LOG = LoggerFactory.getLogger(JwksFetcherCodeGenerator.class);
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, JWKSet.class);
 
     @Override
@@ -110,10 +114,35 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
         JwksClient jwksClient = AOTContextUtils.getBean(JwksClient.class, context);
         List<GeneratedFile> result = new ArrayList<>();
         for (Map.Entry<String, Set<String>> entry: urls.entrySet()) {
-            generatedFile(context, jwksClient, entry.getValue(), entry.getKey(), result.size())
+            String url = entry.getKey();
+            Set<String> providerNames = entry.getValue();
+            if (isAmbiguous(url, providerNames)) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("JWKS of the relative url {} is not fetched at build time: it is declared by {} and each of them may resolve it against a different HTTP service", url, providerNames);
+                }
+                continue;
+            }
+            generatedFile(context, jwksClient, providerNames, url, result.size())
                 .ifPresent(result::add);
         }
         return result;
+    }
+
+    /**
+     * A relative URL is resolved against the HTTP service named after the source, so the same relative URL declared
+     * by several sources may designate several JWKS. As the runtime optimisation is looked up by URL alone, baking
+     * one of them would hand the keys of one issuer to the validators of another.
+     */
+    private static boolean isAmbiguous(@NonNull String url, @NonNull Set<String> providerNames) {
+        return providerNames.size() > 1 && isRelative(url);
+    }
+
+    private static boolean isRelative(@NonNull String url) {
+        try {
+            return !URI.create(url).isAbsolute();
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     /**

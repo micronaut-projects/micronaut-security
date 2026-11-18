@@ -61,12 +61,16 @@ class JwksFetcherCodeGeneratorSpec extends AbstractSourceGeneratorSpec {
         return new JwksFetcherCodeGenerator()
     }
 
+    String getServerUrl() {
+        "http://localhost:$embeddedServer.port".toString()
+    }
+
     String getKeysUrl() {
-        "http://localhost:$embeddedServer.port/keys".toString()
+        "$serverUrl/keys".toString()
     }
 
     String getOtherKeysUrl() {
-        "http://localhost:$embeddedServer.port/other-keys".toString()
+        "$serverUrl/other-keys".toString()
     }
 
     void "verify JwksFetcherCodeGenerator seeds a thread-safe map with the JWKS fetched at build time"() {
@@ -210,6 +214,52 @@ public class AotJwksFetcher implements StaticOptimizations.Loader<DefaultJwkSetF
                 'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
                 'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
                 'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : keysUrl,
+        ]]
+    }
+
+    void "a relative JWKS URL declared by a single source is baked"() {
+        when:
+        generate()
+
+        then:
+        assertThatGeneratedSources {
+            doesNotCreateInitializer()
+            assert generatedClasses.size() == 2
+            hasClass("AotJwksFetcher") {
+                containingSources 'configs.put("/keys", AotJwkSetFetcher0::create);'
+            }
+            hasClass("AotJwkSetFetcher0") {
+                containingSources 'public static JWKSet create()'
+            }
+            compiles()
+        }
+
+        where:
+        contextProperties << [[
+                'micronaut.http.services.x.url'                            : serverUrl,
+                'micronaut.security.token.jwt.signatures.jwks.x.url'       : '/keys',
+        ]]
+    }
+
+    void "a relative JWKS URL declared by several sources is not baked because each source may resolve it differently"() {
+        when:
+        generate()
+
+        then:
+        assertThatGeneratedSources {
+            doesNotCreateInitializer()
+            assert generatedClasses.empty
+        }
+
+        where:
+        contextProperties << [[
+                'micronaut.http.services.x.url'                            : serverUrl,
+                'micronaut.http.services.y.url'                            : serverUrl,
+                'micronaut.security.token.jwt.signatures.jwks.x.url'       : '/keys',
+                'micronaut.security.oauth2.clients.y.client-id'            : 'XXX',
+                'micronaut.security.oauth2.clients.y.client-secret'        : 'YYY',
+                'micronaut.security.oauth2.clients.y.openid.fetch-configuration': false,
+                'micronaut.security.oauth2.clients.y.openid.jwks-uri'      : '/keys',
         ]]
     }
 
