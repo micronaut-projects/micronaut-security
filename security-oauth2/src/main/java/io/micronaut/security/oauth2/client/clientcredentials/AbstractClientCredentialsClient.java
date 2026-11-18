@@ -131,7 +131,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     }
 
     private boolean isExpired(@NonNull CachedTokenResponse cached) {
-        boolean isExpired = isExpired(cached.expiresAt());
+        boolean isExpired = isExpired(Date.from(cached.expiresAt()));
         if (isExpired && LOG.isTraceEnabled()) {
             LOG.trace("client credentials access token (sha256 prefix {}) for OAuth 2.0 client {} expired at {}",
                 fingerprint(cached.tokenResponse().getAccessToken()), getName(), cached.expiresAt());
@@ -139,16 +139,8 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         return isExpired;
     }
 
-    /**
-     * Computes the instant at which the access token expires. It is invoked once, when the token response is cached.
-     *
-     * @param tokenResponse Token Response
-     * @return The expiration returned by {@link #expirationDate(TokenResponse)} or, if it is empty, the current instant plus
-     * {@link ClientCredentialsConfiguration#getDefaultExpiration()}.
-     * @since 5.4.0
-     */
     @NonNull
-    protected Instant expiresAt(@NonNull TokenResponse tokenResponse) {
+    private Instant expiresAt(@NonNull TokenResponse tokenResponse) {
         return expirationDate(tokenResponse)
             .map(Date::toInstant)
             .orElseGet(() -> clock.instant().plus(defaultExpiration()));
@@ -158,7 +150,10 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      *
      * @param tokenResponse Token Response
      * @return true if any A) parameter token response is null B) if an expiration time cannot parsed C) (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
+     * @deprecated It is no longer invoked. The expiration of a token response is computed once with {@link #expirationDate(TokenResponse)},
+     * when the token response is cached, and checked with {@link #isExpired(Date)}.
      */
+    @Deprecated(since = "5.5.3", forRemoval = true)
     protected boolean isExpired(@Nullable TokenResponse tokenResponse) {
         if (tokenResponse == null) {
             return true;
@@ -168,21 +163,11 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
 
     /**
      *
-     * @param expiresAt Expiration
-     * @return true if the (expiration - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) is before the current instant.
-     * @since 5.4.0
-     */
-    protected boolean isExpired(@NonNull Instant expiresAt) {
-        return expiresAt.minus(advancedExpiration()).isBefore(clock.instant());
-    }
-
-    /**
-     *
      * @param expirationDate Expiration
      * @return true if the (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
      */
     protected boolean isExpired(@NonNull Date expirationDate) {
-        return isExpired(expirationDate.toInstant());
+        return expirationDate.toInstant().minus(advancedExpiration()).isBefore(clock.instant());
     }
 
     /**
