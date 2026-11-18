@@ -18,6 +18,7 @@ package io.micronaut.security.endpoints.introspection;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
@@ -137,7 +138,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      *     active only if a {@link RefreshTokenValidator} accepts the token. Subclasses overriding that method keep being honoured.</li>
      *     <li>If the {@link RefreshTokenValidator} rejects the token, the token is reported inactive.</li>
      *     <li>Otherwise the token is reported active only if {@link RefreshTokenPersistence#getAuthentication(String)}
-     *     emits an {@link Authentication}; an empty publisher or an error means the token is reported inactive.</li>
+     *     emits an {@link Authentication}; an empty publisher or an error, emitted or thrown, means the token is reported inactive.</li>
      * </ul>
      * @param token Token
      * @param requestContext Request context
@@ -156,15 +157,26 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
         if (refreshTokenKey.isEmpty()) {
             return Mono.just(inactiveIntrospectionResponse());
         }
-        return Mono.from(refreshTokenPersistence.getAuthentication(refreshTokenKey.get()))
+        String key = refreshTokenKey.get();
+        RefreshTokenPersistence persistence = refreshTokenPersistence;
+        return Mono.defer(() -> Mono.from(persistence.getAuthentication(key)))
                 .map(authentication -> createIntrospectionResponse(authentication, requestContext))
                 .onErrorResume(t -> {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive: {}", t.getMessage());
-                    }
+                    logRefreshTokenPersistenceError(t);
                     return Mono.empty();
                 })
                 .defaultIfEmpty(inactiveIntrospectionResponse());
+    }
+
+    private static void logRefreshTokenPersistenceError(Throwable t) {
+        if (t instanceof OauthErrorResponseException e) {
+            // The documented way for a RefreshTokenPersistence to reject a revoked or unknown refresh token.
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("RefreshTokenPersistence rejected the refresh token with {}. Reporting it inactive", e.getError());
+            }
+        } else if (LOG.isWarnEnabled()) {
+            LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive", t);
+        }
     }
 
     /**

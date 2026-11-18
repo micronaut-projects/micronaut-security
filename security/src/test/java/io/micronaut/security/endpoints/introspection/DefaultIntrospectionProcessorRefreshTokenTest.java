@@ -1,7 +1,13 @@
 package io.micronaut.security.endpoints.introspection;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
+import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
@@ -10,6 +16,7 @@ import io.micronaut.security.token.validator.TokenValidator;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -66,6 +73,56 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
 
         assertInactiveAndEmpty(introspect(processor, SIGNED_A));
+    }
+
+    @Test
+    void refreshTokenIsInactiveWhenPersistenceThrowsInsteadOfEmittingAnError() {
+        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+            @Override
+            public Publisher<Authentication> getAuthentication(String refreshToken) {
+                throw new IllegalStateException("database down");
+            }
+        };
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
+
+        assertInactiveAndEmpty(introspect(processor, SIGNED_A));
+    }
+
+    @Test
+    void unexpectedPersistenceFailureIsLoggedAtWarnWithItsCause() {
+        IllegalStateException failure = new IllegalStateException("database down");
+        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+            @Override
+            public Publisher<Authentication> getAuthentication(String refreshToken) {
+                return Mono.error(failure);
+            }
+        };
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
+
+        List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertNotNull(events.get(0).getThrowableProxy());
+        assertEquals("database down", events.get(0).getThrowableProxy().getMessage());
+    }
+
+    @Test
+    void revocationSignalledWithOauthErrorResponseExceptionIsInactiveAndLoggedAtDebugWithoutTheToken() {
+        RefreshTokenPersistence persistence = new FailingRefreshTokenPersistence() {
+            @Override
+            public Publisher<Authentication> getAuthentication(String refreshToken) {
+                return Mono.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "refresh token " + refreshToken + " revoked", null));
+            }
+        };
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
+
+        List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.DEBUG, events.get(0).getLevel());
+        assertNull(events.get(0).getThrowableProxy());
+        assertFalse(events.get(0).getFormattedMessage().contains("key-a"));
     }
 
     @Test
@@ -150,6 +207,23 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         IntrospectionResponse response = Mono.from(processor.introspect(new IntrospectionRequest(token, null), HttpRequest.GET("/token_info"))).block();
         assertNotNull(response);
         return response;
+    }
+
+    private static List<ILoggingEvent> captureLogs(Runnable action) {
+        Logger logger = (Logger) LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
+        Level originalLevel = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.setLevel(Level.DEBUG);
+        logger.addAppender(appender);
+        try {
+            action.run();
+        } finally {
+            logger.detachAppender(appender);
+            appender.stop();
+            logger.setLevel(originalLevel);
+        }
+        return appender.list;
     }
 
     private static void assertInactiveAndEmpty(IntrospectionResponse response) {
