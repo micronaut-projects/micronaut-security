@@ -77,7 +77,7 @@ public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements Re
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
         return Flux.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
                    .flatMap(openIdTokenResponse ->
-                                Flux.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null))
+                                Flux.from(tokenResponseValidator.validateWithoutNonce(clientConfiguration, openIdProviderMetadata, openIdTokenResponse))
                                     .flatMap(jwt -> {
                                         try {
                                             OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());

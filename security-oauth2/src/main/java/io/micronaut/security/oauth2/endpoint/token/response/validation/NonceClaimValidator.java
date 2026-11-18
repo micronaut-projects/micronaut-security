@@ -40,6 +40,9 @@ import org.slf4j.LoggerFactory;
  * is {@code false}) the authorization request does not carry a nonce, so validation passes only when neither a
  * persisted nonce nor a {@code nonce} claim exists.</p>
  *
+ * <p>Flows without an authorization request, such as the password grant, never send a nonce. They must use
+ * {@link #validateWithoutNonce(OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata)}.</p>
+ *
  * @author James Kleeh
  * @since 1.2.0
  */
@@ -91,5 +94,21 @@ public class NonceClaimValidator {
             return nonceClaim == null;
         }
         return nonce.equals(nonceClaim);
+    }
+
+    /**
+     * Validates the claims of an ID token obtained without an authorization request, for example with the password
+     * grant. No nonce is sent in such flows, so the ID token must not carry a {@code nonce} claim.
+     *
+     * @param claims ID Token Claims
+     * @param clientConfiguration OAuth 2.0 Client Configuration
+     * @param providerMetadata OpenID Connect provider metadata
+     * @return Whether the JWT Claims pass validation or not.
+     * @since 5.5.3
+     */
+    public boolean validateWithoutNonce(OpenIdClaims claims,
+                                        OauthClientConfiguration clientConfiguration,
+                                        OpenIdProviderMetadata providerMetadata) {
+        return claims.getNonce() == null;
     }
 }

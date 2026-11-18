@@ -47,4 +47,26 @@ public interface ReactiveOpenIdTokenResponseValidator<T> {
                           @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                           @NonNull OpenIdTokenResponse openIdTokenResponse,
                           @Nullable String nonce);
+
+    /**
+     * Validates an OpenID token response obtained without an authorization request, for example with the password
+     * grant. No nonce is sent in such flows, so there is no persisted nonce to compare the ID token with.
+     *
+     * <p>The default implementation delegates to
+     * {@link #validate(OauthClientConfiguration, OpenIdProviderMetadata, OpenIdTokenResponse, String)} with a
+     * {@code null} nonce.</p>
+     *
+     * @param clientConfiguration The OAuth 2.0 client configuration
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @param openIdTokenResponse ID Token Access Token response
+     * @return A non-empty publisher if the ID Token access response is considered valid
+     * @since 5.5.3
+     */
+    @SingleResult
+    @NonNull
+    default Publisher<T> validateWithoutNonce(@NonNull OauthClientConfiguration clientConfiguration,
+                                              @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                              @NonNull OpenIdTokenResponse openIdTokenResponse) {
+        return validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null);
+    }
 }
