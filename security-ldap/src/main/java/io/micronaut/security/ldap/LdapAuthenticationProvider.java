@@ -27,7 +27,6 @@ import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
-import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +101,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
                                       LdapGroupProcessor ldapGroupProcessor,
-                                      @Named(TaskExecutors.IO) ExecutorService executorService) {
+                                      ExecutorService executorService) {
         this(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 
