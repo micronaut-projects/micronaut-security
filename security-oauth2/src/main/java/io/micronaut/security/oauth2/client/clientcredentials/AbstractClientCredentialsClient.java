@@ -101,16 +101,34 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     @NonNull
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
-        return Flux.from(scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope)))
+        Publisher<CachedTokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope));
+        return Flux.from(publisher)
             .flatMap((Function<CachedTokenResponse, Mono<TokenResponse>>) cached -> {
                 if (!force && !isExpired(cached)) {
                     return Mono.just(cached.tokenResponse());
                 }
-                return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)))
+                return Mono.from(refresh(resolvedScope, scope, publisher))
                     .map(CachedTokenResponse::tokenResponse);
             }).doOnError(error -> {
                 scopeToPublisherMap.remove(resolvedScope);
             });
+    }
+
+    /**
+     * Replaces the cached token request of a scope, unless another caller has already replaced it.
+     * Callers which observe the same expired token thus share a single token request.
+     *
+     * @param resolvedScope The cache key
+     * @param scope The requested scope
+     * @param stale The cached token request which the caller found expired or was told to bypass
+     * @return The token request to subscribe to
+     */
+    @NonNull
+    private Publisher<CachedTokenResponse> refresh(@NonNull String resolvedScope,
+                                                   @Nullable String scope,
+                                                   @NonNull Publisher<CachedTokenResponse> stale) {
+        return scopeToPublisherMap.compute(resolvedScope, (key, current) ->
+            current == null || current == stale ? cachedTokenResponseForScope(scope) : current);
     }
 
     @NonNull

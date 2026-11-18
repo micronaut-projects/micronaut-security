@@ -169,6 +169,26 @@ class ClientCredentialsExpirationTest {
     }
 
     @Test
+    void callersWhichObserveTheSameExpiredTokenShareASingleTokenRequest() {
+        StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
+        ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder()
+            .advancedExpiration(NO_ADVANCED_EXPIRATION)
+            .build());
+        String accessToken = requestAccessToken(client);
+        clock.advance(Duration.ofMinutes(6));
+
+        List<Publisher<TokenResponse>> concurrentRequests = List.of(client.requestToken(), client.requestToken(), client.requestToken());
+        List<String> refreshed = concurrentRequests.stream()
+            .map(request -> Mono.from(request).map(TokenResponse::getAccessToken).block())
+            .distinct()
+            .toList();
+
+        assertEquals(1, refreshed.size());
+        assertNotEquals(accessToken, refreshed.get(0));
+        assertEquals(2, tokenEndpoint.requests());
+    }
+
+    @Test
     void forcedRequestBypassesTheCache() {
         StubTokenEndpointClient tokenEndpoint = new StubTokenEndpointClient(ClientCredentialsExpirationTest::opaqueToken);
         ClientCredentialsClient client = client(tokenEndpoint, ClientCredentialsConfiguration.builder().build());
