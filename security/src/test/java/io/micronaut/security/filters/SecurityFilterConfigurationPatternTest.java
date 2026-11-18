@@ -68,6 +68,18 @@ class SecurityFilterConfigurationPatternTest {
     }
 
     @Test
+    void patternPropertyTakesPrecedenceOverTheDeprecatedPathProperty() {
+        try (EmbeddedServer server = run(Map.of(PATTERN_PROPERTY, "/secured/**", PATH_PROPERTY, "/other/**"));
+             HttpClient httpClient = httpClient(server)) {
+            BlockingHttpClient client = httpClient.toBlocking();
+
+            assertEquals("/secured/**", pattern(server));
+            assertEquals("Public", client.retrieve(get("/public")));
+            assertEquals(HttpStatus.UNAUTHORIZED, statusOf(client, "/secured"));
+        }
+    }
+
+    @Test
     void patternDefaultsToMatchAll() {
         try (EmbeddedServer server = run(Map.of());
              HttpClient httpClient = httpClient(server)) {

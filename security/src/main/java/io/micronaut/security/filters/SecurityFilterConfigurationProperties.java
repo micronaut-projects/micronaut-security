@@ -16,10 +16,11 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
@@ -43,12 +44,16 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public static final boolean DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS = false;
 
     /**
-     *
-     * The pattern the {@link SecurityFilter} should match.
+     * The value of the {@code micronaut.security.filter.pattern} property.
      */
-    @NonNull
-    @NotBlank
-    private String pattern = "/**";
+    @Nullable
+    private String pattern;
+
+    /**
+     * The value of the deprecated {@code micronaut.security.filter.path} property.
+     */
+    @Nullable
+    private String path;
 
     private boolean enabled = DEFAULT_ENABLED;
 
@@ -70,7 +75,10 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     @Override
     @NonNull
     public String getPattern() {
-        return this.pattern;
+        if (pattern != null) {
+            return pattern;
+        }
+        return path != null ? path : Filter.MATCH_ALL_PATTERN;
     }
 
     /**
@@ -108,10 +116,13 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
      * Pattern the {@link SecurityFilter} should match.
      * @param pattern The pattern
      * @deprecated Use {@link #setPattern(String)} and the {@code micronaut.security.filter.pattern} property instead.
-     * The {@code micronaut.security.filter.path} property populates {@link #getPattern()} but does not change which routes the {@link SecurityFilter} intercepts.
+     * The {@code micronaut.security.filter.path} property populates {@link #getPattern()} only if {@code micronaut.security.filter.pattern} is not set,
+     * and it does not change which routes the {@link SecurityFilter} intercepts.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public void setPath(@NonNull String pattern) {
-        setPattern(pattern);
+        if (StringUtils.isNotEmpty(pattern)) {
+            this.path = pattern;
+        }
     }
 }
