@@ -42,6 +42,7 @@ public class LdapAuthenticationProviderFactory {
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
      * @return an {@link LdapAuthenticationProvider} if the corresponding {@link LdapConfiguration} is enabled
+     * @since 5.6.0
      */
     @EachBean(LdapConfiguration.class)
     @Requires(condition = LdapEnabledCondition.class)
