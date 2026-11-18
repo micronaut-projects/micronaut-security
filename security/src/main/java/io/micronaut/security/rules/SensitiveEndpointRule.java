@@ -109,8 +109,8 @@ public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>>, Endp
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
         // The route match is owned by the request pipeline; it must not be closed here.
         RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
-        if (routeMatch instanceof MethodBasedRouteMatch) {
-            ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
+        if (routeMatch instanceof MethodBasedRouteMatch<?, ?> methodRoute) {
+            ExecutableMethod<?, ?> method = methodRoute.getExecutableMethod();
             if (endpointMethods.containsKey(method)) {
                 return check(request, authentication, method);
             }

@@ -77,8 +77,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule<HttpRequest<?>> 
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
         // The route match is owned by the request pipeline; it must not be closed here.
         RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
-        if (routeMatch instanceof MethodBasedRouteMatch) {
-            MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
+        if (routeMatch instanceof MethodBasedRouteMatch<?, ?> methodRoute) {
             AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
             if (securedAnnotation != null) {
                 if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
