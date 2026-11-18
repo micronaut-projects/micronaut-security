@@ -61,9 +61,9 @@ api:security.token.cookie.RefreshTokenCookieConfigurationProperties[] now declar
 
 Unsigned JSON Web Tokens (JWS header `alg=none`) are now rejected by the JWT validators even when no api:security.token.jwt.signature.SignatureConfiguration[] bean is present. Previously, an application without any signature configuration silently accepted unsigned tokens, which anyone can forge.
 
-If you rely on unsigned tokens (for example in local development), set `micronaut.security.token.jwt.accept-unsigned-tokens` to `true`. A warning is logged at startup when the flag is enabled. Unsigned tokens are still rejected when a signature configuration is present, regardless of the flag.
+If you rely on unsigned tokens (for example in local development), set `micronaut.security.token.jwt.accept-unsigned-tokens` to `true`. When the flag is enabled and no signature configuration is present, a warning is logged once the JWT validators are created. Unsigned tokens are still rejected when a signature configuration is present, regardless of the flag. The first unsigned token rejected for lack of a signature configuration is logged as a warning as well.
 
-api:security.token.jwt.generator.JwtTokenGenerator[] still emits unsigned tokens when no `@Named("generator")` api:security.token.jwt.signature.SignatureGeneratorConfiguration[] bean is present, but it now logs a warning at startup.
+api:security.token.jwt.generator.JwtTokenGenerator[] still emits unsigned tokens when no `@Named("generator")` api:security.token.jwt.signature.SignatureGeneratorConfiguration[] bean is present, but it now logs a warning when it is created.
 
 == Micronaut Security 5.5 breaking changes
 
