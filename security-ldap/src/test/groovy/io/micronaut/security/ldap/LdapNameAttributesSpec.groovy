@@ -54,9 +54,10 @@ class LdapNameAttributesSpec extends InMemoryLdapSpec {
         s.shutDown(true)
 
         where:
-        ldif         | username  | dn                              | cn
-        'slash.ldif' | 'johndoe' | 'cn=John/Doe,dc=example,dc=com' | 'John/Doe'
-        'basic.ldif' | 'riemann' | 'uid=riemann,dc=example,dc=com' | 'riemann'
+        ldif         | username    | dn                                | cn
+        'slash.ldif' | 'johndoe'   | 'cn=John/Doe,dc=example,dc=com'   | 'John/Doe'
+        'quote.ldif' | 'johnquote' | 'cn=John\\"Doe,dc=example,dc=com' | 'John"Doe'
+        'basic.ldif' | 'riemann'   | 'uid=riemann,dc=example,dc=com'   | 'riemann'
     }
 
     /**
