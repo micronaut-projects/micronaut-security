@@ -108,11 +108,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     @Nullable
     private String effectivePrefix() {
         String prefix = configuration.getPrefix();
-        if (prefix == null) {
-            return null;
-        }
-        String trimmed = prefix.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+        return StringUtils.hasText(prefix) ? prefix.trim() : null;
     }
 
     /**
