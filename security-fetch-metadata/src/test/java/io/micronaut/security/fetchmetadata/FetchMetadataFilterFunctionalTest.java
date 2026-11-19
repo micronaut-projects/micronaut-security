@@ -152,6 +152,28 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     @Test
+    void allowsCrossSiteRequestsFromAnOriginMatchingTheRouteRegex() {
+        assertEquals(HttpStatus.OK, exchange(crossSiteCors(HttpMethod.GET, "/fetch-metadata/cors-regex")
+            .header(HttpHeaders.ORIGIN, "https://trusted.example")).getStatus());
+    }
+
+    @Test
+    void rejectsCrossSiteRequestsFromAnOriginThatOnlyStartsWithTheRouteRegex() {
+        assertForbidden(crossSiteCors(HttpMethod.GET, "/fetch-metadata/cors-regex")
+            .header(HttpHeaders.ORIGIN, "https://trusted.example.evil.test"));
+    }
+
+    @Test
+    void anyOriginRouteExemptsOnlyRequestsWithoutCookies() {
+        // a local origin, because CorsFilter denies any-origin routes to other origins on localhost (drive-by localhost)
+        assertEquals(HttpStatus.OK, exchange(crossSiteCors(HttpMethod.POST, "/fetch-metadata/cors-any")
+            .header(HttpHeaders.ORIGIN, "http://localhost:1234")).getStatus());
+        assertForbidden(crossSiteCors(HttpMethod.POST, "/fetch-metadata/cors-any")
+            .header(HttpHeaders.ORIGIN, "http://localhost:1234")
+            .header(HttpHeaders.COOKIE, "SESSION=abc"));
+    }
+
+    @Test
     void rejectsCrossSiteRequestsWhenTheRouteCorsConfigurationRejectsTheOrigin() {
         MutableHttpRequest<?> request = request(HttpMethod.GET, "/fetch-metadata/cors",
             Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)
@@ -248,6 +270,10 @@ class FetchMetadataFilterFunctionalTest {
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
             () -> exchange(request));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+    }
+
+    private static MutableHttpRequest<?> crossSiteCors(HttpMethod method, String path) {
+        return request(method, path, Site.CROSS_SITE, Mode.CORS, Destination.EMPTY);
     }
 
     private static MutableHttpRequest<?> request(HttpMethod method,

@@ -19,12 +19,15 @@ import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.server.cors.CorsOriginConfiguration;
+import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS;
 import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
 import static io.micronaut.http.HttpHeaders.COOKIE;
 import static io.micronaut.http.HttpHeaders.ORIGIN;
@@ -68,6 +71,46 @@ class CrossOriginFetchMetadataRuleTest {
             "https://example.org"));
         assertTrue(RULE.matchesOrigin(configuration,
             "https://example.com"));
+    }
+
+    @Test
+    void allowedOriginRegexMustMatchTheWholeOrigin() {
+        CorsOriginConfiguration configuration = new CorsOriginConfiguration();
+        configuration.setAllowedOrigins(List.of());
+        configuration.setAllowedOriginsRegex("https://trusted\\.example");
+
+        assertTrue(RULE.matchesOrigin(configuration, "https://trusted.example"));
+        assertFalse(RULE.matchesOrigin(configuration, "https://trusted.example.evil.test"));
+        assertFalse(RULE.matchesOrigin(configuration, "https://evil.test/https://trusted.example"));
+    }
+
+    @Test
+    void anInvalidAllowedOriginRegexMatchesNoOrigin() {
+        CorsOriginConfiguration configuration = new CorsOriginConfiguration();
+        configuration.setAllowedOriginsRegex("https://(unclosed");
+
+        assertFalse(RULE.matchesOrigin(configuration, "https://(unclosed"));
+        assertFalse(RULE.matchesOrigin(configuration, "https://example.com"));
+    }
+
+    @Test
+    void cannotDecideWithoutANonBlankOrigin() {
+        assertEquals(FetchMetadataRuleResult.UNKNOWN, RULE.check(HttpRequest.GET("/"), null));
+        assertEquals(FetchMetadataRuleResult.UNKNOWN, RULE.check(HttpRequest.GET("/").header(ORIGIN, ""), null));
+    }
+
+    @Test
+    void matchesThePreflightRequestMethodWhenNoMethodIsRequested() {
+        CorsOriginConfiguration configuration = new CorsOriginConfiguration();
+        MutableHttpRequest<?> preflight = HttpRequest.OPTIONS("/")
+            .header(ORIGIN, "https://allowed.example")
+            .header(ACCESS_CONTROL_REQUEST_HEADERS, "X-Custom");
+
+        configuration.setAllowedMethods(List.of(HttpMethod.POST));
+        assertFalse(CrossOriginFetchMetadataRule.matchesMethod(configuration, preflight));
+
+        configuration.setAllowedMethods(List.of(HttpMethod.OPTIONS));
+        assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, preflight));
     }
 
     @Test

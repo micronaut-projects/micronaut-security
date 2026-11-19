@@ -29,6 +29,8 @@ import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_ORIGIN;
 import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
@@ -63,7 +66,9 @@ import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
 @Singleton
 final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule {
 
-    private final Map<String, Pattern> allowedOriginsPatterns = new ConcurrentHashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(CrossOriginFetchMetadataRule.class);
+
+    private final Map<String, Optional<Pattern>> allowedOriginsPatterns = new ConcurrentHashMap<>();
 
     @Override
     public int getOrder() {
@@ -73,7 +78,7 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
     @Override
     public FetchMetadataRuleResult check(HttpRequest<?> request, @Nullable SecFetch secFetch) {
         String origin = request.getOrigin().orElse(null);
-        if (origin == null) {
+        if (!StringUtils.hasText(origin)) {
             return FetchMetadataRuleResult.UNKNOWN;
         }
         Optional<CorsOriginConfiguration> originConfiguration =
@@ -90,7 +95,8 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
 
     boolean matchesOrigin(CorsOriginConfiguration configuration, String origin) {
         if (configuration.getAllowedOriginsRegex()
-            .map(regex -> allowedOriginsPatterns.computeIfAbsent(regex, Pattern::compile).matcher(origin).matches())
+            .flatMap(regex -> allowedOriginsPatterns.computeIfAbsent(regex, CrossOriginFetchMetadataRule::compile))
+            .map(pattern -> pattern.matcher(origin).matches())
             .orElse(false)) {
             return true;
         }
@@ -99,6 +105,22 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
             ((configuration.getAllowedOriginsRegex().isEmpty() &&
                 Objects.equals(allowedOrigins, CorsOriginConfiguration.ANY)) ||
                 allowedOrigins.contains(origin));
+    }
+
+    /**
+     * Compiles an allowed origins regular expression. An invalid expression matches no origin, so
+     * that it denies the exemption instead of failing the request.
+     *
+     * @param regex the allowed origins regular expression
+     * @return the compiled pattern, or empty when the expression is invalid
+     */
+    private static Optional<Pattern> compile(String regex) {
+        try {
+            return Optional.of(Pattern.compile(regex));
+        } catch (PatternSyntaxException e) {
+            LOG.warn("Invalid @CrossOrigin allowed origins regular expression [{}]; it matches no origin for Fetch Metadata", regex, e);
+            return Optional.empty();
+        }
     }
 
     static boolean matchesMethod(CorsOriginConfiguration configuration, HttpRequest<?> request) {

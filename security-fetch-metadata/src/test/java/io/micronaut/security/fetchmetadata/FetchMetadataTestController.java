@@ -54,6 +54,18 @@ final class FetchMetadataTestController {
         return "ok";
     }
 
+    @CrossOrigin(allowedOriginsRegex = "https://trusted\\.example")
+    @Get(uri = "/cors-regex", produces = MediaType.TEXT_PLAIN)
+    String corsRegex() {
+        return "ok";
+    }
+
+    @CrossOrigin
+    @Post(uri = "/cors-any", produces = MediaType.TEXT_PLAIN)
+    String corsAny() {
+        return "ok";
+    }
+
     @CrossOrigin(value = "https://allowed.example", allowedMethods = HttpMethod.POST, allowCredentials = true)
     @Post(uri = "/cors-credentials", produces = MediaType.TEXT_PLAIN)
     String corsCredentials() {
