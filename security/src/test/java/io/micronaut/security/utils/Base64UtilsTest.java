@@ -1,6 +1,7 @@
 package io.micronaut.security.utils;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -116,11 +118,15 @@ class Base64UtilsTest {
     @Test
     void urlDecoderAcceptsExactlyTheInputsTheJdkAccepts() {
         for (String src : allStrings("A_=", 8)) {
-            byte[] expected = jdkUrlDecodeOrNull(src);
-            if (expected == null) {
-                assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src), src);
+            if (isTriggerShape(src)) {
+                assertGuardRejects(() -> Base64Utils.decodeUrl(src), src);
             } else {
-                assertArrayEquals(expected, Base64Utils.decodeUrl(src), src);
+                byte[] expected = jdkUrlDecodeOrNull(src);
+                if (expected == null) {
+                    assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src), src);
+                } else {
+                    assertArrayEquals(expected, Base64Utils.decodeUrl(src), src);
+                }
             }
         }
     }
@@ -130,14 +136,15 @@ class Base64UtilsTest {
      * incomplete final unit makes the intrinsic's output length underflow. These inputs are invalid, so the JDK
      * rejects them, but they are left to it on purpose. If an advisory widens the trigger, changing this test is
      * part of widening the guard.
+     *
+     * <p>These inputs reach the real JDK decoder, so they must not be triggers on a vulnerable runner: the long input
+     * has no padding at all, and the padded inputs are shorter than one 64 character intrinsic block.</p>
      */
     @ParameterizedTest
     @ValueSource(strings = {
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",    // 64 + 1: no padding, tail mask is 0
         "A===",                                                                 // complete unit, too much padding
         "====",                                                                 // complete unit of padding only
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA===", // 64 + complete unit, too much padding
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA====", // 64 + complete unit of padding only
         "AA=A"                                                                  // padding not at the end
     })
     void inputOutsideTheTriggerIsLeftToTheJdk(String src) {
@@ -151,16 +158,35 @@ class Base64UtilsTest {
     void acceptsExactlyTheInputsTheJdkAccepts() {
         // Exhaustive over a small alphabet: the guard must never reject input the JDK would accept.
         for (String src : allStrings("AQ=", 8)) {
-            byte[] expected = jdkDecodeOrNull(src);
-            if (expected == null) {
-                assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(src), src);
+            if (isTriggerShape(src)) {
+                assertGuardRejects(() -> Base64Utils.decode(src), src);
             } else {
-                assertArrayEquals(expected, Base64Utils.decode(src), src);
+                byte[] expected = jdkDecodeOrNull(src);
+                if (expected == null) {
+                    assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(src), src);
+                } else {
+                    assertArrayEquals(expected, Base64Utils.decode(src), src);
+                }
             }
         }
     }
 
+    /**
+     * Inputs of the Java4Shell shape: padding that does not complete the final four character unit. RFC 4648 only
+     * allows padding that completes a unit, so these are invalid Base64 and the JDK rejects them as well. The tests
+     * never hand them to the JDK decoder: on a vulnerable runner that could trigger the bug the guard prevents.
+     */
+    private static boolean isTriggerShape(String src) {
+        return src.endsWith("=") && src.length() % 4 != 0;
+    }
+
+    private static void assertGuardRejects(Executable decode, String src) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, decode, src);
+        assertEquals(GUARD_MESSAGE, e.getMessage(), src);
+    }
+
     private static byte[] jdkDecodeOrNull(String src) {
+        assertFalse(isTriggerShape(src), () -> "must not reach the JDK decoder: " + src);
         try {
             return Base64.getDecoder().decode(src);
         } catch (IllegalArgumentException e) {
@@ -169,6 +195,7 @@ class Base64UtilsTest {
     }
 
     private static byte[] jdkUrlDecodeOrNull(String src) {
+        assertFalse(isTriggerShape(src), () -> "must not reach the JDK decoder: " + src);
         try {
             return Base64.getUrlDecoder().decode(src);
         } catch (IllegalArgumentException e) {

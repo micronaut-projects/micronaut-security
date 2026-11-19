@@ -21,7 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Base64DecoderUsageTest {
 
-    private static final Pattern JDK_DECODER = Pattern.compile("\\bget(Url|Mime)?Decoder\\s*\\(");
+    /**
+     * A call such as {@code Base64.getDecoder()} or a method reference such as {@code Base64::getUrlDecoder}.
+     * A decoder obtained in a way that never spells its factory method (reflection, or a third-party class) is
+     * outside what a source scan can see.
+     */
+    private static final Pattern JDK_DECODER = Pattern.compile("\\bget(Url|Mime)?Decoder\\s*\\(|::\\s*get(Url|Mime)?Decoder\\b");
     private static final List<String> SOURCE_ROOTS = List.of("java", "kotlin", "groovy");
     private static final String ALLOWED = "Base64Utils.java";
 
@@ -46,8 +51,13 @@ class Base64DecoderUsageTest {
         assertTrue(JDK_DECODER.matcher("Base64.getDecoder().decode(s)").find());
         assertTrue(JDK_DECODER.matcher("java.util.Base64.getUrlDecoder().decode(s)").find());
         assertTrue(JDK_DECODER.matcher("getMimeDecoder ()").find());
+        assertTrue(JDK_DECODER.matcher("Supplier<Base64.Decoder> s = Base64::getUrlDecoder;").find());
+        assertTrue(JDK_DECODER.matcher("Optional.of(java.util.Base64:: getDecoder)").find());
+        assertTrue(JDK_DECODER.matcher("Base64::getMimeDecoder)").find());
         assertFalse(JDK_DECODER.matcher("Base64.getEncoder().encodeToString(b)").find());
         assertFalse(JDK_DECODER.matcher("Base64Utils.decodeUrl(s)").find());
+        assertFalse(JDK_DECODER.matcher("Base64Utils::decodeUrl").find());
+        assertFalse(JDK_DECODER.matcher("Base64::getUrlEncoder").find());
     }
 
     private static boolean usesJdkDecoder(Path source) {
