@@ -30,7 +30,7 @@ import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
-import java.util.Base64;
+import io.micronaut.security.utils.Base64Utils;
 import java.util.Objects;
 
 /**
@@ -49,7 +49,7 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
      */
     public SecretSignature(SecretSignatureConfiguration config) {
         Objects.requireNonNull(config.getSecret(), "The secret for the secret signature cannot be null");
-        this.secret = config.isBase64() ? Base64.getDecoder().decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
+        this.secret = config.isBase64() ? Base64Utils.decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
         this.algorithm = config.getJwsAlgorithm();
     }
 

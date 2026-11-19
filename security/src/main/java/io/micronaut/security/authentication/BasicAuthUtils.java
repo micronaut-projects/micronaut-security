@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.security.utils.Base64Utils;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpHeaderValues;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +51,7 @@ public final class BasicAuthUtils {
     private static Optional<UsernamePasswordCredentials> decode(String credentials) {
         byte[] decoded;
         try {
-            decoded = Base64.getDecoder().decode(credentials);
+            decoded = Base64Utils.decode(credentials);
         } catch (IllegalArgumentException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Error while trying to Base 64 decode the basic auth credentials");
