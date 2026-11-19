@@ -28,6 +28,8 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -321,18 +323,29 @@ class ContentSecurityPolicyControllerTest {
         assertEquals(0, reportListener.reports.size());
     }
 
-    @Test
-    void requiresReportingApiMediaType(@Client("/") HttpClient httpClient) {
-        String json = "[]";
+    @ParameterizedTest
+    @ValueSource(strings = {MediaType.APPLICATION_JSON, "application/csp-report", MediaType.TEXT_PLAIN})
+    void requiresReportingApiMediaType(String contentType, @Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpRequest<byte[]> request = HttpRequest.POST(ContentSecurityPolicyControllerConfigurationProperties.DEFAULT_PATH,
-                json.getBytes(StandardCharsets.UTF_8))
-            .contentType(MediaType.APPLICATION_JSON_TYPE);
+                "[]".getBytes(StandardCharsets.UTF_8))
+            .contentType(MediaType.of(contentType));
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
             () -> client.exchange(request));
 
         assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exception.getStatus());
+    }
+
+    @Test
+    void acceptsAnEmptyBatch(@Client("/") HttpClient httpClient,
+                             ReportListener reportListener) {
+        reportListener.reports.clear();
+
+        HttpResponse<?> response = httpClient.toBlocking().exchange(reportRequest("[]"));
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        assertEquals(0, reportListener.reports.size());
     }
 
     private static HttpRequest<byte[]> reportRequest(String json) {

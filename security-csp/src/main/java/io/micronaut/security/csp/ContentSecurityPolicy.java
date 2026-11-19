@@ -29,7 +29,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>The policy preserves the directive order from the header. Each directive has a name and an
  * optional value; value-less directives, such as {@code upgrade-insecure-requests}, are represented
- * with a {@code null} value. This type parses the header for inspection; it does not validate CSP
+ * with a {@code null} value. Directive lookups such as {@link #scriptSrc()} ignore the case of the
+ * directive name and return the first of duplicate directives, as user agents do. This type parses the header for inspection; it does not validate CSP
  * directive names, source expressions, or the policy behavior implemented by a user agent.</p>
  *
  * @param directives the ordered directives in the policy
@@ -417,9 +418,16 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
         return new ContentSecurityPolicyDirective(parts[0], parts.length == 1 ? null : parts[1]);
     }
 
+    /**
+     * Finds the first directive with the given name. Directive names are compared case-insensitively
+     * and only the first of duplicate directives counts, as user agents do when parsing a policy.
+     *
+     * @param directiveName the lowercase directive name
+     * @return the directive, or {@code null} if it is absent
+     */
     private @Nullable ContentSecurityPolicyDirective findByDirectiveName(String directiveName) {
         return directives.stream()
-                .filter(directive -> directive.name().equals(directiveName))
+                .filter(directive -> directive.name().equalsIgnoreCase(directiveName))
                 .findFirst()
                 .orElse(null);
     }
