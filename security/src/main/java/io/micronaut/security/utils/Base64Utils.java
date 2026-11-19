@@ -57,9 +57,30 @@ public final class Base64Utils {
      * @throws IllegalArgumentException if {@code src} is not valid Base64
      */
     public static byte @NonNull [] decode(@NonNull String src) {
+        rejectIncompletePaddedUnit(src);
+        return Base64.getDecoder().decode(src);
+    }
+
+    /**
+     * Decodes a String with the {@link Base64#getUrlDecoder() URL and filename safe Base64 decoder}.
+     *
+     * <p>Input that ends with padding but whose length is not a multiple of four is rejected before
+     * it is passed to the JDK. The JDK decoder rejects that input as well, so the set of accepted inputs
+     * and the decoded bytes are the same as with {@link Base64.Decoder#decode(String)}; only the
+     * exception message differs.</p>
+     *
+     * @param src the URL safe Base64 encoded String to decode
+     * @return A newly-allocated byte array containing the decoded bytes.
+     * @throws IllegalArgumentException if {@code src} is not valid URL safe Base64
+     */
+    public static byte @NonNull [] decodeUrl(@NonNull String src) {
+        rejectIncompletePaddedUnit(src);
+        return Base64.getUrlDecoder().decode(src);
+    }
+
+    private static void rejectIncompletePaddedUnit(String src) {
         if (!src.isEmpty() && src.charAt(src.length() - 1) == PADDING && src.length() % UNIT_LENGTH != 0) {
             throw new IllegalArgumentException("Invalid Base64 padding");
         }
-        return Base64.getDecoder().decode(src);
     }
 }
