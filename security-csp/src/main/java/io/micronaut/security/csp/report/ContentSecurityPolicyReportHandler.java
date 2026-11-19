@@ -25,6 +25,10 @@ import java.util.List;
  * <p>Implementations must treat report fields as untrusted input. In particular, URLs and content
  * samples can contain sensitive data and should not be logged without appropriate filtering.</p>
  *
+ * <p>The report controller invokes the handler on the {@code blocking} executor
+ * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING}), so it may perform blocking I/O such as
+ * a database insert or a synchronous call to a monitoring service.</p>
+ *
  * @since 5.6.0
  */
 @FunctionalInterface

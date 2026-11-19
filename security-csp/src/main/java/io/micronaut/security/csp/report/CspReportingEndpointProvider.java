@@ -36,8 +36,7 @@ import java.net.URI;
 @Singleton
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
-    private final ReportToConfiguration reportToConfiguration;
-    private final URI url;
+    private final @Nullable ReportingEndpoint reportingEndpoint;
 
     /**
      * Creates the CSP reporting endpoint provider.
@@ -49,35 +48,37 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     CspReportingEndpointProvider(ReportToConfiguration reportToConfiguration,
                                  ContentSecurityPolicyControllerConfiguration controllerConfiguration,
                                  @Nullable ServerContextPathProvider serverContextPathProvider) {
-        this.reportToConfiguration = reportToConfiguration;
-        this.url = url(controllerConfiguration.getPath(), serverContextPathProvider);
+        if (reportToConfiguration.isEnabled()) {
+            String name = reportToConfiguration.getGroup();
+            URI url = url(controllerConfiguration.getPath(), serverContextPathProvider);
+            this.reportingEndpoint = new ReportingEndpoint() {
+                @Override
+                public String getName() {
+                    return name;
+                }
+
+                @Override
+                public URI getUrl() {
+                    return url;
+                }
+            };
+        } else {
+            this.reportingEndpoint = null;
+        }
     }
 
     /**
      * Returns the controller endpoint when the {@code report-to} directive is enabled.
      *
-     * <p>The controller configuration bean exists only while the controller is enabled, so it
-     * does not need to be checked here.</p>
+     * <p>The endpoint is built once: the controller configuration bean exists only while the
+     * controller is enabled, and the configuration does not change at runtime.</p>
      *
      * @param request current request
      * @return the CSP controller endpoint, or {@code null} when reporting is disabled
      */
     @Override
     public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
-        if (!reportToConfiguration.isEnabled()) {
-            return null;
-        }
-        return new ReportingEndpoint() {
-            @Override
-            public String getName() {
-                return reportToConfiguration.getGroup();
-            }
-
-            @Override
-            public URI getUrl() {
-                return url;
-            }
-        };
+        return reportingEndpoint;
     }
 
     /**

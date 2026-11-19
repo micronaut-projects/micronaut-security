@@ -40,6 +40,9 @@ public interface ContentSecurityPolicyNonceGenerator {
     /**
      * Generates the nonce used by both the response header and trusted view elements.
      *
+     * <p>Called for every request that matches the CSP filter pattern while a nonce-enabled directive
+     * is active, typically on the HTTP server's event loop. It must not block.</p>
+     *
      * @param request the request for which the nonce is generated
      * @return an unpredictable nonce value, unique to the request
      * @since 5.6.0

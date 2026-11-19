@@ -21,6 +21,7 @@ import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.server.filter.ResponseHeaderPopulator;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
@@ -64,7 +65,8 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
 
     @Override
     public @Nullable Collection<HttpHeaderEntry> findHttpHeaders(HttpRequest<?> request, HttpResponse<?> response) {
-        if (!PathMatcher.ANT.matches(cspFilterConfiguration.getPattern(), request.getPath())) {
+        String pattern = cspFilterConfiguration.getPattern();
+        if (!ServerFilter.MATCH_ALL_PATTERN.equals(pattern) && !PathMatcher.ANT.matches(pattern, request.getPath())) {
             return null;
         }
         String headerName = cspConfiguration.isReportOnly()

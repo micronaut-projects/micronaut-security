@@ -22,7 +22,7 @@ Content-Security-Policy: default-src 'none'; report-to csp
 
 Without a handler, the reporting controller and the module-provided `Reporting-Endpoints` header are not registered. The generated policy can still use `report-to` with an application-managed or external `Reporting-Endpoints` header.
 
-Implement the handler to redact, persist, or forward reports to a monitoring service:
+Implement the handler to redact, persist, or forward reports to a monitoring service. The controller calls it on the blocking executor, so it may perform I/O such as a database insert:
 
 [source,java]
 ----
@@ -63,6 +63,8 @@ micronaut:
         access:
           - isAnonymous()
 ----
+
+Browsers send report batches of a few kilobytes, but the endpoint accepts bodies up to `micronaut.server.max-request-size` (10MB by default). Because the endpoint is anonymous, consider enforcing a smaller request size limit for it at your reverse proxy.
 
 Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Apply rate limits, sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
 

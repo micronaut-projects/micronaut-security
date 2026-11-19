@@ -27,4 +27,6 @@ class ApplicationContentSecurityPolicyGenerator implements ContentSecurityPolicy
 
 To customize one part of the default policy, subclass api:security.csp.DefaultContentSecurityPolicyGenerator[] and override the corresponding protected directive method. The subclass must declare a constructor with the same parameters as the injected constructor of api:security.csp.DefaultContentSecurityPolicyGenerator[] and pass them to it, so that the `micronaut.security.csp` configuration keeps applying.
 
+IMPORTANT: The generator, and a custom api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[], run for every matching response, typically on the HTTP server's event loop. They must not block: load policies that depend on external data, such as per-tenant policies, ahead of time and cache them.
+
 NOTE: A custom generator is also the escape hatch for directives or source expressions that the directive-specific configuration properties do not expose. Construct an api:security.csp.ContentSecurityPolicy[] from api:security.csp.ContentSecurityPolicyDirective[] values. Each directive accepts its name and already serialized value.

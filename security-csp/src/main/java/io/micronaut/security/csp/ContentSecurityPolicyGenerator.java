@@ -271,6 +271,10 @@ public interface ContentSecurityPolicyGenerator {
      * source expressions. Returning {@code null} suppresses the CSP response header for this
      * request.</p>
      *
+     * <p>This method is called for every response that matches the CSP filter pattern, typically on
+     * the HTTP server's event loop. It must not block: load policies that depend on external data,
+     * such as per-tenant policies, ahead of time and cache them.</p>
+     *
      * @param request the request for which the policy is generated
      * @return the ordered policy, or {@code null} when no CSP header should be written
      * @since 5.6.0

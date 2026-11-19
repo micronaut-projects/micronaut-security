@@ -33,9 +33,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -338,6 +340,18 @@ class ContentSecurityPolicyControllerTest {
     }
 
     @Test
+    void invokesTheHandlerOffTheEventLoop(@Client("/") HttpClient httpClient,
+                                          ReportListener reportListener) {
+        reportListener.threadName = null;
+
+        httpClient.toBlocking().exchange(reportRequest("[]"));
+
+        assertNotNull(reportListener.threadName);
+        assertFalse(reportListener.threadName.toLowerCase(Locale.ROOT).contains("eventloop"),
+            () -> "the handler may block, so it must not run on an event-loop thread: " + reportListener.threadName);
+    }
+
+    @Test
     void acceptsAnEmptyBatch(@Client("/") HttpClient httpClient,
                              ReportListener reportListener) {
         reportListener.reports.clear();
@@ -358,11 +372,13 @@ class ContentSecurityPolicyControllerTest {
     static class ReportListener implements ContentSecurityPolicyReportHandler {
         private final List<ContentSecurityPolicyReport> reports = new CopyOnWriteArrayList<>();
         private volatile String requestPath;
+        private volatile String threadName;
 
         @Override
         public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
             this.reports.addAll(reports);
             requestPath = request.getPath();
+            threadName = Thread.currentThread().getName();
         }
     }
 }

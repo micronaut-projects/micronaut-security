@@ -24,6 +24,8 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Status;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -34,7 +36,8 @@ import java.util.List;
  *
  * <p>User agents deliver one or more reports as a JSON array using the
  * {@code application/reports+json} media type. Each accepted batch is passed to the configured
- * {@link ContentSecurityPolicyReportHandler} bean. The handler must treat every field as untrusted
+ * {@link ContentSecurityPolicyReportHandler} bean on the blocking executor, so the handler may perform
+ * I/O without stalling the event loop. The handler must treat every field as untrusted
  * input.</p>
  *
  * @see <a href="https://w3c.github.io/reporting/#try-delivery">Reporting API report delivery</a>
@@ -64,6 +67,7 @@ class ContentSecurityPolicyController {
      * @param reports reports serialized by the user agent
      * @param request request that delivered the reports
      */
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Post
     @Consumes(APPLICATION_REPORTS_JSON)
     @Status(HttpStatus.NO_CONTENT)
