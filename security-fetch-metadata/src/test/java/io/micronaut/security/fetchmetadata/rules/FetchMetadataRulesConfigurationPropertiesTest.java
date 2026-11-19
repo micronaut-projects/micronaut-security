@@ -51,8 +51,12 @@ class FetchMetadataRulesConfigurationPropertiesTest {
         assertFalse(configuration.isAllowNoFetchMetadata());
         assertFalse(configuration.isAllowSimpleNavigation());
         assertFalse(configuration.isAllowCrossOrigin());
-        assertFalse(beanContext.containsBean(CrossOriginFetchMetadataRule.class));
+        assertFalse(beanContext.containsBean(BrowserInitiatedRequestFetchMetadataRule.class));
+        assertFalse(beanContext.containsBean(SameOriginFetchMetadataRule.class));
+        assertTrue(beanContext.containsBean(SameSiteFetchMetadataRule.class));
+        assertFalse(beanContext.containsBean(NoFetchMetadataRule.class));
         assertFalse(beanContext.containsBean(SimpleTopLevelNavigationAndIframingFetchMetadataRule.class));
+        assertFalse(beanContext.containsBean(CrossOriginFetchMetadataRule.class));
     }
 
     @Test

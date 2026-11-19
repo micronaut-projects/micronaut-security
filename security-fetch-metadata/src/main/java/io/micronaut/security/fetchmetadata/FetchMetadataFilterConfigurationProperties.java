@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.annotation.ServerFilter;
 
 /**
  * Binds configuration for the Fetch Metadata request filter.
@@ -37,7 +38,7 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
     /** Default filter enablement. */
     public static final boolean DEFAULT_ENABLED = true;
     /** Default server-filter pattern. */
-    public static final String DEFAULT_PATTERN = "/**";
+    public static final String DEFAULT_PATTERN = ServerFilter.MATCH_ALL_PATTERN;
 
     private String pattern = DEFAULT_PATTERN;
 
