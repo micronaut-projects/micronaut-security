@@ -7,6 +7,16 @@ noReflection {
     allowIn("io.micronaut.security.context.SecurityContextHolder", "SERVICE_LOADING")
 }
 
+tasks.named<Test>("test") {
+    // Base64DecoderUsageTest scans the main sources of every module (Java4Shell, CVE-2026-114938), so they are
+    // inputs of this task: otherwise an up-to-date or cached result could hide a new JDK Base64 decoder call.
+    inputs.files(fileTree(rootDir) {
+        include("*/src/main/java/**", "*/src/main/kotlin/**", "*/src/main/groovy/**")
+    })
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+        .withPropertyName("base64ScanSources")
+}
+
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
