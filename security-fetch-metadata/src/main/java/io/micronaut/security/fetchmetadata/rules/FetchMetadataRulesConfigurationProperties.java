@@ -50,7 +50,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link CrossOriginFetchMetadataRule} bean which allows a cross-origin request when its matched route declares a CORS configuration that permits the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
+     * Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
      * @param allowCrossOrigin whether permitted cross-origin requests are allowed
      */
     public void setAllowCrossOrigin(boolean allowCrossOrigin) {
@@ -63,7 +63,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link BrowserInitiatedRequestFetchMetadataRule} bean which allows requests initiated directly by a user through browser UI, represented by site: none. Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
+     * Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}). Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
      *
      * @param allowBrowserInitiatedRequests whether requests initiated through browser UI are allowed
      */
@@ -77,7 +77,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link SameOriginFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same origin. Default value: {@value #DEFAULT_ALLOW_SAME_ORIGIN}
+     * Whether to allow requests whose Fetch Metadata identifies their initiator as the same origin. Default value: {@value #DEFAULT_ALLOW_SAME_ORIGIN}
      *
      * @param allowSameOrigin whether same-origin requests are allowed
      */
@@ -91,7 +91,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link SameSiteFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same site. Default value: {@value #DEFAULT_ALLOW_SAME_SITE}
+     * Whether to allow requests whose Fetch Metadata identifies their initiator as the same site. Default value: {@value #DEFAULT_ALLOW_SAME_SITE}
      *
      * @param allowSameSite whether same-site requests are allowed
      */
@@ -105,7 +105,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link NoFetchMetadataRule} bean which allows requests without the {@code Sec-Fetch-Site} header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to allow requests without the {@code Sec-Fetch-Site} header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
      * @param allowNoFetchMetadata whether requests without the {@code Sec-Fetch-Site} header are allowed
      */
@@ -119,7 +119,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to enable {@link SimpleTopLevelNavigationAndIframingFetchMetadataRule} bean which allows simple cross-site {@code GET} navigations and iframing. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
+     * Whether to allow simple cross-site {@code GET} navigations and iframing. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
      *
      * @param allowSimpleNavigation whether simple cross-site navigations and iframing are allowed
      */

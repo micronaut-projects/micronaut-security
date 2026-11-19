@@ -13,6 +13,7 @@ dependencies {
     testRuntimeOnly(mnLogging.logback.classic)
 
     testImplementation(projects.micronautSecurity)
+    // HttpOptionalTest eagerly initializes every singleton without an HTTP server on the classpath
     testImplementation(projects.micronautSecurityFetchMetadata)
     testImplementation(projects.micronautSecurityReporting)
     testImplementation(projects.micronautSecurityCsrf)

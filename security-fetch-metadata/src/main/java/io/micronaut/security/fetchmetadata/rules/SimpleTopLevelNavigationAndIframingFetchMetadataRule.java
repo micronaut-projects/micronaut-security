@@ -34,7 +34,6 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
  * Allows simple {@code GET} navigations, including document and frame navigations, while
  * excluding requests whose destination is {@code object} or {@code embed} or is not recognized.
  */
-@Requires(classes = HttpRequest.class)
 @Requires(property = PROPERTY_ALLOW_SIMPLE_NAVIGATION, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton

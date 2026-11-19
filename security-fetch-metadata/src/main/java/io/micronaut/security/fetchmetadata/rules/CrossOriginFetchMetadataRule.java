@@ -57,7 +57,7 @@ import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
  * from being read, so exempting them would let a cross-site page make credentialed requests the
  * route declared it does not accept.</p>
  */
-@Requires(classes = { HttpRequest.class, CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class })
+@Requires(classes = { CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton

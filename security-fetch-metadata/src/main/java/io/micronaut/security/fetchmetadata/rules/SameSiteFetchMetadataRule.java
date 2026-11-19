@@ -31,7 +31,6 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
 /**
  * Allows requests whose Fetch Metadata identifies their initiator as the same site.
  */
-@Requires(classes = HttpRequest.class)
 @Requires(property = PROPERTY_ALLOW_SAME_SITE, value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 @Singleton
 @Internal

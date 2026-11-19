@@ -32,7 +32,6 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
  * Allows clients that do not send the {@code Sec-Fetch-Site} header.
  * This compatibility rule must be used together with other request-forgery protections.
  */
-@Requires(classes = HttpRequest.class)
 @Requires(property = PROPERTY_ALLOW_NO_FETCH_METADATA, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Singleton
 @Internal

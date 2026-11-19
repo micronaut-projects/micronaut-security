@@ -37,32 +37,32 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
 
     /**
-     * @return Whether to enable {@link CrossOriginFetchMetadataRule} bean which allows a cross-origin request when its matched route declares a CORS configuration that permits the request origin and HTTP method.
+     * @return Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method.
      */
     boolean isAllowCrossOrigin();
 
     /**
-     * @return Whether to enable {@link BrowserInitiatedRequestFetchMetadataRule} bean which allows requests initiated directly by a user through browser UI, represented by site: none.
+     * @return Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}).
      */
     boolean isAllowBrowserInitiatedRequests();
 
     /**
-     * @return Whether to enable {@link SameOriginFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same origin.
+     * @return Whether to allow requests whose Fetch Metadata identifies their initiator as the same origin.
      */
     boolean isAllowSameOrigin();
 
     /**
-     * @return Whether to enable {@link SameSiteFetchMetadataRule} bean which allows requests whose Fetch Metadata identifies their initiator as the same site.
+     * @return Whether to allow requests whose Fetch Metadata identifies their initiator as the same site.
      */
     boolean isAllowSameSite();
 
     /**
-     * @return Whether to enable {@link NoFetchMetadataRule} bean which allows requests without the {@code Sec-Fetch-Site} header.
+     * @return Whether to allow requests without the {@code Sec-Fetch-Site} header.
      */
     boolean isAllowNoFetchMetadata();
 
     /**
-     * @return Whether to enable {@link SimpleTopLevelNavigationAndIframingFetchMetadataRule} bean which allows simple cross-site {@code GET} navigations and iframing.
+     * @return Whether to allow simple cross-site {@code GET} navigations and iframing.
      */
     boolean isAllowSimpleNavigation();
 }

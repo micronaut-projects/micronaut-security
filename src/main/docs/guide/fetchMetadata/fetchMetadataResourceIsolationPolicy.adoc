@@ -7,6 +7,8 @@ The module evaluates its built-in rules in the same sequence as the https://web.
 . Simple `GET` navigations
 . Requests to https://docs.micronaut.io/latest/guide/#annotationBasedCors[CORS-enabled routes]
 
+Unlike the reference policy, which allows same-site requests, the same-site rule is disabled by default: a same-site request can come from any subdomain of the site, including ones the application does not control. Enable it with `micronaut.security.fetch-metadata.rules.allow-same-site` when every same-site origin is trusted.
+
 The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule returns `UNKNOWN` when it does not apply, allowing evaluation to continue. If every rule returns `UNKNOWN`, the filter responds with `403 Forbidden`. Rejections are logged at `DEBUG` level by `io.micronaut.security.fetchmetadata.FetchMetadataFilter`, together with the request's `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` values.
 
 Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses to the requests it evaluates, both allowed and rejected, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
