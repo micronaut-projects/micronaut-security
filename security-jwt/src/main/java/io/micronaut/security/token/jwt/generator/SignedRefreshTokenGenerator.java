@@ -32,9 +32,9 @@ import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
+import io.micronaut.security.utils.Base64Utils;
 import jakarta.inject.Singleton;
 import java.text.ParseException;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
      * @param config Signed Refresh Token generator
      */
     public SignedRefreshTokenGenerator(RefreshTokenConfiguration config) {
-        byte[] secret = config.isBase64() ? Base64.getDecoder().decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
+        byte[] secret = config.isBase64() ? Base64Utils.decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
         this.algorithm = config.getJwsAlgorithm();
         try {
             this.signer = new MACSigner(secret);
