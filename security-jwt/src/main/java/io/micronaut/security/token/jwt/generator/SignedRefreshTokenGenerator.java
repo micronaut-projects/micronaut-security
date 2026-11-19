@@ -32,13 +32,13 @@ import org.jspecify.annotations.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
+import io.micronaut.security.utils.Base64Utils;
 import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.micronaut.security.utils.Base64Utils;
 
 /**
  * The default implementation of {@link RefreshTokenGenerator} and {@link RefreshTokenValidator}.

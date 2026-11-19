@@ -19,7 +19,6 @@ import io.micronaut.security.utils.Base64Utils;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.http.HttpHeaderValues;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

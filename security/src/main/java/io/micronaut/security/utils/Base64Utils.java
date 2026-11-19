@@ -16,37 +16,49 @@
 package io.micronaut.security.utils;
 
 import io.micronaut.core.annotation.Internal;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Base64;
 
+/**
+ * Base64 decoding that rejects malformed padding before it reaches the JDK decoder.
+ *
+ * <p>Some JDK versions corrupt the heap when the AVX-512 VBMI Base64 decode intrinsic receives input
+ * whose final, incomplete four character unit ends with padding (CVE-2026-114938, "Java4Shell").
+ * The JDK rejects such input with an {@link IllegalArgumentException}, but only after the out of bounds
+ * write. Rejecting it here keeps attacker supplied values from reaching the intrinsic.</p>
+ *
+ * @author Sergio del Amo
+ * @since 5.4.3
+ */
 @Internal
 public final class Base64Utils {
 
-    private static final String EQUALS = "=";
+    /**
+     * Number of Base64 characters that encode three bytes.
+     */
+    private static final int UNIT_LENGTH = 4;
+
+    private static final char PADDING = '=';
 
     private Base64Utils() {
     }
 
-
     /**
-     * Decodes a Base64 encoded String into a newly-allocated byte array
-     * using the {@link Base64} encoding scheme.
+     * Decodes a String with the {@link Base64#getDecoder() basic Base64 decoder}.
      *
-     * <p> An invocation of this method has exactly the same effect as invoking
-     * {@code decode(src.getBytes(StandardCharsets.ISO_8859_1))}
+     * <p>Input that ends with padding but whose length is not a multiple of four is rejected before
+     * it is passed to the JDK. The JDK decoder rejects that input as well, so the set of accepted inputs
+     * and the decoded bytes are the same as with {@link Base64.Decoder#decode(String)}; only the
+     * exception message differs.</p>
      *
-     * @param   src
-     *          the string to decode
-     *
-     * @return  A newly-allocated byte array containing the decoded bytes.
-     *
-     * @throws  IllegalArgumentException
-     *          if {@code src} is not in valid Base64 scheme
+     * @param src the Base64 encoded String to decode
+     * @return A newly-allocated byte array containing the decoded bytes.
+     * @throws IllegalArgumentException if {@code src} is not valid Base64
      */
-    public static byte[] decode(String src) {
-        // Padding is only legal when it completes the final four character unit.
-        if (src.endsWith(EQUALS) && src.length() % 4 != 0) {
-            throw new IllegalArgumentException("Invalid Base 64 padding");
+    public static byte @NonNull [] decode(@NonNull String src) {
+        if (!src.isEmpty() && src.charAt(src.length() - 1) == PADDING && src.length() % UNIT_LENGTH != 0) {
+            throw new IllegalArgumentException("Invalid Base64 padding");
         }
         return Base64.getDecoder().decode(src);
     }
