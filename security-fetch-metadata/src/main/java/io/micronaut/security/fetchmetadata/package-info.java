@@ -19,7 +19,8 @@
  *
  * <p>Fetch Metadata is a request-isolation signal and does not replace authentication,
  * authorization, or CSRF protection. Routes annotated with {@code @CrossOrigin} are exempted
- * only when their CORS configuration accepts the request origin and HTTP method.</p>
+ * only when their CORS configuration accepts the request origin and HTTP method, and allows
+ * credentials when the request carries cookies.</p>
  *
  * @since 5.6.0
  */

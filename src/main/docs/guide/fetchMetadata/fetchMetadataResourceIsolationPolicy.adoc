@@ -11,33 +11,39 @@ The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule 
 
 Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses to the requests it evaluates, both allowed and rejected, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
 
-[cols="1,2,1"]
+[cols="1,2,1,1"]
 |===
-|Rule |Behavior |Default
+|Rule |Behavior |Default |Order
 
 |No Fetch Metadata
 |Allows clients that do not send `Sec-Fetch-Site`. Requests with `Sec-Fetch-Site` are evaluated by the remaining rules even when another Fetch Metadata header is incomplete or unrecognized.
 |Enabled
+|100
 
 |Same origin
 |Allows `Sec-Fetch-Site: same-origin`.
 |Enabled
+|200
 
 |Same site
 |Allows `Sec-Fetch-Site: same-site`. Enable this only when every same-site origin is trusted.
 |Disabled
+|300
 
 |Browser initiated
 |Allows `Sec-Fetch-Site: none`, which represents requests explicitly initiated through browser UI, such as the address bar or a bookmark.
 |Enabled
+|400
 
 |Simple navigation
 |Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object`, `embed`, and unrecognized destinations.
 |Enabled
+|500
 
 |CORS endpoint
-|Allows a request when the matched route declares CORS and its configuration accepts the request origin and method.
+|Allows a request when the matched route declares CORS and its configuration accepts the request origin and method, and, for a request carrying a `Cookie` header, allows credentials.
 |Enabled
+|600
 |===
 
 The simple navigation rule intentionally allows cross-site `GET` navigations, including frame and iframe destinations. It does not protect against framing; use https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors[CSP `frame-ancestors`] and/or https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] to control whether the application may be framed.

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 @Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_SITE,
@@ -50,5 +51,15 @@ class BuiltInFetchMetadataRuleOrderTest {
             .map(Object::getClass)
             .filter(BUILT_IN_RULES::contains)
             .toList());
+    }
+
+    @Test
+    void builtInRulesUseTheDocumentedOrderValues() {
+        assertEquals(100, new NoFetchMetadataRule().getOrder());
+        assertEquals(200, new SameOriginFetchMetadataRule().getOrder());
+        assertEquals(300, new SameSiteFetchMetadataRule().getOrder());
+        assertEquals(400, new BrowserInitiatedRequestFetchMetadataRule().getOrder());
+        assertEquals(500, new SimpleTopLevelNavigationAndIframingFetchMetadataRule().getOrder());
+        assertEquals(600, new CrossOriginFetchMetadataRule().getOrder());
     }
 }
