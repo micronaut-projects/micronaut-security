@@ -12,7 +12,7 @@ micronaut:
 
 A reporting group is a name that connects a reporting policy to an endpoint declared by the `Reporting-Endpoints` response header. It is not a URL. The group configured above produces `report-to csp`; the same `csp` name identifies the endpoint in `Reporting-Endpoints`.
 
-When the application also provides an api:security.csp.report.ContentSecurityPolicyReportHandler[] bean, the module registers the controller at `/csp/report` and generates both required response headers:
+When `report-to` is enabled and the application also provides an api:security.csp.report.ContentSecurityPolicyReportHandler[] bean, the module registers the controller at `/csp/report` and generates both required response headers. A handler bean alone does not open the route:
 
 [source,http]
 ----
@@ -64,9 +64,9 @@ micronaut:
           - isAnonymous()
 ----
 
-Browsers send report batches of a few kilobytes, but the endpoint accepts bodies up to `micronaut.server.max-request-size` (10MB by default). Because the endpoint is anonymous, consider enforcing a smaller request size limit for it at your reverse proxy.
+WARNING: The report endpoint is anonymous, so any client can post to it. Browsers send batches of a few kilobytes, but the endpoint accepts bodies up to `micronaut.server.max-request-size` (10MB by default) and the module applies no rate limit. Enforce a small request size limit and a rate limit for the endpoint at your reverse proxy or gateway.
 
-Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Apply rate limits, sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
+Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
 
 include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties.adoc[]
 

@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
+import java.util.regex.Pattern;
 
 /**
  * Advertises the handler-backed CSP report controller through the Reporting API module.
@@ -36,6 +38,7 @@ import java.net.URI;
 @Singleton
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
+    private static final Pattern LOCAL_PATH = Pattern.compile("/[^\\s\"\\\\]*");
     private final @Nullable ReportingEndpoint reportingEndpoint;
 
     /**
@@ -50,7 +53,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
                                  @Nullable ServerContextPathProvider serverContextPathProvider) {
         if (reportToConfiguration.isEnabled()) {
             String name = reportToConfiguration.getGroup();
-            URI url = url(controllerConfiguration.getPath(), serverContextPathProvider);
+            URI url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
             this.reportingEndpoint = new ReportingEndpoint() {
                 @Override
                 public String getName() {
@@ -79,6 +82,23 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     @Override
     public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
         return reportingEndpoint;
+    }
+
+    /**
+     * Rejects a controller path that would advertise another origin, or break the header, in
+     * {@code Reporting-Endpoints}. This mirrors the bean-validation constraint on the property so
+     * that it also applies without micronaut-validation at runtime.
+     *
+     * @param path the configured controller path
+     * @return the path
+     * @throws ConfigurationException if the path is not a local absolute path
+     */
+    private static String requireLocalPath(String path) {
+        if (!LOCAL_PATH.matcher(path).matches() || path.startsWith("//")) {
+            throw new ConfigurationException(ContentSecurityPolicyControllerConfigurationProperties.PREFIX
+                + ".path must be an absolute path on this server, starting with a single '/' and without whitespace, quotes or backslashes");
+        }
+        return path;
     }
 
     /**

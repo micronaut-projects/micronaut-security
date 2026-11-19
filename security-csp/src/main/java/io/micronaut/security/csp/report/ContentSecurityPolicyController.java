@@ -17,6 +17,7 @@ package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
@@ -25,6 +26,7 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +37,8 @@ import java.util.List;
  * Receives Content Security Policy reports delivered through the Reporting API.
  *
  * <p>User agents deliver one or more reports as a JSON array using the
- * {@code application/reports+json} media type. Each accepted batch is passed to the configured
+ * {@code application/reports+json} media type. The controller is registered only when the
+ * {@code report-to} directive is enabled and a {@link ContentSecurityPolicyReportHandler} bean exists. Each accepted batch is passed to the configured
  * {@link ContentSecurityPolicyReportHandler} bean on the blocking executor, so the handler may perform
  * I/O without stalling the event loop. The handler must treat every field as untrusted
  * input.</p>
@@ -45,6 +48,7 @@ import java.util.List;
 @Controller("${" + ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".path:"
     + ContentSecurityPolicyControllerConfigurationProperties.DEFAULT_PATH + "}")
 @Requires(beans = ContentSecurityPolicyReportHandler.class)
+@Requires(property = ReportToConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Requires(beans = ContentSecurityPolicyControllerConfiguration.class)
 @Internal
 class ContentSecurityPolicyController {

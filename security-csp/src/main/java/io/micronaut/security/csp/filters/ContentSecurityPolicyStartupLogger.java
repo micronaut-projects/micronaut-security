@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csp.filters;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
@@ -27,8 +28,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Logs once at startup which CSP header the module writes and where, because adding the module
- * applies a deny-by-default policy to every matching response.
+ * applies a deny-by-default policy to every matching response. It runs only when the header
+ * populator exists, so it never claims a header that is not written.
  */
+@Requires(beans = ContentSecurityPolicyResponseHeaderPopulator.class)
 @Singleton
 @Internal
 final class ContentSecurityPolicyStartupLogger implements ApplicationEventListener<StartupEvent> {

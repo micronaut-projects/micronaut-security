@@ -94,6 +94,21 @@ class CspTogglesTest {
         }
     }
 
+    @Test
+    void reportControllerIsNotRegisteredWhenReportToIsDisabled() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", SPEC_NAME));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+            HttpRequest<byte[]> request = HttpRequest.POST("/csp/report", "[]".getBytes(StandardCharsets.UTF_8))
+                .contentType(MediaType.of("application/reports+json"));
+
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                () -> client.exchange(request));
+
+            assertEquals(HttpStatus.NOT_FOUND, exception.getStatus(), "a handler bean alone must not open the report route");
+        }
+    }
+
     @Requires(property = "spec.name", value = SPEC_NAME)
     @Controller("/csp-toggles")
     static class TogglesController {

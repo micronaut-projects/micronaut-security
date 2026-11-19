@@ -14,8 +14,8 @@ dependencies {
     }
     api(mnValidation.validation)
     compileOnly(mn.micronaut.json.core)
+    compileOnly(mn.jackson.annotations)
     compileOnly(mnValidation.micronaut.validation)
-    compileOnly(mn.jackson.databind)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(mnTest.junit.jupiter.engine)

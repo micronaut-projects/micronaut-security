@@ -65,6 +65,7 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,6 +116,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * The grammar of a Reporting API endpoint group name used by {@code report-to}.
      */
     private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile("[a-z*][a-z0-9_.*-]*");
+    private static final Set<String> LOOPBACK_HOSTS = Set.of("localhost", "127.0.0.1", "[::1]");
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -330,6 +332,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (cspConfiguration.isReportUriEnabled()) {
             for (String reportUri : cspConfiguration.getReportUri()) {
                 requireSafeHeaderValue("micronaut.security.csp.report-uri", reportUri);
+                warnIfPlaintext(reportUri);
             }
         }
         if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
@@ -338,6 +341,29 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (reportToConfiguration.isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(reportToConfiguration.getGroup()).matches()) {
             throw new ConfigurationException("micronaut.security.csp.report-to.group must match " + REPORTING_GROUP_GRAMMAR.pattern()
                 + ", the grammar of a Reporting-Endpoints name");
+        }
+    }
+
+    /**
+     * Warns about a plaintext {@code http:} report URI on a non-loopback host, because violation
+     * reports carry document URLs, referrers and samples that may contain sensitive data.
+     *
+     * @param reportUri a configured {@code report-uri} endpoint
+     */
+    private static void warnIfPlaintext(String reportUri) {
+        String trimmed = reportUri.trim();
+        if (!trimmed.regionMatches(true, 0, "http://", 0, "http://".length())) {
+            return;
+        }
+        String host;
+        try {
+            host = URI.create(trimmed).getHost();
+        } catch (IllegalArgumentException e) {
+            host = null;
+        }
+        if (host == null || !LOOPBACK_HOSTS.contains(host.toLowerCase(Locale.ROOT))) {
+            LOG.warn("micronaut.security.csp.report-uri contains the plaintext endpoint {}; violation reports can contain sensitive URLs. Use https.",
+                trimmed);
         }
     }
 

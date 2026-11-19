@@ -144,6 +144,18 @@ class CspStartupLogTest {
     }
 
     @Test
+    void warnsAboutAPlaintextReportUriOnANonLoopbackHost() {
+        List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.report-uri-enabled", true,
+            "micronaut.security.csp.report-uri", List.of("http://reports.example.com/csp", "HTTP://localhost:8080/csp", "https://reports.example.com/csp", "/csp")),
+            context -> { }));
+
+        assertEquals(List.of("micronaut.security.csp.report-uri contains the plaintext endpoint http://reports.example.com/csp; "
+                + "violation reports can contain sensitive URLs. Use https."),
+            events.stream().map(ILoggingEvent::getFormattedMessage).toList());
+    }
+
+    @Test
     void warnsOnceAboutAnInvalidNonce() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of("micronaut.security.csp.script-src.nonce", true), context -> {
             ContentSecurityPolicyGenerator generator = context.getBean(ContentSecurityPolicyGenerator.class);

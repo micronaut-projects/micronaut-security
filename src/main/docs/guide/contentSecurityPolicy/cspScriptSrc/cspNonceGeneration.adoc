@@ -49,6 +49,8 @@ Use the value as the `nonce` attribute of every trusted inline script that the p
 
 A nonce is generated for every request that matches `micronaut.security.csp.filter.pattern`, including JSON and static-asset responses. Because the nonce changes on every response, HTTP/2 header compression cannot reuse the CSP header. When the same server also serves APIs or assets, narrow `filter.pattern` to the routes that render HTML.
 
+Do not let shared caches or CDNs store HTML that carries a nonce: a cached page replays the same nonce to every visitor. Send such responses with `Cache-Control: no-store` or `private`.
+
 Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
 
 The nonce in the HTML element must exactly match the value in the `script-src 'nonce-<value>'` response directive. Never reuse a nonce across requests and never place untrusted content inside a nonce-authorized element.

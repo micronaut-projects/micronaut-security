@@ -44,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Property(name = "spec.name", value = "ContentSecurityPolicyControllerTest")
+@Property(name = "micronaut.security.csp.report-to.enabled", value = "true")
 @MicronautTest
 class ContentSecurityPolicyControllerTest {
     private static final String SPEC_NAME = "ContentSecurityPolicyControllerTest";
