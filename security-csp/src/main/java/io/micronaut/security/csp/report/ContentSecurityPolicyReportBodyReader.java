@@ -56,7 +56,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                                                             Headers httpHeaders,
                                                             InputStream inputStream) throws CodecException {
         try {
-            List<SerializedContentSecurityPolicyReport> serializedReports = jsonMapper.readValue(
+            List<@Nullable SerializedContentSecurityPolicyReport> serializedReports = jsonMapper.readValue(
                 inputStream,
                 Argument.listOf(SerializedContentSecurityPolicyReport.class)
             );
@@ -64,7 +64,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                 return null;
             }
             List<ContentSecurityPolicyReport> reports = new ArrayList<>(serializedReports.size());
-            for (SerializedContentSecurityPolicyReport report : serializedReports) {
+            for (@Nullable SerializedContentSecurityPolicyReport report : serializedReports) {
                 reports.add(toReport(report));
             }
             return reports;
@@ -73,7 +73,10 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         }
     }
 
-    private ContentSecurityPolicyReport toReport(SerializedContentSecurityPolicyReport report) throws IOException {
+    private ContentSecurityPolicyReport toReport(@Nullable SerializedContentSecurityPolicyReport report) throws IOException {
+        if (report == null) {
+            throw new CodecException("A Content Security Policy report batch must not contain null reports");
+        }
         String reportType = report.type();
         JsonNode serializedBody = report.body();
         if (reportType == null || serializedBody == null || serializedBody.isNull()) {

@@ -16,8 +16,9 @@
 /**
  * Content Security Policy support for Micronaut applications.
  *
- * <p>The module adds an opt-out server filter that writes a restrictive response header and makes
- * an optional per-request nonce available to supported view models. Configure the policy under
+ * <p>The module adds an opt-out server filter that writes a restrictive response header and stores
+ * an optional per-request nonce as a request attribute. The module does not add the nonce to view
+ * models; a view integration, such as Micronaut Views, can expose it to templates. Configure the policy under
  * {@code micronaut.security.csp}. Directive-specific configuration lives in
  * {@code io.micronaut.security.csp.conf}, with each source-list directive owning a dedicated
  * configuration namespace such as {@code micronaut.security.csp.img-src}.</p>

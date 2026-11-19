@@ -29,9 +29,9 @@ import io.micronaut.http.HttpRequest;
  */
 public interface ContentSecurityPolicyNonceGenerator {
     /**
-     * Request attribute and map-backed view-model key under which the CSP nonce is stored.
-     * The value is safe to expose only to trusted template code that applies it to a nonce
-     * attribute.
+     * Request attribute under which the CSP nonce is stored. View integrations, such as Micronaut
+     * Views, can expose it to templates under the same name. The value is safe to expose only to
+     * trusted template code that applies it to a nonce attribute.
      *
      * @since 5.4.0
      */

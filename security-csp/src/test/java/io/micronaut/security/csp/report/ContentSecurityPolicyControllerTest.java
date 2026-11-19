@@ -220,6 +220,19 @@ class ContentSecurityPolicyControllerTest {
     }
 
     @Test
+    void rejectsNullReportInBatch(@Client("/") HttpClient httpClient,
+                                  ReportListener reportListener) {
+        reportListener.reports.clear();
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(reportRequest("[null]")));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(0, reportListener.reports.size());
+    }
+
+    @Test
     void rejectsInvalidCspViolationBody(@Client("/") HttpClient httpClient,
                                         ReportListener reportListener) {
         reportListener.reports.clear();

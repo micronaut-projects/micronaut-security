@@ -76,9 +76,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code http:} scheme source expression.
-     *
-     * Sets whether the source list contains {@code 'none'}.
+     * Controls the {@code 'none'} keyword source expression. It is emitted only when no other
+     * source expression is enabled for the directive.
      *
      * @param none whether no sources are allowed
      */
@@ -92,9 +91,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code https:} scheme source expression.
-     *
-     * Sets whether the source list contains {@code 'self'}.
+     * Controls the {@code 'self'} keyword source expression.
      *
      * @param self whether the protected origin is allowed
      */
@@ -108,7 +105,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code data:} scheme source expression.
+     * Controls the {@code http:} scheme source expression.
      *
      * @param http whether the directive includes the unquoted {@code http:} scheme source
      */
@@ -122,7 +119,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code blob:} scheme source expression.
+     * Controls the {@code https:} scheme source expression.
      *
      * @param https whether the directive includes the unquoted {@code https:} scheme source
      */
@@ -136,7 +133,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code filesystem:} scheme source expression.
+     * Controls the {@code data:} scheme source expression.
      *
      * @param data whether the directive includes the unquoted {@code data:} scheme source
      */
@@ -150,7 +147,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code mediastream:} scheme source expression.
+     * Controls the {@code blob:} scheme source expression.
      *
      * @param blob whether the directive includes the unquoted {@code blob:} scheme source
      */
@@ -164,7 +161,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code ws:} scheme source expression.
+     * Controls the {@code filesystem:} scheme source expression.
      *
      * @param filesystem whether the directive includes the unquoted {@code filesystem:} scheme source
      */
@@ -178,7 +175,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code wss:} scheme source expression.
+     * Controls the {@code mediastream:} scheme source expression.
      *
      * @param mediastream whether the directive includes the unquoted {@code mediastream:} scheme source
      */
