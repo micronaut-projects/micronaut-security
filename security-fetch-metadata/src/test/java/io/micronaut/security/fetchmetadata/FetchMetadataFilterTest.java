@@ -97,7 +97,7 @@ class FetchMetadataFilterTest {
     void mergesTheFetchMetadataHeadersWithAnExistingVary() {
         MutableHttpResponse<?> response = HttpResponse.ok()
             .header(HttpHeaders.VARY, "Origin, sec-fetch-site")
-            .header(HttpHeaders.VARY, "Accept-Encoding,,");
+            .header(HttpHeaders.VARY, "Accept-Encoding,,origin");
 
         filterWith(FetchMetadataRuleResult.ALLOWED).filterResponse(response);
 
