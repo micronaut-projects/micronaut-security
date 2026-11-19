@@ -26,7 +26,7 @@ import io.micronaut.core.order.Ordered;
  * built-in policy rules.</p>
  *
  * @param <T> request type
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface FetchMetadataRule<T> extends Ordered {
     /**

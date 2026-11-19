@@ -21,7 +21,7 @@
  * authorization, or CSRF protection. Routes annotated with {@code @CrossOrigin} are exempted
  * only when their CORS configuration accepts the request origin and HTTP method.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Configuration
 @NullMarked

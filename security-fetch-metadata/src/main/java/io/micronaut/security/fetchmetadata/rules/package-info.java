@@ -16,7 +16,7 @@
 /**
  * Built-in Fetch Metadata request-isolation rules and their configuration.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @NullMarked
 package io.micronaut.security.fetchmetadata.rules;

@@ -18,7 +18,7 @@ package io.micronaut.security.fetchmetadata.rules;
 /**
  * Configuration for the built-in Fetch Metadata rules.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface FetchMetadataRulesConfiguration {
     /** Configuration prefix for the built-in Fetch Metadata rules. */
@@ -31,11 +31,7 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_SAME_SITE = PREFIX + ".allow-same-site";
     /** Property that controls whether requests without the {@code Sec-Fetch-Site} header are allowed. */
     String PROPERTY_ALLOW_NO_FETCH_METADATA = PREFIX + ".allow-no-fetch-metadata";
-    /**
-     * Property that controls whether simple cross-site {@code GET} navigations and iframing are allowed.
-     *
-     * @since 5.4.0
-     */
+    /** Property that controls whether simple cross-site {@code GET} navigations and iframing are allowed. */
     String PROPERTY_ALLOW_SIMPLE_NAVIGATION = PREFIX + ".allow-simple-navigation";
     /** Property that controls whether permitted cross-origin requests are allowed. */
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
@@ -67,9 +63,6 @@ public interface FetchMetadataRulesConfiguration {
 
     /**
      * @return Whether to enable {@link SimpleTopLevelNavigationAndIframingFetchMetadataRule} bean which allows simple cross-site {@code GET} navigations and iframing.
-     * @since 5.4.0
      */
-    default boolean isAllowSimpleNavigation() {
-        return true;
-    }
+    boolean isAllowSimpleNavigation();
 }

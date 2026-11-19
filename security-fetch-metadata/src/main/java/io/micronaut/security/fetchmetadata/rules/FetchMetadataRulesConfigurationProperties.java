@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Binds configuration for the built-in Fetch Metadata rules.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(FetchMetadataRulesConfigurationProperties.PREFIX)
 final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRulesConfiguration {

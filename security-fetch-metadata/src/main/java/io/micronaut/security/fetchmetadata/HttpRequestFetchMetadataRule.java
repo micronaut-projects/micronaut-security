@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * A Fetch Metadata rule for {@link HttpRequest} instances.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface HttpRequestFetchMetadataRule extends FetchMetadataRule<HttpRequest<?>> {
     /**

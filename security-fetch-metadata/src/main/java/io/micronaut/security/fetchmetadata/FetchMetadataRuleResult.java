@@ -18,7 +18,7 @@ package io.micronaut.security.fetchmetadata;
 /**
  * Result of evaluating a {@link FetchMetadataRule}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public enum FetchMetadataRuleResult {
     /**

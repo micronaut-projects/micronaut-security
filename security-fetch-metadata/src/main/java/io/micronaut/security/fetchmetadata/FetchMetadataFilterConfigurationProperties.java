@@ -24,7 +24,7 @@ import io.micronaut.core.util.StringUtils;
 /**
  * Binds configuration for the Fetch Metadata request filter.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Context
 @ConfigurationProperties(FetchMetadataFilterConfigurationProperties.PREFIX)
@@ -47,7 +47,6 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
      * Reports whether the Fetch Metadata request filter is enabled.
      *
      * @return whether the Fetch Metadata request filter is enabled
-     * @since 5.4.0
      */
     @Override
     public boolean isEnabled() {
@@ -63,7 +62,6 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
      * Enables or disables the Fetch Metadata request filter.
      *
      * @param enabled whether the filter is enabled; defaults to {@value #DEFAULT_ENABLED}
-     * @since 5.4.0
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -75,7 +73,6 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
      *
      * @param pattern the server-filter pattern; defaults to {@value #DEFAULT_PATTERN}
      * @throws ConfigurationException if the pattern is empty or blank
-     * @since 5.4.0
      */
     public void setPattern(String pattern) {
         if (!StringUtils.hasText(pattern)) {

@@ -20,14 +20,13 @@ import io.micronaut.core.util.Toggleable;
 /**
  * Configuration for the Fetch Metadata request filter.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface FetchMetadataFilterConfiguration extends Toggleable {
     /**
      * Returns the request path pattern to which the Fetch Metadata filter applies.
      *
      * @return the pattern the {@link FetchMetadataFilter} should match
-     * @since 5.4.0
      */
     String getPattern();
 }
