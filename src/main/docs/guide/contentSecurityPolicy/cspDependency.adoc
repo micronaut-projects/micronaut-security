@@ -2,4 +2,4 @@ Add the dependency:
 
 dependency:micronaut-security-csp[groupId=io.micronaut.security]
 
-The module writes the header through the `ResponseHeaderPopulator` API of the Micronaut HTTP server, which requires `micronaut-http-server` 5.2 or later. With an older HTTP server no CSP header is sent, and the module logs a warning at startup.
+The module writes the header through the `ResponseHeaderPopulator` API of the Micronaut HTTP server.
