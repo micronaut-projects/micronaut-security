@@ -85,10 +85,6 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     private boolean requireTrustedTypesForEnabled = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED;
     private String requireTrustedTypesFor = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE;
 
-    /** Creates the root CSP configuration with its secure defaults. */
-    public ContentSecurityPolicyConfigurationProperties() {
-    }
-
     @Override
     public boolean isReportUriEnabled() {
         return reportUriEnabled;

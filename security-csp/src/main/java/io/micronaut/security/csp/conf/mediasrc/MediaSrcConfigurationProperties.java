@@ -27,7 +27,4 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MEDIA_SRC)
 public class MediaSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements MediaSrcConfiguration {
-    /** Creates the {@code media-src} configuration with its secure defaults. */
-    public MediaSrcConfigurationProperties() {
-    }
 }

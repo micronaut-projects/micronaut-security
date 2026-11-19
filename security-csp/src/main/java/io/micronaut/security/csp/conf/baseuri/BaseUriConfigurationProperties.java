@@ -26,7 +26,4 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_BASE_URI)
 public class BaseUriConfigurationProperties extends SourceListDirectiveConfigurationProperties implements BaseUriConfiguration {
-    /** Creates the {@code base-uri} configuration with its secure defaults. */
-    public BaseUriConfigurationProperties() {
-    }
 }

@@ -39,10 +39,6 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     private boolean reportSha384;
     private boolean reportSha512;
 
-    /** Creates the {@code script-src} configuration with its secure defaults. */
-    public ScriptSrcConfigurationProperties() {
-    }
-
     @Override
     public boolean isNonce() {
         return nonce;

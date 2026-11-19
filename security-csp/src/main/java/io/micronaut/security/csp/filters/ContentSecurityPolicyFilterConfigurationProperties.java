@@ -51,10 +51,6 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
 
     private boolean enabled = DEFAULT_ENABLED;
 
-    /** Creates the filter configuration with its default URL pattern. */
-    public ContentSecurityPolicyFilterConfigurationProperties() {
-    }
-
     /**
      * Reports whether the CSP response filter is enabled.
      *

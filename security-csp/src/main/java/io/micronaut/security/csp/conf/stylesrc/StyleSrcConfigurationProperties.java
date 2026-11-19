@@ -31,10 +31,6 @@ import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProp
 public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcConfiguration {
     private boolean nonce;
 
-    /** Creates the {@code style-src} configuration with its secure defaults. */
-    public StyleSrcConfigurationProperties() {
-    }
-
     @Override
     public boolean isNonce() {
         return nonce;

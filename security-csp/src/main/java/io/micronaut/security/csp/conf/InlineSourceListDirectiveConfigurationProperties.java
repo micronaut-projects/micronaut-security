@@ -26,10 +26,6 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     private boolean unsafeHashes;
     private boolean reportSample;
 
-    /** Creates an inline-capable source-list configuration with secure defaults. */
-    public InlineSourceListDirectiveConfigurationProperties() {
-    }
-
     @Override
     public boolean isUnsafeInline() {
         return unsafeInline;

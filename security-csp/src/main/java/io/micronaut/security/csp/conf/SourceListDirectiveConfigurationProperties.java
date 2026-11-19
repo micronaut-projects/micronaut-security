@@ -38,10 +38,6 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     private boolean wss;
     private List<String> values = Collections.emptyList();
 
-    /** Creates a source-list configuration with secure defaults. */
-    public SourceListDirectiveConfigurationProperties() {
-    }
-
     @Override
     public List<String> getValues() {
         return values;

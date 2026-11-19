@@ -27,7 +27,4 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MANIFEST_SRC)
 public class ManifestSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ManifestSrcConfiguration {
-    /** Creates the {@code manifest-src} configuration with its secure defaults. */
-    public ManifestSrcConfigurationProperties() {
-    }
 }

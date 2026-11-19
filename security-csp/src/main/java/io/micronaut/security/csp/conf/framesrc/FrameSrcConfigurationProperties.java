@@ -27,7 +27,4 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_SRC)
 public class FrameSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FrameSrcConfiguration {
-    /** Creates the {@code frame-src} configuration with its secure defaults. */
-    public FrameSrcConfigurationProperties() {
-    }
 }

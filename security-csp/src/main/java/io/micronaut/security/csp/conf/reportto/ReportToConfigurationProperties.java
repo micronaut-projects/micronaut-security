@@ -42,10 +42,6 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
     @Pattern(regexp = "[a-z*][a-z0-9_.*-]*")
     private String group = DEFAULT_GROUP;
 
-    /** Creates the {@code report-to} configuration, disabled by default with group {@value #DEFAULT_GROUP}. */
-    public ReportToConfigurationProperties() {
-    }
-
     @Override
     public boolean isEnabled() {
         return enabled;

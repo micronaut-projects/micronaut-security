@@ -29,10 +29,6 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ConnectSrcConfiguration {
     private boolean unsafeWebtransportHashes;
 
-    /** Creates the {@code connect-src} configuration with its secure defaults. */
-    public ConnectSrcConfigurationProperties() {
-    }
-
     @Override
     public boolean isUnsafeWebtransportHashes() {
         return unsafeWebtransportHashes;

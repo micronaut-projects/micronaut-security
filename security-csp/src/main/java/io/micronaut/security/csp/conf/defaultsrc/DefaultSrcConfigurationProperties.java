@@ -27,7 +27,4 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_DEFAULT_SRC)
 public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {
-    /** Creates the {@code default-src} configuration with its secure defaults. */
-    public DefaultSrcConfigurationProperties() {
-    }
 }
