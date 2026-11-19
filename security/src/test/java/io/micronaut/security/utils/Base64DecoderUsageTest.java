@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Java4Shell (CVE-2026-114938): every JDK Base64 decode in main sources must go through {@link Base64Utils},
  * which rejects the payloads that reach the vulnerable intrinsic. The call site tests cannot tell the guard
  * from the JDK decoder on an unaffected JDK, so this test fails instead when a call site bypasses the guard.
+ *
+ * <p>It scans only this module's main sources, relative to the project directory Gradle runs tests in, so the
+ * sources it reads are compiled into this task's inputs. security-jwt and security-oauth2 have their own copy.</p>
  */
 class Base64DecoderUsageTest {
 
@@ -32,10 +35,9 @@ class Base64DecoderUsageTest {
 
     @Test
     void mainSourcesDecodeBase64OnlyThroughBase64Utils() {
-        List<Path> sources = mainSources(repositoryRoot());
-        assertFalse(sources.isEmpty(), "no main sources found");
+        List<Path> sources = mainSources();
         assertTrue(sources.stream().anyMatch(p -> p.endsWith(Path.of("io", "micronaut", "security", "utils", ALLOWED))),
-                "Base64Utils.java not found: the scan does not cover the security module");
+                "Base64Utils.java not found: the scan does not cover the security module's main sources");
 
         List<String> offenders = sources.stream()
                 .filter(p -> !p.getFileName().toString().equals(ALLOWED))
@@ -68,17 +70,13 @@ class Base64DecoderUsageTest {
         }
     }
 
-    private static List<Path> mainSources(Path root) {
-        try (Stream<Path> modules = Files.list(root)) {
-            return modules
-                    .flatMap(module -> SOURCE_ROOTS.stream().map(lang -> module.resolve(Path.of("src", "main", lang))))
-                    .filter(Files::isDirectory)
-                    .flatMap(Base64DecoderUsageTest::walk)
-                    .filter(p -> p.toString().endsWith(".java") || p.toString().endsWith(".kt") || p.toString().endsWith(".groovy"))
-                    .toList();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    private static List<Path> mainSources() {
+        return SOURCE_ROOTS.stream()
+                .map(lang -> Path.of("src", "main", lang))
+                .filter(Files::isDirectory)
+                .flatMap(Base64DecoderUsageTest::walk)
+                .filter(p -> p.toString().endsWith(".java") || p.toString().endsWith(".kt") || p.toString().endsWith(".groovy"))
+                .toList();
     }
 
     private static Stream<Path> walk(Path dir) {
@@ -87,16 +85,5 @@ class Base64DecoderUsageTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private static Path repositoryRoot() {
-        Path dir = Path.of("").toAbsolutePath();
-        while (dir != null) {
-            if (Files.exists(dir.resolve("settings.gradle")) || Files.exists(dir.resolve("settings.gradle.kts"))) {
-                return dir;
-            }
-            dir = dir.getParent();
-        }
-        throw new IllegalStateException("Repository root with a Gradle settings file not found");
     }
 }
