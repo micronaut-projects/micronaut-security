@@ -50,7 +50,8 @@ class Base64UtilsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"ABCDE=", "ABCDEF=", "AA==AAAA="})
+    @ValueSource(strings = {"ABCDE=", "ABCDEF=", "AA==AAAA=", "AAAA=====",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA====="})  // 60 + 5 padding
     void otherPaddingThatDoesNotCompleteTheFinalUnitIsRejectedByTheGuard(String src) {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(src));
         assertEquals(GUARD_MESSAGE, e.getMessage());
@@ -74,7 +75,7 @@ class Base64UtilsTest {
     }
 
     @Test
-    void decodesObviousFixture() {
+    void decodesUserPasswordCredentials() {
         assertEquals("user:password", new String(Base64Utils.decode("dXNlcjpwYXNzd29yZA=="), StandardCharsets.UTF_8));
     }
 
@@ -124,10 +125,26 @@ class Base64UtilsTest {
         }
     }
 
-    @Test
-    void unpaddedInputOfInvalidLengthIsLeftToTheJdk() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(SIXTY_FOUR_A + "A"));
+    /**
+     * Deliberately not guarded. The guard rests on the published analysis that only padding at the end of an
+     * incomplete final unit makes the intrinsic's output length underflow. These inputs are invalid, so the JDK
+     * rejects them, but they are left to it on purpose. If an advisory widens the trigger, changing this test is
+     * part of widening the guard.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",    // 64 + 1: no padding, tail mask is 0
+        "A===",                                                                 // complete unit, too much padding
+        "====",                                                                 // complete unit of padding only
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA===", // 64 + complete unit, too much padding
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA====", // 64 + complete unit of padding only
+        "AA=A"                                                                  // padding not at the end
+    })
+    void inputOutsideTheTriggerIsLeftToTheJdk(String src) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(src));
         assertNotEquals(GUARD_MESSAGE, e.getMessage());
+        IllegalArgumentException url = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src));
+        assertNotEquals(GUARD_MESSAGE, url.getMessage());
     }
 
     @Test
