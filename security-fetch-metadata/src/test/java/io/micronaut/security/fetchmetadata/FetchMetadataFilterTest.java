@@ -15,20 +15,27 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import io.micronaut.http.Destination;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.Mode;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.SecFetch;
+import io.micronaut.http.Site;
 import io.micronaut.http.filter.ServerFilterPhase;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FetchMetadataFilterTest {
 
@@ -67,6 +74,63 @@ class FetchMetadataFilterTest {
         FetchMetadataFilter filter = new FetchMetadataFilter(List.of());
 
         assertEquals(HttpStatus.FORBIDDEN, filter.filterRequest(REQUEST).getStatus());
+    }
+
+    @Test
+    void parsesFetchMetadataOnceAndSharesItWithTheRules() {
+        HttpRequest<?> request = HttpRequest.GET("/")
+            .header(HttpHeaders.SEC_FETCH_SITE, "cross-site")
+            .header(HttpHeaders.SEC_FETCH_MODE, "no-cors")
+            .header(HttpHeaders.SEC_FETCH_DEST, "image");
+        List<SecFetch> seen = new ArrayList<>();
+        HttpRequestFetchMetadataRule recording = (req, secFetch) -> {
+            seen.add(secFetch);
+            return FetchMetadataRuleResult.UNKNOWN;
+        };
+
+        new FetchMetadataFilter(List.of(recording, recording)).filterRequest(request);
+
+        SecFetch parsed = request.getAttribute(FetchMetadataAttributes.SEC_FETCH, SecFetch.class).orElseThrow();
+        assertEquals(new SecFetch(Site.CROSS_SITE, Mode.NO_CORS, Destination.IMAGE, false), parsed);
+        assertEquals(2, seen.size());
+        assertSame(parsed, seen.get(0));
+        assertSame(parsed, seen.get(1));
+    }
+
+    @Test
+    void storesNoFetchMetadataForARequestWithoutIt() {
+        HttpRequest<?> request = HttpRequest.GET("/");
+
+        filterWith(FetchMetadataRuleResult.ALLOWED).filterRequest(request);
+
+        assertTrue(request.getAttribute(FetchMetadataAttributes.SEC_FETCH).isEmpty());
+    }
+
+    @Test
+    void ruleParsesFetchMetadataItselfOutsideTheFilter() {
+        HttpRequest<?> request = HttpRequest.GET("/").header(HttpHeaders.SEC_FETCH_SITE, "same-origin");
+        HttpRequestFetchMetadataRule sameOrigin = (req, secFetch) -> secFetch != null && secFetch.site() == Site.SAME_ORIGIN
+            ? FetchMetadataRuleResult.ALLOWED
+            : FetchMetadataRuleResult.UNKNOWN;
+
+        assertEquals(FetchMetadataRuleResult.ALLOWED, sameOrigin.check(request));
+    }
+
+    @Test
+    void honoursARuleThatOverridesTheSingleArgumentCheck() {
+        HttpRequestFetchMetadataRule overriding = new HttpRequestFetchMetadataRule() {
+            @Override
+            public FetchMetadataRuleResult check(HttpRequest<?> request) {
+                return FetchMetadataRuleResult.ALLOWED;
+            }
+
+            @Override
+            public FetchMetadataRuleResult check(HttpRequest<?> request, SecFetch secFetch) {
+                return FetchMetadataRuleResult.REJECTED;
+            }
+        };
+
+        assertNull(new FetchMetadataFilter(List.of(overriding)).filterRequest(REQUEST));
     }
 
     @Test

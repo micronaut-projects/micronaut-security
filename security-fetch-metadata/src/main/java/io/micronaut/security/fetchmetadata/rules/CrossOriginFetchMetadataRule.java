@@ -27,6 +27,8 @@ import io.micronaut.http.server.cors.CorsUtil;
 import io.micronaut.http.server.cors.CrossOriginUtil;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
+import io.micronaut.web.router.RouteAttributes;
+import io.micronaut.web.router.RouteInfo;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -60,7 +62,7 @@ import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
  * from being read, so exempting them would let a cross-site page make credentialed requests the
  * route declared it does not accept.</p>
  */
-@Requires(classes = { CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class })
+@Requires(classes = { CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class, RouteAttributes.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
@@ -69,6 +71,8 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
     private static final Logger LOG = LoggerFactory.getLogger(CrossOriginFetchMetadataRule.class);
 
     private final Map<String, Optional<Pattern>> allowedOriginsPatterns = new ConcurrentHashMap<>();
+    // read-only after creation: never mutated or exposed outside this rule
+    private final Map<RouteInfo<?>, Optional<CorsOriginConfiguration>> routeConfigurations = new ConcurrentHashMap<>();
 
     @Override
     public int getOrder() {
@@ -81,8 +85,9 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
         if (!StringUtils.hasText(origin)) {
             return FetchMetadataRuleResult.UNKNOWN;
         }
-        Optional<CorsOriginConfiguration> originConfiguration =
-            CrossOriginUtil.getCorsOriginConfigurationForRequest(request);
+        Optional<CorsOriginConfiguration> originConfiguration = RouteAttributes.getRouteMatch(request)
+            .flatMap(routeMatch -> routeConfigurations.computeIfAbsent(routeMatch.getRouteInfo(),
+                routeInfo -> CrossOriginUtil.getCorsOriginConfiguration(routeMatch.getAnnotationMetadata())));
         if (originConfiguration
             .filter(configuration -> matchesOrigin(configuration, origin))
             .filter(configuration -> matchesMethod(configuration, request))

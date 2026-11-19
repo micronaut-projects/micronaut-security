@@ -26,14 +26,17 @@ import org.jspecify.annotations.Nullable;
  */
 public interface HttpRequestFetchMetadataRule extends FetchMetadataRule<HttpRequest<?>> {
     /**
-     * Extracts {@link SecFetch} from the request and evaluates it.
+     * Extracts {@link SecFetch} from the request and evaluates it. When the Fetch Metadata filter
+     * evaluates the request, it parses the headers once and this method reuses that result.
      *
      * @param request the request to evaluate
      * @return the rule result
      */
     @Override
     default FetchMetadataRuleResult check(HttpRequest<?> request) {
-        return check(request, request.getSecFetch());
+        SecFetch secFetch = request.getAttribute(FetchMetadataAttributes.SEC_FETCH, SecFetch.class)
+            .orElseGet(request::getSecFetch);
+        return check(request, secFetch);
     }
 
     /**

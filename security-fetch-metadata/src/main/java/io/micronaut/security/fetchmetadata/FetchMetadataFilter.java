@@ -24,6 +24,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.SecFetch;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ResponseFilter;
 import io.micronaut.http.annotation.ServerFilter;
@@ -85,6 +86,11 @@ public final class FetchMetadataFilter implements Ordered {
     @RequestFilter
     @Nullable
     public HttpResponse<?> filterRequest(HttpRequest<?> request) {
+        SecFetch secFetch = request.getSecFetch();
+        if (secFetch != null) {
+            // parsed once here, so that every HttpRequestFetchMetadataRule reuses it
+            request.setAttribute(FetchMetadataAttributes.SEC_FETCH, secFetch);
+        }
         for (FetchMetadataRule<HttpRequest<?>> rule : rules) {
             FetchMetadataRuleResult result = rule.check(request);
             if (result == FetchMetadataRuleResult.ALLOWED) {

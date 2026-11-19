@@ -25,6 +25,9 @@ import io.micronaut.core.order.Ordered;
  * Custom rules can override {@link #getOrder()} to select their position relative to the
  * built-in policy rules.</p>
  *
+ * <p>Rules run on the request thread, usually a Netty event loop, for every request the filter
+ * evaluates. They must be fast and must not perform blocking I/O.</p>
+ *
  * @param <T> request type
  * @since 5.6.0
  */
