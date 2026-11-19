@@ -63,6 +63,13 @@ class FetchMetadataFilterTest {
     }
 
     @Test
+    void rejectsEveryRequestWhenThereAreNoRules() {
+        FetchMetadataFilter filter = new FetchMetadataFilter(List.of());
+
+        assertEquals(HttpStatus.FORBIDDEN, filter.filterRequest(REQUEST).getStatus());
+    }
+
+    @Test
     void stopsAfterTheFirstDecisiveRule() {
         AtomicBoolean laterRuleCalled = new AtomicBoolean();
         FetchMetadataRule<HttpRequest<?>> allow = request -> FetchMetadataRuleResult.ALLOWED;
