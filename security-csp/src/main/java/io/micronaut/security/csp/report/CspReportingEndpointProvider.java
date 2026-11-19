@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 @Singleton
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
+    private static final String SLASH = "/";
     private static final Pattern LOCAL_PATH = Pattern.compile("/[^\\s\"\\\\]*");
     private final @Nullable ReportingEndpoint reportingEndpoint;
 
@@ -112,7 +113,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     private static URI url(String path, @Nullable ServerContextPathProvider serverContextPathProvider) {
         String contextPath = serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath();
         if (StringUtils.hasText(contextPath)) {
-            return UriBuilder.of("/").path(contextPath).path(path).build();
+            return UriBuilder.of(SLASH).path(contextPath).path(path).build();
         }
         return URI.create(path);
     }

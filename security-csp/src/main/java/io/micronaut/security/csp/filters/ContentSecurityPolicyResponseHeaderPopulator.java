@@ -47,6 +47,7 @@ import java.util.List;
 @Singleton
 @Internal
 final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHeaderPopulator {
+    private static final String SLASH = "/";
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final boolean matchAll;
@@ -85,11 +86,11 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         if (!StringUtils.hasText(contextPath)) {
             return List.of(pattern);
         }
-        String normalizedContextPath = StringUtils.prependUri("/", contextPath);
-        if (normalizedContextPath.endsWith("/")) {
+        String normalizedContextPath = StringUtils.prependUri(SLASH, contextPath);
+        if (normalizedContextPath.endsWith(SLASH)) {
             normalizedContextPath = normalizedContextPath.substring(0, normalizedContextPath.length() - 1);
         }
-        if (normalizedContextPath.isEmpty() || pattern.startsWith(normalizedContextPath + "/")) {
+        if (normalizedContextPath.isEmpty() || pattern.startsWith(normalizedContextPath + SLASH)) {
             return List.of(pattern);
         }
         return List.of(pattern, StringUtils.prependUri(normalizedContextPath, pattern));
