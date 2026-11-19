@@ -77,6 +77,23 @@ class FetchMetadataFilterLoggingTest {
     }
 
     @Test
+    void logsParsedFetchMetadataAndSanitizesTheOrigin() {
+        FetchMetadataRule<HttpRequest<?>> unknown = request -> FetchMetadataRuleResult.UNKNOWN;
+        HttpRequest<?> request = HttpRequest.GET("/account")
+            .header(HttpHeaders.SEC_FETCH_SITE, "forged\tvalue")
+            .header(HttpHeaders.SEC_FETCH_DEST, "image")
+            .header(HttpHeaders.ORIGIN, "https://evil.example/\tx" + "a".repeat(300));
+
+        new FetchMetadataFilter(List.of(unknown)).filterRequest(request);
+
+        String message = singleEvent().getFormattedMessage();
+        assertTrue(message.contains("site=<unrecognized>, mode=<absent>, dest=image, origin=https://evil.example/?x"), message);
+        assertTrue(message.contains("a".repeat(200 - "https://evil.example/?x".length()) + "..., cookie=<absent>"), message);
+        assertFalse(message.contains("forged"), message);
+        assertFalse(message.contains("\t"), message);
+    }
+
+    @Test
     void doesNotDescribeTheRequestWhenDebugIsDisabled() {
         Level level = logger.getLevel();
         logger.setLevel(Level.INFO);

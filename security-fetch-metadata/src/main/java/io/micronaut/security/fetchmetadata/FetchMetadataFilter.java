@@ -50,6 +50,8 @@ public final class FetchMetadataFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(FetchMetadataFilter.class);
     private static final String GUIDE_URL = "https://micronaut-projects.github.io/micronaut-security/latest/guide/#fetchMetadata";
     private static final String ABSENT = "<absent>";
+    private static final String UNRECOGNIZED = "<unrecognized>";
+    private static final int MAX_LOGGED_LENGTH = 200;
     private static final List<String> VARY_HEADERS = List.of(
         HttpHeaders.SEC_FETCH_SITE,
         HttpHeaders.SEC_FETCH_MODE,
@@ -95,20 +97,20 @@ public final class FetchMetadataFilter implements Ordered {
             FetchMetadataRuleResult result = rule.check(request);
             if (result == FetchMetadataRuleResult.ALLOWED) {
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("request {} {} approved by rule {}", request.getMethod(), request.getPath(), rule.getClass().getSimpleName());
+                    LOG.trace("request {} {} approved by rule {}", request.getMethod(), loggable(request.getPath()), rule.getClass().getSimpleName());
                 }
                 return null; // proceed
             } else if (result == FetchMetadataRuleResult.REJECTED) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("request {} {} rejected by rule {} ({}). See {}", request.getMethod(), request.getPath(),
-                        rule.getClass().getSimpleName(), describeRequest(request), GUIDE_URL);
+                    LOG.debug("request {} {} rejected by rule {} ({}). See {}", request.getMethod(), loggable(request.getPath()),
+                        rule.getClass().getSimpleName(), describeRequest(request, secFetch), GUIDE_URL);
                 }
                 return forbidden();
             }
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("request {} {} rejected because no Fetch Metadata rule allowed it ({}). See {}",
-                request.getMethod(), request.getPath(), describeRequest(request), GUIDE_URL);
+                request.getMethod(), loggable(request.getPath()), describeRequest(request, secFetch), GUIDE_URL);
         }
         return forbidden();
     }
@@ -157,18 +159,36 @@ public final class FetchMetadataFilter implements Ordered {
         return fields;
     }
 
-    private static String describeRequest(HttpRequest<?> request) {
+    /**
+     * Describes the request for a log message. Fetch Metadata values are logged as parsed, and the
+     * free-form Origin header is truncated and stripped of control characters, so that a client
+     * cannot write arbitrary text to the log.
+     */
+    private static String describeRequest(HttpRequest<?> request, @Nullable SecFetch secFetch) {
         HttpHeaders headers = request.getHeaders();
-        return "site=" + headerValue(headers, HttpHeaders.SEC_FETCH_SITE)
-            + ", mode=" + headerValue(headers, HttpHeaders.SEC_FETCH_MODE)
-            + ", dest=" + headerValue(headers, HttpHeaders.SEC_FETCH_DEST)
-            + ", origin=" + headerValue(headers, HttpHeaders.ORIGIN)
+        String origin = headers.get(HttpHeaders.ORIGIN);
+        return "site=" + parsedValue(headers, HttpHeaders.SEC_FETCH_SITE, secFetch != null ? secFetch.site() : null)
+            + ", mode=" + parsedValue(headers, HttpHeaders.SEC_FETCH_MODE, secFetch != null ? secFetch.mode() : null)
+            + ", dest=" + parsedValue(headers, HttpHeaders.SEC_FETCH_DEST, secFetch != null ? secFetch.dest() : null)
+            + ", origin=" + (origin != null ? loggable(origin) : ABSENT)
             + ", cookie=" + (headers.contains(HttpHeaders.COOKIE) ? "present" : ABSENT);
     }
 
-    private static String headerValue(HttpHeaders headers, String name) {
-        String value = headers.get(name);
-        return value != null ? value : ABSENT;
+    private static String parsedValue(HttpHeaders headers, String name, @Nullable Object parsed) {
+        if (parsed != null) {
+            return parsed.toString();
+        }
+        return headers.contains(name) ? UNRECOGNIZED : ABSENT;
+    }
+
+    private static String loggable(String value) {
+        String truncated = value.length() > MAX_LOGGED_LENGTH ? value.substring(0, MAX_LOGGED_LENGTH) + "..." : value;
+        StringBuilder sb = new StringBuilder(truncated.length());
+        for (int i = 0; i < truncated.length(); i++) {
+            char c = truncated.charAt(i);
+            sb.append(Character.isISOControl(c) ? '?' : c);
+        }
+        return sb.toString();
     }
 
     private static MutableHttpResponse<Object> forbidden() {
