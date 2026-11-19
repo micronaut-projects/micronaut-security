@@ -1,0 +1,28 @@
+package io.micronaut.security.docs.cspnonce
+
+//tag::clazz[]
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator
+import io.micronaut.views.ModelAndView
+import io.micronaut.views.model.ViewModelProcessor
+import jakarta.inject.Singleton
+
+//end::clazz[]
+@Requires(property = "spec.name", value = "CspNonceViewModelProcessorTest")
+//tag::clazz[]
+@Singleton
+class CspNonceViewModelProcessor implements ViewModelProcessor<Map<String, Object>, HttpRequest<?>> {
+
+    @Override
+    void process(HttpRequest<?> request, ModelAndView<Map<String, Object>> modelAndView) {
+        request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String).ifPresent { String nonce ->
+            modelAndView.model.ifPresent { Map<String, Object> model ->
+                Map<String, Object> mutableModel = new HashMap<>(model)
+                mutableModel.put(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce)
+                modelAndView.setModel(mutableModel)
+            }
+        }
+    }
+}
+//end::clazz[]

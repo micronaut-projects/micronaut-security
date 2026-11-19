@@ -24,23 +24,7 @@ Without a handler, the reporting controller and the module-provided `Reporting-E
 
 Implement the handler to redact, persist, or forward reports to a monitoring service. The controller calls it on the blocking executor, so it may perform I/O such as a database insert:
 
-[source,java]
-----
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
-import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
-import jakarta.inject.Singleton;
-
-import java.util.List;
-
-@Singleton
-final class ApplicationCspReportHandler implements ContentSecurityPolicyReportHandler {
-    @Override
-    public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
-        // Validate, sanitize, and send the reports to application storage or monitoring.
-    }
-}
-----
+snippet::io.micronaut.security.docs.cspreport.ApplicationCspReportHandler[tags="clazz"]
 
 The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Reports of other types, such as `deprecation` or `intervention`, can arrive when the reporting group is shared with other policies; the controller skips them and passes only the CSP reports to the handler. A CSP report that is missing a required field, has a field longer than the module's limits, or arrives in a batch of more than 100 reports rejects the whole batch with HTTP 400. These checks run with or without Micronaut Validation. Use a reporting group dedicated to CSP. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
 

@@ -13,30 +13,7 @@ Once enabled, a fresh, unpredictable https://developer.mozilla.org/en-US/docs/We
 
 The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. If your view integration does not do it, register a `ViewModelProcessor` such as:
 
-[source,java]
-----
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
-import io.micronaut.views.ModelAndView;
-import io.micronaut.views.model.ViewModelProcessor;
-import jakarta.inject.Singleton;
-
-import java.util.HashMap;
-import java.util.Map;
-
-@Singleton
-class CspNonceViewModelProcessor implements ViewModelProcessor<Map<String, Object>, HttpRequest<?>> {
-    @Override
-    public void process(HttpRequest<?> request, ModelAndView<Map<String, Object>> modelAndView) {
-        request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class)
-            .ifPresent(nonce -> modelAndView.getModel().ifPresent(model -> {
-                Map<String, Object> mutableModel = new HashMap<>(model);
-                mutableModel.put(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, nonce);
-                modelAndView.setModel(mutableModel);
-            }));
-    }
-}
-----
+snippet::io.micronaut.security.docs.cspnonce.CspNonceViewModelProcessor[tags="clazz"]
 
 Use the value as the `nonce` attribute of every trusted inline script that the policy should allow:
 

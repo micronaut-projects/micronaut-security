@@ -4,26 +4,7 @@ The request-aware `contentSecurityPolicy(HttpRequest)` method returns an api:sec
 
 To take complete control, provide a bean implementing api:security.csp.ContentSecurityPolicyGenerator[]; the default implementation is only loaded when no other generator bean exists:
 
-[source,java]
-----
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.csp.ContentSecurityPolicy;
-import io.micronaut.security.csp.ContentSecurityPolicyDirective;
-import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
-import jakarta.inject.Singleton;
-
-import java.util.List;
-
-@Singleton
-class ApplicationContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
-    @Override
-    public ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request) {
-        return new ContentSecurityPolicy(List.of(
-            new ContentSecurityPolicyDirective(DEFAULT_SRC, QUOTED_SELF),
-            new ContentSecurityPolicyDirective(OBJECT_SRC, QUOTED_NONE)));
-    }
-}
-----
+snippet::io.micronaut.security.docs.cspgenerator.ApplicationContentSecurityPolicyGenerator[tags="clazz"]
 
 To customize one part of the default policy, subclass api:security.csp.DefaultContentSecurityPolicyGenerator[] and override the corresponding protected directive method. The subclass must declare a constructor with the same parameters as the injected constructor of api:security.csp.DefaultContentSecurityPolicyGenerator[] and pass them to it, so that the `micronaut.security.csp` configuration keeps applying.
 
