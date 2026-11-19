@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 

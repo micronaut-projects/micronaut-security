@@ -91,15 +91,6 @@ public interface DirectiveConfiguration extends Toggleable {
     }
 
     /**
-     * Controls the {@code 'unsafe-allow-redirects'} keyword source expression.
-     *
-     * @return whether the directive includes {@code 'unsafe-allow-redirects'}
-     */
-    default boolean isUnsafeAllowRedirects() {
-        return false;
-    }
-
-    /**
      * Controls the {@code 'wasm-unsafe-eval'} keyword source expression.
      *
      * @return whether the directive includes {@code 'wasm-unsafe-eval'}

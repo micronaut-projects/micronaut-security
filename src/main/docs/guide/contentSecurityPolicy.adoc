@@ -3,3 +3,5 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP[Content Security Po
 The `micronaut-security-csp` module generates a policy for each request and writes it to the HTTP response. When nonce support is enabled, it also stores the request nonce as a request attribute. The module does not add the nonce to view models itself; a view integration, such as Micronaut Views, can read the request attribute and expose it to templates.
 
 NOTE: Adding the module enables its restrictive default policy. Existing applications will normally need to allow the resources they intentionally use before deploying the policy in enforcing mode. Use <<cspReportOnly,report-only mode>> while evaluating violations.
+
+NOTE: If you are migrating from the CSP support in Micronaut Views, disable it with `micronaut.views.csp.enabled: false`. Both store their nonce in the `cspNonce` request attribute, so running them together lets one overwrite the other's nonce.

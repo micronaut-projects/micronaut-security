@@ -29,7 +29,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoints;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Singleton;

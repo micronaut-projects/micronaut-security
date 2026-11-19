@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.csp.conf;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Configuration contract for CSP directives whose value is a source list.
@@ -31,5 +31,5 @@ public interface SourceListDirectiveConfiguration extends DirectiveConfiguration
      *
      * @return the additional source expressions, in response-header order
      */
-    Set<String> getValues();
+    List<String> getValues();
 }

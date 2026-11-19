@@ -33,20 +33,23 @@ class CspConfigurationBindingTest {
 
     @Test
     void scriptSrcKeywordSourcesAreBoundAndEmittedInOrder() {
-        ContentSecurityPolicy policy = policy(Map.of(
-            "micronaut.security.csp.script-src.self", true,
-            "micronaut.security.csp.script-src.unsafe-inline", true,
-            "micronaut.security.csp.script-src.unsafe-eval", true,
-            "micronaut.security.csp.script-src.strict-dynamic", true,
-            "micronaut.security.csp.script-src.unsafe-hashes", true,
-            "micronaut.security.csp.script-src.report-sample", true,
-            "micronaut.security.csp.script-src.wasm-unsafe-eval", true,
-            "micronaut.security.csp.script-src.trusted-types-eval", true,
-            "micronaut.security.csp.script-src.urls", List.of("https://cdn.example.com")));
+        ContentSecurityPolicy policy = policy(Map.<String, Object>ofEntries(
+            Map.entry("micronaut.security.csp.script-src.self", true),
+            Map.entry("micronaut.security.csp.script-src.unsafe-inline", true),
+            Map.entry("micronaut.security.csp.script-src.unsafe-eval", true),
+            Map.entry("micronaut.security.csp.script-src.strict-dynamic", true),
+            Map.entry("micronaut.security.csp.script-src.unsafe-hashes", true),
+            Map.entry("micronaut.security.csp.script-src.report-sample", true),
+            Map.entry("micronaut.security.csp.script-src.wasm-unsafe-eval", true),
+            Map.entry("micronaut.security.csp.script-src.trusted-types-eval", true),
+            Map.entry("micronaut.security.csp.script-src.report-sha256", true),
+            Map.entry("micronaut.security.csp.script-src.report-sha384", true),
+            Map.entry("micronaut.security.csp.script-src.report-sha512", true),
+            Map.entry("micronaut.security.csp.script-src.values", List.of("https://cdn.example.com"))));
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC,
                 "'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' 'unsafe-hashes' 'report-sample' "
-                    + "'wasm-unsafe-eval' 'trusted-types-eval' https://cdn.example.com"),
+                    + "'wasm-unsafe-eval' 'trusted-types-eval' 'report-sha256' 'report-sha384' 'report-sha512' https://cdn.example.com"),
             policy.scriptSrc());
     }
 

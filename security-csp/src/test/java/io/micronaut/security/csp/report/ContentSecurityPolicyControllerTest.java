@@ -233,8 +233,8 @@ class ContentSecurityPolicyControllerTest {
     }
 
     @Test
-    void rejectsUnsupportedReportType(@Client("/") HttpClient httpClient,
-                                      ReportListener reportListener) {
+    void skipsNonCspReportsDeliveredInTheSameBatch(@Client("/") HttpClient httpClient,
+                                                   ReportListener reportListener) {
         reportListener.reports.clear();
         String json = """
             [{
@@ -243,6 +243,33 @@ class ContentSecurityPolicyControllerTest {
               "url": "https://example.com/page",
               "user_agent": "Example Browser",
               "body": {"id": "x"}
+            }, {
+              "type": "csp-hash",
+              "age": 2,
+              "url": "https://example.com/page",
+              "user_agent": "Example Browser",
+              "body": {"hash": "sha256-example"}
+            }]
+            """;
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpResponse<?> response = client.exchange(reportRequest(json));
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        assertEquals(1, reportListener.reports.size());
+        assertEquals(ContentSecurityPolicyReport.TYPE_CSP_HASH, reportListener.reports.get(0).type());
+    }
+
+    @Test
+    void rejectsReportWithoutType(@Client("/") HttpClient httpClient,
+                                  ReportListener reportListener) {
+        reportListener.reports.clear();
+        String json = """
+            [{
+              "age": 1,
+              "url": "https://example.com/page",
+              "user_agent": "Example Browser",
+              "body": {"hash": "sha256-example"}
             }]
             """;
         BlockingHttpClient client = httpClient.toBlocking();

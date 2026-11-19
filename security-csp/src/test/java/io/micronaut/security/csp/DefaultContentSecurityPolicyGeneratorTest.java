@@ -18,29 +18,27 @@ package io.micronaut.security.csp;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-import io.micronaut.security.csp.conf.baseUri.BaseUriConfigurationProperties;
-import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfiguration;
-import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.formAction.FormActionConfigurationProperties;
-import io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties;
-import io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.imgSrc.ImgSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
+import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.framesrc.FrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,7 +96,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void joinsConfiguredSourceExpressions() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         ConnectSrcConfigurationProperties connectSrcConfiguration = new ConnectSrcConfigurationProperties();
-        connectSrcConfiguration.setValues(new LinkedHashSet<>(List.of("'self'", "https://api.example.com")));
+        connectSrcConfiguration.setValues(List.of("'self'", "https://api.example.com"));
 
         ContentSecurityPolicyGenerator generator = generator(configuration, request -> "unused",
             new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
@@ -194,20 +192,15 @@ class DefaultContentSecurityPolicyGeneratorTest {
     }
 
     @Test
-    void emitsKeywordSourcesWithoutConfigurationPropertiesInDeclarationOrder() {
+    void emitsKeywordSourcesEnabledByACustomDirectiveConfiguration() {
         ConnectSrcConfiguration connectSrcConfiguration = new ConnectSrcConfiguration() {
             @Override
-            public Set<String> getValues() {
-                return Set.of();
+            public List<String> getValues() {
+                return List.of();
             }
 
             @Override
             public boolean isEnabled() {
-                return true;
-            }
-
-            @Override
-            public boolean isUnsafeAllowRedirects() {
                 return true;
             }
 
@@ -230,8 +223,30 @@ class DefaultContentSecurityPolicyGeneratorTest {
             currentRequest -> null, new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
-                "'unsafe-allow-redirects' 'report-sha256' 'report-sha384' 'report-sha512'"),
+                "'report-sha256' 'report-sha384' 'report-sha512'"),
                 policy(generator).connectSrc());
+    }
+
+    @Test
+    void omitsANonceOutsideTheBase64ValueGrammar() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> "abc'; script-src *", scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'"),
+                policy(generator).scriptSrc());
+    }
+
+    @Test
+    void acceptsABase64Nonce() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> "rAnd0m+/_-Value==", scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-rAnd0m+/_-Value=='"),
+                policy(generator).scriptSrc());
     }
 
     @Test

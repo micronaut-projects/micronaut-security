@@ -48,17 +48,27 @@ class ContentSecurityPolicyDirectiveTest {
     }
 
     @Test
-    void isNoneRecognizesQuotedAndUnquotedNoneValues() {
+    void blankValueHasNoTokensAndIsOmittedFromTheHeader() {
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, "   ");
+
+        assertEquals(List.of(), directive.values());
+        assertEquals("sandbox", directive.toString());
+        assertFalse(directive.isNone());
+        assertFalse(directive.isSelf());
+    }
+
+    @Test
+    void isNoneRecognizesOnlyTheQuotedKeyword() {
         assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'").isNone());
-        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "none").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "none").isNone());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'self'").isNone());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, null).isNone());
     }
 
     @Test
-    void isSelfRecognizesQuotedAndUnquotedSelfValues() {
+    void isSelfRecognizesOnlyTheQuotedKeyword() {
         assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'").isSelf());
-        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'").isSelf());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, null).isSelf());
     }

@@ -29,6 +29,8 @@ import io.micronaut.json.tree.JsonNode;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ import java.util.List;
 @Singleton
 @Consumes(ContentSecurityPolicyController.APPLICATION_REPORTS_JSON)
 final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<List<ContentSecurityPolicyReport>> {
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
     private final JsonMapper jsonMapper;
 
     ContentSecurityPolicyReportBodyReader(JsonMapper jsonMapper) {
@@ -65,7 +68,10 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             }
             List<ContentSecurityPolicyReport> reports = new ArrayList<>(serializedReports.size());
             for (@Nullable SerializedContentSecurityPolicyReport report : serializedReports) {
-                reports.add(toReport(report));
+                ContentSecurityPolicyReport cspReport = toReport(report);
+                if (cspReport != null) {
+                    reports.add(cspReport);
+                }
             }
             return reports;
         } catch (IOException e) {
@@ -73,26 +79,40 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         }
     }
 
-    private ContentSecurityPolicyReport toReport(@Nullable SerializedContentSecurityPolicyReport report) throws IOException {
+    /**
+     * Converts one serialized report.
+     *
+     * <p>A Reporting API endpoint group can receive reports of other types, such as
+     * {@code deprecation} or {@code intervention}, when it is shared with other policies. Those
+     * reports are skipped so that the CSP reports delivered in the same batch are still accepted.</p>
+     *
+     * @param report the serialized report
+     * @return the CSP report, or {@code null} when the report has a non-CSP type
+     * @throws IOException if the report body cannot be decoded
+     */
+    private @Nullable ContentSecurityPolicyReport toReport(@Nullable SerializedContentSecurityPolicyReport report) throws IOException {
         if (report == null) {
             throw new CodecException("A Content Security Policy report batch must not contain null reports");
         }
         String reportType = report.type();
-        JsonNode serializedBody = report.body();
-        if (reportType == null || serializedBody == null || serializedBody.isNull()) {
-            throw new CodecException("A Content Security Policy report type and body are required");
+        if (reportType == null) {
+            throw new CodecException("A Content Security Policy report type is required");
         }
-        ContentSecurityPolicyReportBody body = switch (reportType) {
-            case ContentSecurityPolicyReport.TYPE_CSP_VIOLATION -> jsonMapper.readValueFromTree(
-                serializedBody,
-                ContentSecurityPolicyViolationReportBody.class
-            );
-            case ContentSecurityPolicyReport.TYPE_CSP_HASH -> jsonMapper.readValueFromTree(
-                serializedBody,
-                ContentSecurityPolicyHashReportBody.class
-            );
-            default -> throw new CodecException("Unsupported Content Security Policy report type: " + reportType);
-        };
+        if (!ContentSecurityPolicyReport.TYPE_CSP_VIOLATION.equals(reportType)
+            && !ContentSecurityPolicyReport.TYPE_CSP_HASH.equals(reportType)) {
+            if (LOG.isDebugEnabled()) {
+                // The type is untrusted input, so it is not logged.
+                LOG.debug("Skipping a report whose type is not a Content Security Policy report type");
+            }
+            return null;
+        }
+        JsonNode serializedBody = report.body();
+        if (serializedBody == null || serializedBody.isNull()) {
+            throw new CodecException("A Content Security Policy report body is required");
+        }
+        ContentSecurityPolicyReportBody body = ContentSecurityPolicyReport.TYPE_CSP_VIOLATION.equals(reportType)
+            ? jsonMapper.readValueFromTree(serializedBody, ContentSecurityPolicyViolationReportBody.class)
+            : jsonMapper.readValueFromTree(serializedBody, ContentSecurityPolicyHashReportBody.class);
         if (body == null) {
             throw new CodecException("A Content Security Policy report body is required");
         }

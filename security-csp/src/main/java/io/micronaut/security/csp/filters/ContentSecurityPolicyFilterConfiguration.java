@@ -18,15 +18,17 @@ package io.micronaut.security.csp.filters;
 import io.micronaut.core.util.Toggleable;
 
 /**
- * Configuration for {@link io.micronaut.security.csp.filters.ContentSecurityPolicyFilter}.
+ * Configuration for the CSP server filter, which generates the request nonce, and for the response
+ * header populator, which writes the CSP header. Both apply only to requests matching
+ * {@link #getPattern()}; disabling the filter removes both.
  * @author Sergio del Amo
  * @since 5.6.0
  */
 public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
     /**
-     * Returns the URL pattern to which the CSP filter applies.
+     * Returns the URL pattern to which the CSP filter and response header apply.
      *
-     * @return the pattern the {@link ContentSecurityPolicyFilter} should match
+     * @return the ant-style request path pattern; defaults to {@code /**}
      */
     String getPattern();
 }

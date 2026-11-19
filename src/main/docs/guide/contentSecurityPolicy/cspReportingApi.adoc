@@ -42,7 +42,7 @@ final class ApplicationCspReportHandler implements ContentSecurityPolicyReportHa
 }
 ----
 
-The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
+The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Reports of other types, such as `deprecation` or `intervention`, can arrive when the reporting group is shared with other policies; the controller skips them and passes only the CSP reports to the handler. A CSP report that fails validation still rejects the whole batch with HTTP 400, so use a reporting group dedicated to CSP. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
 
 The Reporting API envelope contains `age`, `type`, the originating `url`, `user_agent`, and `body`. The body is decoded according to the CSP-defined report type:
 
@@ -66,6 +66,6 @@ micronaut:
 
 Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Apply rate limits, sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
 
-include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties.adoc[]
 
 include::{includedir}configurationProperties/io.micronaut.security.csp.report.ContentSecurityPolicyControllerConfigurationProperties.adoc[]

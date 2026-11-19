@@ -20,43 +20,43 @@ import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.NonceConfiguration;
-import io.micronaut.security.csp.conf.baseUri.BaseUriConfiguration;
-import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfiguration;
+import io.micronaut.security.csp.conf.baseuri.BaseUriConfiguration;
+import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
-import io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfiguration;
-import io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfiguration;
-import io.micronaut.security.csp.conf.fontSrc.FontSrcConfiguration;
-import io.micronaut.security.csp.conf.formAction.FormActionConfiguration;
-import io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfiguration;
-import io.micronaut.security.csp.conf.frameSrc.FrameSrcConfiguration;
-import io.micronaut.security.csp.conf.imgSrc.ImgSrcConfiguration;
-import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfiguration;
-import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfiguration;
-import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfiguration;
-import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfiguration;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfiguration;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
-import io.micronaut.security.csp.conf.baseUri.BaseUriConfigurationProperties;
-import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.formAction.FormActionConfigurationProperties;
-import io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties;
-import io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.imgSrc.ImgSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
-import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfiguration;
-import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfiguration;
+import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfiguration;
+import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfiguration;
+import io.micronaut.security.csp.conf.fontsrc.FontSrcConfiguration;
+import io.micronaut.security.csp.conf.formaction.FormActionConfiguration;
+import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfiguration;
+import io.micronaut.security.csp.conf.framesrc.FrameSrcConfiguration;
+import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration;
+import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfiguration;
+import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfiguration;
+import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfiguration;
+import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.framesrc.FrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
+import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfiguration;
+import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfiguration;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -69,6 +69,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * Generates the default, opt-out CSP directive set from the root and directive-specific configuration.
@@ -87,6 +88,11 @@ import java.util.function.Predicate;
 public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
     /**
+     * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
+     * quote, semicolon or space, would corrupt or extend the serialized policy.
+     */
+    private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
+    /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
      * flag that enables each of them.
      */
@@ -97,7 +103,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         new KeywordSource(STRICT_DYNAMIC, DirectiveConfiguration::isStrictDynamic),
         new KeywordSource("unsafe-hashes", DirectiveConfiguration::isUnsafeHashes),
         new KeywordSource("report-sample", DirectiveConfiguration::isReportSample),
-        new KeywordSource("unsafe-allow-redirects", DirectiveConfiguration::isUnsafeAllowRedirects),
         new KeywordSource("wasm-unsafe-eval", DirectiveConfiguration::isWasmUnsafeEval),
         new KeywordSource("trusted-types-eval", DirectiveConfiguration::isTrustedTypesEval),
         new KeywordSource("report-sha256", DirectiveConfiguration::isReportSha256),
@@ -601,8 +606,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         List<String> values = new ArrayList<>();
         if (config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce()) {
             String nonce = cspNonceProvider.apply(request);
-            if (StringUtils.isNotEmpty(nonce)) {
+            if (StringUtils.isNotEmpty(nonce) && NONCE_GRAMMAR.matcher(nonce).matches()) {
                 values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONCE_PREFIX + nonce));
+            } else if (StringUtils.isNotEmpty(nonce)) {
+                // The nonce is not logged: it is a secret for the current response.
+                LOG.warn("Omitting the CSP nonce for directive {}: it does not match the CSP base64-value grammar {}", name, NONCE_GRAMMAR.pattern());
             } else if (LOG.isTraceEnabled()) {
                 LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
             }
@@ -615,9 +623,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         ContentSecurityPolicyUtils.addSchemeSources(config, values);
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
             values.addAll(sourceListDirectiveConfiguration.getValues());
-        }
-        if (config instanceof ScriptSrcConfiguration scriptSrcConfiguration) {
-            values.addAll(scriptSrcConfiguration.getUrls());
         }
         values.removeIf(StringUtils::isEmpty);
         if (config.isNone() && values.isEmpty()) {

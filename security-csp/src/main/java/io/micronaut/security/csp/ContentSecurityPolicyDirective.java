@@ -20,10 +20,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
 
 /**
  * A directive in a Content Security Policy.
@@ -40,9 +38,9 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
 
     @Override
     public String toString() {
-        return StringUtils.isEmpty(value())
-                    ? name()
-                    : name() + " " + value();
+        return StringUtils.hasText(value())
+                    ? name() + " " + value().trim()
+                    : name();
     }
 
     /**
@@ -52,32 +50,32 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * @since 5.6.0
      */
     public List<String> values() {
-        return StringUtils.isEmpty(value()) ? List.of() : List.of(value().trim().split("\\s+"));
+        return StringUtils.hasText(value()) ? List.of(value().trim().split("\\s+")) : List.of();
     }
 
     /**
      * Tests whether this directive disables its controlled resource or behavior.
      *
-     * @return whether this directive has exactly the {@code none} or {@code 'none'} value
+     * <p>Only the quoted keyword counts: an unquoted {@code none} is a host source named
+     * {@code none}.</p>
+     *
+     * @return whether this directive has exactly the {@code 'none'} value
      * @since 5.6.0
      */
     public boolean isNone() {
-        if (StringUtils.isEmpty(value())) {
-            return false;
-        }
-        return NONE.equals(value()) || QUOTED_NONE.equals(value);
+        return value() != null && QUOTED_NONE.equals(value().trim());
     }
 
     /**
      * Tests whether this directive permits only the protected resource's origin.
      *
-     * @return whether this directive has exactly the {@code self} or {@code 'self'} value
+     * <p>Only the quoted keyword counts: an unquoted {@code self} is a host source named
+     * {@code self}.</p>
+     *
+     * @return whether this directive has exactly the {@code 'self'} value
      * @since 5.6.0
      */
     public boolean isSelf() {
-        if (StringUtils.isEmpty(value())) {
-            return false;
-        }
-        return SELF.equals(value()) || QUOTED_SELF.equals(value);
+        return value() != null && QUOTED_SELF.equals(value().trim());
     }
 }

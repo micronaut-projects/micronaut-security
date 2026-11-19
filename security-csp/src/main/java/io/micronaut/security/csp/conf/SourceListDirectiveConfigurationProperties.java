@@ -18,7 +18,7 @@ package io.micronaut.security.csp.conf;
 import io.micronaut.core.annotation.Internal;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Base properties for source-list directives supporting {@code 'none'} and {@code 'self'}.
@@ -36,14 +36,14 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     private boolean mediastream;
     private boolean ws;
     private boolean wss;
-    private Set<String> values = Collections.emptySet();
+    private List<String> values = Collections.emptyList();
 
     /** Creates a source-list configuration with secure defaults. */
     public SourceListDirectiveConfigurationProperties() {
     }
 
     @Override
-    public Set<String> getValues() {
+    public List<String> getValues() {
         return values;
     }
 
@@ -52,7 +52,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
      *
      * @param values additional source expressions to include in the directive
      */
-    public void setValues(Set<String> values) {
+    public void setValues(List<String> values) {
         this.values = values;
     }
 

@@ -19,3 +19,5 @@ The module is enabled by default and writes an enforcing `Content-Security-Polic
 It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive. If `report-uri` is enabled but no report URIs are configured, the directive is omitted.
 
 This baseline intentionally blocks most existing resource loading. Configure only the directives and source expressions required by your application.
+
+WARNING: Some browsers, such as Chromium-based ones, also apply `form-action` to redirects that follow a form submission. With the default `form-action 'self'`, a form that posts to the application and is then redirected to another origin is blocked. For example, a POST logout that redirects to an OpenID Connect provider's `end_session_endpoint`, or a login form that redirects to an external identity provider. Add those origins to `micronaut.security.csp.form-action.values`.

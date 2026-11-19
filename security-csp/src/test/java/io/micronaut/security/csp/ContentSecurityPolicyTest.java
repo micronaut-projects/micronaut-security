@@ -18,14 +18,28 @@ package io.micronaut.security.csp;
 import io.micronaut.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ContentSecurityPolicyTest {
+
+    @Test
+    void copiesTheDirectivesDefensively() {
+        List<ContentSecurityPolicyDirective> directives = new ArrayList<>();
+        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"));
+        ContentSecurityPolicy policy = new ContentSecurityPolicy(directives);
+
+        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self'"));
+
+        assertEquals("default-src 'none'", policy.toString());
+        assertThrows(UnsupportedOperationException.class, () -> policy.directives().add(directives.get(1)));
+    }
 
     @Test
     void parsesHeaderValue() {

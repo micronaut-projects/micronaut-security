@@ -24,7 +24,7 @@ import java.util.List;
  *
  * <p>This root configuration controls policy-wide behavior, such as report-only mode. Source-list
  * directives are configured through their individual types in child packages, for example
- * {@code io.micronaut.security.csp.conf.imgSrc.ImgSrcConfiguration}; their values are serialized as
+ * {@code io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration}; their values are serialized as
  * CSP's space-separated source expression lists.</p>
  *
  * <p>URL-based CSP policies are ineffective as a primary defense against cross-site scripting because

@@ -50,6 +50,15 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
     public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
 
     /**
+     * Creates a policy with an immutable copy of the supplied directives.
+     *
+     * @param directives the ordered directives in the policy
+     */
+    public ContentSecurityPolicy {
+        directives = List.copyOf(directives);
+    }
+
+    /**
      * Serializes this policy as a CSP header value.
      *
      * @return the semicolon-separated directives in their stored order
@@ -337,7 +346,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Parses the enforcing Content Security Policy header from a response.
      *
      * @param response the HTTP response
-     * @return the parsed policy, or {@code null} if the response has no enforcing CSP header
+     * @return the parsed policy from the first enforcing CSP header, or {@code null} if the response has none
      * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(HttpResponse<?> response) {
@@ -359,6 +368,10 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Parses a named Content Security Policy header from HTTP headers.
      *
      * <p>Use {@link ContentSecurityPolicy#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
+     *
+     * <p>Only the first header with that name is parsed. A response can carry several CSP headers,
+     * and a user agent enforces each of them as a separate policy; read them with
+     * {@link HttpHeaders#getAll(CharSequence)} and parse each value with {@link #of(String)}.</p>
      *
      * @param headers the HTTP headers
      * @param headerName the CSP header name to parse

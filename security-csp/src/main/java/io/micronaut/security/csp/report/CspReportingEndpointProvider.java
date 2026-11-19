@@ -17,8 +17,11 @@ package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.csp.conf.reportTo.ReportToConfiguration;
+import io.micronaut.http.context.ServerContextPathProvider;
+import io.micronaut.http.uri.UriBuilder;
+import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import io.micronaut.security.reporting.ReportingEndpointProvider;
 import jakarta.inject.Singleton;
@@ -34,29 +37,34 @@ import java.net.URI;
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     private final ReportToConfiguration reportToConfiguration;
-    private final ContentSecurityPolicyControllerConfiguration controllerConfiguration;
+    private final URI url;
 
     /**
      * Creates the CSP reporting endpoint provider.
      *
      * @param reportToConfiguration reporting group configuration
      * @param controllerConfiguration report controller configuration
+     * @param serverContextPathProvider supplies the server context path under which the controller is mounted, if any
      */
     CspReportingEndpointProvider(ReportToConfiguration reportToConfiguration,
-                                 ContentSecurityPolicyControllerConfiguration controllerConfiguration) {
+                                 ContentSecurityPolicyControllerConfiguration controllerConfiguration,
+                                 @Nullable ServerContextPathProvider serverContextPathProvider) {
         this.reportToConfiguration = reportToConfiguration;
-        this.controllerConfiguration = controllerConfiguration;
+        this.url = url(controllerConfiguration.getPath(), serverContextPathProvider);
     }
 
     /**
-     * Returns the controller endpoint when both CSP reporting components are enabled.
+     * Returns the controller endpoint when the {@code report-to} directive is enabled.
+     *
+     * <p>The controller configuration bean exists only while the controller is enabled, so it
+     * does not need to be checked here.</p>
      *
      * @param request current request
      * @return the CSP controller endpoint, or {@code null} when reporting is disabled
      */
     @Override
     public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
-        if (!reportToConfiguration.isEnabled() || !controllerConfiguration.isEnabled()) {
+        if (!reportToConfiguration.isEnabled()) {
             return null;
         }
         return new ReportingEndpoint() {
@@ -67,8 +75,24 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
 
             @Override
             public URI getUrl() {
-                return URI.create(controllerConfiguration.getPath());
+                return url;
             }
         };
+    }
+
+    /**
+     * Resolves the controller path against the server context path, because user agents send
+     * reports to the advertised URL as-is.
+     *
+     * @param path the controller path
+     * @param serverContextPathProvider supplies the server context path, if any
+     * @return the URL advertised in the {@code Reporting-Endpoints} header
+     */
+    private static URI url(String path, @Nullable ServerContextPathProvider serverContextPathProvider) {
+        String contextPath = serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath();
+        if (StringUtils.hasText(contextPath)) {
+            return UriBuilder.of("/").path(contextPath).path(path).build();
+        }
+        return URI.create(path);
     }
 }
