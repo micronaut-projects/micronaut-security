@@ -61,14 +61,14 @@ final class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpReques
 
     @Override
     @NonNull
-    public CompletableFuture<String> resolveToken(@NonNull HttpRequest<?> request) {
+    public CompletableFuture<@Nullable String> resolveToken(@NonNull HttpRequest<?> request) {
         if (request instanceof ServerHttpRequest<?> serverHttpRequest) {
             return resolveToken(serverHttpRequest);
         }
         return CompletableFuture.completedFuture(null);
     }
 
-    private CompletableFuture<String> resolveToken(ServerHttpRequest<?> request) {
+    private CompletableFuture<@Nullable String> resolveToken(ServerHttpRequest<?> request) {
         CompletableFuture<Map<String, Object>> body;
         try {
             body = filterBodyParser.parseBody(request);
@@ -84,6 +84,11 @@ final class FieldCsrfTokenResolver implements FutureCsrfTokenResolver<HttpReques
                     ? null
                     : csrfToken.toString();
         });
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 
     /**

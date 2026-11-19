@@ -1,4 +1,4 @@
-Micronaut Security CSRF ships a `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver` an implementation of api:security.csrf.resolver.CsrfTokenResolver[] which looks for a CSRF Token in a Request's  form-url-encoded field.
+Micronaut Security CSRF ships a `io.micronaut.security.csrf.resolver.FieldCsrfTokenResolver` an implementation of api:security.csrf.resolver.FutureCsrfTokenResolver[] which looks for a CSRF Token in a Request's  form-url-encoded field.
 
 [source, bash]
 ----
