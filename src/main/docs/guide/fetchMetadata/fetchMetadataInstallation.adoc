@@ -3,3 +3,11 @@ Add the Micronaut Security Fetch Metadata dependency:
 dependency:micronaut-security-fetch-metadata[groupId=io.micronaut.security]
 
 Adding the dependency enables the Fetch Metadata server filter for every request path by default.
+
+Before enabling it in production, check which legitimate browser traffic reaches the application from other sites. With the default policy, the following requests are rejected with `403 Forbidden`:
+
+* Cross-site form `POST` navigations, such as OAuth 2.0 `response_mode=form_post` callbacks (for example Sign in with Apple, which posts to the `/oauth/callback/{provider}` route that Micronaut Security OAuth 2.0 registers), SAML POST bindings, and payment-provider return URLs.
+* Cross-site subresource requests for your resources, such as `<img>`, `<script>`, or `<link>` elements on another site.
+* Cross-origin `fetch` or `XMLHttpRequest` calls to routes that rely on globally configured CORS rather than a route-level `@CrossOrigin` annotation.
+
+Exempt such endpoints with `@CrossOrigin` (see <<fetchMetadataCors,Cross-Origin Routes>>) or a <<fetchMetadataCustomRules,custom rule>>, or restrict the filter to specific paths with its `pattern` (see <<fetchMetadataConfiguration,Configuration>>). Enable `DEBUG` logging for `io.micronaut.security.fetchmetadata.FetchMetadataFilter` to see each rejected request and its Fetch Metadata headers.

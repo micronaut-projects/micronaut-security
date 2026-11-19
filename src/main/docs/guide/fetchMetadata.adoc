@@ -5,3 +5,5 @@ Micronaut Security Fetch Metadata uses those headers to enforce a https://web.de
 The Fetch Metadata filter runs before api:security.filters.SecurityFilter[], allowing unsuitable requests to be rejected before authentication and authorization are evaluated.
 
 IMPORTANT: Fetch Metadata is a defense-in-depth mechanism. It does not replace authentication, authorization, or <<csrf,CSRF protection>>. Non-browser clients can forge `Sec-Fetch-*` headers, and clients that do not send the headers require an explicit compatibility policy.
+
+IMPORTANT: Browsers only send Fetch Metadata headers to https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin[potentially trustworthy origins], such as HTTPS origins and `localhost`. On a host served over plain HTTP the module sees no `Sec-Fetch-*` headers: by default it then allows every request, and with `allow-no-fetch-metadata: false` it rejects every request. Test and deploy the module over HTTPS.

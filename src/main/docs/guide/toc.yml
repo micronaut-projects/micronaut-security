@@ -117,7 +117,7 @@ fetchMetadata:
   fetchMetadataInstallation: Installation
   fetchMetadataResourceIsolationPolicy: Resource Isolation Policy
   fetchMetadataConfiguration: Configuration
-  fetchMetadataCors: CORS Endpoints
+  fetchMetadataCors: Cross-Origin Routes
   fetchMetadataCustomRules: Custom Rules
 reporting:
   title: Reporting API

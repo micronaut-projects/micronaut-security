@@ -37,32 +37,44 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
 
     /**
-     * @return Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method.
+     * Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method.
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowCrossOrigin();
 
     /**
-     * @return Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}).
+     * Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}).
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowBrowserInitiatedRequests();
 
     /**
-     * @return Whether to allow requests whose Fetch Metadata identifies their initiator as the same origin.
+     * Whether to allow requests whose Fetch Metadata identifies their initiator as the same origin.
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowSameOrigin();
 
     /**
-     * @return Whether to allow requests whose Fetch Metadata identifies their initiator as the same site.
+     * Whether to allow requests whose Fetch Metadata identifies their initiator as the same site.
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowSameSite();
 
     /**
-     * @return Whether to allow requests without the {@code Sec-Fetch-Site} header.
+     * Whether to allow requests without the {@code Sec-Fetch-Site} header.
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowNoFetchMetadata();
 
     /**
-     * @return Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that.
+     * Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that.
+     *
+     * @return whether the rule is enabled
      */
     boolean isAllowSimpleNavigation();
 }
