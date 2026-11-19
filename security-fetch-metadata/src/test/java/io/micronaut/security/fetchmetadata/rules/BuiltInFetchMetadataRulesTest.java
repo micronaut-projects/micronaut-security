@@ -22,6 +22,7 @@ import io.micronaut.http.Mode;
 import io.micronaut.http.SecFetch;
 import io.micronaut.http.Site;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,11 +104,32 @@ class BuiltInFetchMetadataRulesTest {
         assertEquals(FetchMetadataRuleResult.UNKNOWN, rule.check(GET, null));
     }
 
+    @Test
+    void navigationRuleCannotDecideWithoutARecognizedModeAndDestination() {
+        SimpleTopLevelNavigationAndIframingFetchMetadataRule rule =
+            new SimpleTopLevelNavigationAndIframingFetchMetadataRule();
+
+        assertEquals(FetchMetadataRuleResult.UNKNOWN,
+            rule.check(GET, secFetch(Site.CROSS_SITE, Mode.NAVIGATE, null)));
+        assertEquals(FetchMetadataRuleResult.UNKNOWN,
+            rule.check(GET, secFetch(Site.CROSS_SITE, null, Destination.DOCUMENT)));
+    }
+
+    @Test
+    void siteRulesOnlyNeedTheSiteHeader() {
+        SecFetch siteOnly = new SecFetch(Site.SAME_ORIGIN, null, null, false);
+
+        assertEquals(FetchMetadataRuleResult.ALLOWED,
+            new SameOriginFetchMetadataRule().check(GET, siteOnly));
+        assertEquals(FetchMetadataRuleResult.UNKNOWN,
+            new SameOriginFetchMetadataRule().check(GET, new SecFetch(null, Mode.CORS, Destination.EMPTY, false)));
+    }
+
     private static SecFetch secFetch(Site site) {
         return secFetch(site, Mode.NO_CORS, Destination.IMAGE);
     }
 
-    private static SecFetch secFetch(Site site, Mode mode, Destination destination) {
+    private static SecFetch secFetch(Site site, @Nullable Mode mode, @Nullable Destination destination) {
         return new SecFetch(site, mode, destination, false);
     }
 }

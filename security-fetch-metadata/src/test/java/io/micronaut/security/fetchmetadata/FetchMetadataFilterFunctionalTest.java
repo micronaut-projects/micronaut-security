@@ -195,9 +195,36 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     @Test
-    void rejectsIncompleteFetchMetadataWhenCompatibilityRuleIsDisabled() {
+    void rejectsIncompleteCrossSiteFetchMetadataWhenCompatibilityRuleIsDisabled() {
         assertForbidden(HttpRequest.GET("/fetch-metadata")
-            .header(HttpHeaders.SEC_FETCH_SITE, Site.SAME_ORIGIN.toString()));
+            .header(HttpHeaders.SEC_FETCH_SITE, Site.CROSS_SITE.toString()));
+    }
+
+    @Test
+    void rejectsUnrecognizedSiteValues() {
+        assertForbidden(HttpRequest.GET("/fetch-metadata")
+            .header(HttpHeaders.SEC_FETCH_SITE, "unknown-site")
+            .header(HttpHeaders.SEC_FETCH_MODE, Mode.NO_CORS.toString())
+            .header(HttpHeaders.SEC_FETCH_DEST, Destination.IMAGE.toString()));
+    }
+
+    @Test
+    void allowsSameOriginRequestsWithAnUnrecognizedDestination() {
+        // Chrome sends Sec-Fetch-Dest: websocket for WebSocket handshakes, which Destination does not list
+        HttpResponse<String> response = exchange(HttpRequest.GET("/fetch-metadata")
+            .header(HttpHeaders.SEC_FETCH_SITE, Site.SAME_ORIGIN.toString())
+            .header(HttpHeaders.SEC_FETCH_MODE, Mode.WEBSOCKET.toString())
+            .header(HttpHeaders.SEC_FETCH_DEST, "websocket"));
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+    }
+
+    @Test
+    void rejectsCrossSiteNavigationsWithAnUnrecognizedDestination() {
+        assertForbidden(HttpRequest.GET("/fetch-metadata")
+            .header(HttpHeaders.SEC_FETCH_SITE, Site.CROSS_SITE.toString())
+            .header(HttpHeaders.SEC_FETCH_MODE, Mode.NAVIGATE.toString())
+            .header(HttpHeaders.SEC_FETCH_DEST, "future-destination"));
     }
 
     private HttpResponse<String> exchange(HttpRequest<?> request) {

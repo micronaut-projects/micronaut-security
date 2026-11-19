@@ -32,7 +32,7 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
 
 /**
  * Allows simple {@code GET} navigations, including document and frame navigations, while
- * excluding requests whose destination is {@code object} or {@code embed}.
+ * excluding requests whose destination is {@code object} or {@code embed} or is not recognized.
  */
 @Requires(classes = HttpRequest.class)
 @Requires(property = PROPERTY_ALLOW_SIMPLE_NAVIGATION, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
@@ -49,9 +49,12 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
         if (secFetch == null) {
             return FetchMetadataRuleResult.UNKNOWN;
         }
+        Destination destination = secFetch.dest();
         if (secFetch.mode() == Mode.NAVIGATE &&
             request.getMethod() == HttpMethod.GET &&
-            (secFetch.dest() != Destination.OBJECT && secFetch.dest() != Destination.EMBED)
+            destination != null &&
+            destination != Destination.OBJECT &&
+            destination != Destination.EMBED
         ) {
             return FetchMetadataRuleResult.ALLOWED;
         }

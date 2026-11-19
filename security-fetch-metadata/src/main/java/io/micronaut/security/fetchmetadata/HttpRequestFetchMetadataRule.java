@@ -33,19 +33,20 @@ public interface HttpRequestFetchMetadataRule extends FetchMetadataRule<HttpRequ
      */
     @Override
     default FetchMetadataRuleResult check(HttpRequest<?> request) {
-        SecFetch secFetch = request.getSecFetch();
-        if (secFetch != null && (secFetch.site() == null || secFetch.mode() == null || secFetch.dest() == null)) {
-            // incomplete or unrecognized Fetch Metadata is not classified by the rules
-            secFetch = null;
-        }
-        return check(request, secFetch);
+        return check(request, request.getSecFetch());
     }
 
     /**
      * Evaluates the request and its parsed Fetch Metadata headers.
      *
+     * <p>Each component of {@code secFetch} is {@code null} when its header is absent or carries a
+     * value Micronaut does not recognize. A {@code null} component means "not classified", not
+     * "harmless": a rule should only allow a request based on the components it actually
+     * inspects, and return {@link FetchMetadataRuleResult#UNKNOWN} when one of them is
+     * {@code null}.</p>
+     *
      * @param request the request to evaluate
-     * @param secFetch parsed Fetch Metadata, or {@code null} when the required headers are absent or invalid
+     * @param secFetch parsed Fetch Metadata, or {@code null} when the request carries no Fetch Metadata header
      * @return the rule result
      */
     FetchMetadataRuleResult check(HttpRequest<?> request, @Nullable SecFetch secFetch);
