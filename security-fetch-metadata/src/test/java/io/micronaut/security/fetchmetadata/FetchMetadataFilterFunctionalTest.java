@@ -75,6 +75,7 @@ class FetchMetadataFilterFunctionalTest {
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
         assertEquals("Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest",
             exception.getResponse().getHeaders().get(HttpHeaders.VARY));
+        assertEquals("no-store", exception.getResponse().getHeaders().get(HttpHeaders.CACHE_CONTROL));
     }
 
     @Test

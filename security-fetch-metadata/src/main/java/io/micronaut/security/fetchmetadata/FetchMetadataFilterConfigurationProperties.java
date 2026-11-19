@@ -73,8 +73,9 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
     }
 
     /**
-     * Sets the request path pattern matched by the Fetch Metadata request filter.
-     * Requests outside this pattern are not evaluated by this module.
+     * Sets the Ant-style request path pattern matched by the Fetch Metadata request filter.
+     * Requests outside this pattern are not evaluated by this module. Prefer a pattern ending in
+     * {@code /**}: an exact path does not match the same path with a trailing slash.
      *
      * @param pattern the server-filter pattern; defaults to {@value #DEFAULT_PATTERN}
      * @throws ConfigurationException if the pattern is empty or blank

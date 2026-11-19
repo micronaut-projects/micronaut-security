@@ -173,7 +173,9 @@ public final class FetchMetadataFilter implements Ordered {
 
     private static MutableHttpResponse<Object> forbidden() {
         // the response filter of this filter does not run for the response its request filter returns
-        MutableHttpResponse<Object> response = HttpResponse.status(HttpStatus.FORBIDDEN);
+        // no-store keeps a cache that ignores Vary from serving the rejection to other requests
+        MutableHttpResponse<Object> response = HttpResponse.<Object>status(HttpStatus.FORBIDDEN)
+            .header(HttpHeaders.CACHE_CONTROL, "no-store");
         addVary(response);
         return response;
     }

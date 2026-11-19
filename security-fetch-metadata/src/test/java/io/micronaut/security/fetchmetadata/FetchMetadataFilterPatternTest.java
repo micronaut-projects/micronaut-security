@@ -46,4 +46,11 @@ class FetchMetadataFilterPatternTest {
             () -> client.exchange(request));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
+
+    @Test
+    void aPatternEndingInDoubleWildcardAlsoFiltersTheTrailingSlashForm(@Client("/") HttpClient httpClient) {
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> httpClient.toBlocking().exchange(HttpRequest.GET("/fetch-metadata/filtered/test/")));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+    }
 }
