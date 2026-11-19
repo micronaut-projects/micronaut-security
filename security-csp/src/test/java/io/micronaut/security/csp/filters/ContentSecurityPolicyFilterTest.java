@@ -15,60 +15,65 @@
  */
 package io.micronaut.security.csp.filters;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.security.csp.conf.NonceConfiguration;
-import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ContentSecurityPolicyFilterTest {
 
     @Test
-    void doesNotGenerateANonceWhenTheOnlyNonceDirectiveIsDisabled() {
-        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
-        scriptSrc.setNonce(true);
-        scriptSrc.setEnabled(false);
+    void generatesOneNonceForTheRequest() {
         CountingNonceGenerator nonceGenerator = new CountingNonceGenerator();
         MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-        new ContentSecurityPolicyFilter(List.of(scriptSrc, new StyleSrcConfigurationProperties()), nonceGenerator).generateNonce(request);
-
-        assertTrue(request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isEmpty());
-        assertEquals(0, nonceGenerator.calls.get());
-    }
-
-    @Test
-    void generatesOneNonceWhenAnEnabledDirectiveUsesNonces() {
-        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
-        scriptSrc.setNonce(true);
-        StyleSrcConfigurationProperties styleSrc = new StyleSrcConfigurationProperties();
-        styleSrc.setNonce(true);
-        CountingNonceGenerator nonceGenerator = new CountingNonceGenerator();
-        MutableHttpRequest<?> request = HttpRequest.GET("/");
-
-        new ContentSecurityPolicyFilter(List.of(scriptSrc, styleSrc), nonceGenerator).generateNonce(request);
+        new ContentSecurityPolicyFilter(nonceGenerator).generateNonce(request);
 
         assertEquals("nonce1", request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElseThrow());
         assertEquals(1, nonceGenerator.calls.get(), "directives share one nonce per request");
     }
 
     @Test
-    void treatsANonToggleableNonceConfigurationAsEnabled() {
-        NonceConfiguration alwaysNonce = () -> true;
-        CountingNonceGenerator nonceGenerator = new CountingNonceGenerator();
-        MutableHttpRequest<?> request = HttpRequest.GET("/");
+    void filterIsNotLoadedWhenNoDirectiveUsesNonces() {
+        try (ApplicationContext context = ApplicationContext.run()) {
+            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+        }
+    }
 
-        new ContentSecurityPolicyFilter(List.of(alwaysNonce), nonceGenerator).generateNonce(request);
+    @ParameterizedTest
+    @ValueSource(strings = {"micronaut.security.csp.script-src.nonce", "micronaut.security.csp.style-src.nonce"})
+    void filterIsLoadedWhenAnEnabledDirectiveUsesNonces(String nonceProperty) {
+        try (ApplicationContext context = ApplicationContext.run(Map.of(nonceProperty, true))) {
+            assertTrue(context.containsBean(ContentSecurityPolicyFilter.class));
+        }
+    }
 
-        assertEquals(1, nonceGenerator.calls.get());
+    @Test
+    void filterIsNotLoadedWhenTheOnlyNonceDirectiveIsDisabled() {
+        try (ApplicationContext context = ApplicationContext.run(Map.of(
+            "micronaut.security.csp.script-src.nonce", true,
+            "micronaut.security.csp.script-src.enabled", false))) {
+            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+        }
+    }
+
+    @Test
+    void filterIsNotLoadedWhenTheModuleIsDisabled() {
+        try (ApplicationContext context = ApplicationContext.run(Map.of(
+            "micronaut.security.csp.enabled", false,
+            "micronaut.security.csp.script-src.nonce", true))) {
+            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+        }
     }
 
     private static final class CountingNonceGenerator implements ContentSecurityPolicyNonceGenerator {
