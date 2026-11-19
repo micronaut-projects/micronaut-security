@@ -31,7 +31,7 @@ public interface FetchMetadataRulesConfiguration {
     String PROPERTY_ALLOW_SAME_SITE = PREFIX + ".allow-same-site";
     /** Property that controls whether requests without the {@code Sec-Fetch-Site} header are allowed. */
     String PROPERTY_ALLOW_NO_FETCH_METADATA = PREFIX + ".allow-no-fetch-metadata";
-    /** Property that controls whether simple cross-site {@code GET} navigations and iframing are allowed. */
+    /** Property that controls whether cross-site {@code GET} navigations, including cross-site iframing, are allowed. */
     String PROPERTY_ALLOW_SIMPLE_NAVIGATION = PREFIX + ".allow-simple-navigation";
     /** Property that controls whether permitted cross-origin requests are allowed. */
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
@@ -62,7 +62,7 @@ public interface FetchMetadataRulesConfiguration {
     boolean isAllowNoFetchMetadata();
 
     /**
-     * @return Whether to allow simple cross-site {@code GET} navigations and iframing.
+     * @return Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that.
      */
     boolean isAllowSimpleNavigation();
 }

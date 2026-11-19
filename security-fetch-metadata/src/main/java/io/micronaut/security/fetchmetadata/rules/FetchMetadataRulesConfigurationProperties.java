@@ -119,7 +119,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow simple cross-site {@code GET} navigations and iframing. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
+     * Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
      *
      * @param allowSimpleNavigation whether simple cross-site navigations and iframing are allowed
      */

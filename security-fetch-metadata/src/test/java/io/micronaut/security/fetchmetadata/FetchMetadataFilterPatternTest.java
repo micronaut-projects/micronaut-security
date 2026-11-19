@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Property(name = FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern",
+@Property(name = FetchMetadataFilterConfiguration.PROPERTY_PATTERN,
     value = "/fetch-metadata/filtered/**")
 @Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_NO_FETCH_METADATA,
     value = StringUtils.FALSE)

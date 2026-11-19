@@ -20,9 +20,20 @@ import io.micronaut.core.util.Toggleable;
 /**
  * Configuration for the Fetch Metadata request filter.
  *
+ * <p>The configuration bean only exists while the filter is enabled, so {@link #isEnabled()}
+ * returns {@code true} for any injected instance. Use {@link #PROPERTY_ENABLED} with
+ * {@code @Requires} to make a bean depend on whether the filter is enabled.</p>
+ *
  * @since 5.6.0
  */
 public interface FetchMetadataFilterConfiguration extends Toggleable {
+    /** Configuration prefix for the Fetch Metadata request filter. */
+    String PREFIX = "micronaut.security.fetch-metadata.filter";
+    /** Property that enables or disables the Fetch Metadata request filter. */
+    String PROPERTY_ENABLED = PREFIX + ".enabled";
+    /** Property that sets the request path pattern the Fetch Metadata request filter applies to. */
+    String PROPERTY_PATTERN = PREFIX + ".pattern";
+
     /**
      * Returns the request path pattern to which the Fetch Metadata filter applies.
      *

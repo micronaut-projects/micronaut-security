@@ -36,7 +36,7 @@ class FetchMetadataFilterInvalidPatternTest {
     void rejectsAnEmptyOrBlankPatternDuringContextStartup(String pattern) {
         BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> {
             try (ApplicationContext ignored = ApplicationContext.run(Map.of(
-                FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern", pattern))) {
+                FetchMetadataFilterConfiguration.PROPERTY_PATTERN, pattern))) {
                 // The @Context configuration bean must be initialized during startup.
             }
         });
@@ -46,8 +46,8 @@ class FetchMetadataFilterInvalidPatternTest {
     @Test
     void ignoresABlankPatternWhenTheFilterIsDisabled() {
         try (ApplicationContext context = ApplicationContext.run(Map.of(
-            FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern", "   ",
-            FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, StringUtils.FALSE))) {
+            FetchMetadataFilterConfiguration.PROPERTY_PATTERN, "   ",
+            FetchMetadataFilterConfiguration.PROPERTY_ENABLED, StringUtils.FALSE))) {
             assertFalse(context.containsBean(FetchMetadataFilterConfiguration.class));
         }
     }

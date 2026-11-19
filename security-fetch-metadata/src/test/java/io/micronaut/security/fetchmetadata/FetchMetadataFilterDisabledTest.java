@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@Property(name = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.FALSE)
+@Property(name = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, value = StringUtils.FALSE)
 @MicronautTest
 class FetchMetadataFilterDisabledTest {
 

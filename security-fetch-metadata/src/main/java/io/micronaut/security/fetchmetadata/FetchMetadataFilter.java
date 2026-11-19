@@ -42,11 +42,13 @@ import java.util.List;
  * the {@code Vary} header of the responses to the requests it evaluates, both allowed and
  * rejected, because those responses depend on the Fetch Metadata request headers.</p>
  */
-@Requires(property = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@ServerFilter("${" + FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
+@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@ServerFilter("${" + FetchMetadataFilterConfiguration.PROPERTY_PATTERN + ":" + ServerFilter.MATCH_ALL_PATTERN + "}")
 @Internal
 public final class FetchMetadataFilter implements Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(FetchMetadataFilter.class);
+    private static final String GUIDE_URL = "https://micronaut-projects.github.io/micronaut-security/latest/guide/#fetchMetadata";
+    private static final String ABSENT = "<absent>";
     private static final List<String> VARY_HEADERS = List.of(
         HttpHeaders.SEC_FETCH_SITE,
         HttpHeaders.SEC_FETCH_MODE,
@@ -92,15 +94,15 @@ public final class FetchMetadataFilter implements Ordered {
                 return null; // proceed
             } else if (result == FetchMetadataRuleResult.REJECTED) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("request {} {} rejected by rule {}. {}", request.getMethod(), request.getPath(),
-                        rule.getClass().getSimpleName(), describeFetchMetadata(request));
+                    LOG.debug("request {} {} rejected by rule {} ({}). See {}", request.getMethod(), request.getPath(),
+                        rule.getClass().getSimpleName(), describeRequest(request), GUIDE_URL);
                 }
                 return forbidden();
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("request {} {} rejected because no Fetch Metadata rule allowed it. {}",
-                request.getMethod(), request.getPath(), describeFetchMetadata(request));
+            LOG.debug("request {} {} rejected because no Fetch Metadata rule allowed it ({}). See {}",
+                request.getMethod(), request.getPath(), describeRequest(request), GUIDE_URL);
         }
         return forbidden();
     }
@@ -149,11 +151,18 @@ public final class FetchMetadataFilter implements Ordered {
         return fields;
     }
 
-    private static String describeFetchMetadata(HttpRequest<?> request) {
+    private static String describeRequest(HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
-        return "Fetch Metadata(site: " + headers.get(HttpHeaders.SEC_FETCH_SITE)
-            + ", mode: " + headers.get(HttpHeaders.SEC_FETCH_MODE)
-            + ", dest: " + headers.get(HttpHeaders.SEC_FETCH_DEST) + ")";
+        return "site=" + headerValue(headers, HttpHeaders.SEC_FETCH_SITE)
+            + ", mode=" + headerValue(headers, HttpHeaders.SEC_FETCH_MODE)
+            + ", dest=" + headerValue(headers, HttpHeaders.SEC_FETCH_DEST)
+            + ", origin=" + headerValue(headers, HttpHeaders.ORIGIN)
+            + ", cookie=" + (headers.contains(HttpHeaders.COOKIE) ? "present" : ABSENT);
+    }
+
+    private static String headerValue(HttpHeaders headers, String name) {
+        String value = headers.get(name);
+        return value != null ? value : ABSENT;
     }
 
     private static MutableHttpResponse<Object> forbidden() {

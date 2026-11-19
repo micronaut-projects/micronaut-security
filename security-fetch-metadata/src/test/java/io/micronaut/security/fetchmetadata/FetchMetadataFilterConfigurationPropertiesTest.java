@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Property(name = FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern", value = "/api/**")
+@Property(name = FetchMetadataFilterConfiguration.PROPERTY_PATTERN, value = "/api/**")
 @MicronautTest(startApplication = false)
 class FetchMetadataFilterConfigurationPropertiesTest {
 

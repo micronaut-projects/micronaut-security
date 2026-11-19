@@ -34,15 +34,11 @@ import io.micronaut.http.annotation.ServerFilter;
  *
  * @since 5.6.0
  */
-@Requires(property = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Context
-@ConfigurationProperties(FetchMetadataFilterConfigurationProperties.PREFIX)
+@ConfigurationProperties(FetchMetadataFilterConfiguration.PREFIX)
 @Internal
 final class FetchMetadataFilterConfigurationProperties implements FetchMetadataFilterConfiguration {
-    /** Configuration prefix for the Fetch Metadata request filter. */
-    public static final String PREFIX = "micronaut.security.fetch-metadata.filter";
-    /** Property that enables or disables the Fetch Metadata request filter. */
-    public static final String PROPERTY_ENABLED = FetchMetadataFilterConfigurationProperties.PREFIX + ".enabled";
     /** Default filter enablement. */
     public static final boolean DEFAULT_ENABLED = true;
     /** Default server-filter pattern. */
@@ -85,7 +81,8 @@ final class FetchMetadataFilterConfigurationProperties implements FetchMetadataF
      */
     public void setPattern(String pattern) {
         if (!StringUtils.hasText(pattern)) {
-            throw new ConfigurationException("Property [" + PREFIX + ".pattern] must not be empty or blank");
+            throw new ConfigurationException("Property [" + PROPERTY_PATTERN + "] must not be empty or blank. "
+                + "Remove it to apply the filter to every path, or set [" + PROPERTY_ENABLED + "] to false to disable the filter.");
         }
         this.pattern = pattern;
     }
