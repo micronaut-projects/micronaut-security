@@ -26,18 +26,21 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
+import static io.micronaut.http.HttpHeaders.COOKIE;
 import static io.micronaut.http.HttpHeaders.ORIGIN;
 
 class CrossOriginFetchMetadataRuleTest {
+
+    private static final CrossOriginFetchMetadataRule RULE = new CrossOriginFetchMetadataRule();
 
     @Test
     void matchesAnExplicitlyAllowedOrigin() {
         CorsOriginConfiguration configuration = new CorsOriginConfiguration();
         configuration.setAllowedOrigins(List.of("https://allowed.example"));
 
-        assertTrue(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertTrue(RULE.matchesOrigin(configuration,
             "https://allowed.example"));
-        assertFalse(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertFalse(RULE.matchesOrigin(configuration,
             "https://disallowed.example"));
     }
 
@@ -45,11 +48,11 @@ class CrossOriginFetchMetadataRuleTest {
     void matchesAnyOriginOnlyWhenNoRegexIsConfigured() {
         CorsOriginConfiguration configuration = new CorsOriginConfiguration();
 
-        assertTrue(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertTrue(RULE.matchesOrigin(configuration,
             "https://example.com"));
 
         configuration.setAllowedOriginsRegex("https://trusted\\.example");
-        assertFalse(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertFalse(RULE.matchesOrigin(configuration,
             "https://example.com"));
     }
 
@@ -59,10 +62,25 @@ class CrossOriginFetchMetadataRuleTest {
         configuration.setAllowedOrigins(List.of());
         configuration.setAllowedOriginsRegex("https://([a-z]+\\.)?example\\.com");
 
-        assertTrue(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertTrue(RULE.matchesOrigin(configuration,
             "https://api.example.com"));
-        assertFalse(CrossOriginFetchMetadataRule.matchesOrigin(configuration,
+        assertFalse(RULE.matchesOrigin(configuration,
             "https://example.org"));
+        assertTrue(RULE.matchesOrigin(configuration,
+            "https://example.com"));
+    }
+
+    @Test
+    void rejectsCookiesWhenCredentialsAreNotAllowed() {
+        CorsOriginConfiguration configuration = new CorsOriginConfiguration();
+
+        assertTrue(CrossOriginFetchMetadataRule.matchesCredentials(configuration, HttpRequest.POST("/", "")));
+        assertFalse(CrossOriginFetchMetadataRule.matchesCredentials(configuration,
+            HttpRequest.POST("/", "").header(COOKIE, "SESSION=abc")));
+
+        configuration.setAllowCredentials(true);
+        assertTrue(CrossOriginFetchMetadataRule.matchesCredentials(configuration,
+            HttpRequest.POST("/", "").header(COOKIE, "SESSION=abc")));
     }
 
     @Test

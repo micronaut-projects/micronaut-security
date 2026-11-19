@@ -103,6 +103,35 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     @Test
+    void rejectsCrossSiteRequestsWithCookiesWhenTheRouteDoesNotAllowCredentials() {
+        MutableHttpRequest<?> request = request(HttpMethod.POST, "/fetch-metadata/cors-post",
+            Site.CROSS_SITE, Mode.NO_CORS, Destination.EMPTY)
+            .header(HttpHeaders.ORIGIN, "https://allowed.example")
+            .header(HttpHeaders.COOKIE, "SESSION=abc");
+
+        assertForbidden(request);
+    }
+
+    @Test
+    void allowsCrossSiteRequestsWithoutCookiesWhenTheRouteDoesNotAllowCredentials() {
+        MutableHttpRequest<?> request = request(HttpMethod.POST, "/fetch-metadata/cors-post",
+            Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)
+            .header(HttpHeaders.ORIGIN, "https://allowed.example");
+
+        assertEquals(HttpStatus.OK, exchange(request).getStatus());
+    }
+
+    @Test
+    void allowsCrossSiteRequestsWithCookiesWhenTheRouteAllowsCredentials() {
+        MutableHttpRequest<?> request = request(HttpMethod.POST, "/fetch-metadata/cors-credentials",
+            Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)
+            .header(HttpHeaders.ORIGIN, "https://allowed.example")
+            .header(HttpHeaders.COOKIE, "SESSION=abc");
+
+        assertEquals(HttpStatus.OK, exchange(request).getStatus());
+    }
+
+    @Test
     void rejectsCrossSiteRequestsWhenTheRouteCorsConfigurationRejectsTheOrigin() {
         MutableHttpRequest<?> request = request(HttpMethod.GET, "/fetch-metadata/cors",
             Site.CROSS_SITE, Mode.CORS, Destination.EMPTY)

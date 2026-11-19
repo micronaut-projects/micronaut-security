@@ -53,4 +53,10 @@ final class FetchMetadataTestController {
     String corsPost() {
         return "ok";
     }
+
+    @CrossOrigin(value = "https://allowed.example", allowedMethods = HttpMethod.POST, allowCredentials = true)
+    @Post(uri = "/cors-credentials", produces = MediaType.TEXT_PLAIN)
+    String corsCredentials() {
+        return "ok";
+    }
 }

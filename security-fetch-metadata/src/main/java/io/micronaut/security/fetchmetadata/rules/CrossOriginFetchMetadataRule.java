@@ -18,6 +18,7 @@ package io.micronaut.security.fetchmetadata.rules;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.SecFetch;
@@ -31,7 +32,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_ORIGIN;
@@ -47,12 +50,20 @@ import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
  * the Fetch Metadata exemption aligned with the validation performed by Micronaut's CORS
  * filter. For a preflight request, the requested method is read from the
  * {@code Access-Control-Request-Method} header.</p>
+ *
+ * <p>When the route's CORS configuration does not allow credentials, a request that carries a
+ * {@code Cookie} header is not exempted. Browsers send cookies on simple cross-origin requests
+ * (for example a {@code no-cors} fetch or a form submission) even though CORS keeps the response
+ * from being read, so exempting them would let a cross-site page make credentialed requests the
+ * route declared it does not accept.</p>
  */
-@Requires(classes = { HttpRequest.class, CorsOriginConfiguration.class, CrossOriginUtil.class })
+@Requires(classes = { HttpRequest.class, CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
 final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule {
+
+    private final Map<String, Pattern> allowedOriginsPatterns = new ConcurrentHashMap<>();
 
     @Override
     public int getOrder() {
@@ -70,15 +81,16 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
         if (originConfiguration
             .filter(configuration -> matchesOrigin(configuration, origin))
             .filter(configuration -> matchesMethod(configuration, request))
+            .filter(configuration -> matchesCredentials(configuration, request))
             .isPresent()) {
             return FetchMetadataRuleResult.ALLOWED;
         }
         return FetchMetadataRuleResult.UNKNOWN;
     }
 
-    static boolean matchesOrigin(CorsOriginConfiguration configuration, String origin) {
+    boolean matchesOrigin(CorsOriginConfiguration configuration, String origin) {
         if (configuration.getAllowedOriginsRegex()
-            .map(regex -> Pattern.matches(regex, origin))
+            .map(regex -> allowedOriginsPatterns.computeIfAbsent(regex, Pattern::compile).matcher(origin).matches())
             .orElse(false)) {
             return true;
         }
@@ -97,5 +109,9 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
         List<HttpMethod> allowedMethods = configuration.getAllowedMethods();
         return Objects.equals(allowedMethods, CorsOriginConfiguration.ANY_METHOD) ||
             allowedMethods.contains(methodToMatch);
+    }
+
+    static boolean matchesCredentials(CorsOriginConfiguration configuration, HttpRequest<?> request) {
+        return configuration.isAllowCredentials() || !request.getHeaders().contains(HttpHeaders.COOKIE);
     }
 }
