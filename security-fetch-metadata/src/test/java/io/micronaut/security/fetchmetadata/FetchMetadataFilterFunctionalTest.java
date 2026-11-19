@@ -68,6 +68,16 @@ class FetchMetadataFilterFunctionalTest {
     }
 
     @Test
+    void varyRejectedResponsesOnTheFetchMetadataHeaders() {
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> exchange(request(HttpMethod.GET, Site.CROSS_SITE, Mode.NO_CORS, Destination.IMAGE)));
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+        assertEquals("Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest",
+            exception.getResponse().getHeaders().get(HttpHeaders.VARY));
+    }
+
+    @Test
     void allowsRequestsInitiatedThroughBrowserUi() {
         HttpResponse<String> response = exchange(request(HttpMethod.GET, Site.NONE,
             Mode.NAVIGATE, Destination.DOCUMENT));

@@ -39,8 +39,8 @@ import java.util.List;
  * Server filter that enforces the configured Fetch Metadata request-isolation policy.
  *
  * <p>It also adds {@code Sec-Fetch-Site}, {@code Sec-Fetch-Mode} and {@code Sec-Fetch-Dest} to
- * the {@code Vary} header of the responses it lets through, because those responses depend on
- * the Fetch Metadata request headers.</p>
+ * the {@code Vary} header of the responses to the requests it evaluates, both allowed and
+ * rejected, because those responses depend on the Fetch Metadata request headers.</p>
  */
 @Requires(property = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = ServerFilter.class)
@@ -114,17 +114,13 @@ public final class FetchMetadataFilter implements Ordered {
      */
     @ResponseFilter
     public void filterResponse(MutableHttpResponse<?> response) {
-        List<String> vary = new ArrayList<>();
-        for (String value : response.getHeaders().getAll(HttpHeaders.VARY)) {
-            for (String field : value.split(",")) {
-                String trimmed = field.trim();
-                if (trimmed.equals("*")) {
-                    return;
-                }
-                if (!trimmed.isEmpty() && vary.stream().noneMatch(trimmed::equalsIgnoreCase)) {
-                    vary.add(trimmed);
-                }
-            }
+        addVary(response);
+    }
+
+    private static void addVary(MutableHttpResponse<?> response) {
+        List<String> vary = varyFields(response);
+        if (vary.contains("*")) {
+            return;
         }
         int existing = vary.size();
         for (String header : VARY_HEADERS) {
@@ -137,6 +133,23 @@ public final class FetchMetadataFilter implements Ordered {
         }
     }
 
+    /**
+     * @param response the response
+     * @return the distinct, case-insensitive field names of every {@code Vary} header of the response
+     */
+    private static List<String> varyFields(MutableHttpResponse<?> response) {
+        List<String> fields = new ArrayList<>();
+        for (String value : response.getHeaders().getAll(HttpHeaders.VARY)) {
+            for (String field : value.split(",")) {
+                String trimmed = field.trim();
+                if (!trimmed.isEmpty() && fields.stream().noneMatch(trimmed::equalsIgnoreCase)) {
+                    fields.add(trimmed);
+                }
+            }
+        }
+        return fields;
+    }
+
     private static String describeFetchMetadata(HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
         return "Fetch Metadata(site: " + headers.get(HttpHeaders.SEC_FETCH_SITE)
@@ -145,6 +158,9 @@ public final class FetchMetadataFilter implements Ordered {
     }
 
     private static MutableHttpResponse<Object> forbidden() {
-        return HttpResponse.status(HttpStatus.FORBIDDEN);
+        // the response filter of this filter does not run for the response its request filter returns
+        MutableHttpResponse<Object> response = HttpResponse.status(HttpStatus.FORBIDDEN);
+        addVary(response);
+        return response;
     }
 }

@@ -9,7 +9,7 @@ The module evaluates its built-in rules in the same sequence as the https://web.
 
 The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule returns `UNKNOWN` when it does not apply, allowing evaluation to continue. If every rule returns `UNKNOWN`, the filter responds with `403 Forbidden`. Rejections are logged at `DEBUG` level by `io.micronaut.security.fetchmetadata.FetchMetadataFilter`, together with the request's `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` values.
 
-Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses it allows, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
+Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses to the requests it evaluates, both allowed and rejected, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
 
 [cols="1,2,1"]
 |===
