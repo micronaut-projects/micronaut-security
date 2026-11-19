@@ -50,14 +50,18 @@ public class JacksonStateSerDes implements StateSerDes {
 
     @Override
     public State deserialize(String base64State) {
+        byte[] decodedBytes;
         try {
-            byte[] decodedBytes = Base64Utils.decodeUrl(base64State);
-            return jsonMapper.readValue(decodedBytes, Argument.of(DefaultState.class));
+            decodedBytes = Base64Utils.decodeUrl(base64State);
         } catch (IllegalArgumentException e) {
             // The state comes from the request, so malformed Base64 is attacker input, not a server error.
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Failed to Base64 decode the authorization request state: {}", e.getMessage());
             }
+            return null;
+        }
+        try {
+            return jsonMapper.readValue(decodedBytes, Argument.of(DefaultState.class));
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to deserialize the authorization request state", e);
