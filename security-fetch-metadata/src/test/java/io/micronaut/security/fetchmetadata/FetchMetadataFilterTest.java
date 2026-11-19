@@ -15,8 +15,11 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.filter.ServerFilterPhase;
 import org.junit.jupiter.api.Test;
 
@@ -71,6 +74,49 @@ class FetchMetadataFilterTest {
 
         assertNull(filter.filterRequest(REQUEST));
         assertFalse(laterRuleCalled.get());
+    }
+
+    @Test
+    void addsTheFetchMetadataHeadersToVary() {
+        MutableHttpResponse<?> response = HttpResponse.ok();
+
+        filterWith(FetchMetadataRuleResult.ALLOWED).filterResponse(response);
+
+        assertEquals(List.of("Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest"),
+            response.getHeaders().getAll(HttpHeaders.VARY));
+    }
+
+    @Test
+    void mergesTheFetchMetadataHeadersWithAnExistingVary() {
+        MutableHttpResponse<?> response = HttpResponse.ok()
+            .header(HttpHeaders.VARY, "Origin, sec-fetch-site")
+            .header(HttpHeaders.VARY, "Accept-Encoding,,");
+
+        filterWith(FetchMetadataRuleResult.ALLOWED).filterResponse(response);
+
+        assertEquals(List.of("Origin, sec-fetch-site, Accept-Encoding, Sec-Fetch-Mode, Sec-Fetch-Dest"),
+            response.getHeaders().getAll(HttpHeaders.VARY));
+    }
+
+    @Test
+    void leavesVaryUnchangedWhenItAlreadyListsTheFetchMetadataHeaders() {
+        MutableHttpResponse<?> response = HttpResponse.ok()
+            .header(HttpHeaders.VARY, "Sec-Fetch-Dest")
+            .header(HttpHeaders.VARY, "Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest");
+
+        filterWith(FetchMetadataRuleResult.ALLOWED).filterResponse(response);
+
+        assertEquals(List.of("Sec-Fetch-Dest", "Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest"),
+            response.getHeaders().getAll(HttpHeaders.VARY));
+    }
+
+    @Test
+    void leavesAWildcardVaryUnchanged() {
+        MutableHttpResponse<?> response = HttpResponse.ok().header(HttpHeaders.VARY, "Origin, *");
+
+        filterWith(FetchMetadataRuleResult.ALLOWED).filterResponse(response);
+
+        assertEquals(List.of("Origin, *"), response.getHeaders().getAll(HttpHeaders.VARY));
     }
 
     private static FetchMetadataFilter filterWith(FetchMetadataRuleResult result) {
