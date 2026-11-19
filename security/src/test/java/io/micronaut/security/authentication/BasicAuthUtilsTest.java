@@ -17,6 +17,11 @@ class BasicAuthUtilsTest {
 
     @Test
     void java4ShellProofOfConceptHeaderIsIgnored() {
+        assertTrue(BasicAuthUtils.parseCredentials("Basic " + "A".repeat(64) + "=").isEmpty());
+    }
+
+    @Test
+    void java4ShellJdk17ProofOfConceptHeaderIsIgnored() {
         assertTrue(BasicAuthUtils.parseCredentials("Basic " + "A".repeat(128) + "=").isEmpty());
     }
 
