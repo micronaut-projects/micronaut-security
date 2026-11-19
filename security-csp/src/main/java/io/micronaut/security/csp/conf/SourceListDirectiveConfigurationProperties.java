@@ -48,7 +48,9 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Sets additional source expressions in their serialized CSP form.
+     * Additional source expressions, written in the configured order after the keyword and scheme sources.
+     * Write keywords, nonces and hashes with their single quotes, for example "'sha256-...'"; host and
+     * scheme sources are written as supplied. Default: empty.
      *
      * @param values additional source expressions to include in the directive
      */
@@ -62,7 +64,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Enables or disables generation of this directive.
+     * Whether the directive is written to the policy. Default: true, except for prefetch-src and
+     * fenced-frame-src, which default to false.
      *
      * @param enabled whether the directive is emitted in the generated policy
      */
@@ -76,8 +79,9 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code 'none'} keyword source expression. It is emitted only when no other
-     * source expression is enabled for the directive.
+     * Whether to write 'none' when no other source expression is enabled. With false and no other source,
+     * the directive is omitted and the browser falls back to default-src. Default: true, except for
+     * form-action, which defaults to false.
      *
      * @param none whether no sources are allowed
      */
@@ -91,7 +95,8 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code 'self'} keyword source expression.
+     * Whether to allow the application's own origin with 'self'. Default: false, except for form-action,
+     * which defaults to true.
      *
      * @param self whether the protected origin is allowed
      */
@@ -105,7 +110,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code http:} scheme source expression.
+     * Whether to allow any URL with the http: scheme. Default: false.
      *
      * @param http whether the directive includes the unquoted {@code http:} scheme source
      */
@@ -119,7 +124,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code https:} scheme source expression.
+     * Whether to allow any URL with the https: scheme. Default: false.
      *
      * @param https whether the directive includes the unquoted {@code https:} scheme source
      */
@@ -133,7 +138,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code data:} scheme source expression.
+     * Whether to allow data: URLs. Default: false.
      *
      * @param data whether the directive includes the unquoted {@code data:} scheme source
      */
@@ -147,7 +152,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code blob:} scheme source expression.
+     * Whether to allow blob: URLs. Default: false.
      *
      * @param blob whether the directive includes the unquoted {@code blob:} scheme source
      */
@@ -161,7 +166,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code filesystem:} scheme source expression.
+     * Whether to allow filesystem: URLs. Default: false.
      *
      * @param filesystem whether the directive includes the unquoted {@code filesystem:} scheme source
      */
@@ -175,7 +180,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code mediastream:} scheme source expression.
+     * Whether to allow mediastream: URLs. Default: false.
      *
      * @param mediastream whether the directive includes the unquoted {@code mediastream:} scheme source
      */
@@ -189,7 +194,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code ws:} scheme source expression.
+     * Whether to allow WebSocket ws: URLs. Default: false.
      *
      * @param ws whether the directive includes the unquoted {@code ws:} scheme source
      */
@@ -203,7 +208,7 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
     }
 
     /**
-     * Controls the {@code wss:} scheme source expression.
+     * Whether to allow secure WebSocket wss: URLs. Default: false.
      *
      * @param wss whether the directive includes the unquoted {@code wss:} scheme source
      */

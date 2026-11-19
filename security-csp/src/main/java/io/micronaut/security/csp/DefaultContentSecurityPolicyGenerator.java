@@ -65,8 +65,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -91,6 +96,16 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
      * quote, semicolon or space, would corrupt or extend the serialized policy.
      */
+    /**
+     * Keywords that are only meaningful when single-quoted. Unquoted, a browser reads them as host sources.
+     */
+    private static final Set<String> QUOTED_KEYWORDS = Set.of(SELF, NONE, UNSAFE_INLINE, UNSAFE_EVAL, STRICT_DYNAMIC,
+        "unsafe-hashes", "report-sample", "wasm-unsafe-eval", "trusted-types-eval", "report-sha256", "report-sha384",
+        "report-sha512", "unsafe-webtransport-hashes");
+    /**
+     * Prefixes of hash and nonce source expressions, which are only meaningful when single-quoted.
+     */
+    private static final List<String> QUOTED_PREFIXES = List.of("sha256-", "sha384-", "sha512-", NONCE_PREFIX);
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -129,16 +144,18 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private final StyleSrcConfiguration styleSrcConfiguration;
     private final WorkerSrcConfiguration workerSrcConfiguration;
     private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
+    private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
 
     /**
-     * Creates a generator with the default configuration for each directive.
+     * Creates a generator with the default configuration for each directive, ignoring any
+     * directive configuration bound from the application's properties.
      *
-     * <p>This convenience constructor is intended for subclasses and tests. The injected
-     * constructor receives the application-bound directive configurations.</p>
+     * <p>It is package-private because a subclass bean built with it would silently drop the
+     * {@code micronaut.security.csp.*} directive settings. Subclasses use the injected constructor.</p>
      *
      * @param cspConfiguration root CSP configuration
      */
-    protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
+    DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
         this(cspConfiguration,
             DefaultContentSecurityPolicyGenerator::requestNonce,
             new BaseUriConfigurationProperties(),
@@ -291,6 +308,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         this.formActionConfiguration = formActionConfiguration;
         this.styleSrcConfiguration = styleSrcConfiguration;
         this.workerSrcConfiguration = workerSrcConfiguration;
+        warnAboutMisquotedValues();
     }
 
     /**
@@ -563,6 +581,55 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Logs a warning for each configured source expression that a browser would not read as intended:
+     * an unquoted keyword, hash or nonce, which becomes a host source, or a value containing a
+     * semicolon or comma, which ends the directive or the policy.
+     */
+    private void warnAboutMisquotedValues() {
+        Map<String, DirectiveConfiguration> configurations = new LinkedHashMap<>();
+        configurations.put(BASE_URI, baseUriConfiguration);
+        configurations.put(DEFAULT_SRC, defaultSrcConfiguration);
+        configurations.put(CONNECT_SRC, connectSrcConfiguration);
+        configurations.put(FENCED_FRAME_SRC, fencedFrameSrcConfiguration);
+        configurations.put(FONT_SRC, fontSrcConfiguration);
+        configurations.put(OBJECT_SRC, objectSrcConfiguration);
+        configurations.put(PREFETCH_SRC, prefetchSrcConfiguration);
+        configurations.put(SCRIPT_SRC, scriptSrcConfiguration);
+        configurations.put(FRAME_ANCESTORS, frameAncestorsConfiguration);
+        configurations.put(FRAME_SRC, frameSrcConfiguration);
+        configurations.put(IMG_SRC, imgSrcConfiguration);
+        configurations.put(MANIFEST_SRC, manifestSrcConfiguration);
+        configurations.put(MEDIA_SRC, mediaSrcConfiguration);
+        configurations.put(FORM_ACTION, formActionConfiguration);
+        configurations.put(STYLE_SRC, styleSrcConfiguration);
+        configurations.put(WORKER_SRC, workerSrcConfiguration);
+        configurations.forEach((name, configuration) -> {
+            if (configuration.isEnabled() && configuration instanceof SourceListDirectiveConfiguration sourceList) {
+                for (String value : sourceList.getValues()) {
+                    warnIfMisquoted(name, value);
+                }
+            }
+        });
+    }
+
+    private static void warnIfMisquoted(String directive, String value) {
+        if (value.contains(";") || value.contains(",")) {
+            LOG.warn("micronaut.security.csp.{}.values contains \"{}\", which has a ';' or ','; browsers read it as the end of the directive or policy. "
+                + "Configure each source expression as a separate value.", directive, value);
+            return;
+        }
+        String trimmed = value.trim();
+        if (trimmed.startsWith(SINGLE_QUOTE)) {
+            return;
+        }
+        String lowerCase = trimmed.toLowerCase(Locale.ROOT);
+        if (QUOTED_KEYWORDS.contains(lowerCase) || QUOTED_PREFIXES.stream().anyMatch(lowerCase::startsWith)) {
+            LOG.warn("micronaut.security.csp.{}.values contains \"{}\", which looks like a keyword, hash or nonce source but is not single-quoted; "
+                + "browsers treat it as a host. Use \"{}\".", directive, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
+        }
+    }
+
+    /**
      * Reads the nonce generated for the request by the CSP server filter.
      *
      * @param request the current request
@@ -610,7 +677,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                 values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONCE_PREFIX + nonce));
             } else if (StringUtils.isNotEmpty(nonce)) {
                 // The nonce is not logged: it is a secret for the current response.
-                LOG.warn("Omitting the CSP nonce for directive {}: it does not match the CSP base64-value grammar {}", name, NONCE_GRAMMAR.pattern());
+                if (invalidNonceWarned.compareAndSet(false, true)) {
+                    LOG.warn("Omitting the CSP nonce from {}: the ContentSecurityPolicyNonceGenerator bean returned a value with characters outside "
+                        + "base64 and base64url (A-Z, a-z, 0-9, +, /, _, - and trailing =). Return a base64 or base64url value. "
+                        + "This warning is logged once.", name);
+                }
             } else if (LOG.isTraceEnabled()) {
                 LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
             }

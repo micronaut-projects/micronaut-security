@@ -8,4 +8,4 @@ micronaut:
       report-only: true
 ----
 
-Report-only mode does not block resources. Review violation reports and browser console messages, adjust the policy, and then remove this setting to enforce it.
+Report-only mode does not block resources. Review the violations in the browser console, or <<cspReportingApi,receive them as reports>>, adjust the policy, and then remove this setting to enforce it.

@@ -39,7 +39,8 @@ public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfig
     }
 
     /**
-     * Controls the {@code 'unsafe-webtransport-hashes'} keyword source expression.
+     * Whether WebTransport certificate hashes may authorize connections, with
+     * 'unsafe-webtransport-hashes'. Default: false.
      *
      * @param unsafeWebtransportHashes whether WebTransport hashes may authorize connections
      */

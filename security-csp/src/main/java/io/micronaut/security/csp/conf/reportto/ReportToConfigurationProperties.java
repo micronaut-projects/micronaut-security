@@ -52,7 +52,7 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
     }
 
     /**
-     * Enables or disables generation of the {@code report-to} directive.
+     * Whether to write the report-to directive. Default: false.
      *
      * @param enabled whether the generated policy includes {@code report-to}
      */
@@ -66,7 +66,9 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
     }
 
     /**
-     * Sets the Reporting API endpoint group selected by the directive.
+     * Reporting API endpoint group named in the report-to directive and, when a report handler exists, in
+     * the Reporting-Endpoints header. Use lowercase letters, digits and the characters _ . * - only.
+     * Default: csp.
      *
      * @param group Reporting API endpoint group referenced by {@code report-to}
      */

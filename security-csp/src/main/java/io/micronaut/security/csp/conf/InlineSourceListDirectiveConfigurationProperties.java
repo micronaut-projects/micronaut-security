@@ -36,7 +36,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     }
 
     /**
-     * Controls the {@code 'unsafe-inline'} keyword source expression.
+     * Whether to allow inline content that has no nonce or hash, with 'unsafe-inline'. This weakens the
+     * protection against cross-site scripting. Default: false.
      *
      * @param unsafeInline whether to allow inline content without a nonce or hash
      */
@@ -50,7 +51,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     }
 
     /**
-     * Controls the {@code 'unsafe-hashes'} keyword source expression.
+     * Whether hashes may also authorize event-handler and style attributes, with 'unsafe-hashes'. Default:
+     * false.
      *
      * @param unsafeHashes whether hashes may authorize event handlers and style attributes
      */
@@ -64,7 +66,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
     }
 
     /**
-     * Controls the {@code 'report-sample'} keyword source expression.
+     * Whether violation reports include a sample of the blocked content, with 'report-sample'. Default:
+     * false.
      *
      * @param reportSample whether violation reports include a sample of blocked inline content
      */

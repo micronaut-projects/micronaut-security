@@ -49,7 +49,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Enables or disables a request-specific nonce source expression.
+     * Whether to add the nonce generated for each request, which views can apply to trusted inline
+     * scripts. Default: false.
      *
      * @param nonce whether a nonce source expression is generated for this directive; defaults to {@code false}
      */
@@ -63,7 +64,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'unsafe-eval'} keyword source expression.
+     * Whether to allow string-to-code APIs such as eval, with 'unsafe-eval'. This weakens the protection
+     * against cross-site scripting. Default: false.
      *
      * @param unsafeEval whether JavaScript string-to-code APIs are allowed
      */
@@ -77,7 +79,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'strict-dynamic'} keyword source expression.
+     * Whether scripts authorized by a nonce or hash may load further scripts, with 'strict-dynamic'. Host
+     * sources are then ignored by CSP3 browsers. Default: false.
      *
      * @param strictDynamic whether trusted scripts may load further scripts dynamically
      */
@@ -91,7 +94,7 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'wasm-unsafe-eval'} keyword source expression.
+     * Whether to allow WebAssembly compilation, with 'wasm-unsafe-eval'. Default: false.
      *
      * @param wasmUnsafeEval whether WebAssembly compilation is allowed
      */
@@ -105,7 +108,7 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'trusted-types-eval'} keyword source expression.
+     * Whether eval may run Trusted Types values, with 'trusted-types-eval'. Default: false.
      *
      * @param trustedTypesEval whether Trusted Types values may be evaluated as JavaScript
      */
@@ -119,7 +122,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'report-sha256'} keyword source expression.
+     * Whether browsers send csp-hash reports with SHA-256 digests of loaded scripts, with 'report-sha256'.
+     * Default: false.
      *
      * @param reportSha256 whether user agents send {@code csp-hash} reports with SHA-256 digests of loaded scripts
      */
@@ -133,7 +137,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'report-sha384'} keyword source expression.
+     * Whether browsers send csp-hash reports with SHA-384 digests of loaded scripts, with 'report-sha384'.
+     * Default: false.
      *
      * @param reportSha384 whether user agents send {@code csp-hash} reports with SHA-384 digests of loaded scripts
      */
@@ -147,7 +152,8 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Controls the {@code 'report-sha512'} keyword source expression.
+     * Whether browsers send csp-hash reports with SHA-512 digests of loaded scripts, with 'report-sha512'.
+     * Default: false.
      *
      * @param reportSha512 whether user agents send {@code csp-hash} reports with SHA-512 digests of loaded scripts
      */

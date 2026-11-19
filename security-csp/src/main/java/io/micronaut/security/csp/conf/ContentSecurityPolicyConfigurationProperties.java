@@ -95,7 +95,7 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Enables or disables the deprecated {@code report-uri} directive.
+     * Whether to write the deprecated report-uri directive. Default: false.
      *
      * @param reportUriEnabled whether the deprecated {@code report-uri} directive is included in the policy
      */
@@ -109,7 +109,7 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Sets the endpoints used by the deprecated {@code report-uri} directive.
+     * Endpoint URLs written in the deprecated report-uri directive. Default: empty.
      *
      * @param reportUri the endpoint URLs used as the value of the deprecated {@code report-uri} directive
      */
@@ -123,7 +123,9 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Enables or disables the {@code require-trusted-types-for} directive.
+     * Whether to write the require-trusted-types-for directive, which makes browsers reject strings
+     * assigned to DOM injection sinks such as innerHTML unless they come from a Trusted Types policy.
+     * Default: true.
      *
      * @param requireTrustedTypesForEnabled whether the {@code require-trusted-types-for} directive is included in the policy
      */
@@ -137,7 +139,7 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Sets the sink group protected by Trusted Types enforcement.
+     * Sink group written in the require-trusted-types-for directive. Default: 'script'.
      *
      * @param requireTrustedTypesFor the sink group required to use Trusted Types
      */
@@ -156,7 +158,8 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Selects report-only or enforcing response-header behavior.
+     * Whether to send the policy in the Content-Security-Policy-Report-Only header, which reports
+     * violations without blocking them. Default: false.
      *
      * @param reportOnly whether to send the policy using the {@code Content-Security-Policy-Report-Only} header
      */
@@ -165,7 +168,7 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     }
 
     /**
-     * Enables or disables the CSP module.
+     * Whether the CSP module is enabled. Default: true.
      *
      * @param enabled whether the CSP module is enabled
      */

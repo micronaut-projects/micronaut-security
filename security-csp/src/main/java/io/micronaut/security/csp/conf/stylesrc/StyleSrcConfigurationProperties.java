@@ -41,7 +41,8 @@ public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveCo
     }
 
     /**
-     * Enables or disables a request-specific nonce source expression.
+     * Whether to add the nonce generated for each request, which views can apply to trusted inline styles.
+     * Default: false.
      *
      * @param nonce whether a nonce source expression is generated for this directive; defaults to {@code false}
      */

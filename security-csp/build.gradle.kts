@@ -19,7 +19,7 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
-    testRuntimeOnly(mnLogging.logback.classic)
+    testImplementation(mnLogging.logback.classic)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnValidation.micronaut.validation)

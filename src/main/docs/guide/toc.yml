@@ -116,16 +116,17 @@ contentSecurityPolicy:
   title: Content Security Policy (CSP)
   cspDependency: CSP Dependency
   cspDefaults: CSP Defaults
-  cspSchemeSources: Scheme Sources
   cspReportOnly: Report Only
-  cspReportingApi: Reporting API
+  cspConfiguringDirectives: Configuring Directives
+  cspSchemeSources: Scheme Sources
   cspScriptSrc:
-    title: CSP script-src
-    cspNonceGeneration: script-src Nonce
-    scriptDynamic: script-src strict-dynamic
+    title: script-src
+    cspNonceGeneration: script-src Nonces
+    scriptDynamic: script-src 'strict-dynamic'
     scriptSrcHashes: script-src Hashes
-    scriptSrcSelf: script-src self
+    scriptSrcSelf: script-src 'self'
     scriptSrcUrls: script-src URLs
+  cspReportingApi: Receiving CSP Reports
   contentSecurityPolicyGenerator: CSP Generator
 reporting:
   title: Reporting API

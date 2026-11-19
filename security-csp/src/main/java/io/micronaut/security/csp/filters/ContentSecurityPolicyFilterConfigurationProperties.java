@@ -72,7 +72,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     }
 
     /**
-     * Enables or disables the {@link ContentSecurityPolicyFilter}.
+     * Whether the CSP response header and the request nonce are generated. Default: true.
      *
      * @param enabled whether the filter is enabled; defaults to {@value #DEFAULT_ENABLED}
      */
@@ -81,9 +81,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     }
 
     /**
-     * Sets the URL pattern matched by the {@link ContentSecurityPolicyFilter}.
-     *
-     * <p>Responses for URLs outside this pattern do not receive the module's CSP header.</p>
+     * Request path pattern that receives the CSP response header and nonce. Default: /**.
      *
      * @param pattern the server-filter pattern; defaults to {@code /**}
      */

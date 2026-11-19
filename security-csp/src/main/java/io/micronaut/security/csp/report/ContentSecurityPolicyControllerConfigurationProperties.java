@@ -69,7 +69,7 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
     }
 
     /**
-     * Enables or disables the {@link ContentSecurityPolicyController}.
+     * Whether the CSP report controller is registered when a report handler bean exists. Default: true.
      *
      * @param enabled whether the controller is enabled; defaults to {@value #DEFAULT_ENABLED}
      */
@@ -78,7 +78,7 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
     }
 
     /**
-     * Sets the path of the {@link ContentSecurityPolicyController}.
+     * Path of the CSP report controller, relative to the server context path. Default: /csp/report.
      *
      * @param path the controller path; defaults to {@value #DEFAULT_PATH}
      */

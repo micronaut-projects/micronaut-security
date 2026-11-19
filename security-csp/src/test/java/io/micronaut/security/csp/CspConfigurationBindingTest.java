@@ -17,6 +17,8 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -89,10 +91,29 @@ class CspConfigurationBindingTest {
             policy.requireTrustedTypesFor());
     }
 
+    @Test
+    void guideStarterConfigurationGeneratesTheDocumentedHeader() {
+        ContentSecurityPolicy policy = policy(Map.of(
+            "micronaut.security.csp.script-src.self", true,
+            "micronaut.security.csp.script-src.nonce", true,
+            "micronaut.security.csp.style-src.self", true,
+            "micronaut.security.csp.img-src.self", true,
+            "micronaut.security.csp.font-src.self", true,
+            "micronaut.security.csp.connect-src.self", true));
+
+        assertEquals("base-uri 'none'; default-src 'none'; connect-src 'self'; font-src 'self'; object-src 'none'; "
+                + "require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self'; "
+                + "manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'self'; "
+                + "script-src 'nonce-requestnonce' 'self'",
+            policy.toString());
+    }
+
     private static ContentSecurityPolicy policy(Map<String, Object> properties) {
         try (ApplicationContext context = ApplicationContext.run(properties)) {
+            MutableHttpRequest<?> request = HttpRequest.GET("/");
+            request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, "requestnonce");
             ContentSecurityPolicy policy = context.getBean(ContentSecurityPolicyGenerator.class)
-                .contentSecurityPolicy(HttpRequest.GET("/"));
+                .contentSecurityPolicy(request);
             assertNotNull(policy);
             return policy;
         }
