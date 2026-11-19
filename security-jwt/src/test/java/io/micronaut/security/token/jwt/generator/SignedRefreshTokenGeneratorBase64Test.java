@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SignedRefreshTokenGeneratorBase64Test {
 
-    // Configuration secrets are not request data: routing them through Base64Utils is defence in depth.
+    // Behaviour only: the JDK rejects this secret too. Configuration secrets are not request data, so routing
+    // them through Base64Utils is defence in depth; Base64DecoderUsageTest in the security module protects the wiring.
     @Test
-    void base64SecretWithPaddingThatDoesNotCompleteTheFinalUnitIsRejected() {
+    void base64SecretWithInvalidPaddingIsRejectedWithIllegalArgumentException() {
         RefreshTokenConfigurationProperties config = new RefreshTokenConfigurationProperties();
         config.setSecret("A".repeat(64) + "=");
         config.setBase64(true);
