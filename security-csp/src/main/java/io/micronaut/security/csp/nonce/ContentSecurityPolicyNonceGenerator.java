@@ -25,7 +25,7 @@ import io.micronaut.http.HttpRequest;
  * as {@code script-src} and {@code style-src}. Views can use that request attribute as the
  * {@code nonce} attribute of trusted script or style elements.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface ContentSecurityPolicyNonceGenerator {
     /**
@@ -33,7 +33,7 @@ public interface ContentSecurityPolicyNonceGenerator {
      * Views, can expose it to templates under the same name. The value is safe to expose only to
      * trusted template code that applies it to a nonce attribute.
      *
-     * @since 5.4.0
+     * @since 5.6.0
      */
     String CSP_NONCE_ATTRIBUTE = "cspNonce";
 
@@ -42,7 +42,7 @@ public interface ContentSecurityPolicyNonceGenerator {
      *
      * @param request the request for which the nonce is generated
      * @return an unpredictable nonce value, unique to the request
-     * @since 5.4.0
+     * @since 5.6.0
      */
     String generateNonce(HttpRequest<?> request);
 }

@@ -33,19 +33,19 @@ import org.jspecify.annotations.Nullable;
  * directive names, source expressions, or the policy behavior implemented by a user agent.</p>
  *
  * @param directives the ordered directives in the policy
- * @since 5.4.0
+ * @since 5.6.0
  */
 public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directives) {
     /**
      * Header that causes user agents to enforce the supplied policy.
      *
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
     /**
      * Header that reports policy violations without enforcing the supplied policy.
      *
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
 
@@ -67,7 +67,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code base-uri} directive.
      *
      * @return the {@code base-uri} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective baseUri() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.BASE_URI);
@@ -77,7 +77,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code child-src} directive.
      *
      * @return the {@code child-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective childSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.CHILD_SRC);
@@ -87,7 +87,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code connect-src} directive.
      *
      * @return the {@code connect-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective connectSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.CONNECT_SRC);
@@ -97,7 +97,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code default-src} directive.
      *
      * @return the {@code default-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective defaultSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.DEFAULT_SRC);
@@ -107,7 +107,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code fenced-frame-src} directive.
      *
      * @return the {@code fenced-frame-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FENCED_FRAME_SRC);
@@ -117,7 +117,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code font-src} directive.
      *
      * @return the {@code font-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective fontSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FONT_SRC);
@@ -127,7 +127,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code form-action} directive.
      *
      * @return the {@code form-action} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective formAction() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FORM_ACTION);
@@ -137,7 +137,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code frame-ancestors} directive.
      *
      * @return the {@code frame-ancestors} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective frameAncestors() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_ANCESTORS);
@@ -147,7 +147,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code frame-src} directive.
      *
      * @return the {@code frame-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective frameSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_SRC);
@@ -157,7 +157,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code img-src} directive.
      *
      * @return the {@code img-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective imgSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.IMG_SRC);
@@ -167,7 +167,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code manifest-src} directive.
      *
      * @return the {@code manifest-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective manifestSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.MANIFEST_SRC);
@@ -177,7 +177,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code media-src} directive.
      *
      * @return the {@code media-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective mediaSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.MEDIA_SRC);
@@ -187,7 +187,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code object-src} directive.
      *
      * @return the {@code object-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective objectSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.OBJECT_SRC);
@@ -197,7 +197,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code prefetch-src} directive.
      *
      * @return the {@code prefetch-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective prefetchSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.PREFETCH_SRC);
@@ -207,7 +207,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code report-to} directive.
      *
      * @return the {@code report-to} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective reportTo() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_TO);
@@ -217,7 +217,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the deprecated {@code report-uri} directive.
      *
      * @return the deprecated {@code report-uri} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective reportUri() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_URI);
@@ -227,7 +227,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code require-trusted-types-for} directive.
      *
      * @return the {@code require-trusted-types-for} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR);
@@ -237,7 +237,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code sandbox} directive.
      *
      * @return the {@code sandbox} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective sandbox() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SANDBOX);
@@ -247,7 +247,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code script-src} directive.
      *
      * @return the {@code script-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC);
@@ -257,7 +257,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code script-src-attr} directive.
      *
      * @return the {@code script-src-attr} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrcAttr() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ATTR);
@@ -267,7 +267,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code script-src-elem} directive.
      *
      * @return the {@code script-src-elem} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrcElem() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ELEM);
@@ -277,7 +277,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code style-src} directive.
      *
      * @return the {@code style-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC);
@@ -287,7 +287,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code style-src-attr} directive.
      *
      * @return the {@code style-src-attr} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrcAttr() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ATTR);
@@ -297,7 +297,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code style-src-elem} directive.
      *
      * @return the {@code style-src-elem} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrcElem() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ELEM);
@@ -307,7 +307,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code trusted-types} directive.
      *
      * @return the {@code trusted-types} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective trustedTypes() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.TRUSTED_TYPES);
@@ -317,7 +317,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code upgrade-insecure-requests} directive.
      *
      * @return the {@code upgrade-insecure-requests} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective upgradeInsecureRequests() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS);
@@ -327,7 +327,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Finds the {@code worker-src} directive.
      *
      * @return the {@code worker-src} directive, or {@code null} if it is absent
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective workerSrc() {
         return findByDirectiveName(ContentSecurityPolicyGenerator.WORKER_SRC);
@@ -338,7 +338,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      *
      * @param response the HTTP response
      * @return the parsed policy, or {@code null} if the response has no enforcing CSP header
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(HttpResponse<?> response) {
         return of(response.getHeaders());
@@ -349,7 +349,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      *
      * @param headers the HTTP headers
      * @return the parsed policy, or {@code null} if the headers have no enforcing CSP header
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(HttpHeaders headers) {
         return of(headers, ContentSecurityPolicy.CONTENT_SECURITY_POLICY);
@@ -363,7 +363,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @param headers the HTTP headers
      * @param headerName the CSP header name to parse
      * @return the parsed policy, or {@code null} if the named header is absent or empty
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(HttpHeaders headers, String headerName) {
         return of(headers.get(headerName));
@@ -379,7 +379,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      *
      * @param headerValue the serialized CSP header value
      * @return the parsed policy, or {@code null} if the value is {@code null} or empty
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(@Nullable String headerValue) {
         if (StringUtils.isEmpty(headerValue)) {

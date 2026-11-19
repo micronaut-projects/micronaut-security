@@ -23,7 +23,7 @@ import io.micronaut.core.util.Toggleable;
  * <p>The directive value identifies an endpoint group declared by the {@code Reporting-Endpoints}
  * response header. It is a single group name, not a URL or CSP source list.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface ReportToConfiguration extends Toggleable {
     /**

@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Pattern;
  * Configures the {@link ContentSecurityPolicyController}.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Requires(property = ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(ContentSecurityPolicyControllerConfigurationProperties.PREFIX)

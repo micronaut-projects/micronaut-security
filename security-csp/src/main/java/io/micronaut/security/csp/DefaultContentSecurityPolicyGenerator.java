@@ -38,6 +38,22 @@ import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfiguration;
 import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfiguration;
 import io.micronaut.security.csp.conf.reportTo.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportTo.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.baseUri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formAction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.imgSrc.ImgSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfiguration;
 import io.micronaut.security.csp.conf.styleSrc.StyleSrcConfiguration;
 import io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfiguration;
@@ -52,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Generates the default, opt-out CSP directive set from the root and directive-specific configuration.
@@ -63,12 +80,31 @@ import java.util.function.Function;
  * <p>Subclasses can override the protected directive methods to replace or omit an individual
  * directive without reimplementing policy assembly.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Requires(missingBeans = ContentSecurityPolicyGenerator.class)
 @Singleton
 public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
+    /**
+     * Keyword source expressions, in the order in which they are emitted, with the configuration
+     * flag that enables each of them.
+     */
+    private static final List<KeywordSource> KEYWORD_SOURCES = List.of(
+        new KeywordSource(SELF, DirectiveConfiguration::isSelf),
+        new KeywordSource(UNSAFE_INLINE, DirectiveConfiguration::isUnsafeInline),
+        new KeywordSource(UNSAFE_EVAL, DirectiveConfiguration::isUnsafeEval),
+        new KeywordSource(STRICT_DYNAMIC, DirectiveConfiguration::isStrictDynamic),
+        new KeywordSource("unsafe-hashes", DirectiveConfiguration::isUnsafeHashes),
+        new KeywordSource("report-sample", DirectiveConfiguration::isReportSample),
+        new KeywordSource("unsafe-allow-redirects", DirectiveConfiguration::isUnsafeAllowRedirects),
+        new KeywordSource("wasm-unsafe-eval", DirectiveConfiguration::isWasmUnsafeEval),
+        new KeywordSource("trusted-types-eval", DirectiveConfiguration::isTrustedTypesEval),
+        new KeywordSource("report-sha256", DirectiveConfiguration::isReportSha256),
+        new KeywordSource("report-sha384", DirectiveConfiguration::isReportSha384),
+        new KeywordSource("report-sha512", DirectiveConfiguration::isReportSha512),
+        new KeywordSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
+    );
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final BaseUriConfiguration baseUriConfiguration;
     private final DefaultSrcConfiguration defaultSrcConfiguration;
@@ -99,24 +135,24 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
         this(cspConfiguration,
-            req -> req.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null),
-            new io.micronaut.security.csp.conf.baseUri.BaseUriConfigurationProperties(),
-            new io.micronaut.security.csp.conf.defaultSrc.DefaultSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.connectSrc.ConnectSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.fencedFrameSrc.FencedFrameSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.fontSrc.FontSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.objectSrc.ObjectSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.prefetchSrc.PrefetchSrcConfigurationProperties(),
+            DefaultContentSecurityPolicyGenerator::requestNonce,
+            new BaseUriConfigurationProperties(),
+            new DefaultSrcConfigurationProperties(),
+            new ConnectSrcConfigurationProperties(),
+            new FencedFrameSrcConfigurationProperties(),
+            new FontSrcConfigurationProperties(),
+            new ObjectSrcConfigurationProperties(),
+            new PrefetchSrcConfigurationProperties(),
             new ReportToConfigurationProperties(),
-            new io.micronaut.security.csp.conf.scriptSrc.ScriptSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.frameAncestors.FrameAncestorsConfigurationProperties(),
-            new io.micronaut.security.csp.conf.frameSrc.FrameSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.imgSrc.ImgSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.manifestSrc.ManifestSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.mediaSrc.MediaSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.formAction.FormActionConfigurationProperties(),
-            new io.micronaut.security.csp.conf.styleSrc.StyleSrcConfigurationProperties(),
-            new io.micronaut.security.csp.conf.workerSrc.WorkerSrcConfigurationProperties());
+            new ScriptSrcConfigurationProperties(),
+            new FrameAncestorsConfigurationProperties(),
+            new FrameSrcConfigurationProperties(),
+            new ImgSrcConfigurationProperties(),
+            new ManifestSrcConfigurationProperties(),
+            new MediaSrcConfigurationProperties(),
+            new FormActionConfigurationProperties(),
+            new StyleSrcConfigurationProperties(),
+            new WorkerSrcConfigurationProperties());
     }
 
     /**
@@ -140,7 +176,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param formActionConfiguration configures {@code form-action}
      * @param styleSrcConfiguration configures {@code style-src}
      * @param workerSrcConfiguration configures {@code worker-src}
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @SuppressWarnings("ParameterNumber")
     @Inject
@@ -164,7 +200,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                                                     WorkerSrcConfiguration workerSrcConfiguration) {
 
         this(cspConfiguration,
-            req -> req.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null),
+            DefaultContentSecurityPolicyGenerator::requestNonce,
             baseUriConfiguration,
             defaultSrcConfiguration,
             connectSrcConfiguration,
@@ -206,7 +242,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param formActionConfiguration configures {@code form-action}
      * @param styleSrcConfiguration configures {@code style-src}
      * @param workerSrcConfiguration configures {@code worker-src}
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @SuppressWarnings("ParameterNumber")
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
@@ -314,7 +350,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code base-uri} directive.
      *
      * @return the base URI directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective baseUri() {
         return directive(BASE_URI, baseUriConfiguration);
@@ -324,7 +360,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code default-src} directive.
      *
      * @return the configured {@code default-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective defaultSrc() {
         return directive(DEFAULT_SRC, defaultSrcConfiguration);
@@ -334,7 +370,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code connect-src} directive.
      *
      * @return the configured {@code connect-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective connectSrc() {
         return directive(CONNECT_SRC, connectSrcConfiguration);
@@ -344,7 +380,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code fenced-frame-src} directive.
      *
      * @return the configured {@code fenced-frame-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
         return directive(FENCED_FRAME_SRC, fencedFrameSrcConfiguration);
@@ -354,7 +390,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code font-src} directive.
      *
      * @return the configured {@code font-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fontSrc() {
         return directive(FONT_SRC, fontSrcConfiguration);
@@ -364,7 +400,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code object-src} directive.
      *
      * @return the configured {@code object-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective objectSrc() {
         return directive(OBJECT_SRC, objectSrcConfiguration);
@@ -374,7 +410,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code prefetch-src} directive.
      *
      * @return the configured {@code prefetch-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective prefetchSrc() {
         return directive(PREFETCH_SRC, prefetchSrcConfiguration);
@@ -384,7 +420,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code report-to} directive.
      *
      * @return the report-to directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportTo() {
         return reportToConfiguration.isEnabled()
@@ -396,7 +432,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured deprecated {@code report-uri} directive.
      *
      * @return the configured deprecated {@code report-uri} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportUri() {
         if (!cspConfiguration.isReportUriEnabled()) {
@@ -410,7 +446,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code require-trusted-types-for} directive.
      *
      * @return the configured {@code require-trusted-types-for} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
         return cspConfiguration.isRequireTrustedTypesForEnabled()
@@ -421,7 +457,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code frame-ancestors} directive.
      *
      * @return the configured {@code frame-ancestors} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameAncestors() {
         return directive(FRAME_ANCESTORS, frameAncestorsConfiguration);
@@ -431,7 +467,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code frame-src} directive.
      *
      * @return the configured {@code frame-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameSrc() {
         return directive(FRAME_SRC, frameSrcConfiguration);
@@ -441,7 +477,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code img-src} directive.
      *
      * @return the configured {@code img-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective imgSrc() {
         return directive(IMG_SRC, imgSrcConfiguration);
@@ -451,7 +487,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code manifest-src} directive.
      *
      * @return the configured {@code manifest-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective manifestSrc() {
         return directive(MANIFEST_SRC, manifestSrcConfiguration);
@@ -461,7 +497,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code media-src} directive.
      *
      * @return the configured {@code media-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective mediaSrc() {
         return directive(MEDIA_SRC, mediaSrcConfiguration);
@@ -471,7 +507,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code form-action} directive.
      *
      * @return the configured {@code form-action} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective formAction() {
         return directive(FORM_ACTION, formActionConfiguration);
@@ -482,7 +518,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * @param request the request whose nonce may be included in the directive
      * @return the configured {@code style-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective styleSrc(HttpRequest<?> request) {
         return directive(STYLE_SRC, styleSrcConfiguration, request);
@@ -493,7 +529,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * @param request the request whose nonce may be included in the directive
      * @return the configured {@code script-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective scriptSrc(HttpRequest<?> request) {
         return directive(SCRIPT_SRC, scriptSrcConfiguration, request);
@@ -503,7 +539,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Builds the configured {@code worker-src} directive.
      *
      * @return the configured {@code worker-src} directive, or {@code null} when disabled
-     * @since 5.4.0
+     * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective workerSrc() {
         return directive(WORKER_SRC, workerSrcConfiguration);
@@ -522,11 +558,21 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Converts source expressions to CSP's space-separated directive representation.
+     * Reads the nonce generated for the request by the CSP server filter.
+     *
+     * @param request the current request
+     * @return the request nonce, or {@code null} when none was generated
+     */
+    private static @Nullable String requestNonce(HttpRequest<?> request) {
+        return request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null);
+    }
+
+    /**
+     * Builds a directive that does not depend on request state.
      *
      * @param name the CSP directive name
      * @param config configuration that supplies the directive values
-     * @return the serialized directive
+     * @return the directive, or {@code null} when it is disabled or has no source expressions
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name,
                                                                DirectiveConfiguration config) {
@@ -534,11 +580,17 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Converts source expressions to CSP's space-separated directive representation.
+     * Converts the enabled source expressions of a directive configuration to CSP's
+     * space-separated directive representation.
+     *
+     * <p>Expressions are emitted in this order: the request nonce, keyword sources in
+     * {@link #KEYWORD_SOURCES} order, scheme sources, and finally the configured values.
+     * {@code 'none'} is emitted only when no other expression is enabled.</p>
      *
      * @param name the CSP directive name
      * @param config configuration that supplies the directive values
-     * @return the serialized directive
+     * @param request the request whose nonce may be added, or {@code null} for request-independent directives
+     * @return the directive, or {@code null} when it is disabled or has no source expressions
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name,
                                                                DirectiveConfiguration config,
@@ -555,44 +607,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                 LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
             }
         }
-        if (config.isSelf()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(SELF));
-        }
-        if (config.isUnsafeInline()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(UNSAFE_INLINE));
-        }
-        if (config.isUnsafeEval()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(UNSAFE_EVAL));
-        }
-        if (config.isStrictDynamic()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(STRICT_DYNAMIC));
-        }
-        if (config.isUnsafeHashes()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("unsafe-hashes"));
-        }
-        if (config.isReportSample()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("report-sample"));
-        }
-        if (config.isUnsafeAllowRedirects()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("unsafe-allow-redirects"));
-        }
-        if (config.isWasmUnsafeEval()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("wasm-unsafe-eval"));
-        }
-        if (config.isTrustedTypesEval()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("trusted-types-eval"));
-        }
-        if (config.isReportSha256()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("report-sha256"));
-        }
-        if (config.isReportSha384()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("report-sha384"));
-        }
-        if (config.isReportSha512()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("report-sha512"));
-        }
-        if (config.isUnsafeWebtransportHashes()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes("unsafe-webtransport-hashes"));
+        for (KeywordSource keywordSource : KEYWORD_SOURCES) {
+            if (keywordSource.enabled().test(config)) {
+                values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(keywordSource.keyword()));
+            }
         }
         ContentSecurityPolicyUtils.addSchemeSources(config, values);
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
@@ -608,8 +626,15 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (values.isEmpty()) {
             return null;
         }
-        return new ContentSecurityPolicyDirective(name, String.join(SPACE, values.stream()
-            .filter(StringUtils::isNotEmpty)
-            .toList()));
+        return new ContentSecurityPolicyDirective(name, String.join(SPACE, values));
+    }
+
+    /**
+     * A keyword source expression and the configuration flag that enables it.
+     *
+     * @param keyword the keyword, without its surrounding quotes
+     * @param enabled tests whether a directive configuration enables the keyword
+     */
+    private record KeywordSource(String keyword, Predicate<DirectiveConfiguration> enabled) {
     }
 }

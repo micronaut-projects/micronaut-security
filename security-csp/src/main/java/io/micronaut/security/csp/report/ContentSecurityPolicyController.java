@@ -39,7 +39,8 @@ import java.util.List;
  *
  * @see <a href="https://w3c.github.io/reporting/#try-delivery">Reporting API report delivery</a>
  */
-@Controller("${" + ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".path:/csp/report}")
+@Controller("${" + ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".path:"
+    + ContentSecurityPolicyControllerConfigurationProperties.DEFAULT_PATH + "}")
 @Requires(beans = ContentSecurityPolicyReportHandler.class)
 @Requires(beans = ContentSecurityPolicyControllerConfiguration.class)
 @Internal

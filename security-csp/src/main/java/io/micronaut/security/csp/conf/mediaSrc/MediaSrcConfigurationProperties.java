@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link MediaSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MEDIA_SRC)
 public class MediaSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements MediaSrcConfiguration {

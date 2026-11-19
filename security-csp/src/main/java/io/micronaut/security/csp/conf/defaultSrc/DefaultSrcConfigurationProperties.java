@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link DefaultSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_DEFAULT_SRC)
 public class DefaultSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements DefaultSrcConfiguration {

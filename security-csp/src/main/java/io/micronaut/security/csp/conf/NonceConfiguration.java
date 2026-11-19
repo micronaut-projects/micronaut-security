@@ -18,14 +18,14 @@ package io.micronaut.security.csp.conf;
 /**
  * Identifies a directive configuration that supports nonce source expressions.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface NonceConfiguration {
     /**
      * Determines whether the generated directive contains the current request's nonce.
      *
      * @return whether a request nonce is added to this directive
-     * @since 5.4.0
+     * @since 5.6.0
      */
     boolean isNonce();
 }

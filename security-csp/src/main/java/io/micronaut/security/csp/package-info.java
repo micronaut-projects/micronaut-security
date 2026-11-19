@@ -28,7 +28,7 @@
  * by their pages. Nonce- and hash-based script or style policies are preferred over URL allowlists.</p>
  *
  * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">Content Security Policy (CSP)</a>
- * @since 5.4.0
+ * @since 5.6.0
  */
 @NullMarked
 @Configuration

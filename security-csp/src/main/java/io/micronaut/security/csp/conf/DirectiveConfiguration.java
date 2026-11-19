@@ -24,7 +24,7 @@ import io.micronaut.core.util.Toggleable;
  * they support, normally by exposing mutable configuration properties. CSP keywords are emitted
  * with single quotes; scheme source expressions are emitted without quotes.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface DirectiveConfiguration extends Toggleable {
     /**
@@ -157,7 +157,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code http:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code http:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isHttp() {
         return false;
@@ -167,7 +167,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code https:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code https:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isHttps() {
         return false;
@@ -177,7 +177,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code data:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code data:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isData() {
         return false;
@@ -187,7 +187,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code blob:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code blob:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isBlob() {
         return false;
@@ -197,7 +197,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code filesystem:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code filesystem:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isFilesystem() {
         return false;
@@ -207,7 +207,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code mediastream:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code mediastream:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isMediastream() {
         return false;
@@ -217,7 +217,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code ws:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code ws:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isWs() {
         return false;
@@ -227,7 +227,7 @@ public interface DirectiveConfiguration extends Toggleable {
      * Controls the {@code wss:} scheme source expression.
      *
      * @return whether the directive includes the unquoted {@code wss:} scheme source
-     * @since 5.4.0
+     * @since 5.6.0
      */
     default boolean isWss() {
         return false;

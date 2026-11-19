@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link FencedFrameSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FENCED_FRAME_SRC)
 public class FencedFrameSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FencedFrameSrcConfiguration {

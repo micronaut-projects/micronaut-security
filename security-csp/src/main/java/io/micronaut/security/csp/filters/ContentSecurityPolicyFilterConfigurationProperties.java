@@ -18,6 +18,7 @@ package io.micronaut.security.csp.filters;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
@@ -26,7 +27,7 @@ import org.jspecify.annotations.NonNull;
  * {@link ConfigurationProperties} implementation of {@link ContentSecurityPolicyFilterConfiguration}.
  *
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyFilterConfigurationProperties.PREFIX)
 @Internal
@@ -46,7 +47,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
      */
     @NonNull
     @NotBlank
-    private String pattern = "/**";
+    private String pattern = ServerFilter.MATCH_ALL_PATTERN;
 
     private boolean enabled = DEFAULT_ENABLED;
 

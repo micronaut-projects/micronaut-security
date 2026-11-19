@@ -20,7 +20,7 @@ import io.micronaut.core.util.Toggleable;
 /**
  * Configuration for {@link io.micronaut.security.csp.filters.ContentSecurityPolicyFilter}.
  * @author Sergio del Amo
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
     /**

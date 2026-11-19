@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link FrameSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_SRC)
 public class FrameSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FrameSrcConfiguration {

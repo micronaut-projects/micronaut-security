@@ -22,7 +22,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link BaseUriConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_BASE_URI)
 public class BaseUriConfigurationProperties extends SourceListDirectiveConfigurationProperties implements BaseUriConfiguration {

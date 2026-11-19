@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Configuration contract for CSP directives whose value is a source list.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface SourceListDirectiveConfiguration extends DirectiveConfiguration {
     /**

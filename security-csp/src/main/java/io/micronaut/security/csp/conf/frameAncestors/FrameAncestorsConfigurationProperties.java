@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link FrameAncestorsConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_ANCESTORS)
 public class FrameAncestorsConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FrameAncestorsConfiguration {

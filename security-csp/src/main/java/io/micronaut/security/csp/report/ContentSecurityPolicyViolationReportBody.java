@@ -41,7 +41,7 @@ import org.jspecify.annotations.Nullable;
  * @param lineNumber source line number, or {@code null}
  * @param columnNumber source column number, or {@code null}
  * @see <a href="https://w3c.github.io/webappsec-csp/#dictdef-cspviolationreportbody">CSPViolationReportBody</a>
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Serdeable
 public record ContentSecurityPolicyViolationReportBody(

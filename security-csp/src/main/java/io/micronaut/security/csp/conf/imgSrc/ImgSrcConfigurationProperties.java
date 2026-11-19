@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link ImgSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_IMG_SRC)
 public class ImgSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ImgSrcConfiguration {

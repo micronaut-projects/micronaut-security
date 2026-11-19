@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Configuration for the {@code script-src} source list.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface ScriptSrcConfiguration extends SourceListDirectiveConfiguration, NonceConfiguration {
     /**

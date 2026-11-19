@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link ManifestSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MANIFEST_SRC)
 public class ManifestSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ManifestSrcConfiguration {

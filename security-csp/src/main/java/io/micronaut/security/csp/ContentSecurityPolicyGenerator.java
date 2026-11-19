@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
  * explicitly present in a policy takes precedence over {@link #DEFAULT_SRC}; {@code default-src}
  * is a fallback, not a value inherited by every directive.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @FunctionalInterface
 @DefaultImplementation(DefaultContentSecurityPolicyGenerator.class)
@@ -273,7 +273,7 @@ public interface ContentSecurityPolicyGenerator {
      *
      * @param request the request for which the policy is generated
      * @return the ordered policy, or {@code null} when no CSP header should be written
-     * @since 5.4.0
+     * @since 5.6.0
      */
     @Nullable ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request);
 }

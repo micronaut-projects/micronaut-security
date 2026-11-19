@@ -21,7 +21,7 @@ import io.micronaut.serde.annotation.Serdeable;
 /**
  * Disposition of the policy that generated a violation report.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Serdeable
 public enum ContentSecurityPolicyReportDisposition {

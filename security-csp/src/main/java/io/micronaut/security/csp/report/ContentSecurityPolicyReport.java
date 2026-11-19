@@ -36,7 +36,7 @@ import jakarta.validation.constraints.PositiveOrZero;
  * @param userAgent user agent of the request that generated the report
  * @param body report-type-specific data
  * @see <a href="https://w3c.github.io/reporting/#serialize-reports">Reporting API report serialization</a>
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Serdeable
 public record ContentSecurityPolicyReport(

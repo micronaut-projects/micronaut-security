@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ContentSecurityPolicyResponseHeaderPopulatorTest {
 
@@ -47,6 +48,35 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                 List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY,
                         "default-src 'self'; img-src 'self' images.example.com; upgrade-insecure-requests")),
                 populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
+    }
+
+    @Test
+    void addsReportOnlyHeaderInReportOnlyMode() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setReportOnly(true);
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                )),
+                configuration,
+                new ContentSecurityPolicyFilterConfigurationProperties()
+        );
+
+        assertEquals(
+                List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY, "default-src 'none'")),
+                populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
+    }
+
+    @Test
+    void keepsContentSecurityPolicyHeaderAlreadySetByTheResponse() {
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> fail("the generator must not be called when the response already sets the header"),
+                new ContentSecurityPolicyConfigurationProperties(),
+                new ContentSecurityPolicyFilterConfigurationProperties()
+        );
+
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/"),
+                HttpResponse.ok().header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'self'")));
     }
 
     @Test

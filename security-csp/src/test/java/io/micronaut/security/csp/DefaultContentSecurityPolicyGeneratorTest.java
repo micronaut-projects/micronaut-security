@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -179,6 +180,86 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "http: https:"),
                 directives.get(directives.size() - 1));
+    }
+
+    @Test
+    void fallsBackToNoneWhenNonceIsEnabledButTheRequestHasNoNonce() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> null, scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'"),
+                policy(generator).scriptSrc());
+    }
+
+    @Test
+    void emitsKeywordSourcesWithoutConfigurationPropertiesInDeclarationOrder() {
+        ConnectSrcConfiguration connectSrcConfiguration = new ConnectSrcConfiguration() {
+            @Override
+            public Set<String> getValues() {
+                return Set.of();
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isUnsafeAllowRedirects() {
+                return true;
+            }
+
+            @Override
+            public boolean isReportSha256() {
+                return true;
+            }
+
+            @Override
+            public boolean isReportSha384() {
+                return true;
+            }
+
+            @Override
+            public boolean isReportSha512() {
+                return true;
+            }
+        };
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> null, new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
+                "'unsafe-allow-redirects' 'report-sha256' 'report-sha384' 'report-sha512'"),
+                policy(generator).connectSrc());
+    }
+
+    @Test
+    void omitsDirectiveWithoutNoneAndWithoutSources() {
+        ConnectSrcConfigurationProperties connectSrcConfiguration = new ConnectSrcConfigurationProperties();
+        connectSrcConfiguration.setNone(false);
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> null, new ScriptSrcConfigurationProperties(), connectSrcConfiguration);
+
+        assertNull(policy(generator).connectSrc());
+    }
+
+    @Test
+    void returnsNullPolicyWhenNoDirectiveIsGenerated() {
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties()) {
+            @Override
+            protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
+                return List.of();
+            }
+        };
+
+        assertNull(generator.contentSecurityPolicy(HttpRequest.GET("/")));
+    }
+
+    @Test
+    void doesNotQuoteAnAlreadyQuotedExpressionTwice() {
+        assertEquals("'self'", ContentSecurityPolicyUtils.wrapInSingleQuotes("'self'"));
+        assertEquals("'self'", ContentSecurityPolicyUtils.wrapInSingleQuotes("self"));
     }
 
     @Test

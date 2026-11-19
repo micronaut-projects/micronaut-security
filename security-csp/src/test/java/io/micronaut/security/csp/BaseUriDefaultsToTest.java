@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 class BaseUriDefaultsToTest {
     @Test
-    void scriptSelf(@Client("/") HttpClient httpClient) {
+    void baseUriDefaultsToNone(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);

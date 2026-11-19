@@ -25,7 +25,7 @@ import java.util.List;
  * <p>Implementations must treat report fields as untrusted input. In particular, URLs and content
  * samples can contain sensitive data and should not be logged without appropriate filtering.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @FunctionalInterface
 public interface ContentSecurityPolicyReportHandler {

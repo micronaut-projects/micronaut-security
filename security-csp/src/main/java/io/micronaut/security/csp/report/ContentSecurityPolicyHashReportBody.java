@@ -35,7 +35,7 @@ import org.jspecify.annotations.Nullable;
  * @param destination request destination, such as {@code script}, or {@code null}
  * @param type kind of resource that was hashed, currently {@code subresource}, or {@code null}
  * @see <a href="https://w3c.github.io/webappsec-csp/#csp-hash-report">CSP hash reports</a>
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Serdeable
 public record ContentSecurityPolicyHashReportBody(

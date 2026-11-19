@@ -36,7 +36,7 @@ import java.util.List;
  * application can disable a directive when it needs to manage that restriction in a different
  * response header or does not want the module to emit it.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public interface ContentSecurityPolicyConfiguration extends Toggleable {
     /**
@@ -50,7 +50,7 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
      * Determines whether the deprecated {@code report-uri} directive is generated.
      *
      * @return whether to send CSP violation reports to the configured legacy reporting endpoints
-     * @since 5.4.0
+     * @since 5.6.0
      */
     boolean isReportUriEnabled();
 
@@ -58,7 +58,7 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
      * Supplies the endpoints for the deprecated {@code report-uri} directive.
      *
      * @return the reporting endpoint URLs for the deprecated {@code report-uri} directive
-     * @since 5.4.0
+     * @since 5.6.0
      */
     List<String> getReportUri();
 

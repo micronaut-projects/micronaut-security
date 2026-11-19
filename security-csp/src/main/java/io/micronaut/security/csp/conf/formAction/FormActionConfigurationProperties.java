@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link FormActionConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FORM_ACTION)
 public class FormActionConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FormActionConfiguration {

@@ -233,6 +233,41 @@ class ContentSecurityPolicyControllerTest {
     }
 
     @Test
+    void rejectsUnsupportedReportType(@Client("/") HttpClient httpClient,
+                                      ReportListener reportListener) {
+        reportListener.reports.clear();
+        String json = """
+            [{
+              "type": "deprecation",
+              "age": 1,
+              "url": "https://example.com/page",
+              "user_agent": "Example Browser",
+              "body": {"id": "x"}
+            }]
+            """;
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(reportRequest(json)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(0, reportListener.reports.size());
+    }
+
+    @Test
+    void rejectsMalformedJson(@Client("/") HttpClient httpClient,
+                              ReportListener reportListener) {
+        reportListener.reports.clear();
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(reportRequest("[{")));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(0, reportListener.reports.size());
+    }
+
+    @Test
     void rejectsInvalidCspViolationBody(@Client("/") HttpClient httpClient,
                                         ReportListener reportListener) {
         reportListener.reports.clear();

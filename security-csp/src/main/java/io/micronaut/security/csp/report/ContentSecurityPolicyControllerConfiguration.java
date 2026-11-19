@@ -19,7 +19,7 @@ import io.micronaut.core.util.Toggleable;
 
 /**
  * Configuration for {@link ContentSecurityPolicyController}.
- * @since 5.4.0
+ * @since 5.6.0
  */
 @FunctionalInterface
 public interface ContentSecurityPolicyControllerConfiguration extends Toggleable {

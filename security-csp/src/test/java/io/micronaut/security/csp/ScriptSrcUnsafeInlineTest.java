@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @MicronautTest
 class ScriptSrcUnsafeInlineTest {
     @Test
-    void scriptSelf(@Client("/") HttpClient httpClient) {
+    void scriptSrcAddsUnsafeInlineWhenEnabled(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
         HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);

@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link FontSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_FONT_SRC)
 public class FontSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FontSrcConfiguration {

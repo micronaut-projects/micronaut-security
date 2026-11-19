@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link WorkerSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_WORKER_SRC)
 public class WorkerSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements WorkerSrcConfiguration {

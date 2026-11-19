@@ -23,7 +23,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 /**
  * Mutable properties for {@link ConnectSrcConfiguration}.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_CONNECT_SRC)
 public class ConnectSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ConnectSrcConfiguration {

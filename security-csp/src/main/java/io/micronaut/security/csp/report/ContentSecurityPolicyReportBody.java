@@ -20,7 +20,7 @@ package io.micronaut.security.csp.report;
  *
  * <p>The report envelope's {@code type} member determines the permitted implementation.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 public sealed interface ContentSecurityPolicyReportBody
     permits ContentSecurityPolicyHashReportBody, ContentSecurityPolicyViolationReportBody {

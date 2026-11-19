@@ -37,7 +37,7 @@ import java.util.List;
  * The header is only added to requests whose path matches the configured filter pattern, and not
  * if the response already contains it.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @Requires(classes = ResponseHeaderPopulator.class)
 @Singleton

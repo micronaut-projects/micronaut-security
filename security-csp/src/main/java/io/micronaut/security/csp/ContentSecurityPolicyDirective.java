@@ -34,7 +34,7 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SELF;
  *
  * @param name the directive name
  * @param value the directive value, or {@code null} for directives without a value
- * @since 5.4.0
+ * @since 5.6.0
  */
 public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
 
@@ -49,7 +49,7 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * Returns the whitespace-separated values of this directive.
      *
      * @return an immutable list of source-expression tokens, or an empty list if this directive has no value
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public List<String> values() {
         return StringUtils.isEmpty(value()) ? List.of() : List.of(value().trim().split("\\s+"));
@@ -59,7 +59,7 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * Tests whether this directive disables its controlled resource or behavior.
      *
      * @return whether this directive has exactly the {@code none} or {@code 'none'} value
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public boolean isNone() {
         if (StringUtils.isEmpty(value())) {
@@ -72,7 +72,7 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * Tests whether this directive permits only the protected resource's origin.
      *
      * @return whether this directive has exactly the {@code self} or {@code 'self'} value
-     * @since 5.4.0
+     * @since 5.6.0
      */
     public boolean isSelf() {
         if (StringUtils.isEmpty(value())) {

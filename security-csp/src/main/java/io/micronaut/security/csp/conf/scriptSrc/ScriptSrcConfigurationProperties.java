@@ -28,7 +28,7 @@ import java.util.List;
  * <p>Nonce source expressions are disabled by default, leaving the inherited {@code 'none'} source
  * expression as the secure default.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_SCRIPT_SRC)
 public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcConfiguration {

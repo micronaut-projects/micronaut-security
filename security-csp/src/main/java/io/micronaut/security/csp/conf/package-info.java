@@ -16,7 +16,7 @@
 /**
  * Configuration contracts for individual Content Security Policy directives.
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @NullMarked
 package io.micronaut.security.csp.conf;

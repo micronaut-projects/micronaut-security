@@ -25,7 +25,7 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
  * <p>The directive is disabled by default because it is not recognized by Safari. Applications
  * that require it can enable it explicitly.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_PREFETCH_SRC)
 public class PrefetchSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements PrefetchSrcConfiguration {

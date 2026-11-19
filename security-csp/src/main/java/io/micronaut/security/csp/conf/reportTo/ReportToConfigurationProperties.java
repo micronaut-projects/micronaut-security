@@ -26,7 +26,7 @@ import jakarta.validation.constraints.Pattern;
  * <p>The directive is disabled by default because applications must deliberately select and
  * implement a reporting endpoint.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ReportToConfigurationProperties.PREFIX)
 public class ReportToConfigurationProperties implements ReportToConfiguration {
@@ -41,6 +41,10 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
     @NotBlank
     @Pattern(regexp = "[a-z*][a-z0-9_.*-]*")
     private String group = DEFAULT_GROUP;
+
+    /** Creates the {@code report-to} configuration, disabled by default with group {@value #DEFAULT_GROUP}. */
+    public ReportToConfigurationProperties() {
+    }
 
     @Override
     public boolean isEnabled() {

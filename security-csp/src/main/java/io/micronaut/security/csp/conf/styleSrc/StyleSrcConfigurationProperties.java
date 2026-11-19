@@ -25,7 +25,7 @@ import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProp
  * <p>Nonce source expressions are disabled by default, leaving the inherited {@code 'none'} source
  * expression as the secure default.</p>
  *
- * @since 5.4.0
+ * @since 5.6.0
  */
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_STYLE_SRC)
 public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcConfiguration {
