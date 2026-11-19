@@ -18,6 +18,7 @@ package io.micronaut.security.csp.nonce;
 import io.micronaut.http.HttpRequest;
 import org.junit.jupiter.api.Test;
 
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -25,19 +26,20 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class UUIDContentSecurityPolicyNonceGeneratorTest {
+class SecureRandomContentSecurityPolicyNonceGeneratorTest {
     /** The CSP base64-value grammar that the default policy generator accepts for nonces. */
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     private static final int NONCES = 100;
 
     @Test
     void generatesDistinctNoncesThatTheGeneratorAccepts() {
-        ContentSecurityPolicyNonceGenerator generator = new UUIDContentSecurityPolicyNonceGenerator();
+        ContentSecurityPolicyNonceGenerator generator = new SecureRandomContentSecurityPolicyNonceGenerator();
         Set<String> nonces = new HashSet<>();
 
         for (int i = 0; i < NONCES; i++) {
             String nonce = generator.generateNonce(HttpRequest.GET("/"));
             assertTrue(NONCE_GRAMMAR.matcher(nonce).matches(), () -> "nonce outside the CSP base64-value grammar: " + nonce);
+            assertEquals(18, Base64.getDecoder().decode(nonce).length, "a nonce carries 144 random bits");
             nonces.add(nonce);
         }
 

@@ -42,7 +42,7 @@ final class ApplicationCspReportHandler implements ContentSecurityPolicyReportHa
 }
 ----
 
-The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Reports of other types, such as `deprecation` or `intervention`, can arrive when the reporting group is shared with other policies; the controller skips them and passes only the CSP reports to the handler. A CSP report that fails validation still rejects the whole batch with HTTP 400, so use a reporting group dedicated to CSP. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
+The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. Reports of other types, such as `deprecation` or `intervention`, can arrive when the reporting group is shared with other policies; the controller skips them and passes only the CSP reports to the handler. A CSP report that is missing a required field, has a field longer than the module's limits, or arrives in a batch of more than 100 reports rejects the whole batch with HTTP 400. These checks run with or without Micronaut Validation. Use a reporting group dedicated to CSP. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
 
 The Reporting API envelope contains `age`, `type`, the originating `url`, `user_agent`, and `body`. The body is decoded according to the CSP-defined report type:
 

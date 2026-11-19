@@ -391,6 +391,10 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * preserved. The parser deliberately does not reject unknown or malformed directives so callers can
      * inspect the header as it was received.</p>
      *
+     * <p>This parses a single policy. A header value that combines several policies with commas is
+     * not split, and a user agent enforces each of those policies separately; do not use the result
+     * to decide whether such a value is strict enough.</p>
+     *
      * @param headerValue the serialized CSP header value
      * @return the parsed policy, or {@code null} if the value is {@code null} or empty
      * @since 5.6.0

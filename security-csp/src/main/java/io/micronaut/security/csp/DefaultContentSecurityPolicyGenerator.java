@@ -16,6 +16,7 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -106,6 +107,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Prefixes of hash and nonce source expressions, which are only meaningful when single-quoted.
      */
     private static final List<String> QUOTED_PREFIXES = List.of("sha256-", "sha384-", "sha512-", NONCE_PREFIX);
+    /**
+     * Characters that end a directive ({@code ;}), a policy ({@code ,}) or the header (control characters).
+     */
+    private static final Pattern UNSAFE_HEADER_CHARACTERS = Pattern.compile("[;,\\p{Cntrl}]");
+    /**
+     * The grammar of a Reporting API endpoint group name used by {@code report-to}.
+     */
+    private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile("[a-z*][a-z0-9_.*-]*");
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -308,7 +317,43 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         this.formActionConfiguration = formActionConfiguration;
         this.styleSrcConfiguration = styleSrcConfiguration;
         this.workerSrcConfiguration = workerSrcConfiguration;
+        validateRootConfiguration();
         warnAboutMisquotedValues();
+    }
+
+    /**
+     * Rejects root and {@code report-to} settings that would corrupt or extend the serialized policy.
+     *
+     * @throws ConfigurationException if a setting contains a character that ends a directive or policy
+     */
+    private void validateRootConfiguration() {
+        if (cspConfiguration.isReportUriEnabled()) {
+            for (String reportUri : cspConfiguration.getReportUri()) {
+                requireSafeHeaderValue("micronaut.security.csp.report-uri", reportUri);
+            }
+        }
+        if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
+            requireSafeHeaderValue("micronaut.security.csp.require-trusted-types-for", cspConfiguration.getRequireTrustedTypesFor());
+        }
+        if (reportToConfiguration.isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(reportToConfiguration.getGroup()).matches()) {
+            throw new ConfigurationException("micronaut.security.csp.report-to.group must match " + REPORTING_GROUP_GRAMMAR.pattern()
+                + ", the grammar of a Reporting-Endpoints name");
+        }
+    }
+
+    /**
+     * Fails closed when a configured value contains a semicolon, comma or control character, which
+     * would end the directive or policy, or break the header.
+     *
+     * @param property the configuration property that supplies the value
+     * @param value the configured value
+     * @throws ConfigurationException if the value is unsafe
+     */
+    private static void requireSafeHeaderValue(String property, String value) {
+        if (UNSAFE_HEADER_CHARACTERS.matcher(value).find()) {
+            throw new ConfigurationException(property + " contains a ';', ',' or control character, which would end the directive "
+                + "or policy. Configure each source expression as a separate value.");
+        }
     }
 
     /**
@@ -581,9 +626,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Logs a warning for each configured source expression that a browser would not read as intended:
-     * an unquoted keyword, hash or nonce, which becomes a host source, or a value containing a
-     * semicolon or comma, which ends the directive or the policy.
+     * Validates the configured source expressions: a value containing a semicolon, comma or control
+     * character fails startup, and an unquoted keyword, hash or nonce, which a browser reads as a
+     * host source, is logged as a warning.
      */
     private void warnAboutMisquotedValues() {
         Map<String, DirectiveConfiguration> configurations = new LinkedHashMap<>();
@@ -613,11 +658,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     private static void warnIfMisquoted(String directive, String value) {
-        if (value.contains(";") || value.contains(",")) {
-            LOG.warn("micronaut.security.csp.{}.values contains \"{}\", which has a ';' or ','; browsers read it as the end of the directive or policy. "
-                + "Configure each source expression as a separate value.", directive, value);
-            return;
-        }
+        requireSafeHeaderValue("micronaut.security.csp." + directive + ".values", value);
         String trimmed = value.trim();
         if (trimmed.startsWith(SINGLE_QUOTE)) {
             return;

@@ -19,6 +19,7 @@ import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.ContentSecurityPolicy;
+import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -38,11 +39,16 @@ final class ContentSecurityPolicyStartupLogger implements ApplicationEventListen
     /**
      * Creates the startup logger.
      *
+     * <p>The generator is injected so that it is created at startup: invalid policy configuration
+     * then fails application startup instead of every response.</p>
+     *
      * @param cspConfiguration the root CSP configuration
      * @param filterConfiguration the configuration of the requests that receive the header
+     * @param cspGenerator the policy generator, created eagerly to validate its configuration
      */
     ContentSecurityPolicyStartupLogger(ContentSecurityPolicyConfiguration cspConfiguration,
-                                       ContentSecurityPolicyFilterConfiguration filterConfiguration) {
+                                       ContentSecurityPolicyFilterConfiguration filterConfiguration,
+                                       ContentSecurityPolicyGenerator cspGenerator) {
         this.cspConfiguration = cspConfiguration;
         this.filterConfiguration = filterConfiguration;
     }

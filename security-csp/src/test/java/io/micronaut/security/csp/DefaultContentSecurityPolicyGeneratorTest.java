@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csp;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
@@ -44,6 +45,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultContentSecurityPolicyGeneratorTest {
@@ -269,6 +271,24 @@ class DefaultContentSecurityPolicyGeneratorTest {
         };
 
         assertNull(generator.contentSecurityPolicy(HttpRequest.GET("/")));
+    }
+
+    @Test
+    void rejectsAnInvalidReportingGroupWithoutBeanValidation() {
+        ReportToConfigurationProperties reportTo = new ReportToConfigurationProperties();
+        reportTo.setEnabled(true);
+        reportTo.setGroup("CSP; script-src *");
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new DefaultContentSecurityPolicyGenerator(
+            new ContentSecurityPolicyConfigurationProperties(), currentRequest -> null,
+            new BaseUriConfigurationProperties(), new DefaultSrcConfigurationProperties(), new ConnectSrcConfigurationProperties(),
+            new FencedFrameSrcConfigurationProperties(), new FontSrcConfigurationProperties(), new ObjectSrcConfigurationProperties(),
+            new PrefetchSrcConfigurationProperties(), reportTo, new ScriptSrcConfigurationProperties(),
+            new FrameAncestorsConfigurationProperties(), new FrameSrcConfigurationProperties(), new ImgSrcConfigurationProperties(),
+            new ManifestSrcConfigurationProperties(), new MediaSrcConfigurationProperties(), new FormActionConfigurationProperties(),
+            new StyleSrcConfigurationProperties(), new WorkerSrcConfigurationProperties()));
+
+        assertTrue(exception.getMessage().startsWith("micronaut.security.csp.report-to.group must match"));
     }
 
     @Test

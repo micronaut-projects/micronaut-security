@@ -21,6 +21,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
@@ -29,13 +30,18 @@ import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
 import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -93,16 +99,48 @@ class CspStartupLogTest {
     }
 
     @Test
-    void warnsAboutMisquotedAndInvalidSourceExpressions() {
+    void warnsAboutMisquotedSourceExpressions() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
-            "micronaut.security.csp.script-src.values", List.of("self", "sha256-abc=", "https://a.example.com;img-src *", "'self'", "https://cdn.example.com")),
-            context -> context.getBean(ContentSecurityPolicyGenerator.class)));
+            "micronaut.security.csp.script-src.values", List.of("self", "sha256-abc=", "'self'", "https://cdn.example.com")),
+            context -> { }));
 
         assertEquals(List.of(
             "micronaut.security.csp.script-src.values contains \"self\", which looks like a keyword, hash or nonce source but is not single-quoted; browsers treat it as a host. Use \"'self'\".",
-            "micronaut.security.csp.script-src.values contains \"sha256-abc=\", which looks like a keyword, hash or nonce source but is not single-quoted; browsers treat it as a host. Use \"'sha256-abc='\".",
-            "micronaut.security.csp.script-src.values contains \"https://a.example.com;img-src *\", which has a ';' or ','; browsers read it as the end of the directive or policy. Configure each source expression as a separate value."),
+            "micronaut.security.csp.script-src.values contains \"sha256-abc=\", which looks like a keyword, hash or nonce source but is not single-quoted; browsers treat it as a host. Use \"'sha256-abc='\"."),
             events.stream().map(ILoggingEvent::getFormattedMessage).toList());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("unsafeConfigurations")
+    void failsStartupForAValueThatWouldCorruptThePolicy(String property, Map<String, Object> properties) {
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class,
+            () -> ApplicationContext.run(properties).close());
+
+        assertTrue(rootCause(exception).getMessage().startsWith(property), () -> rootCause(exception).getMessage());
+    }
+
+    static Stream<Arguments> unsafeConfigurations() {
+        return Stream.of(
+            Arguments.of("micronaut.security.csp.img-src.values", Map.of(
+                "micronaut.security.csp.img-src.values", List.of("https://a.example.com; script-src *"))),
+            Arguments.of("micronaut.security.csp.script-src.values", Map.of(
+                "micronaut.security.csp.script-src.values", List.of("https://a.example.com, script-src *"))),
+            Arguments.of("micronaut.security.csp.style-src.values", Map.of(
+                "micronaut.security.csp.style-src.values", List.of("https://a.example.com\r\nX-Injected: 1"))),
+            Arguments.of("micronaut.security.csp.report-uri", Map.of(
+                "micronaut.security.csp.report-uri-enabled", true,
+                "micronaut.security.csp.report-uri", List.of("https://a.example.com/r; script-src *"))),
+            Arguments.of("micronaut.security.csp.require-trusted-types-for", Map.of(
+                "micronaut.security.csp.require-trusted-types-for", "'script'; script-src *"))
+        );
+    }
+
+    private static Throwable rootCause(Throwable throwable) {
+        Throwable cause = throwable;
+        while (cause.getCause() != null && cause.getCause() != cause) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 
     @Test

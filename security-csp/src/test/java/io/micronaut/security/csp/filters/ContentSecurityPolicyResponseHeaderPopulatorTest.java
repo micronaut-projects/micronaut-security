@@ -41,7 +41,8 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties()
+                new ContentSecurityPolicyFilterConfigurationProperties(),
+                null
         );
 
         assertEquals(
@@ -59,7 +60,8 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
                 )),
                 configuration,
-                new ContentSecurityPolicyFilterConfigurationProperties()
+                new ContentSecurityPolicyFilterConfigurationProperties(),
+                null
         );
 
         assertEquals(
@@ -72,7 +74,8 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> fail("the generator must not be called when the response already sets the header"),
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties()
+                new ContentSecurityPolicyFilterConfigurationProperties(),
+                null
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/"),
@@ -80,11 +83,48 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
     }
 
     @Test
+    void matchesAPatternRelativeToTheServerContextPath() {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern("/foo/**");
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                )),
+                new ContentSecurityPolicyConfigurationProperties(),
+                filterConfiguration,
+                () -> "app/"
+        );
+
+        assertEquals(List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'none'")),
+                populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/bar/page"), HttpResponse.ok()));
+    }
+
+    @Test
+    void keepsAPatternThatAlreadyIncludesTheContextPath() {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern("/app/foo/**");
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                )),
+                new ContentSecurityPolicyConfigurationProperties(),
+                filterConfiguration,
+                () -> "/app"
+        );
+
+        assertEquals(List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'none'")),
+                populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/app/foo/page"), HttpResponse.ok()));
+    }
+
+    @Test
     void omitsContentSecurityPolicyHeaderWhenGeneratorReturnsNull() {
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> null,
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties()
+                new ContentSecurityPolicyFilterConfigurationProperties(),
+                null
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
@@ -99,7 +139,8 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'")
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
-                filterConfiguration
+                filterConfiguration,
+                null
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/bar"), HttpResponse.ok()));

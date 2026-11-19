@@ -18,25 +18,31 @@ package io.micronaut.security.csp.nonce;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
- * Default nonce generator backed by a randomly generated UUID.
+ * Default nonce generator: 144 bits from {@link SecureRandom}, base64-encoded to 24 characters.
+ *
+ * <p>CSP recommends nonces of at least 128 bits encoded as base64. 18 bytes encode without padding.</p>
  *
  * <p>This bean is used only when an application does not provide its own
  * {@link ContentSecurityPolicyNonceGenerator} implementation. A replacement generator must return
  * a fresh, unpredictable value for each request; reusing a nonce weakens nonce-based script policies.</p>
  */
-@Requires(missingBeans =  ContentSecurityPolicyNonceGenerator.class)
+@Requires(missingBeans = ContentSecurityPolicyNonceGenerator.class)
 @Singleton
 @Internal
-@Named("UUID")
-final class UUIDContentSecurityPolicyNonceGenerator implements ContentSecurityPolicyNonceGenerator {
+final class SecureRandomContentSecurityPolicyNonceGenerator implements ContentSecurityPolicyNonceGenerator {
+    private static final int NONCE_BYTES = 18;
+    private final SecureRandom secureRandom = new SecureRandom();
+
     @Override
     public String generateNonce(HttpRequest<?> request) {
-        return UUID.randomUUID().toString();
+        byte[] bytes = new byte[NONCE_BYTES];
+        secureRandom.nextBytes(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 }

@@ -18,10 +18,12 @@ package io.micronaut.security.csp.filters;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.PathMatcher;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.http.context.ServerContextPathProvider;
 import io.micronaut.http.server.filter.ResponseHeaderPopulator;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
@@ -35,8 +37,9 @@ import java.util.List;
 /**
  * {@link ResponseHeaderPopulator} that adds the {@code Content-Security-Policy} header, or the
  * {@code Content-Security-Policy-Report-Only} header when report-only mode is enabled, to responses.
- * The header is only added to requests whose path matches the configured filter pattern, and not
- * if the response already contains it.
+ * The header is only added to requests whose path matches the configured filter pattern, resolved
+ * against the server context path like the pattern of the nonce filter, and not if the response
+ * already contains it.
  *
  * @since 5.6.0
  */
@@ -46,7 +49,8 @@ import java.util.List;
 final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHeaderPopulator {
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
-    private final ContentSecurityPolicyFilterConfiguration cspFilterConfiguration;
+    private final boolean matchAll;
+    private final List<String> patterns;
 
     /**
      * Creates the populator.
@@ -54,19 +58,46 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
      * @param cspGenerator generates the directives to write to the response
      * @param cspConfiguration configures how the policy is written
      * @param cspFilterConfiguration configures the request paths that receive the policy
+     * @param serverContextPathProvider supplies the server context path, if any
      */
     ContentSecurityPolicyResponseHeaderPopulator(ContentSecurityPolicyGenerator cspGenerator,
                                                  ContentSecurityPolicyConfiguration cspConfiguration,
-                                                 ContentSecurityPolicyFilterConfiguration cspFilterConfiguration) {
+                                                 ContentSecurityPolicyFilterConfiguration cspFilterConfiguration,
+                                                 @Nullable ServerContextPathProvider serverContextPathProvider) {
         this.cspGenerator = cspGenerator;
         this.cspConfiguration = cspConfiguration;
-        this.cspFilterConfiguration = cspFilterConfiguration;
+        String pattern = cspFilterConfiguration.getPattern();
+        this.matchAll = ServerFilter.MATCH_ALL_PATTERN.equals(pattern);
+        this.patterns = patterns(pattern, serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath());
+    }
+
+    /**
+     * Resolves the filter pattern the way the server resolves the {@code @ServerFilter} pattern of
+     * the nonce filter: relative to the server context path, so that both select the same requests.
+     * The raw pattern is kept as well, as the server does, for patterns that already include the
+     * context path.
+     *
+     * @param pattern the configured filter pattern
+     * @param contextPath the server context path, if any
+     * @return the patterns matched against the request path
+     */
+    private static List<String> patterns(String pattern, @Nullable String contextPath) {
+        if (!StringUtils.hasText(contextPath)) {
+            return List.of(pattern);
+        }
+        String normalizedContextPath = StringUtils.prependUri("/", contextPath);
+        if (normalizedContextPath.endsWith("/")) {
+            normalizedContextPath = normalizedContextPath.substring(0, normalizedContextPath.length() - 1);
+        }
+        if (normalizedContextPath.isEmpty() || pattern.startsWith(normalizedContextPath + "/")) {
+            return List.of(pattern);
+        }
+        return List.of(pattern, StringUtils.prependUri(normalizedContextPath, pattern));
     }
 
     @Override
     public @Nullable Collection<HttpHeaderEntry> findHttpHeaders(HttpRequest<?> request, HttpResponse<?> response) {
-        String pattern = cspFilterConfiguration.getPattern();
-        if (!ServerFilter.MATCH_ALL_PATTERN.equals(pattern) && !PathMatcher.ANT.matches(pattern, request.getPath())) {
+        if (!matchAll && !matches(request.getPath())) {
             return null;
         }
         String headerName = cspConfiguration.isReportOnly()
@@ -79,5 +110,14 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
             }
         }
         return null;
+    }
+
+    private boolean matches(String path) {
+        for (String pattern : patterns) {
+            if (PathMatcher.ANT.matches(pattern, path)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
