@@ -17,6 +17,7 @@ package io.micronaut.security.fetchmetadata;
 
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
@@ -25,8 +26,15 @@ import io.micronaut.http.annotation.ServerFilter;
 /**
  * Binds configuration for the Fetch Metadata request filter.
  *
+ * <p>Unlike other configuration properties classes, this one is {@code @Context} and rejects a
+ * blank pattern in its setter. The filter reads its pattern from a property placeholder, and a
+ * blank pattern would silently stop it from matching any request; failing startup instead keeps
+ * the security filter from being disabled by a configuration mistake. The bean only exists
+ * while the filter is enabled, so a disabled filter never fails startup.</p>
+ *
  * @since 5.6.0
  */
+@Requires(property = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Context
 @ConfigurationProperties(FetchMetadataFilterConfigurationProperties.PREFIX)
 @Internal

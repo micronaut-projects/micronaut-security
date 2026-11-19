@@ -17,7 +17,6 @@ package io.micronaut.security.fetchmetadata;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
@@ -26,14 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Property(name = FetchMetadataFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.FALSE)
 @Property(name = FetchMetadataFilterConfigurationProperties.PREFIX + ".pattern", value = "/api/**")
 @MicronautTest(startApplication = false)
 class FetchMetadataFilterConfigurationPropertiesTest {
 
     @Test
     void bindsFilterConfiguration(FetchMetadataFilterConfiguration configuration) {
-        assertFalse(configuration.isEnabled());
+        assertTrue(configuration.isEnabled());
         assertEquals("/api/**", configuration.getPattern());
     }
 
@@ -48,5 +46,8 @@ class FetchMetadataFilterConfigurationPropertiesTest {
         assertThrows(ConfigurationException.class, () -> configuration.setPattern(""));
         assertThrows(ConfigurationException.class, () -> configuration.setPattern("   "));
         assertEquals("/**", configuration.getPattern());
+
+        configuration.setEnabled(false);
+        assertFalse(configuration.isEnabled());
     }
 }
