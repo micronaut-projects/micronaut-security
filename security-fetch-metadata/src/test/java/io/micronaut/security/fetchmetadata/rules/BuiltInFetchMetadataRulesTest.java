@@ -22,8 +22,14 @@ import io.micronaut.http.Mode;
 import io.micronaut.http.SecFetch;
 import io.micronaut.http.Site;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
+import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -93,7 +99,7 @@ class BuiltInFetchMetadataRulesTest {
     }
 
     @Test
-    void navigationRuleRejectsPluginDestinationsAndCannotDecideWithoutMetadata() {
+    void navigationRuleDoesNotAllowPluginDestinationsOrRequestsWithoutMetadata() {
         SimpleTopLevelNavigationAndIframingFetchMetadataRule rule =
             new SimpleTopLevelNavigationAndIframingFetchMetadataRule();
 
@@ -115,14 +121,21 @@ class BuiltInFetchMetadataRulesTest {
             rule.check(GET, secFetch(Site.CROSS_SITE, null, Destination.DOCUMENT)));
     }
 
-    @Test
-    void siteRulesOnlyNeedTheSiteHeader() {
-        SecFetch siteOnly = new SecFetch(Site.SAME_ORIGIN, null, null, false);
+    static Stream<Arguments> siteRules() {
+        return Stream.of(
+            Arguments.of(new SameOriginFetchMetadataRule(), Site.SAME_ORIGIN),
+            Arguments.of(new SameSiteFetchMetadataRule(), Site.SAME_SITE),
+            Arguments.of(new BrowserInitiatedRequestFetchMetadataRule(), Site.NONE)
+        );
+    }
 
+    @ParameterizedTest
+    @MethodSource("siteRules")
+    void siteRulesOnlyNeedTheSiteHeader(HttpRequestFetchMetadataRule rule, Site site) {
         assertEquals(FetchMetadataRuleResult.ALLOWED,
-            new SameOriginFetchMetadataRule().check(GET, siteOnly));
+            rule.check(GET, new SecFetch(site, null, null, false)));
         assertEquals(FetchMetadataRuleResult.UNKNOWN,
-            new SameOriginFetchMetadataRule().check(GET, new SecFetch(null, Mode.CORS, Destination.EMPTY, false)));
+            rule.check(GET, new SecFetch(null, Mode.NAVIGATE, Destination.DOCUMENT, false)));
     }
 
     private static SecFetch secFetch(Site site) {
