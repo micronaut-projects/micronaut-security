@@ -23,7 +23,6 @@ import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.SecFetch;
 import io.micronaut.http.server.cors.CorsOriginConfiguration;
-import io.micronaut.http.server.cors.CorsUtil;
 import io.micronaut.http.server.cors.CrossOriginUtil;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
@@ -62,7 +61,7 @@ import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
  * from being read, so exempting them would let a cross-site page make credentialed requests the
  * route declared it does not accept.</p>
  */
-@Requires(classes = { CorsOriginConfiguration.class, CorsUtil.class, CrossOriginUtil.class, RouteAttributes.class })
+@Requires(classes = { CorsOriginConfiguration.class, CrossOriginUtil.class, RouteAttributes.class })
 @Requires(property = PROPERTY_ALLOW_CROSS_ORIGIN, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
@@ -130,12 +129,28 @@ final class CrossOriginFetchMetadataRule implements HttpRequestFetchMetadataRule
 
     static boolean matchesMethod(CorsOriginConfiguration configuration, HttpRequest<?> request) {
         HttpMethod requestMethod = request.getMethod();
-        HttpMethod methodToMatch = CorsUtil.isPreflightRequest(request)
+        HttpMethod methodToMatch = isPreflightRequest(request)
             ? request.getHeaders().getFirst(ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.class).orElse(requestMethod)
             : requestMethod;
         List<HttpMethod> allowedMethods = configuration.getAllowedMethods();
         return Objects.equals(allowedMethods, CorsOriginConfiguration.ANY_METHOD) ||
             allowedMethods.contains(methodToMatch);
+    }
+
+    /**
+     * Same condition as Micronaut's internal {@code CorsUtil.isPreflightRequest}, kept here so that
+     * the rule does not depend on an internal API.
+     *
+     * @param request the request
+     * @return whether the request is a CORS preflight request
+     */
+    static boolean isPreflightRequest(HttpRequest<?> request) {
+        HttpHeaders headers = request.getHeaders();
+        return request.getMethod() == HttpMethod.OPTIONS
+            && request.getOrigin().isPresent()
+            && (headers.contains(ACCESS_CONTROL_REQUEST_METHOD)
+                || headers.contains(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS)
+                || headers.contains(HttpHeaders.ACCESS_CONTROL_REQUEST_PRIVATE_NETWORK));
     }
 
     static boolean matchesCredentials(CorsOriginConfiguration configuration, HttpRequest<?> request) {

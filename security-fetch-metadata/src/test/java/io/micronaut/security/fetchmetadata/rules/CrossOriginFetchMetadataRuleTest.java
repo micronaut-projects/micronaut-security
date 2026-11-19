@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS;
 import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
+import static io.micronaut.http.HttpHeaders.ACCESS_CONTROL_REQUEST_PRIVATE_NETWORK;
 import static io.micronaut.http.HttpHeaders.COOKIE;
 import static io.micronaut.http.HttpHeaders.ORIGIN;
 
@@ -111,6 +112,22 @@ class CrossOriginFetchMetadataRuleTest {
 
         configuration.setAllowedMethods(List.of(HttpMethod.OPTIONS));
         assertTrue(CrossOriginFetchMetadataRule.matchesMethod(configuration, preflight));
+    }
+
+    @Test
+    void recognizesPreflightRequestsLikeMicronautCors() {
+        assertTrue(CrossOriginFetchMetadataRule.isPreflightRequest(preflight(HttpMethod.POST)));
+        assertTrue(CrossOriginFetchMetadataRule.isPreflightRequest(HttpRequest.OPTIONS("/")
+            .header(ORIGIN, "https://allowed.example").header(ACCESS_CONTROL_REQUEST_HEADERS, "X-Custom")));
+        assertTrue(CrossOriginFetchMetadataRule.isPreflightRequest(HttpRequest.OPTIONS("/")
+            .header(ORIGIN, "https://allowed.example").header(ACCESS_CONTROL_REQUEST_PRIVATE_NETWORK, "true")));
+
+        assertFalse(CrossOriginFetchMetadataRule.isPreflightRequest(HttpRequest.OPTIONS("/")
+            .header(ORIGIN, "https://allowed.example")));
+        assertFalse(CrossOriginFetchMetadataRule.isPreflightRequest(HttpRequest.OPTIONS("/")
+            .header(ACCESS_CONTROL_REQUEST_METHOD, "POST")));
+        assertFalse(CrossOriginFetchMetadataRule.isPreflightRequest(HttpRequest.GET("/")
+            .header(ORIGIN, "https://allowed.example").header(ACCESS_CONTROL_REQUEST_METHOD, "POST")));
     }
 
     @Test
