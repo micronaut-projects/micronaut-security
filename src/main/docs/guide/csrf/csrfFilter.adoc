@@ -1,6 +1,13 @@
 The core of Micronaut Security CSRF implementation is `io.micronaut.security.csrf.filter.CsrfFilter`.
 A https://docs.micronaut.io/latest/guide/#filters[Server Filter] which attempts to resolve a CSRF Token with
-every bean of type api:security.csrf.resolvers.CsrfTokenResolver[] and validates it with beans of type api:security.csrf.validator.CsrfTokenValidator[].
+the beans of type api:security.csrf.resolver.CsrfTokenResolver[] and api:security.csrf.resolver.FutureCsrfTokenResolver[], and validates it with a bean of type api:security.csrf.validator.CsrfTokenValidator[].
+
+The filter consults the <<csrfTokenResolvers, resolvers>> one at a time, in their order, and stops at the first token which validates.
+A resolver which does not find a token, which fails, or whose token does not validate, does not reject the request by itself: the filter moves on to the next resolver.
+The request is rejected when no resolver yields a valid token.
+
+The HTTP header resolver runs before the form field resolver. Hence, the request body is not parsed when the HTTP header carries a valid token.
+A request without a valid token in the HTTP header still has its body parsed, up to `micronaut.server.max-request-size`, to look for the token in a form field.
 
 The following configuration options are available for the CSRF Filter:
 
