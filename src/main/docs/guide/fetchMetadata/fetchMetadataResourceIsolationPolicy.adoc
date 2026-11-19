@@ -13,6 +13,8 @@ The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule 
 
 Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses to the requests it evaluates, both allowed and rejected, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
 
+The `Vary` header also makes shared caches, such as a CDN, store a separate copy of a response for each combination of those header values, so the same asset fetched by an `<img>` element, a `fetch` call, and a navigation is cached several times, and some CDNs do not cache responses that vary on headers other than `Accept-Encoding` at all. If the application serves cacheable public assets through a CDN, consider restricting `micronaut.security.fetch-metadata.filter.pattern` to dynamic or state-changing paths, such as `/api/**`. Paths outside the pattern are not protected by the resource isolation policy, so only leave out public resources without side effects.
+
 Each rule is enabled or disabled with a property under `micronaut.security.fetch-metadata.rules`:
 
 [cols="1,1,2,1,1"]
