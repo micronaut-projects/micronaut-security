@@ -21,15 +21,29 @@ import org.jspecify.annotations.NonNull;
 import java.util.Base64;
 
 /**
- * Base64 decoding that rejects malformed padding before it reaches the JDK decoder.
+ * Protection against Java4Shell (CVE-2026-114938): Base64 decoding that keeps attacker supplied input
+ * handled by this library from reaching the vulnerable JDK Base64 decode intrinsic.
  *
- * <p>Some JDK versions corrupt the heap when the AVX-512 VBMI Base64 decode intrinsic receives input
- * whose final, incomplete four character unit ends with padding (CVE-2026-114938, "Java4Shell").
- * The JDK rejects such input with an {@link IllegalArgumentException}, but only after the out of bounds
- * write. Rejecting it here keeps attacker supplied values from reaching the intrinsic.</p>
+ * <p>This is hardening, not a fix. The fix is upgrading the JDK, or running with
+ * {@code -XX:-UseBASE64Intrinsics}. This class only closes the paths through which Micronaut Security
+ * decodes request data, such as Basic authentication credentials and the OAuth 2.0 state.</p>
+ *
+ * <p>Affected JDK versions corrupt the heap when the AVX-512 VBMI Base64 decode intrinsic receives input
+ * whose final, incomplete four character unit ends with padding. The JDK rejects such input with an
+ * {@link IllegalArgumentException}, but only after the out of bounds write. This class rejects that input
+ * before it is passed to the JDK.</p>
+ *
+ * <p>The guard assumes, as the published analysis states, that the intrinsic derives its output length
+ * from trailing padding only: input that does not end in {@code =} takes a path that does not underflow.
+ * Revisit this check if a later advisory widens the trigger.</p>
+ *
+ * <p>Only the basic and URL decoders are wrapped. The MIME decoder skips characters outside the alphabet,
+ * so the length based check would reject valid MIME input.</p>
  *
  * @author Sergio del Amo
  * @since 5.4.3
+ * @see <a href="https://calif.io/java4shell/">Java4Shell (CVE-2026-114938)</a>
+ * @see <a href="https://openjdk.org/groups/vulnerability/advisories/2026-11-17">OpenJDK Vulnerability Advisory 2026/11/17</a>
  */
 @Internal
 public final class Base64Utils {

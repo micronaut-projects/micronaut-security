@@ -85,6 +85,45 @@ class Base64UtilsTest {
         assertNotEquals(GUARD_MESSAGE, e.getMessage());
     }
 
+    @ParameterizedTest
+    @MethodSource("java4ShellPayloads")
+    void java4ShellPayloadIsRejectedByTheGuardOfTheUrlDecoder(String src) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src));
+        assertEquals(GUARD_MESSAGE, e.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "",
+        "-_-_",                          // URL safe characters, no padding
+        "-_8=",                          // one padding character
+        "-w==",                          // two padding characters
+        "-w",                            // unpadded, length not a multiple of four
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-_8=" // 68 characters, padded
+    })
+    void wellFormedUrlSafeInputDecodesLikeTheJdk(String src) {
+        assertArrayEquals(Base64.getUrlDecoder().decode(src), Base64Utils.decodeUrl(src));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"QU+D", "QU/D", "QU*D"})
+    void charactersOutsideTheUrlSafeAlphabetAreStillRejectedByTheJdk(String src) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src));
+        assertNotEquals(GUARD_MESSAGE, e.getMessage());
+    }
+
+    @Test
+    void urlDecoderAcceptsExactlyTheInputsTheJdkAccepts() {
+        for (String src : allStrings("A_=", 8)) {
+            byte[] expected = jdkUrlDecodeOrNull(src);
+            if (expected == null) {
+                assertThrows(IllegalArgumentException.class, () -> Base64Utils.decodeUrl(src), src);
+            } else {
+                assertArrayEquals(expected, Base64Utils.decodeUrl(src), src);
+            }
+        }
+    }
+
     @Test
     void unpaddedInputOfInvalidLengthIsLeftToTheJdk() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Base64Utils.decode(SIXTY_FOUR_A + "A"));
@@ -107,6 +146,14 @@ class Base64UtilsTest {
     private static byte[] jdkDecodeOrNull(String src) {
         try {
             return Base64.getDecoder().decode(src);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static byte[] jdkUrlDecodeOrNull(String src) {
+        try {
+            return Base64.getUrlDecoder().decode(src);
         } catch (IllegalArgumentException e) {
             return null;
         }

@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.type.Argument;
 import io.micronaut.json.JsonMapper;
+import io.micronaut.security.utils.Base64Utils;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,13 @@ public class JacksonStateSerDes implements StateSerDes {
     @Override
     public State deserialize(String base64State) {
         try {
-            byte[] decodedBytes = Base64.getUrlDecoder().decode(base64State);
+            byte[] decodedBytes = Base64Utils.decodeUrl(base64State);
             return jsonMapper.readValue(decodedBytes, Argument.of(DefaultState.class));
+        } catch (IllegalArgumentException e) {
+            // The state comes from the request, so malformed Base64 is attacker input, not a server error.
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Failed to Base64 decode the authorization request state: {}", e.getMessage());
+            }
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to deserialize the authorization request state", e);
