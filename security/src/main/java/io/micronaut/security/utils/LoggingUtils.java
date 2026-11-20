@@ -96,10 +96,14 @@ public final class LoggingUtils {
      * Sanitizes each value with {@link #sanitize(String)}.
      *
      * @param values the values to log
-     * @return the sanitized values, in the iteration order of the collection
+     * @return the sanitized values, in the iteration order of the collection, or {@code null} if the collection is
+     * {@code null}
      * @since 5.6.0
      */
-    public static List<String> sanitizeAll(final Collection<String> values) {
+    public static @Nullable List<@Nullable String> sanitizeAll(@Nullable final Collection<@Nullable String> values) {
+        if (values == null) {
+            return null;
+        }
         return values.stream().map(LoggingUtils::sanitize).toList();
     }
 

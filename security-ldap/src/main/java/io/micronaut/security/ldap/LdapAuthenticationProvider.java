@@ -119,7 +119,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             managerContext = contextBuilder.build(configuration.getManagerSettings());
             debug(LOG, "Manager context initialized successfully");
         } catch (NamingException e) {
-            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}: {}", e.getClass().getSimpleName(), sanitize(e.getMessage()));
+            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", loggable(e));
             return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         }
 
@@ -138,8 +138,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
 
                 debug(LOG, "Successfully bound user [{}]. Attempting to retrieve groups.", sanitize(result.getDn()));
 
-                Set<String> groups = groups(managerContext, result, loggableUsername);
+                Set<String> groups = searchGroups(managerContext, result, loggableUsername);
 
+                // guarded explicitly: sanitizeAll copies the set even when TRACE is off
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, sanitizeAll(groups));
                 }
@@ -155,7 +156,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 return rejectUnknownUser(requestContext, authenticationRequest);
             }
         } catch (NamingException e) {
-            debug(LOG, "Failed to authenticate with user [{}]. Encountered {}: {}", loggableUsername, e.getClass().getSimpleName(), sanitize(e.getMessage()));
+            debug(LOG, "Failed to authenticate with user [{}]. Encountered {}", loggableUsername, loggable(e));
             return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         } finally {
             contextBuilder.close(managerContext);
@@ -165,9 +166,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     /**
      * Binds as the user found by the search and, if the result carries no attributes, fetches them with that bind.
      *
-     * @param result   The entry found for the username
+     * @param result           The entry found for the username
      * @param loggableUsername The username, sanitized for logging
-     * @param password The password to bind with
+     * @param password         The password to bind with
      * @return false if the directory rejected the bind, which means the credentials are not accepted
      * @throws NamingException for any failure that is not a rejection of the bind
      */
@@ -181,7 +182,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 // The server rejected the user bind itself, so the supplied credentials are not accepted.
                 // Only this bind says anything about the credentials: the same exceptions thrown by the
                 // manager context are a problem of the directory or its configuration.
-                debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", loggableUsername, e.getClass().getSimpleName(), sanitize(e.getMessage()));
+                debug(LOG, "Server rejected bind for user [{}]. Encountered {}", loggableUsername, loggable(e));
                 return false;
             }
             if (result.getAttributes() == null) {
@@ -196,7 +197,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         }
     }
 
-    private Set<String> groups(DirContext managerContext, LdapSearchResult result, String loggableUsername) throws NamingException {
+    private Set<String> searchGroups(DirContext managerContext, LdapSearchResult result, String loggableUsername) throws NamingException {
         LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
         if (!groupSettings.isEnabled()) {
             debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
@@ -210,6 +211,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             };
             return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
         });
+        // guarded explicitly: sanitizeAll copies the set even when DEBUG is off
         if (LOG.isDebugEnabled()) {
             LOG.debug("Group search returned [{}] for user [{}]", sanitizeAll(groups), loggableUsername);
         }
@@ -242,13 +244,13 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         try {
             decoyContext = contextBuilder.build(configuration.getSettings(decoyDn(), authenticationRequest.getSecret().toString()));
         } catch (javax.naming.AuthenticationException e) {
-            debug(LOG, "Decoy bind for unknown user failed as expected. Encountered {}", sanitize(e.getMessage()));
+            debug(LOG, "Decoy bind for unknown user failed as expected. Encountered {}", loggable(e));
         } catch (NamingException e) {
             // Anything other than invalid credentials means the decoy bind never reached the directory
             // or was rejected before the password was checked, so the mitigation is not doing its job.
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Decoy bind for unknown user failed with {} rather than invalid credentials; check [{}.{}.search.decoy-dn]. Encountered {}",
-                    e.getClass().getSimpleName(), LdapConfiguration.PREFIX, configuration.getName(), sanitize(e.getMessage()));
+                    e.getClass().getSimpleName(), LdapConfiguration.PREFIX, configuration.getName(), loggable(e));
             }
         } finally {
             contextBuilder.close(decoyContext);
@@ -266,6 +268,17 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         String rdn = "cn=" + UUID.randomUUID();
         String base = search.getBase();
         return StringUtils.isEmpty(base) ? rdn : rdn + "," + base;
+    }
+
+    /**
+     * {@link NamingException#getMessage()} carries only the explanation; {@link NamingException#toString()} adds the
+     * exception type and the root cause, such as a refused connection or a failed TLS handshake.
+     *
+     * @param e The exception
+     * @return The exception type, explanation and root cause, sanitized for logging
+     */
+    private static String loggable(NamingException e) {
+        return sanitize(e.toString());
     }
 
     @Override
