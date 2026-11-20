@@ -76,7 +76,7 @@ class NimbusJsonWebTokenEncryptionTest {
             logger.detachAppender(appender);
         }
         List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption fails")), messages::toString);
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption fails") && message.endsWith(": JOSEException")), messages::toString);
         assertTrue(messages.stream().noneMatch(message -> message.contains("FORGED")), messages::toString);
     }
 
