@@ -1,0 +1,27 @@
+Some endpoints are intentionally called by browser applications on other origins. The module automatically exempts a matched route annotated with `@CrossOrigin` when the request's `Origin` header and HTTP method are permitted by that annotation:
+
+[source,java]
+----
+include::{testssecurityfetchmetadata}/FetchMetadataTestController.java[tag=cors,indent=0]
+----
+
+The annotation alone does not bypass resource isolation. Requests without an `Origin` header, requests from an origin not accepted by the route, and requests using a method not accepted by the route continue to the remaining policy rules and are rejected if no rule allows them.
+
+Unless the route's `@CrossOrigin` sets `allowCredentials = true`, a request carrying a `Cookie` header is not exempted either. Browsers attach cookies to simple cross-origin requests, such as form submissions or `no-cors` fetches, even though CORS prevents the page from reading the response; the exemption therefore only covers credentialed requests on routes that explicitly accept credentials. Only the `Cookie` header is treated as an ambient credential: browsers may also attach cached HTTP Basic or Digest credentials and TLS client certificates, which the module does not detect. Routes that rely on browser-managed HTTP authentication or client certificates should either set `allowCredentials = true` deliberately or not use `@CrossOrigin`.
+
+Micronaut's CORS filter remains responsible for CORS response headers and preflight validation.
+
+This automatic exemption applies to https://docs.micronaut.io/latest/guide/#annotationBasedCors[route-level `@CrossOrigin` configuration]. Globally configured CORS origins do not automatically exempt a route from the Fetch Metadata policy.
+
+The `@CrossOrigin` routes rule is enabled by default. Disable it when cross-origin requests should not receive this automatic exemption:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        allow-cross-origin: false
+----
+
+CAUTION: Do not add `@CrossOrigin` merely to bypass resource isolation. Before exempting an endpoint, verify that it is intended for cross-origin access and does not disclose sensitive user-specific information to the allowed origins.
