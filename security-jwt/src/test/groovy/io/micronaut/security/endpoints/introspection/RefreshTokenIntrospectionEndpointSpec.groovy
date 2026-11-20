@@ -7,6 +7,8 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode
+import io.micronaut.security.errors.OauthErrorResponseException
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
@@ -16,6 +18,8 @@ import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
+
+import java.util.concurrent.ConcurrentHashMap
 
 class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
@@ -79,11 +83,33 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
         m['active'] == false
     }
 
+    def "a refresh token revoked with an OAuth error is reported inactive, not as an OAuth error response"() {
+        given:
+        InMemoryRefreshTokenPersistence persistence = applicationContext.getBean(InMemoryRefreshTokenPersistence)
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
+        String refreshToken = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken).body().refreshToken
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken, null))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
+
+        when:
+        persistence.rejectWithOauthError = true
+        HttpResponse<Map> response = client.exchange(request, Map)
+
+        then:
+        response.status() == HttpStatus.OK
+        response.body() == [active: false]
+
+        cleanup:
+        persistence.rejectWithOauthError = false
+    }
+
     @Requires(property = 'spec.name', value = 'RefreshTokenIntrospectionEndpointSpec')
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, Authentication> tokens = [:]
+        Map<String, Authentication> tokens = new ConcurrentHashMap<>()
+        volatile boolean rejectWithOauthError
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
@@ -92,6 +118,9 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
 
         @Override
         Publisher<Authentication> getAuthentication(String refreshToken) {
+            if (rejectWithOauthError) {
+                return Mono.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "refresh token revoked", null))
+            }
             Mono.justOrEmpty(tokens.get(refreshToken))
         }
     }

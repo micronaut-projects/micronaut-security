@@ -188,12 +188,13 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                 LOG.debug("RefreshTokenPersistence rejected the refresh token with {}. Reporting it inactive", e.getError());
             }
         } else {
-            // A persistence outage would otherwise log a stack trace for every introspection request.
+            // Only the exception type at WARN: its message may contain the refresh token, and a persistence outage
+            // would otherwise log a stack trace for every introspection request.
             if (LOG.isWarnEnabled()) {
-                LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive: {}", t.toString());
+                LOG.warn("RefreshTokenPersistence failed to resolve the refresh token with {}. Reporting it inactive", t.getClass().getName());
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("RefreshTokenPersistence failure stack trace", t);
+                LOG.debug("RefreshTokenPersistence failure", t);
             }
         }
     }

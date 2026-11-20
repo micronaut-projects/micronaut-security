@@ -1,6 +1,7 @@
 package io.micronaut.security.endpoints.introspection;
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class DefaultIntrospectionProcessorRefreshTokenPersistenceInjectionTest {
 
     private static final String SPEC_NAME = "DefaultIntrospectionProcessorRefreshTokenPersistenceInjectionTest";
+    private static final String TWO_BEANS_SPEC_NAME = "DefaultIntrospectionProcessorRefreshTokenPersistenceInjectionTestTwoBeans";
 
     @Test
     void refreshTokenPersistenceBeanIsInjected() {
@@ -37,9 +39,32 @@ class DefaultIntrospectionProcessorRefreshTokenPersistenceInjectionTest {
         }
     }
 
+    @Test
+    void primaryRefreshTokenPersistenceBeanIsInjectedWhenThereAreSeveral() {
+        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", TWO_BEANS_SPEC_NAME))) {
+            DefaultIntrospectionProcessor<?> processor = context.getBean(DefaultIntrospectionProcessor.class);
+
+            assertSame(context.getBean(PrimaryRefreshTokenPersistence.class), processor.refreshTokenPersistence);
+        }
+    }
+
+    @Requires(property = "spec.name", value = TWO_BEANS_SPEC_NAME)
+    @Primary
+    @Singleton
+    static class PrimaryRefreshTokenPersistence extends EmptyRefreshTokenPersistence {
+    }
+
+    @Requires(property = "spec.name", value = TWO_BEANS_SPEC_NAME)
+    @Singleton
+    static class SecondaryRefreshTokenPersistence extends EmptyRefreshTokenPersistence {
+    }
+
     @Requires(property = "spec.name", value = SPEC_NAME)
     @Singleton
-    static class EmptyRefreshTokenPersistence implements RefreshTokenPersistence {
+    static class SpecRefreshTokenPersistence extends EmptyRefreshTokenPersistence {
+    }
+
+    abstract static class EmptyRefreshTokenPersistence implements RefreshTokenPersistence {
         @Override
         public void persistToken(RefreshTokenGeneratedEvent event) {
         }

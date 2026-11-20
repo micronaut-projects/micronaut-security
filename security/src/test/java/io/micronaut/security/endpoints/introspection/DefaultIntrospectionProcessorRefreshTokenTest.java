@@ -15,6 +15,9 @@ import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.reactivestreams.Publisher;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -77,7 +81,25 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertTrue(events.get(0).getFormattedMessage().contains("database down"));
+        assertTrue(events.get(0).getFormattedMessage().contains(IllegalStateException.class.getName()));
+        assertNull(events.get(0).getThrowableProxy());
+    }
+
+    @Test
+    void persistenceFailureMessageContainingTheKeyIsNotLoggedAtWarn() {
+        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
+            @Override
+            public Publisher<Authentication> getAuthentication(String refreshToken) {
+                return Mono.error(new IllegalStateException("lookup failed for " + refreshToken));
+            }
+        };
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
+
+        List<ILoggingEvent> events = captureLogs(Level.WARN, () -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
+
+        assertEquals(1, events.size());
+        assertFalse(events.get(0).getFormattedMessage().contains("key-a"));
+        assertFalse(events.get(0).getFormattedMessage().contains(SIGNED_A));
         assertNull(events.get(0).getThrowableProxy());
     }
 
@@ -128,10 +150,11 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
         List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
 
-        // The WARN line names the cause without a stack trace; the stack trace is only logged at DEBUG.
+        // The WARN line names the exception type only; its message and stack trace are only logged at DEBUG.
         assertEquals(2, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertTrue(events.get(0).getFormattedMessage().contains("database down"));
+        assertTrue(events.get(0).getFormattedMessage().contains(IllegalStateException.class.getName()));
+        assertFalse(events.get(0).getFormattedMessage().contains("database down"));
         assertNull(events.get(0).getThrowableProxy());
         assertEquals(Level.DEBUG, events.get(1).getLevel());
         assertEquals("database down", events.get(1).getThrowableProxy().getMessage());
@@ -169,6 +192,47 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         IntrospectionResponse response = Mono.from(publisher).block();
         assertNotNull(response);
         assertEquals("alice", response.getUsername());
+    }
+
+    @Test
+    void introspectRefreshTokenWithoutPersistenceDoesNoWorkUntilSubscribed() {
+        PrefixRefreshTokenValidator refreshTokenValidator = new PrefixRefreshTokenValidator();
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), refreshTokenValidator, null);
+
+        Publisher<IntrospectionResponse> publisher = processor.introspectRefreshToken(SIGNED_A, HttpRequest.GET("/token_info"));
+
+        assertEquals(0, refreshTokenValidator.invocations.get());
+        IntrospectionResponse response = Mono.from(publisher).block();
+        assertNotNull(response);
+        assertTrue(response.isActive());
+        assertEquals(1, refreshTokenValidator.invocations.get());
+    }
+
+    static Stream<Arguments> inactiveWithPersistence() {
+        RefreshTokenPersistence failing = new NonPersistingRefreshTokenPersistence() {
+            @Override
+            public Publisher<Authentication> getAuthentication(String refreshToken) {
+                return Mono.error(new IllegalStateException("database down"));
+            }
+        };
+        return Stream.of(
+            Arguments.of("validator rejects", "tampered.key-a", new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")))),
+            Arguments.of("revoked", SIGNED_B, new MapRefreshTokenPersistence(Map.of())),
+            Arguments.of("persistence fails", SIGNED_A, failing));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("inactiveWithPersistence")
+    void withPersistenceAnInactiveRefreshTokenUsesTheOverridableInactiveResponse(String scenario, String token, RefreshTokenPersistence persistence) {
+        IntrospectionResponse customInactive = new IntrospectionResponse(false, "custom", null, null, null, null, null, null, null, null, null, null, null);
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator(), persistence) {
+            @Override
+            protected IntrospectionResponse inactiveIntrospectionResponse() {
+                return customInactive;
+            }
+        };
+
+        assertSame(customInactive, introspect(processor, token));
     }
 
     @Test
