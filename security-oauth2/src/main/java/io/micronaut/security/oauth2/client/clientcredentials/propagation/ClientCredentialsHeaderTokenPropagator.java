@@ -40,7 +40,8 @@ import java.util.Optional;
 public class ClientCredentialsHeaderTokenPropagator implements ClientCredentialsTokenPropagator {
 
     /**
-     * @deprecated Not used. The separator between the prefix and the token is added when the header value is built.
+     * @deprecated Not used by this class since 5.6.0; {@link #headerValue(String)} adds the separator between the prefix
+     * and the token. Use a {@code " "} literal if you need one.
      */
     @Deprecated(forRemoval = true, since = "5.6.0")
     public static final String SPACE = " ";
@@ -76,6 +77,9 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
+     * Adds the configured prefix and a single space before the token. A prefix which already ends with a space is not
+     * followed by another one. If the prefix is {@code null} or empty, the token is returned as is.
+     *
      * @param token the token being written
      * @return the value which will be written to an HTTP Header
      */
@@ -84,10 +88,13 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
-     * Removes the configured prefix and the space after it from the header value. The prefix is compared ignoring case.
+     * Removes the configured prefix and the single space after it from the header value.
+     * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * A prefix which already ends with a space is not followed by another one.
+     * If the prefix is {@code null} or empty, the whole header value is the token.
      *
      * @param authorization Authorization header value
-     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
+     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'. Empty if the value does not start with the prefix and a space.
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         return Optional.ofNullable(HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix()));

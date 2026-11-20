@@ -71,8 +71,8 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         final String prefix = getPrefix();
         final String token = HeaderValuePrefixUtils.removePrefix(authorization, prefix);
-        if (token == null) {
-            LOG.debug("{} header does not start with {}", getHeaderName(), prefix);
+        if (token == null && LOG.isDebugEnabled()) {
+            LOG.debug("{} header value does not start with '{}' (compared ignoring case)", getHeaderName(), HeaderValuePrefixUtils.addPrefix("", prefix));
         }
         return Optional.ofNullable(token);
     }
