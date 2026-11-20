@@ -32,6 +32,7 @@ import java.util.Optional;
  */
 public interface OpenIdClientConfiguration extends Named {
     Boolean DEFAULT_PROTECTED_RESOURCE_METADATA = true;
+    boolean DEFAULT_VALIDATE_ISSUER = true;
 
     /**
      * @since 5.3.0
@@ -39,6 +40,17 @@ public interface OpenIdClientConfiguration extends Named {
      */
     default boolean isFetchConfiguration() {
         return true;
+    }
+
+    /**
+     * <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation">OpenID Connect Discovery 1.0, Section 4.3</a> requires the {@code issuer} of the discovery document to match the issuer URL used to retrieve it.
+     * When {@code true}, the {@code issuer} returned by the discovery document must match {@link #getIssuer()} or, if set, {@link #getIssuerIdentifier()} (ignoring a trailing slash and the case of the scheme); otherwise the provider metadata cannot be resolved.
+     * If the provider asserts a different issuer, prefer setting {@link #getIssuerIdentifier()} to that issuer; set this to {@code false} only to skip the validation altogether.
+     * @since 5.6.0
+     * @return Whether the issuer returned by the OpenID configuration must match {@link #getIssuer()}. Default value {@value #DEFAULT_VALIDATE_ISSUER}.
+     */
+    default boolean isValidateIssuer() {
+        return DEFAULT_VALIDATE_ISSUER;
     }
 
     /**

@@ -72,6 +72,7 @@ class EndSessionEndpointProviderMetadataUrlTest {
     private static Map<String, Object> serverConfiguration(EmbeddedServer authServer) {
         return Map.of("spec.name", SPEC_NAME,
             "micronaut.security.oauth2.clients." + CLIENT + ".openid.issuer", authServer.getURL().toString(),
+            "micronaut.security.oauth2.clients." + CLIENT + ".openid.validate-issuer", "false", // the mock discovery document announces another issuer
             "micronaut.security.oauth2.clients." + CLIENT + ".client-secret", "test-fixture-not-a-secret",
             "micronaut.security.oauth2.clients." + CLIENT + ".client-id", "test-client-id");
     }

@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
@@ -74,6 +73,12 @@ class OpenIdClientFactory {
 
     /**
      * Retrieves OpenID configuration from the provided issuer.
+     * <p>
+     * The bean is resolved eagerly at startup by {@link OpenIdProviderMetadataWarmUp}. It is deliberately not a {@code @Context} bean:
+     * if the fetch fails, the exception propagates as a {@link io.micronaut.context.exceptions.BeanInstantiationException} which is not
+     * cached by the bean context, so the bean is created on a later access once the provider is reachable. Throwing a
+     * {@link io.micronaut.context.exceptions.DisabledBeanException} instead would disable the provider for the life of the application.
+     * </p>
      *
      * @param oauthClientConfiguration The client configuration
      * @param openIdClientConfiguration The openid client configuration
@@ -81,7 +86,6 @@ class OpenIdClientFactory {
      * @return The OpenID configuration
      * The bean is not created for a disabled OAuth 2.0 client, so that neither its provider metadata nor its JWKS are registered.
      */
-    @Context
     @EachBean(OpenIdClientConfiguration.class)
     @Requires(condition = OauthClientEnabledCondition.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,

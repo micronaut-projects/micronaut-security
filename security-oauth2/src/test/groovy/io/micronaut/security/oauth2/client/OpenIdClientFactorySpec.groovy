@@ -51,6 +51,7 @@ class OpenIdClientFactorySpec extends Specification {
                 'micronaut.security.authentication'                   : 'cookie',
                 'micronaut.server.port'                               : -1,
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
+                'micronaut.security.oauth2.clients.okta.openid.validate-issuer': false, // the mock discovery document imitates Okta's issuer
         ]))
 
         then:
@@ -95,6 +96,7 @@ class OpenIdClientFactorySpec extends Specification {
                 'spec.name': 'OpenIdClientFactorySpec',
                 'micronaut.security.authentication': 'cookie',
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
+                'micronaut.security.oauth2.clients.okta.openid.validate-issuer': false, // the mock discovery document imitates Okta's issuer
         ])
 
         when:
