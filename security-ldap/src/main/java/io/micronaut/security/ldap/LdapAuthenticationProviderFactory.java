@@ -65,12 +65,15 @@ public class LdapAuthenticationProviderFactory {
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Ignored. LDAP authentication runs on the executor named by
+     * @param executorService             Ignored by this implementation. Always {@code null} when the bean factory method
+     *                                    calls it; before 5.6.0 it was the {@link TaskExecutors#IO} executor. LDAP
+     *                                    authentication runs on the executor named by
      *                                    {@link LdapAuthenticationProvider#getExecutorName()}, {@link TaskExecutors#BLOCKING} by default.
      * @return an {@link LdapAuthenticationProvider}
      * @deprecated The executor service is ignored. Use {@link #ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
-     * Until this method is removed, the bean factory method calls it, so a subclass that overrides it still creates the
-     * provider. Override the method without the executor service instead.
+     * Until this method is removed, the bean factory method calls it with a {@code null} executor service, so a subclass
+     * that overrides it is still called. Override the method without the executor service instead, and inject an
+     * executor yourself if you need one.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public LdapAuthenticationProvider ldapAuthenticationProvider(LdapConfiguration configuration,

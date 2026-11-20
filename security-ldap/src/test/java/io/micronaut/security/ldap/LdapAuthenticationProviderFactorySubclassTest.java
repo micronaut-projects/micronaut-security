@@ -16,9 +16,12 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A subclass of {@link LdapAuthenticationProviderFactory} which replaces it and overrides either factory method, without
@@ -42,7 +45,14 @@ class LdapAuthenticationProviderFactorySubclassTest {
 
     @Test
     void aSubclassOverridingTheDeprecatedFactoryMethodCreatesTheProvider() {
+        DeprecatedMethodFactory.invocations.set(0);
+        DeprecatedMethodFactory.executorServiceWasNull.set(false);
+
         assertOnlyCustomProviders("DeprecatedMethodFactory");
+
+        assertTrue(DeprecatedMethodFactory.invocations.get() > 0, "The overridden deprecated method must be called");
+        assertTrue(DeprecatedMethodFactory.executorServiceWasNull.get(),
+                "The bean factory method passes null for the executor service it no longer injects");
     }
 
     @Test
@@ -76,6 +86,9 @@ class LdapAuthenticationProviderFactorySubclassTest {
     @Replaces(LdapAuthenticationProviderFactory.class)
     @Requires(property = "spec.name", value = "DeprecatedMethodFactory")
     static class DeprecatedMethodFactory extends LdapAuthenticationProviderFactory {
+        static final AtomicInteger invocations = new AtomicInteger();
+        static final AtomicBoolean executorServiceWasNull = new AtomicBoolean();
+
         @Override
         @SuppressWarnings("removal")
         public LdapAuthenticationProvider ldapAuthenticationProvider(LdapConfiguration configuration,
@@ -84,6 +97,8 @@ class LdapAuthenticationProviderFactorySubclassTest {
                                                                      ContextAuthenticationMapper contextAuthenticationMapper,
                                                                      LdapGroupProcessor ldapGroupProcessor,
                                                                      ExecutorService executorService) {
+            invocations.incrementAndGet();
+            executorServiceWasNull.set(executorService == null);
             return new CustomLdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
         }
     }
