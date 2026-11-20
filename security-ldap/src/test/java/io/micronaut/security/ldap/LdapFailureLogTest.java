@@ -59,7 +59,45 @@ class LdapFailureLogTest {
         }
 
         List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.contains("CommunicationException") && message.contains("ConnectException")),
-                "the exception type and its root cause are expected in the log: " + messages);
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("LDAP manager bind failed for user [riemann]; returning UNKNOWN.")
+                        && message.contains("CommunicationException") && message.contains("ConnectException")),
+                "the failing step, the exception type and its root cause are expected in the log: " + messages);
+    }
+
+    @Test
+    void aFailingGroupSearchIsLoggedAsSuchAfterASuccessfulBind() throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of(
+                "micronaut.security.ldap.default.groups.enabled", true,
+                "micronaut.security.ldap.default.groups.base", LdapTestSupport.BASE_DN,
+                // not a valid search filter, so the group search fails after the user bind succeeded
+                "micronaut.security.ldap.default.groups.filter", "((("
+        )), "test")) {
+            assertEquals(AuthenticationFailureReason.UNKNOWN,
+                    failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"))));
+        } finally {
+            server.shutDown(true);
+        }
+
+        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Successfully bound user")), "the bind is expected to succeed: " + messages);
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("LDAP group search failed for user [riemann]; returning UNKNOWN.")),
+                "the log is expected to blame the group search, not the user: " + messages);
+    }
+
+    @Test
+    void aRejectedUserBindStatesTheReasonItReturns() throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server), "test")) {
+            assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH,
+                    failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann", "wrong"))));
+        } finally {
+            server.shutDown(true);
+        }
+
+        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Directory rejected the bind of user [riemann]; returning CREDENTIALS_DO_NOT_MATCH.")
+                        && message.contains("AuthenticationException")),
+                "the log is expected to name the reason returned: " + messages);
     }
 }

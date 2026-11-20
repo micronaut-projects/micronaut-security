@@ -28,6 +28,7 @@ import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.scheduler.Scheduler;
@@ -119,45 +120,50 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             managerContext = contextBuilder.build(configuration.getManagerSettings());
             debug(LOG, "Manager context initialized successfully");
         } catch (NamingException e) {
-            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", loggable(e));
-            return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
+            return unknownFailure("manager bind", loggableUsername, e);
         }
 
         debug(LOG, "Attempting to authenticate with user [{}]", loggableUsername);
 
         try {
-            Optional<LdapSearchResult> optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
-
-            if (optionalResult.isPresent()) {
-                LdapSearchResult result = optionalResult.get();
-                debug(LOG, "User found in context [{}]. Attempting to bind.", sanitize(result.getDn()));
-
-                if (!bindUserAndLoadAttributes(result, loggableUsername, password)) {
-                    return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
-                }
-
-                debug(LOG, "Successfully bound user [{}]. Attempting to retrieve groups.", sanitize(result.getDn()));
-
-                Set<String> groups = searchGroups(managerContext, result, loggableUsername);
-
-                // guarded explicitly: sanitizeAll copies the set even when TRACE is off
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, sanitizeAll(groups));
-                }
-
-                AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
-                if (response.isAuthenticated()) {
-                    debug(LOG, "Response successfully created for [{}]. Response is authenticated: [{}]", loggableUsername, response.isAuthenticated());
-                }
-                return response;
-
-            } else {
+            Optional<LdapSearchResult> optionalResult;
+            try {
+                optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
+            } catch (NamingException e) {
+                return unknownFailure("user search", loggableUsername, e);
+            }
+            if (optionalResult.isEmpty()) {
                 debug(LOG, "User not found [{}]", loggableUsername);
                 return rejectUnknownUser(requestContext, authenticationRequest);
             }
-        } catch (NamingException e) {
-            debug(LOG, "Failed to authenticate with user [{}]. Encountered {}", loggableUsername, loggable(e));
-            return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
+
+            LdapSearchResult result = optionalResult.get();
+            debug(LOG, "User found in context [{}]. Attempting to bind.", sanitize(result.getDn()));
+
+            AuthenticationResponse bindFailure = bindUserAndLoadAttributes(result, loggableUsername, password);
+            if (bindFailure != null) {
+                return bindFailure;
+            }
+
+            debug(LOG, "Successfully bound user [{}]. Attempting to retrieve groups.", sanitize(result.getDn()));
+
+            Set<String> groups;
+            try {
+                groups = searchGroups(managerContext, result, loggableUsername);
+            } catch (NamingException e) {
+                return unknownFailure("group search", loggableUsername, e);
+            }
+
+            // guarded explicitly: sanitizeAll copies the set even when TRACE is off
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, sanitizeAll(groups));
+            }
+
+            AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
+            if (response.isAuthenticated()) {
+                debug(LOG, "Response successfully created for [{}]. Response is authenticated: [{}]", loggableUsername, response.isAuthenticated());
+            }
+            return response;
         } finally {
             contextBuilder.close(managerContext);
         }
@@ -169,10 +175,11 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param result           The entry found for the username
      * @param loggableUsername The username, sanitized for logging
      * @param password         The password to bind with
-     * @return false if the directory rejected the bind, which means the credentials are not accepted
-     * @throws NamingException for any failure that is not a rejection of the bind
+     * @return {@code null} if the user is bound and the result carries its attributes, otherwise the failure:
+     * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} if the directory rejected the bind, which means the
+     * credentials are not accepted, {@link AuthenticationFailureReason#UNKNOWN} for any other failure
      */
-    private boolean bindUserAndLoadAttributes(LdapSearchResult result, String loggableUsername, String password) throws NamingException {
+    private @Nullable AuthenticationResponse bindUserAndLoadAttributes(LdapSearchResult result, String loggableUsername, String password) {
         String dn = result.getDn();
         DirContext userContext = null;
         try {
@@ -182,19 +189,42 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                 // The server rejected the user bind itself, so the supplied credentials are not accepted.
                 // Only this bind says anything about the credentials: the same exceptions thrown by the
                 // manager context are a problem of the directory or its configuration.
-                debug(LOG, "Server rejected bind for user [{}]. Encountered {}", loggableUsername, loggable(e));
-                return false;
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Directory rejected the bind of user [{}]; returning CREDENTIALS_DO_NOT_MATCH. Encountered {}", loggableUsername, loggable(e));
+                }
+                return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+            } catch (NamingException e) {
+                return unknownFailure("user bind", loggableUsername, e);
             }
             if (result.getAttributes() == null) {
-                // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
-                // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
-                // InvalidNameException is a NamingException and is handled by the caller.
-                result.setAttributes(userContext.getAttributes(new LdapName(dn)));
+                try {
+                    // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
+                    // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
+                    result.setAttributes(userContext.getAttributes(new LdapName(dn)));
+                } catch (NamingException e) {
+                    return unknownFailure("attribute fetch", loggableUsername, e);
+                }
             }
-            return true;
+            return null;
         } finally {
             contextBuilder.close(userContext);
         }
+    }
+
+    /**
+     * Logs a failure that says nothing about the supplied credentials and returns {@link AuthenticationFailureReason#UNKNOWN}.
+     *
+     * @param step             The step of the authentication that failed, as it reads in the log
+     * @param loggableUsername The username, sanitized for logging
+     * @param e                The failure
+     * @return an {@link AuthenticationFailureReason#UNKNOWN} failure
+     */
+    private static AuthenticationResponse unknownFailure(String step, String loggableUsername, NamingException e) {
+        // guarded explicitly: loggable builds the exception text even when DEBUG is off
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("LDAP {} failed for user [{}]; returning UNKNOWN. Encountered {}", step, loggableUsername, loggable(e));
+        }
+        return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
     }
 
     private Set<String> searchGroups(DirContext managerContext, LdapSearchResult result, String loggableUsername) throws NamingException {
@@ -244,7 +274,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         try {
             decoyContext = contextBuilder.build(configuration.getSettings(decoyDn(), authenticationRequest.getSecret().toString()));
         } catch (javax.naming.AuthenticationException e) {
-            debug(LOG, "Decoy bind for unknown user failed as expected. Encountered {}", loggable(e));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Decoy bind for unknown user failed as expected. Encountered {}", loggable(e));
+            }
         } catch (NamingException e) {
             // Anything other than invalid credentials means the decoy bind never reached the directory
             // or was rejected before the password was checked, so the mitigation is not doing its job.

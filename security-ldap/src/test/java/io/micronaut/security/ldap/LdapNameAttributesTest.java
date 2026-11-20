@@ -5,12 +5,19 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.convert.value.ConvertibleValues;
+import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchRequest;
+import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
+import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.ldap.sdk.SearchScope;
+import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.context.AttributesConvertibleValues;
 import io.micronaut.security.ldap.context.DefaultLdapSearchService;
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.SearchSettings;
 import jakarta.inject.Singleton;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -51,6 +58,27 @@ class LdapNameAttributesTest {
             assertNotNull(result.getAttributes(), "the provider must fetch the attributes the search did not return");
             assertEquals(username, result.getAttributes().get("uid", String.class).orElseThrow());
             assertEquals(cn, result.getAttributes().get("cn", String.class).orElseThrow());
+        } finally {
+            server.shutDown(true);
+        }
+    }
+
+    @Test
+    void aFailingAttributeFetchAfterASuccessfulBindIsNotBlamedOnTheCredentials() throws Exception {
+        String dn = "uid=riemann," + LdapTestSupport.BASE_DN;
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
+            @Override
+            public void processSearchRequest(InMemoryInterceptedSearchRequest request) throws LDAPException {
+                // the attribute fetch reads the entry itself; the user search is a subtree search of the base
+                if (request.getRequest().getScope() == SearchScope.BASE && dn.equalsIgnoreCase(request.getRequest().getBaseDN())) {
+                    throw new LDAPException(ResultCode.INSUFFICIENT_ACCESS_RIGHTS, "simulated insufficientAccessRights");
+                }
+            }
+        });
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test")) {
+            AuthenticationResponse response = LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"));
+
+            assertEquals(AuthenticationFailureReason.UNKNOWN, LdapTestSupport.failureReason(response));
         } finally {
             server.shutDown(true);
         }

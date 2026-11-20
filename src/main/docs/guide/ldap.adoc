@@ -17,6 +17,28 @@ To keep the work done by the application similar as well, the provider performs 
 
 IMPORTANT: Only the client-side cost is equalised. A directory may still answer faster for a non-existent DN than for a wrong password, because it does not check a password hash, update bad-password or lockout counters or apply a password policy delay. Where that difference matters, create a real decoy account with an unmatchable password and set `micronaut.security.ldap.default.search.decoy-dn` to its DN, for example `micronaut.security.ldap.default.search.decoy-dn: uid=decoy,ou=people,dc=example,dc=com`. Exclude the decoy account from any account-lockout policy: a locked decoy answers unknown-username binds with a distinct, faster lockout error for the rest of the lockout window, which reopens the gap the decoy is meant to close. Remember too that whatever password a client submits with an unknown username is bound against the decoy entry, so a user who mistypes their username sends their real password to the decoy bind, and the directory may record that failed bind.
 
-The failure reason also tells a rejected user bind apart from a problem of the directory. When the directory rejects the bind of the user found by the search, the provider returns `CREDENTIALS_DO_NOT_MATCH`. That covers invalid credentials (LDAP result code 49) and the result codes with which a directory refuses the bind itself, such as `inappropriateAuthentication` (48), `strongerAuthRequired` (8), `confidentialityRequired` (13) or `unwillingToPerform` (53), which some directories return for disabled or locked accounts. Every other failure, including a manager bind the directory rejects, a failing search or an unreachable directory, returns `UNKNOWN`.
+[[ldapFailureReasons]]
+== Failure reasons
 
-NOTE: A directory whose configuration makes it refuse the bind of every user is therefore reported as `CREDENTIALS_DO_NOT_MATCH` for every user, not as `UNKNOWN`. Enable the `DEBUG` level for the `io.micronaut.security.ldap` logger to see the exception behind a rejected bind.
+The failure reason tells a rejected user bind apart from a problem of the directory:
+
+[cols="3,1,1"]
+|===
+|Situation |Reason |Log level
+
+|The directory rejects the bind of the user found by the search, with result code 49 (`invalidCredentials`), 48 (`inappropriateAuthentication`), 53 (`unwillingToPerform`), 7 (`authMethodNotSupported`), 8 (`strongerAuthRequired`), 12 (`unavailableCriticalExtension`) or 13 (`confidentialityRequired`)
+|`CREDENTIALS_DO_NOT_MATCH`
+|`DEBUG`
+
+|The search finds no entry for the username (a decoy bind is performed, see above)
+|`CREDENTIALS_DO_NOT_MATCH`
+|`DEBUG`; `WARN` if the decoy bind fails with anything other than invalid credentials
+
+|The manager bind is rejected, the user search, the attribute fetch or the group search fails, or the directory cannot be reached
+|`UNKNOWN`
+|`DEBUG`
+|===
+
+The provider deliberately does not return `ACCOUNT_LOCKED` or `USER_DISABLED`, although some directories answer the bind of a disabled or locked account with result code 53: directories do not report these states consistently, and a distinct reason would tell a client that the username exists and that its password may be correct. If your users need a hint, make the login failure message for `CREDENTIALS_DO_NOT_MATCH` mention that the account may also be locked or disabled.
+
+NOTE: A directory whose configuration makes it refuse the bind of every user is therefore reported as `CREDENTIALS_DO_NOT_MATCH` for every user, not as `UNKNOWN`. Typical causes are a plain `ldap://` URL against a directory that requires TLS (result code 13 or 8) and a customized context builder that sends a critical control the directory does not support (result code 12). Enable the `DEBUG` level for the `io.micronaut.security.ldap` logger to see the step that failed and the exception behind it, including its root cause.
