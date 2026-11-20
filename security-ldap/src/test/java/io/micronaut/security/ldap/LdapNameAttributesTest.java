@@ -56,6 +56,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LdapNameAttributesTest {
 
     private static final String SPEC_NAME = "LdapNameAttributesTest";
+    private static final String BASE_DN = "dc=example,dc=com";
+    private static final String MANAGER_DN = "cn=admin," + BASE_DN;
+    private static final String MANAGER_PASSWORD = "password";
+    // the password of every user in the LDIF fixtures
+    private static final String USER_PASSWORD = "password";
 
     private @Nullable InMemoryDirectoryServer server;
 
@@ -74,7 +79,7 @@ class LdapNameAttributesTest {
             LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
             NullAttributesLdapSearchService searchService = context.getBean(NullAttributesLdapSearchService.class);
 
-            AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials(username, "password"));
+            AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials(username, USER_PASSWORD));
 
             assertTrue(response.isAuthenticated());
             assertEquals(username, response.getAuthentication().orElseThrow().getName());
@@ -144,7 +149,7 @@ class LdapNameAttributesTest {
                 context.getBean(LdapGroupProcessor.class),
                 context.getBean(ExecutorService.class, Qualifiers.byName(TaskExecutors.IO)));
 
-            AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials("riemann", "password"));
+            AuthenticationResponse response = provider.authenticate(null, new UsernamePasswordCredentials("riemann", USER_PASSWORD));
 
             assertFalse(response.isAuthenticated());
             assertEquals(AuthenticationFailureReason.UNKNOWN,
@@ -161,8 +166,8 @@ class LdapNameAttributesTest {
     }
 
     private ApplicationContext startContext(String ldifPath) throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials("cn=admin,dc=example,dc=com", "password");
+        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(BASE_DN);
+        config.addAdditionalBindCredentials(MANAGER_DN, MANAGER_PASSWORD);
         server = new InMemoryDirectoryServer(config);
         try (InputStream ldif = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(ldifPath));
              LDIFReader reader = new LDIFReader(ldif)) {
@@ -173,9 +178,9 @@ class LdapNameAttributesTest {
             "spec.name", SPEC_NAME,
             "micronaut.security.ldap.default.enabled", true,
             "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-            "micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com",
-            "micronaut.security.ldap.default.context.managerPassword", "password",
-            "micronaut.security.ldap.default.search.base", "dc=example,dc=com"
+            "micronaut.security.ldap.default.context.managerDn", MANAGER_DN,
+            "micronaut.security.ldap.default.context.managerPassword", MANAGER_PASSWORD,
+            "micronaut.security.ldap.default.search.base", BASE_DN
         ), "test");
     }
 
