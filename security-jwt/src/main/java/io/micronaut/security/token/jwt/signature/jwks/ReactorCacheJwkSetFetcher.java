@@ -73,6 +73,17 @@ final class ReactorCacheJwkSetFetcher extends DefaultJwkSetFetcher {
         cache.keySet().removeIf(cacheKey -> url.equals(cacheKey.url()));
     }
 
+    /**
+     * Clears the cached JWK Set for the given provider name and url. The failure back-off is kept.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
+    @Override
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        super.clearCache(providerName, url);
+        cache.remove(new CacheKey(providerName, url));
+    }
+
     private Mono<JwksCacheEntry> jwksCacheEntry(CacheKey cacheKey) {
         return Mono.defer(() -> Mono.from(super.fetch(cacheKey.providerName, cacheKey.url())))
             .defaultIfEmpty(new JWKSet())
