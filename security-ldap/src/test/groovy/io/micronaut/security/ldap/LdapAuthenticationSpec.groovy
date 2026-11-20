@@ -11,7 +11,6 @@ import io.micronaut.security.ldap.context.ContextBuilder
 import io.micronaut.security.ldap.context.LdapSearchService
 import io.micronaut.security.ldap.group.LdapGroupProcessor
 
-
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
     void "test authentication and role retrieval with uniquemember"() {
