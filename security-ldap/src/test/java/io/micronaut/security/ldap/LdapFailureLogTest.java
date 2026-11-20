@@ -1,17 +1,21 @@
 package io.micronaut.security.ldap;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
+import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchRequest;
+import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSimpleBindRequest;
+import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
+import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.ldap.sdk.SearchScope;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
+import java.net.ServerSocket;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,84 +24,115 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link javax.naming.NamingException#getMessage()} carries only the explanation of a JNDI failure, such as the
- * address of the directory. The root cause, such as a refused connection or a failed TLS handshake, is what an
- * operator needs to diagnose an {@link AuthenticationFailureReason#UNKNOWN} failure, so it has to reach the log.
+ * Every failure of {@link LdapAuthenticationProvider} is logged with the step that failed, the reason returned and
+ * the exception, including its root cause: {@link javax.naming.NamingException#getMessage()} carries only the
+ * explanation, such as the address of the directory, whereas the root cause, such as a refused connection or a failed
+ * TLS handshake, is what an operator needs to diagnose an {@link AuthenticationFailureReason#UNKNOWN} failure.
  */
 class LdapFailureLogTest {
 
-    private Logger logger;
-    private Level originalLevel;
-    private ListAppender<ILoggingEvent> appender;
+    private static final String USER = "riemann";
+    private static final String USER_DN = "uid=riemann," + LdapTestSupport.BASE_DN;
+
+    private LogCapture log;
 
     @BeforeEach
     void captureLog() {
-        logger = (Logger) LoggerFactory.getLogger(LdapAuthenticationProvider.class);
-        originalLevel = logger.getLevel();
-        logger.setLevel(Level.DEBUG);
-        appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
+        log = LogCapture.start(LdapAuthenticationProvider.class.getName(), Level.DEBUG);
     }
 
     @AfterEach
     void restoreLog() {
-        logger.detachAppender(appender);
-        logger.setLevel(originalLevel);
+        log.close();
     }
 
     @Test
     void theRootCauseOfAnUnreachableDirectoryIsLogged() throws Exception {
+        int closedPort;
+        try (ServerSocket socket = new ServerSocket(0)) {
+            closedPort = socket.getLocalPort();
+        }
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
-        Map<String, Object> properties = LdapTestSupport.properties(server);
-        // nothing listens on the port any more, so the connection is refused
-        server.shutDown(true);
-
-        try (ApplicationContext context = ApplicationContext.run(properties, "test")) {
-            assertEquals(AuthenticationFailureReason.UNKNOWN,
-                    failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"))));
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of(
+                // nothing listens on the port any more, so the connection is refused
+                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + closedPort
+        )), "test")) {
+            assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(context, LdapTestSupport.PASSWORD));
+        } finally {
+            server.shutDown(true);
         }
 
-        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("LDAP manager bind failed for user [riemann]; returning UNKNOWN.")
-                        && message.contains("CommunicationException") && message.contains("ConnectException")),
-                "the failing step, the exception type and its root cause are expected in the log: " + messages);
+        assertLogged("LDAP manager bind failed for user [riemann]; returning UNKNOWN.", "CommunicationException", "ConnectException");
+    }
+
+    @Test
+    void aFailingUserSearchIsLoggedAsSuch() throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
+            @Override
+            public void processSearchRequest(InMemoryInterceptedSearchRequest request) throws LDAPException {
+                if (request.getRequest().getScope() == SearchScope.SUB) {
+                    throw new LDAPException(ResultCode.UNAVAILABLE, "simulated unavailable");
+                }
+            }
+        });
+
+        assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(), LdapTestSupport.PASSWORD));
+        assertLogged("LDAP user search failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
+    }
+
+    @Test
+    void aUserBindFailureThatIsNotARejectionIsLoggedAsSuch() throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
+            @Override
+            public void processSimpleBindRequest(InMemoryInterceptedSimpleBindRequest request) throws LDAPException {
+                if (USER_DN.equals(request.getRequest().getBindDN())) {
+                    throw new LDAPException(ResultCode.BUSY, "simulated busy");
+                }
+            }
+        });
+
+        assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(), LdapTestSupport.PASSWORD));
+        assertLogged("LDAP user bind failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
     }
 
     @Test
     void aFailingGroupSearchIsLoggedAsSuchAfterASuccessfulBind() throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
-        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of(
+
+        assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(
                 "micronaut.security.ldap.default.groups.enabled", true,
                 "micronaut.security.ldap.default.groups.base", LdapTestSupport.BASE_DN,
                 // not a valid search filter, so the group search fails after the user bind succeeded
                 "micronaut.security.ldap.default.groups.filter", "((("
-        )), "test")) {
-            assertEquals(AuthenticationFailureReason.UNKNOWN,
-                    failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"))));
-        } finally {
-            server.shutDown(true);
-        }
+        ), LdapTestSupport.PASSWORD));
 
-        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Successfully bound user")), "the bind is expected to succeed: " + messages);
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("LDAP group search failed for user [riemann]; returning UNKNOWN.")),
-                "the log is expected to blame the group search, not the user: " + messages);
+        assertTrue(log.messages().stream().anyMatch(message -> message.startsWith("Successfully bound user")), "the bind is expected to succeed: " + log.messages());
+        assertLogged("LDAP group search failed for user [riemann]; returning UNKNOWN.", "InvalidSearchFilterException");
     }
 
     @Test
     void aRejectedUserBindStatesTheReasonItReturns() throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
-        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server), "test")) {
-            assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH,
-                    failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann", "wrong"))));
+
+        assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, authenticate(server, Map.of(), "wrong"));
+        assertLogged("Directory rejected the bind of user [riemann]; returning CREDENTIALS_DO_NOT_MATCH.", "AuthenticationException");
+    }
+
+    private static AuthenticationFailureReason authenticate(InMemoryDirectoryServer server, Map<String, Object> properties, String password) {
+        try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, properties), "test")) {
+            return authenticate(context, password);
         } finally {
             server.shutDown(true);
         }
+    }
 
-        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Directory rejected the bind of user [riemann]; returning CREDENTIALS_DO_NOT_MATCH.")
-                        && message.contains("AuthenticationException")),
-                "the log is expected to name the reason returned: " + messages);
+    private static AuthenticationFailureReason authenticate(ApplicationContext context, String password) {
+        return failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(USER, password)));
+    }
+
+    private void assertLogged(String prefix, String... fragments) {
+        List<String> messages = log.messages();
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith(prefix) && Arrays.stream(fragments).allMatch(message::contains)),
+                "expected a message starting with [" + prefix + "] and containing " + Arrays.toString(fragments) + ": " + messages);
     }
 }

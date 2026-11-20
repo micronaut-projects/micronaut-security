@@ -144,7 +144,7 @@ class LoggingUtilsTest {
     @Test
     void sanitizeReplacesTheCharactersThatBreakALine() {
         assertEquals("alice__INFO forged_entry__", LoggingUtils.sanitize("alice\r\nINFO forged\tentry\u2028\u2029"));
-        assertEquals("a_b_c", LoggingUtils.sanitize("a\u0000b\u0085c"));
+        assertEquals("a_b_c_d", LoggingUtils.sanitize("a\u0000b\u0085c\u007Fd"));
     }
 
     @Test

@@ -26,8 +26,10 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 import javax.naming.ServiceUnavailableException;
 import javax.naming.directory.DirContext;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static io.micronaut.security.ldap.LdapTestSupport.failureReason;
@@ -49,7 +51,11 @@ class LdapBindFailureReasonTest {
     @BeforeAll
     static void setup() throws Exception {
         server = LdapTestSupport.startServer("basic.ldif");
-        context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test");
+        context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.ldap.default.groups.enabled", true,
+                "micronaut.security.ldap.default.groups.base", LdapTestSupport.BASE_DN
+        )), "test");
     }
 
     @AfterAll
@@ -63,11 +69,16 @@ class LdapBindFailureReasonTest {
     }
 
     @AfterEach
-    void reset() {
+    void everyContextOpenedIsClosedAndReset() {
         FailingContextBuilder contextBuilder = context.getBean(FailingContextBuilder.class);
+        int opened = contextBuilder.opened.getAndSet(0);
+        int closed = contextBuilder.closed.getAndSet(0);
         contextBuilder.managerException = null;
         contextBuilder.userException = null;
-        context.getBean(FailingLdapSearchService.class).exception = null;
+        FailingLdapSearchService searchService = context.getBean(FailingLdapSearchService.class);
+        searchService.exception = null;
+        searchService.groupException = null;
+        assertEquals(opened, closed, "every context the provider opens has to be closed");
     }
 
     static Stream<Arguments> userBindFailures() {
@@ -121,6 +132,14 @@ class LdapBindFailureReasonTest {
         assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()));
     }
 
+    @ParameterizedTest(name = "{0} during the group search yields UNKNOWN")
+    @MethodSource("searchFailures")
+    void exceptionDuringTheGroupSearchNeverBlamesTheCredentials(NamingException exception) {
+        context.getBean(FailingLdapSearchService.class).groupException = exception;
+
+        assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()));
+    }
+
     @Test
     void userAuthenticatesWhenNothingFails() {
         assertTrue(authenticate().isAuthenticated());
@@ -138,6 +157,8 @@ class LdapBindFailureReasonTest {
     @Singleton
     static class FailingContextBuilder extends DefaultContextBuilder {
 
+        final AtomicInteger opened = new AtomicInteger();
+        final AtomicInteger closed = new AtomicInteger();
         volatile NamingException managerException;
         volatile NamingException userException;
 
@@ -147,12 +168,23 @@ class LdapBindFailureReasonTest {
             if (exception != null) {
                 throw exception;
             }
-            return super.build(contextSettings);
+            DirContext context = super.build(contextSettings);
+            opened.incrementAndGet();
+            return context;
+        }
+
+        @Override
+        public void close(DirContext context) {
+            if (context != null) {
+                closed.incrementAndGet();
+            }
+            super.close(context);
         }
     }
 
     /**
-     * Delegates to the default search service unless an exception has been configured for the user search.
+     * Delegates to the default search service unless an exception has been configured for the user search or for the
+     * group search.
      */
     @Requires(property = "spec.name", value = SPEC_NAME)
     @Replaces(DefaultLdapSearchService.class)
@@ -160,13 +192,23 @@ class LdapBindFailureReasonTest {
     static class FailingLdapSearchService extends DefaultLdapSearchService {
 
         volatile NamingException exception;
+        volatile NamingException groupException;
 
         @Override
         public Optional<LdapSearchResult> searchFirst(DirContext managerContext, SearchSettings settings) throws NamingException {
             if (exception != null) {
                 throw exception;
             }
-            return super.searchFirst(managerContext, settings);
+            // super.search, not search: the group search exception must not fail the user search
+            return super.search(managerContext, settings).stream().findFirst();
+        }
+
+        @Override
+        public List<LdapSearchResult> search(DirContext managerContext, SearchSettings settings) throws NamingException {
+            if (groupException != null) {
+                throw groupException;
+            }
+            return super.search(managerContext, settings);
         }
     }
 }

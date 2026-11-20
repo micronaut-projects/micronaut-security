@@ -13,6 +13,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -45,7 +46,7 @@ public final class LdapTestSupport {
             config.addInMemoryOperationInterceptor(interceptor);
         }
         InMemoryDirectoryServer server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapTestSupport.class.getClassLoader().getResourceAsStream(ldifPath)) {
+        try (InputStream ldif = Objects.requireNonNull(LdapTestSupport.class.getClassLoader().getResourceAsStream(ldifPath), ldifPath)) {
             server.importFromLDIF(true, new LDIFReader(ldif));
         }
         server.startListening();

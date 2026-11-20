@@ -1,23 +1,32 @@
 package io.micronaut.security.ldap;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSimpleBindRequest;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import com.unboundid.ldap.sdk.Attribute;
+import com.unboundid.ldap.sdk.DN;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.RDN;
 import com.unboundid.ldap.sdk.ResultCode;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.ldap.context.DefaultLdapSearchService;
+import io.micronaut.security.ldap.context.LdapSearchResult;
+import jakarta.inject.Singleton;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.SearchResult;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,35 +35,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A line break in a value that is logged could start a forged log entry (CWE-117). The username is supplied by an
- * unauthenticated client, and the diagnostic messages and group names are supplied by the directory. None of them may
+ * unauthenticated client, and the diagnostic messages, DNs and group names are supplied by the directory. None of them may
  * reach the log with its line breaks.
  */
 class LdapLogInjectionTest {
 
+    private static final String SPEC_NAME = "LdapLogInjectionTest";
     private static final String FORGED_ENTRY = "12:00:00 INFO  Authentication succeeded for admin";
     private static final String LINE_BREAKS = "\r\n";
     private static final String USER = "riemann";
     private static final String USER_DN = "uid=riemann," + LdapTestSupport.BASE_DN;
     private static final String DECOY_DN = "cn=decoy," + LdapTestSupport.BASE_DN;
 
-    private Logger logger;
-    private Level originalLevel;
-    private ListAppender<ILoggingEvent> appender;
+    private LogCapture log;
 
     @BeforeEach
     void captureLog() {
-        logger = (Logger) LoggerFactory.getLogger("io.micronaut.security.ldap");
-        originalLevel = logger.getLevel();
-        logger.setLevel(Level.TRACE);
-        appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
+        log = LogCapture.start("io.micronaut.security.ldap", Level.TRACE);
     }
 
     @AfterEach
     void restoreLog() {
-        logger.detachAppender(appender);
-        logger.setLevel(originalLevel);
+        log.close();
     }
 
     @Test
@@ -88,17 +90,51 @@ class LdapLogInjectionTest {
         assertForgedEntryIsLoggedWithoutLineBreaks();
     }
 
-    @Test
-    void lineBreaksInTheDiagnosticMessageOfAnUnexpectedDecoyBindFailureAreNotLogged() throws Exception {
-        // a result code other than invalid credentials makes the provider warn about the decoy, at a level enabled by default
-        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif",
-                rejectBind(DECOY_DN, ResultCode.UNWILLING_TO_PERFORM));
+    @ParameterizedTest(name = "result code {0} to the decoy bind is logged at {1} without line breaks")
+    @CsvSource({
+            // the expected failure of the decoy bind
+            "49, DEBUG",
+            // a result code other than invalid credentials makes the provider warn about the decoy, at a level enabled by default
+            "53, WARN",
+    })
+    void lineBreaksInTheDiagnosticMessageOfTheDecoyBindAreNotLogged(int resultCode, String level) throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", rejectBind(DECOY_DN, ResultCode.valueOf(resultCode)));
 
         AuthenticationResponse response = authenticate(server, Map.of("micronaut.security.ldap.default.search.decoy-dn", DECOY_DN), "nobody");
 
         assertFalse(response.isAuthenticated());
-        assertTrue(appender.list.stream().anyMatch(event -> event.getLevel() == Level.WARN && event.getFormattedMessage().contains(FORGED_ENTRY)),
-                "the decoy warning is expected to carry the diagnostic message");
+        assertTrue(log.events().stream().anyMatch(event -> event.getLevel() == Level.toLevel(level) && event.getFormattedMessage().contains("Decoy bind")
+                        && event.getFormattedMessage().contains(FORGED_ENTRY)),
+                "the decoy log line is expected to carry the diagnostic message: " + log.messages());
+        assertForgedEntryIsLoggedWithoutLineBreaks();
+    }
+
+    @Test
+    void lineBreaksInTheDnOfTheUserAreNotLogged() throws Exception {
+        // the directory escapes the line breaks of a DN (RFC 4514), so they reach the provider only through a custom
+        // search service: sanitizing the DN is defence in depth
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
+        String uid = "forged" + LINE_BREAKS + FORGED_ENTRY;
+        DN dn = new DN(new RDN("uid", uid), new DN(LdapTestSupport.BASE_DN));
+        server.add(new Entry(dn,
+                new Attribute("objectClass", "inetOrgPerson"),
+                new Attribute("uid", uid),
+                new Attribute("cn", "forged"),
+                new Attribute("sn", "forged"),
+                new Attribute("userPassword", LdapTestSupport.PASSWORD)));
+        server.add(new Entry("cn=staff," + LdapTestSupport.BASE_DN,
+                new Attribute("objectClass", "groupOfUniqueNames"),
+                new Attribute("cn", "staff"),
+                new Attribute("uniqueMember", dn.toString())));
+
+        // groups are enabled, and the user is a member of one, so that the group processor logs the DN too
+        AuthenticationResponse response = authenticate(server, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.ldap.default.groups.enabled", true,
+                "micronaut.security.ldap.default.groups.base", LdapTestSupport.BASE_DN
+        ), uid);
+
+        assertTrue(response.isAuthenticated());
         assertForgedEntryIsLoggedWithoutLineBreaks();
     }
 
@@ -144,10 +180,30 @@ class LdapLogInjectionTest {
     }
 
     private void assertForgedEntryIsLoggedWithoutLineBreaks() {
-        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+        List<String> messages = log.messages();
         assertTrue(messages.stream().anyMatch(message -> message.contains(FORGED_ENTRY)), "the value is expected in the log: " + messages);
         for (String message : messages) {
-            assertFalse(message.matches("(?s).*[\\p{Cntrl}\\u2028\\u2029].*"), "control character logged: " + message);
+            // the characters LoggingUtils#sanitize replaces; \p{Cntrl} would miss C1 controls such as NEL (U+0085)
+            assertFalse(message.chars().anyMatch(c -> Character.isISOControl(c) || c == '\u2028' || c == '\u2029'), "control character logged: " + message);
+        }
+    }
+
+    /**
+     * Stands in for a custom search service that returns the DN of an entry with its line breaks unescaped.
+     */
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Replaces(DefaultLdapSearchService.class)
+    @Singleton
+    static class UnescapedDnLdapSearchService extends DefaultLdapSearchService {
+
+        @Override
+        protected List<LdapSearchResult> createResults(NamingEnumeration<SearchResult> results) throws NamingException {
+            List<LdapSearchResult> searchResults = new ArrayList<>();
+            while (results.hasMore()) {
+                SearchResult result = results.next();
+                searchResults.add(new LdapSearchResult(result.getAttributes(), result.getNameInNamespace().replace("\\0d\\0a", LINE_BREAKS)));
+            }
+            return searchResults;
         }
     }
 }
