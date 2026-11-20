@@ -5,7 +5,9 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.csp.ContentSecurityPolicy
 import io.micronaut.security.csp.ContentSecurityPolicyDirective
+import io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator
+import io.micronaut.security.csp.ContentSecurityPolicyKeywords
 import jakarta.inject.Singleton
 
 //end::clazz[]
@@ -16,7 +18,7 @@ class ApplicationContentSecurityPolicyGenerator : ContentSecurityPolicyGenerator
 
     override fun contentSecurityPolicy(request: HttpRequest<*>): ContentSecurityPolicy =
         ContentSecurityPolicy(listOf(
-            ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, ContentSecurityPolicyGenerator.QUOTED_SELF),
-            ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, ContentSecurityPolicyGenerator.QUOTED_NONE)))
+            ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, ContentSecurityPolicyKeywords.QUOTED_SELF),
+            ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, ContentSecurityPolicyKeywords.QUOTED_NONE)))
 }
 //end::clazz[]

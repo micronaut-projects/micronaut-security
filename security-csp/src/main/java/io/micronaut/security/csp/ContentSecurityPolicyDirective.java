@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
 
 /**
  * A directive in a Content Security Policy.

@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames;
 
 class ContentSecurityPolicyResponseHeaderPopulatorTest {
 
@@ -41,9 +42,9 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
     void addsContentSecurityPolicyHeader() {
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self' images.example.com"),
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'"),
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.IMG_SRC, "'self' images.example.com"),
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, null)
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
                 new ContentSecurityPolicyFilterConfigurationProperties(),
@@ -62,7 +63,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         configuration.setReportOnly(true);
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
                 )),
                 configuration,
                 new ContentSecurityPolicyFilterConfigurationProperties(),
@@ -93,7 +94,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         filterConfiguration.setPattern("/foo/**");
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
                 filterConfiguration,
@@ -111,7 +112,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         filterConfiguration.setPattern("/app/foo/**");
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'")
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
                 filterConfiguration,
@@ -141,7 +142,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         filterConfiguration.setPattern("/foo/**");
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'")
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'")
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
                 filterConfiguration,

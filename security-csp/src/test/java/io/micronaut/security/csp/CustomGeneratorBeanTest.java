@@ -35,6 +35,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.DEFAULT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.IMG_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
 
 /**
  * Verifies the two documented ways of customizing the policy: subclassing
@@ -52,9 +55,9 @@ class CustomGeneratorBeanTest {
             HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/custom-generator"), String.class);
             ContentSecurityPolicy policy = ContentSecurityPolicy.of(response);
 
-            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self'"), policy.imgSrc());
-            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"), policy.defaultSrc());
-            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'"), policy.scriptSrc(),
+            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.IMG_SRC, "'self'"), policy.imgSrc());
+            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'"), policy.defaultSrc());
+            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'self'"), policy.scriptSrc(),
                 "directive configuration must keep applying to a subclass bean");
         }
     }

@@ -30,21 +30,21 @@ class ContentSecurityPolicyDirectiveTest {
 
     @Test
     void headerValueIncludesDirectiveValue() {
-        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'");
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'");
 
         assertEquals("default-src 'self'", directive.toHeaderValue());
     }
 
     @Test
     void headerValueOmitsMissingDirectiveValue() {
-        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null);
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, null);
 
         assertEquals("upgrade-insecure-requests", directive.toHeaderValue());
     }
 
     @Test
     void valuesSplitsDirectiveValue() {
-        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.CONNECT_SRC,
                 "'self'  https://api.example.com");
 
         assertEquals(List.of("'self'", "https://api.example.com"), directive.values());
@@ -52,7 +52,7 @@ class ContentSecurityPolicyDirectiveTest {
 
     @Test
     void blankValueHasNoTokensAndIsOmittedFromTheHeader() {
-        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, "   ");
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SANDBOX, "   ");
 
         assertEquals(List.of(), directive.values());
         assertEquals("sandbox", directive.toHeaderValue());
@@ -62,28 +62,28 @@ class ContentSecurityPolicyDirectiveTest {
 
     @Test
     void isNoneRecognizesOnlyTheQuotedKeyword() {
-        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'none'").isNone());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "none").isNone());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, "'self'").isNone());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.OBJECT_SRC, null).isNone());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, "'none'").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, "none").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, "'self'").isNone());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, null).isNone());
     }
 
     @Test
     void isSelfRecognizesOnlyTheQuotedKeyword() {
-        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'").isSelf());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'").isSelf());
-        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, null).isSelf());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'self'").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "self").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'none'").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, null).isSelf());
     }
 
     @Test
     void toStringRedactsNonceSourcesButHeaderValueKeepsThem() {
-        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC,
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC,
             "'NONCE-abc123' 'self'  https://cdn.example.com");
 
         assertEquals("script-src 'NONCE-abc123' 'self'  https://cdn.example.com", directive.toHeaderValue());
         assertEquals("script-src 'nonce-[redacted]' 'self' https://cdn.example.com", directive.toString());
-        assertEquals("sandbox", new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, null).toString());
+        assertEquals("sandbox", new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SANDBOX, null).toString());
     }
 
     @ParameterizedTest
@@ -96,7 +96,7 @@ class ContentSecurityPolicyDirectiveTest {
     @ValueSource(strings = {"'self'; report-uri https://attacker.example", "'self'\r\nX-Injected: 1", "'self'\u0000"})
     void rejectsAValueThatWouldEndTheDirectiveOrTheHeader(String value) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, value));
+            () -> new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, value));
 
         assertTrue(exception.getMessage().contains("script-src"), exception::getMessage);
     }
@@ -104,6 +104,6 @@ class ContentSecurityPolicyDirectiveTest {
     @Test
     void acceptsATabAndAComma() {
         assertEquals(List.of("'self'", "https://a.example.com,"),
-            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'\thttps://a.example.com,").values());
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'self'\thttps://a.example.com,").values());
     }
 }

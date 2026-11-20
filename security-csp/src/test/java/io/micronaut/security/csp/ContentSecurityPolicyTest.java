@@ -31,10 +31,10 @@ class ContentSecurityPolicyTest {
     @Test
     void copiesTheDirectivesDefensively() {
         List<ContentSecurityPolicyDirective> directives = new ArrayList<>();
-        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"));
+        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'"));
         ContentSecurityPolicy policy = new ContentSecurityPolicy(directives);
 
-        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self'"));
+        directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.IMG_SRC, "'self'"));
 
         assertEquals("default-src 'none'", policy.toHeaderValue());
         assertThrows(UnsupportedOperationException.class, () -> policy.directives().add(directives.get(1)));
@@ -43,8 +43,8 @@ class ContentSecurityPolicyTest {
     @Test
     void toStringRedactsTheNonceThatTheHeaderValueCarries() {
         ContentSecurityPolicy policy = new ContentSecurityPolicy(List.of(
-            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"),
-            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-abc123' 'strict-dynamic'")));
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'"),
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'nonce-abc123' 'strict-dynamic'")));
 
         assertEquals("default-src 'none'; script-src 'nonce-abc123' 'strict-dynamic'", policy.toHeaderValue());
         assertEquals("default-src 'none'; script-src 'nonce-[redacted]' 'strict-dynamic'", policy.toString());
@@ -56,9 +56,9 @@ class ContentSecurityPolicyTest {
                 "default-src 'self'; ; img-src https://images.example.com; upgrade-insecure-requests");
 
         assertEquals(List.of(
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "https://images.example.com"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.IMG_SRC, "https://images.example.com"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, null)
         ), policy.directives());
     }
 
@@ -116,10 +116,10 @@ class ContentSecurityPolicyTest {
 
         assertNotNull(csp);
         assertEquals(List.of(
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'"),
                 new ContentSecurityPolicyDirective("SCRIPT-SRC", "'nonce-abc' https://cdn.example.com"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'"),
-                new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'none'"),
+                new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, null)),
             csp.directives(), "empty components are dropped, names and values are kept as received");
         assertEquals(List.of("'self'"), csp.defaultSrc().values());
         assertEquals(new ContentSecurityPolicyDirective("SCRIPT-SRC", "'nonce-abc' https://cdn.example.com"), csp.scriptSrc(),

@@ -17,8 +17,6 @@ package io.micronaut.security.csp;
 
 import io.micronaut.core.annotation.Internal;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
-
 /**
  * Internal helpers for serializing CSP source expressions.
  *
@@ -27,6 +25,19 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QU
  */
 @Internal
 final class ContentSecurityPolicyUtils {
+    /**
+     * The space between the source expressions of a serialized directive.
+     */
+    static final String SPACE = " ";
+    /**
+     * The quote character around keyword, nonce and hash source expressions.
+     */
+    static final String SINGLE_QUOTE = "'";
+    /**
+     * Prefix of a nonce source expression, without its surrounding quotes.
+     */
+    static final String NONCE_PREFIX = "nonce-";
+
     private ContentSecurityPolicyUtils() {
     }
 

@@ -8,6 +8,11 @@ import io.micronaut.security.csp.ContentSecurityPolicyDirective
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator
 import jakarta.inject.Singleton
 
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.DEFAULT_SRC
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.OBJECT_SRC
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_NONE
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF
+
 //end::clazz[]
 @Requires(property = "spec.name", value = "ApplicationContentSecurityPolicyGeneratorTest")
 //tag::clazz[]

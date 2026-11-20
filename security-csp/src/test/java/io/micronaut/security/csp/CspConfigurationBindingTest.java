@@ -29,14 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.BASE_URI;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.FENCED_FRAME_SRC;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.IMG_SRC;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.OBJECT_SRC;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.PREFETCH_SRC;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.REPORT_TO;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SCRIPT_SRC;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.STYLE_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.BASE_URI;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.FENCED_FRAME_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.IMG_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.OBJECT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.PREFETCH_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.REPORT_TO;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.SCRIPT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.STYLE_SRC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -105,7 +105,7 @@ class CspConfigurationBindingTest {
             Map.entry("micronaut.security.csp.script-src.report-sha512", true),
             Map.entry("micronaut.security.csp.script-src.values", List.of("https://cdn.example.com"))));
 
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC,
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC,
                 "'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' 'unsafe-hashes' 'report-sample' "
                     + "'wasm-unsafe-eval' 'trusted-types-eval' 'report-sha256' 'report-sha384' 'report-sha512' https://cdn.example.com"),
             policy.scriptSrc());
@@ -121,7 +121,7 @@ class CspConfigurationBindingTest {
             "micronaut.security.csp.connect-src.ws", true,
             "micronaut.security.csp.connect-src.wss", true));
 
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC,
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.CONNECT_SRC,
                 "'unsafe-webtransport-hashes' blob: filesystem: mediastream: ws: wss:"),
             policy.connectSrc());
     }
@@ -134,7 +134,7 @@ class CspConfigurationBindingTest {
             "micronaut.security.csp.report-uri", List.of("https://example.com/csp")));
 
         assertNull(policy.requireTrustedTypesFor());
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_URI, "https://example.com/csp"),
             policy.reportUri());
     }
 
@@ -143,7 +143,7 @@ class CspConfigurationBindingTest {
         ContentSecurityPolicy policy = policy(Map.of(
             "micronaut.security.csp.require-trusted-types-for", "'script'"));
 
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
             policy.requireTrustedTypesFor());
     }
 

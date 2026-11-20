@@ -9,6 +9,8 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations
 import jakarta.inject.Singleton
 
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS
+
 //end::clazz[]
 @Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 //tag::clazz[]

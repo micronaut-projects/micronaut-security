@@ -10,6 +10,11 @@ import jakarta.inject.Singleton;
 
 import java.util.List;
 
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.DEFAULT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.OBJECT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
+
 //end::clazz[]
 @Requires(property = "spec.name", value = "ApplicationContentSecurityPolicyGeneratorTest")
 //tag::clazz[]

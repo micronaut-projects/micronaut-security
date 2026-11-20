@@ -3,7 +3,7 @@ from micronaut.context.annotation import Requires
 from jakarta.inject import Singleton
 from java.util import ArrayList, List
 from micronaut.http import HttpRequest
-from micronaut.security.csp import ContentSecurityPolicyDirective, ContentSecurityPolicyGenerator, DefaultContentSecurityPolicyGenerator
+from micronaut.security.csp import ContentSecurityPolicyDirective, ContentSecurityPolicyDirectiveNames, DefaultContentSecurityPolicyGenerator
 from micronaut.security.csp.conf import ContentSecurityPolicyConfiguration, ContentSecurityPolicyDirectiveConfigurations
 
 # end::clazz[]
@@ -20,6 +20,6 @@ class UpgradingContentSecurityPolicyGenerator(DefaultContentSecurityPolicyGenera
         if request is None:
             return super().directives()
         directives = ArrayList(super().directives(request))
-        directives.add(ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, None))
+        directives.add(ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, None))
         return directives
 # end::clazz[]

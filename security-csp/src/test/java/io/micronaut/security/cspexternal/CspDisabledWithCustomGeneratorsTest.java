@@ -47,6 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.DEFAULT_SRC;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
 
 /**
  * Verifies that {@code micronaut.security.csp.enabled=false} also turns off the filter and report

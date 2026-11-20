@@ -39,6 +39,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames;
 
 @Property(name = "spec.name", value = ReportToTest.SPEC_NAME)
 @Property(name = ReportToConfigurationProperties.PREFIX + ".enabled", value = "true")
@@ -57,7 +58,7 @@ class ReportToTest {
 
         ContentSecurityPolicy policy = ContentSecurityPolicy.of(response);
         assertNotNull(policy);
-        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_TO, "security-csp"),
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_TO, "security-csp"),
             policy.reportTo());
         assertEquals("security-csp=\"/custom-csp-report\"",
             response.header(ReportingEndpoints.HEADER_NAME));

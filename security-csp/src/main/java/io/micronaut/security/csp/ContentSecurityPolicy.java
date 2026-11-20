@@ -85,7 +85,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective baseUri() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.BASE_URI);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.BASE_URI);
     }
 
     /**
@@ -95,7 +95,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective childSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.CHILD_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.CHILD_SRC);
     }
 
     /**
@@ -105,7 +105,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective connectSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.CONNECT_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.CONNECT_SRC);
     }
 
     /**
@@ -115,7 +115,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective defaultSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.DEFAULT_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC);
     }
 
     /**
@@ -125,7 +125,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.FENCED_FRAME_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.FENCED_FRAME_SRC);
     }
 
     /**
@@ -135,7 +135,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective fontSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.FONT_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.FONT_SRC);
     }
 
     /**
@@ -145,7 +145,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective formAction() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.FORM_ACTION);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.FORM_ACTION);
     }
 
     /**
@@ -155,7 +155,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective frameAncestors() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_ANCESTORS);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.FRAME_ANCESTORS);
     }
 
     /**
@@ -165,7 +165,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective frameSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.FRAME_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.FRAME_SRC);
     }
 
     /**
@@ -175,7 +175,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective imgSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.IMG_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.IMG_SRC);
     }
 
     /**
@@ -185,7 +185,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective manifestSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.MANIFEST_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.MANIFEST_SRC);
     }
 
     /**
@@ -195,7 +195,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective mediaSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.MEDIA_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.MEDIA_SRC);
     }
 
     /**
@@ -205,7 +205,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective objectSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.OBJECT_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.OBJECT_SRC);
     }
 
     /**
@@ -215,7 +215,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective prefetchSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.PREFETCH_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.PREFETCH_SRC);
     }
 
     /**
@@ -225,7 +225,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective reportTo() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_TO);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.REPORT_TO);
     }
 
     /**
@@ -235,7 +235,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective reportUri() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.REPORT_URI);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.REPORT_URI);
     }
 
     /**
@@ -245,7 +245,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.REQUIRE_TRUSTED_TYPES_FOR);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.REQUIRE_TRUSTED_TYPES_FOR);
     }
 
     /**
@@ -255,7 +255,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective sandbox() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.SANDBOX);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.SANDBOX);
     }
 
     /**
@@ -265,7 +265,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC);
     }
 
     /**
@@ -275,7 +275,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrcAttr() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ATTR);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC_ATTR);
     }
 
     /**
@@ -285,7 +285,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective scriptSrcElem() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.SCRIPT_SRC_ELEM);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC_ELEM);
     }
 
     /**
@@ -295,7 +295,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.STYLE_SRC);
     }
 
     /**
@@ -305,7 +305,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrcAttr() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ATTR);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.STYLE_SRC_ATTR);
     }
 
     /**
@@ -315,7 +315,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective styleSrcElem() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.STYLE_SRC_ELEM);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.STYLE_SRC_ELEM);
     }
 
     /**
@@ -325,7 +325,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective trustedTypes() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.TRUSTED_TYPES);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.TRUSTED_TYPES);
     }
 
     /**
@@ -335,7 +335,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective upgradeInsecureRequests() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS);
     }
 
     /**
@@ -345,7 +345,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public @Nullable ContentSecurityPolicyDirective workerSrc() {
-        return findByDirectiveName(ContentSecurityPolicyGenerator.WORKER_SRC);
+        return findByDirectiveName(ContentSecurityPolicyDirectiveNames.WORKER_SRC);
     }
 
     /**

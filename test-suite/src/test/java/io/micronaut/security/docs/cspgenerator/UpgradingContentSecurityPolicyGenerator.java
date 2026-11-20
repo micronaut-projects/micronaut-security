@@ -12,6 +12,8 @@ import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.micronaut.security.csp.ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS;
+
 //end::clazz[]
 @Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 //tag::clazz[]
