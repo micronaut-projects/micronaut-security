@@ -17,34 +17,46 @@ package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.annotation.Status;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.csp.ContentSecurityPolicy;
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NonceCacheControlResponseHeaderPopulatorTest {
     private static final String SPEC_NAME = "NonceCacheControlResponseHeaderPopulatorTest";
     private static final String NONCE = "micronaut.security.csp.script-src.nonce";
     private static final String NONCE_CACHE_CONTROL = "micronaut.security.csp.filter.nonce-cache-control";
+    private static final List<HttpHeaderEntry> PRIVATE = List.of(new HttpHeaderEntry(HttpHeaders.CACHE_CONTROL, "private"));
 
     @ParameterizedTest
     @ValueSource(strings = {"/nonce-cache/html", "/nonce-cache/xhtml"})
@@ -90,6 +102,56 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     @Test
+    void populatorWritesNothingForARequestWithoutANonce() {
+        assertNull(populator("private", request -> MediaType.TEXT_HTML_TYPE)
+            .findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok().contentType(MediaType.TEXT_HTML_TYPE)));
+    }
+
+    @Test
+    void populatorUsesTheContentTypeOfTheResponseBeforeTheOneOfTheRoute() {
+        NonceCacheControlResponseHeaderPopulator populator = populator("private", request -> MediaType.TEXT_HTML_TYPE);
+
+        assertNull(populator.findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType(MediaType.APPLICATION_JSON_TYPE)));
+        assertEquals(PRIVATE, populator.findHttpHeaders(requestWithNonce(), HttpResponse.ok()));
+    }
+
+    @Test
+    void populatorIgnoresContentTypeParameters() {
+        assertEquals(PRIVATE, populator("private", request -> null)
+            .findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType("text/html; charset=utf-8")));
+    }
+
+    @Test
+    void populatorWritesNothingWhenTheContentTypeCannotBeTold() {
+        assertNull(populator("private", request -> null).findHttpHeaders(requestWithNonce(), HttpResponse.ok()));
+    }
+
+    @Test
+    void jsonErrorResponsesReceiveNoCacheControl() {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
+            HttpResponse<?> notFound = error(server, "/nonce-cache/no-such-path");
+            HttpResponse<?> failure = error(server, "/nonce-cache/failure");
+
+            assertEquals(HttpStatus.NOT_FOUND, notFound.getStatus());
+            assertNull(notFound.header(HttpHeaders.CACHE_CONTROL));
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, failure.getStatus());
+            assertNull(failure.header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/nonce-cache/html-error", "/nonce-cache/html-error-produces"})
+    void htmlErrorPagesThatCarryANonceReceiveCacheControl(String path) {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
+            HttpResponse<?> response = error(server, path);
+
+            assertEquals(HttpStatus.CONFLICT, response.getStatus());
+            assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
+            assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    @Test
     void cacheControlSetByTheApplicationIsKept() {
         try (EmbeddedServer server = server(Map.of(NONCE, true))) {
             HttpResponse<String> response = get(server, "/nonce-cache/own");
@@ -120,6 +182,28 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     void blankCacheControlIsNotWritten(String value) {
         try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, value))) {
             assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    private static NonceCacheControlResponseHeaderPopulator populator(String cacheControl,
+                                                                      Function<HttpRequest<?>, @Nullable MediaType> routeContentType) {
+        ContentSecurityPolicyFilterConfigurationProperties configuration = new ContentSecurityPolicyFilterConfigurationProperties();
+        configuration.setNonceCacheControl(cacheControl);
+        return new NonceCacheControlResponseHeaderPopulator(configuration, routeContentType);
+    }
+
+    private static HttpRequest<?> requestWithNonce() {
+        MutableHttpRequest<?> request = HttpRequest.GET("/");
+        request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, "nonce");
+        return request;
+    }
+
+    private static HttpResponse<?> error(EmbeddedServer server, String path) {
+        try (HttpClient httpClient = HttpClient.create(server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                () -> client.exchange(HttpRequest.GET(path), String.class));
+            return exception.getResponse();
         }
     }
 
@@ -166,6 +250,35 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         @Produces({MediaType.TEXT_PLAIN, MediaType.TEXT_HTML})
         String negotiated() {
             return "Hello";
+        }
+
+        @Get("/failure")
+        String failure() {
+            throw new IllegalStateException("failure");
+        }
+
+        @Get("/html-error")
+        String htmlError() {
+            throw new UnsupportedOperationException("html error");
+        }
+
+        @Get("/html-error-produces")
+        String htmlErrorProduces() {
+            throw new IllegalArgumentException("html error");
+        }
+
+        @Error(UnsupportedOperationException.class)
+        HttpResponse<String> onHtmlError() {
+            return HttpResponse.<String>status(HttpStatus.CONFLICT)
+                .body("<!DOCTYPE html><html><head><title>Error</title></head><body></body></html>")
+                .contentType(MediaType.TEXT_HTML_TYPE);
+        }
+
+        @Error(IllegalArgumentException.class)
+        @Produces(MediaType.TEXT_HTML)
+        @Status(HttpStatus.CONFLICT)
+        String onHtmlErrorProduces() {
+            return "<!DOCTYPE html><html><head><title>Error</title></head><body></body></html>";
         }
 
         @Get("/own")

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.cspdisabled;
+package io.micronaut.security.cspexternal;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -60,7 +61,8 @@ class CspStartupLogTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.INFO, events.get(0).getLevel());
-        assertTrue(events.get(0).getFormattedMessage().startsWith("Enforcing the Content-Security-Policy header on requests matching /**"));
+        assertMentions(events.get(0), "Content-Security-Policy header", "/**");
+        assertFalse(events.get(0).getFormattedMessage().contains("Report-Only"));
     }
 
     @Test
@@ -68,7 +70,7 @@ class CspStartupLogTest {
         List<ILoggingEvent> events = capture(STARTUP_LOGGER, () -> run(Map.of("micronaut.security.csp.report-only", true), context -> { }));
 
         assertEquals(1, events.size());
-        assertTrue(events.get(0).getFormattedMessage().startsWith("Writing the Content-Security-Policy-Report-Only header on requests matching /**"));
+        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "/**");
     }
 
     @Test
@@ -77,7 +79,7 @@ class CspStartupLogTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertTrue(events.get(0).getFormattedMessage().startsWith("CSP report-to is enabled with group 'csp'"));
+        assertMentions(events.get(0), "report-to", "'csp'");
     }
 
     @Test
@@ -104,10 +106,9 @@ class CspStartupLogTest {
             "micronaut.security.csp.script-src.values", List.of("self", "sha256-abc=", "'self'", "https://cdn.example.com")),
             context -> { }));
 
-        assertEquals(List.of(
-            "micronaut.security.csp.script-src.values contains \"self\", which looks like a keyword, hash or nonce source but is not single-quoted; browsers treat it as a host. Use \"'self'\".",
-            "micronaut.security.csp.script-src.values contains \"sha256-abc=\", which looks like a keyword, hash or nonce source but is not single-quoted; browsers treat it as a host. Use \"'sha256-abc='\"."),
-            events.stream().map(ILoggingEvent::getFormattedMessage).toList());
+        assertEquals(2, events.size(), "only the two unquoted expressions are reported");
+        assertMentions(events.get(0), "micronaut.security.csp.script-src.values", "\"self\"", "\"'self'\"");
+        assertMentions(events.get(1), "micronaut.security.csp.script-src.values", "\"sha256-abc=\"", "\"'sha256-abc='\"");
     }
 
     @ParameterizedTest(name = "{0}")
@@ -150,9 +151,9 @@ class CspStartupLogTest {
             "micronaut.security.csp.report-uri", List.of("http://reports.example.com/csp", "HTTP://localhost:8080/csp", "https://reports.example.com/csp", "/csp")),
             context -> { }));
 
-        assertEquals(List.of("micronaut.security.csp.report-uri contains the plaintext endpoint http://reports.example.com/csp; "
-                + "violation reports can contain sensitive URLs. Use https."),
-            events.stream().map(ILoggingEvent::getFormattedMessage).toList());
+        assertEquals(1, events.size(), "only the plaintext endpoint on a non-loopback host is reported");
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertMentions(events.get(0), "micronaut.security.csp.report-uri", "http://reports.example.com/csp");
     }
 
     @Test
@@ -167,7 +168,17 @@ class CspStartupLogTest {
         }));
 
         assertEquals(1, events.size());
-        assertTrue(events.get(0).getFormattedMessage().startsWith("Omitting the CSP nonce from script-src: the ContentSecurityPolicyNonceGenerator bean"));
+        assertMentions(events.get(0), "script-src", "ContentSecurityPolicyNonceGenerator");
+    }
+
+    /**
+     * Asserts on the facts a log message must carry, not on its wording.
+     */
+    private static void assertMentions(ILoggingEvent event, String... facts) {
+        String message = event.getFormattedMessage();
+        for (String fact : facts) {
+            assertTrue(message.contains(fact), () -> "expected \"" + fact + "\" in: " + message);
+        }
     }
 
     private static void run(Map<String, Object> properties, Consumer<ApplicationContext> action) {

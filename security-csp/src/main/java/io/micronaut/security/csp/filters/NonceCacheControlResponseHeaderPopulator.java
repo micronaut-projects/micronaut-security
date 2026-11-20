@@ -27,12 +27,14 @@ import io.micronaut.http.server.RouteExecutor;
 import io.micronaut.http.server.filter.ResponseHeaderPopulator;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import io.micronaut.web.router.RouteAttributes;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * {@link ResponseHeaderPopulator} that adds the configured {@code Cache-Control} header to HTML and
@@ -52,7 +54,7 @@ import java.util.Optional;
 @Internal
 final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPopulator {
     private final @Nullable List<HttpHeaderEntry> cacheControl;
-    private final RouteExecutor routeExecutor;
+    private final Function<HttpRequest<?>, @Nullable MediaType> routeContentType;
 
     /**
      * Creates the populator.
@@ -60,9 +62,24 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
      * @param cspFilterConfiguration configures the {@code Cache-Control} value to write
      * @param routeExecutor resolves the content type of a response that does not declare one yet
      */
+    @Inject
     NonceCacheControlResponseHeaderPopulator(ContentSecurityPolicyFilterConfiguration cspFilterConfiguration,
                                              RouteExecutor routeExecutor) {
-        this.routeExecutor = routeExecutor;
+        this(cspFilterConfiguration, request -> RouteAttributes.getRouteInfo(request)
+            .map(routeInfo -> routeExecutor.resolveDefaultResponseContentType(request, routeInfo))
+            .orElse(null));
+    }
+
+    /**
+     * Creates the populator with the function that predicts the content type of a response.
+     *
+     * @param cspFilterConfiguration configures the {@code Cache-Control} value to write
+     * @param routeContentType returns the content type the server will write for the route matched
+     * by a request, or {@code null} when it cannot be told
+     */
+    NonceCacheControlResponseHeaderPopulator(ContentSecurityPolicyFilterConfiguration cspFilterConfiguration,
+                                             Function<HttpRequest<?>, @Nullable MediaType> routeContentType) {
+        this.routeContentType = routeContentType;
         String value = cspFilterConfiguration.getNonceCacheControl();
         this.cacheControl = StringUtils.hasText(value) ? List.of(new HttpHeaderEntry(HttpHeaders.CACHE_CONTROL, value)) : null;
     }
@@ -87,9 +104,7 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
      * @return the content type the response will be sent with, if it can be told
      */
     private Optional<MediaType> contentType(HttpRequest<?> request, HttpResponse<?> response) {
-        return response.getContentType()
-            .or(() -> RouteAttributes.getRouteInfo(request)
-                .map(routeInfo -> routeExecutor.resolveDefaultResponseContentType(request, routeInfo)));
+        return response.getContentType().or(() -> Optional.ofNullable(routeContentType.apply(request)));
     }
 
     private static boolean canCarryNonce(MediaType mediaType) {

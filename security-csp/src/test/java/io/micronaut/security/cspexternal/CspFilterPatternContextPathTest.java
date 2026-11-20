@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.cspdisabled;
+package io.micronaut.security.cspexternal;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
