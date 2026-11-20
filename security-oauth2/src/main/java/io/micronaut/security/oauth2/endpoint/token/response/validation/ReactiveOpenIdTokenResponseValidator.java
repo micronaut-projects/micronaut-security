@@ -62,7 +62,8 @@ public interface ReactiveOpenIdTokenResponseValidator<T> {
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
-     * @return A non-empty publisher if the ID Token access response is considered valid
+     * @return A non-empty publisher if the ID Token access response is considered valid, otherwise an empty publisher,
+     *         which the password grant reports as a failed login
      * @since 5.6.0
      */
     @SingleResult

@@ -60,8 +60,8 @@ public class NonceClaimValidator {
     private final boolean nonceExpected;
 
     /**
-     * Creates a validator which does not fail when the persisted nonce is missing, unless the ID token carries a
-     * {@code nonce} claim. A subclass which does not call {@link #NonceClaimValidator(NonceFactory)} explicitly uses
+     * Creates a validator which accepts a missing persisted nonce when the ID token has no {@code nonce} claim, the
+     * behavior before 5.6.0. A subclass which does not call {@link #NonceClaimValidator(NonceFactory)} explicitly uses
      * this constructor and does not get the stricter validation.
      *
      * @deprecated Use {@link #NonceClaimValidator(NonceFactory)} instead.
