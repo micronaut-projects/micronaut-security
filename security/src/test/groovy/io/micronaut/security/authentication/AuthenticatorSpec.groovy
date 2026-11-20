@@ -67,7 +67,7 @@ class AuthenticatorSpec extends Specification {
         ctx.close()
     }
 
-    void "if no authentication provider can authentication, the last error is sent back"() {
+    void "if no authentication provider can authenticate, the provider failure is sent back"() {
         given:
         ApplicationContext ctx = ApplicationContext.run()
 

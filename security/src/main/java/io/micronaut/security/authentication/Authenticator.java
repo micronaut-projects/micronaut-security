@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
@@ -44,9 +43,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * An Authenticator operates on several {@link ReactiveAuthenticationProvider} instances returning the first
@@ -61,6 +61,8 @@ import java.util.stream.Collectors;
 @Singleton
 public class Authenticator<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
+    @SuppressWarnings("unchecked")
+    private static final Flux<AuthenticationResponse>[] EMPTY_FLUX_ARRAY = new Flux[0];
 
     private final List<ReactiveAuthenticationProvider<T, ?, ?>> reactiveAuthenticationProviders;
     private final BeanContext beanContext;
@@ -97,16 +99,20 @@ public class Authenticator<T> {
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && CollectionUtils.isEmpty(imperativeAuthenticationProviders)) {
             return Mono.empty();
         }
-        if (LOG.isDebugEnabled() && imperativeAuthenticationProviders != null) {
-            LOG.debug(imperativeAuthenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
-        if (LOG.isDebugEnabled() && reactiveAuthenticationProviders != null) {
-            LOG.debug(reactiveAuthenticationProviders.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
+        logProviders("Imperative authentication providers", imperativeAuthenticationProviders);
+        logProviders("Reactive authentication providers", reactiveAuthenticationProviders);
         if (CollectionUtils.isEmpty(reactiveAuthenticationProviders) && imperativeAuthenticationProviders != null && !anyImperativeAuthenticationProviderIsBlocking()) {
             return Mono.just(authenticate(requestContext, authenticationRequest, imperativeAuthenticationProviders, securityConfiguration));
         }
         return authenticate(requestContext, authenticationRequest, everyProviderSorted());
+    }
+
+    private static void logProviders(String description, @Nullable List<?> providers) {
+        if (LOG.isDebugEnabled() && providers != null) {
+            LOG.debug("{}: {}", description, providers.stream()
+                    .map(provider -> provider.getClass().getName())
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
     /**
@@ -134,17 +140,17 @@ public class Authenticator<T> {
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return authenticateAll(requestContext, authenticationRequest, authenticationProviders);
         }
-        List<AuthenticationResponse> responses = new ArrayList<>();
+        AuthenticationResponse firstFailure = null;
         for (AuthenticationProvider<T, ?, ?> provider : authenticationProviders) {
             AuthenticationResponse response = authenticationResponse(provider, requestContext, authenticationRequest);
             if (response.isAuthenticated()) {
                 return response;
             }
-            responses.add(response);
+            if (firstFailure == null) {
+                firstFailure = response;
+            }
         }
-        return responses.stream()
-                        .findFirst()
-                        .orElseGet(AuthenticationResponse::failure);
+        return firstFailure != null ? firstFailure : AuthenticationResponse.failure();
     }
 
     @NonNull
@@ -187,10 +193,7 @@ public class Authenticator<T> {
         if (providers == null) {
             return Flux.empty();
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(providers.stream().map(ReactiveAuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
-        }
-        Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
+        logProviders("Authentication providers in provider order", providers);
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
 
             return Flux.mergeDelayError(1,
@@ -201,42 +204,71 @@ public class Authenticator<T> {
                                         .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")))
                             )
                             .toList()
-                    .toArray(emptyArr))
+                    .toArray(EMPTY_FLUX_ARRAY))
                     .last()
                     .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
                     .flux();
-        } else {
-            AtomicReference<Throwable> lastError = new AtomicReference<>();
-            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  providers.stream()
-                    .map(auth -> Flux.from(auth.authenticate(request, authenticationRequest)))
-                    .map(sequence -> sequence.switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
-                            .onErrorResume((Function<Throwable, Publisher>) t -> {
-                                lastError.set(t);
-                                return Flux.empty();
-                            })
-                            ).toList()
-                    .toArray(emptyArr));
-
-            return authentication.take(1)
-                    .switchIfEmpty(Flux.create(emitter -> {
-                Throwable error = lastError.get();
-                if (error != null) {
-                    if (error instanceof AuthenticationException) {
-                        AuthenticationResponse response = ((AuthenticationException) error).getResponse();
-                        if (response != null) {
-                            emitter.next(response);
-                            emitter.complete();
-                        } else {
-                            emitter.error(error);
-                        }
-                    } else {
-                        emitter.error(error);
-                    }
-                } else {
-                    emitter.complete();
-                }
-            }, FluxSink.OverflowStrategy.ERROR));
         }
+        return authenticateAny(request, authenticationRequest, providers);
+    }
+
+    /**
+     * Providers may complete on different threads, so failures are recorded by provider index and, when no provider
+     * succeeds, the failure of the first provider in provider order is returned. This mirrors the imperative ANY path.
+     * The failures are held per subscription, so subscribing again never observes the failures of an earlier attempt.
+     * Each provider is invoked inside a defer so that a provider which throws instead of returning a publisher is
+     * recorded as a failure as well.
+     * @param request The request context
+     * @param authenticationRequest The authentication request
+     * @param providers The providers, in provider order
+     * @return The first successful response or, if every provider fails, the failure of the first provider
+     */
+    private Flux<AuthenticationResponse> authenticateAny(T request,
+                                                         AuthenticationRequest authenticationRequest,
+                                                         List<ReactiveAuthenticationProvider<T, ?, ?>> providers) {
+        return Flux.defer(() -> {
+            AtomicReferenceArray<AuthenticationResponse> failures = new AtomicReferenceArray<>(providers.size());
+            List<Flux<AuthenticationResponse>> attempts = IntStream.range(0, providers.size())
+                    .<Flux<AuthenticationResponse>>mapToObj(index -> Flux.defer(() -> Flux.from(providers.get(index).authenticate(request, authenticationRequest)))
+                            .switchMap(rsp -> Authenticator.handleResponse((AuthenticationResponse) rsp))
+                            .onErrorResume((Function<Throwable, Publisher<AuthenticationResponse>>) t -> {
+                                failures.set(index, failedResponseForThrowable(t));
+                                return Flux.empty();
+                            }))
+                    .toList();
+            return Flux.mergeDelayError(1, attempts.toArray(EMPTY_FLUX_ARRAY))
+                    .take(1)
+                    .switchIfEmpty(Mono.fromSupplier(() -> firstFailure(failures)));
+        });
+    }
+
+    @Nullable
+    private static AuthenticationResponse firstFailure(@NonNull AtomicReferenceArray<AuthenticationResponse> failures) {
+        for (int i = 0; i < failures.length(); i++) {
+            AuthenticationResponse failure = failures.get(i);
+            if (failure != null) {
+                return failure;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Converts a throwable raised by a provider into an {@link AuthenticationResponse}, on both the imperative and the
+     * reactive paths. An {@link AuthenticationException} is a deliberate rejection, so its response, or failing that
+     * its message, is returned. Any other throwable is an unexpected error: it is logged and answered with a failure
+     * that does not carry the throwable's message, because that message can reach the client in the HTTP response.
+     * @param t Throwable raised by a provider
+     * @return The failed authentication response
+     */
+    @NonNull
+    private static AuthenticationResponse failedResponseForThrowable(@NonNull Throwable t) {
+        if (t instanceof AuthenticationException authenticationException) {
+            AuthenticationResponse response = authenticationException.getResponse();
+            return response != null ? response : new AuthenticationFailed(authenticationException.getMessage());
+        }
+        LOG.error("An authentication provider failed with an unexpected error. Authentication rejected", t);
+        return AuthenticationResponse.failure();
     }
 
     private static Mono<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
@@ -254,7 +286,7 @@ public class Authenticator<T> {
         try {
             return provider.authenticate(requestContext, authenticationRequest);
         } catch (Exception t) {
-            return authenticationResponseForThrowable(t);
+            return failedResponseForThrowable(t);
         }
     }
 

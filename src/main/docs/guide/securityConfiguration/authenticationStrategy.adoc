@@ -1,1 +1,3 @@
 By default, Micronaut requires just one <<authenticationProviders, Authentication Provider>> to return a successful authentication response. You can set `micronaut.security.authentication-provider-strategy: ALL` to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response.
+
+With the default strategy, when no provider authenticates the user, the failure of the first provider, in provider order, is returned. If a provider throws an exception other than api:security.authentication.AuthenticationException[], the exception is logged and that provider counts as a failed authentication with reason `UNKNOWN`. The exception message is not included in the response.
