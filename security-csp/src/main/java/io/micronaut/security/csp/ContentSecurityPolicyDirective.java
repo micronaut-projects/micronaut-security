@@ -42,7 +42,7 @@ import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SEL
 public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
     private static final String QUOTED_NONCE_PREFIX = "'nonce-";
     private static final String REDACTED_NONCE = QUOTED_NONCE_PREFIX + "[redacted]'";
-    private static final Pattern NAME = Pattern.compile("[A-Za-z0-9-]+");
+    private static final Pattern NAME_PATTERN = Pattern.compile("[A-Za-z0-9-]+");
     private static final Pattern UNSAFE_VALUE_CHARACTERS = Pattern.compile("[;\\x00-\\x08\\x0A-\\x1F\\x7F]");
 
     /**
@@ -54,7 +54,7 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * semicolon or a control character other than a tab
      */
     public ContentSecurityPolicyDirective {
-        if (!NAME.matcher(name).matches()) {
+        if (!NAME_PATTERN.matcher(name).matches()) {
             throw new IllegalArgumentException("A Content Security Policy directive name must consist of letters, digits and hyphens");
         }
         if (value != null && UNSAFE_VALUE_CHARACTERS.matcher(value).find()) {
