@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link LdapAuthenticationProvider} runs on the executor named by
  * {@link LdapAuthenticationProvider#getExecutorName()}. The executor service the deprecated constructor and the
- * deprecated factory method take is never used.
+ * factory method take is never used.
  */
 class LdapAuthenticationProviderExecutorTest {
 
@@ -49,7 +49,7 @@ class LdapAuthenticationProviderExecutorTest {
     @Test
     void oneProviderPerConfigurationNamingTheBlockingExecutor() {
         assertEquals(1, context.getBeansOfType(LdapAuthenticationProvider.class).size(),
-                "One LDAP configuration must produce one provider: the deprecated factory method must not be a bean");
+                "One LDAP configuration must produce one provider");
         assertEquals(TaskExecutors.BLOCKING, context.getBean(LdapAuthenticationProvider.class).getExecutorName());
     }
 
@@ -75,8 +75,8 @@ class LdapAuthenticationProviderExecutorTest {
     }
 
     @Test
-    @SuppressWarnings({"removal", "unchecked"})
-    void theDeprecatedFactoryMethodIgnoresTheExecutorService() {
+    @SuppressWarnings("unchecked")
+    void theFactoryMethodIgnoresTheExecutorService() {
         LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProviderFactory.class).ldapAuthenticationProvider(
                 context.getBean(LdapConfiguration.class),
                 context.getBean(LdapSearchService.class),
