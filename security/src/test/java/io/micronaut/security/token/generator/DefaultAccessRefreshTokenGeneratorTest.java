@@ -17,14 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -78,18 +76,14 @@ class DefaultAccessRefreshTokenGeneratorTest {
 
         Optional<AccessRefreshToken> result = assertDoesNotThrow(() -> generator.generate("refresh-token", claimsWithNullValue()));
 
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "no access refresh token is generated when the token generator fails");
         verify(accessTokenGeneratedEventPublisher, never()).publishEvent(any());
-        assertEquals(1, appender.list.size());
+        assertEquals(1, appender.list.size(), "exactly one log event is written for the failure");
         ILoggingEvent event = appender.list.get(0);
-        assertEquals(Level.DEBUG, event.getLevel());
-        String message = event.getFormattedMessage();
-        assertTrue(message.startsWith("tokenGenerator failed to generate access token for claims:"));
-        assertTrue(message.contains("sub"));
-        assertTrue(message.contains("email"));
-        assertTrue(message.contains("nickname"));
-        assertFalse(message.contains("alice"));
-        assertFalse(message.contains(EMAIL));
+        assertEquals(Level.DEBUG, event.getLevel(), "the failure is logged at DEBUG");
+        assertEquals("tokenGenerator failed to generate access token for claims: [sub, email, nickname]",
+                event.getFormattedMessage(),
+                "the failure log names the claims and contains none of their values");
     }
 
     @Test
@@ -98,13 +92,14 @@ class DefaultAccessRefreshTokenGeneratorTest {
 
         Optional<AccessRefreshToken> result = assertDoesNotThrow(() -> generator.generate("refresh-token", claimsWithNullValue()));
 
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "no access refresh token is generated when the token generator fails");
         verify(accessTokenGeneratedEventPublisher, never()).publishEvent(any());
-        assertTrue(appender.list.isEmpty());
+        assertTrue(appender.list.isEmpty(), "nothing is logged when DEBUG is disabled");
     }
 
     private static Map<String, Object> claimsWithNullValue() {
-        Map<String, Object> claims = new HashMap<>();
+        // Insertion order keeps the logged claim names deterministic.
+        Map<String, Object> claims = new LinkedHashMap<>();
         claims.put("sub", "alice");
         claims.put("email", EMAIL);
         claims.put("nickname", null);
