@@ -26,6 +26,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.endpoints.OauthControllerConfigurationProperties;
+import java.time.Duration;
 import java.util.Optional;
 
 /**
@@ -60,6 +61,13 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
+    /**
+     * The default maximum age of the refresh token cookie.
+     * @since 5.6.0
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final Duration DEFAULT_COOKIEMAXAGE = Duration.ofDays(30);
+
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -69,6 +77,7 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      */
     public RefreshTokenCookieConfigurationProperties(
             @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath) {
+        cookieMaxAge = DEFAULT_COOKIEMAXAGE;
         if (oauthControllerPath != null) {
             cookiePath = oauthControllerPath;
         }
@@ -126,4 +135,12 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
         this.cookiePath = cookiePath;
     }
 
+    /**
+     * Sets the maximum age of the cookie. Default value (30 days).
+     * @param cookieMaxAge The maximum age of the cookie
+     */
+    @Override
+    public void setCookieMaxAge(Duration cookieMaxAge) {
+        super.setCookieMaxAge(cookieMaxAge);
+    }
 }
