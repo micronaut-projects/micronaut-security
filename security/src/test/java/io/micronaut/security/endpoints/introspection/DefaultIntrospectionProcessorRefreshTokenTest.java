@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultIntrospectionProcessorRefreshTokenTest {
@@ -85,7 +86,46 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         };
         DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
 
+        List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertEquals("database down", events.get(0).getThrowableProxy().getMessage());
+    }
+
+    @Test
+    void withoutARefreshTokenValidatorPersistenceIsNeverConsultedAndTheTokenIsInactive() {
+        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")));
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), null, persistence);
+
         assertInactiveAndEmpty(introspect(processor, SIGNED_A));
+        assertTrue(persistence.lookups.isEmpty());
+    }
+
+    @Test
+    @SuppressWarnings("removal")
+    void deprecatedConstructorKeepsTheBehaviourWithoutPersistence() {
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator());
+
+        IntrospectionResponse response = introspect(processor, SIGNED_A);
+
+        assertTrue(response.isActive());
+        assertNull(response.getUsername());
+        assertInactiveAndEmpty(introspect(processor, "tampered.key-a"));
+    }
+
+    @Test
+    @SuppressWarnings("removal")
+    void withoutPersistenceARejectedRefreshTokenUsesTheOverridableInactiveResponse() {
+        IntrospectionResponse customInactive = new IntrospectionResponse(false, "custom", null, null, null, null, null, null, null, null, null, null, null);
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator(), null) {
+            @Override
+            protected IntrospectionResponse inactiveIntrospectionResponse() {
+                return customInactive;
+            }
+        };
+
+        assertSame(customInactive, introspect(processor, "tampered.key-a"));
     }
 
     @Test

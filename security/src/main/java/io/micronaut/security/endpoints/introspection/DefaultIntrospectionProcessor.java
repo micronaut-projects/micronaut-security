@@ -150,7 +150,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     protected Mono<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
         if (refreshTokenValidator == null || refreshTokenPersistence == null) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("No RefreshTokenValidator or RefreshTokenPersistence bean present. Reporting the refresh token based only on RefreshTokenValidator");
+                LOG.trace("No RefreshTokenValidator or no RefreshTokenPersistence bean present. Skipping the RefreshTokenPersistence lookup");
             }
             return Mono.fromSupplier(() -> emptyIntrospectionResponse(token));
         }
@@ -199,7 +199,9 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
     @Deprecated(since = "5.6.0", forRemoval = true)
     @NonNull
     protected IntrospectionResponse emptyIntrospectionResponse(@NonNull String token) {
-        return introspectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent());
+        return refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent()
+            ? introspectionResponse(true)
+            : inactiveIntrospectionResponse();
     }
 
     @NonNull
