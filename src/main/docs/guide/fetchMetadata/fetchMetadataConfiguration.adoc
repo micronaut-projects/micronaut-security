@@ -1,0 +1,25 @@
+The filter is enabled by default and applies to every request path. You can disable it or restrict it to an Ant-style path pattern, where `?` matches one character, `*` matches within a path segment, and `**` matches across segments. URI templates such as `/api/{+path}` are not supported:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      filter:
+        enabled: true
+        pattern: /api/**
+----
+
+NOTE: The pattern is matched against the path the router uses, so an exact path such as `/api/transfer` also covers `/api/transfer/`, which the router dispatches to the same route. Use a pattern ending in `/**`, such as `/api/**`, to cover every path below a prefix.
+
+While the filter is enabled, the pattern must not be empty or blank, and the application fails to start otherwise. Set `enabled: false` to disable the filter instead.
+
+The `pattern` selects the paths the filter applies to. To exempt specific paths inside it, such as public assets or a third-party callback, write a <<fetchMetadataCustomRules,custom rule>>.
+
+The following filter configuration options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.fetchmetadata.FetchMetadataFilterConfigurationProperties.adoc[]
+
+The following built-in rule options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfigurationProperties.adoc[]
