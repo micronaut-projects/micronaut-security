@@ -38,19 +38,6 @@ import org.jspecify.annotations.Nullable;
  */
 public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directives) {
     /**
-     * Header that causes user agents to enforce the supplied policy.
-     *
-     * @since 5.6.0
-     */
-    public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
-    /**
-     * Header that reports policy violations without enforcing the supplied policy.
-     *
-     * @since 5.6.0
-     */
-    public static final String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
-
-    /**
      * Creates a policy with an immutable copy of the supplied directives.
      *
      * @param directives the ordered directives in the policy
@@ -362,13 +349,13 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * @since 5.6.0
      */
     public static @Nullable ContentSecurityPolicy of(HttpHeaders headers) {
-        return of(headers, ContentSecurityPolicy.CONTENT_SECURITY_POLICY);
+        return of(headers, HttpHeaders.CONTENT_SECURITY_POLICY);
     }
 
     /**
      * Parses a named Content Security Policy header from HTTP headers.
      *
-     * <p>Use {@link ContentSecurityPolicy#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
+     * <p>Use {@link HttpHeaders#CONTENT_SECURITY_POLICY_REPORT_ONLY} to parse a report-only policy.</p>
      *
      * <p>Only the first header with that name is parsed. A response can carry several CSP headers,
      * and a user agent enforces each of them as a separate policy; read them with

@@ -18,6 +18,7 @@ package io.micronaut.security.cspexternal;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
@@ -53,7 +54,7 @@ class CspDisabledTest {
         HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-disabled"), String.class);
 
         assertNull(ContentSecurityPolicy.of(response));
-        assertNull(ContentSecurityPolicy.of(response.getHeaders(), ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY));
+        assertNull(ContentSecurityPolicy.of(response.getHeaders(), HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY));
         assertEquals("no nonce", response.body());
     }
 

@@ -34,7 +34,6 @@ import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
-import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         try (EmbeddedServer server = server(Map.of(NONCE, true))) {
             HttpResponse<String> response = get(server, path);
 
-            assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
+            assertTrue(response.header(HttpHeaders.CONTENT_SECURITY_POLICY).contains("'nonce-"));
             assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
         }
     }
@@ -84,7 +83,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, "private"))) {
             HttpResponse<String> response = get(server, path);
 
-            assertNotNull(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+            assertNotNull(response.header(HttpHeaders.CONTENT_SECURITY_POLICY));
             assertNull(response.header(HttpHeaders.CACHE_CONTROL));
         }
     }
@@ -155,7 +154,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
             HttpResponse<?> response = error(server, path);
 
             assertEquals(HttpStatus.CONFLICT, response.getStatus());
-            assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
+            assertTrue(response.header(HttpHeaders.CONTENT_SECURITY_POLICY).contains("'nonce-"));
             assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
         }
     }
@@ -166,7 +165,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
             HttpResponse<?> response = error(server, "/nonce-cache/no-such-path");
 
             assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
-            assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
+            assertTrue(response.header(HttpHeaders.CONTENT_SECURITY_POLICY).contains("'nonce-"));
             assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
         }
     }

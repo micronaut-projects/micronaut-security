@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderEntry;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.ServerFilter;
@@ -102,7 +103,7 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
             return null;
         }
         String headerName = cspConfiguration.isReportOnly()
-            ? ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY : ContentSecurityPolicy.CONTENT_SECURITY_POLICY;
+            ? HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : HttpHeaders.CONTENT_SECURITY_POLICY;
         boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
         if (!responseSetsAlreadyCspHeader) {
             ContentSecurityPolicy csp = cspGenerator.contentSecurityPolicy(request);

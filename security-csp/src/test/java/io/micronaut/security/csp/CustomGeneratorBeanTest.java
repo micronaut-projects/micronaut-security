@@ -17,6 +17,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
@@ -64,7 +65,7 @@ class CustomGeneratorBeanTest {
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/custom-generator"), String.class);
 
-            assertEquals("default-src 'self'", response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+            assertEquals("default-src 'self'", response.header(HttpHeaders.CONTENT_SECURITY_POLICY));
         }
     }
 

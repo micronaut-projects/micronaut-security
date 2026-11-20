@@ -17,6 +17,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -48,7 +49,7 @@ class DefaultPolicyHttpTest {
         HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/default-policy"), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatus());
-        assertEquals(DEFAULT_POLICY, response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+        assertEquals(DEFAULT_POLICY, response.header(HttpHeaders.CONTENT_SECURITY_POLICY));
     }
 
     @Test
@@ -59,7 +60,7 @@ class DefaultPolicyHttpTest {
             () -> client.exchange(HttpRequest.GET("/no-such-path"), String.class));
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
-        assertEquals(DEFAULT_POLICY, exception.getResponse().header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+        assertEquals(DEFAULT_POLICY, exception.getResponse().header(HttpHeaders.CONTENT_SECURITY_POLICY));
     }
 
     @Test
@@ -70,7 +71,7 @@ class DefaultPolicyHttpTest {
             () -> client.exchange(HttpRequest.GET("/default-policy/failure"), String.class));
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
-        assertEquals(DEFAULT_POLICY, exception.getResponse().header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY));
+        assertEquals(DEFAULT_POLICY, exception.getResponse().header(HttpHeaders.CONTENT_SECURITY_POLICY));
     }
 
     @Requires(property = "spec.name", value = "DefaultPolicyHttpTest")

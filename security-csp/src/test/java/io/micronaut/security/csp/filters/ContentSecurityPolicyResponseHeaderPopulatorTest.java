@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.http.HttpHeaderEntry;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.ContentSecurityPolicy;
@@ -46,7 +47,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         );
 
         assertEquals(
-                List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY,
+                List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY,
                         "default-src 'self'; img-src 'self' images.example.com; upgrade-insecure-requests")),
                 populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
     }
@@ -65,7 +66,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         );
 
         assertEquals(
-                List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY, "default-src 'none'")),
+                List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY, "default-src 'none'")),
                 populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
     }
 
@@ -79,7 +80,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/"),
-                HttpResponse.ok().header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'self'")));
+                HttpResponse.ok().header(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'self'")));
     }
 
     @Test
@@ -95,7 +96,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                 () -> "app/"
         );
 
-        assertEquals(List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'none'")),
+        assertEquals(List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'none'")),
                 populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/bar/page"), HttpResponse.ok()));
     }
@@ -113,7 +114,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                 () -> "/app"
         );
 
-        assertEquals(List.of(new HttpHeaderEntry(ContentSecurityPolicy.CONTENT_SECURITY_POLICY, "default-src 'none'")),
+        assertEquals(List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'none'")),
                 populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/app/foo/page"), HttpResponse.ok()));
     }

@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.security.csp.ContentSecurityPolicy;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import jakarta.inject.Singleton;
@@ -61,11 +61,11 @@ final class ContentSecurityPolicyStartupLogger implements ApplicationEventListen
         if (cspConfiguration.isReportOnly()) {
             LOG.info("Writing the {} header on requests matching {}; violations are reported, not blocked. "
                 + "Remove micronaut.security.csp.report-only to enforce the policy.",
-                ContentSecurityPolicy.CONTENT_SECURITY_POLICY_REPORT_ONLY, filterConfiguration.getPattern());
+                HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY, filterConfiguration.getPattern());
         } else {
             LOG.info("Enforcing the {} header on requests matching {}; directives default to 'none'. "
                 + "Set micronaut.security.csp.report-only=true to evaluate the policy first, or narrow micronaut.security.csp.filter.pattern.",
-                ContentSecurityPolicy.CONTENT_SECURITY_POLICY, filterConfiguration.getPattern());
+                HttpHeaders.CONTENT_SECURITY_POLICY, filterConfiguration.getPattern());
         }
     }
 }
