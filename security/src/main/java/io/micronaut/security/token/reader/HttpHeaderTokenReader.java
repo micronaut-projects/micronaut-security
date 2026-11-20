@@ -17,7 +17,7 @@ package io.micronaut.security.token.reader;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
-import java.util.Locale;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +45,14 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     protected abstract String getHeaderName();
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a token in a HTTP request.
      * @param request The request to look for the token in
-     * @return if the JWT token is found it is returned, empty if not
+     * @return if the token is found it is returned, empty if not
      */
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Looking for bearer token in {} header", getHeaderName());
+            LOG.debug("Looking for token in {} header", getHeaderName());
         }
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(getHeaderName());
@@ -60,23 +60,20 @@ public abstract class HttpHeaderTokenReader implements TokenReader<HttpRequest<?
     }
 
     /**
+     * Removes the prefix returned by {@link #getPrefix()} and the single space after it from the header value.
+     * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * A prefix which already ends with a space is not followed by another one.
+     * If the prefix is {@code null} or empty, the whole header value is the token.
      *
      * @param authorization Authorization header value
-     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
+     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'. Empty if the value does not start with the prefix and a space.
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
         final String prefix = getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
+        final String token = HeaderValuePrefixUtils.removePrefix(authorization, prefix);
+        if (token == null && LOG.isDebugEnabled()) {
+            LOG.debug("{} header value does not start with '{}' (compared ignoring case)", getHeaderName(), HeaderValuePrefixUtils.addPrefix("", prefix));
         }
-        String str = sb.toString().toLowerCase(Locale.ROOT);
-        if (authorization.toLowerCase(Locale.ROOT).startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            LOG.debug("{} header does not start with {}", getHeaderName(), str);
-            return Optional.empty();
-        }
+        return Optional.ofNullable(token);
     }
 }

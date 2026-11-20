@@ -24,6 +24,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsEnabled;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import java.util.Optional;
 
 /**
@@ -38,6 +39,11 @@ import java.util.Optional;
 @Requires(condition = ClientCredentialsHeaderPropagatorEnabled.class)
 public class ClientCredentialsHeaderTokenPropagator implements ClientCredentialsTokenPropagator {
 
+    /**
+     * @deprecated Not used by this class since 5.6.0; {@link #headerValue(String)} adds the separator between the prefix
+     * and the token. Use a {@code " "} literal if you need one.
+     */
+    @Deprecated(forRemoval = true, since = "5.6.0")
     public static final String SPACE = " ";
     protected final ClientCredentialsHeaderTokenPropagatorConfiguration configuration;
 
@@ -59,9 +65,9 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a token in a HTTP request.
      * @param request The request to look for the token in
-     * @return if the JWT token is found it is returned, empty if not
+     * @return if the token is found it is returned, empty if not
      */
     @Override
     public Optional<String> findToken(@NonNull HttpRequest<?> request) {
@@ -71,39 +77,27 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
+     * Adds the configured prefix and a single space before the token. A prefix which already ends with a space is not
+     * followed by another one. If the prefix is {@code null} or empty, the token is returned as is.
+     *
      * @param token the token being written
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = prefix();
-        sb.append(token);
-        return sb.toString();
+        return HeaderValuePrefixUtils.addPrefix(token, configuration.getPrefix());
     }
 
     /**
+     * Removes the configured prefix and the single space after it from the header value.
+     * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * A prefix which already ends with a space is not followed by another one.
+     * If the prefix is {@code null} or empty, the whole header value is the token.
+     *
      * @param authorization Authorization header value
-     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
+     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'. Empty if the value does not start with the prefix and a space.
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = prefix();
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        }
-        return Optional.empty();
-    }
-
-    @NonNull
-    private StringBuilder prefix() {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            if (!prefix.endsWith(SPACE)) {
-                sb.append(SPACE);
-            }
-        }
-        return sb;
+        return Optional.ofNullable(HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix()));
     }
 
     /**
