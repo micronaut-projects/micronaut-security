@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdCallbackFlow.AuthorizationRedirect;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdCallbackFlow.CallbackOutcome;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -62,16 +63,22 @@ class OpenIdCallbackSessionNonceTest {
         AuthorizationRedirect redirect = flow.login();
         flow.tokenEndpointReturnsIdTokenWithNonce(null);
 
-        assertFalse(flow.isAuthenticatedAfterCallback(redirect, redirect.cookiesWithout(SESSION_COOKIE)));
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookiesWithout(SESSION_COOKIE));
+
+        assertFalse(outcome.authenticated());
+        assertTrue(outcome.persistedNonceMissing(), "the login should be refused because no persisted nonce could be retrieved");
     }
 
     @Test
-    void secondCallbackForTheSameAuthorizationRequestIsRefusedBecauseTheNonceWasConsumed() {
+    void secondCallbackForTheSameAuthorizationRequestIsRefusedBecauseTheNonceIsNoLongerInTheSession() {
         AuthorizationRedirect redirect = flow.login();
         flow.tokenEndpointReturnsIdTokenWithNonce(redirect.nonce());
         assertTrue(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
 
-        assertFalse(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookies());
+
+        assertFalse(outcome.authenticated());
+        assertTrue(outcome.persistedNonceMissing(), "the login should be refused because no persisted nonce could be retrieved");
     }
 
     @Test
@@ -81,6 +88,9 @@ class OpenIdCallbackSessionNonceTest {
         assertTrue(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
         flow.tokenEndpointReturnsIdTokenWithNonce(null);
 
-        assertFalse(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookies());
+
+        assertFalse(outcome.authenticated());
+        assertTrue(outcome.persistedNonceMissing(), "the login should be refused because no persisted nonce could be retrieved");
     }
 }

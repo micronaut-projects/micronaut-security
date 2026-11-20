@@ -15,6 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
@@ -36,9 +40,11 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.NonceClaimValidator;
 import io.micronaut.security.oauth2.mock.MockOpenIdProvider;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
@@ -118,13 +124,33 @@ final class OpenIdCallbackFlow implements AutoCloseable {
      * @return Whether the callback logged the user in
      */
     boolean isAuthenticatedAfterCallback(AuthorizationRedirect redirect, Collection<Cookie> cookies) {
+        return callback(redirect, cookies).authenticated();
+    }
+
+    /**
+     * @param redirect The authorization redirect the callback answers
+     * @param cookies The cookies the browser sends to the callback
+     * @return Whether the callback logged the user in, and whether the nonce validation found no persisted nonce
+     */
+    CallbackOutcome callback(AuthorizationRedirect redirect, Collection<Cookie> cookies) {
         MutableHttpRequest<?> request = HttpRequest.POST("/oauth/callback/auth", CollectionUtils.mapOf("code", "code", "state", redirect.state()))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED);
         cookies.forEach(request::cookie);
+        Logger logger = (Logger) LoggerFactory.getLogger(NonceClaimValidator.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
         try {
-            return client.exchange(request).getCookies().get(JWT_COOKIE) != null;
-        } catch (HttpClientResponseException e) {
-            return e.getResponse().getCookies().get(JWT_COOKIE) != null;
+            HttpResponse<?> response;
+            try {
+                response = client.exchange(request);
+            } catch (HttpClientResponseException e) {
+                response = e.getResponse();
+            }
+            boolean persistedNonceMissing = appender.list.stream().anyMatch(event -> event.getLevel() == Level.WARN);
+            return new CallbackOutcome(response.getCookies().get(JWT_COOKIE) != null, persistedNonceMissing);
+        } finally {
+            logger.detachAppender(appender);
         }
     }
 
@@ -132,6 +158,13 @@ final class OpenIdCallbackFlow implements AutoCloseable {
     public void close() {
         server.close();
         provider.close();
+    }
+
+    /**
+     * @param authenticated Whether the callback logged the user in
+     * @param persistedNonceMissing Whether the nonce validation reported that no persisted nonce could be retrieved
+     */
+    record CallbackOutcome(boolean authenticated, boolean persistedNonceMissing) {
     }
 
     record AuthorizationRedirect(String state, String nonce, Collection<Cookie> cookies) {
