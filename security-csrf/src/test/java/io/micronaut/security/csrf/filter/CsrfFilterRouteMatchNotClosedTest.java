@@ -57,7 +57,7 @@ class CsrfFilterRouteMatchNotClosedTest {
     }
 
     @Test
-    void filterDoesNotCloseTheRouteMatch() throws Exception {
+    void getRequestToMatchingRouteProceedsWithoutClosingTheRouteMatch() throws Exception {
         CsrfFilter filter = csrfFilter();
         AtomicInteger closeCalls = new AtomicInteger();
         HttpRequest<?> request = HttpRequest.GET("/password/change");

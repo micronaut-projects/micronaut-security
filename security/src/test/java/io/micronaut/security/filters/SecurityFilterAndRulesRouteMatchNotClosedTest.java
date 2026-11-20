@@ -33,6 +33,8 @@ import io.micronaut.security.rules.SensitiveEndpointRule;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteAttributes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -97,13 +99,20 @@ class SecurityFilterAndRulesRouteMatchNotClosedTest {
         verify(routeMatch, never()).close();
     }
 
-    @Test
-    void securityFilterDoesNotCloseTheRouteMatchWhenNoRuleDecides() {
+    /**
+     * A request which matched a route but which no rule decides is rejected, whatever the value of reject-not-found.
+     * reject-not-found only lets through requests which matched no route.
+     *
+     * @param rejectNotFound Value of {@link SecurityConfiguration#isRejectNotFound()}
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void securityFilterRejectsAMatchedRouteNoRuleDecidesWithoutClosingTheRouteMatch(boolean rejectNotFound) {
         MethodBasedRouteMatch<Object, Object> routeMatch = routeMatch();
         HttpRequest<?> request = HttpRequest.GET("/unsecured");
         RouteAttributes.setRouteMatch(request, routeMatch);
         ServerFilterChain chain = mock(ServerFilterChain.class);
-        Flux<MutableHttpResponse<?>> responses = Flux.from(securityFilter().doFilter(request, chain));
+        Flux<MutableHttpResponse<?>> responses = Flux.from(undecidedSecurityFilter(rejectNotFound).doFilter(request, chain));
 
         assertThrows(AuthorizationException.class, responses::blockFirst);
 
@@ -111,13 +120,39 @@ class SecurityFilterAndRulesRouteMatchNotClosedTest {
         verify(routeMatch, never()).close();
     }
 
+    @Test
+    void securityFilterProceedsWithAnUnmatchedRequestNoRuleDecidesWhenRejectNotFoundIsDisabled() {
+        HttpRequest<?> request = HttpRequest.GET("/unmatched");
+        ServerFilterChain chain = mock(ServerFilterChain.class);
+        when(chain.proceed(request)).thenReturn(Mono.<MutableHttpResponse<?>>just(HttpResponse.notFound()));
+
+        MutableHttpResponse<?> response = Flux.from(undecidedSecurityFilter(false).doFilter(request, chain)).blockFirst();
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.status());
+        verify(chain).proceed(request);
+    }
+
     /**
      * @return A {@link SecurityFilter} with the rules which read the route match, rejecting requests no rule decides.
      */
     private static SecurityFilter securityFilter() {
-        SecurityConfiguration securityConfiguration = mock(SecurityConfiguration.class);
-        when(securityConfiguration.isRejectNotFound()).thenReturn(true);
         List<SecurityRule<HttpRequest<?>>> rules = List.of(nonSensitiveEndpointRule(executableMethod()), securedAnnotationRule());
+        return securityFilter(rules, true);
+    }
+
+    /**
+     * @param rejectNotFound Value of {@link SecurityConfiguration#isRejectNotFound()}
+     * @return A {@link SecurityFilter} with a single rule which never decides, so only the filter reads the route match.
+     */
+    private static SecurityFilter undecidedSecurityFilter(boolean rejectNotFound) {
+        SecurityRule<HttpRequest<?>> undecided = (request, authentication) -> Mono.just(SecurityRuleResult.UNKNOWN);
+        return securityFilter(List.of(undecided), rejectNotFound);
+    }
+
+    private static SecurityFilter securityFilter(List<SecurityRule<HttpRequest<?>>> rules, boolean rejectNotFound) {
+        SecurityConfiguration securityConfiguration = mock(SecurityConfiguration.class);
+        when(securityConfiguration.isRejectNotFound()).thenReturn(rejectNotFound);
         return new SecurityFilter(rules, Collections.emptyList(), securityConfiguration, mock(SecurityFilterConfiguration.class), null);
     }
 
