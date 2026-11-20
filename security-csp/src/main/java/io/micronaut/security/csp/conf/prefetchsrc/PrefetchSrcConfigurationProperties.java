@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.conf.prefetchsrc;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties;
 
@@ -27,6 +28,7 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_PREFETCH_SRC)
 public class PrefetchSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements PrefetchSrcConfiguration {
     /**

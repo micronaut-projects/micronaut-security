@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.conf.reportto;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -28,6 +29,7 @@ import jakarta.validation.constraints.Pattern;
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ReportToConfigurationProperties.PREFIX)
 public class ReportToConfigurationProperties implements ReportToConfiguration {
     /** Configuration prefix for the {@code report-to} directive. */
@@ -36,10 +38,16 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
     /** Default Reporting API endpoint group. */
     public static final String DEFAULT_GROUP = "csp";
 
+    /**
+     * The grammar of a Reporting API endpoint group name, the {@code sf-key} grammar of the
+     * {@code Reporting-Endpoints} header.
+     */
+    public static final String GROUP_REGEX = "[a-z*][a-z0-9_.*-]*";
+
     private boolean enabled;
 
     @NotBlank
-    @Pattern(regexp = "[a-z*][a-z0-9_.*-]*")
+    @Pattern(regexp = GROUP_REGEX)
     private String group = DEFAULT_GROUP;
 
     @Override

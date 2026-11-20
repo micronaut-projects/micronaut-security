@@ -16,4 +16,7 @@
 /**
  * Classes related to CSP Nonce generation.
  */
+@NullMarked
 package io.micronaut.security.csp.nonce;
+
+import org.jspecify.annotations.NullMarked;

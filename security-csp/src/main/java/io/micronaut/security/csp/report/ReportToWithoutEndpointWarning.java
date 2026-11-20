@@ -31,11 +31,13 @@ import java.util.List;
  * Warns at startup when the {@code report-to} directive names a reporting group that no
  * {@code Reporting-Endpoints} entry declares, because browsers then discard every report.
  *
- * <p>The module declares the group itself only when a {@link ContentSecurityPolicyReportHandler}
- * bean exists, so this check runs only without one. Endpoints configured through the Reporting API
- * module are taken into account; a header written by the application itself cannot be detected.</p>
+ * <p>The module declares the group itself through {@link CspReportingEndpointProvider}, which
+ * exists only when a {@link ContentSecurityPolicyReportHandler} bean exists and the report
+ * controller is enabled, so this check runs whenever that provider is missing. Endpoints configured
+ * through the Reporting API module are taken into account; a header written by the application
+ * itself cannot be detected.</p>
  */
-@Requires(missingBeans = ContentSecurityPolicyReportHandler.class)
+@Requires(missingBeans = CspReportingEndpointProvider.class)
 @Singleton
 @Internal
 final class ReportToWithoutEndpointWarning implements ApplicationEventListener<StartupEvent> {
@@ -63,7 +65,8 @@ final class ReportToWithoutEndpointWarning implements ApplicationEventListener<S
         String group = reportToConfiguration.getGroup();
         boolean declared = reportingEndpoints.stream().anyMatch(endpoint -> group.equals(endpoint.getName()));
         if (!declared) {
-            LOG.warn("CSP report-to is enabled with group '{}', but there is no ContentSecurityPolicyReportHandler bean and no reporting endpoint named '{}'; "
+            LOG.warn("CSP report-to is enabled with group '{}', but the module declares no reporting endpoint (it needs a ContentSecurityPolicyReportHandler bean "
+                + "and an enabled report controller) and no reporting endpoint named '{}' is configured; "
                 + "unless the application writes its own Reporting-Endpoints header, browsers will discard the reports.", group, group);
         }
     }

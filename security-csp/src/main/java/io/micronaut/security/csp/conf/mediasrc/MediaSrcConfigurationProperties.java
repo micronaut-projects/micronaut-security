@@ -19,12 +19,14 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 
 /**
  * Mutable properties for {@link MediaSrcConfiguration}.
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MEDIA_SRC)
 public class MediaSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements MediaSrcConfiguration {
 }

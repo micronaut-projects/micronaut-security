@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.conf.scriptsrc;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 
@@ -28,6 +29,7 @@ import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProp
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_SCRIPT_SRC)
 public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements ScriptSrcConfiguration {
     private boolean nonce;

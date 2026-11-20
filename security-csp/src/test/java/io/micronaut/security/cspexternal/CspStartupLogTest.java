@@ -61,7 +61,7 @@ class CspStartupLogTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.INFO, events.get(0).getLevel());
-        assertMentions(events.get(0), "Content-Security-Policy header", "/**");
+        assertMentions(events.get(0), "Content-Security-Policy header", "/**", "io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator");
         assertFalse(events.get(0).getFormattedMessage().contains("Report-Only"));
     }
 
@@ -101,6 +101,18 @@ class CspStartupLogTest {
     }
 
     @Test
+    void warnsWhenAReportHandlerExistsButTheReportControllerIsDisabled() {
+        List<ILoggingEvent> events = capture(REPORT_TO_LOGGER, () -> run(Map.of(
+            "spec.name", "CspStartupLogTest",
+            "micronaut.security.csp.report-to.enabled", true,
+            "micronaut.security.csp.report-to.controller.enabled", false), context -> { }));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertMentions(events.get(0), "report-to", "'csp'", "enabled report controller");
+    }
+
+    @Test
     void warnsAboutMisquotedSourceExpressions() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
             "micronaut.security.csp.script-src.values", List.of("self", "sha256-abc=", "'self'", "https://cdn.example.com")),
@@ -109,6 +121,17 @@ class CspStartupLogTest {
         assertEquals(2, events.size(), "only the two unquoted expressions are reported");
         assertMentions(events.get(0), "micronaut.security.csp.script-src.values", "\"self\"", "\"'self'\"");
         assertMentions(events.get(1), "micronaut.security.csp.script-src.values", "\"sha256-abc=\"", "\"'sha256-abc='\"");
+    }
+
+    @Test
+    void warnsAboutASourceExpressionWithoutItsClosingQuote() {
+        List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.script-src.values", List.of("'self", "'", "'unsafe-inline'")),
+            context -> { }));
+
+        assertEquals(2, events.size(), "only the two expressions with an unclosed quote are reported");
+        assertMentions(events.get(0), "micronaut.security.csp.script-src.values", "\"'self\"", "does not close it", "\"'self'\"");
+        assertMentions(events.get(1), "micronaut.security.csp.script-src.values", "\"'\"", "does not close it");
     }
 
     @ParameterizedTest(name = "{0}")

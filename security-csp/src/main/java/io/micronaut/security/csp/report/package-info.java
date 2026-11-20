@@ -16,17 +16,17 @@
 /**
  * Receives Content Security Policy reports delivered through the Reporting API.
  *
+ * <p>Like every subpackage, it is also disabled by the {@code micronaut.security.csp.enabled}
+ * requirement of the {@code io.micronaut.security.csp} package.</p>
+ *
  * @see <a href="https://w3c.github.io/reporting/">Reporting API</a>
  */
 @Requires(classes = HttpRequest.class)
-@Requires(property = ContentSecurityPolicyConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Configuration
 @NullMarked
 package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import org.jspecify.annotations.NullMarked;

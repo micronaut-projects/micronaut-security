@@ -19,12 +19,14 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 
 /**
  * Mutable properties for {@link ImgSrcConfiguration}.
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_IMG_SRC)
 public class ImgSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ImgSrcConfiguration {
 }

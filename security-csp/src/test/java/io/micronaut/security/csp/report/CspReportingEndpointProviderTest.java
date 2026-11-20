@@ -41,6 +41,19 @@ class CspReportingEndpointProviderTest {
         assertThrows(ConfigurationException.class, () -> new CspReportingEndpointProvider(enabledReportTo(), controller, null));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"CSP", "csp group", "csp;x", "1csp"})
+    void rejectsAGroupThatReportingEndpointsCannotCarry(String group) {
+        ReportToConfigurationProperties reportTo = enabledReportTo();
+        reportTo.setGroup(group);
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+            () -> new CspReportingEndpointProvider(reportTo, new ContentSecurityPolicyControllerConfigurationProperties(), null));
+
+        assertEquals("micronaut.security.csp.report-to.group must match " + ReportToConfigurationProperties.GROUP_REGEX
+            + ", the grammar of a Reporting-Endpoints name", exception.getMessage());
+    }
+
     @Test
     void advertisesALocalPath() {
         ContentSecurityPolicyControllerConfigurationProperties controller = new ContentSecurityPolicyControllerConfigurationProperties();

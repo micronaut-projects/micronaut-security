@@ -28,7 +28,6 @@ import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -78,14 +77,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         new FlaggedSource(UNSAFE_INLINE, DirectiveConfiguration::isUnsafeInline),
         new FlaggedSource(UNSAFE_EVAL, DirectiveConfiguration::isUnsafeEval),
         new FlaggedSource(STRICT_DYNAMIC, DirectiveConfiguration::isStrictDynamic),
-        new FlaggedSource("unsafe-hashes", DirectiveConfiguration::isUnsafeHashes),
-        new FlaggedSource("report-sample", DirectiveConfiguration::isReportSample),
-        new FlaggedSource("wasm-unsafe-eval", DirectiveConfiguration::isWasmUnsafeEval),
-        new FlaggedSource("trusted-types-eval", DirectiveConfiguration::isTrustedTypesEval),
-        new FlaggedSource("report-sha256", DirectiveConfiguration::isReportSha256),
-        new FlaggedSource("report-sha384", DirectiveConfiguration::isReportSha384),
-        new FlaggedSource("report-sha512", DirectiveConfiguration::isReportSha512),
-        new FlaggedSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
+        new FlaggedSource(UNSAFE_HASHES, DirectiveConfiguration::isUnsafeHashes),
+        new FlaggedSource(REPORT_SAMPLE, DirectiveConfiguration::isReportSample),
+        new FlaggedSource(WASM_UNSAFE_EVAL, DirectiveConfiguration::isWasmUnsafeEval),
+        new FlaggedSource(TRUSTED_TYPES_EVAL, DirectiveConfiguration::isTrustedTypesEval),
+        new FlaggedSource(REPORT_SHA256, DirectiveConfiguration::isReportSha256),
+        new FlaggedSource(REPORT_SHA384, DirectiveConfiguration::isReportSha384),
+        new FlaggedSource(REPORT_SHA512, DirectiveConfiguration::isReportSha512),
+        new FlaggedSource(UNSAFE_WEBTRANSPORT_HASHES, DirectiveConfiguration::isUnsafeWebtransportHashes)
     );
     /**
      * Scheme source expressions, in the order in which they are emitted, with the configuration
@@ -118,7 +117,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     /**
      * The grammar of a Reporting API endpoint group name used by {@code report-to}.
      */
-    private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile("[a-z*][a-z0-9_.*-]*");
+    private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile(ReportToConfigurationProperties.GROUP_REGEX);
     private static final Set<String> LOOPBACK_HOSTS = Set.of("localhost", "127.0.0.1", "[::1]");
     /**
      * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
@@ -134,7 +133,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private static final Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> DIRECTIVE_CONFIGURATIONS = directiveConfigurationGetters();
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
-    private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
 
     /**
@@ -144,28 +142,12 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param directiveConfigurations configures each directive that has its own configuration
      * @since 5.6.0
      */
-    @Inject
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
-                                                    ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
-        this(cspConfiguration, DefaultContentSecurityPolicyGenerator::requestNonce, directiveConfigurations);
-    }
-
-    /**
-     * Creates a default policy generator with a request-aware nonce provider.
-     *
-     * @param cspConfiguration configures the static policy directives
-     * @param cspNonceProvider CSP Nonce Provider
-     * @param directiveConfigurations configures each directive that has its own configuration
-     * @since 5.6.0
-     */
-    protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
-                                                    Function<HttpRequest<?>, @Nullable String> cspNonceProvider,
                                                     ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
         this.cspConfiguration = cspConfiguration;
         if (cspConfiguration.isReportUriEnabled() && reportUris(cspConfiguration).isEmpty()) {
             LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
         }
-        this.cspNonceProvider = cspNonceProvider;
         this.directiveConfigurations = directiveConfigurations;
         validateRootConfiguration();
         validateSourceExpressions();
@@ -184,6 +166,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             }
         }
         if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
+            if (!StringUtils.hasText(cspConfiguration.getRequireTrustedTypesFor())) {
+                throw new ConfigurationException(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + " must not be blank while "
+                    + PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + "-enabled is true");
+            }
             requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor());
         }
         if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
@@ -520,6 +506,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         requireSafeHeaderValue(property, value);
         String trimmed = value.trim();
         if (trimmed.startsWith(SINGLE_QUOTE)) {
+            if (trimmed.length() == 1 || !trimmed.endsWith(SINGLE_QUOTE)) {
+                LOG.warn("{} contains \"{}\", which opens a single quote but does not close it; browsers ignore the expression. Use \"{}\".",
+                    property, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed.substring(1)));
+            }
             return;
         }
         String lowerCase = trimmed.toLowerCase(Locale.ROOT);
@@ -530,13 +520,36 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Reads the nonce generated for the request by the CSP server filter.
+     * Returns the nonce to add to the nonce-capable directives of a request. By default, it is the
+     * nonce that the CSP server filter stored in the {@value ContentSecurityPolicyNonceGenerator#CSP_NONCE_ATTRIBUTE}
+     * request attribute. A value outside the base64 and base64url alphabets is omitted from the policy.
      *
      * @param request the current request
      * @return the request nonce, or {@code null} when none was generated
+     * @since 5.6.0
      */
-    private static @Nullable String requestNonce(HttpRequest<?> request) {
+    protected @Nullable String nonce(HttpRequest<?> request) {
         return request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null);
+    }
+
+    /**
+     * Returns the root CSP configuration this generator was created with.
+     *
+     * @return the root CSP configuration
+     * @since 5.6.0
+     */
+    protected ContentSecurityPolicyConfiguration getCspConfiguration() {
+        return cspConfiguration;
+    }
+
+    /**
+     * Returns the directive configurations this generator was created with.
+     *
+     * @return the configuration of each directive that has its own configuration
+     * @since 5.6.0
+     */
+    protected ContentSecurityPolicyDirectiveConfigurations getDirectiveConfigurations() {
+        return directiveConfigurations;
     }
 
     private static Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> directiveConfigurationGetters() {
@@ -596,8 +609,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             return null;
         }
         List<String> values = new ArrayList<>();
-        if (config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce()) {
-            String nonce = cspNonceProvider.apply(request);
+        if (request != null && config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce()) {
+            String nonce = nonce(request);
             if (StringUtils.isNotEmpty(nonce) && NONCE_GRAMMAR.matcher(nonce).matches()) {
                 values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONCE_PREFIX + nonce));
             } else if (StringUtils.isNotEmpty(nonce)) {
@@ -622,9 +635,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             }
         }
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
-            values.addAll(sourceListDirectiveConfiguration.getValues());
+            for (String value : sourceListDirectiveConfiguration.getValues()) {
+                values.add(value.trim());
+            }
         }
-        values.removeIf(StringUtils::isEmpty);
+        values.removeIf(value -> !StringUtils.hasText(value));
         if (config.isNone() && values.isEmpty()) {
             values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONE));
         }

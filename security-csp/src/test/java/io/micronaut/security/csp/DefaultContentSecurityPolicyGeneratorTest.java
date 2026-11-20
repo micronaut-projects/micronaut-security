@@ -24,6 +24,8 @@ import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -268,10 +271,63 @@ class DefaultContentSecurityPolicyGeneratorTest {
         reportTo.setGroup("CSP; script-src *");
 
         ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new DefaultContentSecurityPolicyGenerator(
-            new ContentSecurityPolicyConfigurationProperties(), currentRequest -> null,
+            new ContentSecurityPolicyConfigurationProperties(),
             ContentSecurityPolicyDirectiveConfigurations.builder().reportTo(reportTo).build()));
 
         assertTrue(exception.getMessage().startsWith("micronaut.security.csp.report-to.group must match"));
+    }
+
+    @Test
+    void readsTheNonceFromTheRequestAttributeAndExposesItsConfiguration() {
+        ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        ContentSecurityPolicyDirectiveConfigurations directiveConfigurations = ContentSecurityPolicyDirectiveConfigurations.builder()
+            .scriptSrc(scriptSrcConfiguration)
+            .build();
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, directiveConfigurations);
+        HttpRequest<?> request = HttpRequest.GET("/");
+        request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, "abc123");
+
+        assertEquals("abc123", generator.nonce(request));
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-abc123'"), policy(generator, request).scriptSrc());
+        assertSame(configuration, generator.getCspConfiguration());
+        assertSame(directiveConfigurations, generator.getDirectiveConfigurations());
+    }
+
+    @Test
+    void ignoresWhitespaceOnlyValuesAndTrimsConfiguredValues() {
+        ConnectSrcConfigurationProperties whitespaceOnly = new ConnectSrcConfigurationProperties();
+        whitespaceOnly.setValues(List.of("   ", ""));
+        ConnectSrcConfigurationProperties padded = new ConnectSrcConfigurationProperties();
+        padded.setValues(List.of("  https://api.example.com  "));
+        ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "'none'"),
+            policy(generator(configuration, request -> null, new ScriptSrcConfigurationProperties(), whitespaceOnly)).connectSrc(),
+            "a whitespace-only value must not suppress 'none'");
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com"),
+            policy(generator(configuration, request -> null, new ScriptSrcConfigurationProperties(), padded)).connectSrc());
+    }
+
+    @Test
+    void rejectsABlankRequireTrustedTypesForValue() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setRequireTrustedTypesFor("  ");
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> defaultGenerator(configuration));
+
+        assertEquals("micronaut.security.csp.require-trusted-types-for must not be blank while "
+            + "micronaut.security.csp.require-trusted-types-for-enabled is true", exception.getMessage());
+    }
+
+    @Test
+    void acceptsABlankRequireTrustedTypesForValueWhenTheDirectiveIsDisabled() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setRequireTrustedTypesForEnabled(false);
+        configuration.setRequireTrustedTypesFor("");
+
+        assertNull(policy(defaultGenerator(configuration)).requireTrustedTypesFor());
     }
 
     @Test
@@ -306,14 +362,18 @@ class DefaultContentSecurityPolicyGeneratorTest {
     }
 
     private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyConfiguration configuration,
-                                                            Function<HttpRequest<?>, String> nonceProvider,
+                                                            Function<HttpRequest<?>, @Nullable String> nonceProvider,
                                                             ScriptSrcConfigurationProperties scriptSrcConfiguration,
                                                             ConnectSrcConfiguration connectSrcConfiguration) {
         return new DefaultContentSecurityPolicyGenerator(configuration,
-            nonceProvider,
             ContentSecurityPolicyDirectiveConfigurations.builder()
                 .scriptSrc(scriptSrcConfiguration)
                 .connectSrc(connectSrcConfiguration)
-                .build());
+                .build()) {
+            @Override
+            protected @Nullable String nonce(HttpRequest<?> request) {
+                return nonceProvider.apply(request);
+            }
+        };
     }
 }

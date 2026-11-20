@@ -199,14 +199,24 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             throw new CodecException("A Content Security Policy report field " + field + " must not be longer than " + maxLength + " characters");
         }
     }
-}
 
-@Serdeable
-record SerializedContentSecurityPolicyReport(
-    @Nullable Long age,
-    @Nullable String type,
-    @Nullable String url,
-    @JsonProperty("user_agent") @Nullable String userAgent,
-    @Nullable JsonNode body
-) {
+    /**
+     * The Reporting API envelope as delivered; its body is decoded once its type is known. It is
+     * package-private rather than private so that the generated serde introspection can access it.
+     *
+     * @param age the report age in milliseconds
+     * @param type the report type
+     * @param url the URL of the document that generated the report
+     * @param userAgent the user agent that generated the report
+     * @param body the type-specific report body
+     */
+    @Serdeable
+    record SerializedContentSecurityPolicyReport(
+        @Nullable Long age,
+        @Nullable String type,
+        @Nullable String url,
+        @JsonProperty("user_agent") @Nullable String userAgent,
+        @Nullable JsonNode body
+    ) {
+    }
 }

@@ -19,6 +19,7 @@ import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
@@ -35,12 +36,39 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SE
  * @since 5.6.0
  */
 public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
+    private static final String QUOTED_NONCE_PREFIX = "'nonce-";
+    private static final String REDACTED_NONCE = QUOTED_NONCE_PREFIX + "[redacted]'";
 
-    @Override
-    public String toString() {
+    /**
+     * Serializes this directive as it appears in a CSP header value.
+     *
+     * @return the directive name followed by its trimmed value, if any
+     * @since 5.6.0
+     */
+    public String toHeaderValue() {
         return StringUtils.hasText(value())
                     ? name() + " " + value().trim()
                     : name();
+    }
+
+    /**
+     * Describes this directive for logs and debuggers. Nonce source expressions are redacted
+     * because a nonce is a secret of the response that carries it; use {@link #toHeaderValue()} to
+     * serialize the directive.
+     *
+     * @return the directive name followed by its values, with nonces redacted
+     */
+    @Override
+    public String toString() {
+        List<String> values = values();
+        if (values.isEmpty()) {
+            return name();
+        }
+        StringJoiner joiner = new StringJoiner(" ", name() + " ", "");
+        for (String token : values) {
+            joiner.add(token.regionMatches(true, 0, QUOTED_NONCE_PREFIX, 0, QUOTED_NONCE_PREFIX.length()) ? REDACTED_NONCE : token);
+        }
+        return joiner.toString();
     }
 
     /**

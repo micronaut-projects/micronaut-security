@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.csp;
 
-import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 import org.jspecify.annotations.Nullable;
 
@@ -34,7 +33,6 @@ import org.jspecify.annotations.Nullable;
  * @since 5.6.0
  */
 @FunctionalInterface
-@DefaultImplementation(DefaultContentSecurityPolicyGenerator.class)
 public interface ContentSecurityPolicyGenerator {
     /**
      * The space used between directive values in a serialized CSP header.
@@ -55,7 +53,7 @@ public interface ContentSecurityPolicyGenerator {
     /**
      * The {@code 'self'} keyword source expression, including the required single quotes.
      */
-    String QUOTED_SELF = ContentSecurityPolicyUtils.wrapInSingleQuotes(SELF);
+    String QUOTED_SELF = "'self'";
     /**
      * The {@code none} keyword source expression, without its surrounding quotes.
      */
@@ -63,7 +61,7 @@ public interface ContentSecurityPolicyGenerator {
     /**
      * The {@code 'none'} keyword source expression, including the required single quotes.
      */
-    String QUOTED_NONE = ContentSecurityPolicyUtils.wrapInSingleQuotes(NONE);
+    String QUOTED_NONE = "'none'";
     /**
      * The {@code script} Trusted Types sink group, without its surrounding quotes.
      */
@@ -87,6 +85,50 @@ public interface ContentSecurityPolicyGenerator {
      * {@code eval}. Enabling it weakens CSP's protection against cross-site scripting.
      */
     String UNSAFE_EVAL = "unsafe-eval";
+
+    /**
+     * The {@code unsafe-hashes} keyword, which lets hash sources authorize inline event handlers
+     * and {@code style} attributes.
+     */
+    String UNSAFE_HASHES = "unsafe-hashes";
+
+    /**
+     * The {@code report-sample} keyword, which asks the browser to include a sample of the
+     * violating code in violation reports.
+     */
+    String REPORT_SAMPLE = "report-sample";
+
+    /**
+     * The {@code wasm-unsafe-eval} keyword, which permits WebAssembly compilation without
+     * permitting JavaScript {@code eval}.
+     */
+    String WASM_UNSAFE_EVAL = "wasm-unsafe-eval";
+
+    /**
+     * The {@code trusted-types-eval} keyword, which permits {@code eval} with Trusted Types.
+     */
+    String TRUSTED_TYPES_EVAL = "trusted-types-eval";
+
+    /**
+     * The {@code report-sha256} keyword, which asks the browser to report SHA-256 hashes of loaded scripts.
+     */
+    String REPORT_SHA256 = "report-sha256";
+
+    /**
+     * The {@code report-sha384} keyword, which asks the browser to report SHA-384 hashes of loaded scripts.
+     */
+    String REPORT_SHA384 = "report-sha384";
+
+    /**
+     * The {@code report-sha512} keyword, which asks the browser to report SHA-512 hashes of loaded scripts.
+     */
+    String REPORT_SHA512 = "report-sha512";
+
+    /**
+     * The {@code unsafe-webtransport-hashes} keyword, which lets WebTransport connections be
+     * authorized by certificate hashes.
+     */
+    String UNSAFE_WEBTRANSPORT_HASHES = "unsafe-webtransport-hashes";
 
     /**
      * The HTTP scheme source expression. Scheme sources are not enclosed in single quotes.

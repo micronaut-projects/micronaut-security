@@ -161,7 +161,7 @@ class CspConfigurationBindingTest {
                 + "require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self'; "
                 + "manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'self'; "
                 + "script-src 'nonce-requestnonce' 'self'",
-            policy.toString());
+            policy.toHeaderValue());
     }
 
     private static ContentSecurityPolicy policy(Map<String, Object> properties) {

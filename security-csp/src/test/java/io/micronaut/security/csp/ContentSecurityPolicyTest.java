@@ -36,8 +36,18 @@ class ContentSecurityPolicyTest {
 
         directives.add(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC, "'self'"));
 
-        assertEquals("default-src 'none'", policy.toString());
+        assertEquals("default-src 'none'", policy.toHeaderValue());
         assertThrows(UnsupportedOperationException.class, () -> policy.directives().add(directives.get(1)));
+    }
+
+    @Test
+    void toStringRedactsTheNonceThatTheHeaderValueCarries() {
+        ContentSecurityPolicy policy = new ContentSecurityPolicy(List.of(
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'none'"),
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-abc123' 'strict-dynamic'")));
+
+        assertEquals("default-src 'none'; script-src 'nonce-abc123' 'strict-dynamic'", policy.toHeaderValue());
+        assertEquals("default-src 'none'; script-src 'nonce-[redacted]' 'strict-dynamic'", policy.toString());
     }
 
     @Test

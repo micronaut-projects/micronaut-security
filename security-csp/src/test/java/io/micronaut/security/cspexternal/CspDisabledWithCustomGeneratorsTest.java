@@ -20,30 +20,38 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.server.filter.ResponseHeaderPopulator;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
+import io.micronaut.security.reporting.ReportingEndpoints;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Verifies that {@code micronaut.security.csp.enabled=false} also turns off the filter package when
- * the application registers its own policy and nonce generators. The test lives outside
+ * Verifies that {@code micronaut.security.csp.enabled=false} also turns off the filter and report
+ * packages when the application registers its own policy generator, nonce generator and report
+ * handler. The test lives outside
  * {@code io.micronaut.security.csp} so that the package-level requirements of the module do not
  * disable the application beans themselves.
  */
@@ -55,7 +63,8 @@ class CspDisabledWithCustomGeneratorsTest {
         try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
                 "spec.name", SPEC_NAME,
                 "micronaut.security.csp.enabled", false,
-                "micronaut.security.csp.script-src.nonce", true));
+                "micronaut.security.csp.script-src.nonce", true,
+                "micronaut.security.csp.report-to.enabled", true));
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             ApplicationContext context = server.getApplicationContext();
             assertTrue(context.getBean(ContentSecurityPolicyGenerator.class) instanceof SelfOnlyGenerator);
@@ -69,6 +78,13 @@ class CspDisabledWithCustomGeneratorsTest {
             assertNull(ContentSecurityPolicy.of(response));
             assertNull(ContentSecurityPolicy.of(response.getHeaders(), HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY));
             assertEquals("no nonce", response.body());
+
+            HttpRequest<byte[]> report = HttpRequest.POST("/csp/report", "[]".getBytes(StandardCharsets.UTF_8))
+                .contentType(MediaType.of("application/reports+json"));
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                () -> httpClient.toBlocking().exchange(report));
+            assertEquals(HttpStatus.NOT_FOUND, exception.getStatus(), "the report controller must not be registered");
+            assertNull(exception.getResponse().header(ReportingEndpoints.HEADER_NAME));
         }
     }
 
@@ -87,6 +103,14 @@ class CspDisabledWithCustomGeneratorsTest {
         @Override
         public String generateNonce(HttpRequest<?> request) {
             return "fixed";
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Singleton
+    static class NoOpReportHandler implements ContentSecurityPolicyReportHandler {
+        @Override
+        public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
         }
     }
 

@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.conf.stylesrc;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProperties;
 
@@ -27,6 +28,7 @@ import io.micronaut.security.csp.conf.InlineSourceListDirectiveConfigurationProp
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_STYLE_SRC)
 public class StyleSrcConfigurationProperties extends InlineSourceListDirectiveConfigurationProperties implements StyleSrcConfiguration {
     private boolean nonce;

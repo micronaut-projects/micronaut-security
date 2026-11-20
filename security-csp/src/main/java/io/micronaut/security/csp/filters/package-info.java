@@ -15,6 +15,9 @@
  */
 /**
  * HTTP server filter support for Content Security Policy response headers.
+ *
+ * <p>Like every subpackage, it is also disabled by the {@code micronaut.security.csp.enabled}
+ * requirement of the {@code io.micronaut.security.csp} package.</p>
  */
 @NullMarked
 @Requires(classes = ServerFilter.class)

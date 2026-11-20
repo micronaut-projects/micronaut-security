@@ -26,17 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ContentSecurityPolicyDirectiveTest {
 
     @Test
-    void toStringIncludesDirectiveValue() {
+    void headerValueIncludesDirectiveValue() {
         ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.DEFAULT_SRC, "'self'");
 
-        assertEquals("default-src 'self'", directive.toString());
+        assertEquals("default-src 'self'", directive.toHeaderValue());
     }
 
     @Test
-    void toStringOmitsMissingDirectiveValue() {
+    void headerValueOmitsMissingDirectiveValue() {
         ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null);
 
-        assertEquals("upgrade-insecure-requests", directive.toString());
+        assertEquals("upgrade-insecure-requests", directive.toHeaderValue());
     }
 
     @Test
@@ -52,7 +52,7 @@ class ContentSecurityPolicyDirectiveTest {
         ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, "   ");
 
         assertEquals(List.of(), directive.values());
-        assertEquals("sandbox", directive.toString());
+        assertEquals("sandbox", directive.toHeaderValue());
         assertFalse(directive.isNone());
         assertFalse(directive.isSelf());
     }
@@ -71,5 +71,15 @@ class ContentSecurityPolicyDirectiveTest {
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "self").isSelf());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'").isSelf());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, null).isSelf());
+    }
+
+    @Test
+    void toStringRedactsNonceSourcesButHeaderValueKeepsThem() {
+        ContentSecurityPolicyDirective directive = new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC,
+            "'NONCE-abc123' 'self'  https://cdn.example.com");
+
+        assertEquals("script-src 'NONCE-abc123' 'self'  https://cdn.example.com", directive.toHeaderValue());
+        assertEquals("script-src 'nonce-[redacted]' 'self' https://cdn.example.com", directive.toString());
+        assertEquals("sandbox", new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, null).toString());
     }
 }

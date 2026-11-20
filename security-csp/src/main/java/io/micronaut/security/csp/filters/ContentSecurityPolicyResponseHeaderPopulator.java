@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.core.util.StringUtils;
@@ -69,6 +70,12 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         this.cspGenerator = cspGenerator;
         this.cspConfiguration = cspConfiguration;
         String pattern = cspFilterConfiguration.getPattern();
+        if (!StringUtils.hasText(pattern)) {
+            // The nonce filter resolves the same property through its @ServerFilter placeholder. A
+            // blank pattern would match no request there, so the policy and nonce would silently
+            // disappear. Fail startup instead, also when micronaut-validation is not available.
+            throw new ConfigurationException(ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".pattern must not be blank");
+        }
         this.matchAll = ServerFilter.MATCH_ALL_PATTERN.equals(pattern);
         this.patterns = patterns(pattern, serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath());
     }
@@ -108,7 +115,7 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         if (!responseSetsAlreadyCspHeader) {
             ContentSecurityPolicy csp = cspGenerator.contentSecurityPolicy(request);
             if (csp != null) {
-                return List.of(new HttpHeaderEntry(headerName, csp.toString()));
+                return List.of(new HttpHeaderEntry(headerName, csp.toHeaderValue()));
             }
         }
         return null;

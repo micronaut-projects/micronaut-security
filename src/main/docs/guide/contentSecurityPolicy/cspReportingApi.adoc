@@ -22,7 +22,7 @@ Content-Security-Policy: default-src 'none'; report-to csp
 
 Without a handler, the reporting controller and the module-provided `Reporting-Endpoints` header are not registered. The generated policy can still use `report-to` with an application-managed or external `Reporting-Endpoints` header.
 
-Implement the handler to redact, persist, or forward reports to a monitoring service. The controller calls it on the blocking executor, so it may perform I/O such as a database insert:
+Implement the handler to redact, persist, or forward reports to a monitoring service. Register exactly one handler bean; to send reports to several destinations, delegate from it. The controller calls it on the blocking executor, so it may perform I/O such as a database insert:
 
 snippet::io.micronaut.security.docs.cspreport.ApplicationCspReportHandler[tags="clazz"]
 

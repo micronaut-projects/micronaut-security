@@ -29,6 +29,9 @@ import java.util.List;
  * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING}), so it may perform blocking I/O such as
  * a database insert or a synchronous call to a monitoring service.</p>
  *
+ * <p>Register exactly one handler bean. To send reports to several destinations, delegate from
+ * that handler; two handler beans fail when the report controller is created.</p>
+ *
  * @since 5.6.0
  */
 @FunctionalInterface

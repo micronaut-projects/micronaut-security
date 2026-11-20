@@ -23,6 +23,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.context.ServerContextPathProvider;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import io.micronaut.security.reporting.ReportingEndpointProvider;
 import jakarta.inject.Singleton;
@@ -40,6 +41,7 @@ import java.util.regex.Pattern;
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     private static final String SLASH = "/";
     private static final Pattern LOCAL_PATH = Pattern.compile(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX);
+    private static final Pattern GROUP = Pattern.compile(ReportToConfigurationProperties.GROUP_REGEX);
     private final @Nullable ReportingEndpoint reportingEndpoint;
 
     /**
@@ -53,7 +55,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
                                  ContentSecurityPolicyControllerConfiguration controllerConfiguration,
                                  @Nullable ServerContextPathProvider serverContextPathProvider) {
         if (reportToConfiguration.isEnabled()) {
-            String name = reportToConfiguration.getGroup();
+            String name = requireGroup(reportToConfiguration.getGroup());
             URI url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
             this.reportingEndpoint = new ReportingEndpoint() {
                 @Override
@@ -83,6 +85,23 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     @Override
     public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
         return reportingEndpoint;
+    }
+
+    /**
+     * Rejects a group name that the {@code Reporting-Endpoints} header cannot carry. Without this
+     * check, which applies whichever policy generator is in use and without micronaut-validation,
+     * the reporting filter would drop the endpoint and warn on every response.
+     *
+     * @param group the configured reporting group
+     * @return the group
+     * @throws ConfigurationException if the group does not match {@link ReportToConfigurationProperties#GROUP_REGEX}
+     */
+    private static String requireGroup(String group) {
+        if (!GROUP.matcher(group).matches()) {
+            throw new ConfigurationException(ReportToConfigurationProperties.PREFIX + ".group must match "
+                + ReportToConfigurationProperties.GROUP_REGEX + ", the grammar of a Reporting-Endpoints name");
+        }
+        return group;
     }
 
     /**

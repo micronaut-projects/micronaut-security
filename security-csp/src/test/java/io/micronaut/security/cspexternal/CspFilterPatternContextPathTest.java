@@ -17,6 +17,7 @@ package io.micronaut.security.cspexternal;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -37,6 +38,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A narrowed {@code filter.pattern} must select the same requests for the nonce filter and the
@@ -69,6 +72,18 @@ class CspFilterPatternContextPathTest {
             assertNull(ContentSecurityPolicy.of(other), "a request outside filter.pattern must not receive the CSP header");
             assertEquals("no nonce", other.body());
         }
+    }
+
+    @ParameterizedTest(name = "pattern \"{0}\"")
+    @ValueSource(strings = {"", "   "})
+    void emptyOrBlankPatternFailsStartupInsteadOfSilentlyDisablingThePolicy(String pattern) {
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class,
+            () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.filter.pattern", pattern,
+                "micronaut.security.csp.script-src.nonce", true)).close());
+
+        assertTrue(exception.getMessage().contains("pattern - must not be blank"), exception::getMessage);
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)

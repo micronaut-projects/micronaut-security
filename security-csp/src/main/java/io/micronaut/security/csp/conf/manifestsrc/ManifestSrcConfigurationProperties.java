@@ -19,12 +19,14 @@ import io.micronaut.security.csp.conf.SourceListDirectiveConfigurationProperties
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
 
 /**
  * Mutable properties for {@link ManifestSrcConfiguration}.
  *
  * @since 5.6.0
  */
+@Internal
 @ConfigurationProperties(ContentSecurityPolicyConfigurationProperties.PROPERTY_MANIFEST_SRC)
 public class ManifestSrcConfigurationProperties extends SourceListDirectiveConfigurationProperties implements ManifestSrcConfiguration {
 }

@@ -17,7 +17,6 @@ package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
@@ -111,8 +110,6 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
      * @param pattern the server-filter pattern; defaults to {@code /**}
      */
     public void setPattern(@NonNull String pattern) {
-        if (StringUtils.isNotEmpty(pattern)) {
-            this.pattern = pattern;
-        }
+        this.pattern = pattern;
     }
 }

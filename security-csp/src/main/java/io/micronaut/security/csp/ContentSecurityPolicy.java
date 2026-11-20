@@ -37,6 +37,8 @@ import org.jspecify.annotations.Nullable;
  * @since 5.6.0
  */
 public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directives) {
+    private static final String DIRECTIVE_SEPARATOR = "; ";
+
     /**
      * Creates a policy with an immutable copy of the supplied directives.
      *
@@ -50,10 +52,26 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Serializes this policy as a CSP header value.
      *
      * @return the semicolon-separated directives in their stored order
+     * @since 5.6.0
+     */
+    public String toHeaderValue() {
+        StringJoiner directives = new StringJoiner(DIRECTIVE_SEPARATOR);
+        for (ContentSecurityPolicyDirective directive : directives()) {
+            directives.add(directive.toHeaderValue());
+        }
+        return directives.toString();
+    }
+
+    /**
+     * Describes this policy for logs and debuggers. Nonce source expressions are redacted because a
+     * nonce is a secret of the response that carries it; use {@link #toHeaderValue()} to serialize
+     * the policy.
+     *
+     * @return the semicolon-separated directives, with nonces redacted
      */
     @Override
     public String toString() {
-        StringJoiner directives = new StringJoiner("; ");
+        StringJoiner directives = new StringJoiner(DIRECTIVE_SEPARATOR);
         for (ContentSecurityPolicyDirective directive : directives()) {
             directives.add(directive.toString());
         }

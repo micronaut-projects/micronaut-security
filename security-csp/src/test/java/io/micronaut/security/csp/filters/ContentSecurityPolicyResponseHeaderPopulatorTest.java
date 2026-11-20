@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.csp.filters;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
@@ -24,11 +25,14 @@ import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class ContentSecurityPolicyResponseHeaderPopulatorTest {
@@ -145,5 +149,18 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/bar"), HttpResponse.ok()));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   "})
+    void rejectsAnEmptyOrBlankPatternThatTheNonceFilterCouldNotMatch(String pattern) {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern(pattern);
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+            () -> new ContentSecurityPolicyResponseHeaderPopulator(request -> null, configuration, filterConfiguration, null));
+
+        assertEquals("micronaut.security.csp.filter.pattern must not be blank", exception.getMessage());
     }
 }
