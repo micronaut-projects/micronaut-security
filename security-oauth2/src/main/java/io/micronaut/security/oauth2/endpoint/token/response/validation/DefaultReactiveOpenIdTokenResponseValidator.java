@@ -102,7 +102,7 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                                    @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                    @NonNull OpenIdTokenResponse openIdTokenResponse,
                                    @Nullable String nonce) {
-        return validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
+        return validateIdToken(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
                 (validator, claims) -> validator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce));
     }
 
@@ -112,15 +112,15 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
     public Publisher<JWT> validateWithoutNonce(@NonNull OauthClientConfiguration clientConfiguration,
                                                @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                @NonNull OpenIdTokenResponse openIdTokenResponse) {
-        return validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
+        return validateIdToken(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
                 (validator, claims) -> validator.validateWithoutNonce(claims, clientConfiguration, openIdProviderMetadata));
     }
 
     @NonNull
-    private Mono<JWT> validate(@NonNull OauthClientConfiguration clientConfiguration,
-                               @NonNull OpenIdProviderMetadata openIdProviderMetadata,
-                               @NonNull OpenIdTokenResponse openIdTokenResponse,
-                               @NonNull BiPredicate<NonceClaimValidator, OpenIdClaims> nonceValidation) {
+    private Mono<JWT> validateIdToken(@NonNull OauthClientConfiguration clientConfiguration,
+                                      @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                      @NonNull OpenIdTokenResponse openIdTokenResponse,
+                                      @NonNull BiPredicate<NonceClaimValidator, OpenIdClaims> nonceValidation) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
