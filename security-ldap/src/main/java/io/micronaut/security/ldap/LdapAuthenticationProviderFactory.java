@@ -24,6 +24,8 @@ import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
+import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -46,12 +48,15 @@ public class LdapAuthenticationProviderFactory {
      */
     @EachBean(LdapConfiguration.class)
     @Requires(condition = LdapEnabledCondition.class)
+    @SuppressWarnings("removal")
     public LdapAuthenticationProvider ldapAuthenticationProvider(@Parameter LdapConfiguration configuration,
                                                                  LdapSearchService ldapSearchService,
                                                                  ContextBuilder contextBuilder,
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor) {
-        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
+        // Delegates to the deprecated method, so that a subclass which overrides it still creates the provider.
+        // Create the provider here once the deprecated method is removed.
+        return ldapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, null);
     }
 
     /**
@@ -64,6 +69,8 @@ public class LdapAuthenticationProviderFactory {
      *                                    {@link LdapAuthenticationProvider#getExecutorName()}, {@link TaskExecutors#BLOCKING} by default.
      * @return an {@link LdapAuthenticationProvider}
      * @deprecated The executor service is ignored. Use {@link #ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
+     * Until this method is removed, the bean factory method calls it, so a subclass that overrides it still creates the
+     * provider. Override the method without the executor service instead.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public LdapAuthenticationProvider ldapAuthenticationProvider(LdapConfiguration configuration,
@@ -71,7 +78,7 @@ public class LdapAuthenticationProviderFactory {
                                                                  ContextBuilder contextBuilder,
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor,
-                                                                 ExecutorService executorService) {
-        return ldapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
+                                                                 @Nullable ExecutorService executorService) {
+        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 }
