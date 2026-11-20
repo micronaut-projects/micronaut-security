@@ -15,24 +15,24 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
-@Property(name = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
+@Property(name = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 @Property(name = "micronaut.security.csp.script-src.self", value = "true")
 @MicronautTest
-internal class ImagesContentSecurityPolicyGeneratorTest {
+internal class UpgradingContentSecurityPolicyGeneratorTest {
 
     @Test
-    fun theOverriddenDirectiveReplacesTheConfiguredOne(@Client("/") httpClient: HttpClient) {
-        val response = httpClient.toBlocking().exchange(HttpRequest.GET<Any>("/csp-generator-images"), String::class.java)
+    fun theSubclassAppendsADirectiveThatTheConfigurationDoesNotExpose(@Client("/") httpClient: HttpClient) {
+        val response = httpClient.toBlocking().exchange(HttpRequest.GET<Any>("/csp-generator-upgrade"), String::class.java)
 
         val policy = ContentSecurityPolicy.of(response)
         assertNotNull(policy)
-        assertEquals("img-src 'self' https://images.example.com", policy!!.imgSrc()!!.toHeaderValue())
+        assertNotNull(policy!!.upgradeInsecureRequests())
         assertEquals("script-src 'self'", policy.scriptSrc()!!.toHeaderValue())
     }
 
-    @Requires(property = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
-    @Controller("/csp-generator-images")
-    internal class ImagesController {
+    @Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
+    @Controller("/csp-generator-upgrade")
+    internal class UpgradeController {
 
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get

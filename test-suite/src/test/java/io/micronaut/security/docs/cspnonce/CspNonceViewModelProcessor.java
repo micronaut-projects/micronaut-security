@@ -1,7 +1,7 @@
 package io.micronaut.security.docs.cspnonce;
 
-//tag::clazz[]
 import io.micronaut.context.annotation.Requires;
+//tag::clazz[]
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import io.micronaut.views.ModelAndView;

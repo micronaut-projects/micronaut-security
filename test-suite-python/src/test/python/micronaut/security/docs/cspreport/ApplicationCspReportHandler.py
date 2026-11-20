@@ -1,6 +1,6 @@
+from micronaut.context.annotation import Requires
 # tag::clazz[]
 from jakarta.inject import Singleton
-from micronaut.context.annotation import Requires
 from micronaut.http import HttpRequest
 from micronaut.security.csp.report import ContentSecurityPolicyReport, ContentSecurityPolicyReportHandler
 

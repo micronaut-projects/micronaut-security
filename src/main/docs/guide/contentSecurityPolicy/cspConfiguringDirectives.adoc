@@ -6,6 +6,8 @@ Each source-list directive has its own configuration namespace, `micronaut.secur
 * `values`: additional source expressions, written in the configured order. Host and scheme sources are written as supplied; keywords, nonces and hashes must include their single quotes, for example `"'sha256-...'"`. A value containing `;`, `,` or a control character fails application startup, because it would end the directive or policy.
 * `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, `wss`: add the corresponding <<cspSchemeSources,scheme source>>.
 
+Two directives are configured at the root of `micronaut.security.csp` instead of in their own namespace: `report-uri` (`report-uri` and `report-uri-enabled`) and `require-trusted-types-for` (`require-trusted-types-for` and `require-trusted-types-for-enabled`). For example, `micronaut.security.csp.report-uri.enabled` does not exist.
+
 `script-src` and `style-src` also support `nonce`, `unsafe-inline`, `unsafe-hashes` and `report-sample`. `script-src` additionally supports `unsafe-eval`, `strict-dynamic`, `wasm-unsafe-eval`, `trusted-types-eval` and `report-sha256`, `report-sha384` and `report-sha512`. `connect-src` also supports `unsafe-webtransport-hashes`.
 
 A typical server-rendered application that serves its own scripts, styles, images and fonts, and uses nonces for inline scripts, starts with:
@@ -58,4 +60,4 @@ include::{includedir}configurationProperties/io.micronaut.security.csp.filters.C
 
 include::{includedir}configurationProperties/io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties.adoc[]
 
-The other directives have the same properties as `script-src` except those listed above as specific to `script-src` and `style-src`. The complete list is in the configuration reference.
+The other directives have the same properties as `script-src` except those listed above as specific to `script-src` and `style-src`. The complete list is in the link:configurationreference.html[configuration reference].

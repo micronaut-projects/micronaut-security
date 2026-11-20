@@ -1,7 +1,7 @@
+from micronaut.context.annotation import Requires
 # tag::clazz[]
 from jakarta.inject import Singleton
 from java.util import List
-from micronaut.context.annotation import Requires
 from micronaut.http import HttpRequest
 from micronaut.security.csp import ContentSecurityPolicy, ContentSecurityPolicyDirective, ContentSecurityPolicyGenerator
 

@@ -164,6 +164,28 @@ class CspConfigurationBindingTest {
             policy.toHeaderValue());
     }
 
+    @Test
+    void guideStyleSrcExampleGeneratesTheDocumentedDirective() {
+        ContentSecurityPolicy policy = policy(Map.of(
+            "micronaut.security.csp.style-src.self", true,
+            "micronaut.security.csp.style-src.nonce", true));
+
+        assertEquals("style-src 'nonce-requestnonce' 'self'", policy.styleSrc().toHeaderValue());
+    }
+
+    @Test
+    void guideViewsMigrationExampleGeneratesTheDocumentedHeader() {
+        ContentSecurityPolicy policy = policy(Map.of(
+            "micronaut.security.csp.default-src.self", true,
+            "micronaut.security.csp.img-src.self", true,
+            "micronaut.security.csp.img-src.data", true));
+
+        assertEquals("base-uri 'none'; default-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; "
+                + "require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data:; "
+                + "manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'none'; script-src 'none'",
+            policy.toHeaderValue());
+    }
+
     private static ContentSecurityPolicy policy(Map<String, Object> properties) {
         try (ApplicationContext context = ApplicationContext.run(properties)) {
             MutableHttpRequest<?> request = HttpRequest.GET("/");

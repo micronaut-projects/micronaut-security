@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Decodes the Reporting API's dedicated JSON media type.
@@ -56,7 +58,9 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     static final int MAX_TOKEN_LENGTH = 256;
     private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
     private static final int MAX_STATUS_CODE = 65_535;
+    private static final long WARNING_INTERVAL_NANOS = TimeUnit.MINUTES.toNanos(1);
     private final JsonMapper jsonMapper;
+    private final AtomicLong nextWarning = new AtomicLong(System.nanoTime());
 
     ContentSecurityPolicyReportBodyReader(JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
@@ -67,14 +71,17 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                                                             @Nullable MediaType mediaType,
                                                             Headers httpHeaders,
                                                             InputStream inputStream) throws CodecException {
+        List<@Nullable SerializedContentSecurityPolicyReport> serializedReports;
         try {
-            List<@Nullable SerializedContentSecurityPolicyReport> serializedReports = jsonMapper.readValue(
-                inputStream,
-                Argument.listOf(SerializedContentSecurityPolicyReport.class)
-            );
-            if (serializedReports == null) {
-                return null;
-            }
+            serializedReports = jsonMapper.readValue(inputStream, Argument.listOf(SerializedContentSecurityPolicyReport.class));
+        } catch (IOException e) {
+            throw rejected(null, "the body is not a JSON array of Reporting API reports",
+                new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
+        }
+        if (serializedReports == null) {
+            return null;
+        }
+        try {
             if (serializedReports.size() > MAX_REPORTS) {
                 throw new CodecException("A Reporting API batch must not contain more than " + MAX_REPORTS + " reports");
             }
@@ -86,9 +93,36 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                 }
             }
             return reports;
+        } catch (CodecException e) {
+            throw rejected(serializedReports.size(), e.getMessage(), e);
         } catch (IOException e) {
-            throw new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e);
+            throw rejected(serializedReports.size(), "a report body could not be decoded",
+                new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
         }
+    }
+
+    /**
+     * Logs that a batch is rejected with HTTP 400, so that operators notice reports that never reach
+     * the handler. The first rejection in each minute is logged at WARN and the others at DEBUG, so a
+     * misbehaving client cannot flood the log. Report contents are untrusted and never logged; the
+     * reason is one of the reader's own messages.
+     *
+     * @param reports the number of reports in the batch, or {@code null} if the body could not be parsed
+     * @param reason why the batch is rejected
+     * @param exception the exception that rejects the batch
+     * @return {@code exception}, to be thrown by the caller
+     */
+    private CodecException rejected(@Nullable Integer reports, String reason, CodecException exception) {
+        String batch = reports == null ? "a batch of Content Security Policy reports" : "a batch of " + reports + " Content Security Policy reports";
+        long now = System.nanoTime();
+        long next = nextWarning.get();
+        if (now - next >= 0 && nextWarning.compareAndSet(next, now + WARNING_INTERVAL_NANOS)) {
+            LOG.warn("Rejected {} with HTTP 400, so the handler did not receive them: {}. Further rejections within a minute are logged at DEBUG "
+                + "by the logger {}.", batch, reason, LOG.getName());
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Rejected {} with HTTP 400: {}.", batch, reason);
+        }
+        return exception;
     }
 
     /**

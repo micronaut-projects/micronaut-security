@@ -126,8 +126,10 @@ contentSecurityPolicy:
     scriptSrcHashes: script-src Hashes
     scriptSrcSelf: script-src 'self'
     scriptSrcUrls: script-src URLs
+  cspStyleSrc: Inline Styles (style-src)
   cspReportingApi: Receiving CSP Reports
   contentSecurityPolicyGenerator: CSP Generator
+  cspMigratingFromViews: Migrating from Micronaut Views
 reporting:
   title: Reporting API
   reportingEndpoints: Configuration Reporting Endpoints

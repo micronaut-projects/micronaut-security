@@ -147,6 +147,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         this.cspConfiguration = cspConfiguration;
         if (cspConfiguration.isReportUriEnabled() && reportUris(cspConfiguration).isEmpty()) {
             LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
+        } else if (!cspConfiguration.isReportUriEnabled() && !reportUris(cspConfiguration).isEmpty()) {
+            LOG.warn("{} is configured but {}-enabled is false; the report-uri directive is omitted", PROPERTY_REPORT_URI, PROPERTY_REPORT_URI);
         }
         this.directiveConfigurations = directiveConfigurations;
         validateRootConfiguration();
@@ -170,7 +172,13 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                 throw new ConfigurationException(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + " must not be blank while "
                     + PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + "-enabled is true");
             }
-            requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor());
+            String requireTrustedTypesFor = cspConfiguration.getRequireTrustedTypesFor();
+            requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor);
+            String trimmed = requireTrustedTypesFor.trim();
+            if (!trimmed.startsWith(SINGLE_QUOTE)) {
+                LOG.warn("{} is \"{}\", which is not single-quoted; browsers ignore the directive. Use \"{}\".",
+                    PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
+            }
         }
         if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
             throw new ConfigurationException(PROPERTY_REPORT_TO_GROUP + " must match " + REPORTING_GROUP_GRAMMAR.pattern()

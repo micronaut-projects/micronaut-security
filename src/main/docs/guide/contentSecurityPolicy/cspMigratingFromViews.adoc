@@ -1,0 +1,54 @@
+Micronaut Views ships its own CSP filter, disabled by default (`micronaut.views.csp.enabled: false`). If you enabled it, disable it when you add this module. Both write the `cspNonce` request attribute and a CSP header, so running them together lets one overwrite the other's nonce. The module logs a warning at startup while `micronaut.views.csp.enabled` is `true`.
+
+The Micronaut Views settings, as of Micronaut Views 6.3.1, map to this module as follows:
+
+[cols="2,3"]
+|===
+|Micronaut Views |micronaut-security-csp
+
+|`micronaut.views.csp.enabled`
+|`micronaut.security.csp.enabled`, which defaults to `true`
+
+|`micronaut.views.csp.policy-directives`
+|No single property. Configure each directive under `micronaut.security.csp.<directive>`, see the example below, or provide a <<contentSecurityPolicyGenerator,generator>> for directives the configuration does not expose
+
+|`micronaut.views.csp.report-only`
+|`micronaut.security.csp.report-only`
+
+|`micronaut.views.csp.generate-nonce` and the `{#nonceValue}` placeholder
+|`micronaut.security.csp.script-src.nonce` and `micronaut.security.csp.style-src.nonce`; the module adds the nonce to those directives itself
+
+|`micronaut.views.csp.filter-path`
+|`micronaut.security.csp.filter.pattern`
+
+|`micronaut.views.csp.force-secure-random` and `micronaut.views.csp.random-engine`
+|No equivalent: nonces always come from a `SecureRandom`. Replace the api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[] bean to generate them differently
+|===
+
+For example, the Micronaut Views policy `default-src 'self'; img-src 'self' data:` becomes:
+
+[configuration]
+----
+micronaut:
+  views:
+    csp:
+      enabled: false
+  security:
+    csp:
+      default-src:
+        self: true
+      img-src:
+        self: true
+        data: true
+----
+
+Unlike a hand-written policy string, the module also writes its restrictive defaults for the directives you do not configure, so the configuration above generates:
+
+[source,text]
+----
+base-uri 'none'; default-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data:; manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'none'; script-src 'none'
+----
+
+A directive written by the module does not fall back to `default-src`. Allow the sources each directive needs, for example `script-src.self: true`, or set `<directive>.enabled: false` so that the browser falls back to `default-src` for it.
+
+Micronaut Views 6.3.1 does not copy the nonce into the view model. Register a view model processor as shown in <<cspNonceGeneration,script-src Nonces>> so that templates can use `${cspNonce}`.

@@ -15,28 +15,28 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
 
-@Property(name = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
+@Property(name = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 @Property(name = "micronaut.security.csp.script-src.self", value = "true")
 @MicronautTest
-class ImagesContentSecurityPolicyGeneratorTest extends Specification {
+class UpgradingContentSecurityPolicyGeneratorTest extends Specification {
 
     @Inject
     @Client("/")
     HttpClient httpClient
 
-    void "the overridden directive replaces the configured one"() {
+    void "the subclass appends a directive that the configuration does not expose"() {
         when:
-        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-generator-images"), String)
+        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-generator-upgrade"), String)
         ContentSecurityPolicy policy = ContentSecurityPolicy.of(response)
 
         then:
-        policy.imgSrc().toHeaderValue() == "img-src 'self' https://images.example.com"
+        policy.upgradeInsecureRequests() != null
         policy.scriptSrc().toHeaderValue() == "script-src 'self'"
     }
 
-    @Requires(property = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
-    @Controller("/csp-generator-images")
-    static class ImagesController {
+    @Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
+    @Controller("/csp-generator-upgrade")
+    static class UpgradeController {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get
         String index() {

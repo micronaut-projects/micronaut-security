@@ -15,6 +15,10 @@
  */
 package io.micronaut.security.csp.report;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
@@ -27,6 +31,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +40,7 @@ import java.util.StringJoiner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Exercises the checks the reader always applies, independently of bean validation, which needs
@@ -120,6 +126,41 @@ class ContentSecurityPolicyReportBodyReaderTest {
         assertThrows(CodecException.class, () -> read(json));
     }
 
+    @Test
+    void logsTheFirstRejectedBatchOfAMinuteAtWarnWithoutTheReportContents() {
+        ContentSecurityPolicyReportBodyReader freshReader = new ContentSecurityPolicyReportBodyReader(context.getBean(JsonMapper.class));
+        String longUrl = "\"https://example.com/" + "x".repeat(ContentSecurityPolicyReportBodyReader.MAX_URL_LENGTH) + "\"";
+        Logger logger = (Logger) LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
+        Level level = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(Level.DEBUG);
+        try {
+            assertThrows(CodecException.class, () -> read(freshReader, "[" + violation(longUrl, "200", "\"secret sample\"") + "]"));
+            assertThrows(CodecException.class, () -> read(freshReader, "not json"));
+            assertThrows(CodecException.class, () -> read(freshReader, "[{\"type\":\"csp-hash\",\"age\":1,\"url\":\"https://e.com\","
+                + "\"user_agent\":\"UA\",\"body\":[]}]"));
+        } finally {
+            logger.detachAppender(appender);
+            logger.setLevel(level);
+        }
+
+        List<ILoggingEvent> events = appender.list;
+        assertEquals(3, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertEquals("Rejected a batch of 1 Content Security Policy reports with HTTP 400, so the handler did not receive them: "
+            + "A Content Security Policy report field documentURL must not be longer than 8192 characters. Further rejections within a minute "
+            + "are logged at DEBUG by the logger io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.",
+            events.get(0).getFormattedMessage());
+        assertEquals(Level.DEBUG, events.get(1).getLevel(), "a second rejection within a minute is not logged at WARN");
+        assertEquals("Rejected a batch of Content Security Policy reports with HTTP 400: the body is not a JSON array of Reporting API reports.",
+            events.get(1).getFormattedMessage());
+        assertEquals("Rejected a batch of 1 Content Security Policy reports with HTTP 400: a report body could not be decoded.",
+            events.get(2).getFormattedMessage());
+        assertTrue(events.stream().noneMatch(event -> event.getFormattedMessage().contains("secret sample")));
+    }
+
     private static String violation(String documentUrl, String statusCode, String sample) {
         return "{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://example.com/page\",\"user_agent\":\"Example Browser\",\"body\":{"
             + "\"documentURL\":" + documentUrl + ",\"effectiveDirective\":\"script-src\",\"originalPolicy\":\"script-src 'none'\","
@@ -135,6 +176,10 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     private static List<ContentSecurityPolicyReport> read(String json) {
+        return read(reader, json);
+    }
+
+    private static List<ContentSecurityPolicyReport> read(ContentSecurityPolicyReportBodyReader reader, String json) {
         MutableHttpHeaders headers = HttpResponse.ok().getHeaders();
         return reader.read(Argument.listOf(ContentSecurityPolicyReport.class), MediaType.of(ContentSecurityPolicyController.APPLICATION_REPORTS_JSON),
             headers, new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));

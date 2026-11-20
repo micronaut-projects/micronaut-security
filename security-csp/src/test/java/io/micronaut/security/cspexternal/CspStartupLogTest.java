@@ -53,6 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CspStartupLogTest {
     private static final String STARTUP_LOGGER = "io.micronaut.security.csp.filters.ContentSecurityPolicyStartupLogger";
     private static final String REPORT_TO_LOGGER = "io.micronaut.security.csp.report.ReportToWithoutEndpointWarning";
+    private static final String VIEWS_CONFLICT_LOGGER = "io.micronaut.security.csp.filters.ViewsCspConflictWarning";
     private static final String GENERATOR_LOGGER = "io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator";
 
     @Test
@@ -110,6 +111,45 @@ class CspStartupLogTest {
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
         assertMentions(events.get(0), "report-to", "'csp'", "enabled report controller");
+    }
+
+    @Test
+    void warnsWhenTheCspFilterOfMicronautViewsIsEnabledToo() {
+        List<ILoggingEvent> events = capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", true), context -> { }));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertMentions(events.get(0), "Micronaut Views CSP", "cspNonce", "micronaut.views.csp.enabled=false");
+    }
+
+    @Test
+    void doesNotWarnAboutMicronautViewsByDefault() {
+        assertEquals(List.of(), capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of(), context -> { })));
+    }
+
+    @Test
+    void warnsWhenReportUrisAreConfiguredButTheDirectiveIsDisabled() {
+        List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.report-uri", List.of("https://reports.example.com/csp")), context -> { }));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertEquals("micronaut.security.csp.report-uri is configured but micronaut.security.csp.report-uri-enabled is false; "
+            + "the report-uri directive is omitted", events.get(0).getFormattedMessage());
+    }
+
+    @Test
+    void warnsAboutAnUnquotedRequireTrustedTypesForValue() {
+        List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.require-trusted-types-for", "script"), context -> { }));
+
+        assertEquals(1, events.size());
+        assertMentions(events.get(0), "micronaut.security.csp.require-trusted-types-for", "\"script\"", "\"'script'\"");
+    }
+
+    @Test
+    void doesNotWarnAboutTheDefaultRootSettings() {
+        assertEquals(List.of(), capture(GENERATOR_LOGGER, () -> run(Map.of(), context -> { })));
     }
 
     @Test

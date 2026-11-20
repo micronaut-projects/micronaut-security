@@ -1,0 +1,26 @@
+By default, the module generates `style-src 'none'`, which blocks style sheets and inline styles. `style-src` supports the same sources as `script-src` except the script-only keywords: `self`, `nonce`, `unsafe-inline`, `unsafe-hashes`, `report-sample`, the scheme sources and `values`.
+
+To allow the application's own style sheets and inline `style` elements that carry the request nonce:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      style-src:
+        self: true
+        nonce: true
+----
+
+The configuration generates `style-src 'nonce-<value>' 'self'`. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request, and a template applies it the same way as for scripts:
+
+[source,html]
+----
+<style nonce="${cspNonce}">
+    body { margin: 0; }
+</style>
+----
+
+See <<cspNonceGeneration,script-src Nonces>> for how the nonce reaches templates and for the `Cache-Control` header written to responses that carry one.
+
+Nonces do not cover inline `style` attributes. To allow specific ones, add their hashes to `micronaut.security.csp.style-src.values`, for example `"'sha256-<base64-value>'"`, and enable `micronaut.security.csp.style-src.unsafe-hashes`.

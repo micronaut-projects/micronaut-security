@@ -1,7 +1,7 @@
 package io.micronaut.security.docs.cspgenerator;
 
-//tag::clazz[]
 import io.micronaut.context.annotation.Requires;
+//tag::clazz[]
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyDirective;

@@ -84,9 +84,9 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     }
 
     /**
-     * {@code Cache-Control} value written to HTML responses of requests that received a nonce, for
-     * example {@code private} or {@code no-store}. A {@code Cache-Control} header set by the
-     * application is kept. Set it to an empty value to not write the header. Default: private.
+     * Cache-Control value written to HTML responses of requests that received a nonce, for example
+     * private or no-store. A Cache-Control header set by the application is kept. Set it to an empty
+     * string to not write the header. Default: private.
      *
      * @param nonceCacheControl the {@code Cache-Control} value, or a blank value to not write the
      * header; defaults to {@value #DEFAULT_NONCE_CACHE_CONTROL}

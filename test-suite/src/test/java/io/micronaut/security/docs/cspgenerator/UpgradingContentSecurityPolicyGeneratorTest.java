@@ -17,24 +17,24 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Property(name = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
+@Property(name = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 @Property(name = "micronaut.security.csp.script-src.self", value = "true")
 @MicronautTest
-class ImagesContentSecurityPolicyGeneratorTest {
+class UpgradingContentSecurityPolicyGeneratorTest {
 
     @Test
-    void theOverriddenDirectiveReplacesTheConfiguredOne(@Client("/") HttpClient httpClient) {
-        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-generator-images"), String.class);
+    void theSubclassAppendsADirectiveThatTheConfigurationDoesNotExpose(@Client("/") HttpClient httpClient) {
+        HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-generator-upgrade"), String.class);
 
         ContentSecurityPolicy policy = ContentSecurityPolicy.of(response);
         assertNotNull(policy);
-        assertEquals("img-src 'self' https://images.example.com", policy.imgSrc().toHeaderValue());
-        assertEquals("script-src 'self'", policy.scriptSrc().toHeaderValue(), "the configuration keeps applying to other directives");
+        assertNotNull(policy.upgradeInsecureRequests());
+        assertEquals("script-src 'self'", policy.scriptSrc().toHeaderValue(), "the configuration keeps applying to the other directives");
     }
 
-    @Requires(property = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
-    @Controller("/csp-generator-images")
-    static class ImagesController {
+    @Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
+    @Controller("/csp-generator-upgrade")
+    static class UpgradeController {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get
         String index() {

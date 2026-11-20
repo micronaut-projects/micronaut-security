@@ -1,7 +1,7 @@
 package io.micronaut.security.docs.cspreport
 
-//tag::clazz[]
 import io.micronaut.context.annotation.Requires
+//tag::clazz[]
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.csp.report.ContentSecurityPolicyReport
 import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler

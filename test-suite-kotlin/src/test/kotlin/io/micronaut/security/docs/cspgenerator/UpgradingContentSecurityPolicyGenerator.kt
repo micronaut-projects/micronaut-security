@@ -1,7 +1,8 @@
 package io.micronaut.security.docs.cspgenerator
 
-//tag::clazz[]
 import io.micronaut.context.annotation.Requires
+//tag::clazz[]
+import io.micronaut.http.HttpRequest
 import io.micronaut.security.csp.ContentSecurityPolicyDirective
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator
 import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator
@@ -10,16 +11,15 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfiguratio
 import jakarta.inject.Singleton
 
 //end::clazz[]
-@Requires(property = "spec.name", value = "ImagesContentSecurityPolicyGeneratorTest")
+@Requires(property = "spec.name", value = "UpgradingContentSecurityPolicyGeneratorTest")
 //tag::clazz[]
 @Singleton
-class ImagesContentSecurityPolicyGenerator(
+class UpgradingContentSecurityPolicyGenerator(
     cspConfiguration: ContentSecurityPolicyConfiguration,
     directiveConfigurations: ContentSecurityPolicyDirectiveConfigurations
 ) : DefaultContentSecurityPolicyGenerator(cspConfiguration, directiveConfigurations) {
 
-    override fun imgSrc(): ContentSecurityPolicyDirective =
-        ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.IMG_SRC,
-            ContentSecurityPolicyGenerator.QUOTED_SELF + " https://images.example.com")
+    override fun directives(request: HttpRequest<*>): List<ContentSecurityPolicyDirective> =
+        super.directives(request) + ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.UPGRADE_INSECURE_REQUESTS, null)
 }
 //end::clazz[]

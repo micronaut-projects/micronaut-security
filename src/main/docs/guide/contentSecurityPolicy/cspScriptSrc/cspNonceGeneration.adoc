@@ -11,7 +11,7 @@ micronaut:
 
 Once enabled, a fresh, unpredictable https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#nonces[nonce] is generated for every HTTP request by api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[]. The default implementation base64-encodes 144 bits from `SecureRandom`. To use a different nonce format or source of randomness, provide a bean that implements api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[].
 
-The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. If your view integration does not do it, register a `ViewModelProcessor` such as:
+The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. Micronaut Views 6.3.1 does not do it, so register a `ViewModelProcessor` such as:
 
 snippet::io.micronaut.security.docs.cspnonce.CspNonceViewModelProcessor[tags="clazz"]
 
@@ -41,9 +41,20 @@ micronaut:
         nonce-cache-control: no-store
 ----
 
-Set `micronaut.security.csp.filter.nonce-cache-control` to an empty value to stop the module from writing the header.
+To stop the module from writing the header, set `micronaut.security.csp.filter.nonce-cache-control` to an empty string:
 
-Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      filter:
+        nonce-cache-control: ""
+----
+
+A YAML key without a value has the same effect, because it binds `null`; the default `private` applies only when the property is absent.
+
+Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`, see <<cspStyleSrc,Inline Styles (style-src)>>. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
 
 The nonce in the HTML element must exactly match the value in the `script-src 'nonce-<value>'` response directive. Never reuse a nonce across requests and never place untrusted content inside a nonce-authorized element.
 
