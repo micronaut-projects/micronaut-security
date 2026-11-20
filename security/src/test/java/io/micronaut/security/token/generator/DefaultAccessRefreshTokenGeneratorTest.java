@@ -32,8 +32,6 @@ import static org.mockito.Mockito.when;
 
 class DefaultAccessRefreshTokenGeneratorTest {
 
-    private static final String EMAIL = "alice@example.com";
-
     private Logger logger;
     private Level originalLevel;
     private ListAppender<ILoggingEvent> appender;
@@ -87,7 +85,7 @@ class DefaultAccessRefreshTokenGeneratorTest {
     }
 
     @Test
-    void tokenGenerationFailureWithNullClaimValueReturnsEmptyAndLogsNothingAboveDebug() {
+    void tokenGenerationFailureWithNullClaimValueReturnsEmptyAndLogsNothingWhenDebugDisabled() {
         logger.setLevel(Level.INFO);
 
         Optional<AccessRefreshToken> result = assertDoesNotThrow(() -> generator.generate("refresh-token", claimsWithNullValue()));
@@ -101,7 +99,7 @@ class DefaultAccessRefreshTokenGeneratorTest {
         // Insertion order keeps the logged claim names deterministic.
         Map<String, Object> claims = new LinkedHashMap<>();
         claims.put("sub", "alice");
-        claims.put("email", EMAIL);
+        claims.put("email", "alice@example.com");
         claims.put("nickname", null);
         return claims;
     }
