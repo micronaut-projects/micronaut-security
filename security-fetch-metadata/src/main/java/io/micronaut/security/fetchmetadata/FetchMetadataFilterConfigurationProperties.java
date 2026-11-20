@@ -34,7 +34,7 @@ import io.micronaut.http.annotation.ServerFilter;
  *
  * @since 5.6.0
  */
-@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Context
 @ConfigurationProperties(FetchMetadataFilterConfiguration.PREFIX)
 @Internal

@@ -43,7 +43,7 @@ import java.util.List;
  * the {@code Vary} header of the responses to the requests it evaluates, both allowed and
  * rejected, because those responses depend on the Fetch Metadata request headers.</p>
  */
-@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = FetchMetadataFilterConfiguration.PROPERTY_ENABLED, notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ServerFilter("${" + FetchMetadataFilterConfiguration.PROPERTY_PATTERN + ":" + ServerFilter.MATCH_ALL_PATTERN + "}")
 @Internal
 public final class FetchMetadataFilter implements Ordered {
