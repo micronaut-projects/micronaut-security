@@ -283,9 +283,11 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     }
 
     /**
-     * No-op. The provider holds no resources that require closing; this method is retained for binary compatibility.
+     * No-op. The provider holds no resources that require closing. This method implements {@link Closeable}; when it
+     * is removed, the provider will no longer implement {@link Closeable}.
      *
-     * @deprecated The provider holds no resources that require closing.
+     * @deprecated The provider holds no resources that require closing. Do not call this method, and do not rely on the
+     * provider being {@link Closeable}.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     @Override
