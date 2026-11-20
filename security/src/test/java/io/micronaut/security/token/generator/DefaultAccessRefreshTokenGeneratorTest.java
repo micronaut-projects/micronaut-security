@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class DefaultAccessRefreshTokenGeneratorTest {
@@ -35,6 +36,7 @@ class DefaultAccessRefreshTokenGeneratorTest {
     private Logger logger;
     private Level originalLevel;
     private ListAppender<ILoggingEvent> appender;
+    private TokenRenderer tokenRenderer;
     private ApplicationEventPublisher<AccessTokenGeneratedEvent> accessTokenGeneratedEventPublisher;
     private DefaultAccessRefreshTokenGenerator generator;
 
@@ -49,10 +51,11 @@ class DefaultAccessRefreshTokenGeneratorTest {
 
         AccessTokenConfiguration accessTokenConfiguration = mock(AccessTokenConfiguration.class);
         when(accessTokenConfiguration.getExpiration()).thenReturn(3600);
+        tokenRenderer = mock(TokenRenderer.class);
         accessTokenGeneratedEventPublisher = mock(ApplicationEventPublisher.class);
         generator = new DefaultAccessRefreshTokenGenerator(
                 accessTokenConfiguration,
-                mock(TokenRenderer.class),
+                tokenRenderer,
                 new FailingTokenGenerator(),
                 mock(BeanContext.class),
                 null,
@@ -76,6 +79,7 @@ class DefaultAccessRefreshTokenGeneratorTest {
 
         assertTrue(result.isEmpty(), "no access refresh token is generated when the token generator fails");
         verify(accessTokenGeneratedEventPublisher, never()).publishEvent(any());
+        verifyNoInteractions(tokenRenderer);
         assertEquals(1, appender.list.size(), "exactly one log event is written for the failure");
         ILoggingEvent event = appender.list.get(0);
         assertEquals(Level.DEBUG, event.getLevel(), "the failure is logged at DEBUG");
@@ -92,6 +96,7 @@ class DefaultAccessRefreshTokenGeneratorTest {
 
         assertTrue(result.isEmpty(), "no access refresh token is generated when the token generator fails");
         verify(accessTokenGeneratedEventPublisher, never()).publishEvent(any());
+        verifyNoInteractions(tokenRenderer);
         assertTrue(appender.list.isEmpty(), "nothing is logged when DEBUG is disabled");
     }
 
