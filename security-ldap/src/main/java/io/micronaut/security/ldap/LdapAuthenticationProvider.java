@@ -92,7 +92,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
      * @param executorService             Ignored. LDAP authentication runs on the executor named by
-     *                                    {@link #getExecutorName()} ({@link TaskExecutors#BLOCKING}).
+     *                                    {@link #getExecutorName()}, {@link TaskExecutors#BLOCKING} by default.
      * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
