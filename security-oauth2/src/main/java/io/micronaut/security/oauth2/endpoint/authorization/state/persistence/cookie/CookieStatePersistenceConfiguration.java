@@ -16,9 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author James Kleeh
@@ -37,6 +38,7 @@ public class CookieStatePersistenceConfiguration extends AbstractCookieConfigura
      * @param cookieName Cookie name
      */
     @Override
+    @Bindable(defaultValue = DEFAULT_COOKIENAME)
     public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
     }

@@ -17,6 +17,7 @@ package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
@@ -57,6 +58,7 @@ public class TokenPropagationConfigurationProperties extends AbstractOutgoingReq
      * Enables {@link io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter}. Default value {@value #DEFAULT_ENABLED}
      * @param enabled enabled flag
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -65,6 +67,7 @@ public class TokenPropagationConfigurationProperties extends AbstractOutgoingReq
      * Configures {@link io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter} path. Default value {@value #DEFAULT_PATH}
      * @param path Path to be matched by Token Propagation Filter.
      */
+    @Bindable(defaultValue = DEFAULT_PATH)
     public void setPath(String path) {
         this.path = path;
     }

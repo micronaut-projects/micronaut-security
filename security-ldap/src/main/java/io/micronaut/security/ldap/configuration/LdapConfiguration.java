@@ -18,6 +18,7 @@ package io.micronaut.security.ldap.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -81,6 +82,7 @@ public class LdapConfiguration implements Toggleable {
      *
      * @param enabled The enabled setting
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -230,6 +232,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param factory The factory class
          */
+        @Bindable(defaultValue = DEFAULT_FACTORY)
         public void setFactory(String factory) {
             this.factory = factory;
         }
@@ -305,6 +308,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param subtree The subtree
          */
+        @Bindable(defaultValue = "" + DEFAULT_SUBTREE)
         public void setSubtree(boolean subtree) {
             this.subtree = subtree;
         }
@@ -321,6 +325,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param base The base DN
          */
+        @Bindable(defaultValue = "")
         public void setBase(String base) {
             this.base = base;
         }
@@ -337,6 +342,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param filter The search filter
          */
+        @Bindable(defaultValue = DEFAULT_FILTER)
         public void setFilter(String filter) {
             this.filter = filter;
         }
@@ -403,6 +409,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param subtree The subtree
          */
+        @Bindable(defaultValue = "" + DEFAULT_SUBTREE)
         public void setSubtree(boolean subtree) {
             this.subtree = subtree;
         }
@@ -419,6 +426,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param base The base DN
          */
+        @Bindable(defaultValue = "")
         public void setBase(String base) {
             this.base = base;
         }
@@ -435,6 +443,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param filter The filter
          */
+        @Bindable(defaultValue = DEFAULT_FILTER)
         public void setFilter(String filter) {
             this.filter = filter;
         }
@@ -451,6 +460,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param attribute The attribute name
          */
+        @Bindable(defaultValue = DEFAULT_ATTR)
         public void setAttribute(String attribute) {
             this.attribute = attribute;
         }
@@ -465,6 +475,7 @@ public class LdapConfiguration implements Toggleable {
          *
          * @param enabled The enabled setting
          */
+        @Bindable(defaultValue = "" + DEFAULT_ENABLED)
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }

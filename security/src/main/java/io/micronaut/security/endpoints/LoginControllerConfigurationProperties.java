@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -46,5 +47,15 @@ public class LoginControllerConfigurationProperties extends ControllerConfigurat
 
     public LoginControllerConfigurationProperties() {
         super(DEFAULT_PATH);
+    }
+
+    /**
+     * Path to the {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_PATH}.
+     * @param path The path
+     */
+    @Override
+    @Bindable(defaultValue = DEFAULT_PATH)
+    public void setPath(String path) {
+        super.setPath(path);
     }
 }

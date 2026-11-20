@@ -17,6 +17,7 @@ package io.micronaut.security.csrf;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.bind.annotation.Bindable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.http.cookie.SameSite;
@@ -62,6 +63,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     public static final int DEFAULT_RANDOM_VALUE_SIZE = 16;
 
     public static final boolean DEFAULT_ENABLED = true;
+    public static final boolean DEFAULT_SESSION_COOKIE = false;
 
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIEPATH = "/";
@@ -94,11 +96,12 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     /**
-     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value (false).
+     * Whether the cookie is a session cookie. A session cookie does not have an expiration date. `cookie-max-age` is ignored if session cookie is set to true. Default value: {@value #DEFAULT_SESSION_COOKIE}.
      *
      * @param sessionCookie Whether the cookie is a session cookie.
      * @since 4.12.0
      */
+    @Bindable(defaultValue = "" + DEFAULT_SESSION_COOKIE)
     public void setSessionCookie(boolean sessionCookie) {
         this.sessionCookie = sessionCookie;
     }
@@ -127,6 +130,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Key to look for the CSRF token in an HTTP Session. Default Value: {@value #DEFAULT_HTTP_SESSION_NAME}.
      * @param httpSessionName Key to look for the CSRF token in an HTTP Session.
      */
+    @Bindable(defaultValue = DEFAULT_HTTP_SESSION_NAME)
     public void setHttpSessionName(@NonNull String httpSessionName) {
         this.httpSessionName = httpSessionName;
     }
@@ -140,6 +144,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Random value's size in bytes. The random value used is used to build a CSRF Token. Default Value: {@value #DEFAULT_RANDOM_VALUE_SIZE}.
      * @param randomValueSize Random CSRF Token size in bytes.
      */
+    @Bindable(defaultValue = "" + DEFAULT_RANDOM_VALUE_SIZE)
     public void setRandomValueSize(int randomValueSize) {
         this.randomValueSize = randomValueSize;
     }
@@ -154,6 +159,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * HTTP Header name to look for the CSRF token. Default Value: {@value #DEFAULT_HTTP_HEADER_NAME}.
      * @param headerName HTTP Header name to look for the CSRF token.
      */
+    @Bindable(defaultValue = DEFAULT_HTTP_HEADER_NAME)
     public void setHeaderName(@NonNull String headerName) {
         this.headerName = headerName;
     }
@@ -168,6 +174,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Field name in a form url encoded submission  to look for the CSRF token. Default Value: {@value #DEFAULT_FIELD_NAME}.
      * @param fieldName Field name in a form url encoded submission  to look for the CSRF token.
      */
+    @Bindable(defaultValue = DEFAULT_FIELD_NAME)
     public void setFieldName(@NonNull String fieldName) {
         this.fieldName = fieldName;
     }
@@ -181,6 +188,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Whether the CSRF integration is enabled. Default value {@value #DEFAULT_ENABLED}.
      * @param enabled Whether the CSRF integration is enabled
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -209,6 +217,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      *
      * @param cookieSecure True if the cookie is secure
      */
+    @Bindable(defaultValue = "" + true)
     public void setCookieSecure(Boolean cookieSecure) {
         this.cookieSecure = cookieSecure;
     }
@@ -220,10 +229,11 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
     }
 
     /**
-     * Cookie Name.
+     * Cookie Name.  Default value ({@value #DEFAULT_COOKIE_NAME}).
      *
      * @param cookieName Cookie name
      */
+    @Bindable(defaultValue = DEFAULT_COOKIE_NAME)
     public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
     }
@@ -238,6 +248,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      *
      * @param cookiePath The path of the cookie.
      */
+    @Bindable(defaultValue = DEFAULT_COOKIEPATH)
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
     }
@@ -252,6 +263,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      *
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
+    @Bindable(defaultValue = "" + DEFAULT_HTTPONLY)
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
         this.cookieHttpOnly = cookieHttpOnly;
     }
@@ -269,6 +281,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      *
      * @param cookieMaxAge The maximum age of the cookie
      */
+    @Bindable(defaultValue = "" + AccessTokenConfigurationProperties.DEFAULT_EXPIRATION)
     public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
     }
@@ -282,6 +295,7 @@ final class CsrfConfigurationProperties implements CsrfConfiguration {
      * Cookie Same Site Configuration. It defaults to Strict.
      * @param sameSite Same Site Configuration
      */
+    @Bindable(defaultValue = "Strict")
     public void setCookieSameSite(SameSite sameSite) {
         this.sameSite = sameSite;
     }

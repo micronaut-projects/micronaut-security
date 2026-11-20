@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.metadata;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.bind.annotation.Bindable;
 
 @Internal
 @ConfigurationProperties(ProtectedResourceMetadataConfiguration.PREFIX)
@@ -37,6 +38,7 @@ class ProtectedResourceMetadataConfigurationProperties implements ProtectedResou
      * Whether /.well-known/oauth-protected-resource is exposed. Default value: {@value #DEFAULT_ENABLED}.
      * @param enabled Whether /.well-known/oauth-protected-resource is exposed
      */
+    @Bindable(defaultValue = "" + DEFAULT_ENABLED)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

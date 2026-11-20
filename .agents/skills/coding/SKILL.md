@@ -57,6 +57,7 @@ Should not trigger:
 - Preserve existing nullability intent when editing older code. Use JSpecify for new or modified contracts, but do not rewrite deliberate compatibility annotations such as `io.micronaut.core.annotation.Nullable` or `jakarta.annotation.Nullable` unless the task is specifically a nullability migration and compatibility impact has been checked.
 - Avoid reflection-oriented implementations in framework code paths; prefer Micronaut compile-time/introspection mechanisms.
 - Use `jakarta.inject` APIs for DI, not `javax.inject`.
+- Do not introduce wildcard imports such as `import io.micronaut.http.*`; import referenced types explicitly.
 - Prefer constructor injection and immutable state over field injection.
 - For configuration models, prefer `@ConfigurationProperties` over scattered `@Value` usage.
 
@@ -122,6 +123,7 @@ If Spotless fails, run `./gradlew -q spotlessApply` and re-run `spotlessCheck`.
 ## Guardrails
 
 - Do not introduce `javax.inject` usage.
+- Do not introduce wildcard imports (`*`) in Java or Kotlin source.
 - Do not introduce legacy or third-party nullability annotations for new or modified Micronaut Java contracts when JSpecify is available, except for deliberate compatibility annotations whose impact has been checked.
 - Do not hard-code dependency versions in module build files.
 - Do not break public APIs without explicit major-version intent.
