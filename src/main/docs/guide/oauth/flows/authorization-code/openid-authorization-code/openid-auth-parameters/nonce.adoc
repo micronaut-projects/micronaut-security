@@ -32,7 +32,7 @@ micronaut:
 
 NOTE: You can provide your own implementation of api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[]
 
-WARNING: If nonce validation fails, the user will not be authenticated. Because a nonce is always sent in the authorization request when nonce support is enabled, validation also fails if the persisted nonce cannot be retrieved at callback time (for example, because the nonce cookie expired or was not sent back), even if the ID token does not contain a `nonce` claim.
+WARNING: If nonce validation fails, the user will not be authenticated. Because a nonce is always sent in the authorization request when nonce support is enabled, validation also fails if the persisted nonce cannot be retrieved at callback time (for example, because the nonce cookie expired or was not sent back), even if the ID token does not contain a `nonce` claim. When nonce validation fails, the callback responds with `401 Unauthorized`: the login failure handler is not used and no `LoginFailedEvent` is published.
 
 NOTE: Flows without an authorization request, such as the <<password, password grant>>, never send a nonce. For those flows the ID token is accepted only if it does not contain a `nonce` claim.
 
