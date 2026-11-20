@@ -1,0 +1,69 @@
+Each source-list directive has its own configuration namespace, `micronaut.security.csp.<directive>`, for example `micronaut.security.csp.img-src`. Every directive supports the same basic properties:
+
+* `enabled`: whether the directive is written at all.
+* `none`: write `'none'` when no other source is enabled (default `true`).
+* `self`: add `'self'`, the application's own origin.
+* `values`: additional source expressions, written in the configured order. Host and scheme sources are written as supplied; keywords, nonces and hashes must include their single quotes, for example `"'sha256-...'"`. A value containing `;`, `,` or a control character fails application startup, because it would end the directive or policy.
+* `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, `wss`: add the corresponding <<cspSchemeSources,scheme source>>.
+
+`script-src` and `style-src` also support `nonce`, `unsafe-inline`, `unsafe-hashes` and `report-sample`. `script-src` additionally supports `unsafe-eval`, `strict-dynamic`, `wasm-unsafe-eval`, `trusted-types-eval` and `report-sha256`, `report-sha384` and `report-sha512`. `connect-src` also supports `unsafe-webtransport-hashes`.
+
+A typical server-rendered application that serves its own scripts, styles, images and fonts, and uses nonces for inline scripts, starts with:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        self: true
+        nonce: true
+      style-src:
+        self: true
+      img-src:
+        self: true
+      font-src:
+        self: true
+      connect-src:
+        self: true
+----
+
+The configuration generates:
+
+[source,text]
+----
+base-uri 'none'; default-src 'none'; connect-src 'self'; font-src 'self'; object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self'; manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'self'; script-src 'nonce-<request nonce>' 'self'
+----
+
+NOTE: Setting `none: false` without enabling any other source does not allow everything. It removes the directive from the header, so the browser falls back to `default-src`, which is `'none'` by default. To allow a resource type, enable the sources you need.
+
+The default generator builds the directives from this configuration once, not for every response. A configuration refresh, for example from a distributed configuration source, rebuilds them; refreshed values that would fail the startup checks are logged as an error and the previous policy stays in place.
+
+==== Limiting where the header applies
+
+The header and the nonce are added to every request matching `micronaut.security.csp.filter.pattern` (default `/**`). Use it to limit the policy to the part of the application that renders HTML:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      filter:
+        pattern: /app/**
+----
+
+WARNING: Responses to requests outside the pattern receive no policy at all, including `frame-ancestors`, `base-uri` and `form-action`. That includes HTML error pages, such as a custom 404 view, for URLs outside the pattern, and any HTML served elsewhere, such as login pages or static HTML. Narrow the pattern only when every HTML response of the application is inside it; otherwise keep `/**` and accept the header on API responses.
+
+Set `micronaut.security.csp.filter.enabled` to `false` to stop writing the header and generating nonces while keeping the module's other beans, such as the report controller. Set `micronaut.security.csp.enabled` to `false` to disable the whole module.
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.filters.ContentSecurityPolicyFilterConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties.adoc[]
+
+The other directives have the same properties as `script-src` except those listed above as specific to `script-src` and `style-src`. The complete list is in the link:configurationreference.html[configuration reference].

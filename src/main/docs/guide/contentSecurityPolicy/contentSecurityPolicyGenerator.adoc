@@ -1,0 +1,19 @@
+api:security.csp.ContentSecurityPolicyGenerator[] is the main policy-generation API. Its default implementation, api:security.csp.DefaultContentSecurityPolicyGenerator[], builds directives from the `micronaut.security.csp` configuration.
+
+The request-aware `contentSecurityPolicy(HttpRequest)` method returns a api:security.csp.ContentSecurityPolicy[] containing the ordered directives for that response. It can therefore add request-specific values such as `script-src` and `style-src` nonces. The module serializes the policy with `ContentSecurityPolicy.toHeaderValue()` and writes it to the response; `toString()` redacts nonces so that a logged policy does not leak them. Returning `null` tells the module not to write a CSP header for that request.
+
+To take complete control, provide a bean implementing api:security.csp.ContentSecurityPolicyGenerator[]; the default implementation is only loaded when no other generator bean exists:
+
+snippet::io.micronaut.security.docs.cspgenerator.ApplicationContentSecurityPolicyGenerator[tags="clazz"]
+
+To keep the configured policy and add to it, subclass api:security.csp.DefaultContentSecurityPolicyGenerator[]. The subclass declares a constructor that takes api:security.csp.conf.ContentSecurityPolicyConfiguration[] and api:security.csp.conf.ContentSecurityPolicyDirectiveConfigurations[] and passes them to the constructor of api:security.csp.DefaultContentSecurityPolicyGenerator[], so that the `micronaut.security.csp` configuration keeps applying. The following subclass appends `upgrade-insecure-requests`, a directive the configuration does not expose:
+
+snippet::io.micronaut.security.docs.cspgenerator.UpgradingContentSecurityPolicyGenerator[tags="clazz"]
+
+To replace a single configured directive instead, override its protected method, for example `imgSrc()`; the override then ignores the `img-src` configuration.
+
+The subclass can also override `nonce(HttpRequest)` to supply the nonce of nonce-capable directives from somewhere other than the `cspNonce` request attribute, and read its configuration through `getCspConfiguration()` and `getDirectiveConfigurations()`.
+
+IMPORTANT: The generator, and a custom api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[], run for every matching response, typically on the HTTP server's event loop. They must not block: load policies that depend on external data, such as per-tenant policies, ahead of time and cache them.
+
+NOTE: To add a directive or source expression that the configuration does not expose, subclass and append it as above. Implement the interface only when you want no configuration at all. Either way, a api:security.csp.ContentSecurityPolicyDirective[] takes its name and its already serialized value. The value is written verbatim, except that a semicolon or a control character is rejected. Validate request- or tenant-derived data before adding it: a space adds source expressions, and a comma adds a second policy.

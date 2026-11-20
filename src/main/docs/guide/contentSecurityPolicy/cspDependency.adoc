@@ -1,0 +1,5 @@
+Add the dependency:
+
+dependency:micronaut-security-csp[groupId=io.micronaut.security]
+
+The module writes the header through the `ResponseHeaderPopulator` API of the Micronaut HTTP server.
