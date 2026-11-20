@@ -66,6 +66,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     private final LdapGroupProcessor ldapGroupProcessor;
 
     /**
+     * Creates a provider for the given LDAP configuration. Authentication runs on the executor named by
+     * {@link #getExecutorName()}.
+     *
      * @param configuration               The configuration to use to authenticate
      * @param ldapSearchService           The search service
      * @param contextBuilder              The context builder

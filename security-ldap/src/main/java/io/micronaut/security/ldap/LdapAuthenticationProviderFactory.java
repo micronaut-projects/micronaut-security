@@ -38,6 +38,10 @@ import java.util.concurrent.ExecutorService;
 public class LdapAuthenticationProviderFactory {
 
     /**
+     * Creates the provider for each enabled {@link LdapConfiguration}. Override this method to customize the provider.
+     * Until the deprecated overload which takes an executor service is removed, this method delegates to it, so
+     * existing overrides of that overload keep working.
+     *
      * @param configuration               The configuration to use to authenticate
      * @param ldapSearchService           The search service
      * @param contextBuilder              The context builder
