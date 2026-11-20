@@ -103,6 +103,10 @@ public class NonceClaimValidator {
      * Validates the claims of an ID token obtained without an authorization request, for example with the password
      * grant. No nonce is sent in such flows, so the ID token must not carry a {@code nonce} claim.
      *
+     * <p>This method does not call {@link #validate(OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata, String)}.
+     * A subclass which overrides {@code validate} must also override this method to customize the validation of such
+     * flows.</p>
+     *
      * @param claims ID Token Claims
      * @param clientConfiguration OAuth 2.0 Client Configuration
      * @param providerMetadata OpenID Connect provider metadata
