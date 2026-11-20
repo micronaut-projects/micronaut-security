@@ -119,7 +119,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             managerContext = contextBuilder.build(configuration.getManagerSettings());
             debug(LOG, "Manager context initialized successfully");
         } catch (NamingException e) {
-            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", sanitize(e.getMessage()));
+            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}: {}", e.getClass().getSimpleName(), sanitize(e.getMessage()));
             return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         }
 
@@ -136,7 +136,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                     return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                 }
 
-                debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", sanitize(result.getDn()));
+                debug(LOG, "Successfully bound user [{}]. Attempting to retrieve groups.", sanitize(result.getDn()));
 
                 Set<String> groups = groups(managerContext, result, loggableUsername);
 
