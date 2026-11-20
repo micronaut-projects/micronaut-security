@@ -27,6 +27,7 @@ import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +95,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Ignored. LDAP authentication runs on the executor named by
+     * @param executorService             Ignored, may be {@code null}. LDAP authentication runs on the executor named by
      *                                    {@link #getExecutorName()}, {@link TaskExecutors#BLOCKING} by default.
      * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
      */
@@ -104,7 +105,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
                                       LdapGroupProcessor ldapGroupProcessor,
-                                      ExecutorService executorService) {
+                                      @Nullable ExecutorService executorService) {
         this(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 
