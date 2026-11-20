@@ -130,6 +130,13 @@ contentSecurityPolicy:
   cspReportingApi: Receiving CSP Reports
   contentSecurityPolicyGenerator: CSP Generator
   cspMigratingFromViews: Migrating from Micronaut Views
+fetchMetadata:
+  title: Fetch Metadata
+  fetchMetadataInstallation: Installation
+  fetchMetadataResourceIsolationPolicy: Resource Isolation Policy
+  fetchMetadataConfiguration: Configuration
+  fetchMetadataCors: Cross-Origin Routes
+  fetchMetadataCustomRules: Custom Rules
 reporting:
   title: Reporting API
   reportingEndpoints: Configuration Reporting Endpoints
