@@ -96,7 +96,7 @@ public class NonceClaimValidator {
         if (nonce == null) {
             if (nonceExpected) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Nonce validation failed for provider [{}]: a nonce was sent in the authorization request but no persisted nonce could be retrieved at callback time", clientConfiguration.getName());
+                    LOG.warn("Nonce validation failed for provider [{}]: no persisted nonce could be retrieved although nonce support is enabled", clientConfiguration.getName());
                 }
                 return false;
             }
