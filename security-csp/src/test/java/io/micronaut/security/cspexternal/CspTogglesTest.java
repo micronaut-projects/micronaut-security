@@ -31,6 +31,7 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
 import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
+import io.micronaut.security.reporting.ReportingEndpointProvider;
 import io.micronaut.security.reporting.ReportingEndpoints;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
@@ -40,9 +41,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Lives outside {@code io.micronaut.security.csp} so that the package-level requirements of the
@@ -106,6 +109,21 @@ class CspTogglesTest {
                 () -> client.exchange(request));
 
             assertEquals(HttpStatus.NOT_FOUND, exception.getStatus(), "a handler bean alone must not open the report route");
+        }
+    }
+
+    @Test
+    void aReportHandlerAloneDoesNotAddTheReportingApiFilter() throws ClassNotFoundException {
+        Class<?> reportingEndpointsFilter = Class.forName("io.micronaut.security.reporting.ReportingEndpointsFilter");
+        try (ApplicationContext context = ApplicationContext.run(Map.of("spec.name", SPEC_NAME))) {
+            assertTrue(context.getBeansOfType(ReportingEndpointProvider.class).isEmpty(), "report-to is disabled, so nothing is advertised");
+            assertFalse(context.containsBean(reportingEndpointsFilter), "no filter may run on every request to write nothing");
+        }
+        try (ApplicationContext context = ApplicationContext.run(Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.report-to.enabled", true))) {
+            assertEquals(1, context.getBeansOfType(ReportingEndpointProvider.class).size());
+            assertTrue(context.containsBean(reportingEndpointsFilter));
         }
     }
 

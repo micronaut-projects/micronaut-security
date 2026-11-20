@@ -27,7 +27,7 @@ Browsers deliver Reporting API reports only from secure contexts to secure endpo
 
 Without a handler, the reporting controller and the module-provided `Reporting-Endpoints` header are not registered. The generated policy can still use `report-to` with an application-managed or external `Reporting-Endpoints` header.
 
-Implement the handler to redact, persist, or forward reports to a monitoring service. Register exactly one handler bean; to send reports to several destinations, delegate from it. The controller calls it on the blocking executor, so it may perform I/O such as a database insert:
+Implement the handler to redact, persist, or forward reports to a monitoring service. Register exactly one handler bean; to send reports to several destinations, delegate from it. The controller calls it on the blocking executor, so it may perform I/O such as a database insert. Each batch runs on its own blocking thread without a concurrency limit, and during a report-only rollout reports can arrive as often as pages are viewed, so hand reports off to a bounded queue or batch writer, or limit concurrent work with a `Semaphore`, rather than writing each batch synchronously to a connection pool that the application's own endpoints share:
 
 snippet::io.micronaut.security.docs.cspreport.ApplicationCspReportHandler[tags="clazz"]
 
@@ -53,7 +53,7 @@ micronaut:
           - isAnonymous()
 ----
 
-WARNING: The report endpoint is anonymous, so any client can post to it. Browsers send batches of a few kilobytes, but the endpoint accepts bodies up to `micronaut.server.max-request-size` (10MB by default) and the module applies no rate limit. Enforce a small request size limit and a rate limit for the endpoint at your reverse proxy or gateway.
+WARNING: The report endpoint is anonymous, so any client can post to it. Browsers send batches of a few kilobytes. The module rejects a body larger than 1 MiB with HTTP 400 before parsing it, but the server still receives bodies up to `micronaut.server.max-request-size` (10MB by default), and the module applies no rate limit. Enforce a small request size limit and a rate limit for the endpoint at your reverse proxy or gateway.
 
 Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
 

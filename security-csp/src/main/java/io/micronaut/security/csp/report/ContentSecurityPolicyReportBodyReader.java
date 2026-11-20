@@ -21,6 +21,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.Headers;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.body.MessageBodyReader;
@@ -34,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -58,6 +60,13 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     static final int MAX_USER_AGENT_LENGTH = 1024;
     static final int MAX_SAMPLE_LENGTH = 1024;
     static final int MAX_TOKEN_LENGTH = 256;
+    /**
+     * Maximum size of a report batch body. Browsers send a few kilobytes; the limit stops a large
+     * body from being parsed into a JSON tree, which needs many times its size in memory, on this
+     * unauthenticated endpoint.
+     */
+    static final int MAX_BODY_BYTES = 1024 * 1024;
+    private static final String BODY_TOO_LARGE = "A Reporting API batch must not be larger than " + MAX_BODY_BYTES + " bytes";
     private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
     private static final int MAX_STATUS_CODE = 65_535;
     private static final long WARNING_INTERVAL_NANOS = TimeUnit.MINUTES.toNanos(1);
@@ -87,10 +96,16 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                                                             @Nullable MediaType mediaType,
                                                             Headers httpHeaders,
                                                             InputStream inputStream) throws CodecException {
+        if (contentLength(httpHeaders) > MAX_BODY_BYTES) {
+            throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE));
+        }
         List<@Nullable SerializedContentSecurityPolicyReport> serializedReports;
         try {
-            serializedReports = jsonMapper.readValue(inputStream, Argument.listOf(SerializedContentSecurityPolicyReport.class));
-        } catch (IOException e) {
+            serializedReports = jsonMapper.readValue(new BoundedInputStream(inputStream), Argument.listOf(SerializedContentSecurityPolicyReport.class));
+        } catch (IOException | RuntimeException e) {
+            if (isBodyTooLarge(e)) {
+                throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE, e));
+            }
             throw rejected(null, "the body is not a JSON array of Reporting API reports",
                 new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
         }
@@ -114,6 +129,40 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         } catch (IOException e) {
             throw rejected(serializedReports.size(), "a report body could not be decoded",
                 new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
+        }
+    }
+
+    /**
+     * Tests whether reading failed because the body exceeds {@link #MAX_BODY_BYTES}. The JSON parser
+     * may wrap the exception of the bounded stream.
+     *
+     * @param failure the exception thrown while reading the body
+     * @return whether the body is too large
+     */
+    private static boolean isBodyTooLarge(Throwable failure) {
+        for (Throwable cause = failure; cause != null; cause = cause.getCause()) {
+            if (cause instanceof BodyTooLargeException) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the declared length of the body.
+     *
+     * @param headers the request headers
+     * @return the {@code Content-Length}, or {@code -1} when it is absent or not a number
+     */
+    private static long contentLength(Headers headers) {
+        String contentLength = headers.get(HttpHeaders.CONTENT_LENGTH);
+        if (contentLength == null) {
+            return -1;
+        }
+        try {
+            return Long.parseLong(contentLength.trim());
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 
@@ -268,5 +317,51 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         @JsonProperty("user_agent") @Nullable String userAgent,
         @Nullable JsonNode body
     ) {
+    }
+
+    /**
+     * Signals that a body exceeds {@link #MAX_BODY_BYTES}.
+     */
+    private static final class BodyTooLargeException extends IOException {
+        BodyTooLargeException() {
+            super(BODY_TOO_LARGE);
+        }
+    }
+
+    /**
+     * Fails once more than {@link #MAX_BODY_BYTES} bytes are read, also when the request declares
+     * no {@code Content-Length}.
+     */
+    static final class BoundedInputStream extends FilterInputStream {
+        private long remaining = MAX_BODY_BYTES;
+
+        BoundedInputStream(InputStream in) {
+            super(in);
+        }
+
+        @Override
+        public int read() throws IOException {
+            int b = super.read();
+            if (b != -1) {
+                consume(1);
+            }
+            return b;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            int read = super.read(b, off, len);
+            if (read > 0) {
+                consume(read);
+            }
+            return read;
+        }
+
+        private void consume(int bytes) throws BodyTooLargeException {
+            remaining -= bytes;
+            if (remaining < 0) {
+                throw new BodyTooLargeException();
+            }
+        }
     }
 }

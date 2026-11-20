@@ -26,6 +26,7 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperti
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Singleton;
@@ -35,11 +36,12 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -131,9 +133,19 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * be emitted without being validated.
      */
     private static final Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> DIRECTIVE_CONFIGURATIONS = directiveConfigurationGetters();
+    /**
+     * The number of directives that {@link #directives()} can return.
+     */
+    private static final int STATIC_DIRECTIVE_COUNT = 17;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
+    /**
+     * The directives built from the validated configuration. The policy is generated for every
+     * response, so the configuration is read once, at creation and on a configuration refresh,
+     * instead of per response.
+     */
+    private volatile Snapshot snapshot;
 
     /**
      * Creates a default policy generator from the root and directive-specific configuration.
@@ -145,14 +157,48 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
                                                     ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
         this.cspConfiguration = cspConfiguration;
-        if (cspConfiguration.isReportUriEnabled() && reportUris(cspConfiguration).isEmpty()) {
+        this.directiveConfigurations = directiveConfigurations;
+        this.snapshot = snapshot();
+    }
+
+    /**
+     * Rebuilds the cached directives after the configuration beans were re-bound by a configuration
+     * refresh. Refreshed values go through the same checks as the values at startup; when they fail
+     * them, the error is logged and the previous policy is kept.
+     */
+    void refresh() {
+        try {
+            snapshot = snapshot();
+        } catch (ConfigurationException e) {
+            LOG.error("Keeping the previous Content Security Policy because the refreshed configuration is invalid: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Validates the configuration and builds the directives from it.
+     *
+     * @return the directives built from the current configuration
+     * @throws ConfigurationException if a setting would corrupt or extend the serialized policy
+     */
+    private Snapshot snapshot() {
+        List<String> reportUris = reportUris(cspConfiguration);
+        if (cspConfiguration.isReportUriEnabled() && reportUris.isEmpty()) {
             LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
-        } else if (!cspConfiguration.isReportUriEnabled() && !reportUris(cspConfiguration).isEmpty()) {
+        } else if (!cspConfiguration.isReportUriEnabled() && !reportUris.isEmpty()) {
             LOG.warn("{} is configured but {}-enabled is false; the report-uri directive is omitted", PROPERTY_REPORT_URI, PROPERTY_REPORT_URI);
         }
-        this.directiveConfigurations = directiveConfigurations;
         validateRootConfiguration();
         validateSourceExpressions();
+        Map<String, CachedDirective> directives = new HashMap<>();
+        DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> directives.put(name, cachedDirective(name, getter.apply(directiveConfigurations))));
+        ReportToConfiguration reportTo = directiveConfigurations.getReportTo();
+        return new Snapshot(
+            Map.copyOf(directives),
+            reportTo.isEnabled() ? new ContentSecurityPolicyDirective(REPORT_TO, reportTo.getGroup()) : null,
+            cspConfiguration.isReportUriEnabled() && !reportUris.isEmpty()
+                ? new ContentSecurityPolicyDirective(REPORT_URI, String.join(SPACE, reportUris)) : null,
+            cspConfiguration.isRequireTrustedTypesForEnabled()
+                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor()) : null);
     }
 
     /**
@@ -245,25 +291,25 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @return the static policy directives in response-header order
      */
     protected List<ContentSecurityPolicyDirective> directives() {
-        List<@Nullable ContentSecurityPolicyDirective> directives = new ArrayList<>();
-        directives.add(baseUri());
-        directives.add(defaultSrc());
-        directives.add(connectSrc());
-        directives.add(fencedFrameSrc());
-        directives.add(fontSrc());
-        directives.add(objectSrc());
-        directives.add(prefetchSrc());
-        directives.add(reportTo());
-        directives.add(reportUri());
-        directives.add(requireTrustedTypesFor());
-        directives.add(frameAncestors());
-        directives.add(frameSrc());
-        directives.add(imgSrc());
-        directives.add(manifestSrc());
-        directives.add(mediaSrc());
-        directives.add(formAction());
-        directives.add(workerSrc());
-        return directives.stream().filter(Objects::nonNull).toList();
+        List<ContentSecurityPolicyDirective> directives = new ArrayList<>(STATIC_DIRECTIVE_COUNT);
+        addIfPresent(directives, baseUri());
+        addIfPresent(directives, defaultSrc());
+        addIfPresent(directives, connectSrc());
+        addIfPresent(directives, fencedFrameSrc());
+        addIfPresent(directives, fontSrc());
+        addIfPresent(directives, objectSrc());
+        addIfPresent(directives, prefetchSrc());
+        addIfPresent(directives, reportTo());
+        addIfPresent(directives, reportUri());
+        addIfPresent(directives, requireTrustedTypesFor());
+        addIfPresent(directives, frameAncestors());
+        addIfPresent(directives, frameSrc());
+        addIfPresent(directives, imgSrc());
+        addIfPresent(directives, manifestSrc());
+        addIfPresent(directives, mediaSrc());
+        addIfPresent(directives, formAction());
+        addIfPresent(directives, workerSrc());
+        return Collections.unmodifiableList(directives);
     }
 
     /**
@@ -276,10 +322,20 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @return the complete policy for the request
      */
     protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
-        List<@Nullable ContentSecurityPolicyDirective> directives = new ArrayList<>(directives());
-        directives.add(styleSrc(request));
-        directives.add(scriptSrc(request));
-        return directives.stream().filter(Objects::nonNull).toList();
+        List<ContentSecurityPolicyDirective> staticDirectives = directives();
+        List<ContentSecurityPolicyDirective> directives = new ArrayList<>(staticDirectives.size() + 2);
+        for (ContentSecurityPolicyDirective directive : staticDirectives) {
+            addIfPresent(directives, directive);
+        }
+        addIfPresent(directives, styleSrc(request));
+        addIfPresent(directives, scriptSrc(request));
+        return Collections.unmodifiableList(directives);
+    }
+
+    private static void addIfPresent(List<ContentSecurityPolicyDirective> directives, @Nullable ContentSecurityPolicyDirective directive) {
+        if (directive != null) {
+            directives.add(directive);
+        }
     }
 
     /**
@@ -359,9 +415,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportTo() {
-        return directiveConfigurations.getReportTo().isEnabled()
-            ? new ContentSecurityPolicyDirective(REPORT_TO, directiveConfigurations.getReportTo().getGroup())
-            : null;
+        return snapshot.reportTo();
     }
 
     /**
@@ -371,11 +425,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportUri() {
-        if (!cspConfiguration.isReportUriEnabled()) {
-            return null;
-        }
-        List<String> reportUris = reportUris(cspConfiguration);
-        return reportUris.isEmpty() ? null : new ContentSecurityPolicyDirective(REPORT_URI, String.join(SPACE, reportUris));
+        return snapshot.reportUri();
     }
 
     /**
@@ -385,8 +435,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
-        return cspConfiguration.isRequireTrustedTypesForEnabled()
-                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor()) : null;
+        return snapshot.requireTrustedTypesFor();
     }
 
     /**
@@ -582,7 +631,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * Builds a directive from the configuration registered for it in {@link #DIRECTIVE_CONFIGURATIONS}.
+     * Returns a directive built from the configuration registered for it in
+     * {@link #DIRECTIVE_CONFIGURATIONS}. Only the request nonce is added per request; everything else
+     * comes from the cached {@link Snapshot}.
      *
      * @param name the CSP directive name
      * @param request the request whose nonce may be added, or {@code null} for request-independent directives
@@ -590,11 +641,29 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @throws IllegalStateException if no configuration is registered for the directive
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name, @Nullable HttpRequest<?> request) {
-        Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration> getter = DIRECTIVE_CONFIGURATIONS.get(name);
-        if (getter == null) {
+        CachedDirective cached = snapshot.directives().get(name);
+        if (cached == null) {
             throw new IllegalStateException("No configuration is registered for the CSP directive " + name);
         }
-        return directive(name, getter.apply(directiveConfigurations), request);
+        if (request == null || !cached.nonce()) {
+            return cached.withoutNonce();
+        }
+        String nonce = nonce(request);
+        if (StringUtils.isNotEmpty(nonce) && NONCE_GRAMMAR.matcher(nonce).matches()) {
+            String quotedNonce = SINGLE_QUOTE + NONCE_PREFIX + nonce + SINGLE_QUOTE;
+            return new ContentSecurityPolicyDirective(name, cached.sources() == null ? quotedNonce : quotedNonce + SPACE + cached.sources());
+        }
+        if (StringUtils.isNotEmpty(nonce)) {
+            // The nonce is not logged: it is a secret for the current response.
+            if (invalidNonceWarned.compareAndSet(false, true)) {
+                LOG.warn("Omitting the CSP nonce from {}: the ContentSecurityPolicyNonceGenerator bean returned a value with characters outside "
+                    + "base64 and base64url (A-Z, a-z, 0-9, +, /, _, - and trailing =). Return a base64 or base64url value. "
+                    + "This warning is logged once.", name);
+            }
+        } else if (LOG.isTraceEnabled()) {
+            LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
+        }
+        return cached.withoutNonce();
     }
 
     /**
@@ -603,35 +672,17 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * <p>Expressions are emitted in this order: the request nonce, keyword sources in
      * {@link #KEYWORD_SOURCES} order, scheme sources, and finally the configured values.
-     * {@code 'none'} is emitted only when no other expression is enabled.</p>
+     * {@code 'none'} is emitted only when no other expression, including a nonce, is enabled.</p>
      *
      * @param name the CSP directive name
      * @param config configuration that supplies the directive values
-     * @param request the request whose nonce may be added, or {@code null} for request-independent directives
-     * @return the directive, or {@code null} when it is disabled or has no source expressions
+     * @return the cached form of the directive
      */
-    private @Nullable ContentSecurityPolicyDirective directive(String name,
-                                                               DirectiveConfiguration config,
-                                                               @Nullable HttpRequest<?> request) {
+    private static CachedDirective cachedDirective(String name, DirectiveConfiguration config) {
         if (!config.isEnabled()) {
-            return null;
+            return CachedDirective.DISABLED;
         }
         List<String> values = new ArrayList<>();
-        if (request != null && config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce()) {
-            String nonce = nonce(request);
-            if (StringUtils.isNotEmpty(nonce) && NONCE_GRAMMAR.matcher(nonce).matches()) {
-                values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONCE_PREFIX + nonce));
-            } else if (StringUtils.isNotEmpty(nonce)) {
-                // The nonce is not logged: it is a secret for the current response.
-                if (invalidNonceWarned.compareAndSet(false, true)) {
-                    LOG.warn("Omitting the CSP nonce from {}: the ContentSecurityPolicyNonceGenerator bean returned a value with characters outside "
-                        + "base64 and base64url (A-Z, a-z, 0-9, +, /, _, - and trailing =). Return a base64 or base64url value. "
-                        + "This warning is logged once.", name);
-                }
-            } else if (LOG.isTraceEnabled()) {
-                LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
-            }
-        }
         for (FlaggedSource keywordSource : KEYWORD_SOURCES) {
             if (keywordSource.enabled().test(config)) {
                 values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(keywordSource.expression()));
@@ -644,17 +695,47 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         }
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
             for (String value : sourceListDirectiveConfiguration.getValues()) {
-                values.add(value.trim());
+                if (StringUtils.hasText(value)) {
+                    values.add(value.trim());
+                }
             }
         }
-        values.removeIf(value -> !StringUtils.hasText(value));
-        if (config.isNone() && values.isEmpty()) {
-            values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(NONE));
+        String sources = values.isEmpty() ? null : String.join(SPACE, values);
+        ContentSecurityPolicyDirective withoutNonce;
+        if (sources != null) {
+            withoutNonce = new ContentSecurityPolicyDirective(name, sources);
+        } else if (config.isNone()) {
+            withoutNonce = new ContentSecurityPolicyDirective(name, QUOTED_NONE);
+        } else {
+            withoutNonce = null;
         }
-        if (values.isEmpty()) {
-            return null;
-        }
-        return new ContentSecurityPolicyDirective(name, String.join(SPACE, values));
+        boolean nonce = config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
+        return new CachedDirective(nonce, sources, withoutNonce);
+    }
+
+    /**
+     * A directive built from its configuration, ready to be completed with the request nonce.
+     *
+     * @param nonce whether the request nonce is added to the directive
+     * @param sources the configured source expressions, or {@code null} when there are none
+     * @param withoutNonce the directive to write when no valid nonce is added, or {@code null} to omit it
+     */
+    private record CachedDirective(boolean nonce, @Nullable String sources, @Nullable ContentSecurityPolicyDirective withoutNonce) {
+        private static final CachedDirective DISABLED = new CachedDirective(false, null, null);
+    }
+
+    /**
+     * The directives built from one version of the configuration.
+     *
+     * @param directives the directive built from each registered directive configuration
+     * @param reportTo the {@code report-to} directive, or {@code null} when disabled
+     * @param reportUri the {@code report-uri} directive, or {@code null} when disabled or without URIs
+     * @param requireTrustedTypesFor the {@code require-trusted-types-for} directive, or {@code null} when disabled
+     */
+    private record Snapshot(Map<String, CachedDirective> directives,
+                            @Nullable ContentSecurityPolicyDirective reportTo,
+                            @Nullable ContentSecurityPolicyDirective reportUri,
+                            @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor) {
     }
 
     /**

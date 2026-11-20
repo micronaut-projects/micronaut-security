@@ -34,7 +34,12 @@ import java.util.regex.Pattern;
 
 /**
  * Advertises the handler-backed CSP report controller through the Reporting API module.
+ *
+ * <p>It exists only under the same conditions as the controller: while {@code report-to} is
+ * disabled, the provider would advertise nothing, yet its presence alone would add the Reporting API
+ * response filter to every request.</p>
  */
+@Requires(property = ReportToConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Requires(beans = { ContentSecurityPolicyReportHandler.class, ReportToConfiguration.class, ContentSecurityPolicyControllerConfiguration.class })
 @Singleton
 @Internal
@@ -42,7 +47,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     private static final String SLASH = "/";
     private static final Pattern LOCAL_PATH = Pattern.compile(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX);
     private static final Pattern GROUP = Pattern.compile(ReportToConfigurationProperties.GROUP_REGEX);
-    private final @Nullable ReportingEndpoint reportingEndpoint;
+    private final ReportingEndpoint reportingEndpoint;
 
     /**
      * Creates the CSP reporting endpoint provider.
@@ -54,36 +59,32 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     CspReportingEndpointProvider(ReportToConfiguration reportToConfiguration,
                                  ContentSecurityPolicyControllerConfiguration controllerConfiguration,
                                  @Nullable ServerContextPathProvider serverContextPathProvider) {
-        if (reportToConfiguration.isEnabled()) {
-            String name = requireGroup(reportToConfiguration.getGroup());
-            URI url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
-            this.reportingEndpoint = new ReportingEndpoint() {
-                @Override
-                public String getName() {
-                    return name;
-                }
+        String name = requireGroup(reportToConfiguration.getGroup());
+        URI url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
+        this.reportingEndpoint = new ReportingEndpoint() {
+            @Override
+            public String getName() {
+                return name;
+            }
 
-                @Override
-                public URI getUrl() {
-                    return url;
-                }
-            };
-        } else {
-            this.reportingEndpoint = null;
-        }
+            @Override
+            public URI getUrl() {
+                return url;
+            }
+        };
     }
 
     /**
-     * Returns the controller endpoint when the {@code report-to} directive is enabled.
+     * Returns the controller endpoint.
      *
-     * <p>The endpoint is built once: the controller configuration bean exists only while the
-     * controller is enabled, and the configuration does not change at runtime.</p>
+     * <p>The endpoint is built once: the provider exists only while {@code report-to} and the
+     * controller are enabled, and the configuration does not change at runtime.</p>
      *
      * @param request current request
-     * @return the CSP controller endpoint, or {@code null} when reporting is disabled
+     * @return the CSP controller endpoint
      */
     @Override
-    public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
+    public ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
         return reportingEndpoint;
     }
 

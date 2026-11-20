@@ -27,7 +27,6 @@ import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CspReportingEndpointProviderTest {
@@ -63,12 +62,6 @@ class CspReportingEndpointProviderTest {
 
         assertNotNull(endpoint);
         assertEquals(URI.create("/reports/csp"), endpoint.getUrl());
-    }
-
-    @Test
-    void advertisesNothingWhenReportToIsDisabled() {
-        assertNull(new CspReportingEndpointProvider(new ReportToConfigurationProperties(),
-            new ContentSecurityPolicyControllerConfigurationProperties(), null).reportingEndpoint(HttpRequest.GET("/")));
     }
 
     private static ReportToConfigurationProperties enabledReportTo() {

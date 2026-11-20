@@ -19,7 +19,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ import java.util.List;
  * through the Reporting API module are taken into account; a header written by the application
  * itself cannot be detected.</p>
  */
+@Requires(property = ReportToConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Requires(missingBeans = CspReportingEndpointProvider.class)
 @Singleton
 @Internal
@@ -59,9 +62,6 @@ final class ReportToWithoutEndpointWarning implements ApplicationEventListener<S
 
     @Override
     public void onApplicationEvent(StartupEvent event) {
-        if (!reportToConfiguration.isEnabled()) {
-            return;
-        }
         String group = reportToConfiguration.getGroup();
         boolean declared = reportingEndpoints.stream().anyMatch(endpoint -> group.equals(endpoint.getName()));
         if (!declared) {

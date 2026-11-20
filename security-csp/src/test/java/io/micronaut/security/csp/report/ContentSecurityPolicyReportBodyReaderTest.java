@@ -21,6 +21,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.type.Argument;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
@@ -32,9 +33,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,6 +210,57 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     @Test
+    void rejectsABodyDeclaredLargerThanTheLimitBeforeReadingIt() {
+        MutableHttpHeaders headers = HttpResponse.ok().getHeaders();
+        headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES + 1));
+        InputStream unreadable = new InputStream() {
+            @Override
+            public int read() {
+                throw new AssertionError("the body must not be read");
+            }
+        };
+
+        CodecException exception = assertThrows(CodecException.class, () -> read(reader, headers, unreadable));
+
+        assertEquals(bodyTooLarge(), exception.getMessage());
+    }
+
+    @Test
+    void rejectsALargerBodyWithoutContentLengthOnceTheLimitIsRead() {
+        String padding = " ".repeat(ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES);
+
+        CodecException exception = assertThrows(CodecException.class, () -> read("[" + padding + envelope(HASH, hashBody(Map.of())) + "]"));
+
+        assertEquals(bodyTooLarge(), exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"not a number", "512"})
+    void readsABodyWhoseDeclaredLengthIsWithinTheLimitOrInvalid(String contentLength) {
+        MutableHttpHeaders headers = HttpResponse.ok().getHeaders();
+        headers.add(HttpHeaders.CONTENT_LENGTH, contentLength);
+        String json = batch(envelope(HASH, hashBody(Map.of())));
+
+        assertEquals(1, read(reader, headers, new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8))).size());
+    }
+
+    @Test
+    void boundedStreamCountsSingleByteReads() throws IOException {
+        byte[] body = new byte[ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES + 1];
+        try (InputStream stream = new ContentSecurityPolicyReportBodyReader.BoundedInputStream(new ByteArrayInputStream(body))) {
+            for (int i = 0; i < ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES; i++) {
+                assertEquals(0, stream.read());
+            }
+            IOException exception = assertThrows(IOException.class, stream::read);
+            assertEquals(bodyTooLarge(), exception.getMessage());
+        }
+        try (InputStream stream = new ContentSecurityPolicyReportBodyReader.BoundedInputStream(new ByteArrayInputStream(new byte[0]))) {
+            assertEquals(-1, stream.read());
+            assertEquals(-1, stream.read(new byte[8], 0, 8));
+        }
+    }
+
+    @Test
     void logsRejectedBatchesAtWarnOncePerMinuteWithoutTheReportContents() {
         AtomicLong now = new AtomicLong(1_000L);
         ContentSecurityPolicyReportBodyReader clockedReader = new ContentSecurityPolicyReportBodyReader(context.getBean(JsonMapper.class), now::get);
@@ -230,6 +285,10 @@ class ContentSecurityPolicyReportBodyReaderTest {
         assertMentions(events.get(1), "the body is not a JSON array of Reporting API reports");
         assertMentions(events.get(2), "batch of 1 Content Security Policy reports", "a report body could not be decoded");
         assertTrue(events.stream().noneMatch(event -> event.getFormattedMessage().contains("secret sample")), "report contents must not be logged");
+    }
+
+    private static String bodyTooLarge() {
+        return "A Reporting API batch must not be larger than " + ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES + " bytes";
     }
 
     private static String requires(String field) {
@@ -355,8 +414,11 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     private static List<ContentSecurityPolicyReport> read(ContentSecurityPolicyReportBodyReader reader, String json) {
-        MutableHttpHeaders headers = HttpResponse.ok().getHeaders();
+        return read(reader, HttpResponse.ok().getHeaders(), new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private static List<ContentSecurityPolicyReport> read(ContentSecurityPolicyReportBodyReader reader, MutableHttpHeaders headers, InputStream body) {
         return reader.read(Argument.listOf(ContentSecurityPolicyReport.class), MediaType.of(ContentSecurityPolicyController.APPLICATION_REPORTS_JSON),
-            headers, new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));
+            headers, body);
     }
 }

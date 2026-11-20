@@ -29,6 +29,11 @@ import java.util.List;
  * ({@link io.micronaut.scheduling.TaskExecutors#BLOCKING}), so it may perform blocking I/O such as
  * a database insert or a synchronous call to a monitoring service.</p>
  *
+ * <p>Each batch is handled on its own blocking thread, without a concurrency limit, and during a
+ * report-only rollout reports can arrive as often as pages are viewed. Hand reports off to a bounded
+ * queue or batch writer, or limit concurrent work, for example with a {@link java.util.concurrent.Semaphore},
+ * instead of writing every batch synchronously to a connection pool that the application shares.</p>
+ *
  * <p>Register exactly one handler bean. To send reports to several destinations, delegate from
  * that handler; two handler beans fail when the report controller is created.</p>
  *

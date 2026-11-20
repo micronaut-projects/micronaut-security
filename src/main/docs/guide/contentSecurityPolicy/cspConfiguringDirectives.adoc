@@ -39,6 +39,8 @@ base-uri 'none'; default-src 'none'; connect-src 'self'; font-src 'self'; object
 
 NOTE: Setting `none: false` without enabling any other source does not allow everything. It removes the directive from the header, so the browser falls back to `default-src`, which is `'none'` by default. To allow a resource type, enable the sources you need.
 
+The default generator builds the directives from this configuration once, not for every response. A configuration refresh, for example from a distributed configuration source, rebuilds them; refreshed values that would fail the startup checks are logged as an error and the previous policy stays in place.
+
 ==== Limiting where the header applies
 
 The header and the nonce are added to every request matching `micronaut.security.csp.filter.pattern` (default `/**`). Use it to limit the policy to the part of the application that renders HTML:
