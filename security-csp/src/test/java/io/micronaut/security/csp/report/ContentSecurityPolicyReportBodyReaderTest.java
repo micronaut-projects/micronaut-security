@@ -21,32 +21,48 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.type.Argument;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.json.JsonMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_POLICY_LENGTH;
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_REPORTS;
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_SAMPLE_LENGTH;
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_TOKEN_LENGTH;
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_URL_LENGTH;
+import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_USER_AGENT_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Exercises the checks the reader always applies, independently of bean validation, which needs
- * micronaut-validation at runtime.
+ * micronaut-validation at runtime. Each rejection is pinned to the rule that rejects it by the
+ * message, and each limit is tested on both sides of its boundary.
  */
 class ContentSecurityPolicyReportBodyReaderTest {
+    private static final String VIOLATION = ContentSecurityPolicyReport.TYPE_CSP_VIOLATION;
+    private static final String HASH = ContentSecurityPolicyReport.TYPE_CSP_HASH;
     private static ApplicationContext context;
     private static ContentSecurityPolicyReportBodyReader reader;
 
@@ -62,74 +78,256 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     @Test
-    void acceptsAValidViolationReport() {
-        List<ContentSecurityPolicyReport> reports = read("[" + violation("\"https://example.com/page\"", "200", "\"alert(1)\"") + "]");
+    void decodesTheEnvelopeAndTheViolationBody() {
+        List<ContentSecurityPolicyReport> reports = read(batch(envelope(VIOLATION, violationBody(Map.of(
+            "blockedURL", text("inline"),
+            "sample", text("alert(1)"),
+            "lineNumber", "12")))));
 
         assertEquals(1, reports.size());
+        ContentSecurityPolicyReport report = reports.get(0);
+        assertEquals(1L, report.age());
+        assertEquals(VIOLATION, report.type());
+        assertEquals("https://example.com/page", report.url());
+        assertEquals("Example Browser", report.userAgent());
+        ContentSecurityPolicyViolationReportBody body = assertInstanceOf(ContentSecurityPolicyViolationReportBody.class, report.body());
+        assertEquals("https://example.com/page", body.documentUrl());
+        assertEquals("inline", body.blockedUrl());
+        assertEquals("script-src-elem", body.effectiveDirective());
+        assertEquals("script-src 'none'", body.originalPolicy());
+        assertEquals(ContentSecurityPolicyReportDisposition.ENFORCE, body.disposition());
+        assertEquals(200, body.statusCode());
+        assertEquals("alert(1)", body.sample());
+        assertEquals(12L, body.lineNumber());
+    }
+
+    @Test
+    void decodesAHashBody() {
+        List<ContentSecurityPolicyReport> reports = read(batch(envelope(HASH, hashBody(Map.of("destination", text("script"))))));
+
+        ContentSecurityPolicyHashReportBody body = assertInstanceOf(ContentSecurityPolicyHashReportBody.class, reports.get(0).body());
+        assertEquals("sha256-abc", body.hash());
+        assertEquals("script", body.destination());
+    }
+
+    @Test
+    void skipsReportsOfOtherTypes() {
+        List<ContentSecurityPolicyReport> reports = read(batch(envelope("deprecation", "{\"id\":\"x\"}"), envelope(HASH, hashBody(Map.of()))));
+
+        assertEquals(1, reports.size());
+        assertEquals(HASH, reports.get(0).type());
     }
 
     @Test
     void acceptsTheMaximumNumberOfReports() {
-        assertEquals(ContentSecurityPolicyReportBodyReader.MAX_REPORTS, read(batch(ContentSecurityPolicyReportBodyReader.MAX_REPORTS)).size());
+        assertEquals(MAX_REPORTS, read(hashBatch(MAX_REPORTS)).size());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("reportsAtTheLimits")
+    void acceptsValuesAtTheLimits(String description, String json) {
+        assertEquals(1, read(json).size());
+    }
+
+    static Stream<Arguments> reportsAtTheLimits() {
+        return Stream.of(
+            Arguments.of("statusCode 0", batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "0"))))),
+            Arguments.of("statusCode 65535", batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "65535"))))),
+            Arguments.of("lineNumber and columnNumber 0", batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "0", "columnNumber", "0"))))),
+            Arguments.of("age 0", batch(envelope(Map.of("age", "0"), VIOLATION, violationBody(Map.of())))),
+            Arguments.of("url of " + MAX_URL_LENGTH + " characters", batch(envelope(Map.of("url", text(MAX_URL_LENGTH)), VIOLATION, violationBody(Map.of())))),
+            Arguments.of("user_agent of " + MAX_USER_AGENT_LENGTH + " characters",
+                batch(envelope(Map.of("user_agent", text(MAX_USER_AGENT_LENGTH)), VIOLATION, violationBody(Map.of())))),
+            Arguments.of("documentURL of " + MAX_URL_LENGTH + " characters", batch(envelope(VIOLATION, violationBody(Map.of("documentURL", text(MAX_URL_LENGTH)))))),
+            Arguments.of("effectiveDirective of " + MAX_TOKEN_LENGTH + " characters",
+                batch(envelope(VIOLATION, violationBody(Map.of("effectiveDirective", text(MAX_TOKEN_LENGTH)))))),
+            Arguments.of("originalPolicy of " + MAX_POLICY_LENGTH + " characters",
+                batch(envelope(VIOLATION, violationBody(Map.of("originalPolicy", text(MAX_POLICY_LENGTH)))))),
+            Arguments.of("sample of " + MAX_SAMPLE_LENGTH + " characters", batch(envelope(VIOLATION, violationBody(Map.of("sample", text(MAX_SAMPLE_LENGTH)))))),
+            Arguments.of("hash of " + MAX_TOKEN_LENGTH + " characters", batch(envelope(HASH, hashBody(Map.of("hash", text(MAX_TOKEN_LENGTH))))))
+        );
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("rejectedReports")
+    void rejectsAReportThatBreaksARule(String expectedMessage, String json) {
+        CodecException exception = assertThrows(CodecException.class, () -> read(json));
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    static Stream<Arguments> rejectedReports() {
+        return Stream.of(
+            Arguments.of("A Reporting API batch must not contain more than " + MAX_REPORTS + " reports", hashBatch(MAX_REPORTS + 1)),
+            Arguments.of("A Content Security Policy report batch must not contain null reports", "[null]"),
+            Arguments.of("A Content Security Policy report type is required", batch(envelope(Map.of(), null, hashBody(Map.of())))),
+            Arguments.of("A Content Security Policy report body is required", batch(envelope(VIOLATION, null))),
+            Arguments.of("A Content Security Policy report body is required", batch(envelope(VIOLATION, "null"))),
+            Arguments.of("A Content Security Policy report requires a non-negative age", batch(envelope(Map.of("age", "-1"), VIOLATION, violationBody(Map.of())))),
+            Arguments.of("A Content Security Policy report requires a non-negative age", batch(envelope(withoutField("age"), VIOLATION, violationBody(Map.of())))),
+            Arguments.of(requires("url"), batch(envelope(withoutField("url"), VIOLATION, violationBody(Map.of())))),
+            Arguments.of("A Content Security Policy report requires a user_agent", batch(envelope(withoutField("user_agent"), VIOLATION, violationBody(Map.of())))),
+            Arguments.of(requires("documentURL"), batch(envelope(VIOLATION, violationBody(withoutField("documentURL"))))),
+            Arguments.of(requires("documentURL"), batch(envelope(VIOLATION, "{}"))),
+            Arguments.of(requires("effectiveDirective"), batch(envelope(VIOLATION, violationBody(withoutField("effectiveDirective"))))),
+            Arguments.of(requires("originalPolicy"), batch(envelope(VIOLATION, violationBody(withoutField("originalPolicy"))))),
+            Arguments.of("A Content Security Policy violation report requires a disposition", batch(envelope(VIOLATION, violationBody(withoutField("disposition"))))),
+            Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(withoutField("statusCode"))))),
+            Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "-1"))))),
+            Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "65536"))))),
+            Arguments.of(negativePosition(), batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "-1"))))),
+            Arguments.of(negativePosition(), batch(envelope(VIOLATION, violationBody(Map.of("columnNumber", "-1"))))),
+            Arguments.of(requires("hash"), batch(envelope(HASH, hashBody(Map.of("hash", text(" ")))))),
+            Arguments.of(tooLong("url", MAX_URL_LENGTH), batch(envelope(Map.of("url", text(MAX_URL_LENGTH + 1)), VIOLATION, violationBody(Map.of())))),
+            Arguments.of(tooLong("user_agent", MAX_USER_AGENT_LENGTH),
+                batch(envelope(Map.of("user_agent", text(MAX_USER_AGENT_LENGTH + 1)), VIOLATION, violationBody(Map.of())))),
+            Arguments.of(tooLong("documentURL", MAX_URL_LENGTH), batch(envelope(VIOLATION, violationBody(Map.of("documentURL", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("referrer", MAX_URL_LENGTH), batch(envelope(VIOLATION, violationBody(Map.of("referrer", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("blockedURL", MAX_URL_LENGTH), batch(envelope(VIOLATION, violationBody(Map.of("blockedURL", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("effectiveDirective", MAX_TOKEN_LENGTH),
+                batch(envelope(VIOLATION, violationBody(Map.of("effectiveDirective", text(MAX_TOKEN_LENGTH + 1)))))),
+            Arguments.of(tooLong("originalPolicy", MAX_POLICY_LENGTH),
+                batch(envelope(VIOLATION, violationBody(Map.of("originalPolicy", text(MAX_POLICY_LENGTH + 1)))))),
+            Arguments.of(tooLong("sourceFile", MAX_URL_LENGTH), batch(envelope(VIOLATION, violationBody(Map.of("sourceFile", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("sample", MAX_SAMPLE_LENGTH), batch(envelope(VIOLATION, violationBody(Map.of("sample", text(MAX_SAMPLE_LENGTH + 1)))))),
+            Arguments.of(tooLong("documentURL", MAX_URL_LENGTH), batch(envelope(HASH, hashBody(Map.of("documentURL", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("subresourceURL", MAX_URL_LENGTH), batch(envelope(HASH, hashBody(Map.of("subresourceURL", text(MAX_URL_LENGTH + 1)))))),
+            Arguments.of(tooLong("hash", MAX_TOKEN_LENGTH), batch(envelope(HASH, hashBody(Map.of("hash", text(MAX_TOKEN_LENGTH + 1)))))),
+            Arguments.of(tooLong("destination", MAX_TOKEN_LENGTH), batch(envelope(HASH, hashBody(Map.of("destination", text(MAX_TOKEN_LENGTH + 1)))))),
+            Arguments.of(tooLong("type", MAX_TOKEN_LENGTH), batch(envelope(HASH, hashBody(Map.of("type", text(MAX_TOKEN_LENGTH + 1))))))
+        );
     }
 
     @Test
-    void rejectsMoreReportsThanTheMaximum() {
-        assertThrows(CodecException.class, () -> read(batch(ContentSecurityPolicyReportBodyReader.MAX_REPORTS + 1)));
-    }
+    void rejectsABodyThatIsNotJson() {
+        CodecException exception = assertThrows(CodecException.class, () -> read("not json"));
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-        // missing documentURL
-        "[{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{\"effectiveDirective\":\"script-src\",\"originalPolicy\":\"script-src 'none'\",\"disposition\":\"enforce\",\"statusCode\":200}}]",
-        // missing effectiveDirective, originalPolicy, disposition and statusCode
-        "[{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{\"documentURL\":\"https://e.com\"}}]",
-        // empty body
-        "[{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{}}]",
-        // missing envelope url, age and user_agent
-        "[{\"type\":\"csp-hash\",\"body\":{\"hash\":\"sha256-x\"}}]",
-        // negative age
-        "[{\"type\":\"csp-hash\",\"age\":-1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{\"hash\":\"sha256-x\"}}]",
-        // blank hash
-        "[{\"type\":\"csp-hash\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{\"hash\":\" \"}}]"
-    })
-    void rejectsReportsMissingRequiredFields(String json) {
-        assertThrows(CodecException.class, () -> read(json));
+        assertTrue(exception.getMessage().startsWith("Error decoding Reporting API request body: "), exception::getMessage);
     }
 
     @Test
-    void rejectsAnOversizedField() {
-        String longSample = "\"" + "x".repeat(ContentSecurityPolicyReportBodyReader.MAX_SAMPLE_LENGTH + 1) + "\"";
+    void logsRejectedBatchesAtWarnOncePerMinuteWithoutTheReportContents() {
+        AtomicLong now = new AtomicLong(1_000L);
+        ContentSecurityPolicyReportBodyReader clockedReader = new ContentSecurityPolicyReportBodyReader(context.getBean(JsonMapper.class), now::get);
+        String oversized = batch(envelope(VIOLATION, violationBody(Map.of(
+            "documentURL", text(MAX_URL_LENGTH + 1),
+            "sample", text("secret sample")))));
 
-        assertThrows(CodecException.class, () -> read("[" + violation("\"https://example.com/page\"", "200", longSample) + "]"));
+        List<ILoggingEvent> events = captureDebug(() -> {
+            assertThrows(CodecException.class, () -> read(clockedReader, oversized));
+            assertThrows(CodecException.class, () -> read(clockedReader, "not json"));
+            assertThrows(CodecException.class, () -> read(clockedReader, batch(envelope(HASH, "[]"))));
+            now.addAndGet(TimeUnit.MINUTES.toNanos(1) - 1);
+            assertThrows(CodecException.class, () -> read(clockedReader, oversized));
+            now.addAndGet(1);
+            assertThrows(CodecException.class, () -> read(clockedReader, oversized));
+        });
+
+        assertEquals(List.of(Level.WARN, Level.DEBUG, Level.DEBUG, Level.DEBUG, Level.WARN), events.stream().map(ILoggingEvent::getLevel).toList(),
+            "the first rejection of each minute is logged at WARN and the others at DEBUG");
+        assertMentions(events.get(0), "batch of 1 Content Security Policy reports", "HTTP 400", tooLong("documentURL", MAX_URL_LENGTH),
+            ContentSecurityPolicyReportBodyReader.class.getName());
+        assertMentions(events.get(1), "the body is not a JSON array of Reporting API reports");
+        assertMentions(events.get(2), "batch of 1 Content Security Policy reports", "a report body could not be decoded");
+        assertTrue(events.stream().noneMatch(event -> event.getFormattedMessage().contains("secret sample")), "report contents must not be logged");
     }
 
-    @Test
-    void rejectsAnOversizedUrl() {
-        String longUrl = "\"https://example.com/" + "x".repeat(ContentSecurityPolicyReportBodyReader.MAX_URL_LENGTH) + "\"";
-
-        assertThrows(CodecException.class, () -> read("[" + violation(longUrl, "200", "null") + "]"));
+    private static String requires(String field) {
+        return "A Content Security Policy report requires " + field;
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"-1", "65536"})
-    void rejectsAnInvalidStatusCode(String statusCode) {
-        assertThrows(CodecException.class, () -> read("[" + violation("\"https://example.com/page\"", statusCode, "null") + "]"));
+    private static String tooLong(String field, int maxLength) {
+        return "A Content Security Policy report field " + field + " must not be longer than " + maxLength + " characters";
     }
 
-    @Test
-    void rejectsNegativeLineNumbers() {
-        String json = "[{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{"
-            + "\"documentURL\":\"https://e.com\",\"effectiveDirective\":\"script-src\",\"originalPolicy\":\"script-src 'none'\","
-            + "\"disposition\":\"enforce\",\"statusCode\":200,\"lineNumber\":-1}}]";
-
-        assertThrows(CodecException.class, () -> read(json));
+    private static String invalidStatusCode() {
+        return "A Content Security Policy violation report requires a valid statusCode";
     }
 
-    @Test
-    void logsTheFirstRejectedBatchOfAMinuteAtWarnWithoutTheReportContents() {
-        ContentSecurityPolicyReportBodyReader freshReader = new ContentSecurityPolicyReportBodyReader(context.getBean(JsonMapper.class));
-        String longUrl = "\"https://example.com/" + "x".repeat(ContentSecurityPolicyReportBodyReader.MAX_URL_LENGTH) + "\"";
+    private static String negativePosition() {
+        return "A Content Security Policy violation report must not have negative line or column numbers";
+    }
+
+    /**
+     * Marks a field to leave out of {@link #object(Map, Map)}.
+     */
+    private static Map<String, String> withoutField(String field) {
+        Map<String, String> fields = new LinkedHashMap<>();
+        fields.put(field, null);
+        return fields;
+    }
+
+    private static String text(String value) {
+        return "\"" + value + "\"";
+    }
+
+    private static String text(int length) {
+        return text("x".repeat(length));
+    }
+
+    private static String violationBody(Map<String, String> overrides) {
+        Map<String, String> defaults = new LinkedHashMap<>();
+        defaults.put("documentURL", text("https://example.com/page"));
+        defaults.put("effectiveDirective", text("script-src-elem"));
+        defaults.put("originalPolicy", text("script-src 'none'"));
+        defaults.put("disposition", text("enforce"));
+        defaults.put("statusCode", "200");
+        return object(defaults, overrides);
+    }
+
+    private static String hashBody(Map<String, String> overrides) {
+        Map<String, String> defaults = new LinkedHashMap<>();
+        defaults.put("hash", text("sha256-abc"));
+        return object(defaults, overrides);
+    }
+
+    private static String envelope(String type, String body) {
+        return envelope(Map.of(), type, body);
+    }
+
+    private static String envelope(Map<String, String> overrides, String type, String body) {
+        Map<String, String> defaults = new LinkedHashMap<>();
+        defaults.put("type", type == null ? null : text(type));
+        defaults.put("age", "1");
+        defaults.put("url", text("https://example.com/page"));
+        defaults.put("user_agent", text("Example Browser"));
+        defaults.put("body", body);
+        return object(defaults, overrides);
+    }
+
+    /**
+     * Builds a JSON object from raw JSON values. An override replaces a default; a {@code null}
+     * value leaves the field out.
+     */
+    private static String object(Map<String, String> defaults, Map<String, String> overrides) {
+        Map<String, String> fields = new LinkedHashMap<>(defaults);
+        fields.putAll(overrides);
+        StringJoiner joiner = new StringJoiner(",", "{", "}");
+        fields.forEach((name, value) -> {
+            if (value != null) {
+                joiner.add(text(name) + ":" + value);
+            }
+        });
+        return joiner.toString();
+    }
+
+    private static String batch(String... reports) {
+        StringJoiner joiner = new StringJoiner(",", "[", "]");
+        for (String report : reports) {
+            joiner.add(report);
+        }
+        return joiner.toString();
+    }
+
+    private static String hashBatch(int size) {
+        String[] reports = new String[size];
+        for (int i = 0; i < size; i++) {
+            reports[i] = envelope(HASH, hashBody(Map.of()));
+        }
+        return batch(reports);
+    }
+
+    private static List<ILoggingEvent> captureDebug(Runnable action) {
         Logger logger = (Logger) LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
         Level level = logger.getLevel();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
@@ -137,42 +335,19 @@ class ContentSecurityPolicyReportBodyReaderTest {
         logger.addAppender(appender);
         logger.setLevel(Level.DEBUG);
         try {
-            assertThrows(CodecException.class, () -> read(freshReader, "[" + violation(longUrl, "200", "\"secret sample\"") + "]"));
-            assertThrows(CodecException.class, () -> read(freshReader, "not json"));
-            assertThrows(CodecException.class, () -> read(freshReader, "[{\"type\":\"csp-hash\",\"age\":1,\"url\":\"https://e.com\","
-                + "\"user_agent\":\"UA\",\"body\":[]}]"));
+            action.run();
         } finally {
             logger.detachAppender(appender);
             logger.setLevel(level);
         }
-
-        List<ILoggingEvent> events = appender.list;
-        assertEquals(3, events.size());
-        assertEquals(Level.WARN, events.get(0).getLevel());
-        assertEquals("Rejected a batch of 1 Content Security Policy reports with HTTP 400, so the handler did not receive them: "
-            + "A Content Security Policy report field documentURL must not be longer than 8192 characters. Further rejections within a minute "
-            + "are logged at DEBUG by the logger io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.",
-            events.get(0).getFormattedMessage());
-        assertEquals(Level.DEBUG, events.get(1).getLevel(), "a second rejection within a minute is not logged at WARN");
-        assertEquals("Rejected a batch of Content Security Policy reports with HTTP 400: the body is not a JSON array of Reporting API reports.",
-            events.get(1).getFormattedMessage());
-        assertEquals("Rejected a batch of 1 Content Security Policy reports with HTTP 400: a report body could not be decoded.",
-            events.get(2).getFormattedMessage());
-        assertTrue(events.stream().noneMatch(event -> event.getFormattedMessage().contains("secret sample")));
+        return appender.list;
     }
 
-    private static String violation(String documentUrl, String statusCode, String sample) {
-        return "{\"type\":\"csp-violation\",\"age\":1,\"url\":\"https://example.com/page\",\"user_agent\":\"Example Browser\",\"body\":{"
-            + "\"documentURL\":" + documentUrl + ",\"effectiveDirective\":\"script-src\",\"originalPolicy\":\"script-src 'none'\","
-            + "\"disposition\":\"enforce\",\"statusCode\":" + statusCode + ",\"sample\":" + sample + "}}";
-    }
-
-    private static String batch(int size) {
-        StringJoiner joiner = new StringJoiner(",", "[", "]");
-        for (int i = 0; i < size; i++) {
-            joiner.add("{\"type\":\"csp-hash\",\"age\":1,\"url\":\"https://e.com\",\"user_agent\":\"UA\",\"body\":{\"hash\":\"sha256-x\"}}");
+    private static void assertMentions(ILoggingEvent event, String... facts) {
+        String message = event.getFormattedMessage();
+        for (String fact : facts) {
+            assertTrue(message.contains(fact), () -> "expected \"" + fact + "\" in: " + message);
         }
-        return joiner.toString();
     }
 
     private static List<ContentSecurityPolicyReport> read(String json) {

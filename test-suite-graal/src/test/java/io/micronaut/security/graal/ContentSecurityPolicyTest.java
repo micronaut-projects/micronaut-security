@@ -13,6 +13,7 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
@@ -32,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Smoke test of the CSP module in a native image: the policy header, the request nonce, and the
@@ -93,6 +95,20 @@ class ContentSecurityPolicyTest {
         ContentSecurityPolicyViolationReportBody body = assertInstanceOf(ContentSecurityPolicyViolationReportBody.class,
             reportHandler.reports.get(0).body());
         assertEquals("script-src-elem", body.effectiveDirective());
+    }
+
+    @Test
+    void rejectsAReportThatBreaksARuleWithBadRequest() {
+        BlockingHttpClient client = httpClient.toBlocking();
+        int handled = reportHandler.reports.size();
+        HttpRequest<byte[]> request = HttpRequest.POST("/csp/report", REPORTS.replace("\"statusCode\": 200", "\"statusCode\": -1")
+                .getBytes(StandardCharsets.UTF_8))
+            .contentType(MediaType.of("application/reports+json"));
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class, () -> client.exchange(request));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(handled, reportHandler.reports.size(), "a rejected batch must not reach the handler");
     }
 
     @Requires(property = "spec.name", value = "ContentSecurityPolicyTest")

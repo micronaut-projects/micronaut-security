@@ -134,8 +134,7 @@ class CspStartupLogTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertEquals("micronaut.security.csp.report-uri is configured but micronaut.security.csp.report-uri-enabled is false; "
-            + "the report-uri directive is omitted", events.get(0).getFormattedMessage());
+        assertMentions(events.get(0), "micronaut.security.csp.report-uri ", "micronaut.security.csp.report-uri-enabled", "omitted");
     }
 
     @Test

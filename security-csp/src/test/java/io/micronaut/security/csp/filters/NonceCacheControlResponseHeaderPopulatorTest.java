@@ -34,6 +34,7 @@ import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
+import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
@@ -187,6 +188,22 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         }
     }
 
+    /**
+     * Pins a deliberate decision: the module never overrides an application's Cache-Control, even a
+     * {@code public} one on a page that carries a nonce. The guide documents that the application
+     * then owns the caching of its nonce-bearing pages.
+     */
+    @Test
+    void publicCacheControlSetByTheApplicationIsKeptOnANonceBearingPage() {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
+            HttpResponse<String> response = get(server, "/nonce-cache/public");
+
+            assertEquals(List.of("public, max-age=60"), response.getHeaders().getAll(HttpHeaders.CACHE_CONTROL));
+            assertNotNull(ContentSecurityPolicy.of(response).scriptSrc().value());
+            assertTrue(ContentSecurityPolicy.of(response).scriptSrc().value().startsWith("'nonce-"), "the page carries a nonce");
+        }
+    }
+
     @Test
     void htmlOutsideTheFilterPatternReceivesNoCacheControl() {
         try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, "private",
@@ -306,6 +323,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         @Status(HttpStatus.CONFLICT)
         String onHtmlErrorProduces() {
             return "<!DOCTYPE html><html><head><title>Error</title></head><body></body></html>";
+        }
+
+        @Get("/public")
+        @Produces(MediaType.TEXT_HTML)
+        HttpResponse<String> publicPage() {
+            return HttpResponse.ok("<!DOCTYPE html><html><head><title>Page</title></head><body></body></html>")
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=60");
         }
 
         @Get("/own")

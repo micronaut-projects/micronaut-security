@@ -28,6 +28,7 @@ import io.micronaut.http.codec.CodecException;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.json.tree.JsonNode;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.LongSupplier;
 
 /**
  * Decodes the Reporting API's dedicated JSON media type.
@@ -60,10 +62,24 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     private static final int MAX_STATUS_CODE = 65_535;
     private static final long WARNING_INTERVAL_NANOS = TimeUnit.MINUTES.toNanos(1);
     private final JsonMapper jsonMapper;
-    private final AtomicLong nextWarning = new AtomicLong(System.nanoTime());
+    private final LongSupplier nanoTime;
+    private final AtomicLong nextWarning;
 
+    @Inject
     ContentSecurityPolicyReportBodyReader(JsonMapper jsonMapper) {
+        this(jsonMapper, System::nanoTime);
+    }
+
+    /**
+     * Creates the reader with the clock that rate-limits the warnings about rejected batches.
+     *
+     * @param jsonMapper decodes the request body
+     * @param nanoTime returns the current value of a monotonic clock in nanoseconds, like {@link System#nanoTime()}
+     */
+    ContentSecurityPolicyReportBodyReader(JsonMapper jsonMapper, LongSupplier nanoTime) {
         this.jsonMapper = jsonMapper;
+        this.nanoTime = nanoTime;
+        this.nextWarning = new AtomicLong(nanoTime.getAsLong());
     }
 
     @Override
@@ -114,7 +130,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
      */
     private CodecException rejected(@Nullable Integer reports, String reason, CodecException exception) {
         String batch = reports == null ? "a batch of Content Security Policy reports" : "a batch of " + reports + " Content Security Policy reports";
-        long now = System.nanoTime();
+        long now = nanoTime.getAsLong();
         long next = nextWarning.get();
         if (now - next >= 0 && nextWarning.compareAndSet(next, now + WARNING_INTERVAL_NANOS)) {
             LOG.warn("Rejected {} with HTTP 400, so the handler did not receive them: {}. Further rejections within a minute are logged at DEBUG "

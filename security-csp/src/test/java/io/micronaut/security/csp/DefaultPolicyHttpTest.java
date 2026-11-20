@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Property(name = "spec.name", value = "DefaultPolicyHttpTest")
 @MicronautTest
 class DefaultPolicyHttpTest {
-    private static final String DEFAULT_POLICY = "base-uri 'none'; default-src 'none'; connect-src 'none'; font-src 'none'; "
+    static final String DEFAULT_POLICY = "base-uri 'none'; default-src 'none'; connect-src 'none'; font-src 'none'; "
         + "object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'none'; "
         + "manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'none'; script-src 'none'";
 
