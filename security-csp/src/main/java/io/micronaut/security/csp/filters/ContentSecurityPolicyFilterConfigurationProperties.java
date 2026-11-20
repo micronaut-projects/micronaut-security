@@ -44,6 +44,11 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default {@code Cache-Control} value of HTML responses that carry a nonce.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_NONCE_CACHE_CONTROL = "private";
 
     /**
      * The pattern the {@link ContentSecurityPolicyFilter} should match.
@@ -55,7 +60,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     private boolean enabled = DEFAULT_ENABLED;
 
     @Nullable
-    private String nonceCacheControl;
+    private String nonceCacheControl = DEFAULT_NONCE_CACHE_CONTROL;
 
     /**
      * Reports whether the CSP response filter is enabled.
@@ -82,9 +87,10 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     /**
      * {@code Cache-Control} value written to HTML responses of requests that received a nonce, for
      * example {@code private} or {@code no-store}. A {@code Cache-Control} header set by the
-     * application is kept. Not set by default.
+     * application is kept. Set it to an empty value to not write the header. Default: private.
      *
-     * @param nonceCacheControl the {@code Cache-Control} value, or {@code null} to not write the header
+     * @param nonceCacheControl the {@code Cache-Control} value, or a blank value to not write the
+     * header; defaults to {@value #DEFAULT_NONCE_CACHE_CONTROL}
      */
     public void setNonceCacheControl(@Nullable String nonceCacheControl) {
         this.nonceCacheControl = nonceCacheControl;

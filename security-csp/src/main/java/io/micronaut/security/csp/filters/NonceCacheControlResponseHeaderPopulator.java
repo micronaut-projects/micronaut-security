@@ -40,14 +40,13 @@ import java.util.Optional;
  * stored such a response would replay the same nonce to every visitor.
  *
  * <p>Other content types cannot carry the nonce in their body and keep their caching. A
- * {@code Cache-Control} header already set by the application is kept. The populator is only loaded
- * when {@value ContentSecurityPolicyFilterConfigurationProperties#PROPERTY_NONCE_CACHE_CONTROL} is
- * set and an enabled directive uses nonces.</p>
+ * {@code Cache-Control} header already set by the application is kept. The value comes from
+ * {@value ContentSecurityPolicyFilterConfigurationProperties#PROPERTY_NONCE_CACHE_CONTROL}; a blank
+ * value writes no header. The populator is only loaded when an enabled directive uses nonces.</p>
  *
  * @since 5.6.0
  */
 @Requires(classes = ResponseHeaderPopulator.class)
-@Requires(property = ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_NONCE_CACHE_CONTROL)
 @Requires(condition = NonceEnabledCondition.class)
 @Singleton
 @Internal

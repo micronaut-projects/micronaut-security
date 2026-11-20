@@ -17,6 +17,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -55,6 +56,16 @@ class CspNonceFunctionalTest {
             HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
 
             assertEquals(nonceSource(viewNonce(response)), policy(response).scriptSrc().value());
+        });
+    }
+
+    @Test
+    void renderedViewThatCarriesANonceIsNotStoredBySharedCaches() {
+        withClient(Map.of("micronaut.security.csp.script-src.nonce", true), client -> {
+            HttpResponse<String> response = client.exchange(HttpRequest.GET("/"), String.class);
+
+            assertNotNull(viewNonce(response));
+            assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
         });
     }
 
@@ -137,6 +148,7 @@ class CspNonceFunctionalTest {
 
             assertEquals("'none'", policy(response).scriptSrc().value());
             assertFalse(SCRIPT_NONCE.matcher(response.body()).find(), "no nonce may be rendered when nonces are disabled");
+            assertNull(response.header(HttpHeaders.CACHE_CONTROL), "a page without a nonce keeps its caching");
         });
     }
 

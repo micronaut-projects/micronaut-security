@@ -26,7 +26,9 @@ Use the value as the `nonce` attribute of every trusted inline script that the p
 
 A nonce is generated for every request that matches `micronaut.security.csp.filter.pattern`, including JSON and static-asset responses. Because the nonce changes on every response, HTTP/2 header compression cannot reuse the CSP header. When the same server also serves APIs or assets, narrow `filter.pattern` to the routes that render HTML.
 
-Do not let shared caches or CDNs store HTML that carries a nonce: a cached page replays the same nonce to every visitor. Send such responses with `Cache-Control: private` or `no-store`. The module does not write the header by default. To have it written for you, set `micronaut.security.csp.filter.nonce-cache-control`:
+Do not let shared caches or CDNs store HTML that carries a nonce: a cached page replays the same nonce to every visitor. For that reason the module writes `Cache-Control: private` on `text/html` and `application/xhtml+xml` responses to requests that received a nonce. Other responses, such as JSON, scripts, stylesheets and images, cannot carry the nonce and keep their caching. A `Cache-Control` header that the application sets itself is kept.
+
+`private` lets the visitor's own browser keep the page and stops shared caches from storing it. To forbid every cache from storing it, which also prevents the browser from restoring the page from its back/forward cache, set `micronaut.security.csp.filter.nonce-cache-control` to `no-store`:
 
 [configuration]
 ----
@@ -36,12 +38,10 @@ micronaut:
       script-src:
         nonce: true
       filter:
-        nonce-cache-control: private
+        nonce-cache-control: no-store
 ----
 
-The value is written as the `Cache-Control` header of `text/html` and `application/xhtml+xml` responses to requests that received a nonce. Other responses, such as JSON, scripts, stylesheets and images, cannot carry the nonce and keep their caching. A `Cache-Control` header that the application sets itself is kept.
-
-`private` lets the visitor's own browser keep the page and stops shared caches from storing it. `no-store` forbids every cache from storing it, which also prevents the browser from restoring the page from its back/forward cache.
+Set `micronaut.security.csp.filter.nonce-cache-control` to an empty value to stop the module from writing the header.
 
 Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
 

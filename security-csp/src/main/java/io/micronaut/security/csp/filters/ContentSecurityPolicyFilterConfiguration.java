@@ -38,7 +38,7 @@ public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
      * nonce, so that a shared cache does not replay one nonce to every visitor.
      *
      * @return the {@code Cache-Control} value, such as {@code private} or {@code no-store}, or
-     * {@code null} to leave the header to the application; defaults to {@code null}
+     * {@code null} or a blank value to leave the header to the application; defaults to {@code private}
      */
     @Nullable String getNonceCacheControl();
 }

@@ -48,12 +48,19 @@ class NonceCacheControlResponseHeaderPopulatorTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/nonce-cache/html", "/nonce-cache/xhtml"})
-    void documentsThatCarryANonceReceiveTheConfiguredCacheControl(String path) {
-        try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, "private"))) {
+    void documentsThatCarryANonceReceivePrivateCacheControlByDefault(String path) {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
             HttpResponse<String> response = get(server, path);
 
             assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
             assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    @Test
+    void configuredCacheControlReplacesTheDefault() {
+        try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, "no-store"))) {
+            assertEquals("no-store", get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
         }
     }
 
@@ -84,7 +91,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
 
     @Test
     void cacheControlSetByTheApplicationIsKept() {
-        try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, "private"))) {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
             HttpResponse<String> response = get(server, "/nonce-cache/own");
 
             assertEquals(1, response.getHeaders().getAll(HttpHeaders.CACHE_CONTROL).size());
@@ -101,24 +108,17 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     @Test
-    void cacheControlIsNotWrittenByDefault() {
-        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
-            assertFalse(server.getApplicationContext().containsBean(NonceCacheControlResponseHeaderPopulator.class));
-            assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
-        }
-    }
-
-    @Test
     void cacheControlIsNotWrittenWhenNoDirectiveUsesNonces() {
-        try (EmbeddedServer server = server(Map.of(NONCE_CACHE_CONTROL, "private"))) {
+        try (EmbeddedServer server = server(Map.of())) {
             assertFalse(server.getApplicationContext().containsBean(NonceCacheControlResponseHeaderPopulator.class));
             assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
         }
     }
 
-    @Test
-    void blankCacheControlIsNotWritten() {
-        try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, " "))) {
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void blankCacheControlIsNotWritten(String value) {
+        try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, value))) {
             assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
         }
     }
