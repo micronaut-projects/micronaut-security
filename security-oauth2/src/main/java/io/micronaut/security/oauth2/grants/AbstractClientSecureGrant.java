@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 original authors
+ * Copyright 2017-2026 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
 
     protected String clientId;
     protected String clientSecret;
+    protected String clientAssertion;
+    protected String clientAssertionType;
 
     /**
      *
@@ -81,6 +83,42 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
     }
 
     /**
+     * @return The client assertion (signed JWT) used for {@code private_key_jwt} client authentication.
+     * @since 5.5.3
+     */
+    @Nullable
+    public String getClientAssertion() {
+        return clientAssertion;
+    }
+
+    /**
+     * @param clientAssertion The signed JWT assertion.
+     * @since 5.5.3
+     */
+    @Override
+    public void setClientAssertion(@Nullable String clientAssertion) {
+        this.clientAssertion = clientAssertion;
+    }
+
+    /**
+     * @return The client assertion type URI.
+     * @since 5.5.3
+     */
+    @Nullable
+    public String getClientAssertionType() {
+        return clientAssertionType;
+    }
+
+    /**
+     * @param clientAssertionType The client assertion type URI.
+     * @since 5.5.3
+     */
+    @Override
+    public void setClientAssertionType(@Nullable String clientAssertionType) {
+        this.clientAssertionType = clientAssertionType;
+    }
+
+    /**
      * @return this object as a Map
      */
     @Override
@@ -93,6 +131,12 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
         }
         if (clientSecret != null) {
             m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
+        if (clientAssertion != null) {
+            m.put(KEY_CLIENT_ASSERTION, clientAssertion);
+        }
+        if (clientAssertionType != null) {
+            m.put(KEY_CLIENT_ASSERTION_TYPE, clientAssertionType);
         }
         return m;
     }

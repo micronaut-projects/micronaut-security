@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.ClientAssertionConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -497,6 +498,141 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @ConfigurationProperties("token")
     public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
 
+        private ClientAssertionConfigurationProperties clientAssertion;
+
+        @Override
+        public Optional<ClientAssertionConfiguration> getClientAssertion() {
+            return Optional.ofNullable(clientAssertion);
+        }
+
+        /**
+         * Sets the client assertion configuration used for {@code private_key_jwt} client authentication.
+         *
+         * @param clientAssertion The client assertion configuration
+         * @since 5.5.3
+         */
+        public void setClientAssertion(@Nullable ClientAssertionConfigurationProperties clientAssertion) {
+            this.clientAssertion = clientAssertion;
+        }
+
+        /**
+         * Client assertion configuration used for {@code private_key_jwt} client authentication.
+         *
+         * @since 5.5.3
+         */
+        @ConfigurationProperties("client-assertion")
+        public static class ClientAssertionConfigurationProperties implements ClientAssertionConfiguration {
+
+            private String privateKey;
+            private String keyId;
+            private String keyName;
+            private String algorithm = DEFAULT_ALGORITHM;
+            private Duration lifetime = DEFAULT_LIFETIME;
+            private String audience;
+            private boolean remoteSigningEnabled;
+
+            @Override
+            public Optional<String> getPrivateKey() {
+                return Optional.ofNullable(privateKey);
+            }
+
+            /**
+             * The PEM-encoded private key (PKCS#8, PKCS#1 or SEC1), or a {@code classpath:} or {@code file:} resource containing it, used to sign the client assertion. Only used when {@code remote-signing-enabled} is false.
+             *
+             * @param privateKey The PEM-encoded private key or resource path
+             */
+            public void setPrivateKey(@Nullable String privateKey) {
+                this.privateKey = privateKey;
+            }
+
+            @Override
+            public Optional<String> getKeyId() {
+                return Optional.ofNullable(keyId);
+            }
+
+            /**
+             * The JWT {@code kid} header value used when signing with a local private key.
+             *
+             * @param keyId The key identifier
+             */
+            public void setKeyId(@Nullable String keyId) {
+                this.keyId = keyId;
+            }
+
+            @Override
+            public Optional<String> getKeyName() {
+                return Optional.ofNullable(keyName);
+            }
+
+            /**
+             * The name of the key held by the remote signer. Only used when {@code remote-signing-enabled} is true.
+             *
+             * @param keyName The remote key name
+             */
+            public void setKeyName(@Nullable String keyName) {
+                this.keyName = keyName;
+            }
+
+            @NonNull
+            @Override
+            public String getAlgorithm() {
+                return algorithm;
+            }
+
+            /**
+             * The JWS algorithm used to sign the client assertion. RSA (RS*, PS*) and EC (ES*) algorithms are supported. Default value (RS256).
+             *
+             * @param algorithm The algorithm
+             */
+            public void setAlgorithm(@NonNull String algorithm) {
+                this.algorithm = algorithm;
+            }
+
+            @NonNull
+            @Override
+            public Duration getLifetime() {
+                return lifetime;
+            }
+
+            /**
+             * The lifetime of the client assertion. Default value (60s).
+             *
+             * @param lifetime The client assertion lifetime
+             */
+            public void setLifetime(@NonNull Duration lifetime) {
+                this.lifetime = lifetime;
+            }
+
+            @Override
+            public Optional<String> getAudience() {
+                return Optional.ofNullable(audience);
+            }
+
+            /**
+             * The authorization server's issuer identifier used as the sole audience ({@code aud} claim).
+             * Defaults to the OpenID issuer identifier. Required for non-OpenID clients.
+             * When both are configured, they must match exactly.
+             *
+             * @param audience The audience
+             */
+            public void setAudience(@Nullable String audience) {
+                this.audience = audience;
+            }
+
+            @Override
+            public boolean isRemoteSigningEnabled() {
+                return remoteSigningEnabled;
+            }
+
+            /**
+             * Whether the client assertion is signed by an application-provided {@code ClientAssertionGenerator} bean named after the client (for example backed by a KMS or HSM) instead of {@code private-key}. Default value (false).
+             *
+             * @param remoteSigningEnabled Whether remote signing is enabled
+             */
+            public void setRemoteSigningEnabled(boolean remoteSigningEnabled) {
+                this.remoteSigningEnabled = remoteSigningEnabled;
+            }
+        }
     }
 
     /**

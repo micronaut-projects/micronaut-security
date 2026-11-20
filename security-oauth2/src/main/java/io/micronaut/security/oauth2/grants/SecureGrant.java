@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.oauth2.grants;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A contract for a grant that requires authentication.
  *
@@ -25,6 +27,18 @@ public interface SecureGrant {
 
     String KEY_CLIENT_ID = "client_id";
     String KEY_CLIENT_SECRET = "client_secret";
+
+    /**
+     * The key of the client assertion in the token request body.
+     * @since 5.5.3
+     */
+    String KEY_CLIENT_ASSERTION = "client_assertion";
+
+    /**
+     * The key of the client assertion type in the token request body.
+     * @since 5.5.3
+     */
+    String KEY_CLIENT_ASSERTION_TYPE = "client_assertion_type";
 
     /**
      * Sets the client id in the grant.
@@ -39,4 +53,24 @@ public interface SecureGrant {
      * @param clientSecret The client secret
      */
     void setClientSecret(String clientSecret);
+
+    /**
+     * Sets the client assertion (signed JWT) used for {@code private_key_jwt} client authentication.
+     *
+     * @param clientAssertion The signed JWT assertion
+     * @since 5.5.3
+     */
+    default void setClientAssertion(@Nullable String clientAssertion) {
+        // no-op for backward compatibility
+    }
+
+    /**
+     * Sets the client assertion type, typically {@code urn:ietf:params:oauth:client-assertion-type:jwt-bearer}.
+     *
+     * @param clientAssertionType The assertion type URI
+     * @since 5.5.3
+     */
+    default void setClientAssertionType(@Nullable String clientAssertionType) {
+        // no-op for backward compatibility
+    }
 }
