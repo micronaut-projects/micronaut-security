@@ -94,7 +94,7 @@ final class CsrfFilter implements Ordered {
     }
 
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
-        // The RouteMatch is owned by the request and is still needed to execute the route, so it must not be closed here.
+        // The route match is owned by the request pipeline; it must not be closed here.
         RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
         if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
             return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
