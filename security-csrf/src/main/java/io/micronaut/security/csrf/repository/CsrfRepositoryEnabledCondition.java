@@ -74,7 +74,7 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
     }
 
     private void warnLegacyKey(BeanContext beanContext, boolean canonicalKeySet) {
-        // the condition is evaluated several times per bean context
+        // one condition instance serves every bean context, and lookups of a disabled bean evaluate it again
         boolean firstTime = WARNED.computeIfAbsent(beanContext, k -> ConcurrentHashMap.newKeySet()).add(legacyKey);
         if (!firstTime || !CsrfRepositoryEnabledConditionLogging.LOG.isWarnEnabled()) {
             return;
