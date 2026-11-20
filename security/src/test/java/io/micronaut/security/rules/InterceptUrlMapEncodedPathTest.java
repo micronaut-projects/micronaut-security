@@ -112,15 +112,16 @@ class InterceptUrlMapEncodedPathTest {
     }
 
     /**
-     * Records the routing of the server, not a security property: the router does not bind a value that decodes to a
-     * slash to a single-segment path variable, so the authorized request matches no route. If this fails because the
-     * router serves these paths again, {@link #protectedPatternsRejectEncodedSlashes(String)} still guards them.
+     * The role-restricted entries must admit the authorized request to a path whose path variable holds an encoded
+     * slash: the answer is 404, not 403, so security let the request through. The 404 itself comes from the router,
+     * which since Micronaut Core 5.2.23 does not bind a value that decodes to a slash to a single-segment path
+     * variable. If the router serves these paths again, expect the controller's response here instead.
      *
      * @param path A path whose path variable holds an encoded slash
      */
     @ParameterizedTest
     @MethodSource("encodedSlashPaths")
-    void routerDoesNotRouteEncodedSlashesForAnAuthorizedRequest(String path) {
+    void authorizedRequestToEncodedSlashPassesSecurityButIsNotRouted(String path) {
         assertStatus(httpClient.toBlocking(), HttpRequest.GET(path).bearerAuth(ADMIN_TOKEN), HttpStatus.NOT_FOUND);
     }
 
