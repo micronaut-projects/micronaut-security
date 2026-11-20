@@ -114,8 +114,8 @@ public class NonceClaimValidator {
      * flows.</p>
      *
      * @param claims ID Token Claims
-     * @param clientConfiguration OAuth 2.0 Client Configuration
-     * @param providerMetadata OpenID Connect provider metadata
+     * @param clientConfiguration OAuth 2.0 Client Configuration. Not used by this implementation; available to subclasses.
+     * @param providerMetadata OpenID Connect provider metadata. Not used by this implementation; available to subclasses.
      * @return Whether the JWT Claims pass validation or not.
      * @since 5.6.0
      */
