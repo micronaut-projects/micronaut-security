@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * Utility methods to add a prefix, such as {@code Bearer}, to an HTTP header value or remove it.
  *
  * @author Sergio del Amo
- * @since 5.5.3
+ * @since 5.6.0
  */
 @Internal
 public final class HeaderValuePrefixUtils {
