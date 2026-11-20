@@ -49,7 +49,6 @@ import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfiguration;
 import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfiguration;
 import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -104,7 +103,6 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
      * @param workerSrc configures {@code worker-src}
      */
     @SuppressWarnings("ParameterNumber")
-    @Inject
     ContentSecurityPolicyDirectiveConfigurations(BaseUriConfiguration baseUri,
                                                  DefaultSrcConfiguration defaultSrc,
                                                  ConnectSrcConfiguration connectSrc,
