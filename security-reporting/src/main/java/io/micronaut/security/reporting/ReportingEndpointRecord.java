@@ -24,12 +24,24 @@ import java.net.URI;
  * <p>This record is convenient for {@link ReportingEndpointProvider} implementations that create
  * endpoints dynamically.</p>
  *
- * @param name endpoint name referenced by reporting policies
- * @param url absolute or relative endpoint URI
+ * @param name endpoint name referenced by reporting policies; must be a Structured Fields
+ * dictionary key matching {@code [a-z*][a-z0-9_\-.*]*}
+ * @param url absolute or relative endpoint URI; must not be empty
  * @since 5.4.0
  */
 @Introspected
 record ReportingEndpointRecord(String name, URI url) implements ReportingEndpoint {
+    /**
+     * Validates the endpoint name and URL.
+     *
+     * @throws IllegalArgumentException when the name is not a valid Structured Fields
+     * dictionary key (RFC 8941), because such a name would make user agents discard the
+     * whole {@code Reporting-Endpoints} header, or when the URL is missing or empty
+     */
+    ReportingEndpointRecord {
+        ReportingEndpointUtils.require(name, url);
+    }
+
     @Override
     public String getName() {
         return name;
