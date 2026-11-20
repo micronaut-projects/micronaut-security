@@ -28,7 +28,8 @@ class ContextPathSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.server.context-path': 'foo',
-                'micronaut.security.authentication': 'session'
+                'micronaut.security.authentication': 'session',
+                'micronaut.security.reject-not-found': true
         ]
     }
 
@@ -43,7 +44,9 @@ class ContextPathSpec extends EmbeddedServerSpecification {
         when:
         client.retrieve('/')
 
-        then: 'nothing is served outside the context path; since Micronaut Core 5.2.23 the security filter also sees such a request and rejects it as an unmatched route (reject-not-found)'
+        // Since Micronaut Core 5.2.23 the security filter also sees requests outside the context path,
+        // so reject-not-found rejects the unmatched route instead of the router answering 404.
+        then: 'nothing is served outside the context path'
         HttpClientResponseException e = thrown()
         HttpStatus.UNAUTHORIZED == e.status
 

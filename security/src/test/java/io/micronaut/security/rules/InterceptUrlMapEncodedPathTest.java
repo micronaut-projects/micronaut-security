@@ -50,8 +50,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Fixed-depth intercept URL map patterns must be evaluated against the path the router sees,
- * so an encoded slash or a blank path variable cannot skip a role-restricted entry.
+ * Fixed-depth intercept URL map patterns must be evaluated against the raw request path, with an encoded slash
+ * kept inside its segment, so an encoded slash or a blank path variable cannot skip a role-restricted entry.
  */
 @Property(name = "micronaut.security.reject-not-found", value = StringUtils.FALSE)
 @Property(name = "spec.name", value = "InterceptUrlMapEncodedPathTest")
