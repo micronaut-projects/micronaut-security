@@ -36,6 +36,12 @@ import org.slf4j.LoggerFactory;
  * nonce must be present at callback time and must match the {@code nonce} claim of the ID token; a missing persisted
  * nonce is treated as a validation failure, even if the ID token does not carry a {@code nonce} claim either.</p>
  *
+ * <p>This assumes that the authorization request carries the nonce built by the {@link NonceFactory} bean and that the
+ * nonce is persisted with the {@link io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence} bean.
+ * An application with a custom authorization request or redirect handler which omits the nonce, or with a custom
+ * {@link NonceFactory} which does not persist the nonce with {@code NoncePersistence}, must disable nonce support
+ * ({@code micronaut.security.oauth2.openid.nonce.enabled: false}); otherwise every login fails.</p>
+ *
  * <p>When no {@link NonceFactory} bean is present (for example, {@code micronaut.security.oauth2.openid.nonce.enabled}
  * is {@code false}) the authorization request does not carry a nonce, so validation passes only when neither a
  * persisted nonce nor a {@code nonce} claim exists.</p>
