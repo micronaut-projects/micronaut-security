@@ -1,8 +1,6 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.scheduling.TaskExecutors;
@@ -22,13 +20,14 @@ import org.junit.jupiter.api.Test;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+import static io.micronaut.security.ldap.LdapTestSupport.MANAGER_DN;
+import static io.micronaut.security.ldap.LdapTestSupport.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -42,7 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class LdapUsernameEnumerationTest {
 
-    private static final String MANAGER_DN = "cn=admin,dc=example,dc=com";
     private static final String EXISTING_USER = "euclid";
     private static final String UNKNOWN_USER = "nobody-in-this-directory";
     private static final String DECOY_DN = "cn=decoy,dc=example,dc=com";
@@ -53,32 +51,21 @@ class LdapUsernameEnumerationTest {
 
     @BeforeAll
     static void setup() throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials(MANAGER_DN, "password");
-        server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapUsernameEnumerationTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
+        server = LdapTestSupport.startServer("basic.ldif");
         // a real decoy entry whose password no client is expected to submit; it has no uid, so the user search filter never matches it
         server.add("dn: " + DECOY_DN,
                 "objectclass: inetOrgPerson",
                 "cn: decoy",
                 "sn: decoy",
                 "userPassword: " + DECOY_PASSWORD);
-        server.startListening();
         context = ApplicationContext.run(properties(), "test");
     }
 
     private static Map<String, Object> properties() {
-        return Map.of(
-                "micronaut.security.ldap.default.enabled", true,
-                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-                "micronaut.security.ldap.default.context.managerDn", MANAGER_DN,
-                "micronaut.security.ldap.default.context.managerPassword", "password",
-                "micronaut.security.ldap.default.search.base", "dc=example,dc=com",
+        return LdapTestSupport.properties(server, Map.of(
                 "micronaut.security.ldap.default.groups.enabled", true,
                 "micronaut.security.ldap.default.groups.base", "dc=example,dc=com"
-        );
+        ));
     }
 
     private static Map<String, Object> propertiesWithDecoyDn(String decoyDn) {
@@ -253,20 +240,6 @@ class LdapUsernameEnumerationTest {
                 context.getBean(ContextAuthenticationMapper.class),
                 context.getBean(LdapGroupProcessor.class),
                 context.getBean(ExecutorService.class, Qualifiers.byName(TaskExecutors.IO)));
-    }
-
-    private static AuthenticationRequest<String, String> request(String username, String password) {
-        return new AuthenticationRequest<>() {
-            @Override
-            public String getIdentity() {
-                return username;
-            }
-
-            @Override
-            public String getSecret() {
-                return password;
-            }
-        };
     }
 
     private static class RecordingContextBuilder implements ContextBuilder {
