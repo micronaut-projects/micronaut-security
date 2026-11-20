@@ -126,6 +126,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * quote, semicolon or space, would corrupt or extend the serialized policy.
      */
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
+    private static final String QUOTED_UNSAFE_INLINE = SINGLE_QUOTE + UNSAFE_INLINE + SINGLE_QUOTE;
     /**
      * The configuration behind each directive that is built from a {@link DirectiveConfiguration}.
      * It is the only place that pairs a directive name with its configuration: both the startup
@@ -672,7 +673,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * <p>Expressions are emitted in this order: the request nonce, keyword sources in
      * {@link #KEYWORD_SOURCES} order, scheme sources, and finally the configured values.
-     * {@code 'none'} is emitted only when no other expression, including a nonce, is enabled.</p>
+     * {@code 'none'} is emitted only when no other expression, including a nonce, is enabled.
+     * When a directive that takes a nonce gets no valid nonce, it is written without
+     * {@code 'unsafe-inline'}, and as {@code 'none'} when nothing else remains.</p>
      *
      * @param name the CSP directive name
      * @param config configuration that supplies the directive values
@@ -701,15 +704,21 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             }
         }
         String sources = values.isEmpty() ? null : String.join(SPACE, values);
+        boolean nonce = config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
         ContentSecurityPolicyDirective withoutNonce;
-        if (sources != null) {
+        if (nonce) {
+            // Fail closed: a response that should carry a nonce but has none must not fall back to
+            // 'unsafe-inline', which browsers ignore only next to a nonce, nor omit the directive.
+            List<String> strict = new ArrayList<>(values);
+            strict.removeIf(QUOTED_UNSAFE_INLINE::equalsIgnoreCase);
+            withoutNonce = new ContentSecurityPolicyDirective(name, strict.isEmpty() ? QUOTED_NONE : String.join(SPACE, strict));
+        } else if (sources != null) {
             withoutNonce = new ContentSecurityPolicyDirective(name, sources);
         } else if (config.isNone()) {
             withoutNonce = new ContentSecurityPolicyDirective(name, QUOTED_NONE);
         } else {
             withoutNonce = null;
         }
-        boolean nonce = config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
         return new CachedDirective(nonce, sources, withoutNonce);
     }
 
@@ -718,7 +727,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * @param nonce whether the request nonce is added to the directive
      * @param sources the configured source expressions, or {@code null} when there are none
-     * @param withoutNonce the directive to write when no valid nonce is added, or {@code null} to omit it
+     * @param withoutNonce the directive to write when no valid nonce is added, or {@code null} to omit it.
+     * For a directive that takes a nonce, it never contains {@code 'unsafe-inline'} and is never omitted.
      */
     private record CachedDirective(boolean nonce, @Nullable String sources, @Nullable ContentSecurityPolicyDirective withoutNonce) {
         private static final CachedDirective DISABLED = new CachedDirective(false, null, null);

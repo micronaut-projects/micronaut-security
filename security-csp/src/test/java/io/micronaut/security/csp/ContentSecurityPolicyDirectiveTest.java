@@ -16,11 +16,14 @@
 package io.micronaut.security.csp;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ContentSecurityPolicyDirectiveTest {
@@ -81,5 +84,26 @@ class ContentSecurityPolicyDirectiveTest {
         assertEquals("script-src 'NONCE-abc123' 'self'  https://cdn.example.com", directive.toHeaderValue());
         assertEquals("script-src 'nonce-[redacted]' 'self' https://cdn.example.com", directive.toString());
         assertEquals("sandbox", new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SANDBOX, null).toString());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"script-src; report-uri", "script src", "script-src,", ""})
+    void rejectsANameThatIsNotADirectiveName(String name) {
+        assertThrows(IllegalArgumentException.class, () -> new ContentSecurityPolicyDirective(name, "'self'"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"'self'; report-uri https://attacker.example", "'self'\r\nX-Injected: 1", "'self'\u0000"})
+    void rejectsAValueThatWouldEndTheDirectiveOrTheHeader(String value) {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, value));
+
+        assertTrue(exception.getMessage().contains("script-src"), exception::getMessage);
+    }
+
+    @Test
+    void acceptsATabAndAComma() {
+        assertEquals(List.of("'self'", "https://a.example.com,"),
+            new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'\thttps://a.example.com,").values());
     }
 }

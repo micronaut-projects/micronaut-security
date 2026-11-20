@@ -20,6 +20,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SELF;
@@ -28,8 +29,11 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SE
  * A directive in a Content Security Policy.
  *
  * <p>Values are stored in their header representation. Use {@link #values()} to obtain the
- * individual whitespace-separated CSP tokens. This type does not validate directive names or
- * source expressions; validation remains the responsibility of the browser applying the policy.</p>
+ * individual whitespace-separated CSP tokens. The name must be a directive name, and the value must
+ * not contain a semicolon or a control character other than a tab, so that a directive cannot end
+ * itself or the header and add directives. Otherwise, source expressions are written verbatim: a
+ * value built from request or tenant data can still add source expressions with a space, or a
+ * second policy with a comma, so validate such data before passing it.</p>
  *
  * @param name the directive name
  * @param value the directive value, or {@code null} for directives without a value
@@ -38,6 +42,26 @@ import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.QUOTED_SE
 public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
     private static final String QUOTED_NONCE_PREFIX = "'nonce-";
     private static final String REDACTED_NONCE = QUOTED_NONCE_PREFIX + "[redacted]'";
+    private static final Pattern NAME = Pattern.compile("[A-Za-z0-9-]+");
+    private static final Pattern UNSAFE_VALUE_CHARACTERS = Pattern.compile("[;\\x00-\\x08\\x0A-\\x1F\\x7F]");
+
+    /**
+     * Creates a directive.
+     *
+     * @param name the directive name, made of letters, digits and hyphens
+     * @param value the directive value, or {@code null} for directives without a value
+     * @throws IllegalArgumentException if the name is not a directive name, or the value contains a
+     * semicolon or a control character other than a tab
+     */
+    public ContentSecurityPolicyDirective {
+        if (!NAME.matcher(name).matches()) {
+            throw new IllegalArgumentException("A Content Security Policy directive name must consist of letters, digits and hyphens");
+        }
+        if (value != null && UNSAFE_VALUE_CHARACTERS.matcher(value).find()) {
+            throw new IllegalArgumentException("The value of the Content Security Policy directive " + name
+                + " must not contain a semicolon or a control character, which would end the directive or the header");
+        }
+    }
 
     /**
      * Serializes this directive as it appears in a CSP header value.

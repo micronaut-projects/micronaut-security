@@ -54,6 +54,8 @@ micronaut:
         pattern: /app/**
 ----
 
+WARNING: Responses to requests outside the pattern receive no policy at all, including `frame-ancestors`, `base-uri` and `form-action`. That includes HTML error pages, such as a custom 404 view, for URLs outside the pattern, and any HTML served elsewhere, such as login pages or static HTML. Narrow the pattern only when every HTML response of the application is inside it; otherwise keep `/**` and accept the header on API responses.
+
 Set `micronaut.security.csp.filter.enabled` to `false` to stop writing the header and generating nonces while keeping the module's other beans, such as the report controller. Set `micronaut.security.csp.enabled` to `false` to disable the whole module.
 
 include::{includedir}configurationProperties/io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.adoc[]

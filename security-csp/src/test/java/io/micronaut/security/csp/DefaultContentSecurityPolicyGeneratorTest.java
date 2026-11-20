@@ -184,6 +184,39 @@ class DefaultContentSecurityPolicyGeneratorTest {
     }
 
     @Test
+    void doesNotFallBackToUnsafeInlineWhenTheNonceIsMissingOrInvalid() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        scriptSrcConfiguration.setUnsafeInline(true);
+        scriptSrcConfiguration.setSelf(true);
+        scriptSrcConfiguration.setValues(List.of("'UNSAFE-INLINE'"));
+
+        for (String nonce : new String[] {null, "", "not a nonce"}) {
+            ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+                currentRequest -> nonce, scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+            assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'self'"),
+                policy(generator).scriptSrc(), () -> "nonce " + nonce);
+        }
+        ContentSecurityPolicyGenerator withNonce = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> "abc", scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'nonce-abc' 'self' 'unsafe-inline' 'UNSAFE-INLINE'"),
+            policy(withNonce).scriptSrc(), "next to a nonce, 'unsafe-inline' is kept for browsers without nonce support");
+    }
+
+    @Test
+    void writesNoneInsteadOfOmittingANonceDirectiveWithoutOtherSources() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        scriptSrcConfiguration.setUnsafeInline(true);
+        scriptSrcConfiguration.setNone(false);
+        ContentSecurityPolicyGenerator generator = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> null, scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+
+        assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.SCRIPT_SRC, "'none'"), policy(generator).scriptSrc(),
+            "an omitted script-src would fall back to default-src");
+    }
+
+    @Test
     void emitsKeywordSourcesEnabledByACustomDirectiveConfiguration() {
         ConnectSrcConfiguration connectSrcConfiguration = new ConnectSrcConfiguration() {
             @Override

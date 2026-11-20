@@ -56,6 +56,7 @@ import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyRe
 import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader.MAX_USER_AGENT_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -138,6 +139,8 @@ class ContentSecurityPolicyReportBodyReaderTest {
             Arguments.of("statusCode 0", batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "0"))))),
             Arguments.of("statusCode 65535", batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "65535"))))),
             Arguments.of("lineNumber and columnNumber 0", batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "0", "columnNumber", "0"))))),
+            Arguments.of("lineNumber and columnNumber 4294967295",
+                batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "4294967295", "columnNumber", "4294967295"))))),
             Arguments.of("age 0", batch(envelope(Map.of("age", "0"), VIOLATION, violationBody(Map.of())))),
             Arguments.of("url of " + MAX_URL_LENGTH + " characters", batch(envelope(Map.of("url", text(MAX_URL_LENGTH)), VIOLATION, violationBody(Map.of())))),
             Arguments.of("user_agent of " + MAX_USER_AGENT_LENGTH + " characters",
@@ -179,8 +182,10 @@ class ContentSecurityPolicyReportBodyReaderTest {
             Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(withoutField("statusCode"))))),
             Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "-1"))))),
             Arguments.of(invalidStatusCode(), batch(envelope(VIOLATION, violationBody(Map.of("statusCode", "65536"))))),
-            Arguments.of(negativePosition(), batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "-1"))))),
-            Arguments.of(negativePosition(), batch(envelope(VIOLATION, violationBody(Map.of("columnNumber", "-1"))))),
+            Arguments.of(positionOutOfRange(), batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "-1"))))),
+            Arguments.of(positionOutOfRange(), batch(envelope(VIOLATION, violationBody(Map.of("columnNumber", "-1"))))),
+            Arguments.of(positionOutOfRange(), batch(envelope(VIOLATION, violationBody(Map.of("lineNumber", "4294967296"))))),
+            Arguments.of(positionOutOfRange(), batch(envelope(VIOLATION, violationBody(Map.of("columnNumber", "9223372036854775807"))))),
             Arguments.of(requires("hash"), batch(envelope(HASH, hashBody(Map.of("hash", text(" ")))))),
             Arguments.of(tooLong("url", MAX_URL_LENGTH), batch(envelope(Map.of("url", text(MAX_URL_LENGTH + 1)), VIOLATION, violationBody(Map.of())))),
             Arguments.of(tooLong("user_agent", MAX_USER_AGENT_LENGTH),
@@ -206,7 +211,8 @@ class ContentSecurityPolicyReportBodyReaderTest {
     void rejectsABodyThatIsNotJson() {
         CodecException exception = assertThrows(CodecException.class, () -> read("not json"));
 
-        assertTrue(exception.getMessage().startsWith("Error decoding Reporting API request body: "), exception::getMessage);
+        assertEquals("The body is not a valid Reporting API batch", exception.getMessage(), "the decoder's message names internal types");
+        assertNotNull(exception.getCause());
     }
 
     @Test
@@ -303,8 +309,8 @@ class ContentSecurityPolicyReportBodyReaderTest {
         return "A Content Security Policy violation report requires a valid statusCode";
     }
 
-    private static String negativePosition() {
-        return "A Content Security Policy violation report must not have negative line or column numbers";
+    private static String positionOutOfRange() {
+        return "A Content Security Policy violation report requires line and column numbers between 0 and 4294967295";
     }
 
     /**

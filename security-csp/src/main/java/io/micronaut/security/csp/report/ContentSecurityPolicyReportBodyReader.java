@@ -69,6 +69,15 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     private static final String BODY_TOO_LARGE = "A Reporting API batch must not be larger than " + MAX_BODY_BYTES + " bytes";
     private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
     private static final int MAX_STATUS_CODE = 65_535;
+    /**
+     * The largest line or column number, the range of the {@code unsigned long} the Reporting API uses.
+     */
+    private static final long MAX_POSITION = 4_294_967_295L;
+    /**
+     * The message of a body that cannot be decoded. It does not repeat the decoder's message, which
+     * names internal types, in the response of this anonymous endpoint.
+     */
+    private static final String INVALID_BODY = "The body is not a valid Reporting API batch";
     private static final long WARNING_INTERVAL_NANOS = TimeUnit.MINUTES.toNanos(1);
     private final JsonMapper jsonMapper;
     private final LongSupplier nanoTime;
@@ -107,7 +116,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
                 throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE, e));
             }
             throw rejected(null, "the body is not a JSON array of Reporting API reports",
-                new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
+                new CodecException(INVALID_BODY, e));
         }
         if (serializedReports == null) {
             return null;
@@ -128,7 +137,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             throw rejected(serializedReports.size(), e.getMessage(), e);
         } catch (IOException e) {
             throw rejected(serializedReports.size(), "a report body could not be decoded",
-                new CodecException("Error decoding Reporting API request body: " + e.getMessage(), e));
+                new CodecException(INVALID_BODY, e));
         }
     }
 
@@ -273,8 +282,8 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         if (body.statusCode() == null || body.statusCode() < 0 || body.statusCode() > MAX_STATUS_CODE) {
             throw new CodecException("A Content Security Policy violation report requires a valid statusCode");
         }
-        if ((body.lineNumber() != null && body.lineNumber() < 0) || (body.columnNumber() != null && body.columnNumber() < 0)) {
-            throw new CodecException("A Content Security Policy violation report must not have negative line or column numbers");
+        if (outOfRange(body.lineNumber()) || outOfRange(body.columnNumber())) {
+            throw new CodecException("A Content Security Policy violation report requires line and column numbers between 0 and " + MAX_POSITION);
         }
     }
 
@@ -284,6 +293,10 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         requireText("hash", body.hash(), MAX_TOKEN_LENGTH);
         requireLength("destination", body.destination(), MAX_TOKEN_LENGTH);
         requireLength("type", body.type(), MAX_TOKEN_LENGTH);
+    }
+
+    private static boolean outOfRange(@Nullable Long position) {
+        return position != null && (position < 0 || position > MAX_POSITION);
     }
 
     private static void requireText(String field, @Nullable String value, int maxLength) {

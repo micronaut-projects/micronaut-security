@@ -24,7 +24,7 @@ Use the value as the `nonce` attribute of every trusted inline script that the p
 </script>
 ----
 
-A nonce is generated for every request that matches `micronaut.security.csp.filter.pattern`, including JSON and static-asset responses. Because the nonce changes on every response, HTTP/2 header compression cannot reuse the CSP header. When the same server also serves APIs or assets, narrow `filter.pattern` to the routes that render HTML.
+A nonce is generated for every request that matches `micronaut.security.csp.filter.pattern`, including JSON and static-asset responses. Because the nonce changes on every response, HTTP/2 header compression cannot reuse the CSP header. When the same server also serves APIs or assets, narrow `filter.pattern` to the routes that render HTML, but read <<cspConfiguringDirectives,what loses the policy>> first: responses outside the pattern, HTML error pages included, receive no CSP header.
 
 Do not let shared caches or CDNs store HTML that carries a nonce: a cached page replays the same nonce to every visitor. For that reason the module writes `Cache-Control: private` on `text/html` and `application/xhtml+xml` responses to requests that received a nonce, including HTML error pages. Other responses, such as JSON, scripts, stylesheets and images, cannot carry the nonce and keep their caching. A `Cache-Control` header that the application sets itself is kept, even `public`, so an application that sets its own header on a page that carries a nonce must keep that page out of shared caches.
 
@@ -58,4 +58,4 @@ Nonces work the same way for inline styles: set `micronaut.security.csp.style-sr
 
 The nonce in the HTML element must exactly match the value in the `script-src 'nonce-<value>'` response directive. Never reuse a nonce across requests and never place untrusted content inside a nonce-authorized element.
 
-Without nonce support or another permitted script source, the generated directive remains `script-src 'none'`.
+Without nonce support or another permitted script source, the generated directive remains `script-src 'none'`. When nonces are enabled but a response has no valid nonce, for example because a filter that runs before the module's nonce filter returned the response, the directive is written without the nonce and without `'unsafe-inline'`, and as `'none'` when no other source remains. It is never omitted, so it cannot fall back to `default-src`.
