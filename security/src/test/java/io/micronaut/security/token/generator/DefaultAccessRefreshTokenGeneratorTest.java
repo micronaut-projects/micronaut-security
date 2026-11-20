@@ -79,9 +79,9 @@ class DefaultAccessRefreshTokenGeneratorTest {
         assertEquals(1, appender.list.size(), "exactly one log event is written for the failure");
         ILoggingEvent event = appender.list.get(0);
         assertEquals(Level.DEBUG, event.getLevel(), "the failure is logged at DEBUG");
-        assertEquals("tokenGenerator failed to generate access token for claims: [sub, email, nickname]",
+        assertEquals("Failed to generate access token for claims [sub, email, nickname] using " + FailingTokenGenerator.class.getName(),
                 event.getFormattedMessage(),
-                "the failure log names the claims and contains none of their values");
+                "the failure log names the claims and the token generator and contains none of the claim values");
     }
 
     @Test
