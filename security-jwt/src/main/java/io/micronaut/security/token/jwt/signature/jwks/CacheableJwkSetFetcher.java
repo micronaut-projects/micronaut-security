@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 
 /**
@@ -59,5 +60,16 @@ class CacheableJwkSetFetcher extends DefaultJwkSetFetcher {
     @CacheInvalidate(all = true)
     public void clearCache(@NonNull String url) {
         super.clearCache(url);
+    }
+
+    /**
+     * Clears the {@value #CACHE_JWKS} cache entry for the given provider name and url. The failure back-off is kept.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
+    @Override
+    @CacheInvalidate
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        super.clearCache(providerName, url);
     }
 }

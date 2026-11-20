@@ -33,15 +33,21 @@ import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwksClient;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import javax.lang.model.element.Modifier;
+import java.net.URI;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -55,6 +61,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
      * AOT Module ID.
      */
     public static final String SECURITY_AOT_JWKS_MODULE_ID = "micronaut.security.jwks";
+    private static final Logger LOG = LoggerFactory.getLogger(JwksFetcherCodeGenerator.class);
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, JWKSet.class);
 
     @Override
@@ -68,7 +75,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
             context.registerStaticOptimization("AotJwksFetcher", DefaultJwkSetFetcher.Optimizations.class, body -> {
                 body.addStatement("$T configs = new $T()",
                         ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
-                        ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
+                        ParameterizedTypeName.get(ClassName.get(ConcurrentHashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
                 );
                 for (GeneratedFile generatedFile : files) {
                     context.registerGeneratedSourceFile(generatedFile.getJavaFile());
@@ -79,30 +86,82 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
         }
     }
 
+    /**
+     * Collects the JWKS URLs to bake at build time, keyed by URL.
+     * <p>
+     * The runtime optimisation ({@link DefaultJwkSetFetcher.Optimizations}) is looked up by URL, not by name.
+     * Keying by URL ensures that a {@link JwksSignatureConfiguration} and an {@link OpenIdProviderMetadata}
+     * sharing the same name but pointing at different URLs are both baked, while several sources sharing
+     * one URL are baked only once.
+     *
+     * @param context The AOT context
+     * @return A map of JWKS URL to the names of the sources that declared it, both in discovery order
+     */
     @NonNull
-    private Map<String, String> jwksUrls(@NonNull AOTContext context) {
-        Map<String, String> urls = new HashMap<>();
-        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context)
-            .forEach(config -> urls.put(config.getName(), config.getUrl()));
+    private Map<String, Set<String>> jwksUrls(@NonNull AOTContext context) {
+        Map<String, Set<String>> urls = new LinkedHashMap<>();
+        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context).stream()
+            .filter(config -> StringUtils.isNotEmpty(config.getUrl()))
+            .forEach(config -> urls.computeIfAbsent(config.getUrl(), url -> new LinkedHashSet<>()).add(config.getName()));
         AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
-            .filter(metadata -> metadata.getJwksUri() != null)
-            .forEach(metadata -> urls.put(metadata.getName(), metadata.getJwksUri()));
+            .filter(metadata -> StringUtils.isNotEmpty(metadata.getJwksUri()))
+            .forEach(metadata -> urls.computeIfAbsent(metadata.getJwksUri(), url -> new LinkedHashSet<>()).add(metadata.getName()));
         return urls;
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
-        Map<String, String> urls = jwksUrls(context);
+        Map<String, Set<String>> urls = jwksUrls(context);
         JwksClient jwksClient = AOTContextUtils.getBean(JwksClient.class, context);
         List<GeneratedFile> result = new ArrayList<>();
-        int count = 0;
-        for (Map.Entry<String, String> entry: urls.entrySet()) {
-            Optional<GeneratedFile> generatedFile = generatedFile(context, jwksClient, entry.getKey(), entry.getValue(), count);
-            if (generatedFile.isPresent()) {
-                result.add(generatedFile.get());
-                count++;
+        for (Map.Entry<String, Set<String>> entry: urls.entrySet()) {
+            String url = entry.getKey();
+            Set<String> providerNames = entry.getValue();
+            if (isAmbiguous(url, providerNames)) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("JWKS of the relative url {} is not fetched at build time: it is declared by {} and each of them may resolve it against a different HTTP service", url, providerNames);
+                }
+                continue;
             }
+            generatedFile(context, jwksClient, providerNames, url, result.size())
+                .ifPresent(result::add);
         }
         return result;
+    }
+
+    /**
+     * A relative URL is resolved against the HTTP service named after the source, so the same relative URL declared
+     * by several sources may designate several JWKS. As the runtime optimisation is looked up by URL alone, baking
+     * one of them would hand the keys of one issuer to the validators of another.
+     */
+    private static boolean isAmbiguous(@NonNull String url, @NonNull Set<String> providerNames) {
+        return providerNames.size() > 1 && isRelative(url);
+    }
+
+    private static boolean isRelative(@NonNull String url) {
+        try {
+            return !URI.create(url).isAbsolute();
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    /**
+     * The provider name selects the HTTP client settings used to reach the URL, so a source whose client cannot
+     * retrieve the JWKS must not prevent another source sharing the URL from baking it: the JWKS of the first
+     * source able to retrieve it is baked.
+     */
+    private Optional<GeneratedFile> generatedFile(AOTContext aotContext,
+                                        JwksClient jwksClient,
+                                        Set<String> providerNames,
+                                        String url,
+                                        int count) {
+        for (String providerName : providerNames) {
+            Optional<GeneratedFile> generatedFile = generatedFile(aotContext, jwksClient, providerName, url, count);
+            if (generatedFile.isPresent()) {
+                return generatedFile;
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<GeneratedFile> generatedFile(AOTContext aotContext,

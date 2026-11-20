@@ -32,6 +32,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.LongSupplier;
@@ -54,6 +55,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     private static final long MAX_BACKOFF_NANOS = Long.MAX_VALUE / 2;
 
     private final JwksClient jwksClient;
+    private final Optimizations optimizations;
     private final Duration failureBackoff;
     private final long failureBackoffNanos;
     @Nullable
@@ -77,6 +79,15 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     /**
      * @param jwksClient JWKS Client
+     * @param optimizations AOT optimizations used as an initial seed for the JWKS of each url.
+     * @since 5.4.0
+     */
+    protected DefaultJwkSetFetcher(JwksClient jwksClient, Optimizations optimizations) {
+        this(jwksClient, new JwksClientConfigurationProperties(), System::nanoTime, optimizations);
+    }
+
+    /**
+     * @param jwksClient JWKS Client
      * @param jwksClientConfiguration JWKS Client Configuration
      * @since 5.5.2
      */
@@ -92,7 +103,12 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
      * @param nanoTime Monotonic clock in nanoseconds, see {@link System#nanoTime()}
      */
     DefaultJwkSetFetcher(JwksClient jwksClient, JwksClientConfiguration jwksClientConfiguration, LongSupplier nanoTime) {
+        this(jwksClient, jwksClientConfiguration, nanoTime, OPTIMIZATIONS);
+    }
+
+    private DefaultJwkSetFetcher(JwksClient jwksClient, JwksClientConfiguration jwksClientConfiguration, LongSupplier nanoTime, Optimizations optimizations) {
         this.jwksClient = jwksClient;
+        this.optimizations = optimizations;
         this.failureBackoff = jwksClientConfiguration.getFailureBackoff();
         this.failureBackoffNanos = toNanosSaturated(failureBackoff);
         Duration timeout = jwksClientConfiguration.getRetrievalTimeout();
@@ -107,7 +123,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
         if (url == null) {
             return Mono.empty();
         }
-        Optional<Publisher<JWKSet>> optionalJWKSetPublisher = OPTIMIZATIONS.findJwkSet(url)
+        Optional<Publisher<JWKSet>> optionalJWKSetPublisher = optimizations.findJwkSet(url)
                 .map(Supplier::get)
                 .map(Mono::just);
         return optionalJWKSetPublisher.orElseGet(() -> load(providerName, url));
@@ -115,12 +131,27 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     /**
      * Clears the cache for the given url, including the failure back-off of every provider using it, so that the JWK Set is requested again on the next fetch.
+     * If a JWKS was baked at build time for the url, it is discarded and the next call to {@link #fetch(String, String)} loads the JWKS over the network.
      * @param url The Jwks uri
      */
     @Override
     public void clearCache(@NonNull String url) {
-        OPTIMIZATIONS.clear(url);
+        optimizations.clear(url);
         failures.keySet().removeIf(key -> url.equals(key.url()));
+    }
+
+    /**
+     * Clears the cache for the given provider name and url. If a JWKS was baked at build time for the url, it is discarded and the next call to {@link #fetch(String, String)} loads the JWKS over the network.
+     * <p>
+     * Unlike {@link #clearCache(String)}, the failure back-off is kept: this method is invoked when a token carries an unknown key ID,
+     * and a token must not be able to make a failing JWKS endpoint be requested again before the back-off elapses.
+     * </p>
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     */
+    @Override
+    public void clearCache(@Nullable String providerName, @NonNull String url) {
+        optimizations.clear(url);
     }
 
     /**
@@ -231,10 +262,12 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     }
 
     /**
-     * AOT Optimizations.
+     * AOT Optimizations. The JWKS baked at build time is only an initial seed: once {@link #clear(String)} is invoked for a url,
+     * {@link #findJwkSet(String)} returns an empty optional for that url and the JWKS is fetched over the network.
      */
     public static class Optimizations {
         private final Map<String, Supplier<JWKSet>> suppliers;
+        private final Set<String> consumed = ConcurrentHashMap.newKeySet();
 
         /**
          *
@@ -247,17 +280,23 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
         /**
          *
          * @param url Json Web Key Set Url
-         * @return a Json Web Key  supplier or an empty optional if not cached
+         * @return a Json Web Key  supplier or an empty optional if not cached or if the seed for the url was cleared
          */
         public Optional<Supplier<JWKSet>> findJwkSet(@NonNull String url) {
+            if (consumed.contains(url)) {
+                return Optional.empty();
+            }
             return Optional.ofNullable(suppliers.get(url));
         }
 
         /**
+         * Marks the build-time seed for the url as consumed so that subsequent calls to {@link #findJwkSet(String)} return an empty optional.
          * @param url Json Web Key Set Url
          */
         public void clear(@NonNull String url) {
-            suppliers.remove(url);
+            if (suppliers.containsKey(url)) {
+                consumed.add(url);
+            }
         }
     }
 }
