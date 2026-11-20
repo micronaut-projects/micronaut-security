@@ -4,6 +4,9 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Optional;
 
@@ -21,30 +24,28 @@ class ClientCredentialsHeaderTokenPropagatorTest {
         assertEquals(Optional.empty(), propagator.findToken(HttpRequest.GET("/")));
     }
 
-    @Test
-    void findTokenReadsWhatWriteTokenWrote() {
-        for (String prefix : new String[] {"Bearer", "Bearer "}) {
-            ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
-            MutableHttpRequest<?> request = HttpRequest.GET("/");
+    @ParameterizedTest
+    @ValueSource(strings = {"Bearer", "Bearer "})
+    void findTokenReadsWhatWriteTokenWrote(String prefix) {
+        ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
+        MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-            propagator.writeToken(request, "XXX");
+        propagator.writeToken(request, "XXX");
 
-            assertEquals("Bearer XXX", request.getHeaders().get("Authorization"));
-            assertEquals(Optional.of("XXX"), propagator.findToken(request));
-        }
+        assertEquals("Bearer XXX", request.getHeaders().get("Authorization"));
+        assertEquals(Optional.of("XXX"), propagator.findToken(request));
     }
 
-    @Test
-    void emptyPrefixWritesAndReadsTheTokenAlone() {
-        for (String prefix : new String[] {"", null}) {
-            ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
-            MutableHttpRequest<?> request = HttpRequest.GET("/");
+    @ParameterizedTest
+    @NullAndEmptySource
+    void emptyPrefixWritesAndReadsTheTokenAlone(String prefix) {
+        ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
+        MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-            propagator.writeToken(request, "XXX");
+        propagator.writeToken(request, "XXX");
 
-            assertEquals("XXX", request.getHeaders().get("Authorization"));
-            assertEquals(Optional.of("XXX"), propagator.findToken(request));
-        }
+        assertEquals("XXX", request.getHeaders().get("Authorization"));
+        assertEquals(Optional.of("XXX"), propagator.findToken(request));
     }
 
     private static ClientCredentialsHeaderTokenPropagator propagator(String prefix) {

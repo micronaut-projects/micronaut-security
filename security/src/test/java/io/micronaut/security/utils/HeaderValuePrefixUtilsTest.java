@@ -51,9 +51,9 @@ class HeaderValuePrefixUtilsTest {
     @Test
     void lookAlikeCharactersAreNotFoldedThroughUpperCase() {
         // long s and dotless i upper-case to S and I
-        assertNull(HeaderValuePrefixUtils.removePrefix("Baſıc x", "Basic"));
+        assertNull(HeaderValuePrefixUtils.removePrefix("Ba\u017F\u0131c x", "Basic"));
         // the Kelvin sign lower-cases to k
-        assertEquals("x", HeaderValuePrefixUtils.removePrefix("ToKen x", "Token"));
+        assertEquals("x", HeaderValuePrefixUtils.removePrefix("To\u212Aen x", "Token"));
     }
 
     @Test

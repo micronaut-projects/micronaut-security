@@ -39,6 +39,10 @@ import java.util.Optional;
 @Requires(condition = ClientCredentialsHeaderPropagatorEnabled.class)
 public class ClientCredentialsHeaderTokenPropagator implements ClientCredentialsTokenPropagator {
 
+    /**
+     * @deprecated Not used. The separator between the prefix and the token is added when the header value is built.
+     */
+    @Deprecated(forRemoval = true, since = "5.6.0")
     public static final String SPACE = " ";
     protected final ClientCredentialsHeaderTokenPropagatorConfiguration configuration;
 
