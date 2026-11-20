@@ -47,8 +47,9 @@ class LdapAuthenticationProviderExecutorTest {
     }
 
     @Test
-    void theFactoryCreatesOneProviderPerConfigurationWhichRunsOnTheBlockingExecutor() {
-        assertEquals(1, context.getBeansOfType(LdapAuthenticationProvider.class).size());
+    void onlyTheFactoryMethodWithoutAnExecutorServiceCreatesAProviderWhichRunsOnTheBlockingExecutor() {
+        assertEquals(1, context.getBeansOfType(LdapAuthenticationProvider.class).size(),
+                "One LDAP configuration must produce one provider: the deprecated factory method must not be a bean");
         assertEquals(TaskExecutors.BLOCKING, context.getBean(LdapAuthenticationProvider.class).getExecutorName());
     }
 
