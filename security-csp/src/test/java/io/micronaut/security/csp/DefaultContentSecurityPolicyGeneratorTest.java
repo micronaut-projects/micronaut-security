@@ -19,24 +19,11 @@ import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
-import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
-import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
-import io.micronaut.security.csp.conf.framesrc.FrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -281,12 +268,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new DefaultContentSecurityPolicyGenerator(
             new ContentSecurityPolicyConfigurationProperties(), currentRequest -> null,
-            new BaseUriConfigurationProperties(), new DefaultSrcConfigurationProperties(), new ConnectSrcConfigurationProperties(),
-            new FencedFrameSrcConfigurationProperties(), new FontSrcConfigurationProperties(), new ObjectSrcConfigurationProperties(),
-            new PrefetchSrcConfigurationProperties(), reportTo, new ScriptSrcConfigurationProperties(),
-            new FrameAncestorsConfigurationProperties(), new FrameSrcConfigurationProperties(), new ImgSrcConfigurationProperties(),
-            new ManifestSrcConfigurationProperties(), new MediaSrcConfigurationProperties(), new FormActionConfigurationProperties(),
-            new StyleSrcConfigurationProperties(), new WorkerSrcConfigurationProperties()));
+            ContentSecurityPolicyDirectiveConfigurations.builder().reportTo(reportTo).build()));
 
         assertTrue(exception.getMessage().startsWith("micronaut.security.csp.report-to.group must match"));
     }
@@ -324,22 +306,9 @@ class DefaultContentSecurityPolicyGeneratorTest {
                                                             ConnectSrcConfiguration connectSrcConfiguration) {
         return new DefaultContentSecurityPolicyGenerator(configuration,
             nonceProvider,
-            new BaseUriConfigurationProperties(),
-            new DefaultSrcConfigurationProperties(),
-            connectSrcConfiguration,
-            new FencedFrameSrcConfigurationProperties(),
-            new FontSrcConfigurationProperties(),
-            new ObjectSrcConfigurationProperties(),
-            new PrefetchSrcConfigurationProperties(),
-            new ReportToConfigurationProperties(),
-            scriptSrcConfiguration,
-            new FrameAncestorsConfigurationProperties(),
-            new FrameSrcConfigurationProperties(),
-            new ImgSrcConfigurationProperties(),
-            new ManifestSrcConfigurationProperties(),
-            new MediaSrcConfigurationProperties(),
-            new FormActionConfigurationProperties(),
-            new StyleSrcConfigurationProperties(),
-            new WorkerSrcConfigurationProperties());
+            ContentSecurityPolicyDirectiveConfigurations.builder()
+                .scriptSrc(scriptSrcConfiguration)
+                .connectSrc(connectSrcConfiguration)
+                .build());
     }
 }

@@ -30,14 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ContentSecurityPolicyFilterTest {
+class ContentSecurityPolicyNonceFilterTest {
 
     @Test
     void generatesOneNonceForTheRequest() {
         CountingNonceGenerator nonceGenerator = new CountingNonceGenerator();
         MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-        new ContentSecurityPolicyFilter(nonceGenerator).generateNonce(request);
+        new ContentSecurityPolicyNonceFilter(nonceGenerator).generateNonce(request);
 
         assertEquals("nonce1", request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElseThrow());
         assertEquals(1, nonceGenerator.calls.get(), "directives share one nonce per request");
@@ -46,7 +46,7 @@ class ContentSecurityPolicyFilterTest {
     @Test
     void filterIsNotLoadedWhenNoDirectiveUsesNonces() {
         try (ApplicationContext context = ApplicationContext.run()) {
-            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+            assertFalse(context.containsBean(ContentSecurityPolicyNonceFilter.class));
         }
     }
 
@@ -54,7 +54,7 @@ class ContentSecurityPolicyFilterTest {
     @ValueSource(strings = {"micronaut.security.csp.script-src.nonce", "micronaut.security.csp.style-src.nonce"})
     void filterIsLoadedWhenAnEnabledDirectiveUsesNonces(String nonceProperty) {
         try (ApplicationContext context = ApplicationContext.run(Map.of(nonceProperty, true))) {
-            assertTrue(context.containsBean(ContentSecurityPolicyFilter.class));
+            assertTrue(context.containsBean(ContentSecurityPolicyNonceFilter.class));
         }
     }
 
@@ -63,7 +63,7 @@ class ContentSecurityPolicyFilterTest {
         try (ApplicationContext context = ApplicationContext.run(Map.of(
             "micronaut.security.csp.script-src.nonce", true,
             "micronaut.security.csp.script-src.enabled", false))) {
-            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+            assertFalse(context.containsBean(ContentSecurityPolicyNonceFilter.class));
         }
     }
 
@@ -72,7 +72,7 @@ class ContentSecurityPolicyFilterTest {
         try (ApplicationContext context = ApplicationContext.run(Map.of(
             "micronaut.security.csp.enabled", false,
             "micronaut.security.csp.script-src.nonce", true))) {
-            assertFalse(context.containsBean(ContentSecurityPolicyFilter.class));
+            assertFalse(context.containsBean(ContentSecurityPolicyNonceFilter.class));
         }
     }
 

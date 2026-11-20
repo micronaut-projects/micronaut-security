@@ -21,8 +21,6 @@ import io.micronaut.core.annotation.Internal;
 import java.util.Collections;
 import java.util.List;
 
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SCRIPT;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
 
 /**
  * Binds the {@code micronaut.security.csp} configuration namespace to the default CSP policy.
@@ -71,7 +69,7 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     /** Configuration prefix for the {@code worker-src} directive. */
     public static final String PROPERTY_WORKER_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src";
 
-    private static final String SCRIPT_VALUE = SINGLE_QUOTE + SCRIPT + SINGLE_QUOTE;
+    private static final String SCRIPT_VALUE = "'script'";
     private static final boolean DEFAULT_ENABLED = true;
     private static final boolean DEFAULT_REPORT_ONLY = false;
     private static final boolean DEFAULT_REPORT_URI_ENABLED = false;

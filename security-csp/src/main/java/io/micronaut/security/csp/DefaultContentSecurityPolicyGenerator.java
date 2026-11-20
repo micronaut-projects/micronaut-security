@@ -21,43 +21,10 @@ import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.NonceConfiguration;
-import io.micronaut.security.csp.conf.baseuri.BaseUriConfiguration;
-import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
-import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfiguration;
-import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfiguration;
-import io.micronaut.security.csp.conf.fontsrc.FontSrcConfiguration;
-import io.micronaut.security.csp.conf.formaction.FormActionConfiguration;
-import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfiguration;
-import io.micronaut.security.csp.conf.framesrc.FrameSrcConfiguration;
-import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration;
-import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfiguration;
-import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfiguration;
-import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfiguration;
-import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfiguration;
-import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
-import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
-import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
-import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
-import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
-import io.micronaut.security.csp.conf.framesrc.FrameSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
-import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
-import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfiguration;
-import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfiguration;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -137,23 +104,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         new KeywordSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
     );
     private final ContentSecurityPolicyConfiguration cspConfiguration;
-    private final BaseUriConfiguration baseUriConfiguration;
-    private final DefaultSrcConfiguration defaultSrcConfiguration;
-    private final ConnectSrcConfiguration connectSrcConfiguration;
-    private final FencedFrameSrcConfiguration fencedFrameSrcConfiguration;
-    private final FontSrcConfiguration fontSrcConfiguration;
-    private final ObjectSrcConfiguration objectSrcConfiguration;
-    private final PrefetchSrcConfiguration prefetchSrcConfiguration;
-    private final ReportToConfiguration reportToConfiguration;
-    private final ScriptSrcConfiguration scriptSrcConfiguration;
-    private final FrameAncestorsConfiguration frameAncestorsConfiguration;
-    private final FrameSrcConfiguration frameSrcConfiguration;
-    private final ImgSrcConfiguration imgSrcConfiguration;
-    private final ManifestSrcConfiguration manifestSrcConfiguration;
-    private final MediaSrcConfiguration mediaSrcConfiguration;
-    private final FormActionConfiguration formActionConfiguration;
-    private final StyleSrcConfiguration styleSrcConfiguration;
-    private final WorkerSrcConfiguration workerSrcConfiguration;
+    private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
 
@@ -167,90 +118,21 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param cspConfiguration root CSP configuration
      */
     DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
-        this(cspConfiguration,
-            DefaultContentSecurityPolicyGenerator::requestNonce,
-            new BaseUriConfigurationProperties(),
-            new DefaultSrcConfigurationProperties(),
-            new ConnectSrcConfigurationProperties(),
-            new FencedFrameSrcConfigurationProperties(),
-            new FontSrcConfigurationProperties(),
-            new ObjectSrcConfigurationProperties(),
-            new PrefetchSrcConfigurationProperties(),
-            new ReportToConfigurationProperties(),
-            new ScriptSrcConfigurationProperties(),
-            new FrameAncestorsConfigurationProperties(),
-            new FrameSrcConfigurationProperties(),
-            new ImgSrcConfigurationProperties(),
-            new ManifestSrcConfigurationProperties(),
-            new MediaSrcConfigurationProperties(),
-            new FormActionConfigurationProperties(),
-            new StyleSrcConfigurationProperties(),
-            new WorkerSrcConfigurationProperties());
+        this(cspConfiguration, DefaultContentSecurityPolicyGenerator::requestNonce,
+            ContentSecurityPolicyDirectiveConfigurations.builder().build());
     }
 
     /**
      * Creates a default policy generator from the root and directive-specific configuration.
      *
      * @param cspConfiguration configures the static policy directives
-     * @param baseUriConfiguration configures {@code base-uri}
-     * @param defaultSrcConfiguration configures {@code default-src}
-     * @param connectSrcConfiguration configures {@code connect-src}
-     * @param fencedFrameSrcConfiguration configures {@code fenced-frame-src}
-     * @param fontSrcConfiguration configures {@code font-src}
-     * @param objectSrcConfiguration configures {@code object-src}
-     * @param prefetchSrcConfiguration configures {@code prefetch-src}
-     * @param reportToConfiguration configures {@code report-to}
-     * @param scriptSrcConfiguration configures {@code script-src}
-     * @param frameAncestorsConfiguration configures {@code frame-ancestors}
-     * @param frameSrcConfiguration configures {@code frame-src}
-     * @param imgSrcConfiguration configures {@code img-src}
-     * @param manifestSrcConfiguration configures {@code manifest-src}
-     * @param mediaSrcConfiguration configures {@code media-src}
-     * @param formActionConfiguration configures {@code form-action}
-     * @param styleSrcConfiguration configures {@code style-src}
-     * @param workerSrcConfiguration configures {@code worker-src}
+     * @param directiveConfigurations configures each directive that has its own configuration
      * @since 5.6.0
      */
-    @SuppressWarnings("ParameterNumber")
     @Inject
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
-                                                    BaseUriConfiguration baseUriConfiguration,
-                                                    DefaultSrcConfiguration defaultSrcConfiguration,
-                                                    ConnectSrcConfiguration connectSrcConfiguration,
-                                                    FencedFrameSrcConfiguration fencedFrameSrcConfiguration,
-                                                    FontSrcConfiguration fontSrcConfiguration,
-                                                    ObjectSrcConfiguration objectSrcConfiguration,
-                                                    PrefetchSrcConfiguration prefetchSrcConfiguration,
-                                                    ReportToConfiguration reportToConfiguration,
-                                                    ScriptSrcConfiguration scriptSrcConfiguration,
-                                                    FrameAncestorsConfiguration frameAncestorsConfiguration,
-                                                    FrameSrcConfiguration frameSrcConfiguration,
-                                                    ImgSrcConfiguration imgSrcConfiguration,
-                                                    ManifestSrcConfiguration manifestSrcConfiguration,
-                                                    MediaSrcConfiguration mediaSrcConfiguration,
-                                                    FormActionConfiguration formActionConfiguration,
-                                                    StyleSrcConfiguration styleSrcConfiguration,
-                                                    WorkerSrcConfiguration workerSrcConfiguration) {
-
-        this(cspConfiguration,
-            DefaultContentSecurityPolicyGenerator::requestNonce,
-            baseUriConfiguration,
-            defaultSrcConfiguration,
-            connectSrcConfiguration,
-            fencedFrameSrcConfiguration,
-            fontSrcConfiguration,
-            objectSrcConfiguration,
-            prefetchSrcConfiguration,
-            reportToConfiguration,
-            scriptSrcConfiguration,
-            frameAncestorsConfiguration,
-            frameSrcConfiguration,
-            imgSrcConfiguration,
-            manifestSrcConfiguration,
-            mediaSrcConfiguration,
-            formActionConfiguration,
-            styleSrcConfiguration,
-            workerSrcConfiguration);
+                                                    ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
+        this(cspConfiguration, DefaultContentSecurityPolicyGenerator::requestNonce, directiveConfigurations);
     }
 
     /**
@@ -258,67 +140,18 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * @param cspConfiguration configures the static policy directives
      * @param cspNonceProvider CSP Nonce Provider
-     * @param baseUriConfiguration configures {@code base-uri}
-     * @param defaultSrcConfiguration configures {@code default-src}
-     * @param connectSrcConfiguration configures {@code connect-src}
-     * @param fencedFrameSrcConfiguration configures {@code fenced-frame-src}
-     * @param fontSrcConfiguration configures {@code font-src}
-     * @param objectSrcConfiguration configures {@code object-src}
-     * @param prefetchSrcConfiguration configures {@code prefetch-src}
-     * @param reportToConfiguration configures {@code report-to}
-     * @param scriptSrcConfiguration configures {@code script-src}
-     * @param frameAncestorsConfiguration configures {@code frame-ancestors}
-     * @param frameSrcConfiguration configures {@code frame-src}
-     * @param imgSrcConfiguration configures {@code img-src}
-     * @param manifestSrcConfiguration configures {@code manifest-src}
-     * @param mediaSrcConfiguration configures {@code media-src}
-     * @param formActionConfiguration configures {@code form-action}
-     * @param styleSrcConfiguration configures {@code style-src}
-     * @param workerSrcConfiguration configures {@code worker-src}
+     * @param directiveConfigurations configures each directive that has its own configuration
      * @since 5.6.0
      */
-    @SuppressWarnings("ParameterNumber")
     protected DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
                                                     Function<HttpRequest<?>, @Nullable String> cspNonceProvider,
-                                                    BaseUriConfiguration baseUriConfiguration,
-                                                    DefaultSrcConfiguration defaultSrcConfiguration,
-                                                    ConnectSrcConfiguration connectSrcConfiguration,
-                                                    FencedFrameSrcConfiguration fencedFrameSrcConfiguration,
-                                                    FontSrcConfiguration fontSrcConfiguration,
-                                                    ObjectSrcConfiguration objectSrcConfiguration,
-                                                    PrefetchSrcConfiguration prefetchSrcConfiguration,
-                                                    ReportToConfiguration reportToConfiguration,
-                                                    ScriptSrcConfiguration scriptSrcConfiguration,
-                                                    FrameAncestorsConfiguration frameAncestorsConfiguration,
-                                                    FrameSrcConfiguration frameSrcConfiguration,
-                                                    ImgSrcConfiguration imgSrcConfiguration,
-                                                    ManifestSrcConfiguration manifestSrcConfiguration,
-                                                    MediaSrcConfiguration mediaSrcConfiguration,
-                                                    FormActionConfiguration formActionConfiguration,
-                                                    StyleSrcConfiguration styleSrcConfiguration,
-                                                    WorkerSrcConfiguration workerSrcConfiguration) {
+                                                    ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
         this.cspConfiguration = cspConfiguration;
         if (cspConfiguration.isReportUriEnabled() && reportUris(cspConfiguration).isEmpty()) {
             LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
         }
         this.cspNonceProvider = cspNonceProvider;
-        this.baseUriConfiguration = baseUriConfiguration;
-        this.defaultSrcConfiguration = defaultSrcConfiguration;
-        this.connectSrcConfiguration = connectSrcConfiguration;
-        this.fencedFrameSrcConfiguration = fencedFrameSrcConfiguration;
-        this.fontSrcConfiguration = fontSrcConfiguration;
-        this.objectSrcConfiguration = objectSrcConfiguration;
-        this.prefetchSrcConfiguration = prefetchSrcConfiguration;
-        this.reportToConfiguration = reportToConfiguration;
-        this.scriptSrcConfiguration = scriptSrcConfiguration;
-        this.frameAncestorsConfiguration = frameAncestorsConfiguration;
-        this.frameSrcConfiguration = frameSrcConfiguration;
-        this.imgSrcConfiguration = imgSrcConfiguration;
-        this.manifestSrcConfiguration = manifestSrcConfiguration;
-        this.mediaSrcConfiguration = mediaSrcConfiguration;
-        this.formActionConfiguration = formActionConfiguration;
-        this.styleSrcConfiguration = styleSrcConfiguration;
-        this.workerSrcConfiguration = workerSrcConfiguration;
+        this.directiveConfigurations = directiveConfigurations;
         validateRootConfiguration();
         warnAboutMisquotedValues();
     }
@@ -338,7 +171,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
             requireSafeHeaderValue("micronaut.security.csp.require-trusted-types-for", cspConfiguration.getRequireTrustedTypesFor());
         }
-        if (reportToConfiguration.isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(reportToConfiguration.getGroup()).matches()) {
+        if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
             throw new ConfigurationException("micronaut.security.csp.report-to.group must match " + REPORTING_GROUP_GRAMMAR.pattern()
                 + ", the grammar of a Reporting-Endpoints name");
         }
@@ -447,7 +280,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective baseUri() {
-        return directive(BASE_URI, baseUriConfiguration);
+        return directive(BASE_URI, directiveConfigurations.getBaseUri());
     }
 
     /**
@@ -457,7 +290,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective defaultSrc() {
-        return directive(DEFAULT_SRC, defaultSrcConfiguration);
+        return directive(DEFAULT_SRC, directiveConfigurations.getDefaultSrc());
     }
 
     /**
@@ -467,7 +300,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective connectSrc() {
-        return directive(CONNECT_SRC, connectSrcConfiguration);
+        return directive(CONNECT_SRC, directiveConfigurations.getConnectSrc());
     }
 
     /**
@@ -477,7 +310,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
-        return directive(FENCED_FRAME_SRC, fencedFrameSrcConfiguration);
+        return directive(FENCED_FRAME_SRC, directiveConfigurations.getFencedFrameSrc());
     }
 
     /**
@@ -487,7 +320,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fontSrc() {
-        return directive(FONT_SRC, fontSrcConfiguration);
+        return directive(FONT_SRC, directiveConfigurations.getFontSrc());
     }
 
     /**
@@ -497,7 +330,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective objectSrc() {
-        return directive(OBJECT_SRC, objectSrcConfiguration);
+        return directive(OBJECT_SRC, directiveConfigurations.getObjectSrc());
     }
 
     /**
@@ -507,7 +340,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective prefetchSrc() {
-        return directive(PREFETCH_SRC, prefetchSrcConfiguration);
+        return directive(PREFETCH_SRC, directiveConfigurations.getPrefetchSrc());
     }
 
     /**
@@ -517,8 +350,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportTo() {
-        return reportToConfiguration.isEnabled()
-            ? new ContentSecurityPolicyDirective(REPORT_TO, reportToConfiguration.getGroup())
+        return directiveConfigurations.getReportTo().isEnabled()
+            ? new ContentSecurityPolicyDirective(REPORT_TO, directiveConfigurations.getReportTo().getGroup())
             : null;
     }
 
@@ -554,7 +387,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameAncestors() {
-        return directive(FRAME_ANCESTORS, frameAncestorsConfiguration);
+        return directive(FRAME_ANCESTORS, directiveConfigurations.getFrameAncestors());
     }
 
     /**
@@ -564,7 +397,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameSrc() {
-        return directive(FRAME_SRC, frameSrcConfiguration);
+        return directive(FRAME_SRC, directiveConfigurations.getFrameSrc());
     }
 
     /**
@@ -574,7 +407,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective imgSrc() {
-        return directive(IMG_SRC, imgSrcConfiguration);
+        return directive(IMG_SRC, directiveConfigurations.getImgSrc());
     }
 
     /**
@@ -584,7 +417,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective manifestSrc() {
-        return directive(MANIFEST_SRC, manifestSrcConfiguration);
+        return directive(MANIFEST_SRC, directiveConfigurations.getManifestSrc());
     }
 
     /**
@@ -594,7 +427,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective mediaSrc() {
-        return directive(MEDIA_SRC, mediaSrcConfiguration);
+        return directive(MEDIA_SRC, directiveConfigurations.getMediaSrc());
     }
 
     /**
@@ -604,7 +437,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective formAction() {
-        return directive(FORM_ACTION, formActionConfiguration);
+        return directive(FORM_ACTION, directiveConfigurations.getFormAction());
     }
 
     /**
@@ -615,7 +448,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective styleSrc(HttpRequest<?> request) {
-        return directive(STYLE_SRC, styleSrcConfiguration, request);
+        return directive(STYLE_SRC, directiveConfigurations.getStyleSrc(), request);
     }
 
     /**
@@ -626,7 +459,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective scriptSrc(HttpRequest<?> request) {
-        return directive(SCRIPT_SRC, scriptSrcConfiguration, request);
+        return directive(SCRIPT_SRC, directiveConfigurations.getScriptSrc(), request);
     }
 
     /**
@@ -636,7 +469,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective workerSrc() {
-        return directive(WORKER_SRC, workerSrcConfiguration);
+        return directive(WORKER_SRC, directiveConfigurations.getWorkerSrc());
     }
 
     /**
@@ -658,22 +491,22 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private void warnAboutMisquotedValues() {
         Map<String, DirectiveConfiguration> configurations = new LinkedHashMap<>();
-        configurations.put(BASE_URI, baseUriConfiguration);
-        configurations.put(DEFAULT_SRC, defaultSrcConfiguration);
-        configurations.put(CONNECT_SRC, connectSrcConfiguration);
-        configurations.put(FENCED_FRAME_SRC, fencedFrameSrcConfiguration);
-        configurations.put(FONT_SRC, fontSrcConfiguration);
-        configurations.put(OBJECT_SRC, objectSrcConfiguration);
-        configurations.put(PREFETCH_SRC, prefetchSrcConfiguration);
-        configurations.put(SCRIPT_SRC, scriptSrcConfiguration);
-        configurations.put(FRAME_ANCESTORS, frameAncestorsConfiguration);
-        configurations.put(FRAME_SRC, frameSrcConfiguration);
-        configurations.put(IMG_SRC, imgSrcConfiguration);
-        configurations.put(MANIFEST_SRC, manifestSrcConfiguration);
-        configurations.put(MEDIA_SRC, mediaSrcConfiguration);
-        configurations.put(FORM_ACTION, formActionConfiguration);
-        configurations.put(STYLE_SRC, styleSrcConfiguration);
-        configurations.put(WORKER_SRC, workerSrcConfiguration);
+        configurations.put(BASE_URI, directiveConfigurations.getBaseUri());
+        configurations.put(DEFAULT_SRC, directiveConfigurations.getDefaultSrc());
+        configurations.put(CONNECT_SRC, directiveConfigurations.getConnectSrc());
+        configurations.put(FENCED_FRAME_SRC, directiveConfigurations.getFencedFrameSrc());
+        configurations.put(FONT_SRC, directiveConfigurations.getFontSrc());
+        configurations.put(OBJECT_SRC, directiveConfigurations.getObjectSrc());
+        configurations.put(PREFETCH_SRC, directiveConfigurations.getPrefetchSrc());
+        configurations.put(SCRIPT_SRC, directiveConfigurations.getScriptSrc());
+        configurations.put(FRAME_ANCESTORS, directiveConfigurations.getFrameAncestors());
+        configurations.put(FRAME_SRC, directiveConfigurations.getFrameSrc());
+        configurations.put(IMG_SRC, directiveConfigurations.getImgSrc());
+        configurations.put(MANIFEST_SRC, directiveConfigurations.getManifestSrc());
+        configurations.put(MEDIA_SRC, directiveConfigurations.getMediaSrc());
+        configurations.put(FORM_ACTION, directiveConfigurations.getFormAction());
+        configurations.put(STYLE_SRC, directiveConfigurations.getStyleSrc());
+        configurations.put(WORKER_SRC, directiveConfigurations.getWorkerSrc());
         configurations.forEach((name, configuration) -> {
             if (configuration.isEnabled() && configuration instanceof SourceListDirectiveConfiguration sourceList) {
                 for (String value : sourceList.getValues()) {

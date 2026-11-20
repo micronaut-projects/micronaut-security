@@ -34,7 +34,7 @@ import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 @Internal
 @Requires(condition = NonceEnabledCondition.class)
 @ServerFilter("${" + ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".pattern:" + ServerFilter.MATCH_ALL_PATTERN + "}")
-final class ContentSecurityPolicyFilter {
+final class ContentSecurityPolicyNonceFilter {
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
 
     /**
@@ -42,7 +42,7 @@ final class ContentSecurityPolicyFilter {
      *
      * @param cspNonceGenerator generates per-response CSP nonces
      */
-    ContentSecurityPolicyFilter(ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
+    ContentSecurityPolicyNonceFilter(ContentSecurityPolicyNonceGenerator cspNonceGenerator) {
         this.cspNonceGenerator = cspNonceGenerator;
     }
 

@@ -23,7 +23,7 @@ import io.micronaut.security.csp.conf.NonceConfiguration;
 
 /**
  * Matches when at least one enabled Content Security Policy directive, such as {@code script-src}
- * or {@code style-src}, uses nonces. It keeps {@link ContentSecurityPolicyFilter} out of the
+ * or {@code style-src}, uses nonces. It keeps {@link ContentSecurityPolicyNonceFilter} out of the
  * filter chain of applications that do not use nonces.
  *
  * @author Sergio del Amo

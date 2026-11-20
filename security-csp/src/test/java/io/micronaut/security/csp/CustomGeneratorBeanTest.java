@@ -24,23 +24,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
-import io.micronaut.security.csp.conf.baseuri.BaseUriConfiguration;
-import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfiguration;
-import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
-import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfiguration;
-import io.micronaut.security.csp.conf.fontsrc.FontSrcConfiguration;
-import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfiguration;
-import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfiguration;
-import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
-import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
-import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfiguration;
-import io.micronaut.security.csp.conf.framesrc.FrameSrcConfiguration;
-import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration;
-import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfiguration;
-import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfiguration;
-import io.micronaut.security.csp.conf.formaction.FormActionConfiguration;
-import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfiguration;
-import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfiguration;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
@@ -87,26 +71,9 @@ class CustomGeneratorBeanTest {
     @Requires(property = "spec.name", value = "SubclassGenerator")
     @Singleton
     static class ImgSrcSelfGenerator extends DefaultContentSecurityPolicyGenerator {
-        @SuppressWarnings("ParameterNumber")
         ImgSrcSelfGenerator(ContentSecurityPolicyConfiguration cspConfiguration,
-                            BaseUriConfiguration baseUri,
-                            DefaultSrcConfiguration defaultSrc,
-                            ConnectSrcConfiguration connectSrc,
-                            FencedFrameSrcConfiguration fencedFrameSrc,
-                            FontSrcConfiguration fontSrc,
-                            ObjectSrcConfiguration objectSrc,
-                            PrefetchSrcConfiguration prefetchSrc,
-                            ReportToConfiguration reportTo,
-                            ScriptSrcConfiguration scriptSrc,
-                            FrameAncestorsConfiguration frameAncestors,
-                            FrameSrcConfiguration frameSrc,
-                            ImgSrcConfiguration imgSrc,
-                            ManifestSrcConfiguration manifestSrc,
-                            MediaSrcConfiguration mediaSrc,
-                            FormActionConfiguration formAction,
-                            StyleSrcConfiguration styleSrc,
-                            WorkerSrcConfiguration workerSrc) {
-            super(cspConfiguration, baseUri, defaultSrc, connectSrc, fencedFrameSrc, fontSrc, objectSrc, prefetchSrc, reportTo, scriptSrc, frameAncestors, frameSrc, imgSrc, manifestSrc, mediaSrc, formAction, styleSrc, workerSrc);
+                            ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
+            super(cspConfiguration, directiveConfigurations);
         }
 
         @Override
