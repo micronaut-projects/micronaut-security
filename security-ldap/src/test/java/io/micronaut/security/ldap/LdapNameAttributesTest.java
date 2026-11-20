@@ -180,6 +180,7 @@ class LdapNameAttributesTest {
         return Stream.of(
             Arguments.of("special-characters-dn.ldif", "johndoe", "cn=John/Doe,dc=example,dc=com", "John/Doe"),
             Arguments.of("special-characters-dn.ldif", "janedoe", "cn=Jane \\\"JD\\\" Doe,dc=example,dc=com", "Jane \"JD\" Doe"),
+            Arguments.of("special-characters-dn.ldif", "backslash", "cn=Back\\\\slash,dc=example,dc=com", "Back\\slash"),
             Arguments.of("basic.ldif", "riemann", "uid=riemann,dc=example,dc=com", "riemann")
         );
     }

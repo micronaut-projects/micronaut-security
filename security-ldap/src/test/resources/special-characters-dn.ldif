@@ -22,3 +22,13 @@ sn: Doe
 cn: Jane "JD" Doe
 userpassword: password
 
+dn: cn=Back\\slash,dc=example,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: backslash
+sn: Slash
+cn: Back\slash
+userpassword: password
+
