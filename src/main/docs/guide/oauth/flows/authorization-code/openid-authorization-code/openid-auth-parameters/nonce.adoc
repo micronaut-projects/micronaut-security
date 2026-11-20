@@ -32,7 +32,9 @@ micronaut:
 
 NOTE: You can provide your own implementation of api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[]
 
-WARNING: If nonce validation fails, the user will not be authenticated.
+WARNING: If nonce validation fails, the user will not be authenticated. Because a nonce is always sent in the authorization request when nonce support is enabled, validation also fails if the persisted nonce cannot be retrieved at callback time (for example, because the nonce cookie expired or was not sent back), even if the ID token does not contain a `nonce` claim.
+
+NOTE: Flows without an authorization request, such as the <<password, password grant>>, never send a nonce. For those flows the ID token is accepted only if it does not contain a `nonce` claim.
 
 === Customization
 
@@ -41,7 +43,7 @@ There are several interfaces that implementations can be provided for to overrid
 |===
 |Interface |Responsibility |Default Implementation
 |api:security.oauth2.endpoint.nonce.NonceFactory[] |Builds a `java.lang.String` nonce value |api:security.oauth2.endpoint.nonce.DefaultNonceFactory[]
-| api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] |  Validates an OpenID token response (including the nonce). | api:security.oauth2.endpoint.token.response.validation.DefaultOpenIdTokenResponseValidator[]
+| api:security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator[] |  Validates an OpenID token response (including the nonce). | `DefaultReactiveOpenIdTokenResponseValidator`
 | |Validates the nonce claim in the token response |api:security.oauth2.endpoint.token.response.validation.NonceClaimValidator[]
 |api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] |Stores the nonce to be retrieved later to allow validation |api:security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence[]
 |===
