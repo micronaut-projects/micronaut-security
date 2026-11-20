@@ -7,6 +7,7 @@ import ch.qos.logback.core.read.ListAppender;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
@@ -14,6 +15,7 @@ import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.encryption.secret.SecretEncryption;
 import io.micronaut.security.token.jwt.encryption.secret.SecretEncryptionConfiguration;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -25,12 +27,13 @@ import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.ENCRYPTION_
 import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.OTHER_ENCRYPTION_SECRET;
 import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.SUBJECT;
 import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.nestedJwe;
+import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.plainJwe;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link NimbusJsonWebTokenEncryption}. The parser-level JWE scenarios (no encryption
- * configurations, undecryptable JWE, non-JWS payload with several configurations) are covered by the
+ * configurations, undecryptable JWE, non-JWS payload through the parser) are covered by the
  * {@code NimbusJsonWebTokenParser*Test} classes.
  */
 class NimbusJsonWebTokenEncryptionTest {
@@ -50,13 +53,40 @@ class NimbusJsonWebTokenEncryptionTest {
     void decryptTriesConfigurationsSupportingTheHeaderFirst() throws Exception {
         List<String> attempts = new ArrayList<>();
         NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(
-            new FailingEncryptionConfiguration("unsupported", false, attempts),
-            new FailingEncryptionConfiguration("supported-1", true, attempts),
-            new FailingEncryptionConfiguration("supported-2", true, attempts)));
+            new RecordingEncryptionConfiguration("unsupported", false, attempts, null),
+            new RecordingEncryptionConfiguration("supported-1", true, attempts, null),
+            new RecordingEncryptionConfiguration("supported-2", true, attempts, null)));
 
         assertTrue(encryption.decrypt(EncryptedJWT.parse(nestedJwe(ENCRYPTION_SECRET))).isEmpty());
         // configurations supporting the header keep their configured order, e.g. for key rotation
         assertEquals(List.of("supported-1", "supported-2", "unsupported"), attempts);
+    }
+
+    @Test
+    void decryptStillTriesConfigurationsNotSupportingTheHeaderLast() throws Exception {
+        List<String> attempts = new ArrayList<>();
+        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(
+            new RecordingEncryptionConfiguration("unsupported", false, attempts, secretEncryption(ENCRYPTION_SECRET)),
+            new RecordingEncryptionConfiguration("supported", true, attempts, null)));
+
+        Optional<SignedJWT> result = encryption.decrypt(EncryptedJWT.parse(nestedJwe(ENCRYPTION_SECRET)));
+
+        assertTrue(result.isPresent());
+        assertEquals(SUBJECT, result.get().getJWTClaimsSet().getSubject());
+        assertEquals(List.of("supported", "unsupported"), attempts);
+    }
+
+    @Test
+    void decryptDoesNotTryTheNextConfigurationOnceThePayloadIsDecrypted() throws Exception {
+        List<String> attempts = new ArrayList<>();
+        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(
+            secretEncryption(ENCRYPTION_SECRET),
+            new RecordingEncryptionConfiguration("next", true, attempts, null)));
+        EncryptedJWT jwt = EncryptedJWT.parse(plainJwe(ENCRYPTION_SECRET));
+
+        assertTrue(encryption.decrypt(jwt).isEmpty());
+        assertEquals(JWEObject.State.DECRYPTED, jwt.getState());
+        assertEquals(List.of(), attempts);
     }
 
     @Test
@@ -77,6 +107,8 @@ class NimbusJsonWebTokenEncryptionTest {
             logger.setLevel(original);
             logger.detachAppender(appender);
         }
+        // a throwable argument would log the exception message with the stack trace
+        assertTrue(appender.list.stream().allMatch(event -> event.getThrowableProxy() == null), appender.list::toString);
         List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
         assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption failed") && message.contains("JOSEException")), messages::toString);
         assertTrue(messages.stream().noneMatch(message -> message.contains("FORGED")), messages::toString);
@@ -90,9 +122,13 @@ class NimbusJsonWebTokenEncryptionTest {
         return new SecretEncryption(configuration);
     }
 
-    private record FailingEncryptionConfiguration(String name,
-                                                  boolean supported,
-                                                  List<String> attempts) implements EncryptionConfiguration {
+    /**
+     * Records each decryption attempt, then delegates to {@code delegate} or, when it is {@code null}, fails.
+     */
+    private record RecordingEncryptionConfiguration(String name,
+                                                    boolean supported,
+                                                    List<String> attempts,
+                                                    @Nullable EncryptionConfiguration delegate) implements EncryptionConfiguration {
         @Override
         public boolean supports(JWEAlgorithm algorithm, EncryptionMethod method) {
             return supported;
@@ -111,7 +147,10 @@ class NimbusJsonWebTokenEncryptionTest {
         @Override
         public void decrypt(EncryptedJWT encryptedJWT) throws JOSEException {
             attempts.add(name);
-            throw new JOSEException(name);
+            if (delegate == null) {
+                throw new JOSEException(name);
+            }
+            delegate.decrypt(encryptedJWT);
         }
     }
 }
