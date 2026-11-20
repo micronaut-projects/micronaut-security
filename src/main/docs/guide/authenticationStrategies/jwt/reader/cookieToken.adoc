@@ -5,6 +5,7 @@ The following sequence illustrates the authentication flow:
 image::jwt-cookie.svg[]
 
 Reading tokens from Cookies is disabled by default. Note that using JWT tokens from cookies requires JWT Authentication to be enabled.
+Set `micronaut.security.token.cookie.enabled=true` to read JWT tokens from cookies without enabling Cookie Authentication login and logout handlers.
 
 include::{includedir}configurationProperties/io.micronaut.security.token.cookie.TokenCookieConfigurationProperties.adoc[]
 
