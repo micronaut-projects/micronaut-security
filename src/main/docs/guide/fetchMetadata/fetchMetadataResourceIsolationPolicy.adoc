@@ -1,0 +1,85 @@
+The module evaluates its built-in rules in the same sequence as the https://web.dev/articles/fetch-metadata#enforcing_a_resource_isolation_policy[recommended resource isolation policy]:
+
+. Requests without `Sec-Fetch-Site`
+. Same-origin requests
+. Same-site requests
+. Requests initiated directly through browser UI
+. Simple `GET` navigations
+. Requests to routes annotated with https://docs.micronaut.io/latest/guide/#annotationBasedCors[`@CrossOrigin`]
+
+Unlike the reference policy, which allows same-site requests, the same-site rule is disabled by default: a same-site request can come from any subdomain of the site, including ones the application does not control. Enable it with `micronaut.security.fetch-metadata.rules.allow-same-site` when every same-site origin is trusted.
+
+The first rule that returns `ALLOWED` or `REJECTED` decides the request. A rule returns `UNKNOWN` when it does not apply, allowing evaluation to continue. If every rule returns `UNKNOWN`, the filter responds with an empty `403 Forbidden` marked `Cache-Control: no-store`. This response is produced before api:security.filters.SecurityFilter[] runs, so it is not processed by the security rejection handlers or the application's error handling. Rejections are logged at `DEBUG` level by `io.micronaut.security.fetchmetadata.FetchMetadataFilter`, together with the request's parsed `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` values (`<unrecognized>` for a value Micronaut does not know), its `Origin` header (truncated and with control characters replaced), and whether it carries a `Cookie` header.
+
+Because the outcome depends on the Fetch Metadata request headers, the filter adds `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` to the `Vary` header of the responses to the requests it evaluates, both allowed and rejected, merging them with any existing `Vary` values. This prevents a shared cache from serving a response allowed for a same-origin request to a cross-site request.
+
+The `Vary` header also makes shared caches, such as a CDN, store a separate copy of a response for each combination of those header values, so the same asset fetched by an `<img>` element, a `fetch` call, and a navigation is cached several times, and some CDNs do not cache responses that vary on headers other than `Accept-Encoding` at all. If the application serves cacheable public assets through a CDN, consider restricting `micronaut.security.fetch-metadata.filter.pattern` to dynamic or state-changing paths, such as `/api/**`. Paths outside the pattern are not protected by the resource isolation policy, so only leave out public resources without side effects. A cache in front of the application must either include `Sec-Fetch-Site`, `Sec-Fetch-Mode`, and `Sec-Fetch-Dest` in its cache key or serve only paths outside the filter pattern; otherwise it can serve a response allowed for a same-origin request to a cross-site request, or a rejection to legitimate users if it caches error responses regardless of `Cache-Control`.
+
+Each rule is enabled or disabled with a property under `micronaut.security.fetch-metadata.rules`:
+
+[cols="1,1,2,1,1"]
+|===
+|Rule |Property |Behavior |Default |Order
+
+|No Fetch Metadata
+|`allow-no-fetch-metadata`
+|Allows clients that do not send `Sec-Fetch-Site`. Requests with `Sec-Fetch-Site` are evaluated by the remaining rules even when another Fetch Metadata header is incomplete or unrecognized.
+|Enabled
+|100
+
+|Same origin
+|`allow-same-origin`
+|Allows `Sec-Fetch-Site: same-origin`.
+|Enabled
+|200
+
+|Same site
+|`allow-same-site`
+|Allows `Sec-Fetch-Site: same-site`. Enable this only when every same-site origin is trusted.
+|Disabled
+|300
+
+|Browser initiated
+|`allow-browser-initiated-requests`
+|Allows `Sec-Fetch-Site: none`, which represents requests explicitly initiated through browser UI, such as the address bar or a bookmark.
+|Enabled
+|400
+
+|Simple navigation
+|`allow-simple-navigation`
+|Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object`, `embed`, and unrecognized destinations.
+|Enabled
+|500
+
+|`@CrossOrigin` routes
+|`allow-cross-origin`
+|Allows a request when the matched route declares CORS and its configuration accepts the request origin and method, and, for a request carrying a `Cookie` header, allows credentials.
+|Enabled
+|600
+|===
+
+The simple navigation rule intentionally allows cross-site `GET` navigations, including frame and iframe destinations. It does not protect against framing; use https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors[CSP `frame-ancestors`] and/or https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] to control whether the application may be framed.
+
+== Incomplete or unrecognized Fetch Metadata
+
+The compatibility rule treats requests without `Sec-Fetch-Site` as Fetch Metadata-unaware. A request that includes `Sec-Fetch-Site` but has an incomplete or unrecognized Fetch Metadata value is evaluated by the remaining rules and is rejected if none allows it.
+
+Each rule relies only on the headers it inspects: the same-origin, same-site, and browser-initiated rules need a recognized `Sec-Fetch-Site`, while the simple navigation rule also needs a recognized `Sec-Fetch-Mode` and `Sec-Fetch-Dest`. A same-origin request whose `Sec-Fetch-Dest` is a value Micronaut does not know, such as the `websocket` destination some browsers send for WebSocket handshakes, is therefore still allowed.
+
+== Requiring Fetch Metadata
+
+To reject requests without `Sec-Fetch-Site`, disable `micronaut.security.fetch-metadata.rules.allow-no-fetch-metadata`. Before enabling this stricter behavior, verify that each of the following sends `Sec-Fetch-Site` or is otherwise exempted:
+
+* every supported browser
+* API clients
+* webhooks
+* monitoring probes and other callers
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        allow-no-fetch-metadata: false
+----
