@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.exceptions.NoSuchBeanException;
 import io.micronaut.security.csrf.session.SessionCsrfTokenRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CsrfRepositoryEnabledConditionTest {
@@ -102,7 +104,11 @@ class CsrfRepositoryEnabledConditionTest {
     void warningIsLoggedOncePerApplicationContext() {
         for (int i = 0; i < 2; i++) {
             try (ApplicationContext ctx = ApplicationContext.run(Map.of(legacyKey(COOKIE), false))) {
-                assertOnlyDisabled(ctx, COOKIE);
+                // every lookup of the disabled bean evaluates the condition again
+                for (int j = 0; j < 3; j++) {
+                    assertOnlyDisabled(ctx, COOKIE);
+                    assertThrows(NoSuchBeanException.class, () -> ctx.getBean(CookieCsrfTokenRepository.class));
+                }
             }
         }
         assertEquals(List.of(deprecationWarning(COOKIE), deprecationWarning(COOKIE)), warnings());
