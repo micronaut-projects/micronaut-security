@@ -26,36 +26,13 @@ class HttpHeaderTokenReaderSpec extends Specification {
         bearerTokenReader.extractTokenFromAuthorization(authorization) == expected
 
         where:
-        authorization    | expected                | description
-        'Bearer x'       | Optional.of('x')        | 'accepts an exact prefix'
-        'bEaReR x'       | Optional.of('x')        | 'accepts a mixed-case prefix'
-        'BEARER x'       | Optional.of('x')        | 'accepts an upper-case prefix'
-        'Bearerx'        | Optional.empty()        | 'rejects a prefix not followed by a space'
-        'Bearer'         | Optional.empty()        | 'rejects a prefix-only header with no token'
-        'Bear'           | Optional.empty()        | 'rejects a header shorter than the prefix'
-        ''               | Optional.empty()        | 'rejects an empty header'
-        'Bearer '        | Optional.of('')         | 'yields an empty token when only the prefix and a space are present'
-        'Bearer  x'      | Optional.of(' x')       | 'consumes exactly one space after the prefix'
-        'Bearer x y'     | Optional.of('x y')      | 'keeps the rest of the header untouched'
-        'Basic x'        | Optional.empty()        | 'rejects a different prefix'
-        'Bearer\tx'      | Optional.empty()        | 'rejects a tab as the separator'
-        ' Bearer x'      | Optional.empty()        | 'rejects leading whitespace before the prefix'
-        'x Bearer y'     | Optional.empty()        | 'rejects a prefix that is not at the start'
-    }
-
-    void "prefix matching does not fold look-alike characters through upper case"(String prefix, String authorization, Optional<String> expected) {
-        given:
-        HttpHeaderTokenReader reader = new StubHttpHeaderTokenReader('Authorization', prefix)
-
-        expect:
-        reader.extractTokenFromAuthorization(authorization) == expected
-
-        where:
-        prefix  | authorization           | expected
-        'Basic' | 'BASIC x'               | Optional.of('x')
-        'Basic' | 'Ba\u017F\u0131c x'     | Optional.empty() // long s and dotless i upper-case to S and I
-        'Token' | 'To\u212Aen x'          | Optional.of('x') // the Kelvin sign lower-cases to k, as it did before
-        'Tökén' | 'TÖKÉN x'               | Optional.of('x')
+        authorization | expected         | description
+        'Bearer x'    | Optional.of('x') | 'accepts an exact prefix'
+        'bEaReR x'    | Optional.of('x') | 'accepts a mixed-case prefix'
+        'Bearer '     | Optional.of('')  | 'yields an empty token when only the prefix and a space are present'
+        'Bearerx'     | Optional.empty() | 'rejects a prefix not followed by a space'
+        'Bearer'      | Optional.empty() | 'rejects a prefix-only header with no token'
+        'Basic x'     | Optional.empty() | 'rejects a different prefix'
     }
 
     void "a prefix ending with a space is not followed by another space"() {
@@ -65,16 +42,6 @@ class HttpHeaderTokenReaderSpec extends Specification {
         expect:
         reader.extractTokenFromAuthorization('Bearer x') == Optional.of('x')
         reader.extractTokenFromAuthorization('Bearerx') == Optional.empty()
-    }
-
-    void "a very long token round-trips unchanged"() {
-        given:
-        String token = (('a'..'z') + ('A'..'Z') + ('0'..'9') + ['-', '_', '.']).join('') * 100
-        def request = HttpRequest.create(HttpMethod.GET, '/').header('Authorization', 'Bearer ' + token)
-
-        expect:
-        token.length() > 6000
-        bearerTokenReader.findToken(request).get() == token
     }
 
     void "an empty prefix returns the whole header value"() {

@@ -22,6 +22,7 @@ class HeaderValuePrefixUtilsTest {
         assertNull(HeaderValuePrefixUtils.removePrefix("", "Bearer"));
         assertNull(HeaderValuePrefixUtils.removePrefix("Bearer\tx", "Bearer"));
         assertNull(HeaderValuePrefixUtils.removePrefix(" Bearer x", "Bearer"));
+        assertNull(HeaderValuePrefixUtils.removePrefix("x Bearer y", "Bearer"));
         assertNull(HeaderValuePrefixUtils.removePrefix("Basic x", "Bearer"));
     }
 
@@ -54,6 +55,10 @@ class HeaderValuePrefixUtilsTest {
         assertNull(HeaderValuePrefixUtils.removePrefix("Ba\u017F\u0131c x", "Basic"));
         // the Kelvin sign lower-cases to k
         assertEquals("x", HeaderValuePrefixUtils.removePrefix("To\u212Aen x", "Token"));
+        // capital I with dot above lower-cases to i
+        assertEquals("x", HeaderValuePrefixUtils.removePrefix("Bas\u0130c x", "Basic"));
+        // non-ASCII letters in the prefix are compared ignoring case
+        assertEquals("x", HeaderValuePrefixUtils.removePrefix("T\u00D6K\u00C9N x", "T\u00F6k\u00E9n"));
     }
 
     @Test

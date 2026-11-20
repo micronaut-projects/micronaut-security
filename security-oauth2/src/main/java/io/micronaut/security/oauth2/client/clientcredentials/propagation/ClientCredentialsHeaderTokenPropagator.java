@@ -64,9 +64,9 @@ public class ClientCredentialsHeaderTokenPropagator implements ClientCredentials
     }
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a token in a HTTP request.
      * @param request The request to look for the token in
-     * @return if the JWT token is found it is returned, empty if not
+     * @return if the token is found it is returned, empty if not
      */
     @Override
     public Optional<String> findToken(@NonNull HttpRequest<?> request) {

@@ -75,8 +75,11 @@ public final class HeaderValuePrefixUtils {
     }
 
     /**
-     * Compares characters by their lower-case form only. {@link String#regionMatches(boolean, int, String, int, int)}
-     * also folds through upper case, which would accept look-alikes such as {@code "Baſıc"} for {@code "Basic"}.
+     * Compares characters by their lower-case form only, using {@link Character#toLowerCase(char)}.
+     * {@link String#regionMatches(boolean, int, String, int, int)} also folds through upper case, which would accept
+     * look-alikes such as {@code "Baſıc"} (long s, dotless i) for {@code "Basic"}.
+     * Characters whose lower-case form is ASCII are still accepted: {@code "Basİc"} (capital I with dot above)
+     * matches {@code "Basic"} and {@code "ToKen"} (Kelvin sign) matches {@code "Token"}.
      *
      * @param value  The value to test. It must be at least as long as the prefix.
      * @param prefix The expected prefix
