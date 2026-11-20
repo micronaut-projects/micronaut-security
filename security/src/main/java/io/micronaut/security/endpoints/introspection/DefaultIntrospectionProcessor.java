@@ -90,7 +90,8 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * @param tokenValidators Token validators
      * @param tokenConfiguration Token configuration
      * @param refreshTokenValidator Refresh token validator
-     * @deprecated Use {@link #DefaultIntrospectionProcessor(Collection, TokenConfiguration, RefreshTokenValidator, RefreshTokenPersistence)} instead.
+     * @deprecated Does not consult {@link RefreshTokenPersistence}: refresh tokens revoked in the persistence layer are still reported active.
+     * Use {@link #DefaultIntrospectionProcessor(Collection, TokenConfiguration, RefreshTokenValidator, RefreshTokenPersistence)} instead.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
@@ -136,7 +137,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      * <ul>
      *     <li>If there is no {@link RefreshTokenValidator} or no {@link RefreshTokenPersistence} bean, there is no revocation
      *     point to consult and the response is the one built by {@link #emptyIntrospectionResponse(String)}:
-     *     active only if a {@link RefreshTokenValidator} accepts the token. Subclasses overriding that method keep being honoured.</li>
+     *     active only if a {@link RefreshTokenValidator} accepts the token. Overrides of {@link #emptyIntrospectionResponse(String)} are only honoured in this case.</li>
      *     <li>If the {@link RefreshTokenValidator} rejects the token, the token is reported inactive.</li>
      *     <li>Otherwise the token is reported active only if {@link RefreshTokenPersistence#getAuthentication(String)}
      *     emits an {@link Authentication}; an empty publisher or an error, emitted or thrown, means the token is reported inactive.
@@ -150,9 +151,15 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      */
     @NonNull
     protected Publisher<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
-        if (refreshTokenValidator == null || refreshTokenPersistence == null) {
+        if (refreshTokenValidator == null) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("No RefreshTokenValidator or no RefreshTokenPersistence bean present. Skipping the RefreshTokenPersistence lookup");
+                LOG.trace("No RefreshTokenValidator bean present. Reporting the token inactive");
+            }
+            return Mono.fromSupplier(() -> emptyIntrospectionResponse(token));
+        }
+        if (refreshTokenPersistence == null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("No RefreshTokenPersistence bean present. Refresh tokens are reported active while the RefreshTokenValidator accepts them; revocation is not checked");
             }
             return Mono.fromSupplier(() -> emptyIntrospectionResponse(token));
         }
@@ -180,8 +187,14 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
             if (LOG.isDebugEnabled()) {
                 LOG.debug("RefreshTokenPersistence rejected the refresh token with {}. Reporting it inactive", e.getError());
             }
-        } else if (LOG.isWarnEnabled()) {
-            LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive", t);
+        } else {
+            // A persistence outage would otherwise log a stack trace for every introspection request.
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("RefreshTokenPersistence failed to resolve the refresh token. Reporting it inactive: {}", t.toString());
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("RefreshTokenPersistence failure stack trace", t);
+            }
         }
     }
 

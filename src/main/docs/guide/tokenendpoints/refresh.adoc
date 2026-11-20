@@ -41,6 +41,8 @@ The refresh token endpoint uses the api:security.token.validator.RefreshTokenVal
 
 If the validator successfully validates the token, it is then passed to a api:security.token.refresh.RefreshTokenPersistence[] implementation, which each application must provide. A new access token is then created from the user details returned by `RefreshTokenPersistence::getAuthentication` and then sent in the response.
 
+IMPORTANT: The <<introspectionendpoint, introspection endpoint>> also calls `RefreshTokenPersistence::getAuthentication` to check whether a refresh token has been revoked, so the method must not have side effects. Keep refresh token rotation, single-use bookkeeping or reuse detection out of it. For a revoked or unknown refresh token, emit no item or an api:security.errors.OauthErrorResponseException[] with the `invalid_grant` error code.
+
 Here is an example of a refresh token request. Send a POST request to the `/oauth/access_token` endpoint:
 
 [source,bash]

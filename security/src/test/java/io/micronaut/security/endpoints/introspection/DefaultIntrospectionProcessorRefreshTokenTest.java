@@ -73,11 +73,12 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         };
         DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
 
-        List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
+        List<ILoggingEvent> events = captureLogs(Level.WARN, () -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertEquals("database down", events.get(0).getThrowableProxy().getMessage());
+        assertTrue(events.get(0).getFormattedMessage().contains("database down"));
+        assertNull(events.get(0).getThrowableProxy());
     }
 
     @Test
@@ -127,9 +128,13 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
         List<ILoggingEvent> events = captureLogs(() -> assertInactiveAndEmpty(introspect(processor, SIGNED_A)));
 
-        assertEquals(1, events.size());
+        // The WARN line names the cause without a stack trace; the stack trace is only logged at DEBUG.
+        assertEquals(2, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertEquals("database down", events.get(0).getThrowableProxy().getMessage());
+        assertTrue(events.get(0).getFormattedMessage().contains("database down"));
+        assertNull(events.get(0).getThrowableProxy());
+        assertEquals(Level.DEBUG, events.get(1).getLevel());
+        assertEquals("database down", events.get(1).getThrowableProxy().getMessage());
     }
 
     @Test
@@ -269,11 +274,15 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     }
 
     private static List<ILoggingEvent> captureLogs(Runnable action) {
+        return captureLogs(Level.DEBUG, action);
+    }
+
+    private static List<ILoggingEvent> captureLogs(Level level, Runnable action) {
         Logger logger = (Logger) LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
         Level originalLevel = logger.getLevel();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
-        logger.setLevel(Level.DEBUG);
+        logger.setLevel(level);
         logger.addAppender(appender);
         try {
             action.run();

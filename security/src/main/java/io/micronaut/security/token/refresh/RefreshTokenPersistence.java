@@ -38,6 +38,14 @@ public interface RefreshTokenPersistence {
     void persistToken(RefreshTokenGeneratedEvent event);
 
     /**
+     * Resolves the user details of a refresh token. Called by the refresh token endpoint and, since 5.6.0,
+     * by the introspection endpoint to check whether a refresh token has been revoked.
+     * Implementations must therefore not have side effects such as rotating the refresh token, marking it as used,
+     * or reuse detection; do that when the refresh token is generated or in the refresh flow instead.
+     * For a revoked or unknown refresh token, emit no item or an
+     * {@link io.micronaut.security.errors.OauthErrorResponseException} with
+     * {@link io.micronaut.security.errors.IssuingAnAccessTokenErrorCode#INVALID_GRANT}.
+     *
      * @param refreshToken The refresh token
      * @return The user details associated with the refresh token
      */
