@@ -211,6 +211,8 @@ class LdapNameAttributesTest {
 
     /**
      * Returns null attributes until they are fetched using the bound user context.
+     * A subclass is needed because {@link LdapSearchResult#setAttributes(Attributes)} wraps even a null
+     * argument, so {@code new LdapSearchResult(null, dn)} never returns null attributes.
      */
     static class NullAttributesLdapSearchResult extends LdapSearchResult {
 
