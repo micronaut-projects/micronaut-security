@@ -96,7 +96,7 @@ public class NonceClaimValidator {
         if (nonce == null) {
             if (nonceExpected) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Nonce validation failed for provider [{}]: no persisted nonce could be retrieved although nonce support is enabled", clientConfiguration.getName());
+                    LOG.warn("Nonce validation failed for provider [{}]: no persisted nonce could be retrieved although nonce support is enabled. Check that the nonce cookie or session reaches the callback (cookie max age and path), or disable nonce support with micronaut.security.oauth2.openid.nonce.enabled=false", clientConfiguration.getName());
                 }
                 return false;
             }
