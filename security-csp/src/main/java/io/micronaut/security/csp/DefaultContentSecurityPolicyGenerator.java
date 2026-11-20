@@ -62,10 +62,6 @@ import java.util.regex.Pattern;
 public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
     /**
-     * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
-     * quote, semicolon or space, would corrupt or extend the serialized policy.
-     */
-    /**
      * Keywords that are only meaningful when single-quoted. Unquoted, a browser reads them as host sources.
      */
     private static final Set<String> QUOTED_KEYWORDS = Set.of(SELF, NONE, UNSAFE_INLINE, UNSAFE_EVAL, STRICT_DYNAMIC,
@@ -84,6 +80,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile("[a-z*][a-z0-9_.*-]*");
     private static final Set<String> LOOPBACK_HOSTS = Set.of("localhost", "127.0.0.1", "[::1]");
+    /**
+     * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
+     * quote, semicolon or space, would corrupt or extend the serialized policy.
+     */
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -103,6 +103,13 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         new KeywordSource("report-sha512", DirectiveConfiguration::isReportSha512),
         new KeywordSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
     );
+    /**
+     * The configuration behind each directive that is built from a {@link DirectiveConfiguration}.
+     * It is the only place that pairs a directive name with its configuration: both the startup
+     * validation of the configured values and the directive methods read it, so a directive cannot
+     * be emitted without being validated.
+     */
+    private static final Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> DIRECTIVE_CONFIGURATIONS = directiveConfigurationGetters();
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
@@ -280,7 +287,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective baseUri() {
-        return directive(BASE_URI, directiveConfigurations.getBaseUri());
+        return directive(BASE_URI, null);
     }
 
     /**
@@ -290,7 +297,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective defaultSrc() {
-        return directive(DEFAULT_SRC, directiveConfigurations.getDefaultSrc());
+        return directive(DEFAULT_SRC, null);
     }
 
     /**
@@ -300,7 +307,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective connectSrc() {
-        return directive(CONNECT_SRC, directiveConfigurations.getConnectSrc());
+        return directive(CONNECT_SRC, null);
     }
 
     /**
@@ -310,7 +317,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fencedFrameSrc() {
-        return directive(FENCED_FRAME_SRC, directiveConfigurations.getFencedFrameSrc());
+        return directive(FENCED_FRAME_SRC, null);
     }
 
     /**
@@ -320,7 +327,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective fontSrc() {
-        return directive(FONT_SRC, directiveConfigurations.getFontSrc());
+        return directive(FONT_SRC, null);
     }
 
     /**
@@ -330,7 +337,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective objectSrc() {
-        return directive(OBJECT_SRC, directiveConfigurations.getObjectSrc());
+        return directive(OBJECT_SRC, null);
     }
 
     /**
@@ -340,7 +347,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective prefetchSrc() {
-        return directive(PREFETCH_SRC, directiveConfigurations.getPrefetchSrc());
+        return directive(PREFETCH_SRC, null);
     }
 
     /**
@@ -387,7 +394,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameAncestors() {
-        return directive(FRAME_ANCESTORS, directiveConfigurations.getFrameAncestors());
+        return directive(FRAME_ANCESTORS, null);
     }
 
     /**
@@ -397,7 +404,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective frameSrc() {
-        return directive(FRAME_SRC, directiveConfigurations.getFrameSrc());
+        return directive(FRAME_SRC, null);
     }
 
     /**
@@ -407,7 +414,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective imgSrc() {
-        return directive(IMG_SRC, directiveConfigurations.getImgSrc());
+        return directive(IMG_SRC, null);
     }
 
     /**
@@ -417,7 +424,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective manifestSrc() {
-        return directive(MANIFEST_SRC, directiveConfigurations.getManifestSrc());
+        return directive(MANIFEST_SRC, null);
     }
 
     /**
@@ -427,7 +434,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective mediaSrc() {
-        return directive(MEDIA_SRC, directiveConfigurations.getMediaSrc());
+        return directive(MEDIA_SRC, null);
     }
 
     /**
@@ -437,7 +444,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective formAction() {
-        return directive(FORM_ACTION, directiveConfigurations.getFormAction());
+        return directive(FORM_ACTION, null);
     }
 
     /**
@@ -448,7 +455,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective styleSrc(HttpRequest<?> request) {
-        return directive(STYLE_SRC, directiveConfigurations.getStyleSrc(), request);
+        return directive(STYLE_SRC, request);
     }
 
     /**
@@ -459,7 +466,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective scriptSrc(HttpRequest<?> request) {
-        return directive(SCRIPT_SRC, directiveConfigurations.getScriptSrc(), request);
+        return directive(SCRIPT_SRC, request);
     }
 
     /**
@@ -469,7 +476,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective workerSrc() {
-        return directive(WORKER_SRC, directiveConfigurations.getWorkerSrc());
+        return directive(WORKER_SRC, null);
     }
 
     /**
@@ -490,24 +497,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * host source, is logged as a warning.
      */
     private void warnAboutMisquotedValues() {
-        Map<String, DirectiveConfiguration> configurations = new LinkedHashMap<>();
-        configurations.put(BASE_URI, directiveConfigurations.getBaseUri());
-        configurations.put(DEFAULT_SRC, directiveConfigurations.getDefaultSrc());
-        configurations.put(CONNECT_SRC, directiveConfigurations.getConnectSrc());
-        configurations.put(FENCED_FRAME_SRC, directiveConfigurations.getFencedFrameSrc());
-        configurations.put(FONT_SRC, directiveConfigurations.getFontSrc());
-        configurations.put(OBJECT_SRC, directiveConfigurations.getObjectSrc());
-        configurations.put(PREFETCH_SRC, directiveConfigurations.getPrefetchSrc());
-        configurations.put(SCRIPT_SRC, directiveConfigurations.getScriptSrc());
-        configurations.put(FRAME_ANCESTORS, directiveConfigurations.getFrameAncestors());
-        configurations.put(FRAME_SRC, directiveConfigurations.getFrameSrc());
-        configurations.put(IMG_SRC, directiveConfigurations.getImgSrc());
-        configurations.put(MANIFEST_SRC, directiveConfigurations.getManifestSrc());
-        configurations.put(MEDIA_SRC, directiveConfigurations.getMediaSrc());
-        configurations.put(FORM_ACTION, directiveConfigurations.getFormAction());
-        configurations.put(STYLE_SRC, directiveConfigurations.getStyleSrc());
-        configurations.put(WORKER_SRC, directiveConfigurations.getWorkerSrc());
-        configurations.forEach((name, configuration) -> {
+        DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> {
+            DirectiveConfiguration configuration = getter.apply(directiveConfigurations);
             if (configuration.isEnabled() && configuration instanceof SourceListDirectiveConfiguration sourceList) {
                 for (String value : sourceList.getValues()) {
                     warnIfMisquoted(name, value);
@@ -539,16 +530,41 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         return request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse(null);
     }
 
+    private static Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> directiveConfigurationGetters() {
+        Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> getters = new LinkedHashMap<>();
+        getters.put(BASE_URI, ContentSecurityPolicyDirectiveConfigurations::getBaseUri);
+        getters.put(DEFAULT_SRC, ContentSecurityPolicyDirectiveConfigurations::getDefaultSrc);
+        getters.put(CONNECT_SRC, ContentSecurityPolicyDirectiveConfigurations::getConnectSrc);
+        getters.put(FENCED_FRAME_SRC, ContentSecurityPolicyDirectiveConfigurations::getFencedFrameSrc);
+        getters.put(FONT_SRC, ContentSecurityPolicyDirectiveConfigurations::getFontSrc);
+        getters.put(OBJECT_SRC, ContentSecurityPolicyDirectiveConfigurations::getObjectSrc);
+        getters.put(PREFETCH_SRC, ContentSecurityPolicyDirectiveConfigurations::getPrefetchSrc);
+        getters.put(SCRIPT_SRC, ContentSecurityPolicyDirectiveConfigurations::getScriptSrc);
+        getters.put(FRAME_ANCESTORS, ContentSecurityPolicyDirectiveConfigurations::getFrameAncestors);
+        getters.put(FRAME_SRC, ContentSecurityPolicyDirectiveConfigurations::getFrameSrc);
+        getters.put(IMG_SRC, ContentSecurityPolicyDirectiveConfigurations::getImgSrc);
+        getters.put(MANIFEST_SRC, ContentSecurityPolicyDirectiveConfigurations::getManifestSrc);
+        getters.put(MEDIA_SRC, ContentSecurityPolicyDirectiveConfigurations::getMediaSrc);
+        getters.put(FORM_ACTION, ContentSecurityPolicyDirectiveConfigurations::getFormAction);
+        getters.put(STYLE_SRC, ContentSecurityPolicyDirectiveConfigurations::getStyleSrc);
+        getters.put(WORKER_SRC, ContentSecurityPolicyDirectiveConfigurations::getWorkerSrc);
+        return getters;
+    }
+
     /**
-     * Builds a directive that does not depend on request state.
+     * Builds a directive from the configuration registered for it in {@link #DIRECTIVE_CONFIGURATIONS}.
      *
      * @param name the CSP directive name
-     * @param config configuration that supplies the directive values
+     * @param request the request whose nonce may be added, or {@code null} for request-independent directives
      * @return the directive, or {@code null} when it is disabled or has no source expressions
+     * @throws IllegalStateException if no configuration is registered for the directive
      */
-    private @Nullable ContentSecurityPolicyDirective directive(String name,
-                                                               DirectiveConfiguration config) {
-        return directive(name, config, null);
+    private @Nullable ContentSecurityPolicyDirective directive(String name, @Nullable HttpRequest<?> request) {
+        Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration> getter = DIRECTIVE_CONFIGURATIONS.get(name);
+        if (getter == null) {
+            throw new IllegalStateException("No configuration is registered for the CSP directive " + name);
+        }
+        return directive(name, getter.apply(directiveConfigurations), request);
     }
 
     /**

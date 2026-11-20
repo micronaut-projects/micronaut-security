@@ -43,7 +43,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -56,6 +56,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     private static final String SPEC_NAME = "NonceCacheControlResponseHeaderPopulatorTest";
     private static final String NONCE = "micronaut.security.csp.script-src.nonce";
     private static final String NONCE_CACHE_CONTROL = "micronaut.security.csp.filter.nonce-cache-control";
+    private static final String HTML_NOT_FOUND_PAGE = "nonce-cache.html-not-found-page";
     private static final List<HttpHeaderEntry> PRIVATE = List.of(new HttpHeaderEntry(HttpHeaders.CACHE_CONTROL, "private"));
 
     @ParameterizedTest
@@ -103,13 +104,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
 
     @Test
     void populatorWritesNothingForARequestWithoutANonce() {
-        assertNull(populator("private", request -> MediaType.TEXT_HTML_TYPE)
+        assertNull(populator("private", (request, response) -> MediaType.TEXT_HTML_TYPE)
             .findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok().contentType(MediaType.TEXT_HTML_TYPE)));
     }
 
     @Test
     void populatorUsesTheContentTypeOfTheResponseBeforeTheOneOfTheRoute() {
-        NonceCacheControlResponseHeaderPopulator populator = populator("private", request -> MediaType.TEXT_HTML_TYPE);
+        NonceCacheControlResponseHeaderPopulator populator = populator("private", (request, response) -> MediaType.TEXT_HTML_TYPE);
 
         assertNull(populator.findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType(MediaType.APPLICATION_JSON_TYPE)));
         assertEquals(PRIVATE, populator.findHttpHeaders(requestWithNonce(), HttpResponse.ok()));
@@ -117,13 +118,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
 
     @Test
     void populatorIgnoresContentTypeParameters() {
-        assertEquals(PRIVATE, populator("private", request -> null)
+        assertEquals(PRIVATE, populator("private", (request, response) -> null)
             .findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType("text/html; charset=utf-8")));
     }
 
     @Test
     void populatorWritesNothingWhenTheContentTypeCannotBeTold() {
-        assertNull(populator("private", request -> null).findHttpHeaders(requestWithNonce(), HttpResponse.ok()));
+        assertNull(populator("private", (request, response) -> null).findHttpHeaders(requestWithNonce(), HttpResponse.ok()));
     }
 
     @Test
@@ -146,6 +147,17 @@ class NonceCacheControlResponseHeaderPopulatorTest {
             HttpResponse<?> response = error(server, path);
 
             assertEquals(HttpStatus.CONFLICT, response.getStatus());
+            assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
+            assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    @Test
+    void htmlPageOfAStatusErrorHandlerReceivesCacheControl() {
+        try (EmbeddedServer server = server(Map.of(NONCE, true, HTML_NOT_FOUND_PAGE, true))) {
+            HttpResponse<?> response = error(server, "/nonce-cache/no-such-path");
+
+            assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
             assertTrue(response.header(ContentSecurityPolicy.CONTENT_SECURITY_POLICY).contains("'nonce-"));
             assertEquals("private", response.header(HttpHeaders.CACHE_CONTROL));
         }
@@ -186,7 +198,7 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     private static NonceCacheControlResponseHeaderPopulator populator(String cacheControl,
-                                                                      Function<HttpRequest<?>, @Nullable MediaType> routeContentType) {
+                                                                      BiFunction<HttpRequest<?>, HttpResponse<?>, @Nullable MediaType> routeContentType) {
         ContentSecurityPolicyFilterConfigurationProperties configuration = new ContentSecurityPolicyFilterConfigurationProperties();
         configuration.setNonceCacheControl(cacheControl);
         return new NonceCacheControlResponseHeaderPopulator(configuration, routeContentType);
@@ -286,6 +298,17 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         HttpResponse<String> own() {
             return HttpResponse.ok("<!DOCTYPE html><html><head><title>Page</title></head><body></body></html>")
                 .header(HttpHeaders.CACHE_CONTROL, "no-store");
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Requires(property = HTML_NOT_FOUND_PAGE, value = "true")
+    @Controller("/nonce-cache-not-found")
+    static final class NotFoundPageController {
+        @Error(status = HttpStatus.NOT_FOUND, global = true)
+        @Produces(MediaType.TEXT_HTML)
+        String notFound() {
+            return "<!DOCTYPE html><html><head><title>Not found</title></head><body></body></html>";
         }
     }
 }
