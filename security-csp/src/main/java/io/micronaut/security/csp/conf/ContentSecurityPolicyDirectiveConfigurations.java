@@ -43,6 +43,10 @@ import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfiguration;
 import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfiguration;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfiguration;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfiguration;
@@ -71,6 +75,8 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
     private final ObjectSrcConfiguration objectSrc;
     private final PrefetchSrcConfiguration prefetchSrc;
     private final ReportToConfiguration reportTo;
+    private final ReportUriConfiguration reportUri;
+    private final RequireTrustedTypesForConfiguration requireTrustedTypesFor;
     private final ScriptSrcConfiguration scriptSrc;
     private final FrameAncestorsConfiguration frameAncestors;
     private final FrameSrcConfiguration frameSrc;
@@ -92,6 +98,8 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
      * @param objectSrc configures {@code object-src}
      * @param prefetchSrc configures {@code prefetch-src}
      * @param reportTo configures {@code report-to}
+     * @param reportUri configures the deprecated {@code report-uri}
+     * @param requireTrustedTypesFor configures {@code require-trusted-types-for}
      * @param scriptSrc configures {@code script-src}
      * @param frameAncestors configures {@code frame-ancestors}
      * @param frameSrc configures {@code frame-src}
@@ -111,6 +119,8 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
                                                  ObjectSrcConfiguration objectSrc,
                                                  PrefetchSrcConfiguration prefetchSrc,
                                                  ReportToConfiguration reportTo,
+                                                 ReportUriConfiguration reportUri,
+                                                 RequireTrustedTypesForConfiguration requireTrustedTypesFor,
                                                  ScriptSrcConfiguration scriptSrc,
                                                  FrameAncestorsConfiguration frameAncestors,
                                                  FrameSrcConfiguration frameSrc,
@@ -128,6 +138,8 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
         this.objectSrc = objectSrc;
         this.prefetchSrc = prefetchSrc;
         this.reportTo = reportTo;
+        this.reportUri = reportUri;
+        this.requireTrustedTypesFor = requireTrustedTypesFor;
         this.scriptSrc = scriptSrc;
         this.frameAncestors = frameAncestors;
         this.frameSrc = frameSrc;
@@ -218,6 +230,24 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
      */
     public ReportToConfiguration getReportTo() {
         return reportTo;
+    }
+
+    /**
+     * Returns the configuration of the deprecated {@code report-uri} directive.
+     *
+     * @return the {@code report-uri} configuration
+     */
+    public ReportUriConfiguration getReportUri() {
+        return reportUri;
+    }
+
+    /**
+     * Returns the configuration of the {@code require-trusted-types-for} directive.
+     *
+     * @return the {@code require-trusted-types-for} configuration
+     */
+    public RequireTrustedTypesForConfiguration getRequireTrustedTypesFor() {
+        return requireTrustedTypesFor;
     }
 
     /**
@@ -316,6 +346,8 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
         private ObjectSrcConfiguration objectSrc = new ObjectSrcConfigurationProperties();
         private PrefetchSrcConfiguration prefetchSrc = new PrefetchSrcConfigurationProperties();
         private ReportToConfiguration reportTo = new ReportToConfigurationProperties();
+        private ReportUriConfiguration reportUri = new ReportUriConfigurationProperties();
+        private RequireTrustedTypesForConfiguration requireTrustedTypesFor = new RequireTrustedTypesForConfigurationProperties();
         private ScriptSrcConfiguration scriptSrc = new ScriptSrcConfigurationProperties();
         private FrameAncestorsConfiguration frameAncestors = new FrameAncestorsConfigurationProperties();
         private FrameSrcConfiguration frameSrc = new FrameSrcConfigurationProperties();
@@ -414,6 +446,28 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
          */
         public Builder reportTo(ReportToConfiguration reportTo) {
             this.reportTo = reportTo;
+            return this;
+        }
+
+        /**
+         * Sets the configuration of the deprecated {@code report-uri} directive.
+         *
+         * @param reportUri the {@code report-uri} configuration
+         * @return this builder
+         */
+        public Builder reportUri(ReportUriConfiguration reportUri) {
+            this.reportUri = reportUri;
+            return this;
+        }
+
+        /**
+         * Sets the configuration of the {@code require-trusted-types-for} directive.
+         *
+         * @param requireTrustedTypesFor the {@code require-trusted-types-for} configuration
+         * @return this builder
+         */
+        public Builder requireTrustedTypesFor(RequireTrustedTypesForConfiguration requireTrustedTypesFor) {
+            this.requireTrustedTypesFor = requireTrustedTypesFor;
             return this;
         }
 
@@ -523,7 +577,7 @@ public final class ContentSecurityPolicyDirectiveConfigurations {
          */
         public ContentSecurityPolicyDirectiveConfigurations build() {
             return new ContentSecurityPolicyDirectiveConfigurations(
-                baseUri, defaultSrc, connectSrc, fencedFrameSrc, fontSrc, objectSrc, prefetchSrc, reportTo, scriptSrc,
+                baseUri, defaultSrc, connectSrc, fencedFrameSrc, fontSrc, objectSrc, prefetchSrc, reportTo, reportUri, requireTrustedTypesFor, scriptSrc,
                 frameAncestors, frameSrc, imgSrc, manifestSrc, mediaSrc, formAction, styleSrc, workerSrc);
         }
     }

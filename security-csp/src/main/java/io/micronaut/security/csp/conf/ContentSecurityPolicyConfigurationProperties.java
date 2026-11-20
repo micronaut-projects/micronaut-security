@@ -18,10 +18,6 @@ package io.micronaut.security.csp.conf;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.Internal;
 
-import java.util.Collections;
-import java.util.List;
-
-
 /**
  * Binds the {@code micronaut.security.csp} configuration namespace to the default CSP policy.
  *
@@ -62,6 +58,10 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     public static final String PROPERTY_OBJECT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".object-src";
     /** Configuration prefix for the {@code prefetch-src} directive. */
     public static final String PROPERTY_PREFETCH_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".prefetch-src";
+    /** Configuration prefix for the deprecated {@code report-uri} directive. */
+    public static final String PROPERTY_REPORT_URI = ContentSecurityPolicyConfigurationProperties.PREFIX + ".report-uri";
+    /** Configuration prefix for the {@code require-trusted-types-for} directive. */
+    public static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR = ContentSecurityPolicyConfigurationProperties.PREFIX + ".require-trusted-types-for";
     /** Configuration prefix for the {@code script-src} directive. */
     public static final String PROPERTY_SCRIPT_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".script-src";
     /** Configuration prefix for the {@code style-src} directive. */
@@ -69,77 +69,10 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     /** Configuration prefix for the {@code worker-src} directive. */
     public static final String PROPERTY_WORKER_SRC = ContentSecurityPolicyConfigurationProperties.PREFIX + ".worker-src";
 
-    private static final String SCRIPT_VALUE = "'script'";
     private static final boolean DEFAULT_ENABLED = true;
     private static final boolean DEFAULT_REPORT_ONLY = false;
-    private static final boolean DEFAULT_REPORT_URI_ENABLED = false;
-    private static final List<String> DEFAULT_REPORT_URI_VALUE = Collections.emptyList();
-    private static final boolean DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED = true;
-    private static final String DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE = SCRIPT_VALUE;
     private boolean enabled = DEFAULT_ENABLED;
     private boolean reportOnly = DEFAULT_REPORT_ONLY;
-    private boolean reportUriEnabled = DEFAULT_REPORT_URI_ENABLED;
-    private List<String> reportUri = DEFAULT_REPORT_URI_VALUE;
-    private boolean requireTrustedTypesForEnabled = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_ENABLED;
-    private String requireTrustedTypesFor = DEFAULT_REQUIRE_TRUSTED_TYPES_FOR_VALUE;
-
-    @Override
-    public boolean isReportUriEnabled() {
-        return reportUriEnabled;
-    }
-
-    /**
-     * Whether to write the deprecated report-uri directive. Default: false.
-     *
-     * @param reportUriEnabled whether the deprecated {@code report-uri} directive is included in the policy
-     */
-    public void setReportUriEnabled(boolean reportUriEnabled) {
-        this.reportUriEnabled = reportUriEnabled;
-    }
-
-    @Override
-    public List<String> getReportUri() {
-        return reportUri;
-    }
-
-    /**
-     * Endpoint URLs written in the deprecated report-uri directive. Default: empty.
-     *
-     * @param reportUri the endpoint URLs used as the value of the deprecated {@code report-uri} directive
-     */
-    public void setReportUri(List<String> reportUri) {
-        this.reportUri = reportUri;
-    }
-
-    @Override
-    public boolean isRequireTrustedTypesForEnabled() {
-        return requireTrustedTypesForEnabled;
-    }
-
-    /**
-     * Whether to write the require-trusted-types-for directive, which makes browsers reject strings
-     * assigned to DOM injection sinks such as innerHTML unless they come from a Trusted Types policy.
-     * Default: true.
-     *
-     * @param requireTrustedTypesForEnabled whether the {@code require-trusted-types-for} directive is included in the policy
-     */
-    public void setRequireTrustedTypesForEnabled(boolean requireTrustedTypesForEnabled) {
-        this.requireTrustedTypesForEnabled = requireTrustedTypesForEnabled;
-    }
-
-    @Override
-    public String getRequireTrustedTypesFor() {
-        return requireTrustedTypesFor;
-    }
-
-    /**
-     * Sink group written in the require-trusted-types-for directive. Default: 'script'.
-     *
-     * @param requireTrustedTypesFor the sink group required to use Trusted Types
-     */
-    public void setRequireTrustedTypesFor(String requireTrustedTypesFor) {
-        this.requireTrustedTypesFor = requireTrustedTypesFor;
-    }
 
     @Override
     public boolean isEnabled() {

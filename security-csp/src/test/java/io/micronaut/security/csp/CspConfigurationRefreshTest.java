@@ -52,11 +52,14 @@ class CspConfigurationRefreshTest {
 
             properties.put("micronaut.security.csp.img-src.values", List.of("https://b.example.com"));
             properties.put("micronaut.security.csp.script-src.self", true);
+            properties.put("micronaut.security.csp.report-uri.enabled", true);
+            properties.put("micronaut.security.csp.report-uri.values", List.of("https://reports.example.com/csp"));
             refresh(context);
 
             ContentSecurityPolicy refreshed = policy(generator);
             assertEquals("img-src https://b.example.com", refreshed.imgSrc().toHeaderValue());
             assertEquals("script-src 'nonce-requestnonce' 'self'", refreshed.scriptSrc().toHeaderValue(), "the nonce is still added per request");
+            assertEquals("report-uri https://reports.example.com/csp", refreshed.reportUri().toHeaderValue());
         }
     }
 

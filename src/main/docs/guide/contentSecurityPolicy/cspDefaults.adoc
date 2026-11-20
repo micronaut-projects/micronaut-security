@@ -7,7 +7,7 @@ base-uri 'none'; default-src 'none'; connect-src 'none'; font-src 'none'; object
 
 The module does not overwrite a CSP header that the response already has, for example one set by a controller or carried by a proxied upstream response. That header is sent unchanged, even if it is weaker than the module's policy.
 
-It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive. If `report-uri` is enabled but no report URIs are configured, the directive is omitted.
+It does not emit `prefetch-src`, `fenced-frame-src`, or `report-uri` unless you enable them explicitly. `prefetch-src` is disabled by default because Safari does not recognize the directive. The deprecated `report-uri` directive is enabled with `micronaut.security.csp.report-uri.enabled` and lists the URLs in `micronaut.security.csp.report-uri.values`; if it is enabled but no URLs are configured, the directive is omitted.
 
 This baseline intentionally blocks most existing resource loading. Start in <<cspReportOnly,report-only mode>>, then allow only the sources your application needs as described in <<cspConfiguringDirectives,Configuring Directives>>.
 
@@ -15,14 +15,15 @@ This baseline intentionally blocks most existing resource loading. Start in <<cs
 
 The default `require-trusted-types-for 'script'` directive makes supporting browsers reject strings assigned to DOM injection sinks such as `innerHTML`, `outerHTML`, `document.write` or `eval`, unless the value comes from a https://developer.mozilla.org/en-US/docs/Web/API/Trusted_Types_API[Trusted Types] policy. Once your scripts load, code that assigns HTML strings, including many libraries, fails with a browser console error similar to `This document requires 'TrustedHTML' assignment`.
 
-Either create Trusted Types policies for that code or disable the directive:
+The sink group is set with `micronaut.security.csp.require-trusted-types-for.value`, which defaults to `'script'`, the only group browsers support. Either create Trusted Types policies for that code or disable the directive:
 
 [configuration]
 ----
 micronaut:
   security:
     csp:
-      require-trusted-types-for-enabled: false
+      require-trusted-types-for:
+        enabled: false
 ----
 
 WARNING: Some browsers, such as Chromium-based ones, also apply `form-action` to redirects that follow a form submission. With the default `form-action 'self'`, a form that posts to the application and is then redirected to another origin is blocked. For example, a POST logout that redirects to an OpenID Connect provider's `end_session_endpoint`, or a login form that redirects to an external identity provider. Add those origins to `micronaut.security.csp.form-action.values`.

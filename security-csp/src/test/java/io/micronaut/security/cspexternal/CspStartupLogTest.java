@@ -131,22 +131,31 @@ class CspStartupLogTest {
     }
 
     @Test
+    void warnsWhenReportUriIsEnabledWithoutValues() {
+        List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.report-uri.enabled", true), context -> { }));
+
+        assertEquals(1, events.size());
+        assertMentions(events.get(0), "micronaut.security.csp.report-uri.enabled", "micronaut.security.csp.report-uri.values", "omitted");
+    }
+
+    @Test
     void warnsWhenReportUrisAreConfiguredButTheDirectiveIsDisabled() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
-            "micronaut.security.csp.report-uri", List.of("https://reports.example.com/csp")), context -> { }));
+            "micronaut.security.csp.report-uri.values", List.of("https://reports.example.com/csp")), context -> { }));
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertMentions(events.get(0), "micronaut.security.csp.report-uri ", "micronaut.security.csp.report-uri-enabled", "omitted");
+        assertMentions(events.get(0), "micronaut.security.csp.report-uri.values", "micronaut.security.csp.report-uri.enabled", "omitted");
     }
 
     @Test
     void warnsAboutAnUnquotedRequireTrustedTypesForValue() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
-            "micronaut.security.csp.require-trusted-types-for", "script"), context -> { }));
+            "micronaut.security.csp.require-trusted-types-for.value", "script"), context -> { }));
 
         assertEquals(1, events.size());
-        assertMentions(events.get(0), "micronaut.security.csp.require-trusted-types-for", "\"script\"", "\"'script'\"");
+        assertMentions(events.get(0), "micronaut.security.csp.require-trusted-types-for.value", "\"script\"", "\"'script'\"");
     }
 
     @Test
@@ -193,11 +202,11 @@ class CspStartupLogTest {
                 "micronaut.security.csp.script-src.values", List.of("https://a.example.com, script-src *"))),
             Arguments.of("micronaut.security.csp.style-src.values", Map.of(
                 "micronaut.security.csp.style-src.values", List.of("https://a.example.com\r\nX-Injected: 1"))),
-            Arguments.of("micronaut.security.csp.report-uri", Map.of(
-                "micronaut.security.csp.report-uri-enabled", true,
-                "micronaut.security.csp.report-uri", List.of("https://a.example.com/r; script-src *"))),
-            Arguments.of("micronaut.security.csp.require-trusted-types-for", Map.of(
-                "micronaut.security.csp.require-trusted-types-for", "'script'; script-src *"))
+            Arguments.of("micronaut.security.csp.report-uri.values", Map.of(
+                "micronaut.security.csp.report-uri.enabled", true,
+                "micronaut.security.csp.report-uri.values", List.of("https://a.example.com/r; script-src *"))),
+            Arguments.of("micronaut.security.csp.require-trusted-types-for.value", Map.of(
+                "micronaut.security.csp.require-trusted-types-for.value", "'script'; script-src *"))
         );
     }
 
@@ -212,13 +221,13 @@ class CspStartupLogTest {
     @Test
     void warnsAboutAPlaintextReportUriOnANonLoopbackHost() {
         List<ILoggingEvent> events = capture(GENERATOR_LOGGER, () -> run(Map.of(
-            "micronaut.security.csp.report-uri-enabled", true,
-            "micronaut.security.csp.report-uri", List.of("http://reports.example.com/csp", "HTTP://localhost:8080/csp", "https://reports.example.com/csp", "/csp")),
+            "micronaut.security.csp.report-uri.enabled", true,
+            "micronaut.security.csp.report-uri.values", List.of("http://reports.example.com/csp", "HTTP://localhost:8080/csp", "https://reports.example.com/csp", "/csp")),
             context -> { }));
 
         assertEquals(1, events.size(), "only the plaintext endpoint on a non-loopback host is reported");
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertMentions(events.get(0), "micronaut.security.csp.report-uri", "http://reports.example.com/csp");
+        assertMentions(events.get(0), "micronaut.security.csp.report-uri.values", "http://reports.example.com/csp");
     }
 
     @Test

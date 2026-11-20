@@ -38,7 +38,7 @@ The Reporting API envelope contains `age`, `type`, the originating `url`, `user_
 * `csp-violation` becomes api:security.csp.report.ContentSecurityPolicyViolationReportBody[].
 * `csp-hash` becomes api:security.csp.report.ContentSecurityPolicyHashReportBody[].
 
-The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. The existing `report-uri` configuration uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint.
+The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. The `report-uri` directive, configured with `micronaut.security.csp.report-uri.enabled` and `micronaut.security.csp.report-uri.values`, uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint.
 
 Reporting endpoints should generally be reachable without authentication because cross-origin report deliveries do not contain credentials. When Micronaut Security is active, permit anonymous POST requests to the endpoint. Adjust the pattern if you changed `micronaut.security.csp.report-to.controller.path`:
 

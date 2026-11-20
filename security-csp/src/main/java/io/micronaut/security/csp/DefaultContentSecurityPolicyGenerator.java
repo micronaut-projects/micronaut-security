@@ -28,6 +28,8 @@ import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfiguration;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfiguration;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -111,8 +113,10 @@ import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.WSS;
 public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
     private static final String PROPERTY_PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".";
-    private static final String PROPERTY_REPORT_URI = PROPERTY_PREFIX + REPORT_URI;
-    private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR;
+    private static final String PROPERTY_REPORT_URI_ENABLED = PROPERTY_PREFIX + REPORT_URI + ".enabled";
+    private static final String PROPERTY_REPORT_URI_VALUES = PROPERTY_PREFIX + REPORT_URI + ".values";
+    private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_ENABLED = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".enabled";
+    private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".value";
     private static final String PROPERTY_REPORT_TO_GROUP = ReportToConfigurationProperties.PREFIX + ".group";
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -226,12 +230,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @throws ConfigurationException if a setting would corrupt or extend the serialized policy
      */
     private Snapshot snapshot() {
-        List<String> reportUris = reportUris(cspConfiguration);
-        if (cspConfiguration.isReportUriEnabled() && reportUris.isEmpty()) {
-            LOG.warn("CSP report-uri is enabled but no report URIs are configured; the report-uri directive is omitted");
-        } else if (!cspConfiguration.isReportUriEnabled() && !reportUris.isEmpty()) {
-            LOG.warn("{} is configured but {}-enabled is false; the report-uri directive is omitted", PROPERTY_REPORT_URI, PROPERTY_REPORT_URI);
+        ReportUriConfiguration reportUri = directiveConfigurations.getReportUri();
+        List<String> reportUris = reportUris(reportUri);
+        if (reportUri.isEnabled() && reportUris.isEmpty()) {
+            LOG.warn("{} is true but {} is empty; the report-uri directive is omitted", PROPERTY_REPORT_URI_ENABLED, PROPERTY_REPORT_URI_VALUES);
+        } else if (!reportUri.isEnabled() && !reportUris.isEmpty()) {
+            LOG.warn("{} is configured but {} is false; the report-uri directive is omitted", PROPERTY_REPORT_URI_VALUES, PROPERTY_REPORT_URI_ENABLED);
         }
+        RequireTrustedTypesForConfiguration requireTrustedTypesFor = directiveConfigurations.getRequireTrustedTypesFor();
         validateRootConfiguration();
         validateSourceExpressions();
         Map<String, CachedDirective> directives = new HashMap<>();
@@ -240,35 +246,37 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         return new Snapshot(
             Map.copyOf(directives),
             reportTo.isEnabled() ? new ContentSecurityPolicyDirective(REPORT_TO, reportTo.getGroup()) : null,
-            cspConfiguration.isReportUriEnabled() && !reportUris.isEmpty()
+            reportUri.isEnabled() && !reportUris.isEmpty()
                 ? new ContentSecurityPolicyDirective(REPORT_URI, String.join(SPACE, reportUris)) : null,
-            cspConfiguration.isRequireTrustedTypesForEnabled()
-                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor()) : null);
+            requireTrustedTypesFor.isEnabled()
+                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor.getValue()) : null);
     }
 
     /**
-     * Rejects root and {@code report-to} settings that would corrupt or extend the serialized policy.
+     * Rejects {@code report-uri}, {@code require-trusted-types-for} and {@code report-to} settings that would corrupt or extend the serialized policy.
      *
      * @throws ConfigurationException if a setting contains a character that ends a directive or policy
      */
     private void validateRootConfiguration() {
-        if (cspConfiguration.isReportUriEnabled()) {
-            for (String reportUri : cspConfiguration.getReportUri()) {
-                requireSafeHeaderValue(PROPERTY_REPORT_URI, reportUri);
+        ReportUriConfiguration reportUriConfiguration = directiveConfigurations.getReportUri();
+        if (reportUriConfiguration.isEnabled()) {
+            for (String reportUri : reportUriConfiguration.getValues()) {
+                requireSafeHeaderValue(PROPERTY_REPORT_URI_VALUES, reportUri);
                 warnIfPlaintext(reportUri);
             }
         }
-        if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
-            if (!StringUtils.hasText(cspConfiguration.getRequireTrustedTypesFor())) {
-                throw new ConfigurationException(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + " must not be blank while "
-                    + PROPERTY_REQUIRE_TRUSTED_TYPES_FOR + "-enabled is true");
+        RequireTrustedTypesForConfiguration requireTrustedTypesForConfiguration = directiveConfigurations.getRequireTrustedTypesFor();
+        if (requireTrustedTypesForConfiguration.isEnabled()) {
+            String requireTrustedTypesFor = requireTrustedTypesForConfiguration.getValue();
+            if (!StringUtils.hasText(requireTrustedTypesFor)) {
+                throw new ConfigurationException(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE + " must not be blank while "
+                    + PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_ENABLED + " is true");
             }
-            String requireTrustedTypesFor = cspConfiguration.getRequireTrustedTypesFor();
-            requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor);
+            requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE, requireTrustedTypesFor);
             String trimmed = requireTrustedTypesFor.trim();
             if (!trimmed.startsWith(SINGLE_QUOTE)) {
                 LOG.warn("{} is \"{}\", which is not single-quoted; browsers ignore the directive. Use \"{}\".",
-                    PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
+                    PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE, requireTrustedTypesFor, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
             }
         }
         if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
@@ -296,7 +304,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         }
         if (host == null || !LOOPBACK_HOSTS.contains(host.toLowerCase(Locale.ROOT))) {
             LOG.warn("{} contains the plaintext endpoint {}; violation reports can contain sensitive URLs. Use https.",
-                PROPERTY_REPORT_URI, trimmed);
+                PROPERTY_REPORT_URI_VALUES, trimmed);
         }
     }
 
@@ -578,11 +586,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     /**
      * Returns the configured {@code report-uri} endpoints, without blank entries.
      *
-     * @param cspConfiguration root CSP configuration
+     * @param reportUri the {@code report-uri} configuration
      * @return the non-blank report URIs
      */
-    private static List<String> reportUris(ContentSecurityPolicyConfiguration cspConfiguration) {
-        return cspConfiguration.getReportUri().stream()
+    private static List<String> reportUris(ReportUriConfiguration reportUri) {
+        return reportUri.getValues().stream()
             .filter(StringUtils::isNotEmpty)
             .toList();
     }

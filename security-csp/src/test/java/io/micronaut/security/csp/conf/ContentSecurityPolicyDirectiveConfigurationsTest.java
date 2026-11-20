@@ -33,12 +33,17 @@ import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperti
 import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfiguration;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfiguration;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfigurationProperties;
 import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,6 +57,8 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
 
             assertSame(context.getBean(ImgSrcConfiguration.class), configurations.getImgSrc());
             assertSame(context.getBean(ScriptSrcConfiguration.class), configurations.getScriptSrc());
+            assertSame(context.getBean(ReportUriConfiguration.class), configurations.getReportUri());
+            assertSame(context.getBean(RequireTrustedTypesForConfiguration.class), configurations.getRequireTrustedTypesFor());
             assertTrue(configurations.getScriptSrc().isNonce());
             assertFalse(configurations.getStyleSrc().isNonce());
         }
@@ -69,6 +76,10 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
         assertFalse(configurations.getScriptSrc().isNonce());
         assertFalse(configurations.getReportTo().isEnabled());
         assertFalse(configurations.getPrefetchSrc().isEnabled());
+        assertFalse(configurations.getReportUri().isEnabled());
+        assertTrue(configurations.getReportUri().getValues().isEmpty());
+        assertTrue(configurations.getRequireTrustedTypesFor().isEnabled());
+        assertEquals("'script'", configurations.getRequireTrustedTypesFor().getValue());
     }
 
     @Test
@@ -90,6 +101,8 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
         FormActionConfigurationProperties formAction = new FormActionConfigurationProperties();
         StyleSrcConfigurationProperties styleSrc = new StyleSrcConfigurationProperties();
         WorkerSrcConfigurationProperties workerSrc = new WorkerSrcConfigurationProperties();
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        RequireTrustedTypesForConfigurationProperties requireTrustedTypesFor = new RequireTrustedTypesForConfigurationProperties();
 
         ContentSecurityPolicyDirectiveConfigurations configurations = ContentSecurityPolicyDirectiveConfigurations.builder()
             .baseUri(baseUri)
@@ -109,6 +122,8 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
             .formAction(formAction)
             .styleSrc(styleSrc)
             .workerSrc(workerSrc)
+            .reportUri(reportUri)
+            .requireTrustedTypesFor(requireTrustedTypesFor)
             .build();
 
         assertSame(baseUri, configurations.getBaseUri());
@@ -128,5 +143,7 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
         assertSame(formAction, configurations.getFormAction());
         assertSame(styleSrc, configurations.getStyleSrc());
         assertSame(workerSrc, configurations.getWorkerSrc());
+        assertSame(reportUri, configurations.getReportUri());
+        assertSame(requireTrustedTypesFor, configurations.getRequireTrustedTypesFor());
     }
 }

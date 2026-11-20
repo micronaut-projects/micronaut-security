@@ -129,9 +129,9 @@ class CspConfigurationBindingTest {
     @Test
     void rootSettingsControlTrustedTypesAndReportUri() {
         ContentSecurityPolicy policy = policy(Map.of(
-            "micronaut.security.csp.require-trusted-types-for-enabled", false,
-            "micronaut.security.csp.report-uri-enabled", true,
-            "micronaut.security.csp.report-uri", List.of("https://example.com/csp")));
+            "micronaut.security.csp.require-trusted-types-for.enabled", false,
+            "micronaut.security.csp.report-uri.enabled", true,
+            "micronaut.security.csp.report-uri.values", List.of("https://example.com/csp")));
 
         assertNull(policy.requireTrustedTypesFor());
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_URI, "https://example.com/csp"),
@@ -141,7 +141,7 @@ class CspConfigurationBindingTest {
     @Test
     void requireTrustedTypesForValueIsBound() {
         ContentSecurityPolicy policy = policy(Map.of(
-            "micronaut.security.csp.require-trusted-types-for", "'script'"));
+            "micronaut.security.csp.require-trusted-types-for.value", "'script'"));
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REQUIRE_TRUSTED_TYPES_FOR, "'script'"),
             policy.requireTrustedTypesFor());

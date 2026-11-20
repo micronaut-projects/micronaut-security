@@ -23,6 +23,8 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfiguratio
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties;
+import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.jspecify.annotations.Nullable;
@@ -66,19 +68,19 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
     @Test
     void omitsReportUriWhenEnabledWithoutUris() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setReportUriEnabled(true);
-        ContentSecurityPolicy policy = policy(defaultGenerator(configuration));
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        reportUri.setEnabled(true);
+        ContentSecurityPolicy policy = policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().reportUri(reportUri)));
 
         assertNull(policy.reportUri());
     }
 
     @Test
     void omitsBlankReportUris() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setReportUriEnabled(true);
-        configuration.setReportUri(List.of("", "https://example.com/csp"));
-        ContentSecurityPolicy policy = policy(defaultGenerator(configuration));
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        reportUri.setEnabled(true);
+        reportUri.setValues(List.of("", "https://example.com/csp"));
+        ContentSecurityPolicy policy = policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().reportUri(reportUri)));
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_URI, "https://example.com/csp"),
                 policy.reportUri());
@@ -345,22 +347,25 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
     @Test
     void rejectsABlankRequireTrustedTypesForValue() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setRequireTrustedTypesFor("  ");
+        RequireTrustedTypesForConfigurationProperties requireTrustedTypesFor = new RequireTrustedTypesForConfigurationProperties();
+        requireTrustedTypesFor.setValue("  ");
+        ContentSecurityPolicyDirectiveConfigurations.Builder builder = ContentSecurityPolicyDirectiveConfigurations.builder()
+            .requireTrustedTypesFor(requireTrustedTypesFor);
 
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> defaultGenerator(configuration));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> generator(builder));
 
-        assertEquals("micronaut.security.csp.require-trusted-types-for must not be blank while "
-            + "micronaut.security.csp.require-trusted-types-for-enabled is true", exception.getMessage());
+        assertEquals("micronaut.security.csp.require-trusted-types-for.value must not be blank while "
+            + "micronaut.security.csp.require-trusted-types-for.enabled is true", exception.getMessage());
     }
 
     @Test
     void acceptsABlankRequireTrustedTypesForValueWhenTheDirectiveIsDisabled() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setRequireTrustedTypesForEnabled(false);
-        configuration.setRequireTrustedTypesFor("");
+        RequireTrustedTypesForConfigurationProperties requireTrustedTypesFor = new RequireTrustedTypesForConfigurationProperties();
+        requireTrustedTypesFor.setEnabled(false);
+        requireTrustedTypesFor.setValue("");
 
-        assertNull(policy(defaultGenerator(configuration)).requireTrustedTypesFor());
+        assertNull(policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().requireTrustedTypesFor(requireTrustedTypesFor)))
+            .requireTrustedTypesFor());
     }
 
     @Test
@@ -371,13 +376,17 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
     @Test
     void addsReportUriWhenEnabled() {
-        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
-        configuration.setReportUriEnabled(true);
-        configuration.setReportUri(List.of("https://example.com/csp-reports"));
-        ContentSecurityPolicyGenerator generator = defaultGenerator(configuration);
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        reportUri.setEnabled(true);
+        reportUri.setValues(List.of("https://example.com/csp-reports"));
+        ContentSecurityPolicyGenerator generator = generator(ContentSecurityPolicyDirectiveConfigurations.builder().reportUri(reportUri));
 
         assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_URI, "https://example.com/csp-reports")));
+    }
+
+    private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyDirectiveConfigurations.Builder directiveConfigurations) {
+        return new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(), directiveConfigurations.build());
     }
 
     private static ContentSecurityPolicyGenerator defaultGenerator(ContentSecurityPolicyConfiguration configuration) {

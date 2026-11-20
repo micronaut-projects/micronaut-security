@@ -17,8 +17,6 @@ package io.micronaut.security.csp.conf;
 
 import io.micronaut.core.util.Toggleable;
 
-import java.util.List;
-
 /**
  * Configuration for Content Security Policy response headers.
  *
@@ -45,34 +43,4 @@ public interface ContentSecurityPolicyConfiguration extends Toggleable {
      * @return whether to report policy violations without enforcing the policy
      */
     boolean isReportOnly();
-
-    /**
-     * Determines whether the deprecated {@code report-uri} directive is generated.
-     *
-     * @return whether to send CSP violation reports to the configured legacy reporting endpoints
-     * @since 5.6.0
-     */
-    boolean isReportUriEnabled();
-
-    /**
-     * Supplies the endpoints for the deprecated {@code report-uri} directive.
-     *
-     * @return the reporting endpoint URLs for the deprecated {@code report-uri} directive
-     * @since 5.6.0
-     */
-    List<String> getReportUri();
-
-    /**
-     * Determines whether Trusted Types enforcement is generated.
-     *
-     * @return whether to require Trusted Types for selected DOM injection sinks
-     */
-    boolean isRequireTrustedTypesForEnabled();
-
-    /**
-     * Supplies the Trusted Types sink group to protect.
-     *
-     * @return the Trusted Types sink group, such as {@code 'script'}, to enforce
-     */
-    String getRequireTrustedTypesFor();
 }
