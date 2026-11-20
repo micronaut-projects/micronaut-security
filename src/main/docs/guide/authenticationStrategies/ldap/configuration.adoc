@@ -7,6 +7,52 @@ include::{includedir}configurationProperties/io.micronaut.security.ldap.configur
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]
 
+== Returned User Attributes
+
+When `micronaut.security.ldap.*.search.attributes` is not set, the user search requests every attribute the manager account is allowed to read. The attributes are then exposed to your api:security.ldap.ContextAuthenticationMapper[] and api:security.ldap.group.LdapGroupProcessor[] implementations through the api:security.ldap.context.LdapSearchResult[].
+
+To avoid exposing password hashes to application code, the attributes listed in `micronaut.security.ldap.*.search.excluded-attributes` are stripped from the search results before they reach your code. By default `userPassword` and `unicodePwd` are excluded. Matching is case-insensitive. An excluded name without LDAP options also excludes all its option variants: for example, `userPassword` excludes `userPassword;binary`. An exclusion containing options matches the same attribute type and option set, regardless of option order. Set the property to an empty list to disable the exclusion.
+
+Setting `search.excluded-attributes` replaces the default list; it does not add to it. To strip additional attributes, repeat the defaults:
+
+[configuration]
+----
+micronaut:
+  security:
+    ldap:
+      default:
+        search:
+          excluded-attributes:
+            - userPassword
+            - unicodePwd
+            - sambaNTPassword
+----
+
+Surrounding whitespace in an entry is ignored, so a comma-separated value such as `userPassword, unicodePwd` in an environment variable works as expected. Both attribute names and numeric OIDs may be listed. The default password attribute names are treated as aliases of their OIDs: `userPassword` matches `2.5.4.35`, and `unicodePwd` matches `1.2.840.113556.1.4.90`, in either direction and with any LDAP options. Other schema aliases are not resolved automatically; list each identifier your directory returns when needed.
+
+The default list covers the two most common password attributes only. If the manager account can read other credential attributes in your directory, such as `authPassword`, `sambaNTPassword`, `sambaLMPassword`, `krbPrincipalKey` or `pwdHistory`, add them.
+
+Exclusions also apply when an attribute is explicitly requested in `search.attributes`. A conflicting setting logs a warning once, when that LDAP configuration is loaded. If your application needs the attribute, remove it from `search.excluded-attributes`.
+
+This filtering happens after JNDI receives the attributes into process memory; it prevents downstream exposure rather than preventing retrieval. The defaults apply to properties-based user searches. Custom api:security.ldap.context.SearchSettings[] implementations default to no exclusions and must override `getExcludedAttributes()` to opt in. The exclusions are applied by api:security.ldap.context.DefaultLdapSearchService[]; a custom api:security.ldap.context.LdapSearchService[] that does not extend it must strip the attributes itself.
+
+It is recommended to set `micronaut.security.ldap.*.search.attributes` explicitly to the minimal set of attributes your application needs, for example:
+
+[configuration]
+----
+micronaut:
+  security:
+    ldap:
+      default:
+        search:
+          attributes:
+            - uid
+            - cn
+            - mail
+----
+
+NOTE: The group search only requests the attribute configured with `micronaut.security.ldap.*.groups.attribute` (`cn` by default). If you set `micronaut.security.ldap.*.groups.filter-attribute`, make sure that attribute is included in `micronaut.security.ldap.*.search.attributes` when configured and is absent from `micronaut.security.ldap.*.search.excluded-attributes`, since the value is read from the user search result. When the value is missing, the group search falls back to the user's DN. A conflict with the exclusion list logs a warning when the configuration is loaded.
+
 TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
 ```
 -Djavax.net.ssl.trustStore="<path to truststore file>"

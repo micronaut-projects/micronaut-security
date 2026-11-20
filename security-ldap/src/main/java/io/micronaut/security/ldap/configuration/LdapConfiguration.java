@@ -19,13 +19,16 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
 import io.micronaut.security.ldap.context.ContextSettings;
 import io.micronaut.security.ldap.context.SearchSettings;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
@@ -262,6 +265,13 @@ public class LdapConfiguration implements Toggleable {
          */
         public static final String PREFIX = LdapConfiguration.PREFIX + ".search";
 
+        /**
+         * The attributes stripped from the user search results by default.
+         *
+         * @since 5.6.0
+         */
+        public static final List<String> DEFAULT_EXCLUDED_ATTRIBUTES = List.of("userPassword", "unicodePwd");
+
         private static final boolean DEFAULT_SUBTREE = true;
         private static final String DEFAULT_FILTER = "(uid={0})";
 
@@ -269,6 +279,7 @@ public class LdapConfiguration implements Toggleable {
         private String base = "";
         private String filter = DEFAULT_FILTER;
         private String[] attributes = null;
+        private List<String> excludedAttributes = DEFAULT_EXCLUDED_ATTRIBUTES;
         private @Nullable String decoyDn;
 
         /**
@@ -349,12 +360,41 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
-         * Sets the attributes to return. Default all
+         * Sets the attributes to return. Default all, except the attributes listed in {@code excluded-attributes}.
+         * It is recommended to set this to the minimal set of attributes your application needs.
          *
          * @param attributes The attributes
          */
         public void setAttributes(String[] attributes) {
             this.attributes = attributes;
+        }
+
+        /**
+         * @return The attributes stripped from the search results. Never null.
+         * @since 5.6.0
+         */
+        public List<String> getExcludedAttributes() {
+            return excludedAttributes;
+        }
+
+        /**
+         * Sets the attributes stripped from the user search results before they are exposed to the application.
+         * Matching is case-insensitive. Set to an empty list to disable the exclusion. Default {@code [userPassword, unicodePwd]}.
+         * Names without LDAP options also exclude all option variants, such as {@code userPassword;binary}.
+         * Option order is ignored. The names and OIDs of {@code userPassword} and {@code unicodePwd} are treated as aliases.
+         * Exclusions also apply to explicitly requested attributes; conflicting settings log a warning when the configuration is loaded.
+         * Setting this property replaces the default list, so repeat the defaults when adding attributes.
+         * Entries may be attribute names or OIDs; surrounding whitespace is ignored and blank entries are dropped.
+         *
+         * @param excludedAttributes The attributes to exclude
+         * @since 5.6.0
+         */
+        public void setExcludedAttributes(@Nullable List<String> excludedAttributes) {
+            this.excludedAttributes = excludedAttributes == null ? Collections.emptyList() : excludedAttributes.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(StringUtils::isNotEmpty)
+                .toList();
         }
 
         /**
