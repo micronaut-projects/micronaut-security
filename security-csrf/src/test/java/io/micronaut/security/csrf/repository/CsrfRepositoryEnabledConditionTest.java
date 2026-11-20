@@ -88,7 +88,7 @@ class CsrfRepositoryEnabledConditionTest {
             legacyKey(name), false))) {
             assertBothEnabled(ctx);
         }
-        assertTrue(warnings().isEmpty());
+        assertEquals(List.of(ignoredWarning(name)), warnings());
     }
 
     @ParameterizedTest
@@ -100,7 +100,7 @@ class CsrfRepositoryEnabledConditionTest {
             assertOnlyDisabled(ctx, name);
             assertDisabledBy(ctx, name, canonicalKey(name));
         }
-        assertTrue(warnings().isEmpty());
+        assertEquals(List.of(ignoredWarning(name)), warnings());
     }
 
     @Test
@@ -127,6 +127,10 @@ class CsrfRepositoryEnabledConditionTest {
 
     private static String deprecationWarning(String name) {
         return "Configuration property [" + legacyKey(name) + "] is deprecated. Use [" + canonicalKey(name) + "] instead.";
+    }
+
+    private static String ignoredWarning(String name) {
+        return "Configuration property [" + legacyKey(name) + "] is deprecated and ignored because [" + canonicalKey(name) + "] is set. Remove it.";
     }
 
     private static void assertBothEnabled(ApplicationContext ctx) {

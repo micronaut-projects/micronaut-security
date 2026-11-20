@@ -34,7 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base {@link Condition} to enable or disable a CSRF token repository.
  * The canonical configuration key is {@code micronaut.security.csrf.repositories.<name>.enabled}.
  * The legacy key {@code micronaut.security.csrf.repository.<name>.enabled} is still supported but deprecated.
- * When the canonical key is set, it takes precedence. When only the legacy key is set, it is used and a warning is logged once per bean context.
+ * When the canonical key is set, it takes precedence. When only the legacy key is set, it is used.
+ * Whenever the legacy key is set, a warning is logged once per bean context.
  * When neither key is set, the repository is enabled.
  *
  * @author Sergio del Amo
@@ -57,15 +58,13 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context) {
-        Boolean enabled = context.getProperty(canonicalKey, Boolean.class).orElse(null);
-        String key = canonicalKey;
-        if (enabled == null) {
-            enabled = context.getProperty(legacyKey, Boolean.class).orElse(null);
-            if (enabled != null) {
-                key = legacyKey;
-                warnLegacyKey(context.getBeanContext());
-            }
+        Boolean canonical = context.getProperty(canonicalKey, Boolean.class).orElse(null);
+        Boolean legacy = context.getProperty(legacyKey, Boolean.class).orElse(null);
+        if (legacy != null) {
+            warnLegacyKey(context.getBeanContext(), canonical != null);
         }
+        Boolean enabled = canonical != null ? canonical : legacy;
+        String key = canonical != null ? canonicalKey : legacyKey;
         if (enabled == null || enabled) {
             return true;
         }
@@ -73,10 +72,15 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
         return false;
     }
 
-    private void warnLegacyKey(BeanContext beanContext) {
+    private void warnLegacyKey(BeanContext beanContext, boolean canonicalKeySet) {
         // the condition is evaluated several times per bean context
         boolean firstTime = WARNED.computeIfAbsent(beanContext, k -> ConcurrentHashMap.newKeySet()).add(legacyKey);
-        if (firstTime && CsrfRepositoryEnabledConditionLogging.LOG.isWarnEnabled()) {
+        if (!firstTime || !CsrfRepositoryEnabledConditionLogging.LOG.isWarnEnabled()) {
+            return;
+        }
+        if (canonicalKeySet) {
+            CsrfRepositoryEnabledConditionLogging.LOG.warn("Configuration property [{}] is deprecated and ignored because [{}] is set. Remove it.", legacyKey, canonicalKey);
+        } else {
             CsrfRepositoryEnabledConditionLogging.LOG.warn("Configuration property [{}] is deprecated. Use [{}] instead.", legacyKey, canonicalKey);
         }
     }
