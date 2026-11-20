@@ -37,12 +37,17 @@ import java.util.concurrent.ExecutorService;
 public class LdapAuthenticationProviderFactory {
 
     /**
+     * Creates the provider for each enabled {@link LdapConfiguration}. Override this method to customize the provider.
+     *
      * @param configuration               The configuration to use to authenticate
      * @param ldapSearchService           The search service
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Executor Service
+     * @param executorService             Ignored by this implementation. It is still the {@link TaskExecutors#IO} executor,
+     *                                    so overrides of this method keep receiving it. LDAP authentication runs on the
+     *                                    executor named by {@link LdapAuthenticationProvider#getExecutorName()},
+     *                                    {@link TaskExecutors#BLOCKING} by default.
      * @return an {@link LdapAuthenticationProvider} if the corresponding {@link LdapConfiguration} is enabled
      */
     @EachBean(LdapConfiguration.class)
@@ -53,6 +58,6 @@ public class LdapAuthenticationProviderFactory {
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor,
                                                                  @Named(TaskExecutors.IO) ExecutorService executorService) {
-        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
+        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 }

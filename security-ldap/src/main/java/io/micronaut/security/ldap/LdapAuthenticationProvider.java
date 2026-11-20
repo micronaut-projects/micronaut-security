@@ -27,14 +27,15 @@ import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
-import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
+import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.NamingException;
+import javax.naming.OperationNotSupportedException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Optional;
@@ -43,6 +44,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import static io.micronaut.security.utils.LoggingUtils.debug;
+import static io.micronaut.security.utils.LoggingUtils.sanitize;
+import static io.micronaut.security.utils.LoggingUtils.sanitizeAll;
 
 /**
  * Authenticates against an LDAP server using the configuration provided through
@@ -62,7 +65,29 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     private final ContextBuilder contextBuilder;
     private final ContextAuthenticationMapper contextAuthenticationMapper;
     private final LdapGroupProcessor ldapGroupProcessor;
-    private final Scheduler scheduler;
+
+    /**
+     * Creates a provider for the given LDAP configuration. Authentication runs on the executor named by
+     * {@link #getExecutorName()}.
+     *
+     * @param configuration               The configuration to use to authenticate
+     * @param ldapSearchService           The search service
+     * @param contextBuilder              The context builder
+     * @param contextAuthenticationMapper The authentication mapper
+     * @param ldapGroupProcessor          The group processor
+     * @since 5.6.0
+     */
+    public LdapAuthenticationProvider(LdapConfiguration configuration,
+                                      LdapSearchService ldapSearchService,
+                                      ContextBuilder contextBuilder,
+                                      ContextAuthenticationMapper contextAuthenticationMapper,
+                                      LdapGroupProcessor ldapGroupProcessor) {
+        this.configuration = configuration;
+        this.ldapSearchService = ldapSearchService;
+        this.contextBuilder = contextBuilder;
+        this.contextAuthenticationMapper = contextAuthenticationMapper;
+        this.ldapGroupProcessor = ldapGroupProcessor;
+    }
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -70,28 +95,28 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
-     * @param executorService             Executor Service
+     * @param executorService             Ignored, may be {@code null}. LDAP authentication runs on the executor named by
+     *                                    {@link #getExecutorName()}, {@link TaskExecutors#BLOCKING} by default.
+     * @deprecated The executor service is ignored. Use {@link #LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)} instead.
      */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
                                       LdapGroupProcessor ldapGroupProcessor,
-                                      @Named(TaskExecutors.IO) ExecutorService executorService) {
-        this.configuration = configuration;
-        this.ldapSearchService = ldapSearchService;
-        this.contextBuilder = contextBuilder;
-        this.contextAuthenticationMapper = contextAuthenticationMapper;
-        this.ldapGroupProcessor = ldapGroupProcessor;
-        this.scheduler = Schedulers.fromExecutorService(executorService);
+                                      @Nullable ExecutorService executorService) {
+        this(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
     }
 
     @Override
     public AuthenticationResponse authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         String username = authenticationRequest.getIdentity().toString();
+        // the username comes from the client before it is authenticated: never log it as it was received
+        String loggableUsername = sanitize(username);
         S secret = authenticationRequest.getSecret();
         if (secret == null) {
-            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is null", username);
+            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is null", loggableUsername);
             return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
         }
         String password = secret.toString();
@@ -99,7 +124,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             // RFC 4513 section 5.1.2: a simple bind with a non-empty DN and an empty password is an
             // unauthenticated bind, which some directories (e.g. Active Directory) accept by default.
             // Never send it to the server.
-            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is empty", username);
+            debug(LOG, "Rejecting authentication for user [{}] because the supplied secret is empty", loggableUsername);
             return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
         }
 
@@ -112,75 +137,101 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             managerContext = contextBuilder.build(configuration.getManagerSettings());
             debug(LOG, "Manager context initialized successfully");
         } catch (NamingException e) {
-            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
+            debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", sanitize(e.getMessage()));
             return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         }
 
-        debug(LOG, "Attempting to authenticate with user [{}]", username);
+        debug(LOG, "Attempting to authenticate with user [{}]", loggableUsername);
 
         try {
             Optional<LdapSearchResult> optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
 
             if (optionalResult.isPresent()) {
                 LdapSearchResult result = optionalResult.get();
-                debug(LOG, "User found in context [{}]. Attempting to bind.", result.getDn());
+                debug(LOG, "User found in context [{}]. Attempting to bind.", sanitize(result.getDn()));
 
-                DirContext userContext = null;
-                try {
-                    String dn = result.getDn();
-                    userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
-                    if (result.getAttributes() == null) {
-                        result.setAttributes(userContext.getAttributes(dn));
-                    }
-                } finally {
-                    contextBuilder.close(userContext);
+                if (!bindUserAndLoadAttributes(result, loggableUsername, password)) {
+                    return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
                 }
 
-                debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
+                debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", sanitize(result.getDn()));
 
-                Set<String> groups = Collections.emptySet();
-
-                LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
-                if (groupSettings.isEnabled()) {
-                    groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
-                        Object[] params = new Object[]{
-                                groupSettings.getFilterAttribute()
-                                        .map(attr -> result.getAttributes().getValue(attr))
-                                        .orElse(result.getDn())
-                        };
-                        return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
-                    });
-
-
-                    debug(LOG, "Group search returned [{}] for user [{}]", groups, username);
-                } else {
-                    debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
-                }
+                Set<String> groups = groups(managerContext, result, loggableUsername);
 
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", username, groups);
+                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", loggableUsername, sanitizeAll(groups));
                 }
 
                 AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
                 if (response.isAuthenticated()) {
-                    debug(LOG, "Response successfully created for [{}]. Response is authenticated: [{}]", username, response.isAuthenticated());
+                    debug(LOG, "Response successfully created for [{}]. Response is authenticated: [{}]", loggableUsername, response.isAuthenticated());
                 }
                 return response;
 
             } else {
-                debug(LOG, "User not found [{}]", username);
+                debug(LOG, "User not found [{}]", loggableUsername);
                 return rejectUnknownUser(requestContext, authenticationRequest);
             }
         } catch (NamingException e) {
-            debug(LOG, "Failed to authenticate with user [{}].  {}", username, e);
-            if (e instanceof javax.naming.AuthenticationException) {
-                return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
-            } else {
-                return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
-            }
+            debug(LOG, "Failed to authenticate with user [{}]. Encountered {}: {}", loggableUsername, e.getClass().getSimpleName(), sanitize(e.getMessage()));
+            return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
         } finally {
             contextBuilder.close(managerContext);
         }
+    }
+
+    /**
+     * Binds as the user found by the search and, if the result carries no attributes, fetches them with that bind.
+     *
+     * @param result   The entry found for the username
+     * @param loggableUsername The username, sanitized for logging
+     * @param password The password to bind with
+     * @return false if the directory rejected the bind, which means the credentials are not accepted
+     * @throws NamingException for any failure that is not a rejection of the bind
+     */
+    private boolean bindUserAndLoadAttributes(LdapSearchResult result, String loggableUsername, String password) throws NamingException {
+        String dn = result.getDn();
+        DirContext userContext = null;
+        try {
+            try {
+                userContext = contextBuilder.build(configuration.getSettings(dn, password));
+            } catch (javax.naming.AuthenticationException | AuthenticationNotSupportedException | OperationNotSupportedException e) {
+                // The server rejected the user bind itself, so the supplied credentials are not accepted.
+                // Only this bind says anything about the credentials: the same exceptions thrown by the
+                // manager context are a problem of the directory or its configuration.
+                debug(LOG, "Server rejected bind for user [{}]. Encountered {}: {}", loggableUsername, e.getClass().getSimpleName(), sanitize(e.getMessage()));
+                return false;
+            }
+            if (result.getAttributes() == null) {
+                // DirContext#getAttributes(String) parses its argument as a JNDI composite name, which
+                // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
+                // InvalidNameException is a NamingException and is handled by the caller.
+                result.setAttributes(userContext.getAttributes(new LdapName(dn)));
+            }
+            return true;
+        } finally {
+            contextBuilder.close(userContext);
+        }
+    }
+
+    private Set<String> groups(DirContext managerContext, LdapSearchResult result, String loggableUsername) throws NamingException {
+        LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
+        if (!groupSettings.isEnabled()) {
+            debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
+            return Collections.emptySet();
+        }
+        Set<String> groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
+            Object[] params = new Object[]{
+                    groupSettings.getFilterAttribute()
+                            .map(attr -> result.getAttributes().getValue(attr))
+                            .orElse(result.getDn())
+            };
+            return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
+        });
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Group search returned [{}] for user [{}]", sanitizeAll(groups), loggableUsername);
+        }
+        return groups;
     }
 
     /**
@@ -209,13 +260,13 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         try {
             decoyContext = contextBuilder.build(configuration.getSettings(decoyDn(), authenticationRequest.getSecret().toString()));
         } catch (javax.naming.AuthenticationException e) {
-            debug(LOG, "Decoy bind for unknown user failed as expected. Encountered {}", e.getMessage());
+            debug(LOG, "Decoy bind for unknown user failed as expected. Encountered {}", sanitize(e.getMessage()));
         } catch (NamingException e) {
             // Anything other than invalid credentials means the decoy bind never reached the directory
             // or was rejected before the password was checked, so the mitigation is not doing its job.
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Decoy bind for unknown user failed with {} rather than invalid credentials; check [{}.{}.search.decoy-dn]. Encountered {}",
-                    e.getClass().getSimpleName(), LdapConfiguration.PREFIX, configuration.getName(), e.getMessage());
+                    e.getClass().getSimpleName(), LdapConfiguration.PREFIX, configuration.getName(), sanitize(e.getMessage()));
             }
         } finally {
             contextBuilder.close(decoyContext);
@@ -235,8 +286,16 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         return StringUtils.isEmpty(base) ? rdn : rdn + "," + base;
     }
 
+    /**
+     * No-op. The provider holds no resources that require closing. This method implements {@link Closeable}; when it
+     * is removed, the provider will no longer implement {@link Closeable}.
+     *
+     * @deprecated The provider holds no resources that require closing. Do not call this method, and do not rely on the
+     * provider being {@link Closeable}.
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     @Override
     public void close() {
-        //No op
+        // No op
     }
 }
