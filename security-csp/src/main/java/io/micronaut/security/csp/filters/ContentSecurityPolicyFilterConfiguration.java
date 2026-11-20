@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.core.util.Toggleable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration for the CSP server filter, which generates the request nonce, and for the response
@@ -31,4 +32,13 @@ public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
      * @return the ant-style request path pattern; defaults to {@code /**}
      */
     String getPattern();
+
+    /**
+     * Returns the {@code Cache-Control} value written to HTML responses of requests that received a
+     * nonce, so that a shared cache does not replay one nonce to every visitor.
+     *
+     * @return the {@code Cache-Control} value, such as {@code private} or {@code no-store}, or
+     * {@code null} to leave the header to the application; defaults to {@code null}
+     */
+    @Nullable String getNonceCacheControl();
 }

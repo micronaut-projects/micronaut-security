@@ -22,6 +22,7 @@ import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link ContentSecurityPolicyFilterConfiguration}.
@@ -36,6 +37,8 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     public static final String PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".filter";
     /** Property that enables or disables the CSP response filter. */
     public static final String PROPERTY_ENABLED = ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".enabled";
+    /** Property that sets the {@code Cache-Control} value of HTML responses that carry a nonce. */
+    public static final String PROPERTY_NONCE_CACHE_CONTROL = ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".nonce-cache-control";
     /**
      * The default enable value.
      */
@@ -51,6 +54,9 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
 
     private boolean enabled = DEFAULT_ENABLED;
 
+    @Nullable
+    private String nonceCacheControl;
+
     /**
      * Reports whether the CSP response filter is enabled.
      *
@@ -65,6 +71,23 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     @NonNull
     public String getPattern() {
         return this.pattern;
+    }
+
+    @Override
+    @Nullable
+    public String getNonceCacheControl() {
+        return this.nonceCacheControl;
+    }
+
+    /**
+     * {@code Cache-Control} value written to HTML responses of requests that received a nonce, for
+     * example {@code private} or {@code no-store}. A {@code Cache-Control} header set by the
+     * application is kept. Not set by default.
+     *
+     * @param nonceCacheControl the {@code Cache-Control} value, or {@code null} to not write the header
+     */
+    public void setNonceCacheControl(@Nullable String nonceCacheControl) {
+        this.nonceCacheControl = nonceCacheControl;
     }
 
     /**
