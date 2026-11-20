@@ -127,6 +127,14 @@ class DefaultReactiveOpenIdTokenResponseValidatorTest {
     }
 
     @Test
+    void expiredIdTokenIsRejected() {
+        Instant now = Instant.now();
+        assertTrue(validate(provider.signedJwt(claims -> claims.subject("sherlock").audience(CLIENT_ID).claim("nonce", NONCE)
+            .issueTime(Date.from(now.minusSeconds(7200)))
+            .expirationTime(Date.from(now.minusSeconds(3600))))).isEmpty());
+    }
+
+    @Test
     void malformedIdTokenIsRejected() {
         assertTrue(validate("not-a-jwt").isEmpty());
     }
