@@ -16,12 +16,8 @@
 package io.micronaut.security.token.jwt.nimbus;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
-import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 import org.slf4j.Logger;
@@ -38,31 +34,21 @@ import java.util.List;
 abstract class AbstractJsonWebTokenValidator<R> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJsonWebTokenValidator.class);
 
-    private final boolean noSignatures;
+    private final UnsignedJwtPolicy unsignedJwtPolicy;
     private List<? extends JwtClaimsValidator<R>> claimsValidators;
 
     AbstractJsonWebTokenValidator(List<GenericJwtClaimsValidator<R>> claimsValidators,
-                                  List<SignatureConfiguration> imperativeSignatureConfigurations,
-                                  List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations) {
+                                  UnsignedJwtPolicy unsignedJwtPolicy) {
         this.claimsValidators = claimsValidators;
-        this.noSignatures = imperativeSignatureConfigurations.isEmpty() && reactiveSignatureConfigurations.isEmpty();
+        this.unsignedJwtPolicy = unsignedJwtPolicy;
     }
 
-    protected boolean validateSignature(PlainJWT plainJWT) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating plain JWT");
-        }
-        if (noSignatures) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT is not signed and no signature configurations -> verified");
-            }
-            return true;
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("A non-signed JWT cannot be accepted as signature configurations have been defined");
-            }
-            return false;
-        }
+    /**
+     * @return Whether an unsigned JWT should be accepted
+     * @see UnsignedJwtPolicy
+     */
+    protected boolean acceptsUnsignedJwt() {
+        return unsignedJwtPolicy.acceptsUnsignedJwt();
     }
 
     protected boolean validateClaims(JWT jwt, R request) {

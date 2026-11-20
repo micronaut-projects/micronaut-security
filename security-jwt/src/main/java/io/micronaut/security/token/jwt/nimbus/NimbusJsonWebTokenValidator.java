@@ -22,8 +22,6 @@ import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.jwt.signature.ReactiveSignatureConfiguration;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenParser;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenSignatureValidator;
@@ -47,11 +45,10 @@ class NimbusJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> im
 
     NimbusJsonWebTokenValidator(
             List<GenericJwtClaimsValidator<R>> claimsValidators,
-            List<SignatureConfiguration> imperativeSignatureConfigurations,
-            List<ReactiveSignatureConfiguration<SignedJWT>> reactiveSignatureConfigurations,
             JsonWebTokenParser<JWT> jsonWebTokenParser,
-            JsonWebTokenSignatureValidator<SignedJWT> signatureValidator) {
-        super(claimsValidators, imperativeSignatureConfigurations, reactiveSignatureConfigurations);
+            JsonWebTokenSignatureValidator<SignedJWT> signatureValidator,
+            UnsignedJwtPolicy unsignedJwtPolicy) {
+        super(claimsValidators, unsignedJwtPolicy);
         this.jsonWebTokenParser = jsonWebTokenParser;
         this.signatureValidator = signatureValidator;
     }
@@ -74,8 +71,8 @@ class NimbusJsonWebTokenValidator<R> extends AbstractJsonWebTokenValidator<R> im
     }
 
     private boolean validateSignature(JWT jwt) {
-        if (jwt instanceof PlainJWT plainJWT) {
-            return validateSignature(plainJWT);
+        if (jwt instanceof PlainJWT) {
+            return acceptsUnsignedJwt();
 
         } else if (jwt instanceof SignedJWT signedJWT) {
             return signatureValidator.validateSignature(signedJWT);

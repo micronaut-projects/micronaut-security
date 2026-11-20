@@ -38,7 +38,21 @@ public class JwtConfigurationProperties implements JwtConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
+    /**
+     * The name of the property which controls whether unsigned tokens are accepted.
+     * @since 5.6.0
+     */
+    public static final String ACCEPT_UNSIGNED_TOKENS = PREFIX + ".accept-unsigned-tokens";
+
+    /**
+     * The default accept unsigned tokens value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ACCEPT_UNSIGNED_TOKENS = false;
+
     private boolean enabled = DEFAULT_ENABLED;
+
+    private boolean acceptUnsignedTokens = DEFAULT_ACCEPT_UNSIGNED_TOKENS;
 
     @Override
     public boolean isEnabled() {
@@ -51,5 +65,20 @@ public class JwtConfigurationProperties implements JwtConfiguration {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isAcceptUnsignedTokens() {
+        return acceptUnsignedTokens;
+    }
+
+    /**
+     * Sets whether unsigned JWTs (JWS header {@code alg=none}) are accepted when no signature configuration is present.
+     * Unsigned tokens can be forged by anyone; enable this only for local development or testing. Default value ({@value #DEFAULT_ACCEPT_UNSIGNED_TOKENS}).
+     * @param acceptUnsignedTokens True to accept unsigned tokens when no signature configuration is present
+     * @since 5.6.0
+     */
+    public void setAcceptUnsignedTokens(boolean acceptUnsignedTokens) {
+        this.acceptUnsignedTokens = acceptUnsignedTokens;
     }
 }
