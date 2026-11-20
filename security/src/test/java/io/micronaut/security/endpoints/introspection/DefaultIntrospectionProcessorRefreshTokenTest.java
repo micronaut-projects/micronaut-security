@@ -34,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultIntrospectionProcessorRefreshTokenTest {
@@ -43,16 +42,32 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     private static final String SIGNED_B = "signed.key-b";
 
     @Test
-    void refreshTokenKnownToPersistenceIsActiveAndPopulatedFromThePersistedAuthentication() {
-        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice", List.of("ROLE_USER"))));
+    void refreshTokenKnownToPersistenceIsActiveWithNoClaimsFromThePersistedAuthentication() {
+        // The persisted Authentication describes the user at login (here with ID token claims), not the refresh token.
+        Authentication loginAuthentication = Authentication.build("alice", List.of("ROLE_USER"), Map.of(
+            "token_type", "Bearer",
+            "scope", "openid",
+            "exp", 1L,
+            "iat", 1L,
+            "iss", "https://idp.example",
+            "aud", "client",
+            "jti", "id-token-id"));
+        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", loginAuthentication));
         DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
 
         IntrospectionResponse response = introspect(processor, SIGNED_A);
 
         assertTrue(response.isActive());
-        assertEquals("alice", response.getUsername());
-        assertEquals("alice", response.getSub());
-        assertEquals(List.of("ROLE_USER"), response.getExtensions().get("roles"));
+        assertNull(response.getUsername());
+        assertNull(response.getSub());
+        assertNull(response.getTokenType());
+        assertNull(response.getScope());
+        assertNull(response.getExp());
+        assertNull(response.getIat());
+        assertNull(response.getIss());
+        assertNull(response.getAud());
+        assertNull(response.getJti());
+        assertTrue(response.getExtensions().isEmpty());
         assertEquals(List.of("key-a"), persistence.lookups);
     }
 
@@ -115,13 +130,27 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     @Test
     @SuppressWarnings("removal")
     void deprecatedConstructorKeepsTheBehaviourWithoutPersistence() {
-        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator());
+        List<DefaultIntrospectionProcessor<HttpRequest<?>>> created = new ArrayList<>();
+        List<ILoggingEvent> events = captureLogs(Level.WARN, () -> created.add(new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator())));
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = created.get(0);
 
+        // The revocation check is skipped, so the deprecated constructor says so.
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertTrue(events.get(0).getFormattedMessage().contains("RefreshTokenPersistence"));
         IntrospectionResponse response = introspect(processor, SIGNED_A);
 
         assertTrue(response.isActive());
         assertNull(response.getUsername());
         assertInactiveAndEmpty(introspect(processor, "tampered.key-a"));
+    }
+
+    @Test
+    @SuppressWarnings("removal")
+    void deprecatedConstructorWithoutARefreshTokenValidatorDoesNotWarn() {
+        List<ILoggingEvent> events = captureLogs(Level.WARN, () -> new DefaultIntrospectionProcessor<HttpRequest<?>>(List.of(), new TokenConfigurationProperties(), null));
+
+        assertTrue(events.isEmpty());
     }
 
     @Test
@@ -161,25 +190,6 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     }
 
     @Test
-    void failureMappingThePersistedAuthenticationIsPropagatedAndNotLoggedAsAPersistenceFailure() {
-        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")));
-        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator(), persistence) {
-            @Override
-            protected Map<String, Object> resolveExtensions(Authentication authentication) {
-                throw new IllegalStateException("mapping bug");
-            }
-        };
-
-        List<ILoggingEvent> events = captureLogs(() -> {
-            IllegalStateException e = assertThrows(IllegalStateException.class,
-                () -> Mono.from(processor.introspect(new IntrospectionRequest(SIGNED_A, null), HttpRequest.GET("/token_info"))).block());
-            assertEquals("mapping bug", e.getMessage());
-        });
-
-        assertTrue(events.isEmpty());
-    }
-
-    @Test
     void introspectRefreshTokenDoesNoWorkUntilSubscribed() {
         PrefixRefreshTokenValidator refreshTokenValidator = new PrefixRefreshTokenValidator();
         MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")));
@@ -191,7 +201,8 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         assertTrue(persistence.lookups.isEmpty());
         IntrospectionResponse response = Mono.from(publisher).block();
         assertNotNull(response);
-        assertEquals("alice", response.getUsername());
+        assertTrue(response.isActive());
+        assertEquals(List.of("key-a"), persistence.lookups);
     }
 
     @Test
@@ -307,7 +318,6 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         IntrospectionResponse response = introspect(processor, SIGNED_A);
 
         assertTrue(response.isActive());
-        assertEquals("alice", response.getUsername());
         assertEquals(1, refreshTokenValidator.invocations.get());
         assertEquals(List.of("key-a"), persistence.lookups);
     }

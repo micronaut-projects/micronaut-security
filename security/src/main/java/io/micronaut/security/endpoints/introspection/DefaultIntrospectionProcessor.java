@@ -45,7 +45,8 @@ import reactor.core.publisher.Mono;
  * Then it creates a {@link IntrospectionResponse} with the first {@link Authentication} object.
  * If no TokenValidator is able to validate the token, it tries with {@link RefreshTokenValidator}.
  * A refresh token whose format is valid is then looked up in {@link RefreshTokenPersistence}, when such a bean exists,
- * so that a revoked refresh token is reported as inactive. If no {@link RefreshTokenPersistence} bean exists,
+ * so that a revoked refresh token is reported as inactive. An active refresh token is reported as {@code active: true}
+ * with no other fields. If no {@link RefreshTokenPersistence} bean exists,
  * a refresh token is reported active as soon as the {@link RefreshTokenValidator} accepts it.
  * If it cannot authenticate it returns {active: false}
  * @author Sergio del Amo
@@ -98,6 +99,9 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
         this(tokenValidators, tokenConfiguration, refreshTokenValidator, null);
+        if (refreshTokenValidator != null && LOG.isWarnEnabled()) {
+            LOG.warn("{} uses a deprecated DefaultIntrospectionProcessor constructor which does not consult RefreshTokenPersistence, so revoked refresh tokens are reported active. Use the constructor which takes a RefreshTokenPersistence instead.", getClass().getName());
+        }
     }
 
     /**
@@ -141,6 +145,8 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      *     <li>If the {@link RefreshTokenValidator} rejects the token, the token is reported inactive.</li>
      *     <li>Otherwise the token is reported active only if {@link RefreshTokenPersistence#getAuthentication(String)}
      *     emits an {@link Authentication}; an empty publisher or an error, emitted or thrown, means the token is reported inactive.
+     *     An active refresh token is reported as {@code active: true} with no other fields: the persisted {@link Authentication}
+     *     describes the user at login, not the refresh token, and a refresh token must not be mistaken for an access token.
      *     {@link RefreshTokenPersistence#getAuthentication(String)} must therefore not have side effects, such as marking the refresh token as used.</li>
      * </ul>
      * No work is done until the returned publisher is subscribed.
@@ -176,7 +182,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                         logRefreshTokenPersistenceError(t);
                         return Mono.empty();
                     })
-                    .map(authentication -> createIntrospectionResponse(authentication, requestContext))
+                    .map(authentication -> introspectionResponse(true))
                     .defaultIfEmpty(inactiveIntrospectionResponse());
         });
     }

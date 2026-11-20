@@ -61,10 +61,8 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
         when:
         Map m = response.body()
 
-        then: 'the refresh token is active and the response is populated from the persisted Authentication'
-        m['active'] == true
-        m['username'] == 'user'
-        m['sub'] == 'user'
+        then: 'the refresh token is active and no claims of the persisted Authentication are returned'
+        m == [active: true]
 
         when: 'the refresh token is revoked'
         InMemoryRefreshTokenPersistence persistence = applicationContext.getBean(InMemoryRefreshTokenPersistence)
