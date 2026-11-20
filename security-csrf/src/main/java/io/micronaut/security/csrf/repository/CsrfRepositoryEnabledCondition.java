@@ -68,7 +68,8 @@ public abstract class CsrfRepositoryEnabledCondition implements Condition {
         if (enabled == null || enabled) {
             return true;
         }
-        context.fail("Property [" + key + "] is set to false");
+        String value = context.getProperty(key, String.class).orElse(null);
+        context.fail("Property [" + key + "] is set to [" + value + "], which disables the repository. Only true, yes, y or on enable it.");
         return false;
     }
 
