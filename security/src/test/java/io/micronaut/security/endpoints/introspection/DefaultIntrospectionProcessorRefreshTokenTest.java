@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultIntrospectionProcessorRefreshTokenTest {
@@ -61,19 +61,6 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
         assertInactiveAndEmpty(response);
         assertEquals(List.of("key-b"), persistence.lookups);
-    }
-
-    @Test
-    void refreshTokenIsInactiveWhenPersistenceEmitsAnError() {
-        RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
-            @Override
-            public Publisher<Authentication> getAuthentication(String refreshToken) {
-                return Mono.error(new IllegalStateException("database down"));
-            }
-        };
-        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
-
-        assertInactiveAndEmpty(introspect(processor, SIGNED_A));
     }
 
     @Test
@@ -129,12 +116,11 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
     }
 
     @Test
-    void unexpectedPersistenceFailureIsLoggedAtWarnWithItsCause() {
-        IllegalStateException failure = new IllegalStateException("database down");
+    void refreshTokenIsInactiveAndLoggedAtWarnWithItsCauseWhenPersistenceEmitsAnError() {
         RefreshTokenPersistence persistence = new NonPersistingRefreshTokenPersistence() {
             @Override
             public Publisher<Authentication> getAuthentication(String refreshToken) {
-                return Mono.error(failure);
+                return Mono.error(new IllegalStateException("database down"));
             }
         };
         DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), new PrefixRefreshTokenValidator(), persistence);
@@ -143,8 +129,41 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
-        assertNotNull(events.get(0).getThrowableProxy());
         assertEquals("database down", events.get(0).getThrowableProxy().getMessage());
+    }
+
+    @Test
+    void failureMappingThePersistedAuthenticationIsPropagatedAndNotLoggedAsAPersistenceFailure() {
+        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")));
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = new DefaultIntrospectionProcessor<>(List.of(), new TokenConfigurationProperties(), new PrefixRefreshTokenValidator(), persistence) {
+            @Override
+            protected Map<String, Object> resolveExtensions(Authentication authentication) {
+                throw new IllegalStateException("mapping bug");
+            }
+        };
+
+        List<ILoggingEvent> events = captureLogs(() -> {
+            IllegalStateException e = assertThrows(IllegalStateException.class,
+                () -> Mono.from(processor.introspect(new IntrospectionRequest(SIGNED_A, null), HttpRequest.GET("/token_info"))).block());
+            assertEquals("mapping bug", e.getMessage());
+        });
+
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    void introspectRefreshTokenDoesNoWorkUntilSubscribed() {
+        PrefixRefreshTokenValidator refreshTokenValidator = new PrefixRefreshTokenValidator();
+        MapRefreshTokenPersistence persistence = new MapRefreshTokenPersistence(Map.of("key-a", Authentication.build("alice")));
+        DefaultIntrospectionProcessor<HttpRequest<?>> processor = processor(List.of(), refreshTokenValidator, persistence);
+
+        Publisher<IntrospectionResponse> publisher = processor.introspectRefreshToken(SIGNED_A, HttpRequest.GET("/token_info"));
+
+        assertEquals(0, refreshTokenValidator.invocations.get());
+        assertTrue(persistence.lookups.isEmpty());
+        IntrospectionResponse response = Mono.from(publisher).block();
+        assertNotNull(response);
+        assertEquals("alice", response.getUsername());
     }
 
     @Test
@@ -289,18 +308,16 @@ class DefaultIntrospectionProcessorRefreshTokenTest {
         }
     }
 
-    static class MapRefreshTokenPersistence implements RefreshTokenPersistence {
+    /**
+     * Resolves an {@link Authentication} by the key the {@link PrefixRefreshTokenValidator} extracts.
+     */
+    static class MapRefreshTokenPersistence extends NonPersistingRefreshTokenPersistence {
 
         final List<String> lookups = new ArrayList<>();
         private final Map<String, Authentication> tokens;
 
         MapRefreshTokenPersistence(Map<String, Authentication> tokens) {
-            this.tokens = new HashMap<>(tokens);
-        }
-
-        @Override
-        public void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getAuthentication());
+            this.tokens = Map.copyOf(tokens);
         }
 
         @Override

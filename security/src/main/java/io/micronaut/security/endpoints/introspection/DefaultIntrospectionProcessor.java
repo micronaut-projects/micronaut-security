@@ -126,7 +126,7 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
                 .concatMap(tokenValidator -> tokenValidator.validateToken(token, requestContext))
                 .next()
                 .map(authentication -> createIntrospectionResponse(authentication, requestContext))
-                .switchIfEmpty(Mono.defer(() -> introspectRefreshToken(token, requestContext)))
+                .switchIfEmpty(Mono.defer(() -> Mono.from(introspectRefreshToken(token, requestContext))))
                 .flux();
     }
 
@@ -139,34 +139,39 @@ public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<
      *     active only if a {@link RefreshTokenValidator} accepts the token. Subclasses overriding that method keep being honoured.</li>
      *     <li>If the {@link RefreshTokenValidator} rejects the token, the token is reported inactive.</li>
      *     <li>Otherwise the token is reported active only if {@link RefreshTokenPersistence#getAuthentication(String)}
-     *     emits an {@link Authentication}; an empty publisher or an error, emitted or thrown, means the token is reported inactive.</li>
+     *     emits an {@link Authentication}; an empty publisher or an error, emitted or thrown, means the token is reported inactive.
+     *     {@link RefreshTokenPersistence#getAuthentication(String)} must therefore not have side effects, such as marking the refresh token as used.</li>
      * </ul>
+     * No work is done until the returned publisher is subscribed.
      * @param token Token
      * @param requestContext Request context
      * @return Introspection Response
      * @since 5.6.0
      */
     @NonNull
-    protected Mono<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
+    protected Publisher<IntrospectionResponse> introspectRefreshToken(@NonNull String token, @NonNull T requestContext) {
         if (refreshTokenValidator == null || refreshTokenPersistence == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("No RefreshTokenValidator or no RefreshTokenPersistence bean present. Skipping the RefreshTokenPersistence lookup");
             }
             return Mono.fromSupplier(() -> emptyIntrospectionResponse(token));
         }
-        Optional<String> refreshTokenKey = refreshTokenValidator.validate(token);
-        if (refreshTokenKey.isEmpty()) {
-            return Mono.just(inactiveIntrospectionResponse());
-        }
-        String key = refreshTokenKey.get();
+        RefreshTokenValidator validator = refreshTokenValidator;
         RefreshTokenPersistence persistence = refreshTokenPersistence;
-        return Mono.defer(() -> Mono.from(persistence.getAuthentication(key)))
-                .map(authentication -> createIntrospectionResponse(authentication, requestContext))
-                .onErrorResume(t -> {
-                    logRefreshTokenPersistenceError(t);
-                    return Mono.empty();
-                })
-                .defaultIfEmpty(inactiveIntrospectionResponse());
+        return Mono.defer(() -> {
+            Optional<String> refreshTokenKey = validator.validate(token);
+            if (refreshTokenKey.isEmpty()) {
+                return Mono.just(inactiveIntrospectionResponse());
+            }
+            String key = refreshTokenKey.get();
+            return Mono.defer(() -> Mono.from(persistence.getAuthentication(key)))
+                    .onErrorResume(t -> {
+                        logRefreshTokenPersistenceError(t);
+                        return Mono.empty();
+                    })
+                    .map(authentication -> createIntrospectionResponse(authentication, requestContext))
+                    .defaultIfEmpty(inactiveIntrospectionResponse());
+        });
     }
 
     private static void logRefreshTokenPersistenceError(Throwable t) {

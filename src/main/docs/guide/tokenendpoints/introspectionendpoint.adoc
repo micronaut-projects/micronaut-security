@@ -39,6 +39,8 @@ If no api:security.token.validator.TokenValidator[] accepts the token, the endpo
 * If `RefreshTokenPersistence::getAuthentication` emits an api:security.authentication.Authentication[], the refresh token is reported as `"active": true` and the response is populated from that `Authentication` (for example `username`, `sub` and roles), the same way as for an access token.
 * If it emits nothing or fails (for example, because the refresh token was revoked or the persistence layer is unavailable), the refresh token is reported as `"active": false`.
 
+IMPORTANT: Because introspection calls `RefreshTokenPersistence::getAuthentication`, the method must not have side effects. Keep refresh token rotation, single-use bookkeeping or reuse detection out of it; otherwise introspecting a refresh token consumes or revokes it.
+
 If there is no `RefreshTokenPersistence` bean, there is no revocation point to consult; a refresh token is reported as `"active": true`, with no other fields, as soon as the `RefreshTokenValidator` accepts it.
 
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties.adoc[]
