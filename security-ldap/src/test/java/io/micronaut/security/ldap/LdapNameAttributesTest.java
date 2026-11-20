@@ -2,6 +2,8 @@ package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
+import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchRequest;
+import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
@@ -39,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,6 +64,7 @@ class LdapNameAttributesTest {
     private static final String MANAGER_PASSWORD = "password";
     // the password of every user in the LDIF fixtures
     private static final String USER_PASSWORD = "password";
+    private static final String MALFORMED_DN = "not-a-distinguished-name";
 
     private @Nullable InMemoryDirectoryServer server;
 
@@ -114,14 +118,22 @@ class LdapNameAttributesTest {
     }
 
     /**
-     * Pins the contract that a DN which cannot be parsed ends as an UNKNOWN failure and no exception
-     * escapes the provider. It does not prove where the DN is rejected: without the {@code LdapName}
-     * parse the directory server rejects the same DN, with the same outcome. The parameterized tests
-     * above are the ones that guard the {@code LdapName} parse.
+     * A DN which cannot be parsed ends as an UNKNOWN failure and no exception escapes the provider.
+     * The DN must be rejected client-side by the {@code LdapName} parse: without it the directory server
+     * would receive, and reject, a lookup for the same DN with the same outcome.
      */
     @Test
     void malformedDnIsAnUnknownFailureRatherThanAnException() throws Exception {
-        try (ApplicationContext context = startContext("basic.ldif")) {
+        AtomicInteger malformedDnLookups = new AtomicInteger();
+        InMemoryOperationInterceptor countsMalformedDnLookups = new InMemoryOperationInterceptor() {
+            @Override
+            public void processSearchRequest(InMemoryInterceptedSearchRequest request) {
+                if (MALFORMED_DN.equals(request.getRequest().getBaseDN())) {
+                    malformedDnLookups.incrementAndGet();
+                }
+            }
+        };
+        try (ApplicationContext context = startContext("basic.ldif", countsMalformedDnLookups)) {
             ContextBuilder contextBuilder = context.getBean(ContextBuilder.class);
             LdapConfiguration configuration = context.getBean(LdapConfiguration.class);
             // binds every user as the manager, so that the malformed DN reaches the attribute lookup
@@ -144,7 +156,7 @@ class LdapNameAttributesTest {
             LdapSearchService malformedDn = new DefaultLdapSearchService() {
                 @Override
                 public Optional<LdapSearchResult> searchFirst(DirContext managerContext, SearchSettings settings) {
-                    return Optional.of(new NullAttributesLdapSearchResult("not-a-distinguished-name"));
+                    return Optional.of(new NullAttributesLdapSearchResult(MALFORMED_DN));
                 }
             };
             LdapAuthenticationProvider<Object, String, String> provider = new LdapAuthenticationProvider<>(
@@ -160,6 +172,7 @@ class LdapNameAttributesTest {
             assertFalse(response.isAuthenticated());
             assertEquals(AuthenticationFailureReason.UNKNOWN,
                 assertInstanceOf(AuthenticationFailed.class, response).getReason());
+            assertEquals(0, malformedDnLookups.get(), "the malformed DN must be rejected before it reaches the directory");
         }
     }
 
@@ -171,9 +184,12 @@ class LdapNameAttributesTest {
         );
     }
 
-    private ApplicationContext startContext(String ldifPath) throws Exception {
+    private ApplicationContext startContext(String ldifPath, InMemoryOperationInterceptor... interceptors) throws Exception {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(BASE_DN);
         config.addAdditionalBindCredentials(MANAGER_DN, MANAGER_PASSWORD);
+        for (InMemoryOperationInterceptor interceptor : interceptors) {
+            config.addInMemoryOperationInterceptor(interceptor);
+        }
         server = new InMemoryDirectoryServer(config);
         try (InputStream ldif = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(ldifPath));
              LDIFReader reader = new LDIFReader(ldif)) {
