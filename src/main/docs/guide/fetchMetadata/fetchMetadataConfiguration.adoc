@@ -10,7 +10,7 @@ micronaut:
         pattern: /api/**
 ----
 
-WARNING: Use a pattern ending in `/**`, such as `/api/**`. An exact path such as `/api/transfer` does not match `/api/transfer/`, which the router still dispatches to the same route, so that request would skip the filter.
+NOTE: The pattern is matched against the path the router uses, so an exact path such as `/api/transfer` also covers `/api/transfer/`, which the router dispatches to the same route. Use a pattern ending in `/**`, such as `/api/**`, to cover every path below a prefix.
 
 While the filter is enabled, the pattern must not be empty or blank, and the application fails to start otherwise. Set `enabled: false` to disable the filter instead.
 
