@@ -31,9 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Server filter patterns use Ant matching, which does not treat a trailing slash as optional,
- * whereas the router does. The guide therefore recommends patterns ending in {@code /**}; this
- * test pins the behaviour that recommendation is based on.
+ * The router treats a trailing slash as optional, and server filters match the path the router
+ * uses. An exact filter pattern must therefore also filter the trailing slash form of the path;
+ * otherwise that request would reach the route without being evaluated.
  */
 @Property(name = FetchMetadataFilterConfiguration.PROPERTY_PATTERN,
     value = "/fetch-metadata/filtered/test")
@@ -42,12 +42,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @MicronautTest
 class FetchMetadataFilterExactPatternTest {
     @Test
-    void anExactPatternDoesNotFilterTheTrailingSlashFormTheRouterStillMatches(@Client("/") HttpClient httpClient) {
+    void anExactPatternAlsoFiltersTheTrailingSlashFormTheRouterMatches(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
-        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-            () -> client.exchange(HttpRequest.GET("/fetch-metadata/filtered/test")));
-        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+        assertForbidden(client, "/fetch-metadata/filtered/test");
+        assertForbidden(client, "/fetch-metadata/filtered/test/");
+    }
 
-        assertEquals(HttpStatus.OK, client.exchange(HttpRequest.GET("/fetch-metadata/filtered/test/")).getStatus());
+    private static void assertForbidden(BlockingHttpClient client, String path) {
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(HttpRequest.GET(path)));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
     }
 }
