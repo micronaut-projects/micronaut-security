@@ -9,6 +9,8 @@ dependencies {
     api(projects.micronautSecurityReporting)
     api(mn.micronaut.http)
     compileOnly(mn.micronaut.http.server)
+    // As in the security module: the JSON runtime, which brings micronaut-json-core, is the application's choice.
+    // The report body reader that uses it only loads when a JsonMapper bean exists (compileOnly below).
     api(mnSerde.micronaut.serde.api) {
         exclude(group = "io.micronaut", module = "micronaut-json-core")
     }

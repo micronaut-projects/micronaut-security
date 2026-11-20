@@ -16,10 +16,11 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.condition.Condition;
+import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * Warns at startup when the CSP filter of Micronaut Views is enabled as well, because both filters
  * write a CSP header and the {@code cspNonce} request attribute, so one overwrites the other's nonce.
  */
-@Requires(property = ViewsCspConflictWarning.VIEWS_CSP_ENABLED, value = StringUtils.TRUE)
+@Requires(condition = ViewsCspConflictWarning.ViewsCspEnabledCondition.class)
 @Singleton
 @Internal
 final class ViewsCspConflictWarning implements ApplicationEventListener<StartupEvent> {
@@ -42,5 +43,21 @@ final class ViewsCspConflictWarning implements ApplicationEventListener<StartupE
     public void onApplicationEvent(StartupEvent event) {
         LOG.warn("Micronaut Views CSP and micronaut-security-csp are both active and both write the cspNonce request attribute "
             + "and a Content-Security-Policy header. Set {}=false.", VIEWS_CSP_ENABLED);
+    }
+
+    /**
+     * Matches when the CSP filter of Micronaut Views is enabled, with the value converted the way
+     * the configuration binds booleans, so that {@code TRUE} or {@code yes} also match.
+     */
+    @Internal
+    static final class ViewsCspEnabledCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context) {
+            if (context.getProperty(VIEWS_CSP_ENABLED, Boolean.class).orElse(Boolean.FALSE)) {
+                return true;
+            }
+            context.fail(VIEWS_CSP_ENABLED + " is not true");
+            return false;
+        }
     }
 }

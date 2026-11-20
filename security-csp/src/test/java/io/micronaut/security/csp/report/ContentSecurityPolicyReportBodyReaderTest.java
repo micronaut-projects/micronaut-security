@@ -57,6 +57,7 @@ import static io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyRe
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -121,6 +122,33 @@ class ContentSecurityPolicyReportBodyReaderTest {
 
         assertEquals(1, reports.size());
         assertEquals(HASH, reports.get(0).type());
+    }
+
+    @Test
+    void returnsNoReportsForAJsonNullBody() {
+        assertNull(read("null"));
+    }
+
+    @Test
+    void logsASkippedReportTypeOnlyAtDebug() {
+        String json = batch(envelope("deprecation", "{\"id\":\"x\"}"));
+
+        List<ILoggingEvent> events = captureAt(Level.DEBUG, () -> assertEquals(List.of(), read(json)));
+        assertEquals(1, events.size());
+        assertMentions(events.get(0), "not a Content Security Policy report type");
+        assertEquals(List.of(), captureAt(Level.INFO, () -> assertEquals(List.of(), read(json))));
+    }
+
+    @Test
+    void doesNotLogARejectionWithinTheMinuteWhenDebugIsOff() {
+        ContentSecurityPolicyReportBodyReader clockedReader = new ContentSecurityPolicyReportBodyReader(context.getBean(JsonMapper.class), () -> 0L);
+
+        List<ILoggingEvent> events = captureAt(Level.INFO, () -> {
+            assertThrows(CodecException.class, () -> read(clockedReader, "not json"));
+            assertThrows(CodecException.class, () -> read(clockedReader, "not json"));
+        });
+
+        assertEquals(List.of(Level.WARN), events.stream().map(ILoggingEvent::getLevel).toList());
     }
 
     @Test
@@ -393,12 +421,16 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     private static List<ILoggingEvent> captureDebug(Runnable action) {
+        return captureAt(Level.DEBUG, action);
+    }
+
+    private static List<ILoggingEvent> captureAt(Level captureLevel, Runnable action) {
         Logger logger = (Logger) LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
         Level level = logger.getLevel();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
-        logger.setLevel(Level.DEBUG);
+        logger.setLevel(captureLevel);
         try {
             action.run();
         } finally {

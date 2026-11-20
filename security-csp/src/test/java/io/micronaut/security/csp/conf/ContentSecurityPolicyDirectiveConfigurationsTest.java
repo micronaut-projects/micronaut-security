@@ -16,6 +16,22 @@
 package io.micronaut.security.csp.conf;
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
+import io.micronaut.security.csp.conf.defaultsrc.DefaultSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fencedframesrc.FencedFrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.objectsrc.ObjectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.prefetchsrc.PrefetchSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.framesrc.FrameSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.manifestsrc.ManifestSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.mediasrc.MediaSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.workersrc.WorkerSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfiguration;
 import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfiguration;
@@ -53,5 +69,64 @@ class ContentSecurityPolicyDirectiveConfigurationsTest {
         assertFalse(configurations.getScriptSrc().isNonce());
         assertFalse(configurations.getReportTo().isEnabled());
         assertFalse(configurations.getPrefetchSrc().isEnabled());
+    }
+
+    @Test
+    void builderSetsEveryDirective() {
+        BaseUriConfigurationProperties baseUri = new BaseUriConfigurationProperties();
+        DefaultSrcConfigurationProperties defaultSrc = new DefaultSrcConfigurationProperties();
+        ConnectSrcConfigurationProperties connectSrc = new ConnectSrcConfigurationProperties();
+        FencedFrameSrcConfigurationProperties fencedFrameSrc = new FencedFrameSrcConfigurationProperties();
+        FontSrcConfigurationProperties fontSrc = new FontSrcConfigurationProperties();
+        ObjectSrcConfigurationProperties objectSrc = new ObjectSrcConfigurationProperties();
+        PrefetchSrcConfigurationProperties prefetchSrc = new PrefetchSrcConfigurationProperties();
+        ReportToConfigurationProperties reportTo = new ReportToConfigurationProperties();
+        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
+        FrameAncestorsConfigurationProperties frameAncestors = new FrameAncestorsConfigurationProperties();
+        FrameSrcConfigurationProperties frameSrc = new FrameSrcConfigurationProperties();
+        ImgSrcConfigurationProperties imgSrc = new ImgSrcConfigurationProperties();
+        ManifestSrcConfigurationProperties manifestSrc = new ManifestSrcConfigurationProperties();
+        MediaSrcConfigurationProperties mediaSrc = new MediaSrcConfigurationProperties();
+        FormActionConfigurationProperties formAction = new FormActionConfigurationProperties();
+        StyleSrcConfigurationProperties styleSrc = new StyleSrcConfigurationProperties();
+        WorkerSrcConfigurationProperties workerSrc = new WorkerSrcConfigurationProperties();
+
+        ContentSecurityPolicyDirectiveConfigurations configurations = ContentSecurityPolicyDirectiveConfigurations.builder()
+            .baseUri(baseUri)
+            .defaultSrc(defaultSrc)
+            .connectSrc(connectSrc)
+            .fencedFrameSrc(fencedFrameSrc)
+            .fontSrc(fontSrc)
+            .objectSrc(objectSrc)
+            .prefetchSrc(prefetchSrc)
+            .reportTo(reportTo)
+            .scriptSrc(scriptSrc)
+            .frameAncestors(frameAncestors)
+            .frameSrc(frameSrc)
+            .imgSrc(imgSrc)
+            .manifestSrc(manifestSrc)
+            .mediaSrc(mediaSrc)
+            .formAction(formAction)
+            .styleSrc(styleSrc)
+            .workerSrc(workerSrc)
+            .build();
+
+        assertSame(baseUri, configurations.getBaseUri());
+        assertSame(defaultSrc, configurations.getDefaultSrc());
+        assertSame(connectSrc, configurations.getConnectSrc());
+        assertSame(fencedFrameSrc, configurations.getFencedFrameSrc());
+        assertSame(fontSrc, configurations.getFontSrc());
+        assertSame(objectSrc, configurations.getObjectSrc());
+        assertSame(prefetchSrc, configurations.getPrefetchSrc());
+        assertSame(reportTo, configurations.getReportTo());
+        assertSame(scriptSrc, configurations.getScriptSrc());
+        assertSame(frameAncestors, configurations.getFrameAncestors());
+        assertSame(frameSrc, configurations.getFrameSrc());
+        assertSame(imgSrc, configurations.getImgSrc());
+        assertSame(manifestSrc, configurations.getManifestSrc());
+        assertSame(mediaSrc, configurations.getMediaSrc());
+        assertSame(formAction, configurations.getFormAction());
+        assertSame(styleSrc, configurations.getStyleSrc());
+        assertSame(workerSrc, configurations.getWorkerSrc());
     }
 }

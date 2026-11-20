@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -113,9 +114,10 @@ class CspStartupLogTest {
         assertMentions(events.get(0), "report-to", "'csp'", "enabled report controller");
     }
 
-    @Test
-    void warnsWhenTheCspFilterOfMicronautViewsIsEnabledToo() {
-        List<ILoggingEvent> events = capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", true), context -> { }));
+    @ParameterizedTest
+    @ValueSource(strings = {"true", "TRUE", "yes"})
+    void warnsWhenTheCspFilterOfMicronautViewsIsEnabledToo(String enabled) {
+        List<ILoggingEvent> events = capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", enabled), context -> { }));
 
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
@@ -125,6 +127,7 @@ class CspStartupLogTest {
     @Test
     void doesNotWarnAboutMicronautViewsByDefault() {
         assertEquals(List.of(), capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of(), context -> { })));
+        assertEquals(List.of(), capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", "FALSE"), context -> { })));
     }
 
     @Test

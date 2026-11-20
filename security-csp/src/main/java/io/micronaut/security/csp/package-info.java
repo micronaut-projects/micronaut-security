@@ -32,10 +32,9 @@
  */
 @NullMarked
 @Configuration
-@Requires(property = "micronaut.security.csp.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(condition = CspEnabledCondition.class)
 package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import org.jspecify.annotations.NullMarked;

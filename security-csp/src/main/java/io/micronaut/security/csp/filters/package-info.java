@@ -21,12 +21,11 @@
  */
 @NullMarked
 @Requires(classes = ServerFilter.class)
-@Requires(property = ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(condition = CspFilterEnabledCondition.class)
 @Configuration
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.ServerFilter;
 import org.jspecify.annotations.NullMarked;

@@ -35,6 +35,8 @@ import io.micronaut.security.reporting.ReportingEndpointProvider;
 import io.micronaut.security.reporting.ReportingEndpoints;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -53,6 +55,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class CspTogglesTest {
     private static final String SPEC_NAME = "CspTogglesTest";
+
+    @ParameterizedTest(name = "{0}={1} writes the header: {2}")
+    @CsvSource({
+        "micronaut.security.csp.enabled, true, true",
+        "micronaut.security.csp.enabled, TRUE, true",
+        "micronaut.security.csp.enabled, True, true",
+        "micronaut.security.csp.enabled, yes, true",
+        "micronaut.security.csp.enabled, on, true",
+        "micronaut.security.csp.enabled, false, false",
+        "micronaut.security.csp.enabled, FALSE, false",
+        "micronaut.security.csp.enabled, no, false",
+        "micronaut.security.csp.enabled, off, false",
+        "micronaut.security.csp.enabled, Off, false",
+        "micronaut.security.csp.enabled, ' false ', false",
+        "micronaut.security.csp.enabled, ture, true",
+        "micronaut.security.csp.enabled, maybe, true",
+        "micronaut.security.csp.filter.enabled, TRUE, true",
+        "micronaut.security.csp.filter.enabled, yes, true",
+        "micronaut.security.csp.filter.enabled, false, false",
+        "micronaut.security.csp.filter.enabled, FALSE, false",
+        "micronaut.security.csp.filter.enabled, off, false",
+        "micronaut.security.csp.filter.enabled, maybe, true"
+    })
+    void enabledTogglesAcceptEverySpellingOfABoolean(String property, String value, boolean header) {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", SPEC_NAME, property, value));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-toggles"), String.class);
+
+            assertEquals(header, ContentSecurityPolicy.of(response) != null);
+        }
+    }
 
     @Test
     void disablingTheFilterRemovesTheHeader() {

@@ -19,6 +19,7 @@ dependencies {
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityCsp)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
 }
