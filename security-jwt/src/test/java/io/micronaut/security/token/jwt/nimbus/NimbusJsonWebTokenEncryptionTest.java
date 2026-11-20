@@ -7,82 +7,43 @@ import ch.qos.logback.core.read.ListAppender;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWEObject;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.crypto.DirectEncrypter;
-import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.encryption.secret.SecretEncryption;
 import io.micronaut.security.token.jwt.encryption.secret.SecretEncryptionConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.ENCRYPTION_SECRET;
+import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.OTHER_ENCRYPTION_SECRET;
+import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.SUBJECT;
+import static io.micronaut.security.token.jwt.nimbus.JweTestFixtures.nestedJwe;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Unit tests for {@link NimbusJsonWebTokenEncryption}. The parser-level JWE scenarios (no encryption
+ * configurations, undecryptable JWE, non-JWS payload with several configurations) are covered by the
+ * {@code NimbusJsonWebTokenParser*Test} classes.
+ */
 class NimbusJsonWebTokenEncryptionTest {
-
-    private static final String SECRET = "pleaseChangeThisSecretForANewOne";
-    private static final String OTHER_SECRET = "anotherSecretWhichIsAlso32Bytes!";
-    private static final String SUBJECT = "john";
-
-    @ParameterizedTest
-    @ValueSource(strings = {"DEBUG", "INFO"})
-    void decryptReturnsEmptyWithoutEncryptionConfiguration(String level) throws Exception {
-        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(Collections.emptyList());
-        Logger logger = (Logger) LoggerFactory.getLogger(NimbusJsonWebTokenEncryption.class);
-        Level original = logger.getLevel();
-        try {
-            logger.setLevel(Level.valueOf(level));
-
-            assertTrue(encryption.decrypt(encryptedSignedJwt(SECRET)).isEmpty());
-        } finally {
-            logger.setLevel(original);
-        }
-    }
-
-    @Test
-    void decryptReturnsTheNestedSignedJwt() throws Exception {
-        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(secretEncryption(SECRET)));
-
-        Optional<SignedJWT> result = encryption.decrypt(encryptedSignedJwt(SECRET));
-
-        assertTrue(result.isPresent());
-        assertEquals(SUBJECT, result.get().getJWTClaimsSet().getSubject());
-    }
 
     @Test
     void decryptFallsBackToTheNextConfigurationWhenOneFails() throws Exception {
         NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(
-            List.of(secretEncryption(OTHER_SECRET), secretEncryption(SECRET)));
+            List.of(secretEncryption(OTHER_ENCRYPTION_SECRET), secretEncryption(ENCRYPTION_SECRET)));
 
-        Optional<SignedJWT> result = encryption.decrypt(encryptedSignedJwt(SECRET));
+        Optional<SignedJWT> result = encryption.decrypt(EncryptedJWT.parse(nestedJwe(ENCRYPTION_SECRET)));
 
         assertTrue(result.isPresent());
         assertEquals(SUBJECT, result.get().getJWTClaimsSet().getSubject());
-    }
-
-    @Test
-    void decryptReturnsEmptyWhenNoConfigurationDecrypts() throws Exception {
-        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(secretEncryption(OTHER_SECRET)));
-
-        assertTrue(encryption.decrypt(encryptedSignedJwt(SECRET)).isEmpty());
     }
 
     @Test
@@ -92,23 +53,13 @@ class NimbusJsonWebTokenEncryptionTest {
             new FailingEncryptionConfiguration("unsupported", false, attempts),
             new FailingEncryptionConfiguration("supported", true, attempts)));
 
-        assertTrue(encryption.decrypt(encryptedSignedJwt(SECRET)).isEmpty());
+        assertTrue(encryption.decrypt(EncryptedJWT.parse(nestedJwe(ENCRYPTION_SECRET))).isEmpty());
         assertEquals(List.of("supported", "unsupported"), attempts);
     }
 
     @Test
-    void decryptReturnsEmptyWhenThePayloadIsNotASignedJwt() throws Exception {
-        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(
-            List.of(secretEncryption(SECRET), secretEncryption(OTHER_SECRET)));
-        EncryptedJWT jwt = new EncryptedJWT(header(), claims());
-        jwt.encrypt(new DirectEncrypter(SECRET.getBytes(StandardCharsets.UTF_8)));
-
-        assertTrue(encryption.decrypt(EncryptedJWT.parse(jwt.serialize())).isEmpty());
-    }
-
-    @Test
     void decryptDoesNotLogTokenControlledText() throws Exception {
-        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(secretEncryption(SECRET)));
+        NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(secretEncryption(ENCRYPTION_SECRET)));
         String header = Base64URL.encode("{\"alg\":\"x\\nFORGED\",\"enc\":\"A256GCM\"}").toString();
         EncryptedJWT jwt = EncryptedJWT.parse(header + "..AAAA.AAAA.AAAA");
         Logger logger = (Logger) LoggerFactory.getLogger(NimbusJsonWebTokenEncryption.class);
@@ -127,22 +78,6 @@ class NimbusJsonWebTokenEncryptionTest {
         List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
         assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption fails")), messages::toString);
         assertTrue(messages.stream().noneMatch(message -> message.contains("FORGED")), messages::toString);
-    }
-
-    private static EncryptedJWT encryptedSignedJwt(String secret) throws Exception {
-        SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims());
-        signedJWT.sign(new MACSigner(SECRET));
-        JWEObject jwe = new JWEObject(header(), new Payload(signedJWT));
-        jwe.encrypt(new DirectEncrypter(secret.getBytes(StandardCharsets.UTF_8)));
-        return EncryptedJWT.parse(jwe.serialize());
-    }
-
-    private static JWEHeader header() {
-        return new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A256GCM).contentType("JWT").build();
-    }
-
-    private static JWTClaimsSet claims() {
-        return new JWTClaimsSet.Builder().subject(SUBJECT).build();
     }
 
     private static SecretEncryption secretEncryption(String secret) {

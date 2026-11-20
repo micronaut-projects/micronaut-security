@@ -72,10 +72,6 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
                 return Optional.of(signedJWT);
             }
             if (jwt.getState() == JWEObject.State.DECRYPTED) {
-                // A decrypted JWE cannot be decrypted again, so the remaining configurations are not tried.
-                break;
-            }
-            if (jwt.getState() == JWEObject.State.DECRYPTED) {
                 // decrypted but the payload is not a signed JWT. A decrypted JWE cannot be decrypted again.
                 return Optional.empty();
             }
