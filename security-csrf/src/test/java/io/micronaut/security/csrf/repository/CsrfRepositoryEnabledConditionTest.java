@@ -103,6 +103,22 @@ class CsrfRepositoryEnabledConditionTest {
         assertEquals(List.of(ignoredWarning(name)), warnings());
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"TRUE", "yes", "on", "y"})
+    void booleanLikeValueKeepsRepositoryEnabled(String value) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(COOKIE), value))) {
+            assertBothEnabled(ctx);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"off", "no", "disabled"})
+    void otherValueDisablesRepository(String value) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(COOKIE), value))) {
+            assertOnlyDisabled(ctx, COOKIE);
+        }
+    }
+
     @Test
     void warningIsLoggedOncePerApplicationContext() {
         for (int i = 0; i < 2; i++) {
