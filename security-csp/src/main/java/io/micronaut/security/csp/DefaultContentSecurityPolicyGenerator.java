@@ -737,17 +737,30 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (!config.isEnabled()) {
             return CachedDirective.DISABLED;
         }
+        List<String> values = sourceExpressions(config);
+        String sources = values.isEmpty() ? null : String.join(SPACE, values);
+        boolean nonce = config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
+        return new CachedDirective(nonce, sources, directiveWithoutNonce(name, config, values, sources, nonce));
+    }
+
+    private static List<String> sourceExpressions(DirectiveConfiguration config) {
         List<String> values = new ArrayList<>();
-        for (FlaggedSource keywordSource : KEYWORD_SOURCES) {
-            if (keywordSource.enabled().test(config)) {
-                values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(keywordSource.expression()));
+        addEnabledSources(values, KEYWORD_SOURCES, config, true);
+        addEnabledSources(values, SCHEME_SOURCES, config, false);
+        addConfiguredValues(values, config);
+        return values;
+    }
+
+    private static void addEnabledSources(List<String> values, List<FlaggedSource> sources,
+                                         DirectiveConfiguration config, boolean quote) {
+        for (FlaggedSource source : sources) {
+            if (source.enabled().test(config)) {
+                values.add(quote ? ContentSecurityPolicyUtils.wrapInSingleQuotes(source.expression()) : source.expression());
             }
         }
-        for (FlaggedSource schemeSource : SCHEME_SOURCES) {
-            if (schemeSource.enabled().test(config)) {
-                values.add(schemeSource.expression());
-            }
-        }
+    }
+
+    private static void addConfiguredValues(List<String> values, DirectiveConfiguration config) {
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
             for (String value : sourceListDirectiveConfiguration.getValues()) {
                 if (StringUtils.hasText(value)) {
@@ -755,23 +768,22 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                 }
             }
         }
-        String sources = values.isEmpty() ? null : String.join(SPACE, values);
-        boolean nonce = config instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
-        ContentSecurityPolicyDirective withoutNonce;
+    }
+
+    private static @Nullable ContentSecurityPolicyDirective directiveWithoutNonce(String name, DirectiveConfiguration config,
+                                                                                  List<String> values, @Nullable String sources,
+                                                                                  boolean nonce) {
         if (nonce) {
             // Fail closed: a response that should carry a nonce but has none must not fall back to
             // 'unsafe-inline', which browsers ignore only next to a nonce, nor omit the directive.
             List<String> strict = new ArrayList<>(values);
             strict.removeIf(QUOTED_UNSAFE_INLINE::equalsIgnoreCase);
-            withoutNonce = new ContentSecurityPolicyDirective(name, strict.isEmpty() ? QUOTED_NONE : String.join(SPACE, strict));
-        } else if (sources != null) {
-            withoutNonce = new ContentSecurityPolicyDirective(name, sources);
-        } else if (config.isNone()) {
-            withoutNonce = new ContentSecurityPolicyDirective(name, QUOTED_NONE);
-        } else {
-            withoutNonce = null;
+            return new ContentSecurityPolicyDirective(name, strict.isEmpty() ? QUOTED_NONE : String.join(SPACE, strict));
         }
-        return new CachedDirective(nonce, sources, withoutNonce);
+        if (sources != null) {
+            return new ContentSecurityPolicyDirective(name, sources);
+        }
+        return config.isNone() ? new ContentSecurityPolicyDirective(name, QUOTED_NONE) : null;
     }
 
     /**
