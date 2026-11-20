@@ -82,6 +82,7 @@ class InterceptUrlMapEncodedPathTest {
         "/admin/%00",
         "/admin/%20%09",
         "/admin/jos%C3%A9",
+        "/admin/x%252Fy",
         "/users/1/roles",
         "/users/%20/roles",
         "/acme/admin/settings",
