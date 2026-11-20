@@ -16,19 +16,8 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.security.csp.conf.DirectiveConfiguration;
 
-import java.util.List;
-
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.BLOB;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.DATA;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.FILESYSTEM;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.HTTP;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.HTTPS;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.MEDIASTREAM;
 import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.SINGLE_QUOTE;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.WS;
-import static io.micronaut.security.csp.ContentSecurityPolicyGenerator.WSS;
 
 /**
  * Internal helpers for serializing CSP source expressions.
@@ -52,39 +41,6 @@ final class ContentSecurityPolicyUtils {
             return value;
         }
         return SINGLE_QUOTE + value + SINGLE_QUOTE;
-    }
-
-    /**
-     * Adds enabled scheme source expressions without quoting them.
-     *
-     * @param configuration the directive configuration
-     * @param values the destination source expression list
-     */
-    static void addSchemeSources(DirectiveConfiguration configuration, List<String> values) {
-        if (configuration.isHttp()) {
-            values.add(HTTP);
-        }
-        if (configuration.isHttps()) {
-            values.add(HTTPS);
-        }
-        if (configuration.isData()) {
-            values.add(DATA);
-        }
-        if (configuration.isBlob()) {
-            values.add(BLOB);
-        }
-        if (configuration.isFilesystem()) {
-            values.add(FILESYSTEM);
-        }
-        if (configuration.isMediastream()) {
-            values.add(MEDIASTREAM);
-        }
-        if (configuration.isWs()) {
-            values.add(WS);
-        }
-        if (configuration.isWss()) {
-            values.add(WSS);
-        }
     }
 
     /**

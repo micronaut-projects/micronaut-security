@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider {
     private static final String SLASH = "/";
-    private static final Pattern LOCAL_PATH = Pattern.compile("/[^\\s\"\\\\]*");
+    private static final Pattern LOCAL_PATH = Pattern.compile(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX);
     private final @Nullable ReportingEndpoint reportingEndpoint;
 
     /**

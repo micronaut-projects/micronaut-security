@@ -40,7 +40,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void generatesSecureDefaultPolicy() {
         ContentSecurityPolicyConfiguration cfg = new ContentSecurityPolicyConfigurationProperties();
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(cfg);
+        ContentSecurityPolicyGenerator generator = defaultGenerator(cfg);
 
         assertEquals(List.of(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.BASE_URI, "'none'"),
@@ -65,7 +65,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     void omitsReportUriWhenEnabledWithoutUris() {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setReportUriEnabled(true);
-        ContentSecurityPolicy policy = policy(new DefaultContentSecurityPolicyGenerator(configuration));
+        ContentSecurityPolicy policy = policy(defaultGenerator(configuration));
 
         assertNull(policy.reportUri());
     }
@@ -75,7 +75,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setReportUriEnabled(true);
         configuration.setReportUri(List.of("", "https://example.com/csp"));
-        ContentSecurityPolicy policy = policy(new DefaultContentSecurityPolicyGenerator(configuration));
+        ContentSecurityPolicy policy = policy(defaultGenerator(configuration));
 
         assertEquals(new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp"),
                 policy.reportUri());
@@ -97,7 +97,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
     @Test
     void invokesOverriddenDirectiveMethod() {
         ContentSecurityPolicyConfiguration configuration = new ContentSecurityPolicyConfigurationProperties();
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration) {
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration, ContentSecurityPolicyDirectiveConfigurations.builder().build()) {
             @Override
             protected ContentSecurityPolicyDirective connectSrc() {
                 return new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.CONNECT_SRC, "https://api.example.com");
@@ -250,7 +250,8 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
     @Test
     void returnsNullPolicyWhenNoDirectiveIsGenerated() {
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties()) {
+        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().build()) {
             @Override
             protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
                 return List.of();
@@ -284,10 +285,14 @@ class DefaultContentSecurityPolicyGeneratorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
         configuration.setReportUriEnabled(true);
         configuration.setReportUri(List.of("https://example.com/csp-reports"));
-        ContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration);
+        ContentSecurityPolicyGenerator generator = defaultGenerator(configuration);
 
         assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyGenerator.REPORT_URI, "https://example.com/csp-reports")));
+    }
+
+    private static ContentSecurityPolicyGenerator defaultGenerator(ContentSecurityPolicyConfiguration configuration) {
+        return new DefaultContentSecurityPolicyGenerator(configuration, ContentSecurityPolicyDirectiveConfigurations.builder().build());
     }
 
     private static ContentSecurityPolicy policy(ContentSecurityPolicyGenerator generator) {

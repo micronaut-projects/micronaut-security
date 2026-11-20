@@ -48,9 +48,14 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/csp/report";
 
+    /**
+     * The grammar of the report path: an absolute path without whitespace, quotes or backslashes.
+     */
+    static final String LOCAL_PATH_REGEX = "/[^\\s\"\\\\]*";
+
     private boolean enabled = DEFAULT_ENABLED;
     @NotBlank
-    @Pattern(regexp = "/[^\\s\"\\\\]*")
+    @Pattern(regexp = LOCAL_PATH_REGEX)
     private String path = DEFAULT_PATH;
 
     /**

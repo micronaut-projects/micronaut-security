@@ -22,9 +22,11 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.NonceConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.DirectiveConfiguration;
 import io.micronaut.security.csp.conf.SourceListDirectiveConfiguration;
+import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -44,6 +46,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Generates the default, opt-out CSP directive set from the root and directive-specific configuration.
@@ -61,12 +65,48 @@ import java.util.regex.Pattern;
 @Singleton
 public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPolicyGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
+    private static final String PROPERTY_PREFIX = ContentSecurityPolicyConfigurationProperties.PREFIX + ".";
+    private static final String PROPERTY_REPORT_URI = PROPERTY_PREFIX + REPORT_URI;
+    private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR;
+    private static final String PROPERTY_REPORT_TO_GROUP = ReportToConfigurationProperties.PREFIX + ".group";
     /**
-     * Keywords that are only meaningful when single-quoted. Unquoted, a browser reads them as host sources.
+     * Keyword source expressions, in the order in which they are emitted, with the configuration
+     * flag that enables each of them.
      */
-    private static final Set<String> QUOTED_KEYWORDS = Set.of(SELF, NONE, UNSAFE_INLINE, UNSAFE_EVAL, STRICT_DYNAMIC,
-        "unsafe-hashes", "report-sample", "wasm-unsafe-eval", "trusted-types-eval", "report-sha256", "report-sha384",
-        "report-sha512", "unsafe-webtransport-hashes");
+    private static final List<FlaggedSource> KEYWORD_SOURCES = List.of(
+        new FlaggedSource(SELF, DirectiveConfiguration::isSelf),
+        new FlaggedSource(UNSAFE_INLINE, DirectiveConfiguration::isUnsafeInline),
+        new FlaggedSource(UNSAFE_EVAL, DirectiveConfiguration::isUnsafeEval),
+        new FlaggedSource(STRICT_DYNAMIC, DirectiveConfiguration::isStrictDynamic),
+        new FlaggedSource("unsafe-hashes", DirectiveConfiguration::isUnsafeHashes),
+        new FlaggedSource("report-sample", DirectiveConfiguration::isReportSample),
+        new FlaggedSource("wasm-unsafe-eval", DirectiveConfiguration::isWasmUnsafeEval),
+        new FlaggedSource("trusted-types-eval", DirectiveConfiguration::isTrustedTypesEval),
+        new FlaggedSource("report-sha256", DirectiveConfiguration::isReportSha256),
+        new FlaggedSource("report-sha384", DirectiveConfiguration::isReportSha384),
+        new FlaggedSource("report-sha512", DirectiveConfiguration::isReportSha512),
+        new FlaggedSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
+    );
+    /**
+     * Scheme source expressions, in the order in which they are emitted, with the configuration
+     * flag that enables each of them.
+     */
+    private static final List<FlaggedSource> SCHEME_SOURCES = List.of(
+        new FlaggedSource(HTTP, DirectiveConfiguration::isHttp),
+        new FlaggedSource(HTTPS, DirectiveConfiguration::isHttps),
+        new FlaggedSource(DATA, DirectiveConfiguration::isData),
+        new FlaggedSource(BLOB, DirectiveConfiguration::isBlob),
+        new FlaggedSource(FILESYSTEM, DirectiveConfiguration::isFilesystem),
+        new FlaggedSource(MEDIASTREAM, DirectiveConfiguration::isMediastream),
+        new FlaggedSource(WS, DirectiveConfiguration::isWs),
+        new FlaggedSource(WSS, DirectiveConfiguration::isWss)
+    );
+    /**
+     * Keywords that are only meaningful when single-quoted. Unquoted, a browser reads them as host
+     * sources. They are the emitted keyword sources plus {@code none}.
+     */
+    private static final Set<String> QUOTED_KEYWORDS = Stream.concat(Stream.of(NONE), KEYWORD_SOURCES.stream().map(FlaggedSource::expression))
+        .collect(Collectors.toUnmodifiableSet());
     /**
      * Prefixes of hash and nonce source expressions, which are only meaningful when single-quoted.
      */
@@ -86,24 +126,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     /**
-     * Keyword source expressions, in the order in which they are emitted, with the configuration
-     * flag that enables each of them.
-     */
-    private static final List<KeywordSource> KEYWORD_SOURCES = List.of(
-        new KeywordSource(SELF, DirectiveConfiguration::isSelf),
-        new KeywordSource(UNSAFE_INLINE, DirectiveConfiguration::isUnsafeInline),
-        new KeywordSource(UNSAFE_EVAL, DirectiveConfiguration::isUnsafeEval),
-        new KeywordSource(STRICT_DYNAMIC, DirectiveConfiguration::isStrictDynamic),
-        new KeywordSource("unsafe-hashes", DirectiveConfiguration::isUnsafeHashes),
-        new KeywordSource("report-sample", DirectiveConfiguration::isReportSample),
-        new KeywordSource("wasm-unsafe-eval", DirectiveConfiguration::isWasmUnsafeEval),
-        new KeywordSource("trusted-types-eval", DirectiveConfiguration::isTrustedTypesEval),
-        new KeywordSource("report-sha256", DirectiveConfiguration::isReportSha256),
-        new KeywordSource("report-sha384", DirectiveConfiguration::isReportSha384),
-        new KeywordSource("report-sha512", DirectiveConfiguration::isReportSha512),
-        new KeywordSource("unsafe-webtransport-hashes", DirectiveConfiguration::isUnsafeWebtransportHashes)
-    );
-    /**
      * The configuration behind each directive that is built from a {@link DirectiveConfiguration}.
      * It is the only place that pairs a directive name with its configuration: both the startup
      * validation of the configured values and the directive methods read it, so a directive cannot
@@ -114,20 +136,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final Function<HttpRequest<?>, @Nullable String> cspNonceProvider;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
-
-    /**
-     * Creates a generator with the default configuration for each directive, ignoring any
-     * directive configuration bound from the application's properties.
-     *
-     * <p>It is package-private because a subclass bean built with it would silently drop the
-     * {@code micronaut.security.csp.*} directive settings. Subclasses use the injected constructor.</p>
-     *
-     * @param cspConfiguration root CSP configuration
-     */
-    DefaultContentSecurityPolicyGenerator(ContentSecurityPolicyConfiguration cspConfiguration) {
-        this(cspConfiguration, DefaultContentSecurityPolicyGenerator::requestNonce,
-            ContentSecurityPolicyDirectiveConfigurations.builder().build());
-    }
 
     /**
      * Creates a default policy generator from the root and directive-specific configuration.
@@ -160,7 +168,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         this.cspNonceProvider = cspNonceProvider;
         this.directiveConfigurations = directiveConfigurations;
         validateRootConfiguration();
-        warnAboutMisquotedValues();
+        validateSourceExpressions();
     }
 
     /**
@@ -171,15 +179,15 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private void validateRootConfiguration() {
         if (cspConfiguration.isReportUriEnabled()) {
             for (String reportUri : cspConfiguration.getReportUri()) {
-                requireSafeHeaderValue("micronaut.security.csp.report-uri", reportUri);
+                requireSafeHeaderValue(PROPERTY_REPORT_URI, reportUri);
                 warnIfPlaintext(reportUri);
             }
         }
         if (cspConfiguration.isRequireTrustedTypesForEnabled()) {
-            requireSafeHeaderValue("micronaut.security.csp.require-trusted-types-for", cspConfiguration.getRequireTrustedTypesFor());
+            requireSafeHeaderValue(PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, cspConfiguration.getRequireTrustedTypesFor());
         }
         if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
-            throw new ConfigurationException("micronaut.security.csp.report-to.group must match " + REPORTING_GROUP_GRAMMAR.pattern()
+            throw new ConfigurationException(PROPERTY_REPORT_TO_GROUP + " must match " + REPORTING_GROUP_GRAMMAR.pattern()
                 + ", the grammar of a Reporting-Endpoints name");
         }
     }
@@ -202,8 +210,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             host = null;
         }
         if (host == null || !LOOPBACK_HOSTS.contains(host.toLowerCase(Locale.ROOT))) {
-            LOG.warn("micronaut.security.csp.report-uri contains the plaintext endpoint {}; violation reports can contain sensitive URLs. Use https.",
-                trimmed);
+            LOG.warn("{} contains the plaintext endpoint {}; violation reports can contain sensitive URLs. Use https.",
+                PROPERTY_REPORT_URI, trimmed);
         }
     }
 
@@ -496,27 +504,28 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * character fails startup, and an unquoted keyword, hash or nonce, which a browser reads as a
      * host source, is logged as a warning.
      */
-    private void warnAboutMisquotedValues() {
+    private void validateSourceExpressions() {
         DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> {
             DirectiveConfiguration configuration = getter.apply(directiveConfigurations);
             if (configuration.isEnabled() && configuration instanceof SourceListDirectiveConfiguration sourceList) {
                 for (String value : sourceList.getValues()) {
-                    warnIfMisquoted(name, value);
+                    validateSourceExpression(name, value);
                 }
             }
         });
     }
 
-    private static void warnIfMisquoted(String directive, String value) {
-        requireSafeHeaderValue("micronaut.security.csp." + directive + ".values", value);
+    private static void validateSourceExpression(String directive, String value) {
+        String property = PROPERTY_PREFIX + directive + ".values";
+        requireSafeHeaderValue(property, value);
         String trimmed = value.trim();
         if (trimmed.startsWith(SINGLE_QUOTE)) {
             return;
         }
         String lowerCase = trimmed.toLowerCase(Locale.ROOT);
         if (QUOTED_KEYWORDS.contains(lowerCase) || QUOTED_PREFIXES.stream().anyMatch(lowerCase::startsWith)) {
-            LOG.warn("micronaut.security.csp.{}.values contains \"{}\", which looks like a keyword, hash or nonce source but is not single-quoted; "
-                + "browsers treat it as a host. Use \"{}\".", directive, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
+            LOG.warn("{} contains \"{}\", which looks like a keyword, hash or nonce source but is not single-quoted; "
+                + "browsers treat it as a host. Use \"{}\".", property, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
         }
     }
 
@@ -602,12 +611,16 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                 LOG.trace("CSP nonce not found in request attribute {}", ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE);
             }
         }
-        for (KeywordSource keywordSource : KEYWORD_SOURCES) {
+        for (FlaggedSource keywordSource : KEYWORD_SOURCES) {
             if (keywordSource.enabled().test(config)) {
-                values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(keywordSource.keyword()));
+                values.add(ContentSecurityPolicyUtils.wrapInSingleQuotes(keywordSource.expression()));
             }
         }
-        ContentSecurityPolicyUtils.addSchemeSources(config, values);
+        for (FlaggedSource schemeSource : SCHEME_SOURCES) {
+            if (schemeSource.enabled().test(config)) {
+                values.add(schemeSource.expression());
+            }
+        }
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
             values.addAll(sourceListDirectiveConfiguration.getValues());
         }
@@ -622,11 +635,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
-     * A keyword source expression and the configuration flag that enables it.
+     * A keyword or scheme source expression and the configuration flag that enables it.
      *
-     * @param keyword the keyword, without its surrounding quotes
-     * @param enabled tests whether a directive configuration enables the keyword
+     * @param expression the source expression; a keyword without its surrounding quotes
+     * @param enabled tests whether a directive configuration enables the expression
      */
-    private record KeywordSource(String keyword, Predicate<DirectiveConfiguration> enabled) {
+    private record FlaggedSource(String expression, Predicate<DirectiveConfiguration> enabled) {
     }
 }
