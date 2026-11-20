@@ -195,7 +195,7 @@ public class SecurityFilter implements HttpServerFilter {
                                 method,
                                 path);
                     }
-                    // The route match is owned by the request pipeline; it must not be closed here.
+                    // Only check presence; the route match is owned by the request pipeline and must not be closed.
                     boolean routeMatchPresent = RouteAttributes.getRouteMatch(request).isPresent();
                     // no rule found for the given request
                     if (!routeMatchPresent && !securityConfiguration.isRejectNotFound()) {
