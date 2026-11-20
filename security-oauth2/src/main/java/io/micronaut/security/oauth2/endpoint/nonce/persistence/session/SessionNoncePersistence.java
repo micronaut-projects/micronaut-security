@@ -18,16 +18,21 @@ package io.micronaut.security.oauth2.endpoint.nonce.persistence.session;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StateKeyedSessionValues;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * Persists the state in the session.
+ * Persists the nonce in the session. Several in-flight nonces (up to {@link StateKeyedSessionValues#MAX_ENTRIES})
+ * are kept, keyed by the nonce of the {@link State} of the login flow they belong to, so that concurrent login flows
+ * do not overwrite each other.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -50,20 +55,19 @@ public class SessionNoncePersistence implements NoncePersistence {
 
     @Override
     public Optional<String> retrieveNonce(HttpRequest<?> request) {
-        return SessionForRequest.find(request)
-                .flatMap(session -> {
-                    Optional<String> state = session.get(SESSION_KEY, String.class);
-                    if (state.isPresent()) {
-                        session.remove(SESSION_KEY);
-                    }
-                    return state;
-                });
+        return retrieveNonce(request, null);
     }
 
     @Override
-    public void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String state) {
+    public Optional<String> retrieveNonce(HttpRequest<?> request, @Nullable State callbackState) {
+        return SessionForRequest.find(request)
+                .flatMap(session -> StateKeyedSessionValues.<String>remove(session, SESSION_KEY, StateKeyedSessionValues.keyForCallbackState(callbackState)));
+    }
+
+    @Override
+    public void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String nonce) {
         Session session = SessionForRequest.find(request).orElseGet(() ->
                 SessionForRequest.create(sessionStore, request));
-        session.put(SESSION_KEY, state);
+        StateKeyedSessionValues.put(session, SESSION_KEY, StateKeyedSessionValues.keyForLoginRequest(request), nonce);
     }
 }
