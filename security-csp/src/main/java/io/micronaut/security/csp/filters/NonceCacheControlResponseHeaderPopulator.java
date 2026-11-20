@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderEntry;
@@ -43,17 +44,18 @@ import java.util.function.BiFunction;
  *
  * <p>Other content types cannot carry the nonce in their body and keep their caching. A
  * {@code Cache-Control} header already set by the application is kept. The value comes from
- * {@value ContentSecurityPolicyFilterConfigurationProperties#PROPERTY_NONCE_CACHE_CONTROL}; a blank
- * value writes no header. The populator is only loaded when an enabled directive uses nonces.</p>
+ * {@value ContentSecurityPolicyFilterConfigurationProperties#PROPERTY_NONCE_CACHE_CONTROL}. The
+ * populator is only loaded when an enabled directive uses nonces and that value is not blank.</p>
  *
  * @since 5.6.0
  */
 @Requires(classes = ResponseHeaderPopulator.class)
 @Requires(condition = NonceEnabledCondition.class)
+@Requires(condition = NonceCacheControlCondition.class)
 @Singleton
 @Internal
 final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPopulator {
-    private final @Nullable List<HttpHeaderEntry> cacheControl;
+    private final List<HttpHeaderEntry> cacheControl;
     private final BiFunction<HttpRequest<?>, HttpResponse<?>, @Nullable MediaType> routeContentType;
 
     /**
@@ -82,13 +84,15 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
                                              BiFunction<HttpRequest<?>, HttpResponse<?>, @Nullable MediaType> routeContentType) {
         this.routeContentType = routeContentType;
         String value = cspFilterConfiguration.getNonceCacheControl();
-        this.cacheControl = StringUtils.hasText(value) ? List.of(new HttpHeaderEntry(HttpHeaders.CACHE_CONTROL, value)) : null;
+        if (!StringUtils.hasText(value)) {
+            throw new ConfigurationException(ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_NONCE_CACHE_CONTROL + " must not be blank");
+        }
+        this.cacheControl = List.of(new HttpHeaderEntry(HttpHeaders.CACHE_CONTROL, value));
     }
 
     @Override
     public @Nullable Collection<HttpHeaderEntry> findHttpHeaders(HttpRequest<?> request, HttpResponse<?> response) {
-        if (cacheControl == null
-            || request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isEmpty()
+        if (request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isEmpty()
             || !contentType(request, response).filter(NonceCacheControlResponseHeaderPopulator::canCarryNonce).isPresent()) {
             return null;
         }

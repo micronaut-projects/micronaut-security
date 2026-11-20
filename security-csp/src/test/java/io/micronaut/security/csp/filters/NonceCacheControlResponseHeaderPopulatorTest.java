@@ -17,6 +17,7 @@ package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -103,6 +104,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     @Test
+    void populatorRejectsABlankCacheControl() {
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> populator(" ", (request, response) -> null));
+
+        assertTrue(exception.getMessage().startsWith(NONCE_CACHE_CONTROL));
+    }
+
+    @Test
     void populatorWritesNothingForARequestWithoutANonce() {
         assertNull(populator("private", (request, response) -> MediaType.TEXT_HTML_TYPE)
             .findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok().contentType(MediaType.TEXT_HTML_TYPE)));
@@ -164,6 +172,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     @Test
+    void populatorIsLoadedWhenADirectiveUsesNoncesAndCacheControlIsConfigured() {
+        try (EmbeddedServer server = server(Map.of(NONCE, true))) {
+            assertTrue(server.getApplicationContext().containsBean(NonceCacheControlResponseHeaderPopulator.class));
+        }
+    }
+
+    @Test
     void cacheControlSetByTheApplicationIsKept() {
         try (EmbeddedServer server = server(Map.of(NONCE, true))) {
             HttpResponse<String> response = get(server, "/nonce-cache/own");
@@ -191,8 +206,9 @@ class NonceCacheControlResponseHeaderPopulatorTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void blankCacheControlIsNotWritten(String value) {
+    void populatorIsNotLoadedForABlankCacheControl(String value) {
         try (EmbeddedServer server = server(Map.of(NONCE, true, NONCE_CACHE_CONTROL, value))) {
+            assertFalse(server.getApplicationContext().containsBean(NonceCacheControlResponseHeaderPopulator.class));
             assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
         }
     }
