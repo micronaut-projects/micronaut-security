@@ -37,11 +37,14 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.reactivestreams.Publisher;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,18 +77,14 @@ class InterceptUrlMapEncodedPathTest {
     @ParameterizedTest
     @ValueSource(strings = {
         "/admin/1",
-        "/admin/x%2Fy",
-        "/admin/x%2fy",
         "/admin/%20",
         "/admin/%09",
         "/admin/%00",
         "/admin/%20%09",
         "/admin/jos%C3%A9",
         "/users/1/roles",
-        "/users/x%2Fy/roles",
         "/users/%20/roles",
         "/acme/admin/settings",
-        "/x%2Fy/admin/settings",
         "/%20/admin/settings",
         "/books/caf%C3%A9"
     })
@@ -96,15 +95,61 @@ class InterceptUrlMapEncodedPathTest {
         assertEquals("ok", client.retrieve(HttpRequest.GET(path).accept(MediaType.TEXT_PLAIN).bearerAuth(ADMIN_TOKEN)));
     }
 
+    /**
+     * The role-restricted entries must reject the anonymous and the unprivileged request to a path whose path variable
+     * holds an encoded slash: decoded, these paths gain a segment and only the permissive {@code /**} entry would
+     * match them, which would let both requests through ({@code reject-not-found} is disabled). The rejections
+     * therefore prove that the patterns are matched against the path with the encoded slash kept in its segment.
+     *
+     * @param path A path whose path variable holds an encoded slash
+     */
+    @ParameterizedTest
+    @MethodSource("encodedSlashPaths")
+    void protectedPatternsRejectEncodedSlashes(String path) {
+        BlockingHttpClient client = httpClient.toBlocking();
+        assertStatus(client, HttpRequest.GET(path), HttpStatus.UNAUTHORIZED);
+        assertStatus(client, HttpRequest.GET(path).bearerAuth(USER_TOKEN), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Records the routing of the server, not a security property: the router does not bind a value that decodes to a
+     * slash to a single-segment path variable, so the authorized request matches no route. If this fails because the
+     * router serves these paths again, {@link #protectedPatternsRejectEncodedSlashes(String)} still guards them.
+     *
+     * @param path A path whose path variable holds an encoded slash
+     */
+    @ParameterizedTest
+    @MethodSource("encodedSlashPaths")
+    void routerDoesNotRouteEncodedSlashesForAnAuthorizedRequest(String path) {
+        assertStatus(httpClient.toBlocking(), HttpRequest.GET(path).bearerAuth(ADMIN_TOKEN), HttpStatus.NOT_FOUND);
+    }
+
+    private static Stream<String> encodedSlashPaths() {
+        return Stream.of(
+            "/admin/x%2Fy",
+            "/admin/x%2fy",
+            "/users/x%2Fy/roles",
+            "/x%2Fy/admin/settings"
+        );
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
         "/public/1",
-        "/public/x%2Fy",
         "/books/other"
     })
     void publicRoutesStayAccessible(String path) {
         BlockingHttpClient client = httpClient.toBlocking();
         assertEquals("ok", client.retrieve(HttpRequest.GET(path).accept(MediaType.TEXT_PLAIN)));
+    }
+
+    /**
+     * An encoded slash under a public route is not rejected by security: the anonymous request reaches the router,
+     * which answers 404 because the value decodes to a slash.
+     */
+    @Test
+    void encodedSlashUnderPublicRouteIsNotRejectedBySecurity() {
+        assertStatus(httpClient.toBlocking(), HttpRequest.GET("/public/x%2Fy"), HttpStatus.NOT_FOUND);
     }
 
     private static void assertStatus(BlockingHttpClient client, MutableHttpRequest<?> request, HttpStatus expectedStatus) {

@@ -43,9 +43,9 @@ class ContextPathSpec extends EmbeddedServerSpecification {
         when:
         client.retrieve('/')
 
-        then:
+        then: 'nothing is served outside the context path; since Micronaut Core 5.2.23 the security filter also sees such a request and rejects it as an unmatched route (reject-not-found)'
         HttpClientResponseException e = thrown()
-        HttpStatus.NOT_FOUND == e.status
+        HttpStatus.UNAUTHORIZED == e.status
 
         when:
         HttpRequest<?> request = HttpRequest.POST("/foo/login", [username: 'user', password: 'password'])
