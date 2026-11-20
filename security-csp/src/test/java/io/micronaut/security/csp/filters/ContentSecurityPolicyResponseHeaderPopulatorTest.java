@@ -26,6 +26,7 @@ import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
@@ -163,5 +164,43 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
             () -> new ContentSecurityPolicyResponseHeaderPopulator(request -> null, configuration, filterConfiguration, null));
 
         assertEquals("micronaut.security.csp.filter.pattern must not be blank", exception.getMessage());
+    }
+
+    @ParameterizedTest(name = "pattern {0} matches {1}: {2}")
+    @CsvSource({
+        "/foo/page, /foo/page, true",
+        "/foo/page, /foo/page/, true",
+        "/foo/page, /f%6Fo/page, true",
+        "/foo/page, /f%6Fo/page/, true",
+        "/foo/page, /foo%zzpage, false",
+        "/a+b, /a+b, true",
+        "/a+b, /a%2Bb, true",
+        "/foo/page, /bar/page, false",
+        "/, '', true"
+    })
+    void matchesTheFormsOfThePathThatTheServerMatchesFilterPatternsAgainst(String pattern, String path, boolean matches) {
+        assertEquals(matches, ContentSecurityPolicyResponseHeaderPopulator.matchesAnyForm(pattern, path));
+    }
+
+    @ParameterizedTest(name = "context path {0}, pattern {1}, request {2}: {3}")
+    @CsvSource({
+        "/app, /foo/**, /app/foo/page, true",
+        "/app/, /foo/**, /app/foo/page, true",
+        "app, foo/**, /app/foo/page, true",
+        "/app, /foo/**, /foo/page, true",
+        "/app, /foo/**, /app/bar/page, false",
+        "/app, /, /app, true",
+        "/app, /app/foo/**, /app/foo/page, true",
+        "/app, /app/foo/**, /foo/page, false",
+        "/, /foo/**, /foo/page, true"
+    })
+    void resolvesThePatternAgainstTheContextPathLikeTheServer(String contextPath, String pattern, String path, boolean header) {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern(pattern);
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+            request -> new ContentSecurityPolicy(List.of(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'"))),
+            new ContentSecurityPolicyConfigurationProperties(), filterConfiguration, () -> contextPath);
+
+        assertEquals(header, populator.findHttpHeaders(HttpRequest.GET(path), HttpResponse.ok()) != null);
     }
 }

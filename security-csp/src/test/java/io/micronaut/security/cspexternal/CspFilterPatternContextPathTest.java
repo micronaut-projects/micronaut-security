@@ -30,6 +30,7 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
@@ -71,6 +72,43 @@ class CspFilterPatternContextPathTest {
             HttpResponse<String> other = client.exchange(HttpRequest.GET(prefix + "/bar/page"), String.class);
             assertNull(ContentSecurityPolicy.of(other), "a request outside filter.pattern must not receive the CSP header");
             assertEquals("no nonce", other.body());
+        }
+    }
+
+    /**
+     * The response header must be written exactly for the requests on which the nonce filter ran,
+     * whatever form of the path selects them: Micronaut Core matches a filter pattern against the
+     * raw path, the path without its trailing slash, and the percent-decoded path, relative to the
+     * context path. The encoded forms are covered by ContentSecurityPolicyResponseHeaderPopulatorTest
+     * because the router does not serve them.
+     */
+    @ParameterizedTest(name = "context path \"{0}\", request {1}")
+    @CsvSource({
+        "'', /foo/page",
+        "'', /foo/page/",
+        "'', /bar/page",
+        "/app, /app/foo/page",
+        "/app, /app/foo/page/",
+        "/app, /app/bar/page"
+    })
+    void headerIsWrittenExactlyWhenTheNonceFilterRan(String contextPath, String path) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("spec.name", SPEC_NAME);
+        properties.put("micronaut.security.csp.filter.pattern", "/foo/page");
+        properties.put("micronaut.security.csp.script-src.nonce", true);
+        if (!contextPath.isEmpty()) {
+            properties.put("micronaut.server.context-path", contextPath);
+        }
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, properties);
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET(path), String.class);
+
+            boolean nonceGenerated = !"no nonce".equals(response.body());
+            ContentSecurityPolicy policy = ContentSecurityPolicy.of(response);
+            assertEquals(nonceGenerated, policy != null, "the header must be written exactly when the nonce filter ran");
+            if (policy != null) {
+                assertEquals("'nonce-" + response.body() + "'", policy.scriptSrc().value());
+            }
         }
     }
 

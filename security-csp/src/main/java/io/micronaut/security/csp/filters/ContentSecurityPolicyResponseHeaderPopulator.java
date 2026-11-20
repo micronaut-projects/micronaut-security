@@ -33,15 +33,16 @@ import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * {@link ResponseHeaderPopulator} that adds the {@code Content-Security-Policy} header, or the
  * {@code Content-Security-Policy-Report-Only} header when report-only mode is enabled, to responses.
- * The header is only added to requests whose path matches the configured filter pattern, resolved
- * against the server context path like the pattern of the nonce filter, and not if the response
- * already contains it.
+ * The header is only added to requests whose path matches the configured filter pattern the way
+ * Micronaut Core matches the pattern of the nonce filter, and not if the response already contains it.
  *
  * @since 5.6.0
  */
@@ -53,7 +54,19 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final boolean matchAll;
-    private final List<String> patterns;
+    /**
+     * The pattern when it is matched against the whole request path, or {@code null} when it is
+     * relative to the context path.
+     */
+    private final @Nullable String absolutePattern;
+    /**
+     * The pattern when it is relative to the context path, or {@code null}.
+     */
+    private final @Nullable String contextPathPattern;
+    /**
+     * The normalized context path, without a trailing slash, or {@code null} when there is none.
+     */
+    private final @Nullable String contextPath;
 
     /**
      * Creates the populator.
@@ -77,31 +90,36 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
             throw new ConfigurationException(ContentSecurityPolicyFilterConfigurationProperties.PREFIX + ".pattern must not be blank");
         }
         this.matchAll = ServerFilter.MATCH_ALL_PATTERN.equals(pattern);
-        this.patterns = patterns(pattern, serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath());
+        this.contextPath = normalize(serverContextPathProvider == null ? null : serverContextPathProvider.getContextPath());
+        if (contextPath == null || isUnderContextPath(contextPath, pattern)) {
+            this.absolutePattern = pattern;
+            this.contextPathPattern = null;
+        } else {
+            this.absolutePattern = null;
+            this.contextPathPattern = pattern.startsWith(SLASH) ? pattern : SLASH + pattern;
+        }
     }
 
     /**
-     * Resolves the filter pattern the way the server resolves the {@code @ServerFilter} pattern of
-     * the nonce filter: relative to the server context path, so that both select the same requests.
-     * The raw pattern is kept as well, as the server does, for patterns that already include the
-     * context path.
+     * Normalizes the context path the way the server does for filter patterns: with a leading slash
+     * and without trailing slashes.
      *
-     * @param pattern the configured filter pattern
      * @param contextPath the server context path, if any
-     * @return the patterns matched against the request path
+     * @return the normalized context path, or {@code null} when there is none
      */
-    private static List<String> patterns(String pattern, @Nullable String contextPath) {
-        if (!StringUtils.hasText(contextPath)) {
-            return List.of(pattern);
+    private static @Nullable String normalize(@Nullable String contextPath) {
+        if (contextPath == null) {
+            return null;
         }
-        String normalizedContextPath = StringUtils.prependUri(SLASH, contextPath);
-        if (normalizedContextPath.endsWith(SLASH)) {
-            normalizedContextPath = normalizedContextPath.substring(0, normalizedContextPath.length() - 1);
+        String normalized = contextPath.startsWith(SLASH) ? contextPath : SLASH + contextPath;
+        while (normalized.endsWith(SLASH)) {
+            normalized = normalized.substring(0, normalized.length() - 1);
         }
-        if (normalizedContextPath.isEmpty() || pattern.startsWith(normalizedContextPath + SLASH)) {
-            return List.of(pattern);
-        }
-        return List.of(pattern, StringUtils.prependUri(normalizedContextPath, pattern));
+        return normalized.isEmpty() ? null : normalized;
+    }
+
+    private static boolean isUnderContextPath(String contextPath, String path) {
+        return path.startsWith(contextPath) && (path.length() == contextPath.length() || path.charAt(contextPath.length()) == '/');
     }
 
     @Override
@@ -121,12 +139,65 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         return null;
     }
 
+    /**
+     * Matches the request path the way Micronaut Core matches the {@code @ServerFilter} pattern of
+     * the nonce filter, so that the header is written exactly for the requests that receive a nonce.
+     * A pattern that does not start with the context path is relative to it: it is matched against
+     * the part of the path after the context path, and against the whole path of a request outside
+     * the context path.
+     *
+     * @param path the raw request path
+     * @return whether the request receives the policy
+     */
     private boolean matches(String path) {
-        for (String pattern : patterns) {
-            if (PathMatcher.ANT.matches(pattern, path)) {
-                return true;
-            }
+        if (absolutePattern != null) {
+            return matchesAnyForm(absolutePattern, path);
         }
-        return false;
+        String relativePath = path;
+        if (contextPath != null && isUnderContextPath(contextPath, path)) {
+            relativePath = path.length() == contextPath.length() ? SLASH : path.substring(contextPath.length());
+        }
+        return contextPathPattern != null && matchesAnyForm(contextPathPattern, relativePath);
+    }
+
+    /**
+     * Matches a pattern against the raw path and the forms of it that the server also matches filter
+     * patterns against: the path without its trailing slash, and the percent-decoded path with and
+     * without its trailing slash.
+     *
+     * @param pattern the Ant-style pattern
+     * @param path the raw request path
+     * @return whether any form of the path matches
+     */
+    static boolean matchesAnyForm(String pattern, String path) {
+        if (PathMatcher.ANT.matches(pattern, path)) {
+            return true;
+        }
+        if (path.isEmpty()) {
+            return PathMatcher.ANT.matches(pattern, SLASH);
+        }
+        String stripped = trimTrailingSlash(path);
+        if (stripped != null && PathMatcher.ANT.matches(pattern, stripped)) {
+            return true;
+        }
+        if (path.indexOf('%') == -1) {
+            return false;
+        }
+        String decoded;
+        try {
+            decoded = URLDecoder.decode(path.replace("+", "%2B"), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        if (PathMatcher.ANT.matches(pattern, decoded)) {
+            return true;
+        }
+        String decodedStripped = trimTrailingSlash(decoded);
+        return decodedStripped != null && PathMatcher.ANT.matches(pattern, decodedStripped);
+    }
+
+    private static @Nullable String trimTrailingSlash(String path) {
+        int length = path.length();
+        return length > 1 && path.charAt(length - 1) == '/' ? path.substring(0, length - 1) : null;
     }
 }
