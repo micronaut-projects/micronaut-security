@@ -78,7 +78,7 @@ If your provider issues tokens whose `iss` differs from the configured issuer, c
 ** `micronaut.security.csrf.repositories.cookie.enabled: false` or `micronaut.security.csrf.repository.session.enabled: false` now disables that repository.
 ** If both spellings are set with different values, the `repositories` value now applies, which can re-enable a repository you had disabled.
 ** Values are converted like any Micronaut boolean property: `true`, `yes`, `y` and `on` (case-insensitive) enable the repository, and any other value, including an empty value, disables it. Previously only the exact value `true` kept it enabled, so `yes` or `on` disabled it.
-** To migrate, rename any `micronaut.security.csrf.repository.*` key to `micronaut.security.csrf.repositories.*`.
+** To migrate, rename any `+micronaut.security.csrf.repository.*+` key to `+micronaut.security.csrf.repositories.*+`.
 
 === Deprecations
 
