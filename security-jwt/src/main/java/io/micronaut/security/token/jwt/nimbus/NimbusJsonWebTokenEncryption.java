@@ -93,8 +93,8 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
             return signedJWT;
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
-                // The exception message echoes the token's header, so only its type is logged.
-                LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one: {}", config, e.getClass().getSimpleName());
+                // Nimbus exception messages can echo token-controlled header values (e.g. an unsupported alg), so only the type is logged.
+                LOG.debug("Decryption failed with encryption configuration {} ({})", config, e.getClass().getSimpleName());
             }
             return null;
         }

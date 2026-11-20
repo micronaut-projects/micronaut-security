@@ -51,10 +51,12 @@ class NimbusJsonWebTokenEncryptionTest {
         List<String> attempts = new ArrayList<>();
         NimbusJsonWebTokenEncryption encryption = new NimbusJsonWebTokenEncryption(List.of(
             new FailingEncryptionConfiguration("unsupported", false, attempts),
-            new FailingEncryptionConfiguration("supported", true, attempts)));
+            new FailingEncryptionConfiguration("supported-1", true, attempts),
+            new FailingEncryptionConfiguration("supported-2", true, attempts)));
 
         assertTrue(encryption.decrypt(EncryptedJWT.parse(nestedJwe(ENCRYPTION_SECRET))).isEmpty());
-        assertEquals(List.of("supported", "unsupported"), attempts);
+        // configurations supporting the header keep their configured order, e.g. for key rotation
+        assertEquals(List.of("supported-1", "supported-2", "unsupported"), attempts);
     }
 
     @Test
@@ -76,7 +78,7 @@ class NimbusJsonWebTokenEncryptionTest {
             logger.detachAppender(appender);
         }
         List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption fails") && message.endsWith(": JOSEException")), messages::toString);
+        assertTrue(messages.stream().anyMatch(message -> message.startsWith("Decryption failed") && message.contains("JOSEException")), messages::toString);
         assertTrue(messages.stream().noneMatch(message -> message.contains("FORGED")), messages::toString);
     }
 
