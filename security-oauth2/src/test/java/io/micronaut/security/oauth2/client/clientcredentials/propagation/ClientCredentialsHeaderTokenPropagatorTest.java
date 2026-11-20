@@ -5,6 +5,7 @@ import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -14,14 +15,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ClientCredentialsHeaderTokenPropagatorTest {
 
-    @Test
-    void findTokenComparesThePrefixIgnoringCase() {
-        ClientCredentialsHeaderTokenPropagator propagator = propagator("Bearer");
+    @ParameterizedTest(name = "prefix [{0}] reads [{1}] as [{2}]")
+    @CsvSource(delimiter = '|', value = {
+        "Bearer    | Bearer XXX    | XXX",
+        "Bearer    | bearer XXX    | XXX",
+        "Bearer    | BEARER XXX    | XXX",
+        "Bearer    | 'Bearer '     | ''",
+        "Bearer    | 'Bearer  XXX' | ' XXX'",
+        "Bearer    | BearerXXX     |",
+        "Bearer    | Bearer        |",
+        "Bearer    | Basic XXX     |",
+        "'Bearer ' | Bearer XXX    | XXX",
+        "'Bearer ' | bearer XXX    | XXX",
+        "'Bearer ' | BearerXXX     |",
+        "'Bearer ' | Bearer        |",
+    })
+    void findTokenRemovesThePrefixAndOneSpace(String prefix, String header, String expected) {
+        ClientCredentialsHeaderTokenPropagator propagator = propagator(prefix);
 
-        assertEquals(Optional.of("XXX"), propagator.findToken(HttpRequest.GET("/").header("Authorization", "Bearer XXX")));
-        assertEquals(Optional.of("XXX"), propagator.findToken(HttpRequest.GET("/").header("Authorization", "bearer XXX")));
-        assertEquals(Optional.empty(), propagator.findToken(HttpRequest.GET("/").header("Authorization", "Basic XXX")));
-        assertEquals(Optional.empty(), propagator.findToken(HttpRequest.GET("/")));
+        assertEquals(Optional.ofNullable(expected), propagator.findToken(HttpRequest.GET("/").header("Authorization", header)));
+    }
+
+    @Test
+    void findTokenIsEmptyWithoutTheHeader() {
+        assertEquals(Optional.empty(), propagator("Bearer").findToken(HttpRequest.GET("/")));
     }
 
     @ParameterizedTest

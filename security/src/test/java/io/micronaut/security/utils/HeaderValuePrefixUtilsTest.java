@@ -1,6 +1,8 @@
 package io.micronaut.security.utils;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -14,16 +16,10 @@ class HeaderValuePrefixUtilsTest {
         assertEquals("x", HeaderValuePrefixUtils.removePrefix("BEARER x", "bearer"));
     }
 
-    @Test
-    void prefixMustBeAtTheStartAndFollowedByASpace() {
-        assertNull(HeaderValuePrefixUtils.removePrefix("Bearerx", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("Bearer", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("Bear", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("Bearer\tx", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix(" Bearer x", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("x Bearer y", "Bearer"));
-        assertNull(HeaderValuePrefixUtils.removePrefix("Basic x", "Bearer"));
+    @ParameterizedTest
+    @ValueSource(strings = {"Bearerx", "Bearer", "Bear", "", "Bearer\tx", " Bearer x", "x Bearer y", "Basic x"})
+    void prefixMustBeAtTheStartAndFollowedByASpace(String headerValue) {
+        assertNull(HeaderValuePrefixUtils.removePrefix(headerValue, "Bearer"));
     }
 
     @Test
@@ -40,6 +36,13 @@ class HeaderValuePrefixUtilsTest {
         assertEquals("", HeaderValuePrefixUtils.removePrefix("Bearer ", "Bearer "));
         assertNull(HeaderValuePrefixUtils.removePrefix("Bearer", "Bearer "));
         assertNull(HeaderValuePrefixUtils.removePrefix("Bearerx", "Bearer "));
+    }
+
+    @Test
+    void aPrefixMadeOfASpaceOnlyRemovesThatSpace() {
+        assertEquals("x", HeaderValuePrefixUtils.removePrefix(" x", " "));
+        assertNull(HeaderValuePrefixUtils.removePrefix("x", " "));
+        assertEquals(" x", HeaderValuePrefixUtils.addPrefix("x", " "));
     }
 
     @Test
