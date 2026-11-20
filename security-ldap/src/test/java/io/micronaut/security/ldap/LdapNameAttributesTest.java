@@ -113,6 +113,12 @@ class LdapNameAttributesTest {
         }
     }
 
+    /**
+     * Pins the contract that a DN which cannot be parsed ends as an UNKNOWN failure and no exception
+     * escapes the provider. It does not prove where the DN is rejected: without the {@code LdapName}
+     * parse the directory server rejects the same DN, with the same outcome. The parameterized tests
+     * above are the ones that guard the {@code LdapName} parse.
+     */
     @Test
     void malformedDnIsAnUnknownFailureRatherThanAnException() throws Exception {
         try (ApplicationContext context = startContext("basic.ldif")) {
