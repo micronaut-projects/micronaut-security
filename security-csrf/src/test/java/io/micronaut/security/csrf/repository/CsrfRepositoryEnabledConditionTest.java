@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
@@ -104,19 +105,25 @@ class CsrfRepositoryEnabledConditionTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"TRUE", "yes", "on", "y"})
-    void booleanLikeValueKeepsRepositoryEnabled(String value) {
-        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(COOKIE), value))) {
+    @CsvSource({
+        "cookie, TRUE", "cookie, yes", "cookie, on", "cookie, y",
+        "session, TRUE", "session, yes", "session, on", "session, y"
+    })
+    void booleanLikeValueKeepsRepositoryEnabled(String name, String value) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(name), value))) {
             assertBothEnabled(ctx);
         }
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"off", "no", "disabled"})
-    void otherValueDisablesRepository(String value) {
-        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(COOKIE), value))) {
-            assertOnlyDisabled(ctx, COOKIE);
-            assertDisabledBy(ctx, COOKIE, canonicalKey(COOKIE), value);
+    @CsvSource({
+        "cookie, off", "cookie, no", "cookie, disabled", "cookie, ''", "cookie, '   '",
+        "session, off", "session, no", "session, disabled", "session, ''", "session, '   '"
+    })
+    void otherValueDisablesRepository(String name, String value) {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(name), value))) {
+            assertOnlyDisabled(ctx, name);
+            assertDisabledBy(ctx, name, canonicalKey(name), value);
         }
     }
 

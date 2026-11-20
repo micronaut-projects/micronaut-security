@@ -77,7 +77,7 @@ If your provider issues tokens whose `iss` differs from the configured issuer, c
 - Starting with 5.5.3, CSRF token repositories read both `micronaut.security.csrf.repositories.<name>.enabled` and the deprecated `micronaut.security.csrf.repository.<name>.enabled`. When both are set, the `repositories` value wins. Before 5.5.3, the cookie repository read only `micronaut.security.csrf.repository.cookie.enabled` and the session repository read only `micronaut.security.csrf.repositories.session.enabled`; the other spelling was silently ignored. Check your configuration for the following:
 ** `micronaut.security.csrf.repositories.cookie.enabled: false` or `micronaut.security.csrf.repository.session.enabled: false` now disables that repository.
 ** If both spellings are set with different values, the `repositories` value now applies, which can re-enable a repository you had disabled.
-** Values are converted like any Micronaut boolean property: `true`, `yes`, `y` and `on` (case-insensitive) enable the repository, and any other value disables it. Previously only the exact value `true` kept it enabled, so `yes` or `on` disabled it.
+** Values are converted like any Micronaut boolean property: `true`, `yes`, `y` and `on` (case-insensitive) enable the repository, and any other value, including an empty value, disables it. Previously only the exact value `true` kept it enabled, so `yes` or `on` disabled it.
 ** To migrate, rename any `micronaut.security.csrf.repository.*` key to `micronaut.security.csrf.repositories.*`.
 
 === Deprecations
