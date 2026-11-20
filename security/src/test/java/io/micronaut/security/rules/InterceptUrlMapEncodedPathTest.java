@@ -140,7 +140,7 @@ class InterceptUrlMapEncodedPathTest {
     }
 
     /**
-     * A multi-segment path variable still receives an encoded slash, so the router serves these paths. The
+     * A multi-segment path variable still binds a value that decodes to a slash, so the router serves these paths. The
      * role-restricted {@code /files/*} entry must match them with the encoded slash kept in its segment: decoded, they
      * gain a segment and only the permissive {@code /**} entry would match, letting the anonymous and the unprivileged
      * request through.
