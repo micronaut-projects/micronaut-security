@@ -51,3 +51,5 @@ There are several interfaces that implementations can be provided for to overrid
 |===
 
 To override the behavior of any of those beans, provide an implementation and replace the default one.
+
+A subclass of `NonceClaimValidator` must call the `NonceClaimValidator(NonceFactory)` constructor to keep rejecting a missing persisted nonce, and must override `validateWithoutNonce` if it overrides `validate`.
