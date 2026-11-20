@@ -36,6 +36,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -51,9 +52,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RejectNotFoundContextPathTest {
     private static final String SPEC_NAME = "RejectNotFoundContextPathTest";
 
-    @ParameterizedTest(name = "reject-not-found {0}: GET {1} answers {2}")
-    @MethodSource("unmatchedRequests")
-    void unmatchedRequestsFollowRejectNotFound(@Nullable String rejectNotFound, String path, HttpStatus expectedStatus) {
+    @ParameterizedTest(name = "reject-not-found {0}: unmatched requests answer {1}")
+    @MethodSource("configurations")
+    void unmatchedRequestsFollowRejectNotFound(@Nullable String rejectNotFound, HttpStatus expectedStatus) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("spec.name", SPEC_NAME);
         properties.put("micronaut.server.context-path", "/foo");
@@ -64,19 +65,19 @@ class RejectNotFoundContextPathTest {
              HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
             BlockingHttpClient client = httpClient.toBlocking();
             assertEquals("Home", client.retrieve(HttpRequest.GET("/foo").accept(MediaType.TEXT_PLAIN)));
-            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-                () -> client.exchange(HttpRequest.GET(path).accept(MediaType.TEXT_PLAIN)),
-                () -> "GET " + path + " should not have been served");
-            assertEquals(expectedStatus, exception.getStatus(), () -> "GET " + path);
+            for (String path : List.of("/", "/foo/unknown")) {
+                HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                    () -> client.exchange(HttpRequest.GET(path).accept(MediaType.TEXT_PLAIN)),
+                    () -> "GET " + path + " should not have been served");
+                assertEquals(expectedStatus, exception.getStatus(), () -> "GET " + path);
+            }
         }
     }
 
-    private static Stream<Arguments> unmatchedRequests() {
+    private static Stream<Arguments> configurations() {
         return Stream.of(
-            Arguments.of(null, "/", HttpStatus.UNAUTHORIZED),
-            Arguments.of(null, "/foo/unknown", HttpStatus.UNAUTHORIZED),
-            Arguments.of(StringUtils.FALSE, "/", HttpStatus.NOT_FOUND),
-            Arguments.of(StringUtils.FALSE, "/foo/unknown", HttpStatus.NOT_FOUND)
+            Arguments.of(null, HttpStatus.UNAUTHORIZED),
+            Arguments.of(StringUtils.FALSE, HttpStatus.NOT_FOUND)
         );
     }
 
