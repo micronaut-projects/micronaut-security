@@ -141,6 +141,31 @@ class CsrfRepositoryEnabledConditionTest {
         assertEquals(List.of(deprecationWarning(COOKIE), deprecationWarning(COOKIE)), warnings());
     }
 
+    @Test
+    void eachDeprecatedKeyWarnsOnceInTheSameContext() {
+        try (ApplicationContext ctx = ApplicationContext.run(Map.of(
+            legacyKey(COOKIE), true,
+            legacyKey(SESSION), true))) {
+            assertBothEnabled(ctx);
+            assertBothEnabled(ctx);
+        }
+        List<String> warnings = warnings();
+        assertEquals(2, warnings.size(), () -> "Expected one warning per deprecated key: " + warnings);
+        assertTrue(warnings.containsAll(List.of(deprecationWarning(COOKIE), deprecationWarning(SESSION))), () -> "Unexpected warnings: " + warnings);
+    }
+
+    @Test
+    void contextsOpenAtTheSameTimeWarnIndependently() {
+        Map<String, Object> config = Map.of(legacyKey(COOKIE), false);
+        try (ApplicationContext first = ApplicationContext.run(config);
+             ApplicationContext second = ApplicationContext.run(config)) {
+            assertOnlyDisabled(first, COOKIE);
+            assertOnlyDisabled(second, COOKIE);
+            assertOnlyDisabled(first, COOKIE);
+        }
+        assertEquals(List.of(deprecationWarning(COOKIE), deprecationWarning(COOKIE)), warnings());
+    }
+
     private static String canonicalKey(String name) {
         return "micronaut.security.csrf.repositories." + name + ".enabled";
     }
