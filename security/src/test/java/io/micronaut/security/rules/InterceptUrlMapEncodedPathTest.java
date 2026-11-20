@@ -63,8 +63,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Property(name = "micronaut.security.intercept-url-map[2].access[0]", value = "ROLE_ADMIN")
 @Property(name = "micronaut.security.intercept-url-map[3].pattern", value = "/books/café")
 @Property(name = "micronaut.security.intercept-url-map[3].access[0]", value = "ROLE_ADMIN")
-@Property(name = "micronaut.security.intercept-url-map[4].pattern", value = "/**")
-@Property(name = "micronaut.security.intercept-url-map[4].access[0]", value = "isAnonymous()")
+@Property(name = "micronaut.security.intercept-url-map[4].pattern", value = "/files/*")
+@Property(name = "micronaut.security.intercept-url-map[4].access[0]", value = "ROLE_ADMIN")
+@Property(name = "micronaut.security.intercept-url-map[5].pattern", value = "/**")
+@Property(name = "micronaut.security.intercept-url-map[5].access[0]", value = "isAnonymous()")
 @MicronautTest
 class InterceptUrlMapEncodedPathTest {
     private static final String ADMIN_TOKEN = "admin";
@@ -113,10 +115,12 @@ class InterceptUrlMapEncodedPathTest {
     }
 
     /**
-     * The role-restricted entries must admit the authorized request to a path whose path variable holds an encoded
-     * slash: the answer is 404, not 403, so security let the request through. The 404 itself comes from the router,
-     * which since Micronaut Core 5.2.23 does not bind a value that decodes to a slash to a single-segment path
-     * variable. If the router serves these paths again, expect the controller's response here instead.
+     * Security must not reject the authorized request to a path whose path variable holds an encoded slash: the answer
+     * is 404, not 403. The 404 does not show which entry matched, because the permissive {@code /**} entry would admit
+     * the request too; {@link #protectedPatternsRejectEncodedSlashes(String)} proves the match. The 404 itself comes
+     * from the router, which since Micronaut Core 5.2.23 does not bind a value that decodes to a slash to a
+     * single-segment path variable. If the router serves these paths again, expect the controller's response here
+     * instead.
      *
      * @param path A path whose path variable holds an encoded slash
      */
@@ -133,6 +137,26 @@ class InterceptUrlMapEncodedPathTest {
             "/users/x%2Fy/roles",
             "/x%2Fy/admin/settings"
         );
+    }
+
+    /**
+     * A multi-segment path variable still receives an encoded slash, so the router serves these paths. The
+     * role-restricted {@code /files/*} entry must match them with the encoded slash kept in its segment: decoded, they
+     * gain a segment and only the permissive {@code /**} entry would match, letting the anonymous and the unprivileged
+     * request through.
+     *
+     * @param path A path whose multi-segment path variable holds an encoded slash
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "/files/x%2Fy",
+        "/files/x%2fy"
+    })
+    void encodedSlashInMultiSegmentVariableIsServedOnlyToAuthorizedRequests(String path) {
+        BlockingHttpClient client = httpClient.toBlocking();
+        assertStatus(client, HttpRequest.GET(path), HttpStatus.UNAUTHORIZED);
+        assertStatus(client, HttpRequest.GET(path).bearerAuth(USER_TOKEN), HttpStatus.FORBIDDEN);
+        assertEquals("ok", client.retrieve(HttpRequest.GET(path).accept(MediaType.TEXT_PLAIN).bearerAuth(ADMIN_TOKEN)));
     }
 
     @ParameterizedTest
@@ -182,6 +206,11 @@ class InterceptUrlMapEncodedPathTest {
 
         @Get("/books/{name}")
         String book(String name) {
+            return "ok";
+        }
+
+        @Get("/files/{+path}")
+        String files(String path) {
             return "ok";
         }
 
