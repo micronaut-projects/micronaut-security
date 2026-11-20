@@ -39,13 +39,10 @@ class LdapNameAttributesTest {
             "quote.ldif, johnquote, 'cn=John\\\"Doe,dc=example,dc=com', John\"Doe",
             "basic.ldif, riemann,   'uid=riemann,dc=example,dc=com',   riemann",
     })
-    @SuppressWarnings("unchecked")
     void attributesAreFetchedWithTheUserContextWhenTheSearchResultHasNone(String ldif, String username, String dn, String cn) throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer(ldif);
         try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test")) {
-            LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-
-            AuthenticationResponse response = provider.authenticate(null, LdapTestSupport.request(username));
+            AuthenticationResponse response = LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(username));
 
             assertTrue(response.isAuthenticated());
             assertEquals(username, response.getAuthentication().orElseThrow().getName());

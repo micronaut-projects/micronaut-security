@@ -35,6 +35,7 @@ class LdapLogInjectionTest {
     private static final String LINE_BREAKS = "\r\n";
     private static final String USER = "riemann";
     private static final String USER_DN = "uid=riemann," + LdapTestSupport.BASE_DN;
+    private static final String DECOY_DN = "cn=decoy," + LdapTestSupport.BASE_DN;
 
     private Logger logger;
     private Level originalLevel;
@@ -68,18 +69,36 @@ class LdapLogInjectionTest {
 
     @Test
     void lineBreaksInTheDiagnosticMessageOfTheDirectoryAreNotLogged() throws Exception {
-        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
-            @Override
-            public void processSimpleBindRequest(InMemoryInterceptedSimpleBindRequest request) throws LDAPException {
-                if (USER_DN.equals(request.getRequest().getBindDN())) {
-                    throw new LDAPException(ResultCode.INVALID_CREDENTIALS, "denied" + LINE_BREAKS + FORGED_ENTRY);
-                }
-            }
-        });
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", rejectBind(USER_DN, ResultCode.INVALID_CREDENTIALS));
 
         AuthenticationResponse response = authenticate(server, Map.of(), USER);
 
         assertFalse(response.isAuthenticated());
+        assertForgedEntryIsLoggedWithoutLineBreaks();
+    }
+
+    @Test
+    void lineBreaksInTheDiagnosticMessageOfARejectedManagerBindAreNotLogged() throws Exception {
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif",
+                rejectBind(LdapTestSupport.MANAGER_DN, ResultCode.INVALID_CREDENTIALS));
+
+        AuthenticationResponse response = authenticate(server, Map.of(), USER);
+
+        assertFalse(response.isAuthenticated());
+        assertForgedEntryIsLoggedWithoutLineBreaks();
+    }
+
+    @Test
+    void lineBreaksInTheDiagnosticMessageOfAnUnexpectedDecoyBindFailureAreNotLogged() throws Exception {
+        // a result code other than invalid credentials makes the provider warn about the decoy, at a level enabled by default
+        InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif",
+                rejectBind(DECOY_DN, ResultCode.UNWILLING_TO_PERFORM));
+
+        AuthenticationResponse response = authenticate(server, Map.of("micronaut.security.ldap.default.search.decoy-dn", DECOY_DN), "nobody");
+
+        assertFalse(response.isAuthenticated());
+        assertTrue(appender.list.stream().anyMatch(event -> event.getLevel() == Level.WARN && event.getFormattedMessage().contains(FORGED_ENTRY)),
+                "the decoy warning is expected to carry the diagnostic message");
         assertForgedEntryIsLoggedWithoutLineBreaks();
     }
 
@@ -100,11 +119,25 @@ class LdapLogInjectionTest {
         assertForgedEntryIsLoggedWithoutLineBreaks();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * @param bindDn     The DN whose bind the directory rejects
+     * @param resultCode The result code of the rejection
+     * @return An interceptor that rejects the bind with a diagnostic message carrying a forged log entry
+     */
+    private static InMemoryOperationInterceptor rejectBind(String bindDn, ResultCode resultCode) {
+        return new InMemoryOperationInterceptor() {
+            @Override
+            public void processSimpleBindRequest(InMemoryInterceptedSimpleBindRequest request) throws LDAPException {
+                if (bindDn.equals(request.getRequest().getBindDN())) {
+                    throw new LDAPException(resultCode, "denied" + LINE_BREAKS + FORGED_ENTRY);
+                }
+            }
+        };
+    }
+
     private static AuthenticationResponse authenticate(InMemoryDirectoryServer server, Map<String, Object> properties, String username) {
         try (ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, properties), "test")) {
-            LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-            return provider.authenticate(null, LdapTestSupport.request(username));
+            return LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(username));
         } finally {
             server.shutDown(true);
         }

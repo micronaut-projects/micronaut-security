@@ -4,11 +4,18 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import com.unboundid.ldif.LDIFReader;
+import io.micronaut.context.ApplicationContext;
+import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationResponse;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 /**
  * The in-memory directory, the configuration pointing to it and the authentication requests shared by the LDAP tests.
@@ -105,5 +112,23 @@ public final class LdapTestSupport {
                 return password;
             }
         };
+    }
+
+    /**
+     * @param context The application context running the LDAP configuration named {@code default}
+     * @return The authentication provider of that configuration
+     */
+    @SuppressWarnings("unchecked")
+    public static LdapAuthenticationProvider<Object, String, String> provider(ApplicationContext context) {
+        return context.getBean(LdapAuthenticationProvider.class);
+    }
+
+    /**
+     * @param response A response that is expected to be a failure
+     * @return The reason of the failure
+     */
+    public static AuthenticationFailureReason failureReason(AuthenticationResponse response) {
+        assertFalse(response.isAuthenticated());
+        return assertInstanceOf(AuthenticationFailed.class, response).getReason();
     }
 }

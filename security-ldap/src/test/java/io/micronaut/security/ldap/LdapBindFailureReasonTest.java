@@ -4,7 +4,6 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.context.ContextSettings;
@@ -31,9 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static io.micronaut.security.ldap.LdapTestSupport.failureReason;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -128,15 +126,8 @@ class LdapBindFailureReasonTest {
         assertTrue(authenticate().isAuthenticated());
     }
 
-    private static AuthenticationFailureReason failureReason(AuthenticationResponse response) {
-        assertFalse(response.isAuthenticated());
-        return assertInstanceOf(AuthenticationFailed.class, response).getReason();
-    }
-
-    @SuppressWarnings("unchecked")
     private static AuthenticationResponse authenticate() {
-        LdapAuthenticationProvider<Object, String, String> provider = context.getBean(LdapAuthenticationProvider.class);
-        return provider.authenticate(null, LdapTestSupport.request("riemann"));
+        return LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"));
     }
 
     /**
