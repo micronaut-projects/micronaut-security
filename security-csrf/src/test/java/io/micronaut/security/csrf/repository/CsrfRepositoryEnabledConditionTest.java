@@ -56,6 +56,7 @@ class CsrfRepositoryEnabledConditionTest {
     void canonicalKeyFalseDisablesRepository(String name) {
         try (ApplicationContext ctx = ApplicationContext.run(Map.of(canonicalKey(name), false))) {
             assertOnlyDisabled(ctx, name);
+            assertDisabledBy(ctx, name, canonicalKey(name));
         }
         assertTrue(warnings().isEmpty());
     }
@@ -65,6 +66,7 @@ class CsrfRepositoryEnabledConditionTest {
     void legacyKeyFalseDisablesRepositoryAndLogsWarning(String name) {
         try (ApplicationContext ctx = ApplicationContext.run(Map.of(legacyKey(name), false))) {
             assertOnlyDisabled(ctx, name);
+            assertDisabledBy(ctx, name, legacyKey(name));
         }
         assertEquals(List.of(deprecationWarning(name)), warnings());
     }
@@ -96,6 +98,7 @@ class CsrfRepositoryEnabledConditionTest {
             canonicalKey(name), false,
             legacyKey(name), true))) {
             assertOnlyDisabled(ctx, name);
+            assertDisabledBy(ctx, name, canonicalKey(name));
         }
         assertTrue(warnings().isEmpty());
     }
@@ -134,6 +137,13 @@ class CsrfRepositoryEnabledConditionTest {
     private static void assertOnlyDisabled(ApplicationContext ctx, String name) {
         assertEquals(!COOKIE.equals(name), ctx.containsBean(CookieCsrfTokenRepository.class));
         assertEquals(!SESSION.equals(name), ctx.containsBean(SessionCsrfTokenRepository.class));
+    }
+
+    private static void assertDisabledBy(ApplicationContext ctx, String name, String key) {
+        Class<?> repository = COOKIE.equals(name) ? CookieCsrfTokenRepository.class : SessionCsrfTokenRepository.class;
+        NoSuchBeanException e = assertThrows(NoSuchBeanException.class, () -> ctx.getBean(repository));
+        String reason = "Property [" + key + "] is set to false";
+        assertTrue(e.getMessage().contains(reason), () -> "Expected [" + reason + "] in: " + e.getMessage());
     }
 
     private List<String> warnings() {
