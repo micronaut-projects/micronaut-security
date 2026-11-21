@@ -174,8 +174,8 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                     }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return true;
-                    } else if (LOG.isErrorEnabled()) {
-                        LOG.error("Nonce validation failed for provider [{}]", clientConfiguration.getName());
+                    } else if (LOG.isWarnEnabled()) {
+                        LOG.warn("{} failed for provider [{}]. Expected nonce present: {}, nonce claim present: {}, ID token claims: {}", NonceClaimValidator.class.getSimpleName(), clientConfiguration.getName(), nonce != null, claims.getNonce() != null, claims.getClaims().keySet());
                     }
                 } else if (LOG.isErrorEnabled()) {
                     LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());

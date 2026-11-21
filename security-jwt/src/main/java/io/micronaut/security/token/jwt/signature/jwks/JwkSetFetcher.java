@@ -44,4 +44,32 @@ public interface JwkSetFetcher<T> {
      * Clears cache
      */
     void clearCache(String url);
+
+    /**
+     * Clears the cache for the given provider name and Jwks uri. Implementations which key their cache by provider name and url should override this method.
+     * The default implementation delegates to {@link #clearCache(String)}.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @since 5.5.3
+     */
+    default void clearCache(@Nullable String providerName, @NonNull String url) {
+        clearCache(url);
+    }
+
+    /**
+     * Retrieves the Json Web Key Set again, bypassing the cache, and replaces the cached Json Web Key Set only if the retrieval succeeds.
+     * If the retrieval fails, the cached Json Web Key Set is kept.
+     * The default implementation clears the cache with {@link #clearCache(String, String)} and delegates to {@link #fetch(String, String)},
+     * which does not keep the cached Json Web Key Set if the retrieval fails. Implementations should override this method.
+     * @param providerName The jwks provider name
+     * @param url The Jwks uri
+     * @return The Json Web Key Set which was retrieved, or empty if it could not be retrieved.
+     * @since 5.5.3
+     */
+    @NonNull
+    @SingleResult
+    default Publisher<T> refresh(@Nullable String providerName, @NonNull String url) {
+        clearCache(providerName, url);
+        return fetch(providerName, url);
+    }
 }

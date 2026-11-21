@@ -24,6 +24,8 @@ import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.Duration;
+
 /**
  * JSON Web Key Set (JWKS) Signature Configuration properties holder.
  *
@@ -49,6 +51,13 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_CACHE_EXPIRATION = 60;
 
+    /**
+     * The default minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     * @since 5.5.3
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final Duration DEFAULT_REFRESH_INTERVAL = Duration.ofSeconds(30);
+
     @Nullable
     private final String name;
 
@@ -62,6 +71,9 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
 
     @Nullable
     private String issuer;
+
+    @NonNull
+    private Duration refreshInterval = DEFAULT_REFRESH_INTERVAL;
 
     public JwksSignatureConfigurationProperties(@Parameter String name) {
         this.name = name;
@@ -130,6 +142,29 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      */
     public void setKeyType(@Nullable KeyType keyType) {
         this.keyType = keyType;
+    }
+
+    /**
+     *
+     * @return Minimum interval between two JWKS refreshes triggered by a token whose key ID is not present in the cached JWKS.
+     * @since 5.5.3
+     */
+    @Override
+    @NonNull
+    public Duration getRefreshInterval() {
+        return refreshInterval;
+    }
+
+    /**
+     * When a JWT carries a {@code kid} header which is not present in the cached JWKS, the JWKS is fetched again and, if it can be retrieved, replaces the cached JWKS.
+     * This property sets the minimum interval between two such refreshes. Default value 30 seconds.
+     * A zero or negative interval disables the rate limit.
+     * @param refreshInterval Minimum interval between two JWKS refreshes triggered by an unknown key ID.
+     * @since 5.5.3
+     */
+    public void setRefreshInterval(@NonNull Duration refreshInterval) {
+        ArgumentUtils.requireNonNull("refreshInterval", refreshInterval);
+        this.refreshInterval = refreshInterval;
     }
 
     /**
