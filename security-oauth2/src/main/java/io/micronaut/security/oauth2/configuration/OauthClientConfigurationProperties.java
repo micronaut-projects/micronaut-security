@@ -399,7 +399,10 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * Additional parameters included in the client-credentials flow.
+         * Additional parameters included in the client-credentials flow. The reserved keys {@code grant_type},
+         * {@code client_id} and {@code client_secret} are ignored, as is {@code scope} when a scope is already
+         * set for the request (for example, via the {@code scope} property). A warning is logged once per client
+         * for each ignored key.
          * @param additionalRequestParams Map of additional request parameters to include in client-credentials flow
          */
         public void setAdditionalRequestParams(@MapFormat(transformation = MapFormat.MapTransformation.FLAT) Map<String, String> additionalRequestParams) {

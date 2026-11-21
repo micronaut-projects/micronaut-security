@@ -23,8 +23,14 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant;
+import io.micronaut.security.oauth2.grants.SecureGrant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A token request context for sending a client credentials request to an OAuth 2.0 provider.
@@ -33,6 +39,19 @@ import java.util.Map;
  * @version 2.1.0
  */
 public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
+    private static final Logger LOG = LoggerFactory.getLogger(ClientCredentialsTokenRequestContext.class);
+    private static final String KEY_GRANT_TYPE = "grant_type";
+
+    /**
+     * Keys which additional request parameters can never set, because they are protocol critical.
+     */
+    private static final Set<String> RESERVED_KEYS = Set.of(KEY_GRANT_TYPE, SecureGrant.KEY_CLIENT_ID, SecureGrant.KEY_CLIENT_SECRET);
+
+    /**
+     * Client name and ignored key combinations for which a warning has already been logged.
+     */
+    private static final Set<String> WARNED = ConcurrentHashMap.newKeySet();
+
     private final ClientCredentialsGrant grant;
     private final Map<String, String> additionalRequestParams;
 
@@ -45,9 +64,8 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
                                                 SecureEndpoint tokenEndpoint,
                                                 OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
-        ClientCredentialsGrant clientCredentialsGrant = new ClientCredentialsGrant();
-        clientCredentialsGrant.setScope(scope);
-        this.grant = clientCredentialsGrant;
+        this.grant = new ClientCredentialsGrant();
+        this.grant.setScope(scope);
         this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
     }
 
@@ -55,9 +73,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
      * @param clientConfiguration The client configuration
      */
     public ClientCredentialsTokenRequestContext(OauthClientConfiguration clientConfiguration) {
-        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
-        this.grant = new ClientCredentialsGrant();
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
+        this(null, clientConfiguration);
     }
 
     /**
@@ -65,17 +81,32 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
      * @param clientConfiguration The client configuration
      */
     public ClientCredentialsTokenRequestContext(String scope, OauthClientConfiguration clientConfiguration) {
-        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
-        this.grant = new ClientCredentialsGrant();
-        this.grant.setScope(scope);
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
+        this(scope, clientConfiguration.getTokenEndpoint(), clientConfiguration);
     }
 
     @Override
     public Map<String, String> getGrant() {
         Map<String, String> grantMap = grant.toMap();
-        grantMap.putAll(additionalRequestParams);
+        for (Map.Entry<String, String> entry : additionalRequestParams.entrySet()) {
+            String key = entry.getKey();
+            if (RESERVED_KEYS.contains(key)) {
+                warnIgnoredKey(key, "it is reserved for the client credentials grant and client authentication");
+            } else if (grantMap.containsKey(key)) {
+                warnIgnoredKey(key, "the request already sets it");
+            } else {
+                grantMap.put(key, entry.getValue());
+            }
+        }
         return grantMap;
+    }
+
+    /**
+     * Logs the ignored key, never its value, which could be a credential.
+     */
+    private void warnIgnoredKey(String key, String reason) {
+        if (LOG.isWarnEnabled() && WARNED.add(clientConfiguration.getName() + '\u0000' + key)) {
+            LOG.warn("Ignoring additional request parameter [{}] for OAuth 2.0 client [{}] because {}.", key, clientConfiguration.getName(), reason);
+        }
     }
 
     @Override
