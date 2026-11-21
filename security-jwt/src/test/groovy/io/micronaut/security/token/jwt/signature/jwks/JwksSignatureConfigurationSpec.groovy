@@ -26,4 +26,17 @@ class JwksSignatureConfigurationSpec extends Specification {
         noExceptionThrown()
         jwksSignatureConfiguration.keyType == KeyType.EC
     }
+
+    void "by default no key type is configured"() {
+        given:
+        ApplicationContext ctx = ApplicationContext.run([
+                'micronaut.security.token.jwt.signatures.jwks.opes.url': "http://localhost:8081/keys",
+        ])
+
+        expect:
+        ctx.getBean(JwksSignatureConfiguration).keyType == null
+
+        cleanup:
+        ctx.close()
+    }
 }
