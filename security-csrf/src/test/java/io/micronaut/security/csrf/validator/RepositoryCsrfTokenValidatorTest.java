@@ -56,7 +56,7 @@ class RepositoryCsrfTokenValidatorTest {
     void firstRepositoryHoldingATokenIsAuthoritative() {
         try (ApplicationContext context = ApplicationContext.run(Map.of(
             "spec.name", SPEC_NAME,
-            "micronaut.security.csrf.repository.cookie.enabled", StringUtils.FALSE,
+            "micronaut.security.csrf.repositories.cookie.enabled", StringUtils.FALSE,
             "micronaut.security.csrf.repositories.session.enabled", StringUtils.FALSE))) {
             CsrfTokenValidator<HttpRequest<?>> validator = context.getBean(CsrfTokenValidator.class);
             PrimaryRepository primary = context.getBean(PrimaryRepository.class);
