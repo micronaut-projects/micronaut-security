@@ -333,7 +333,7 @@ class ClientCredentialsClientDatabaseAccessTokenFetcherTest {
             return HttpResponse.ok(Map.of(
                     "access_token", tokenGenerator.generateToken(Authentication.build("sergio"), expirationSeconds).orElseThrow(),
                     "token_type", "Bearer",
-                    "expires_in", 3600));
+                    "expires_in", expirationSeconds));
         }
     }
 

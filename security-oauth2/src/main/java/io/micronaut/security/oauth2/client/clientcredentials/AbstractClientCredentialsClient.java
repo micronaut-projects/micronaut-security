@@ -29,12 +29,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HexFormat;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -46,9 +55,11 @@ import java.util.function.Function;
 public abstract class AbstractClientCredentialsClient implements ClientCredentialsClient {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClientCredentialsClient.class);
     private static final String NOSCOPE = "NOSCOPE";
+    private static final int FINGERPRINT_BYTES = 4;
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
-    protected final Map<String, Publisher<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    protected final Map<String, Publisher<CachedTokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    private final Clock clock;
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -56,8 +67,20 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      */
     public AbstractClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
                                            @NonNull TokenEndpointClient tokenEndpointClient) {
+        this(oauthClientConfiguration, tokenEndpointClient, Clock.systemUTC());
+    }
+
+    /**
+     * @param tokenEndpointClient The token endpoint client
+     * @param oauthClientConfiguration The client configuration
+     * @param clock The clock used to decide whether a cached token is expired
+     */
+    AbstractClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
+                                    @NonNull TokenEndpointClient tokenEndpointClient,
+                                    @NonNull Clock clock) {
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.tokenEndpointClient = tokenEndpointClient;
+        this.clock = clock;
     }
 
     /**
@@ -78,38 +101,82 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     @NonNull
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
-        return Flux.from(scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope)))
-            .flatMap((Function<TokenResponse, Mono<TokenResponse>>) response -> {
-                if (!force && !isExpired(response)) {
-                    return Mono.just(response);
+        Publisher<CachedTokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope));
+        return Flux.from(publisher)
+            .flatMap((Function<CachedTokenResponse, Mono<TokenResponse>>) cached -> {
+                if (!force && !isExpired(cached)) {
+                    return Mono.just(cached.tokenResponse());
                 }
-                return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
+                return Mono.from(refresh(resolvedScope, scope, publisher))
+                    .map(CachedTokenResponse::tokenResponse);
             }).doOnError(error -> {
                 scopeToPublisherMap.remove(resolvedScope);
             });
     }
 
+    /**
+     * Replaces the cached token request of a scope, unless another caller has already replaced it.
+     * Callers which observe the same expired token thus share a single token request.
+     *
+     * @param resolvedScope The cache key
+     * @param scope The requested scope
+     * @param stale The cached token request which the caller found expired or was told to bypass
+     * @return The token request to subscribe to
+     */
     @NonNull
-    private Publisher<TokenResponse> cachedTokenResponseForScope(String scope) {
-        return Flux.from(tokenEndpointClient.sendRequest(createTokenRequestContext(scope))).cache();
+    private Publisher<CachedTokenResponse> refresh(@NonNull String resolvedScope,
+                                                   @Nullable String scope,
+                                                   @NonNull Publisher<CachedTokenResponse> stale) {
+        return scopeToPublisherMap.compute(resolvedScope, (key, current) ->
+            current == null || current == stale ? cachedTokenResponseForScope(scope) : current);
+    }
+
+    @NonNull
+    private Publisher<CachedTokenResponse> cachedTokenResponseForScope(String scope) {
+        return Flux.from(tokenEndpointClient.sendRequest(createTokenRequestContext(scope)))
+            .map(this::toCachedTokenResponse)
+            .cache();
+    }
+
+    @NonNull
+    private CachedTokenResponse toCachedTokenResponse(@NonNull TokenResponse tokenResponse) {
+        Instant expiresAt = expiresAt(tokenResponse);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("caching client credentials access token (sha256 prefix {}) for OAuth 2.0 client {} until {}",
+                fingerprint(tokenResponse.getAccessToken()), getName(), expiresAt);
+        }
+        return new CachedTokenResponse(tokenResponse, expiresAt);
+    }
+
+    private boolean isExpired(@NonNull CachedTokenResponse cached) {
+        boolean isExpired = isExpired(Date.from(cached.expiresAt()));
+        if (isExpired && LOG.isTraceEnabled()) {
+            LOG.trace("client credentials access token (sha256 prefix {}) for OAuth 2.0 client {} expired at {}",
+                fingerprint(cached.tokenResponse().getAccessToken()), getName(), cached.expiresAt());
+        }
+        return isExpired;
+    }
+
+    @NonNull
+    private Instant expiresAt(@NonNull TokenResponse tokenResponse) {
+        return expirationDate(tokenResponse)
+            .map(Date::toInstant)
+            .orElseGet(() -> clock.instant().plus(defaultExpiration()));
     }
 
     /**
      *
      * @param tokenResponse Token Response
      * @return true if any A) parameter token response is null B) if an expiration time cannot parsed C) (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
+     * @deprecated It is no longer invoked. The expiration of a token response is computed once with {@link #expirationDate(TokenResponse)},
+     * when the token response is cached, and checked with {@link #isExpired(Date)}.
      */
+    @Deprecated(since = "5.5.3", forRemoval = true)
     protected boolean isExpired(@Nullable TokenResponse tokenResponse) {
         if (tokenResponse == null) {
             return true;
         }
-        return expirationDate(tokenResponse).map(expDate -> {
-            boolean isExpired = isExpired(expDate);
-            if (isExpired && LOG.isTraceEnabled()) {
-                LOG.trace("access token is expired");
-            }
-            return isExpired;
-        }).orElse(true);
+        return expirationDate(tokenResponse).map(this::isExpired).orElse(true);
     }
 
     /**
@@ -118,27 +185,60 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      * @return true if the (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
      */
     protected boolean isExpired(@NonNull Date expirationDate) {
-        return (expirationDate.getTime() - oauthClientConfiguration.getClientCredentials()
-                .map(ClientCredentialsConfiguration::getAdvancedExpiration)
-                .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
-                .toMillis()) < new Date().getTime();
+        return expirationDate.toInstant().minus(advancedExpiration()).isBefore(clock.instant());
     }
 
     /**
      *
      * @param tokenResponse Token Response
-     * @return The expiration date from the exp claim in the access token is a JWT or the expiration date calculated from the expiresIn
+     * @return The earlier of the expiration date calculated from {@code expires_in} and the {@code exp} claim if the access token is a JWT,
+     * the one which is present if only one is, or an empty optional if the token response carries no expiration.
      */
     protected Optional<Date> expirationDate(@NonNull TokenResponse tokenResponse) {
+        return Stream.of(tokenResponse.getExpiresInDate(), jwtExpirationDate(tokenResponse))
+            .flatMap(Optional::stream)
+            .min(Comparator.naturalOrder());
+    }
+
+    @NonNull
+    private Optional<Date> jwtExpirationDate(@NonNull TokenResponse tokenResponse) {
         try {
             JWT jwt = JWTParser.parse(tokenResponse.getAccessToken());
             return Optional.ofNullable(jwt.getJWTClaimsSet().getExpirationTime());
         } catch (ParseException e) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("cannot parse access token to JWT");
+                LOG.trace("client credentials access token (sha256 prefix {}) for OAuth 2.0 client {} cannot be parsed as a JWT",
+                    fingerprint(tokenResponse.getAccessToken()), getName());
             }
         }
-        return tokenResponse.getExpiresInDate();
+        return Optional.empty();
+    }
+
+    @NonNull
+    private Duration advancedExpiration() {
+        return oauthClientConfiguration.getClientCredentials()
+            .map(ClientCredentialsConfiguration::getAdvancedExpiration)
+            .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION);
+    }
+
+    @NonNull
+    private Duration defaultExpiration() {
+        return oauthClientConfiguration.getClientCredentials()
+            .map(ClientCredentialsConfiguration::getDefaultExpiration)
+            .orElse(ClientCredentialsConfiguration.DEFAULT_EXPIRATION);
+    }
+
+    @NonNull
+    private static String fingerprint(@Nullable String accessToken) {
+        if (accessToken == null) {
+            return "null";
+        }
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256").digest(accessToken.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest, 0, FINGERPRINT_BYTES);
+        } catch (NoSuchAlgorithmException e) {
+            return "unavailable";
+        }
     }
 
     /**
@@ -147,4 +247,14 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      * @return A client credentials token request context
      */
     protected abstract ClientCredentialsTokenRequestContext createTokenRequestContext(@Nullable String scope);
+
+    /**
+     * A token response together with the expiration computed when it was received.
+     *
+     * @param tokenResponse The token response
+     * @param expiresAt The instant at which the access token expires
+     * @since 5.5.3
+     */
+    protected record CachedTokenResponse(@NonNull TokenResponse tokenResponse, @NonNull Instant expiresAt) {
+    }
 }

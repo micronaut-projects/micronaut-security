@@ -328,9 +328,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private Duration advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
 
+        private Duration defaultExpiration = ClientCredentialsConfiguration.DEFAULT_EXPIRATION;
+
         private HeaderTokenPropagatorConfigurationProperties headerPropagation;
 
-        private Map<String, String> additonalRequestParams = Collections.emptyMap();
+        private Map<String, String> additionalRequestParams = Collections.emptyMap();
 
         @NonNull
         @Override
@@ -354,11 +356,29 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * @param advancedExpiration Number of seconds for a token obtained via client credentials grant to be considered expired
-         *                           prior to its expiration date. Default value (30 seconds).
+         * @param advancedExpiration Amount of time for a token obtained via client credentials grant to be considered expired
+         *                           prior to its expiration date. It is applied to every expiration, including the one derived
+         *                           from {@code default-expiration}. Default value (30 seconds).
          */
         public void setAdvancedExpiration(@NonNull Duration advancedExpiration) {
             this.advancedExpiration = advancedExpiration;
+        }
+
+        @NonNull
+        @Override
+        public Duration getDefaultExpiration() {
+            return defaultExpiration;
+        }
+
+        /**
+         * @param defaultExpiration Amount of time a token obtained via client credentials grant is cached when the token response
+         *                          does not include {@code expires_in} and the access token is not a JWT with an {@code exp} claim.
+         *                          It should be greater than {@code advanced-expiration}; otherwise such tokens are requested again on
+         *                          every call. Default value (5 minutes).
+         * @since 5.5.3
+         */
+        public void setDefaultExpiration(@NonNull Duration defaultExpiration) {
+            this.defaultExpiration = defaultExpiration;
         }
 
         @NonNull
@@ -395,7 +415,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         @NonNull
         public Map<String, String> getAdditionalRequestParams() {
-            return additonalRequestParams;
+            return additionalRequestParams;
         }
 
         /**
@@ -403,7 +423,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * @param additionalRequestParams Map of additional request parameters to include in client-credentials flow
          */
         public void setAdditionalRequestParams(@MapFormat(transformation = MapFormat.MapTransformation.FLAT) Map<String, String> additionalRequestParams) {
-            this.additonalRequestParams = additionalRequestParams;
+            this.additionalRequestParams = additionalRequestParams;
         }
 
         /**
