@@ -18,7 +18,9 @@ package io.micronaut.security.filters;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.web.router.RouteAttributes;
 import org.jspecify.annotations.Nullable;
+import io.micronaut.core.async.propagation.ReactivePropagation;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
@@ -44,6 +46,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * Security Filter.
@@ -87,6 +90,8 @@ public class SecurityFilter implements HttpServerFilter {
     protected final SecurityConfiguration securityConfiguration;
     private final StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass;
     private final boolean staticResourceAuthenticationBypassEnabled;
+    @Nullable
+    private final StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher;
 
     /**
      * @param securityRules          The list of security rules that will allow or reject the request
@@ -103,6 +108,8 @@ public class SecurityFilter implements HttpServerFilter {
         this.securityConfiguration = securityConfiguration;
         this.staticResourceAuthenticationBypass = null;
         this.staticResourceAuthenticationBypassEnabled = false;
+        this.staticResourceMatcher = null;
+        warnIfNoStaticResourceMatcher(securityConfiguration, null);
     }
 
     /**
@@ -112,18 +119,47 @@ public class SecurityFilter implements HttpServerFilter {
      * @param securityFilterConfiguration The security filter configuration
      * @param staticResourceAuthenticationBypass Determines whether authentication can be skipped for static resources
      * @since 5.4.0
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)}.
+     */
+    @Deprecated(forRemoval = true, since = "5.5.2")
+    public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
+                          Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration,
+                          SecurityFilterConfiguration securityFilterConfiguration,
+                          @Nullable StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass) {
+        this(securityRules, authenticationFetchers, securityConfiguration, securityFilterConfiguration, staticResourceAuthenticationBypass, (StaticResourceMatcher<HttpRequest<?>>) null);
+    }
+
+    /**
+     * @param securityRules The list of security rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context
+     * @param securityConfiguration The security configuration
+     * @param securityFilterConfiguration The security filter configuration
+     * @param staticResourceAuthenticationBypass Determines whether authentication can be skipped for static resources
+     * @param staticResourceMatcher Tells whether the server could serve a request that matches no route as a static resource, used to reject static resources that no security rule covers even when {@code micronaut.security.reject-not-found} is disabled. When {@code null}, the filter fails closed and rejects every request that matches no route, regardless of {@code micronaut.security.reject-not-found}.
+     * @since 5.5.2
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
                           Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration,
                           SecurityFilterConfiguration securityFilterConfiguration,
-                          @Nullable StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass) {
+                          @Nullable StaticResourceAuthenticationBypass<HttpRequest<?>> staticResourceAuthenticationBypass,
+                          @Nullable StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
         this.staticResourceAuthenticationBypass = staticResourceAuthenticationBypass;
         this.staticResourceAuthenticationBypassEnabled = securityFilterConfiguration.isStaticResourceAuthenticationBypass();
+        this.staticResourceMatcher = staticResourceMatcher;
+        warnIfNoStaticResourceMatcher(securityConfiguration, staticResourceMatcher);
+    }
+
+    private static void warnIfNoStaticResourceMatcher(SecurityConfiguration securityConfiguration,
+                                                      @Nullable StaticResourceMatcher<HttpRequest<?>> staticResourceMatcher) {
+        if (staticResourceMatcher == null && !securityConfiguration.isRejectNotFound() && LOG.isWarnEnabled()) {
+            LOG.warn("No StaticResourceMatcher is available to the SecurityFilter. Requests that match no route and that no security rule allows are rejected regardless of micronaut.security.reject-not-found, because the filter cannot tell whether the server would serve them as a static resource. Create the filter with a StaticResourceMatcher to answer 404 for unknown routes.");
+        }
     }
 
     @Override
@@ -141,12 +177,16 @@ public class SecurityFilter implements HttpServerFilter {
             return createResponse(null, request, chain);
         }
 
+        // Authentication fetchers may complete asynchronously on a thread bound to another request's propagated
+        // context (for example when several requests wait for the same remote JWK Set). Bind the propagated context
+        // of this request around each fetcher, so that what a fetcher does with its result after an asynchronous
+        // validation is bound to this request too, and resume the rule checks within that context.
+        PropagatedContext propagatedContext = PropagatedContext.getOrEmpty();
         return Flux.fromIterable(authenticationFetchers)
-                .concatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
+                .concatMap(authenticationFetcher -> inContext(propagatedContext, () -> authenticationFetcher.fetchAuthentication(request)))
                 .next()
-                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
-                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
-                        .next());
+                .flatMap(authentication -> Mono.from(inContext(propagatedContext, () -> createResponse(authentication, request, chain))))
+                .switchIfEmpty(Mono.from(inContext(propagatedContext, () -> createResponse(null, request, chain))));
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
@@ -171,9 +211,12 @@ public class SecurityFilter implements HttpServerFilter {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
+        // Each rule, and the rest of the filter chain, may be resumed on a thread bound to the propagated context of
+        // another request. Bind the context of this request explicitly around each of them.
+        PropagatedContext propagatedContext = PropagatedContext.getOrEmpty();
 
         return Flux.fromIterable(securityRules)
-                .concatMap(rule -> Mono.from(rule.check(request, authentication))
+                .concatMap(rule -> Mono.from(inContext(propagatedContext, () -> rule.check(request, authentication)))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter(result -> result != SecurityRuleResult.UNKNOWN)
@@ -184,7 +227,7 @@ public class SecurityFilter implements HttpServerFilter {
                         ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                         return Mono.error(new AuthorizationException(authentication));
                     } else if (result == SecurityRuleResult.ALLOWED) {
-                        return chain.proceed(request);
+                        return inContext(propagatedContext, () -> chain.proceed(request));
                     } else {
                         return Mono.empty();
                     }
@@ -198,14 +241,32 @@ public class SecurityFilter implements HttpServerFilter {
                     }
                     try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
                         // no rule found for the given request
-                        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                            return chain.proceed(request);
+                        if (routeMatch == null && !securityConfiguration.isRejectNotFound() && !mayBeStaticResource(request)) {
+                            return inContext(propagatedContext, () -> chain.proceed(request));
                         } else {
                             ServerRequestContextSecurityContextSupplier.getSecurityContext(request).withRejectionStatus(forbidden ? HttpStatus.FORBIDDEN.getCode() : HttpStatus.UNAUTHORIZED.getCode());
                             return Mono.error(new AuthorizationException(authentication));
                         }
                     }
                 }));
+    }
+
+    private static <T> Publisher<T> inContext(PropagatedContext propagatedContext, Supplier<Publisher<T>> supplier) {
+        return ReactivePropagation.propagate(propagatedContext, Flux.defer(supplier));
+    }
+
+    /**
+     * A request that matches no route may still be served by the server as a static resource. The
+     * {@link StaticResourceMatcher} tells, so that a static resource that no security rule covers is rejected instead
+     * of being served when {@code micronaut.security.reject-not-found} is disabled. Without a matcher, which only
+     * happens with the deprecated constructors, the filter cannot tell and fails closed: every such request is
+     * treated as a possible static resource.
+     *
+     * @param request The request
+     * @return Whether the request may be served as a static resource
+     */
+    private boolean mayBeStaticResource(HttpRequest<?> request) {
+        return staticResourceMatcher == null || staticResourceMatcher.isStaticResource(request);
     }
 
     private void logResult(SecurityRuleResult result, String method, String path, Ordered ordered) {

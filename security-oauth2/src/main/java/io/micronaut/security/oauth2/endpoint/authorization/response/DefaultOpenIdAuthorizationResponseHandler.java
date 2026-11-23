@@ -16,7 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.security.authentication.AuthenticationFailed;
@@ -36,6 +38,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
@@ -63,6 +66,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
 
     private final ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator;
+    @Nullable
     private final OpenIdAuthenticationMapper defaultAuthenticationMapper;
     private final TokenEndpointClient tokenEndpointClient;
     private final OauthRouteUrlBuilder<T> oauthRouteUrlBuilder;
@@ -71,16 +75,51 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
     private final ExecutorService blockingExecutor;
 
     /**
+     * Creates the handler with the application's global {@link OpenIdAuthenticationMapper}: the bean without a
+     * qualifier (a primary bean counts as such), used for the clients which have no mapper of their own. A mapper
+     * registered with a qualifier for another client is never used as the global mapper. When no unqualified mapper
+     * exists, a client without its own mapper cannot authenticate anyone.
+     *
      * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper   Authentication Mapper
+     * @param beanContext            The bean context, used to resolve the global authentication mapper
      * @param tokenEndpointClient    The token endpoint client
      * @param oauthRouteUrlBuilder   The oauth route url builder
      * @param stateValidator         The state validator
      * @param pkcePersistence        The PKCE persistence
      * @param blockingExecutor       An executor for blocking operations
+     * @since 5.5.2
      */
+    @Inject
     public DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator,
-                                                     OpenIdAuthenticationMapper authenticationMapper,
+                                                     BeanContext beanContext,
+                                                     TokenEndpointClient tokenEndpointClient,
+                                                     OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
+                                                     @Nullable StateValidator stateValidator,
+                                                     @Nullable PkcePersistence pkcePersistence,
+                                                     @Named(TaskExecutors.BLOCKING) ExecutorService blockingExecutor) {
+        this(tokenResponseValidator,
+            beanContext.findBean(OpenIdAuthenticationMapper.class, Qualifiers.none()).orElse(null),
+            tokenEndpointClient,
+            oauthRouteUrlBuilder,
+            stateValidator,
+            pkcePersistence,
+            blockingExecutor);
+    }
+
+    /**
+     * @param tokenResponseValidator The token response validator
+     * @param authenticationMapper   Authentication Mapper used for the clients without a mapper of their own
+     * @param tokenEndpointClient    The token endpoint client
+     * @param oauthRouteUrlBuilder   The oauth route url builder
+     * @param stateValidator         The state validator
+     * @param pkcePersistence        The PKCE persistence
+     * @param blockingExecutor       An executor for blocking operations
+     * @deprecated Use {@link #DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, BeanContext, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)},
+     * which resolves the global mapper among the beans without a qualifier, so that a mapper registered for another client is never used.
+     */
+    @Deprecated(since = "5.5.2", forRemoval = true)
+    public DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator<JWT> tokenResponseValidator,
+                                                     @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
                                                      @Nullable StateValidator stateValidator,
@@ -107,12 +146,17 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
         } catch (InvalidStateException e) {
             return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
         }
+        OpenIdAuthenticationMapper openIdAuthenticationMapper = authenticationMapper != null ? authenticationMapper : defaultAuthenticationMapper;
+        if (openIdAuthenticationMapper == null) {
+            LOG.warn("No OpenID authentication mapper is registered for provider [{}] and no global mapper without a qualifier exists. Rejecting the authorization response", clientConfiguration.getName());
+            return Flux.just(new AuthenticationFailed("No OpenID authentication mapper is registered for provider [" + clientConfiguration.getName() + "]"));
+        }
         return Flux.from(sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
                 .switchMap(response -> Flux.from(createAuthenticationResponse(authorizationResponse.getNonce(),
                     clientConfiguration,
                     openIdProviderMetadata,
                     response,
-                    authenticationMapper,
+                    openIdAuthenticationMapper,
                     authorizationResponse.getState())).map(AuthenticationResponse.class::cast));
     }
 
@@ -161,7 +205,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param openIdTokenResponse OpenID token response
-     * @param authenticationMapper The user details mapper
+     * @param openIdAuthenticationMapper The user details mapper
      * @param state State
      * @return An Authentication response if the open id token could  be validated
      * @throws ParseException If the payload of the JWT doesn't represent a valid JSON object and a JWT claims set.
@@ -170,7 +214,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
                                                                       OauthClientConfiguration clientConfiguration,
                                                                       OpenIdProviderMetadata openIdProviderMetadata,
                                                                       OpenIdTokenResponse openIdTokenResponse,
-                                                                      @Nullable OpenIdAuthenticationMapper authenticationMapper,
+                                                                      OpenIdAuthenticationMapper openIdAuthenticationMapper,
                                                                       @Nullable State state) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Token endpoint returned a success response. Validating the JWT");
@@ -182,7 +226,6 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
                     }
                     try {
                         OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
-                        OpenIdAuthenticationMapper openIdAuthenticationMapper = authenticationMapper != null ? authenticationMapper : defaultAuthenticationMapper;
                         return Mono.from(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, state));
                     } catch (ParseException e) {
                         return Mono.error(e);
