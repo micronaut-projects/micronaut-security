@@ -18,4 +18,5 @@ dependencies {
     testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.unboundid.ldapsdk)
+    testImplementation(mnLogging.logback.classic)
 }
