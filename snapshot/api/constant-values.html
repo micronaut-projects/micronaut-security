@@ -464,9 +464,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Constant Field</div>
 <div class="table-header col-last">Value</div>
-<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#PREFIX">PREFIX</a></code></div>
-<div class="col-last even-row-color"><code>"micronaut.security.ldap.context"</code></div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.DEFAULT_POOLED">public&nbsp;static&nbsp;final&nbsp;boolean</code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#DEFAULT_POOLED">DEFAULT_POOLED</a></code></div>
+<div class="col-last even-row-color"><code>false</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#PREFIX">PREFIX</a></code></div>
+<div class="col-last odd-row-color"><code>"micronaut.security.ldap.context"</code></div>
+</div>
+</li>
+<li>
+<div class="caption"><span>io.micronaut.security.ldap.configuration.<a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.PoolConfiguration.html" title="class in io.micronaut.security.ldap.configuration">LdapConfiguration.ContextConfiguration.PoolConfiguration</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PoolConfiguration.DEFAULT_MAX_SIZE">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.PoolConfiguration.html#DEFAULT_MAX_SIZE">DEFAULT_MAX_SIZE</a></code></div>
+<div class="col-last even-row-color"><code>20</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PoolConfiguration.DEFAULT_PREF_SIZE">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.PoolConfiguration.html#DEFAULT_PREF_SIZE">DEFAULT_PREF_SIZE</a></code></div>
+<div class="col-last odd-row-color"><code>5</code></div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PoolConfiguration.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.PoolConfiguration.html#PREFIX">PREFIX</a></code></div>
+<div class="col-last even-row-color"><code>"micronaut.security.ldap.context.pool"</code></div>
 </div>
 </li>
 <li>
@@ -492,6 +512,28 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html#PREFIX">PREFIX</a></code></div>
 <div class="col-last even-row-color"><code>"micronaut.security.ldap.search"</code></div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
+<div class="caption"><span>io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/LdapConnectionPoolConfigurer.html" title="class in io.micronaut.security.ldap.context">LdapConnectionPoolConfigurer</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer.CONNECT_TIMEOUT_PROPERTY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/context/LdapConnectionPoolConfigurer.html#CONNECT_TIMEOUT_PROPERTY">CONNECT_TIMEOUT_PROPERTY</a></code></div>
+<div class="col-last even-row-color"><code>"com.sun.jndi.ldap.connect.timeout"</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer.IDLE_TIMEOUT_PROPERTY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/ldap/context/LdapConnectionPoolConfigurer.html#IDLE_TIMEOUT_PROPERTY">IDLE_TIMEOUT_PROPERTY</a></code></div>
+<div class="col-last odd-row-color"><code>"com.sun.jndi.ldap.connect.pool.timeout"</code></div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer.MAX_SIZE_PROPERTY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/ldap/context/LdapConnectionPoolConfigurer.html#MAX_SIZE_PROPERTY">MAX_SIZE_PROPERTY</a></code></div>
+<div class="col-last even-row-color"><code>"com.sun.jndi.ldap.connect.pool.maxsize"</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.ldap.context.LdapConnectionPoolConfigurer.PREF_SIZE_PROPERTY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/ldap/context/LdapConnectionPoolConfigurer.html#PREF_SIZE_PROPERTY">PREF_SIZE_PROPERTY</a></code></div>
+<div class="col-last odd-row-color"><code>"com.sun.jndi.ldap.connect.pool.prefsize"</code></div>
 </div>
 </li>
 </ul>

@@ -125,7 +125,10 @@ Blocking implementations of AuthenticationProvider should use this API.</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getExecutorName()" class="member-name-link">getExecutorName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ExecutorService</code></a> bean on which
+<a href="AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)"><code>AuthenticationProvider.authenticate(Object, AuthenticationRequest)</code></a> is invoked.</div>
+</div>
 </div>
 </div>
 </div>
@@ -151,6 +154,11 @@ Blocking implementations of AuthenticationProvider should use this API.</div>
 <h3>getExecutorName</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getExecutorName</span>()</div>
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ExecutorService</code></a> bean on which
+<a href="AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)"><code>AuthenticationProvider.authenticate(Object, AuthenticationRequest)</code></a> is invoked. Any executor name is honored,
+not only <code>TaskExecutors.BLOCKING</code> or <code>TaskExecutors.IO</code>; the provider is never invoked on the thread
+that subscribes to the authentication publisher, such as the server event loop. If no executor bean with that
+name exists, the <code>TaskExecutors.BLOCKING</code> executor is used instead and a warning is logged.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>The executor name where the code <a href="AuthenticationProvider.html#authenticate(T,io.micronaut.security.authentication.AuthenticationRequest)"><code>AuthenticationProvider.authenticate(Object, AuthenticationRequest)</code></a> will be executed.</dd>

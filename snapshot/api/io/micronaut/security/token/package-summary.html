@@ -174,6 +174,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Attempts to retrieve a token form the <code>HttpRequest</code> and if existing validated.</div>
 </div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TokenAuthenticationNames.html" title="class in io.micronaut.security.token">TokenAuthenticationNames</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Resolves the name token based authentication gives to a user on later requests from the <a href="../authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>
+a token is issued for, the way <a href="AbstractTokenAuthenticationFactory.html" title="class in io.micronaut.security.token"><code>AbstractTokenAuthenticationFactory</code></a> resolves it from the claims of the token:
+the <a href="config/TokenConfiguration.html#getNameKey()"><code>TokenConfiguration.getNameKey()</code></a> claim, falling back to the <code>sub</code> claim, which is the principal name.</div>
+</div>
 </div>
 </div>
 </div>

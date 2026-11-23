@@ -72,6 +72,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration)" tabindex="0">SecurityFilter(Collection, Collection, SecurityConfiguration)</a></li>
 <li><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)" tabindex="0">SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)</a></li>
+<li><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)" tabindex="0">SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -177,7 +178,18 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
  <a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a>&nbsp;securityFilterConfiguration,
  @Nullable <a href="StaticResourceAuthenticationBypass.html" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceAuthenticationBypass)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)</code></a>.</div>
+</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)" class="member-name-link">SecurityFilter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;securityRules,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;authenticationFetchers,
+ <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
+ <a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a>&nbsp;securityFilterConfiguration,
+ @Nullable <a href="StaticResourceAuthenticationBypass.html" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceAuthenticationBypass,
+ @Nullable io.micronaut.security.filters.StaticResourceMatcher&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceMatcher)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -318,12 +330,16 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)">
 <h3>SecurityFilter</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations">@Inject
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Deprecated.html#since()" title="class or interface in java.lang" class="external-link">since</a>="5.5.2")
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">SecurityFilter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;securityRules,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;authenticationFetchers,
  <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
  <a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a>&nbsp;securityFilterConfiguration,
  @Nullable <a href="StaticResourceAuthenticationBypass.html" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceAuthenticationBypass)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)</code></a>.</div>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>securityRules</code> - The list of security rules that will allow or reject the request</dd>
@@ -333,6 +349,31 @@ implements io.micronaut.http.filter.HttpServerFilter</span></div>
 <dd><code>staticResourceAuthenticationBypass</code> - Determines whether authentication can be skipped for static resources</dd>
 <dt>Since:</dt>
 <dd>5.4.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)">
+<h3>SecurityFilter</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Inject
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">SecurityFilter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;securityRules,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&gt;&nbsp;authenticationFetchers,
+ <a href="../config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
+ <a href="SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a>&nbsp;securityFilterConfiguration,
+ @Nullable <a href="StaticResourceAuthenticationBypass.html" title="interface in io.micronaut.security.filters">StaticResourceAuthenticationBypass</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceAuthenticationBypass,
+ @Nullable io.micronaut.security.filters.StaticResourceMatcher&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;&nbsp;staticResourceMatcher)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>securityRules</code> - The list of security rules that will allow or reject the request</dd>
+<dd><code>authenticationFetchers</code> - List of <a href="AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><code>AuthenticationFetcher</code></a> beans in the context</dd>
+<dd><code>securityConfiguration</code> - The security configuration</dd>
+<dd><code>securityFilterConfiguration</code> - The security filter configuration</dd>
+<dd><code>staticResourceAuthenticationBypass</code> - Determines whether authentication can be skipped for static resources</dd>
+<dd><code>staticResourceMatcher</code> - Tells whether the server could serve a request that matches no route as a static resource, used to reject static resources that no security rule covers even when <code>micronaut.security.reject-not-found</code> is disabled. When <code>null</code>, the filter fails closed and rejects every request that matches no route, regardless of <code>micronaut.security.reject-not-found</code>.</dd>
+<dt>Since:</dt>
+<dd>5.5.2</dd>
 </dl>
 </div>
 </section>

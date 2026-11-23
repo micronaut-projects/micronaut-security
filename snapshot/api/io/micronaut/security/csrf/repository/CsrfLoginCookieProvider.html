@@ -64,6 +64,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#provideCookie(io.micronaut.http.HttpRequest)" tabindex="0">provideCookie(HttpRequest)</a></li>
+<li><a href="#provideCookie(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)" tabindex="0">provideCookie(HttpRequest, Authentication)</a></li>
+<li><a href="#csrfCookie(io.micronaut.http.HttpRequest,java.lang.String)" tabindex="0">csrfCookie(HttpRequest, String)</a></li>
 </ol>
 </li>
 </ol>
@@ -124,9 +126,21 @@ implements <a href="../../token/cookie/LoginCookieProvider.html" title="interfac
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull io.micronaut.http.cookie.Cookie</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#csrfCookie(io.micronaut.http.HttpRequest,java.lang.String)" class="member-name-link">csrfCookie</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;csrfToken)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Builds the CSRF cookie.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull io.micronaut.http.cookie.Cookie</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideCookie(io.micronaut.http.HttpRequest)" class="member-name-link">provideCookie</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NonNull io.micronaut.http.cookie.Cookie</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideCookie(io.micronaut.http.HttpRequest)" class="member-name-link">provideCookie</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideCookie(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)" class="member-name-link">provideCookie</a><wbr>(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Provides a CSRF Cookie whose token is bound to the authenticated user who is logging in.</div>
+</div>
 </div>
 </div>
 </div>
@@ -174,6 +188,49 @@ implements <a href="../../token/cookie/LoginCookieProvider.html" title="interfac
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../token/cookie/LoginCookieProvider.html#provideCookie(T)">provideCookie</a></code>&nbsp;in interface&nbsp;<code><a href="../../token/cookie/LoginCookieProvider.html" title="interface in io.micronaut.security.token.cookie">LoginCookieProvider</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="provideCookie(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)">
+<h3>provideCookie</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@NonNull io.micronaut.http.cookie.Cookie</span>&nbsp;<span class="element-name">provideCookie</span><wbr><span class="parameters">(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="../../authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</span></div>
+<div class="block">Provides a CSRF Cookie whose token is bound to the authenticated user who is logging in. The cookie is built by
+<a href="#provideCookie(io.micronaut.http.HttpRequest)"><code>provideCookie(HttpRequest)</code></a>, so that subclasses overriding it to customize the cookie name, path or
+attributes keep working, and its value is replaced with a token bound to the authenticated user.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../token/cookie/LoginCookieProvider.html#provideCookie(T,io.micronaut.security.authentication.Authentication)">provideCookie</a></code>&nbsp;in interface&nbsp;<code><a href="../../token/cookie/LoginCookieProvider.html" title="interface in io.micronaut.security.token.cookie">LoginCookieProvider</a>&lt;io.micronaut.http.HttpRequest&lt;?&gt;&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>request</code> - Request</dd>
+<dd><code>authentication</code> - The authenticated user's representation</dd>
+<dt>Returns:</dt>
+<dd>A CSRF Cookie</dd>
+<dt>Since:</dt>
+<dd>5.5.2</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="csrfCookie(io.micronaut.http.HttpRequest,java.lang.String)">
+<h3>csrfCookie</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull io.micronaut.http.cookie.Cookie</span>&nbsp;<span class="element-name">csrfCookie</span><wbr><span class="parameters">(@NonNull io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;csrfToken)</span></div>
+<div class="block">Builds the CSRF cookie. Both <a href="#provideCookie(io.micronaut.http.HttpRequest)"><code>provideCookie(HttpRequest)</code></a> and <a href="#provideCookie(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.Authentication)"><code>provideCookie(HttpRequest, Authentication)</code></a>
+delegate to this method, so subclasses can override it to change the cookie name or attributes.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - Request</dd>
+<dd><code>csrfToken</code> - The CSRF token</dd>
+<dt>Returns:</dt>
+<dd>A CSRF Cookie</dd>
+<dt>Since:</dt>
+<dd>5.5.2</dd>
 </dl>
 </div>
 </section>

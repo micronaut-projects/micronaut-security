@@ -97,14 +97,23 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)</code></a>.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E()">io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()</a></div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)">io.micronaut.security.filters.SecurityFilter<wbr>(Collection&lt;SecurityRule&lt;HttpRequest&lt;?&gt;&gt;&gt;, Collection&lt;AuthenticationFetcher&lt;HttpRequest&lt;?&gt;&gt;&gt;, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass&lt;HttpRequest&lt;?&gt;&gt;)</a></div>
 <div class="col-last even-row-color">
+<div class="block">Use <a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)</code></a>.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E()">io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E(java.lang.String)"><code>DefaultOpenIdProviderMetadata(java.lang.@org.jspecify.annotations.NonNull String)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOauthAuthorizationResponseHandler<wbr>(TokenEndpointClient, StateValidator, PkcePersistence)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOauthAuthorizationResponseHandler<wbr>(TokenEndpointClient, StateValidator, PkcePersistence)</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)"><code>DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)</code></a>.
 A handler created with this constructor does not send the <code>redirect_uri</code> parameter to the token endpoint.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler<wbr>(ReactiveOpenIdTokenResponseValidator&lt;JWT&gt;, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder&lt;T&gt;, StateValidator, PkcePersistence, ExecutorService)</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator,io.micronaut.context.BeanContext,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)"><code>DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, BeanContext, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)</code></a>,
+which resolves the global mapper among the beans without a qualifier, so that a mapper registered for another client is never used.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.lang.String)">io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext<wbr>(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)</a></div>
 <div class="col-last even-row-color">
@@ -119,124 +128,140 @@ A context created with this constructor does not send the <code>redirect_uri</co
 <div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)"><code>IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence, List)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_ADDRESS">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_ADDRESS</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#setTokenConfiguration(io.micronaut.security.token.config.TokenConfiguration)">io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler.setTokenConfiguration<wbr>(TokenConfiguration)</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Method injection is used only to keep the existing constructors of this class and of its subclasses working.
+This method will be removed in the next major release in favour of pure constructor injection, when the
+<code>TokenConfiguration</code> becomes a constructor parameter. Subclasses should not rely on it.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_ADDRESS">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_ADDRESS</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_ADDRESS"><code>ProfileClaims.CLAIM_ADDRESS</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_BIRTHDATE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_BIRTHDATE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_BIRTHDATE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_BIRTHDATE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_BIRTHDATE"><code>ProfileClaims.CLAIM_BIRTHDATE</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_EMAIL">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_EMAIL</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_EMAIL">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_EMAIL</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_EMAIL"><code>ProfileClaims.CLAIM_EMAIL</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_EMAIL_VERIFIED">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_EMAIL_VERIFIED</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_EMAIL_VERIFIED">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_EMAIL_VERIFIED</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_EMAIL_VERIFIED"><code>ProfileClaims.CLAIM_EMAIL_VERIFIED</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_FAMILY_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_FAMILY_NAME</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_FAMILY_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_FAMILY_NAME</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_FAMILY_NAME"><code>ProfileClaims.CLAIM_FAMILY_NAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_GENDER">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_GENDER</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_GENDER">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_GENDER</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_GENDER"><code>ProfileClaims.CLAIM_GENDER</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_GIVEN_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_GIVEN_NAME</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_GIVEN_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_GIVEN_NAME</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_GIVEN_NAME"><code>ProfileClaims.CLAIM_GIVEN_NAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_LOCALE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_LOCALE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_LOCALE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_LOCALE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_LOCALE"><code>ProfileClaims.CLAIM_LOCALE</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_MIDDLE_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_MIDDLE_NAME</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_MIDDLE_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_MIDDLE_NAME</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_MIDDLE_NAME"><code>ProfileClaims.CLAIM_MIDDLE_NAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_NAME</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_NAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_NAME</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_NAME"><code>ProfileClaims.CLAIM_NAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_NICKNAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_NICKNAME</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_NICKNAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_NICKNAME</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_NICKNAME"><code>ProfileClaims.CLAIM_NICKNAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PHONE_NUMBER">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PHONE_NUMBER</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PHONE_NUMBER">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PHONE_NUMBER</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_PHONE_NUMBER"><code>ProfileClaims.CLAIM_PHONE_NUMBER</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PHONE_NUMBER_VERIFIED">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PHONE_NUMBER_VERIFIED</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PHONE_NUMBER_VERIFIED">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PHONE_NUMBER_VERIFIED</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_PHONE_NUMBER_VERIFIED"><code>ProfileClaims.CLAIM_PHONE_NUMBER_VERIFIED</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PICTURE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PICTURE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PICTURE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PICTURE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_PICTURE"><code>ProfileClaims.CLAIM_PICTURE</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PREFERRED_USERNAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PREFERRED_USERNAME</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PREFERRED_USERNAME">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PREFERRED_USERNAME</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_PREFERRED_USERNAME"><code>ProfileClaims.CLAIM_PREFERRED_USERNAME</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PROFILE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PROFILE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_PROFILE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_PROFILE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_PROFILE"><code>ProfileClaims.CLAIM_PROFILE</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_UPDATED_AT">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_UPDATED_AT</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_UPDATED_AT">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_UPDATED_AT</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_UPDATED_AT"><code>ProfileClaims.CLAIM_UPDATED_AT</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_WEBSITE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_WEBSITE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_WEBSITE">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_WEBSITE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_WEBSITE"><code>ProfileClaims.CLAIM_WEBSITE</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_ZONEINFO">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_ZONEINFO</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#CLAIMS_ZONEINFO">io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims.CLAIMS_ZONEINFO</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ProfileClaims.html#CLAIM_ZONEINFO"><code>ProfileClaims.CLAIM_ZONEINFO</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#%3Cinit%3E(io.micronaut.security.token.RolesFinder,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.config.InterceptUrlPatternModifier)">io.micronaut.security.rules.ConfigurationInterceptUrlMapRule<wbr>(RolesFinder, SecurityConfiguration, InterceptUrlPatternModifier)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#%3Cinit%3E(io.micronaut.security.token.RolesFinder,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.config.InterceptUrlPatternModifier)">io.micronaut.security.rules.ConfigurationInterceptUrlMapRule<wbr>(RolesFinder, SecurityConfiguration, InterceptUrlPatternModifier)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#%3Cinit%3E(io.micronaut.security.token.RolesFinder,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.config.InterceptUrlPatternModifier,io.micronaut.http.context.ServerContextPathProvider)"><code>ConfigurationInterceptUrlMapRule(RolesFinder, SecurityConfiguration, InterceptUrlPatternModifier, ServerContextPathProvider)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)">io.micronaut.security.session.SessionLoginHandler<wbr>(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, RedirectService)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)">io.micronaut.security.session.SessionLoginHandler<wbr>(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;, RedirectService)</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService,java.util.List)"><code>SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence, RedirectService, List)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)">io.micronaut.security.session.SessionLogoutHandler<wbr>(RedirectConfiguration, RedirectService)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)">io.micronaut.security.session.SessionLogoutHandler<wbr>(RedirectConfiguration, RedirectService)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.session.SessionStore,java.util.List)"><code>SessionLogoutHandler(RedirectConfiguration, RedirectService, SessionStore, List)</code></a> instead. Without a <code>SessionStore</code>, the session is not deleted on logout; only the authentication is removed from it.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/ClaimsUtils.html#endsWithIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)">io.micronaut.security.token.ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash<wbr>(String, String)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/ClaimsUtils.html#endsWithIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)">io.micronaut.security.token.ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash<wbr>(String, String)</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ClaimsUtils.html#equalsIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)"><code>ClaimsUtils.equalsIgnoringProtocolAndTrailingSlash(String, String)</code></a> instead. This method no longer performs a suffix match.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)">io.micronaut.security.token.cookie.TokenCookieLoginHandler<wbr>(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)">io.micronaut.security.token.cookie.TokenCookieLoginHandler<wbr>(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence&lt;HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;&gt;)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.generator.AccessTokenConfiguration,io.micronaut.security.token.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence,java.util.List)"><code>TokenCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence, List)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieTokenReader.html" title="class in io.micronaut.security.token.cookie">io.micronaut.security.token.cookie.TokenCookieTokenReader</a></div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)">io.micronaut.security.token.cookie.TokenCookieLoginHandler.getCookies<wbr>(AccessRefreshToken, HttpRequest&lt;?&gt;)</a></div>
+<div class="col-last even-row-color">
+<div class="block">Override <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.authentication.Authentication,io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)"><code>TokenCookieLoginHandler.getCookies(Authentication, AccessRefreshToken, HttpRequest)</code></a> instead. This method is still invoked on login by <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.authentication.Authentication,io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)"><code>TokenCookieLoginHandler.getCookies(Authentication, AccessRefreshToken, HttpRequest)</code></a>, which then replaces the values of the cookies supplied by <a href="io/micronaut/security/token/cookie/LoginCookieProvider.html" title="interface in io.micronaut.security.token.cookie"><code>LoginCookieProvider</code></a> beans with the ones bound to the authenticated user, so an override keeps its customizations; the cookies it supplies via <a href="io/micronaut/security/token/cookie/LoginCookieProvider.html#provideCookie(T)"><code>LoginCookieProvider.provideCookie(Object)</code></a> are not bound to the user by themselves.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#setTokenConfiguration(io.micronaut.security.token.config.TokenConfiguration)">io.micronaut.security.token.cookie.TokenCookieLoginHandler.setTokenConfiguration<wbr>(TokenConfiguration)</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Method injection is used only to keep the existing constructors of this class and of its subclasses working.
+This method will be removed in the next major release in favour of pure constructor injection, when the
+<code>TokenConfiguration</code> becomes a constructor parameter. Subclasses should not rely on it.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieTokenReader.html" title="class in io.micronaut.security.token.cookie">io.micronaut.security.token.cookie.TokenCookieTokenReader</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/cookie/CookieTokenReader.html" title="class in io.micronaut.security.token.cookie"><code>CookieTokenReader</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.html#%3Cinit%3E(io.micronaut.security.token.jwt.signature.jwks.JwksClient)">io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher<wbr>(JwksClient)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.html#%3Cinit%3E(io.micronaut.security.token.jwt.signature.jwks.JwksClient)">io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher<wbr>(JwksClient)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/jwt/signature/jwks/DefaultJwkSetFetcher.html#%3Cinit%3E(io.micronaut.security.token.jwt.signature.jwks.JwksClient,io.micronaut.security.token.jwt.signature.jwks.JwksClientConfiguration)"><code>DefaultJwkSetFetcher(JwksClient, JwksClientConfiguration)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfiguration.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration.getCacheExpiration()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfiguration.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration.getCacheExpiration()</a></div>
+<div class="col-last even-row-color">
 <div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#DEFAULT_KEYTYPE">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.DEFAULT_KEYTYPE</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#DEFAULT_KEYTYPE">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.DEFAULT_KEYTYPE</a></div>
+<div class="col-last odd-row-color">
 <div class="block">No longer used. Since 5.5.2 no key type is applied unless <a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#setKeyType(com.nimbusds.jose.jwk.KeyType)"><code>JwksSignatureConfigurationProperties.setKeyType(KeyType)</code></a> is configured, so that keys of any type of the JWKS are matched.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.getCacheExpiration()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.getCacheExpiration()</a></div>
+<div class="col-last even-row-color">
 <div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#setCacheExpiration(java.lang.Integer)">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.setCacheExpiration<wbr>(Integer)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#setCacheExpiration(java.lang.Integer)">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.setCacheExpiration<wbr>(Integer)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
 </div>
 </div>
@@ -372,20 +397,36 @@ A context created with this constructor does not send the <code>redirect_uri</co
 <div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServerResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request"><code>AuthorizationServerResolver</code></a> instead</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/ClaimsUtils.html#endsWithIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)">io.micronaut.security.token.ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash<wbr>(String, String)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#setTokenConfiguration(io.micronaut.security.token.config.TokenConfiguration)">io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler.setTokenConfiguration<wbr>(TokenConfiguration)</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Method injection is used only to keep the existing constructors of this class and of its subclasses working.
+This method will be removed in the next major release in favour of pure constructor injection, when the
+<code>TokenConfiguration</code> becomes a constructor parameter. Subclasses should not rely on it.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/ClaimsUtils.html#endsWithIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)">io.micronaut.security.token.ClaimsUtils.endsWithIgnoringProtocolAndTrailingSlash<wbr>(String, String)</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/token/ClaimsUtils.html#equalsIgnoringProtocolAndTrailingSlash(java.lang.String,java.lang.String)"><code>ClaimsUtils.equalsIgnoringProtocolAndTrailingSlash(String, String)</code></a> instead. This method no longer performs a suffix match.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfiguration.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration.getCacheExpiration()</a></div>
-<div class="col-last even-row-color">
-<div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)">io.micronaut.security.token.cookie.TokenCookieLoginHandler.getCookies<wbr>(AccessRefreshToken, HttpRequest&lt;?&gt;)</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Override <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.authentication.Authentication,io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)"><code>TokenCookieLoginHandler.getCookies(Authentication, AccessRefreshToken, HttpRequest)</code></a> instead. This method is still invoked on login by <a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#getCookies(io.micronaut.security.authentication.Authentication,io.micronaut.security.token.render.AccessRefreshToken,io.micronaut.http.HttpRequest)"><code>TokenCookieLoginHandler.getCookies(Authentication, AccessRefreshToken, HttpRequest)</code></a>, which then replaces the values of the cookies supplied by <a href="io/micronaut/security/token/cookie/LoginCookieProvider.html" title="interface in io.micronaut.security.token.cookie"><code>LoginCookieProvider</code></a> beans with the ones bound to the authenticated user, so an override keeps its customizations; the cookies it supplies via <a href="io/micronaut/security/token/cookie/LoginCookieProvider.html#provideCookie(T)"><code>LoginCookieProvider.provideCookie(Object)</code></a> are not bound to the user by themselves.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.getCacheExpiration()</a></div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/cookie/TokenCookieLoginHandler.html#setTokenConfiguration(io.micronaut.security.token.config.TokenConfiguration)">io.micronaut.security.token.cookie.TokenCookieLoginHandler.setTokenConfiguration<wbr>(TokenConfiguration)</a></div>
+<div class="col-last even-row-color">
+<div class="block">Method injection is used only to keep the existing constructors of this class and of its subclasses working.
+This method will be removed in the next major release in favour of pure constructor injection, when the
+<code>TokenConfiguration</code> becomes a constructor parameter. Subclasses should not rely on it.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfiguration.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration.getCacheExpiration()</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#setCacheExpiration(java.lang.Integer)">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.setCacheExpiration<wbr>(Integer)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#getCacheExpiration()">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.getCacheExpiration()</a></div>
 <div class="col-last even-row-color">
+<div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#setCacheExpiration(java.lang.Integer)">io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties.setCacheExpiration<wbr>(Integer)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Not used. JWKS is cached via Micronaut Cache. You need an implementation of Micronaut Cache and the cache configuration micronaut.caches.jwks.expire-after-write</div>
 </div>
 </div>
@@ -419,18 +460,29 @@ A context created with this constructor does not send the <code>redirect_uri</co
 <div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass)</code></a>.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E()">io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass)">io.micronaut.security.filters.SecurityFilter<wbr>(Collection&lt;SecurityRule&lt;HttpRequest&lt;?&gt;&gt;&gt;, Collection&lt;AuthenticationFetcher&lt;HttpRequest&lt;?&gt;&gt;&gt;, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass&lt;HttpRequest&lt;?&gt;&gt;)</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Use <a href="io/micronaut/security/filters/SecurityFilter.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.config.SecurityConfiguration,io.micronaut.security.filters.SecurityFilterConfiguration,io.micronaut.security.filters.StaticResourceAuthenticationBypass,io.micronaut.security.filters.StaticResourceMatcher)"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterConfiguration, StaticResourceAuthenticationBypass, StaticResourceMatcher)</code></a>.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E()">io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#%3Cinit%3E(java.lang.String)"><code>DefaultOpenIdProviderMetadata(java.lang.@org.jspecify.annotations.NonNull String)</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/DefaultProviderResolver.html#%3Cinit%3E(java.util.List)">io.micronaut.security.oauth2.DefaultProviderResolver<wbr>(List&lt;OpenIdClientConfiguration&gt;)</a></div>
-<div class="col-last even-row-color">
-<div class="block">Use <a href="io/micronaut/security/oauth2/DefaultProviderResolver.html#%3Cinit%3E(java.util.List,java.util.Collection)"><code>DefaultProviderResolver(List, Collection)</code></a> instead, which ignores disabled OAuth 2.0 clients.</div>
-</div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOauthAuthorizationResponseHandler<wbr>(TokenEndpointClient, StateValidator, PkcePersistence)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/DefaultProviderResolver.html#%3Cinit%3E(java.util.List)">io.micronaut.security.oauth2.DefaultProviderResolver<wbr>(List&lt;OpenIdClientConfiguration&gt;)</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Use <a href="io/micronaut/security/oauth2/DefaultProviderResolver.html#%3Cinit%3E(java.util.List,java.util.Collection)"><code>DefaultProviderResolver(List, Collection)</code></a> instead, which ignores disabled OAuth 2.0 clients. Without
+the OAuth 2.0 client configurations the <code>aud</code> claim cannot be used to tell apart OpenID clients whose issuers overlap,
+and no provider is resolved in that case.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOauthAuthorizationResponseHandler<wbr>(TokenEndpointClient, StateValidator, PkcePersistence)</a></div>
+<div class="col-last even-row-color">
 <div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOauthAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)"><code>DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)</code></a>.
 A handler created with this constructor does not send the <code>redirect_uri</code> parameter to the token endpoint.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)">io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler<wbr>(ReactiveOpenIdTokenResponseValidator&lt;JWT&gt;, OpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder&lt;T&gt;, StateValidator, PkcePersistence, ExecutorService)</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Use <a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator,io.micronaut.context.BeanContext,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence,java.util.concurrent.ExecutorService)"><code>DefaultOpenIdAuthorizationResponseHandler(ReactiveOpenIdTokenResponseValidator, BeanContext, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence, ExecutorService)</code></a>,
+which resolves the global mapper among the beans without a qualifier, so that a mapper registered for another client is never used.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html#%3Cinit%3E(io.micronaut.context.BeanContext)">io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver<wbr>(BeanContext)</a></div>
 <div class="col-last even-row-color"></div>

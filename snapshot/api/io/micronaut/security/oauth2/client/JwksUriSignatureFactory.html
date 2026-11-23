@@ -58,12 +58,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E()" tabindex="0">JwksUriSignatureFactory()</a></li>
+<li><a href="#%3Cinit%3E(io.micronaut.context.BeanContext)" tabindex="0">JwksUriSignatureFactory(BeanContext)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider)" tabindex="0">createJwksSignatureConfiguration(OpenIdClientConfiguration, BeanProvider)</a></li>
+<li><a href="#createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider,java.util.concurrent.ExecutorService,io.micronaut.security.token.jwt.signature.jwks.JwksClientConfiguration)" tabindex="0">createJwksSignatureConfiguration(OpenIdClientConfiguration, BeanProvider, ExecutorService, JwksClientConfiguration)</a></li>
 </ol>
 </li>
 </ol>
@@ -88,7 +88,7 @@ loadScripts(document, 'script');</script>
 The beans are only created for the <a href="../../authentication/AuthenticationMode.html#IDTOKEN"><code>AuthenticationMode.IDTOKEN</code></a> authentication mode, where the
 ID token issued by the provider is the request credential. In any other authentication mode, tokens signed by the provider's keys, such
 as ID tokens issued to other clients, must not authenticate requests. The ID token obtained during the authorization code flow is
-validated against the provider's JWKS independently of these beans.
+validated against the provider's JWKS independently of these beans. No bean is created for a disabled OAuth 2.0 client.
 <p>
 The key set of a provider is bound to the issuer of that provider (see <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html#getIssuer()"><code>JwksSignatureConfiguration.getIssuer()</code></a>),
 so that a token whose <code>iss</code> claim names one provider cannot be verified with the keys of another provider.</div>
@@ -110,7 +110,7 @@ so that a token whose <code>iss</code> claim names one provider cannot be verifi
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">JwksUriSignatureFactory</a>()</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.BeanContext)" class="member-name-link">JwksUriSignatureFactory</a><wbr>(io.micronaut.context.BeanContext&nbsp;beanContext)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -127,9 +127,13 @@ so that a token whose <code>iss</code> claim names one provider cannot be verifi
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider)" class="member-name-link">createJwksSignatureConfiguration</a><wbr>(<a href="../configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a>&nbsp;openIdClientConfiguration,
- io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider,java.util.concurrent.ExecutorService,io.micronaut.security.token.jwt.signature.jwks.JwksClientConfiguration)" class="member-name-link">createJwksSignatureConfiguration</a><wbr>(<a href="../configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a>&nbsp;openIdClientConfiguration,
+ io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService,
+ <a href="../../token/jwt/signature/jwks/JwksClientConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksClientConfiguration</a>&nbsp;jwksClientConfiguration)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates a <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a> for the <code>jwks_uri</code> exposed via the OpenID configuration of the client.</div>
+</div>
 </div>
 </div>
 </div>
@@ -148,10 +152,14 @@ so that a token whose <code>iss</code> claim names one provider cannot be verifi
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(io.micronaut.context.BeanContext)">
 <h3>JwksUriSignatureFactory</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwksUriSignatureFactory</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JwksUriSignatureFactory</span><wbr><span class="parameters">(io.micronaut.context.BeanContext&nbsp;beanContext)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>beanContext</code> - The bean context</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -164,20 +172,29 @@ so that a token whose <code>iss</code> claim names one provider cannot be verifi
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider)">
+<section class="detail" id="createJwksSignatureConfiguration(io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration,io.micronaut.context.BeanProvider,java.util.concurrent.ExecutorService,io.micronaut.security.token.jwt.signature.jwks.JwksClientConfiguration)">
 <h3>createJwksSignatureConfiguration</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations">@Requires(property="micronaut.security.authentication",
-          value="idtoken")
-@EachBean(<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>.class)
+<div class="member-signature"><span class="annotations">@Requires(property="micronaut.security.authentication",value="idtoken") @Requires(condition=<a href="condition/OauthClientEnabledCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientEnabledCondition</a>.class)
+@EachBean(<a href="../configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a>.class)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfiguration</a></span>&nbsp;<span class="element-name">createJwksSignatureConfiguration</span><wbr><span class="parameters">(@Parameter
  <a href="../configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a>&nbsp;openIdClientConfiguration,
  @Parameter
- io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata)</span></div>
+ io.micronaut.context.BeanProvider&lt;<a href="DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+ @Named("blocking")
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&nbsp;executorService,
+ <a href="../../token/jwt/signature/jwks/JwksClientConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwksClientConfiguration</a>&nbsp;jwksClientConfiguration)</span></div>
+<div class="block">Creates a <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a> for the <code>jwks_uri</code> exposed via the OpenID configuration of the client.
+The configuration is created for every enabled OpenID client, even if the OpenID configuration could not be fetched at startup,
+so that an unreachable provider never leaves the application without signature configurations. The <code>jwks_uri</code> and the
+issuer come from the provider metadata: the one already created at startup, or else one resolved on the blocking executor,
+see <code>OpenIdProviderJwksSignatureConfiguration</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>openIdClientConfiguration</code> - The OpenID client configuration</dd>
 <dd><code>openIdProviderMetadata</code> - The open id provider metadata</dd>
+<dd><code>executorService</code> - Executor used to resolve the provider metadata when it was not created at startup</dd>
+<dd><code>jwksClientConfiguration</code> - JWKS client configuration, whose failure back-off bounds how often the provider metadata is requested after a failure</dd>
 <dt>Returns:</dt>
 <dd>a <a href="../../token/jwt/signature/jwks/JwksSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.jwks"><code>JwksSignatureConfiguration</code></a> pointed to the jwks_uri exposed via OpenID configuration and bound to the issuer of the OpenID client</dd>
 </dl>
