@@ -59,7 +59,7 @@ micronaut:
             connect-timeout: 10s
 ----
 
-include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration$PoolConfiguration.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration.PoolConfiguration.adoc[]
 
 When an LDAP configuration with `pooled: true` is created, which happens before the first pooled connection is opened, Micronaut applies these values as the `com.sun.jndi.ldap.connect.pool.maxsize`, `com.sun.jndi.ldap.connect.pool.prefsize` and `com.sun.jndi.ldap.connect.pool.timeout` system properties. A value set under `pool` always wins. For a value not set under `pool`, a system property that is already set, for example with `-Dcom.sun.jndi.ldap.connect.pool.maxsize=50` on the command line, is kept; otherwise the default applies: a maximum of 20 connections, a preferred size of 5 and an idle timeout of 5 minutes. Setting `max-size: 0` or `idle-timeout: 0` restores the unbounded JDK behaviour; Micronaut logs a warning in that case.
 
