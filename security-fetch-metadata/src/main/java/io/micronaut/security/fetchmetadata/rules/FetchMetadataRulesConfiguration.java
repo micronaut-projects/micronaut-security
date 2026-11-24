@@ -36,10 +36,10 @@ public interface FetchMetadataRulesConfiguration {
     /** Property that controls whether permitted cross-origin requests are allowed. */
     String PROPERTY_ALLOW_CROSS_ORIGIN = PREFIX + ".allow-cross-origin";
     /**
-     * Property that controls whether the simple navigation rule refuses navigations to routes annotated with
+     * Property that controls whether the simple navigation rule allows navigations to routes annotated with
      * {@link io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation DenyCrossSiteNavigation}.
      */
-    String PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION = PREFIX + ".deny-annotated-cross-site-navigation";
+    String PROPERTY_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES = PREFIX + ".allow-cross-site-navigation-to-annotated-routes";
 
     /**
      * Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method.
@@ -84,11 +84,11 @@ public interface FetchMetadataRulesConfiguration {
     boolean isAllowSimpleNavigation();
 
     /**
-     * Whether the simple navigation rule refuses {@code GET} navigations to routes annotated with
+     * Whether the simple navigation rule allows {@code GET} navigations to routes annotated with
      * {@link io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation DenyCrossSiteNavigation}, such as the
-     * OAuth 2.0 login route, so that another site cannot send the browser to them.
+     * OAuth 2.0 login route, like to any other route. When disabled, another site cannot send the browser to them.
      *
-     * @return whether navigations to annotated routes are refused by the simple navigation rule
+     * @return whether the simple navigation rule allows navigations to annotated routes
      */
-    boolean isDenyAnnotatedCrossSiteNavigation();
+    boolean isAllowCrossSiteNavigationToAnnotatedRoutes();
 }

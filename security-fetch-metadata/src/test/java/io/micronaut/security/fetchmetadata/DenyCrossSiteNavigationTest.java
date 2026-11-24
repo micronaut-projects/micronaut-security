@@ -63,7 +63,7 @@ class DenyCrossSiteNavigationTest {
         sameSiteAllowed = ApplicationContext.run(EmbeddedServer.class,
             Map.of(FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SAME_SITE, StringUtils.TRUE));
         protectionDisabled = ApplicationContext.run(EmbeddedServer.class,
-            Map.of(FetchMetadataRulesConfiguration.PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION, StringUtils.FALSE));
+            Map.of(FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES, StringUtils.TRUE));
     }
 
     @AfterAll
@@ -106,7 +106,7 @@ class DenyCrossSiteNavigationTest {
         assertEquals(Level.DEBUG, event.getLevel());
         String message = event.getFormattedMessage();
         assertTrue(message.contains("Sec-Fetch-Site [cross-site] targets a route annotated with @DenyCrossSiteNavigation"), message);
-        assertTrue(message.contains("micronaut.security.fetch-metadata.rules.deny-annotated-cross-site-navigation=false"), message);
+        assertTrue(message.contains("micronaut.security.fetch-metadata.rules.allow-cross-site-navigation-to-annotated-routes=true"), message);
         assertTrue(message.contains("#fetchMetadataSensitiveNavigationRoutes"), message);
     }
 

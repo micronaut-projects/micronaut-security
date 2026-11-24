@@ -38,8 +38,8 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
  * Allows simple {@code GET} navigations, including document and frame navigations, while
  * excluding requests whose destination is {@code object} or {@code embed} or is not recognized.
  *
- * <p>Unless {@link FetchMetadataRulesConfiguration#isDenyAnnotatedCrossSiteNavigation()} is
- * disabled, navigations to a route annotated with {@link DenyCrossSiteNavigation} are not
+ * <p>Unless {@link FetchMetadataRulesConfiguration#isAllowCrossSiteNavigationToAnnotatedRoutes()}
+ * is enabled, navigations to a route annotated with {@link DenyCrossSiteNavigation} are not
  * allowed by this rule, so that they are rejected unless another rule allows them.</p>
  */
 @Requires(property = PROPERTY_ALLOW_SIMPLE_NAVIGATION, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
@@ -51,13 +51,13 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
     private static final String GUIDE_URL =
         "https://micronaut-projects.github.io/micronaut-security/latest/guide/#fetchMetadataSensitiveNavigationRoutes";
 
-    private final boolean denyAnnotatedCrossSiteNavigation;
+    private final boolean allowCrossSiteNavigationToAnnotatedRoutes;
 
     /**
      * @param configuration the built-in rules configuration
      */
     SimpleTopLevelNavigationAndIframingFetchMetadataRule(FetchMetadataRulesConfiguration configuration) {
-        this.denyAnnotatedCrossSiteNavigation = configuration.isDenyAnnotatedCrossSiteNavigation();
+        this.allowCrossSiteNavigationToAnnotatedRoutes = configuration.isAllowCrossSiteNavigationToAnnotatedRoutes();
     }
 
     @Override
@@ -79,12 +79,12 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
         ) {
             return FetchMetadataRuleResult.UNKNOWN;
         }
-        if (denyAnnotatedCrossSiteNavigation && targetsRouteDenyingCrossSiteNavigation(request)) {
+        if (!allowCrossSiteNavigationToAnnotatedRoutes && targetsRouteDenyingCrossSiteNavigation(request)) {
             if (LOG.isDebugEnabled()) {
                 // the filter logs the path, sanitized, when no later rule allows the request
                 LOG.debug("navigation with Sec-Fetch-Site [{}] targets a route annotated with @DenyCrossSiteNavigation, so the simple "
-                    + "navigation rule does not allow it. Set {}=false to allow such navigations. See {}",
-                    secFetch.site(), FetchMetadataRulesConfiguration.PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION, GUIDE_URL);
+                    + "navigation rule does not allow it. Set {}=true to allow such navigations. See {}",
+                    secFetch.site(), FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES, GUIDE_URL);
             }
             return FetchMetadataRuleResult.UNKNOWN;
         }

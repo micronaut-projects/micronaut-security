@@ -38,9 +38,9 @@ import java.lang.annotation.Target;
  *
  * <p>Annotate a {@code GET} route whose side effects must only be triggered from the
  * application itself, such as a route that starts a login. Micronaut Security OAuth 2.0
- * annotates its login route with it. The property
- * {@code micronaut.security.fetch-metadata.rules.deny-annotated-cross-site-navigation}
- * switches this protection off.</p>
+ * annotates its login route with it. Setting the property
+ * {@code micronaut.security.fetch-metadata.rules.allow-cross-site-navigation-to-annotated-routes}
+ * to {@code true} switches this protection off.</p>
  *
  * <p>The annotation applies to route methods only, by design; it cannot be placed on a
  * controller class. It only matters for {@code GET} routes: cross-site requests with other

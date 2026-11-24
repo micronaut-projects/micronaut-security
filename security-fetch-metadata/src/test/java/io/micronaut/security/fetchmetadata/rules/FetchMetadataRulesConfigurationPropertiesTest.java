@@ -37,8 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     value = StringUtils.FALSE)
 @Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_ORIGIN,
     value = StringUtils.FALSE)
-@Property(name = FetchMetadataRulesConfiguration.PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION,
-    value = StringUtils.FALSE)
+@Property(name = FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES,
+    value = StringUtils.TRUE)
 @MicronautTest(startApplication = false)
 class FetchMetadataRulesConfigurationPropertiesTest {
 
@@ -53,7 +53,7 @@ class FetchMetadataRulesConfigurationPropertiesTest {
         assertFalse(configuration.isAllowNoFetchMetadata());
         assertFalse(configuration.isAllowSimpleNavigation());
         assertFalse(configuration.isAllowCrossOrigin());
-        assertFalse(configuration.isDenyAnnotatedCrossSiteNavigation());
+        assertTrue(configuration.isAllowCrossSiteNavigationToAnnotatedRoutes());
         assertFalse(beanContext.containsBean(BrowserInitiatedRequestFetchMetadataRule.class));
         assertFalse(beanContext.containsBean(SameOriginFetchMetadataRule.class));
         assertTrue(beanContext.containsBean(SameSiteFetchMetadataRule.class));
@@ -73,6 +73,6 @@ class FetchMetadataRulesConfigurationPropertiesTest {
         assertTrue(configuration.isAllowNoFetchMetadata());
         assertTrue(configuration.isAllowSimpleNavigation());
         assertTrue(configuration.isAllowCrossOrigin());
-        assertTrue(configuration.isDenyAnnotatedCrossSiteNavigation());
+        assertFalse(configuration.isAllowCrossSiteNavigationToAnnotatedRoutes());
     }
 }

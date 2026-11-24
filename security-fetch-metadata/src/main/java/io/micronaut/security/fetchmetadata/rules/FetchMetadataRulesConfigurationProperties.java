@@ -37,7 +37,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     /** Default permitted cross-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_CROSS_ORIGIN = true;
     /** Default behavior for navigations to routes annotated with {@code DenyCrossSiteNavigation}. */
-    public static final boolean DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION = true;
+    public static final boolean DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES = false;
 
     private boolean allowNoFetchMetadata = DEFAULT_ALLOW_NO_FETCH_METADATA;
     private boolean allowBrowserInitiatedRequests = DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS;
@@ -45,7 +45,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     private boolean allowSameSite = DEFAULT_ALLOW_SAME_SITE;
     private boolean allowSimpleNavigation = DEFAULT_ALLOW_SIMPLE_NAVIGATION;
     private boolean allowCrossOrigin = DEFAULT_ALLOW_CROSS_ORIGIN;
-    private boolean denyAnnotatedCrossSiteNavigation = DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION;
+    private boolean allowCrossSiteNavigationToAnnotatedRoutes = DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES;
 
     @Override
     public boolean isAllowCrossOrigin() {
@@ -131,16 +131,16 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     @Override
-    public boolean isDenyAnnotatedCrossSiteNavigation() {
-        return denyAnnotatedCrossSiteNavigation;
+    public boolean isAllowCrossSiteNavigationToAnnotatedRoutes() {
+        return allowCrossSiteNavigationToAnnotatedRoutes;
     }
 
     /**
-     * Whether the simple navigation rule refuses GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. A cross-site navigation to such a route is then rejected unless another rule allows it. Set it to false so that the simple navigation rule treats annotated routes like any other route. Default value: {@value #DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION}
+     * Whether the simple navigation rule allows GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. When false, a cross-site navigation to such a route is rejected unless another rule allows it. Set it to true so that the simple navigation rule treats annotated routes like any other route. Default value: {@value #DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES}
      *
-     * @param denyAnnotatedCrossSiteNavigation whether navigations to annotated routes are refused by the simple navigation rule
+     * @param allowCrossSiteNavigationToAnnotatedRoutes whether the simple navigation rule allows navigations to annotated routes
      */
-    public void setDenyAnnotatedCrossSiteNavigation(boolean denyAnnotatedCrossSiteNavigation) {
-        this.denyAnnotatedCrossSiteNavigation = denyAnnotatedCrossSiteNavigation;
+    public void setAllowCrossSiteNavigationToAnnotatedRoutes(boolean allowCrossSiteNavigationToAnnotatedRoutes) {
+        this.allowCrossSiteNavigationToAnnotatedRoutes = allowCrossSiteNavigationToAnnotatedRoutes;
     }
 }

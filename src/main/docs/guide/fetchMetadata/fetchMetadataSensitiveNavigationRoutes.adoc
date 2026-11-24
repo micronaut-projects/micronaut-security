@@ -64,7 +64,7 @@ As explained in the <<fetchMetadata,Fetch Metadata>> introduction, browsers send
 
 == Switching the protection off
 
-To allow cross-site navigations to every route, including the OAuth 2.0 login route, disable `deny-annotated-cross-site-navigation`:
+To allow cross-site navigations to every route, including the OAuth 2.0 login route, enable `allow-cross-site-navigation-to-annotated-routes`:
 
 [configuration]
 ----
@@ -72,5 +72,5 @@ micronaut:
   security:
     fetch-metadata:
       rules:
-        deny-annotated-cross-site-navigation: false
+        allow-cross-site-navigation-to-annotated-routes: true
 ----

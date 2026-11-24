@@ -95,7 +95,7 @@ class OauthLoginFetchMetadataTest {
         customLoginUriApp = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME,
             Map.of("micronaut.security.oauth2.login-uri", "/sign-in{/provider}")));
         protectionDisabledApp = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME,
-            Map.of(FetchMetadataRulesConfiguration.PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION, StringUtils.FALSE)));
+            Map.of(FetchMetadataRulesConfiguration.PROPERTY_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES, StringUtils.TRUE)));
         customControllerApp = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME + "CustomController",
             Map.of()));
     }
