@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -110,6 +111,23 @@ class OauthLoginFetchMetadataTest {
     @Test
     void crossSiteNavigationToTheLoginRouteIsRejected() {
         assertRejected(app, navigation("/oauth/login/auth", "cross-site"));
+    }
+
+    @Test
+    void filterPatternLimitedToTheLoginRoutesStillCoversEveryLoginRoute() {
+        try (EmbeddedServer loginOnly = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME,
+            Map.of(FetchMetadataFilterConfiguration.PROPERTY_PATTERN, "/oauth/login/**")))) {
+            assertRejected(loginOnly, navigation("/oauth/login/auth", "cross-site"));
+            assertRejected(loginOnly, navigation("/oauth/login", "cross-site"));
+            assertRejected(loginOnly, navigation("/oauth/login/oidc", "cross-site"));
+            // outside the pattern, a cross-site form_post callback is not evaluated by the filter
+            HttpResponse<?> callback = exchange(loginOnly, HttpRequest.POST("/oauth/callback/auth", "code=code-fixture&state=state-fixture")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HttpHeaders.SEC_FETCH_SITE, "cross-site")
+                .header(HttpHeaders.SEC_FETCH_MODE, "navigate")
+                .header(HttpHeaders.SEC_FETCH_DEST, "document"));
+            assertNotEquals(HttpStatus.FORBIDDEN, callback.status());
+        }
     }
 
     @Test

@@ -40,6 +40,10 @@ import java.lang.annotation.Target;
  * {@code micronaut.security.fetch-metadata.rules.deny-annotated-cross-site-navigation}
  * switches this protection off.</p>
  *
+ * <p>The annotation applies to route methods only, by design; it cannot be placed on a
+ * controller class. It only matters for {@code GET} routes: cross-site requests with other
+ * methods are not allowed by the simple navigation rule in any case.</p>
+ *
  * <p>Micronaut copies this annotation to a method that implements or overrides an annotated
  * method, as long as this module is on the compile classpath of the implementing class.
  * Otherwise, repeat the annotation.</p>

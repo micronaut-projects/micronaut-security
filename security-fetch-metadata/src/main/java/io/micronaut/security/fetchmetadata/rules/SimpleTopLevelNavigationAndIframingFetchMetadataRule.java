@@ -29,6 +29,8 @@ import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
 import io.micronaut.web.router.RouteAttributes;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfiguration.PROPERTY_ALLOW_SIMPLE_NAVIGATION;
 
@@ -44,6 +46,10 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
 @Internal
 @Singleton
 final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements HttpRequestFetchMetadataRule {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleTopLevelNavigationAndIframingFetchMetadataRule.class);
+    private static final String GUIDE_URL =
+        "https://micronaut-projects.github.io/micronaut-security/latest/guide/#fetchMetadataSensitiveNavigationRoutes";
 
     private final boolean denyAnnotatedCrossSiteNavigation;
 
@@ -65,16 +71,24 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
             return FetchMetadataRuleResult.UNKNOWN;
         }
         Destination destination = secFetch.dest();
-        if (secFetch.mode() == Mode.NAVIGATE &&
-            request.getMethod() == HttpMethod.GET &&
-            destination != null &&
-            destination != Destination.OBJECT &&
-            destination != Destination.EMBED &&
-            !(denyAnnotatedCrossSiteNavigation && targetsRouteDenyingCrossSiteNavigation(request))
+        if (secFetch.mode() != Mode.NAVIGATE ||
+            request.getMethod() != HttpMethod.GET ||
+            destination == null ||
+            destination == Destination.OBJECT ||
+            destination == Destination.EMBED
         ) {
-            return FetchMetadataRuleResult.ALLOWED;
+            return FetchMetadataRuleResult.UNKNOWN;
         }
-        return FetchMetadataRuleResult.UNKNOWN;
+        if (denyAnnotatedCrossSiteNavigation && targetsRouteDenyingCrossSiteNavigation(request)) {
+            if (LOG.isDebugEnabled()) {
+                // the filter logs the path, sanitized, when no later rule allows the request
+                LOG.debug("navigation with Sec-Fetch-Site [{}] targets a route annotated with @DenyCrossSiteNavigation, so the simple "
+                    + "navigation rule does not allow it. Set {}=false to allow such navigations. See {}",
+                    secFetch.site(), FetchMetadataRulesConfiguration.PROPERTY_DENY_ANNOTATED_CROSS_SITE_NAVIGATION, GUIDE_URL);
+            }
+            return FetchMetadataRuleResult.UNKNOWN;
+        }
+        return FetchMetadataRuleResult.ALLOWED;
     }
 
     // RouteAttributes comes from micronaut-router, which every HTTP server that runs the filter

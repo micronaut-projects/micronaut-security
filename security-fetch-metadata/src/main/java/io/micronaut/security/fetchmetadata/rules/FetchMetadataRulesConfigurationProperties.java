@@ -53,7 +53,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
+     * Whether to allow cross-origin requests to routes whose @CrossOrigin configuration accepts the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
      * @param allowCrossOrigin whether permitted cross-origin requests are allowed
      */
     public void setAllowCrossOrigin(boolean allowCrossOrigin) {
@@ -66,7 +66,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}). Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
+     * Whether to allow requests initiated directly by a user through browser UI (Sec-Fetch-Site: none). Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
      *
      * @param allowBrowserInitiatedRequests whether requests initiated through browser UI are allowed
      */
@@ -108,7 +108,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow requests without the {@code Sec-Fetch-Site} header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to allow requests without the Sec-Fetch-Site header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
      * @param allowNoFetchMetadata whether requests without the {@code Sec-Fetch-Site} header are allowed
      */
@@ -122,7 +122,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
+     * Whether to allow cross-site GET navigations, including loading the application in a cross-site iframe. This rule does not protect against framing; use the CSP frame-ancestors directive for that. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
      *
      * @param allowSimpleNavigation whether simple cross-site navigations and iframing are allowed
      */
@@ -136,7 +136,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether the simple navigation rule refuses GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. A cross-site navigation to such a route is then rejected unless another rule allows it. Set it to false to allow cross-site navigations to every route. Default value: true
+     * Whether the simple navigation rule refuses GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. A cross-site navigation to such a route is then rejected unless another rule allows it. Set it to false so that the simple navigation rule treats annotated routes like any other route. Default value: {@value #DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION}
      *
      * @param denyAnnotatedCrossSiteNavigation whether navigations to annotated routes are refused by the simple navigation rule
      */

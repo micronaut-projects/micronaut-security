@@ -15,6 +15,10 @@
  */
 package io.micronaut.security.fetchmetadata;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.Destination;
@@ -33,17 +37,21 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DenyCrossSiteNavigationTest {
 
     private static final String ANNOTATED = "/fetch-metadata/start";
     private static final String ANNOTATED_CORS = "/fetch-metadata/start-cors";
     private static final String NOT_ANNOTATED = "/fetch-metadata";
+    private static final String RULE_LOGGER =
+        "io.micronaut.security.fetchmetadata.rules.SimpleTopLevelNavigationAndIframingFetchMetadataRule";
 
     private static EmbeddedServer defaults;
     private static EmbeddedServer sameSiteAllowed;
@@ -75,6 +83,45 @@ class DenyCrossSiteNavigationTest {
 
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
         assertEquals("no-store", exception.getResponse().getHeaders().get(HttpHeaders.CACHE_CONTROL));
+    }
+
+    @Test
+    void logsWhyANavigationToAnAnnotatedRouteIsNotAllowed() {
+        Logger logger = (Logger) LoggerFactory.getLogger(RULE_LOGGER);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            assertForbidden(defaults, navigation(ANNOTATED, Site.CROSS_SITE, Destination.DOCUMENT));
+        } finally {
+            logger.detachAppender(appender);
+        }
+
+        assertEquals(1, appender.list.size(), appender.list::toString);
+        ILoggingEvent event = appender.list.getFirst();
+        assertEquals(Level.DEBUG, event.getLevel());
+        String message = event.getFormattedMessage();
+        assertTrue(message.contains("Sec-Fetch-Site [cross-site] targets a route annotated with @DenyCrossSiteNavigation"), message);
+        assertTrue(message.contains("micronaut.security.fetch-metadata.rules.deny-annotated-cross-site-navigation=false"), message);
+        assertTrue(message.contains("#fetchMetadataSensitiveNavigationRoutes"), message);
+    }
+
+    @Test
+    void stillRejectsWithoutLoggingWhenDebugIsDisabled() {
+        Logger logger = (Logger) LoggerFactory.getLogger(RULE_LOGGER);
+        Level level = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(Level.INFO);
+        try {
+            assertForbidden(defaults, navigation(ANNOTATED, Site.CROSS_SITE, Destination.DOCUMENT));
+        } finally {
+            logger.setLevel(level);
+            logger.detachAppender(appender);
+        }
+
+        assertTrue(appender.list.isEmpty(), appender.list::toString);
     }
 
     @Test

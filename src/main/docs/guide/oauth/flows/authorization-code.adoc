@@ -18,6 +18,17 @@ The recommended protection is the <<fetchMetadata,Fetch Metadata>> module. The l
 
 dependency:micronaut-security-fetch-metadata[groupId=io.micronaut.security]
 
+The module applies its resource isolation policy to every route by default, which also rejects, for example, cross-site form `POST` callbacks such as `response_mode=form_post`. Before enabling it for the whole application, review <<fetchMetadataInstallation,Installation>>. To protect only the login routes at first, restrict the filter to them. With the default `login-uri`, the following pattern covers `/oauth/login/{provider}` and the default provider's `/oauth/login`; adapt it if you change `micronaut.security.oauth2.login-uri`:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      filter:
+        pattern: /oauth/login/**
+----
+
 The login response is marked `Cache-Control: no-store`, unless the api:security.oauth2.client.OauthClient[] sets a `Cache-Control` header itself.
 
 If you do not use the Fetch Metadata module, you must implement CSRF protection on the OAuth login endpoints yourself. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.

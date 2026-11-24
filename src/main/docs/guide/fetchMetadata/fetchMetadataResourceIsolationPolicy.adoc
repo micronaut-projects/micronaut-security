@@ -46,7 +46,7 @@ Each rule is enabled or disabled with a property under `micronaut.security.fetch
 |400
 
 |Simple navigation
-|`allow-simple-navigation`
+|`allow-simple-navigation`, and `deny-annotated-cross-site-navigation` for annotated routes
 |Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object`, `embed`, and unrecognized destinations, and except navigations to routes annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[] (see `deny-annotated-cross-site-navigation`).
 |Enabled
 |500
