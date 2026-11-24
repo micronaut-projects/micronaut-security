@@ -30,9 +30,12 @@ import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@link ResponseHeaderPopulator} that adds the {@code Content-Security-Policy} header, or the
@@ -40,6 +43,10 @@ import java.util.List;
  * The header is only added to requests that {@link ContentSecurityPolicyFilter} matched, and not if
  * the response already contains it. With the default {@code /**} pattern, it is added to every
  * response, including one that a filter ordered before {@link ContentSecurityPolicyFilter} returned.
+ *
+ * <p>When the generator throws, for example because a custom generator built a directive from request
+ * data that {@link io.micronaut.security.csp.ContentSecurityPolicyDirective} rejects, the populator
+ * writes an enforcing deny-all policy instead of none.</p>
  *
  * <p>The bean is created at startup, so that a blank filter pattern fails application startup
  * instead of silently removing the policy.</p>
@@ -49,6 +56,13 @@ import java.util.List;
 @Context
 @Internal
 final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHeaderPopulator {
+    /**
+     * The enforcing policy written when the generator fails, also in report-only mode.
+     */
+    static final List<HttpHeaderEntry> FALLBACK = List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY,
+        "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"));
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyResponseHeaderPopulator.class);
+    private final AtomicBoolean failureLogged = new AtomicBoolean();
     private final ContentSecurityPolicyGenerator cspGenerator;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final boolean matchAll;
@@ -80,6 +94,21 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         if (!matchAll && request.getAttribute(ContentSecurityPolicyFilter.MATCHED_ATTRIBUTE).isEmpty()) {
             return null;
         }
+        try {
+            return generatedHeader(request, response);
+        } catch (RuntimeException e) {
+            // Fail closed: the error response that the failure would otherwise produce carries no policy.
+            if (failureLogged.compareAndSet(false, true)) {
+                LOG.error("The Content Security Policy generator failed, so a deny-all policy is written instead. "
+                    + "Further failures are logged at DEBUG.", e);
+            } else if (LOG.isDebugEnabled()) {
+                LOG.debug("The Content Security Policy generator failed, so a deny-all policy is written instead", e);
+            }
+            return response.getHeaders().contains(HttpHeaders.CONTENT_SECURITY_POLICY) ? null : FALLBACK;
+        }
+    }
+
+    private @Nullable Collection<HttpHeaderEntry> generatedHeader(HttpRequest<?> request, HttpResponse<?> response) {
         if (cspGenerator instanceof DefaultContentSecurityPolicyGenerator defaultGenerator) {
             // The policy and its mode come from one configuration, also during a refresh.
             DefaultContentSecurityPolicyGenerator.GeneratedHeader generated = defaultGenerator.generateHeader(request);

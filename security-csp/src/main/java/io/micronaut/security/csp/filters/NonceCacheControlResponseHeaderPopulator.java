@@ -39,7 +39,7 @@ import java.util.function.BiFunction;
 
 /**
  * {@link ResponseHeaderPopulator} that adds the configured {@code Cache-Control} header to HTML,
- * XHTML, SVG and XML responses of requests that received a Content Security Policy nonce. A shared
+ * XHTML, SVG and other XML responses of requests that received a Content Security Policy nonce. A shared
  * cache that stored such a response would replay the same nonce to every visitor.
  *
  * <p>Other content types cannot carry the nonce in a document that the browser enforces the policy
@@ -58,6 +58,7 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
      * The content types of documents that can carry the nonce in an inline script or style that the
      * browser runs under the policy: HTML, XHTML, SVG and generic XML documents.
      */
+    private static final String XML_SUFFIX = "+xml";
     private static final List<String> DOCUMENT_TYPES = List.of(MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML,
         MediaType.IMAGE_SVG, MediaType.TEXT_XML, MediaType.APPLICATION_XML);
     private final List<HttpHeaderEntry> cacheControl;
@@ -125,6 +126,7 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
                 return true;
             }
         }
-        return false;
+        // Browsers render any other +xml type, such as application/rss+xml, as an XML document.
+        return name.regionMatches(true, name.length() - XML_SUFFIX.length(), XML_SUFFIX, 0, XML_SUFFIX.length());
     }
 }

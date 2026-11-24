@@ -212,6 +212,13 @@ class NonceCacheControlResponseHeaderPopulatorTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {MediaType.APPLICATION_JSON, "application/xmlish", "text/plain", "xml"})
+    void otherContentTypesKeepTheirCaching(String contentType) {
+        assertNull(populator("private", (request, response) -> null)
+            .findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType(contentType)));
+    }
+
     @Test
     void cacheControlIsNotWrittenWhenNoDirectiveUsesNonces() {
         try (EmbeddedServer server = server(Map.of())) {
@@ -220,7 +227,8 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {MediaType.IMAGE_SVG, MediaType.TEXT_XML, MediaType.APPLICATION_XML, "Application/XHTML+XML"})
+    @ValueSource(strings = {MediaType.IMAGE_SVG, MediaType.TEXT_XML, MediaType.APPLICATION_XML, "Application/XHTML+XML",
+        "application/rss+xml", "application/atom+XML"})
     void otherDocumentsThatCanCarryANonceReceiveCacheControl(String contentType) {
         assertEquals(PRIVATE, populator("private", (request, response) -> null)
             .findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType(contentType)));

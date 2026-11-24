@@ -159,4 +159,38 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                 populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()).iterator().next().name(),
                 "until the generator rebuilds its policy, the policy keeps its mode");
     }
+
+    @Test
+    void writesAnEnforcingDenyAllPolicyWhenTheGeneratorFails() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        configuration.setReportOnly(true);
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.IMG_SRC,
+                    "https://" + request.getParameters().get("t") + ".cdn.example"))),
+                configuration, new ContentSecurityPolicyFilterConfigurationProperties());
+
+        assertEquals(ContentSecurityPolicyResponseHeaderPopulator.FALLBACK,
+                populator.findHttpHeaders(HttpRequest.GET("/?t=a%3Bscript-src%20*"), HttpResponse.ok()),
+                "a fixed, enforcing policy, also in report-only mode");
+        assertEquals("default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+                ContentSecurityPolicyResponseHeaderPopulator.FALLBACK.get(0).value());
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/?t=a%3B"),
+                HttpResponse.ok().header(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'self'")),
+                "a policy that the response already has is kept");
+    }
+
+    @Test
+    void writesTheDenyAllPolicyWhenADefaultGeneratorSubclassFails() {
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+                    ContentSecurityPolicyDirectiveConfigurations.builder().build()) {
+                    @Override
+                    protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
+                        throw new IllegalStateException("tenant policy not loaded");
+                    }
+                },
+                new ContentSecurityPolicyConfigurationProperties(), new ContentSecurityPolicyFilterConfigurationProperties());
+
+        assertEquals(ContentSecurityPolicyResponseHeaderPopulator.FALLBACK, populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
+    }
 }
