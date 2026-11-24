@@ -29,7 +29,9 @@ import java.lang.annotation.Target;
  * route annotated with {@code DenyCrossSiteNavigation}, it does not: a cross-site navigation,
  * for example a link or a script on another site that sends the browser to the route, is
  * rejected with {@code 403 Forbidden} unless another rule allows it. Same-origin navigations,
- * navigations the user starts from the browser UI ({@code Sec-Fetch-Site: none}), and requests
+ * navigations that do not start from a web page ({@code Sec-Fetch-Site: none}, such as the
+ * address bar, a bookmark, or a link opened from a native application, possibly redirected by
+ * another site), and requests
  * without Fetch Metadata are still allowed by the rules that run before the navigation rule,
  * as long as those rules are enabled. A same-site navigation is allowed only when same-site
  * requests are allowed.</p>

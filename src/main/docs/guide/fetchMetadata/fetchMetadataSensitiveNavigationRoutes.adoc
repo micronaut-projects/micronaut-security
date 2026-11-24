@@ -22,37 +22,39 @@ The simple navigation rule then does not allow navigations to the route, and the
 |Navigation from the application itself (`Sec-Fetch-Site: same-origin`)
 |Allowed, unless `allow-same-origin` is disabled
 
-|Navigation the user starts from the browser UI, such as the address bar or a bookmark (`Sec-Fetch-Site: none`)
+|Navigation that does not start from a web page, such as the address bar, a bookmark, or a link opened from another application such as a native mail or chat client (`Sec-Fetch-Site: none`)
 |Allowed, unless `allow-browser-initiated-requests` is disabled
 
 |Request without `Sec-Fetch-Site`
 |Allowed, unless `allow-no-fetch-metadata` is disabled
 |===
 
+NOTE: The protection stops web pages from sending the browser to the route. It does not stop a navigation that the user starts outside web content, such as a link opened from a native mail or chat client, because the browser reports it as `Sec-Fetch-Site: none`. Per the Fetch specification, the browser may keep reporting `none` when another site redirects such a navigation to the route, so a link to another site that the user opens from such an application can still reach the route.
+
 A route annotated with `@CrossOrigin` as well still accepts the CORS requests its configuration allows (see <<fetchMetadataCors,Cross-Origin Routes>>). Browsers do not send an `Origin` header with `GET` navigations, so the `@CrossOrigin` routes rule does not allow a cross-site navigation to the route.
 
 == OAuth 2.0 login
 
-The OAuth 2.0 login route of <<oauth,Micronaut Security OAuth 2.0>> (`/oauth/login/{provider}`, the default provider's `/oauth/login`, or wherever `micronaut.security.oauth2.login-uri` places it) is annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[]. Without this, another site could send the browser of a user who has a session at the identity provider, and has already authorized the application, to the login route, and the user would be logged in to the application without intending to (forced login). With the Fetch Metadata module installed, such a navigation is rejected before the authorization redirect is built, so no state, PKCE, or nonce cookie is issued. The OAuth 2.0 callback route is not annotated: the identity provider's redirect back to the application is a cross-site navigation and keeps working.
+The OAuth 2.0 login route of <<oauth,Micronaut Security OAuth 2.0>> (`/oauth/login/{provider}`, the default provider's `/oauth/login`, or wherever `micronaut.security.oauth2.login-uri` places it) is annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[]. Without this, another site could send the browser of a user who has a session at the identity provider, and has already authorized the application, to the login route, and the user would be logged in to the application without intending to (forced login). With the Fetch Metadata module installed, such a navigation, when a web page of another site starts it, is rejected before the authorization redirect is built, so no state, PKCE, or nonce cookie is issued. The OAuth 2.0 callback route is not annotated: the identity provider's redirect back to the application is a cross-site navigation and keeps working.
 
 Micronaut copies the annotation to methods that implement or override an annotated method: if the application provides its own api:security.oauth2.routes.OauthController[] implementation, its `login` method is annotated too, provided the Fetch Metadata module is on the compile classpath of that implementation. Otherwise, annotate the `login` method explicitly. The `Cache-Control: no-store` header of the login response is added by the default controller; an application's own implementation must set it itself.
 
 Start the login from a link or a form on a page of the application itself, which the browser reports as a same-origin navigation.
 
-Because the protection rejects every login navigation started by another site, the following logins are rejected too, with a `403 Forbidden` response that the filter produces without a redirect or an explanation for the user:
+Because the protection rejects every login navigation that a web page of another site starts, the following logins are rejected too, with a `403 Forbidden` response that the filter produces without a redirect or an explanation for the user:
 
-* Login links outside the application, such as a link in a webmail or chat application, or a "Sign in" button on a marketing site served from another domain.
+* Login links on web pages outside the application, such as a link in a webmail or web chat application, or a "Sign in" button on a marketing site served from another domain.
 * Logins started from the identity provider, such as an application tile on the provider's dashboard or an OpenID Connect third-party initiated login (`initiate_login_uri`) pointing at the login route.
 * Login links on another origin of the same site, for example `https://www.example.com` linking to `https://app.example.com/oauth/login/google`, unless `allow-same-site` is enabled.
-* Logins started through a redirect from another site.
+* Logins started through a redirect by another site, when the navigation was started by a web page.
 
-To keep the protection and still let such users sign in, point external links, and the identity provider's application URL where the provider allows it, at a page of the application, for example `/login`, that links to the login route. The user then starts the login with a same-origin click.
+To keep the protection and still let such users sign in, point external links, and the identity provider's application URL where the provider allows it, at a page of the application, for example `/login`, that links to the login route. The user then starts the login with a same-origin click. That page must require the click: a page that sends the browser to the login route by script, by a meta refresh, or by a server redirect lets another site start the login through it.
 
 The `403 Forbidden` response is produced by the filter, so a global `@Error(status = HttpStatus.FORBIDDEN)` route of the application does not render for it. If the application relies on such logins and cannot change the links, switch the protection off as shown below.
 
 CAUTION: If `micronaut.security.redirect.unauthorized.url` points at the OAuth 2.0 login route, a user who follows a link from another site to a secured page is redirected to the login route, and the browser reports the redirected navigation as cross-site. The login route then responds with `403 Forbidden`. Point `micronaut.security.redirect.unauthorized.url` at a page of the application that links to the login route instead, or switch the protection off.
 
-The login route is protected only when the filter's `pattern` covers it (see <<fetchMetadataConfiguration,Configuration>>). A pattern such as `/api/**` leaves `/oauth/login/{provider}` unprotected.
+The login route is protected only when the filter's `pattern` covers it (see <<fetchMetadataConfiguration,Configuration>>). A pattern such as `+/api/**+` leaves `/oauth/login/{provider}` unprotected. Do not include `micronaut.server.context-path` in the pattern: with the context path `/app`, the pattern `+/oauth/login/**+` covers the login route, and `+/app/oauth/login/**+` does not.
 
 The rule finds the annotation on the route the router matched for the request. The protection is tested with the default Netty server and with the Tomcat servlet runtime; a request that matches no route is not affected by the annotation.
 

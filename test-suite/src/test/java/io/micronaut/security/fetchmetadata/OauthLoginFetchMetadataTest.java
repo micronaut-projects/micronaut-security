@@ -137,6 +137,21 @@ class OauthLoginFetchMetadataTest {
     }
 
     @Test
+    void filterPatternForTheLoginRoutesMustNotIncludeTheContextPath() {
+        Map<String, Object> withoutContextPath = Map.of("micronaut.server.context-path", "/app",
+            FetchMetadataFilterConfiguration.PROPERTY_PATTERN, "/oauth/login/**");
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME, withoutContextPath))) {
+            assertRejected(server, navigation("/oauth/login/auth", "cross-site"));
+        }
+        Map<String, Object> withContextPath = Map.of("micronaut.server.context-path", "/app",
+            FetchMetadataFilterConfiguration.PROPERTY_PATTERN, "/app/oauth/login/**");
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME, withContextPath))) {
+            // documented limit: a pattern that includes the context path does not cover the login route
+            assertEquals(HttpStatus.FOUND, exchange(server, navigation("/oauth/login/auth", "cross-site")).status());
+        }
+    }
+
+    @Test
     void filterPatternLimitedToTheLoginRoutesStillCoversEveryLoginRoute() {
         try (EmbeddedServer loginOnly = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME,
             Map.of(FetchMetadataFilterConfiguration.PROPERTY_PATTERN, "/oauth/login/**")))) {
