@@ -22,10 +22,13 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.ServerFilterPhase;
+import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.NonceConfiguration;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * Selects the requests that receive the Content Security Policy and generates their nonce.
@@ -38,8 +41,9 @@ import java.util.List;
  *
  * <p>When an enabled directive, such as {@code script-src} or {@code style-src}, uses nonces, the
  * filter also stores one nonce for the request, which every such directive shares. Whether a
- * directive uses nonces is read for each request, so a configuration refresh that enables nonces
- * takes effect without a restart.</p>
+ * directive uses nonces is decided for each request, from the policy of the default generator, so
+ * a configuration refresh that enables nonces takes effect without a restart and a refresh that the
+ * generator rejects changes nothing. With another generator, the directive configuration decides.</p>
  *
  * <p>The filter runs before the filters of the other server filter phases, so a response that one of
  * them returns early, such as a security rejection, still carries the policy and the nonce.</p>
@@ -55,18 +59,22 @@ final class ContentSecurityPolicyFilter implements Ordered {
     static final String MATCHED_ATTRIBUTE = "io.micronaut.security.csp.filters.matched";
 
     private final ContentSecurityPolicyNonceGenerator cspNonceGenerator;
-    private final List<NonceConfiguration> nonceConfigurations;
+    private final BooleanSupplier usesNonce;
 
     /**
      * Creates the server filter.
      *
      * @param cspNonceGenerator generates per-response CSP nonces
+     * @param cspGenerator the policy generator
      * @param nonceConfigurations the configuration of every directive that can use nonces
      */
     ContentSecurityPolicyFilter(ContentSecurityPolicyNonceGenerator cspNonceGenerator,
+                                ContentSecurityPolicyGenerator cspGenerator,
                                 List<NonceConfiguration> nonceConfigurations) {
         this.cspNonceGenerator = cspNonceGenerator;
-        this.nonceConfigurations = nonceConfigurations;
+        this.usesNonce = cspGenerator instanceof DefaultContentSecurityPolicyGenerator defaultGenerator
+            ? defaultGenerator::usesNonce
+            : () -> usesNonce(nonceConfigurations);
     }
 
     /**
@@ -78,7 +86,7 @@ final class ContentSecurityPolicyFilter implements Ordered {
     @RequestFilter
     void filterRequest(HttpRequest<?> request) {
         request.setAttribute(MATCHED_ATTRIBUTE, Boolean.TRUE);
-        if (usesNonce()) {
+        if (usesNonce.getAsBoolean()) {
             request.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, cspNonceGenerator.generateNonce(request));
         }
     }
@@ -88,7 +96,7 @@ final class ContentSecurityPolicyFilter implements Ordered {
         return ServerFilterPhase.FIRST.before();
     }
 
-    private boolean usesNonce() {
+    private static boolean usesNonce(List<NonceConfiguration> nonceConfigurations) {
         for (NonceConfiguration configuration : nonceConfigurations) {
             if (configuration.isNonce() && (!(configuration instanceof Toggleable toggleable) || toggleable.isEnabled())) {
                 return true;

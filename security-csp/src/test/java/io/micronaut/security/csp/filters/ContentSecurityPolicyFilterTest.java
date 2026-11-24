@@ -19,6 +19,10 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.filter.ServerFilterPhase;
+import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.scriptsrc.ScriptSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.stylesrc.StyleSrcConfigurationProperties;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
@@ -33,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ContentSecurityPolicyFilterTest {
+    private static final ContentSecurityPolicyGenerator CUSTOM_GENERATOR = request -> null;
 
     @Test
     void marksTheRequestAndGeneratesOneNonceSharedByTheDirectives() {
@@ -43,7 +48,7 @@ class ContentSecurityPolicyFilterTest {
         styleSrc.setNonce(true);
         MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-        new ContentSecurityPolicyFilter(nonceGenerator, List.of(scriptSrc, styleSrc)).filterRequest(request);
+        new ContentSecurityPolicyFilter(nonceGenerator, CUSTOM_GENERATOR, List.of(scriptSrc, styleSrc)).filterRequest(request);
 
         assertTrue(request.getAttribute(ContentSecurityPolicyFilter.MATCHED_ATTRIBUTE).isPresent());
         assertEquals("nonce1", request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElseThrow());
@@ -55,7 +60,7 @@ class ContentSecurityPolicyFilterTest {
         CountingNonceGenerator nonceGenerator = new CountingNonceGenerator();
         MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-        new ContentSecurityPolicyFilter(nonceGenerator, List.of(new ScriptSrcConfigurationProperties())).filterRequest(request);
+        new ContentSecurityPolicyFilter(nonceGenerator, CUSTOM_GENERATOR, List.of(new ScriptSrcConfigurationProperties())).filterRequest(request);
 
         assertTrue(request.getAttribute(ContentSecurityPolicyFilter.MATCHED_ATTRIBUTE).isPresent());
         assertFalse(request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isPresent());
@@ -69,7 +74,7 @@ class ContentSecurityPolicyFilterTest {
         scriptSrc.setEnabled(false);
         MutableHttpRequest<?> request = HttpRequest.GET("/");
 
-        new ContentSecurityPolicyFilter(new CountingNonceGenerator(), List.of(scriptSrc)).filterRequest(request);
+        new ContentSecurityPolicyFilter(new CountingNonceGenerator(), CUSTOM_GENERATOR, List.of(scriptSrc)).filterRequest(request);
 
         assertFalse(request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isPresent());
     }
@@ -77,7 +82,7 @@ class ContentSecurityPolicyFilterTest {
     @Test
     void readsWhetherADirectiveUsesNoncesForEachRequest() {
         ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
-        ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(new CountingNonceGenerator(), List.of(scriptSrc));
+        ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(new CountingNonceGenerator(), CUSTOM_GENERATOR, List.of(scriptSrc));
         MutableHttpRequest<?> before = HttpRequest.GET("/");
         filter.filterRequest(before);
 
@@ -91,9 +96,26 @@ class ContentSecurityPolicyFilterTest {
     }
 
     @Test
+    void followsThePolicyOfTheDefaultGeneratorRatherThanTheRebound() {
+        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
+        scriptSrc.setNonce(true);
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().scriptSrc(scriptSrc).build()) { };
+        ContentSecurityPolicyFilter filter = new ContentSecurityPolicyFilter(new CountingNonceGenerator(), generator, List.of(scriptSrc));
+
+        // Re-bound by a refresh that the generator has not accepted.
+        scriptSrc.setNonce(false);
+        MutableHttpRequest<?> request = HttpRequest.GET("/");
+        filter.filterRequest(request);
+
+        assertTrue(request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE).isPresent(),
+            "the policy still adds the nonce, so the request needs one");
+    }
+
+    @Test
     void runsBeforeTheOtherServerFilterPhases() {
         assertEquals(ServerFilterPhase.FIRST.before(),
-            new ContentSecurityPolicyFilter(new CountingNonceGenerator(), List.of()).getOrder());
+            new ContentSecurityPolicyFilter(new CountingNonceGenerator(), CUSTOM_GENERATOR, List.of()).getOrder());
     }
 
     @Test

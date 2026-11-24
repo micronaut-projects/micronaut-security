@@ -22,6 +22,9 @@ import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
+import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import org.junit.jupiter.api.Test;
@@ -139,10 +142,25 @@ class CspReportingEndpointProviderTest {
         assertEquals("csp", provider.reportingEndpoint(HttpRequest.GET("/")).getName());
     }
 
+    @Test
+    void followsTheReportToDirectiveOfTheDefaultGenerator() {
+        ReportToConfigurationProperties reportTo = enabledReportTo();
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().reportTo(reportTo).build()) { };
+        CspReportingEndpointProvider provider = new CspReportingEndpointProvider(reportTo,
+            new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(), generator);
+
+        // Re-bound by a refresh; the generator has not rebuilt its policy.
+        reportTo.setGroup("csp2");
+        provider.onApplicationEvent(new RefreshEvent(Map.of()));
+
+        assertEquals("csp", provider.reportingEndpoint(HttpRequest.GET("/")).getName(), "the endpoint matches the report-to directive sent");
+    }
+
     private static CspReportingEndpointProvider provider(ReportToConfigurationProperties reportTo,
                                                          ContentSecurityPolicyControllerConfigurationProperties controller,
                                                          List<ReportingEndpoint> staticEndpoints) {
-        return new CspReportingEndpointProvider(reportTo, controller, null, staticEndpoints);
+        return new CspReportingEndpointProvider(reportTo, controller, null, staticEndpoints, request -> null);
     }
 
     private static ReportingEndpoint endpoint(String name, String url) {

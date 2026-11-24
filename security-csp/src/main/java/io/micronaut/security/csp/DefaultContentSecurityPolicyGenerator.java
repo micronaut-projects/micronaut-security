@@ -17,6 +17,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -188,10 +189,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * be emitted without being validated.
      */
     private static final Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> DIRECTIVE_CONFIGURATIONS = directiveConfigurationGetters();
-    /**
-     * The number of directives that {@link #directives()} can return.
-     */
-    private static final int STATIC_DIRECTIVE_COUNT = 17;
     private final ContentSecurityPolicyConfiguration cspConfiguration;
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
@@ -264,6 +261,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         ReportToConfiguration reportTo = directiveConfigurations.getReportTo();
         return new Snapshot(
             cspConfiguration.isReportOnly(),
+            directives.values().stream().anyMatch(CachedDirective::nonce),
             Map.copyOf(directives),
             reportTo.isEnabled() ? new ContentSecurityPolicyDirective(REPORT_TO, reportTo.getGroup()) : null,
             reportUri.isEnabled() && !reportUris.isEmpty()
@@ -351,7 +349,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     @Override
     public @Nullable ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request) {
-        List<ContentSecurityPolicyDirective> directives = ScopedValue.where(generationSnapshot, snapshot).call(() -> directives(request));
+        List<ContentSecurityPolicyDirective> directives = generationSnapshot.isBound()
+            ? directives(request)
+            : ScopedValue.where(generationSnapshot, snapshot).call(() -> directives(request));
         if (CollectionUtils.isEmpty(directives)) {
             return null;
         }
@@ -364,7 +364,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @return the static policy directives in response-header order
      */
     protected List<ContentSecurityPolicyDirective> directives() {
-        List<ContentSecurityPolicyDirective> directives = new ArrayList<>(STATIC_DIRECTIVE_COUNT);
+        List<ContentSecurityPolicyDirective> directives = new ArrayList<>();
         addIfPresent(directives, baseUri());
         addIfPresent(directives, defaultSrc());
         addIfPresent(directives, connectSrc());
@@ -700,6 +700,44 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the policy for a request together with the header mode, both from the configuration
+     * the current policy was built from, so that a concurrent refresh cannot send one
+     * configuration's policy in the other's header.
+     *
+     * @param request the current request
+     * @return the policy, or a {@code null} policy when no header is written, and its mode
+     */
+    @Internal
+    public GeneratedPolicy generatePolicy(HttpRequest<?> request) {
+        Snapshot current = snapshot;
+        ContentSecurityPolicy policy = ScopedValue.where(generationSnapshot, current).call(() -> contentSecurityPolicy(request));
+        return new GeneratedPolicy(current.reportOnly(), policy);
+    }
+
+    /**
+     * Returns whether the current policy adds a request nonce to a directive. The CSP filter
+     * follows it, so that a refresh rejected as invalid does not change whether nonces are generated.
+     *
+     * @return whether an enabled directive of the current policy uses nonces
+     */
+    @Internal
+    public boolean usesNonce() {
+        return snapshot.nonce();
+    }
+
+    /**
+     * Returns the reporting group named by the {@code report-to} directive of the current policy.
+     * The module's reporting endpoint follows it, so that it keeps matching the directive.
+     *
+     * @return the reporting group, or {@code null} when the current policy has no {@code report-to} directive
+     */
+    @Internal
+    public @Nullable String reportToGroup() {
+        ContentSecurityPolicyDirective reportTo = snapshot.reportTo();
+        return reportTo == null ? null : reportTo.value();
+    }
+
+    /**
      * Returns the snapshot of the policy generation in progress, or the current snapshot outside a
      * generation, for example when a subclass calls a directive method directly.
      *
@@ -862,16 +900,29 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * The directives built from one version of the configuration.
      *
      * @param reportOnly whether the policy is sent in the report-only header
+     * @param nonce whether a directive adds the request nonce
      * @param directives the directive built from each registered directive configuration
      * @param reportTo the {@code report-to} directive, or {@code null} when disabled
      * @param reportUri the {@code report-uri} directive, or {@code null} when disabled or without URIs
      * @param requireTrustedTypesFor the {@code require-trusted-types-for} directive, or {@code null} when disabled
      */
     private record Snapshot(boolean reportOnly,
+                            boolean nonce,
                             Map<String, CachedDirective> directives,
                             @Nullable ContentSecurityPolicyDirective reportTo,
                             @Nullable ContentSecurityPolicyDirective reportUri,
                             @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor) {
+    }
+
+    /**
+     * A policy and the header it is sent in, built from one configuration.
+     *
+     * @param reportOnly whether the policy is sent in the {@code Content-Security-Policy-Report-Only} header
+     * @param policy the policy, or {@code null} when no header is written
+     * @since 5.6.0
+     */
+    @Internal
+    public record GeneratedPolicy(boolean reportOnly, @Nullable ContentSecurityPolicy policy) {
     }
 
     /**

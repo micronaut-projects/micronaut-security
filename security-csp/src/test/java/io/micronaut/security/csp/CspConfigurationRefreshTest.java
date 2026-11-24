@@ -31,6 +31,9 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.runtime.server.EmbeddedServer;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
+import io.micronaut.security.csp.report.ContentSecurityPolicyReportHandler;
+import jakarta.inject.Singleton;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
@@ -112,6 +115,51 @@ class CspConfigurationRefreshTest {
     }
 
     @Test
+    void aRejectedRefreshKeepsTheNonceOfThePreviousPolicy() {
+        Map<String, Object> properties = new HashMap<>(Map.of(
+            "spec.name", SPEC_NAME,
+            "micronaut.security.csp.script-src.self", true,
+            "micronaut.security.csp.script-src.nonce", true));
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
+             EmbeddedServer server = context.getBean(EmbeddedServer.class).start();
+             HttpClient httpClient = context.createBean(HttpClient.class, server.getURL())) {
+            properties.put("micronaut.security.csp.script-src.nonce", false);
+            properties.put("micronaut.security.csp.img-src.values", List.of("https://a.example.com; script-src *"));
+            captureErrors(() -> refresh(context));
+
+            HttpResponse<String> response = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertEquals("script-src 'nonce-" + response.body() + "' 'self'", ContentSecurityPolicy.of(response).scriptSrc().toHeaderValue(),
+                "the previous policy, nonce included, stays in place");
+        }
+    }
+
+    @Test
+    void theReportingEndpointFollowsTheReportToGroupOfThePolicy() {
+        Map<String, Object> properties = new HashMap<>(Map.of(
+            "spec.name", SPEC_NAME,
+            "micronaut.security.csp.report-to.enabled", true));
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
+             EmbeddedServer server = context.getBean(EmbeddedServer.class).start();
+             HttpClient httpClient = context.createBean(HttpClient.class, server.getURL())) {
+            properties.put("micronaut.security.csp.report-to.group", "rejected");
+            properties.put("micronaut.security.csp.img-src.values", List.of("https://a.example.com; script-src *"));
+            captureErrors(() -> refresh(context));
+
+            HttpResponse<String> rejected = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertEquals("report-to csp", ContentSecurityPolicy.of(rejected).reportTo().toHeaderValue());
+            assertEquals("csp=\"/csp/report\"", rejected.header("Reporting-Endpoints"), "a rejected refresh changes neither");
+
+            properties.put("micronaut.security.csp.report-to.group", "accepted");
+            properties.put("micronaut.security.csp.img-src.values", List.of("https://a.example.com"));
+            refresh(context);
+
+            HttpResponse<String> accepted = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertEquals("report-to accepted", ContentSecurityPolicy.of(accepted).reportTo().toHeaderValue());
+            assertEquals("accepted=\"/csp/report\"", accepted.header("Reporting-Endpoints"), "an accepted refresh changes both");
+        }
+    }
+
+    @Test
     void reportOnlyModeChangesWithTheRefreshedPolicyOnly() {
         Map<String, Object> properties = new HashMap<>(Map.of("spec.name", SPEC_NAME));
         try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
@@ -179,6 +227,14 @@ class CspConfigurationRefreshTest {
             logger.detachAppender(appender);
         }
         return appender.list.stream().filter(event -> event.getLevel() == level).toList();
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Singleton
+    static class NoOpReportHandler implements ContentSecurityPolicyReportHandler {
+        @Override
+        public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
+        }
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)

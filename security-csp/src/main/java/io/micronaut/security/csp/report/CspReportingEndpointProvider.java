@@ -25,6 +25,8 @@ import io.micronaut.http.context.ServerContextPathProvider;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import io.micronaut.runtime.context.scope.refresh.RefreshEventListener;
+import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
@@ -46,9 +48,10 @@ import java.util.regex.Pattern;
  * response filter to every request.</p>
  *
  * <p>The bean is created at startup, so that an invalid controller path or reporting group fails
- * application startup instead of every response. A configuration refresh that changes the reporting
- * group changes the advertised endpoint name as well, so that it keeps matching the {@code report-to}
- * directive. When an endpoint configured through the Reporting API module already uses the group
+ * application startup instead of every response. The advertised endpoint name follows the
+ * {@code report-to} directive of the default generator's current policy, so a refresh that the
+ * generator accepts changes both and a refresh that it rejects changes neither. With another
+ * generator, the name follows the {@code report-to} group configuration. When an endpoint configured through the Reporting API module already uses the group
  * name, the provider advertises nothing and lets that endpoint receive the reports.</p>
  */
 @Requires(condition = ReportToEnabledCondition.class)
@@ -60,9 +63,14 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
     private static final String SLASH = "/";
     private static final Pattern LOCAL_PATH = Pattern.compile(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX);
     private final ReportToConfiguration reportToConfiguration;
+    private final @Nullable DefaultContentSecurityPolicyGenerator defaultGenerator;
     private final List<ReportingEndpoint> staticEndpoints;
     private final URI url;
-    private volatile @Nullable ReportingEndpoint reportingEndpoint;
+    /**
+     * The validated group configuration, used only when the default generator is not in use.
+     */
+    private volatile String configuredGroup;
+    private volatile Advertised advertised;
 
     /**
      * Creates the CSP reporting endpoint provider.
@@ -71,15 +79,19 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
      * @param controllerConfiguration report controller configuration
      * @param serverContextPathProvider supplies the server context path under which the controller is mounted, if any
      * @param staticEndpoints the reporting endpoints configured through the Reporting API module
+     * @param cspGenerator the policy generator, whose {@code report-to} directive the endpoint follows
      */
     CspReportingEndpointProvider(ReportToConfiguration reportToConfiguration,
                                  ContentSecurityPolicyControllerConfiguration controllerConfiguration,
                                  @Nullable ServerContextPathProvider serverContextPathProvider,
-                                 List<ReportingEndpoint> staticEndpoints) {
+                                 List<ReportingEndpoint> staticEndpoints,
+                                 ContentSecurityPolicyGenerator cspGenerator) {
         this.reportToConfiguration = reportToConfiguration;
+        this.defaultGenerator = cspGenerator instanceof DefaultContentSecurityPolicyGenerator generator ? generator : null;
         this.staticEndpoints = staticEndpoints;
         this.url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
-        this.reportingEndpoint = endpoint(ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup()));
+        this.configuredGroup = ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup());
+        this.advertised = new Advertised(configuredGroup, endpoint(configuredGroup));
     }
 
     /**
@@ -90,7 +102,16 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
      */
     @Override
     public @Nullable ReportingEndpoint reportingEndpoint(HttpRequest<?> request) {
-        return reportingEndpoint;
+        String group = defaultGenerator == null ? configuredGroup : defaultGenerator.reportToGroup();
+        if (group == null) {
+            return null;
+        }
+        Advertised current = advertised;
+        if (!group.equals(current.group())) {
+            current = new Advertised(group, endpoint(group));
+            advertised = current;
+        }
+        return current.endpoint();
     }
 
     @Override
@@ -99,17 +120,20 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
     }
 
     /**
-     * Rebuilds the endpoint from the refreshed reporting group. An invalid group is logged and the
-     * previous endpoint is kept, as the policy generator keeps the previous {@code report-to} directive.
+     * Reads the refreshed reporting group when the default generator is not in use; the default
+     * generator validates its own refresh. An invalid group is logged and the previous one is kept.
      *
      * @param event the refresh event
      */
     @Override
     public void onApplicationEvent(RefreshEvent event) {
+        if (defaultGenerator != null) {
+            return;
+        }
         try {
-            reportingEndpoint = endpoint(ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup()));
+            configuredGroup = ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup());
         } catch (ConfigurationException e) {
-            LOG.error("Keeping the previous CSP reporting endpoint because the refreshed configuration is invalid: {}", e.getMessage());
+            LOG.error("Keeping the previous CSP reporting group because the refreshed configuration is invalid: {}", e.getMessage());
         }
     }
 
@@ -176,5 +200,14 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
             return UriBuilder.of(SLASH).path(contextPath).path(path).build();
         }
         return URI.create(path);
+    }
+
+    /**
+     * The endpoint advertised for a reporting group.
+     *
+     * @param group the reporting group
+     * @param endpoint the endpoint, or {@code null} when a configured endpoint already uses the group
+     */
+    private record Advertised(String group, @Nullable ReportingEndpoint endpoint) {
     }
 }

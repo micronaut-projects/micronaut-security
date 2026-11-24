@@ -50,7 +50,6 @@ import java.util.function.BiFunction;
  *
  * @since 5.6.0
  */
-@Requires(classes = ResponseHeaderPopulator.class)
 @Requires(condition = NonceCacheControlCondition.class)
 @Singleton
 @Internal

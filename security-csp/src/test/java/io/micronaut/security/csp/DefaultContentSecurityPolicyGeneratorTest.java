@@ -506,6 +506,49 @@ class DefaultContentSecurityPolicyGeneratorTest {
         assertTrue(generator.isReportOnly());
     }
 
+    @Test
+    void generatesThePolicyAndItsModeFromOneConfiguration() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        ImgSrcConfigurationProperties imgSrc = new ImgSrcConfigurationProperties();
+        imgSrc.setValues(List.of("https://old.example.com"));
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration,
+            ContentSecurityPolicyDirectiveConfigurations.builder().imgSrc(imgSrc).build()) {
+            @Override
+            protected @Nullable ContentSecurityPolicyDirective baseUri() {
+                // A refresh to a report-only configuration lands during this generation.
+                configuration.setReportOnly(true);
+                imgSrc.setValues(List.of("https://new.example.com"));
+                refresh();
+                return super.baseUri();
+            }
+        };
+
+        DefaultContentSecurityPolicyGenerator.GeneratedPolicy generated = generator.generatePolicy(HttpRequest.GET("/"));
+
+        assertFalse(generated.reportOnly());
+        assertEquals("img-src https://old.example.com", generated.policy().imgSrc().toHeaderValue());
+        assertTrue(generator.isReportOnly(), "the next policy uses the refreshed configuration");
+    }
+
+    @Test
+    void exposesTheNonceUseAndTheReportToGroupOfTheCurrentPolicy() {
+        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
+        scriptSrc.setNonce(true);
+        ReportToConfigurationProperties reportTo = new ReportToConfigurationProperties();
+        reportTo.setEnabled(true);
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().scriptSrc(scriptSrc).reportTo(reportTo).build());
+        assertTrue(generator.usesNonce());
+        assertEquals("csp", generator.reportToGroup());
+
+        scriptSrc.setEnabled(false);
+        reportTo.setEnabled(false);
+        generator.refresh();
+
+        assertFalse(generator.usesNonce(), "a disabled directive adds no nonce");
+        assertNull(generator.reportToGroup());
+    }
+
     private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyDirectiveConfigurations.Builder directiveConfigurations) {
         return new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(), directiveConfigurations.build());
     }

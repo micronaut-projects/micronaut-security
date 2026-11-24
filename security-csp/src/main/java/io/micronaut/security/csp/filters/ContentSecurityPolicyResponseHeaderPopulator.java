@@ -16,7 +16,6 @@
 package io.micronaut.security.csp.filters;
 
 import io.micronaut.context.annotation.Context;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
@@ -47,7 +46,6 @@ import java.util.List;
  *
  * @since 5.6.0
  */
-@Requires(classes = ResponseHeaderPopulator.class)
 @Context
 @Internal
 final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHeaderPopulator {
@@ -82,28 +80,27 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         if (!matchAll && request.getAttribute(ContentSecurityPolicyFilter.MATCHED_ATTRIBUTE).isEmpty()) {
             return null;
         }
-        String headerName = isReportOnly()
-            ? HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : HttpHeaders.CONTENT_SECURITY_POLICY;
-        boolean responseSetsAlreadyCspHeader = response.getHeaders().contains(headerName);
-        if (!responseSetsAlreadyCspHeader) {
-            ContentSecurityPolicy csp = cspGenerator.contentSecurityPolicy(request);
-            if (csp != null) {
-                return List.of(new HttpHeaderEntry(headerName, csp.toHeaderValue()));
-            }
+        if (cspGenerator instanceof DefaultContentSecurityPolicyGenerator defaultGenerator) {
+            // The policy and its mode come from one configuration, also during a refresh.
+            DefaultContentSecurityPolicyGenerator.GeneratedPolicy generated = defaultGenerator.generatePolicy(request);
+            return header(generated.reportOnly(), generated.policy(), response);
         }
-        return null;
+        boolean reportOnly = cspConfiguration.isReportOnly();
+        if (response.getHeaders().contains(headerName(reportOnly))) {
+            return null;
+        }
+        return header(reportOnly, cspGenerator.contentSecurityPolicy(request), response);
     }
 
-    /**
-     * Returns whether the policy is sent report-only. The default generator keeps the value of the
-     * configuration its policy was built from, so that a refresh it rejects as invalid does not
-     * switch the previous policy between enforcing and report-only.
-     *
-     * @return whether the policy is sent in the {@code Content-Security-Policy-Report-Only} header
-     */
-    private boolean isReportOnly() {
-        return cspGenerator instanceof DefaultContentSecurityPolicyGenerator defaultGenerator
-            ? defaultGenerator.isReportOnly()
-            : cspConfiguration.isReportOnly();
+    private static @Nullable Collection<HttpHeaderEntry> header(boolean reportOnly, @Nullable ContentSecurityPolicy csp, HttpResponse<?> response) {
+        String headerName = headerName(reportOnly);
+        if (csp == null || response.getHeaders().contains(headerName)) {
+            return null;
+        }
+        return List.of(new HttpHeaderEntry(headerName, csp.toHeaderValue()));
+    }
+
+    private static String headerName(boolean reportOnly) {
+        return reportOnly ? HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY : HttpHeaders.CONTENT_SECURITY_POLICY;
     }
 }

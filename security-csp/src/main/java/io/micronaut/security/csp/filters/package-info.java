@@ -16,11 +16,14 @@
 /**
  * HTTP server filter support for Content Security Policy response headers.
  *
+ * <p>The package requires the {@code ResponseHeaderPopulator} API of the HTTP server, which writes
+ * the header, so that the filter never generates nonces for responses that cannot carry the policy.</p>
+ *
  * <p>Like every subpackage, it is also disabled by the {@code micronaut.security.csp.enabled}
  * requirement of the {@code io.micronaut.security.csp} package.</p>
  */
 @NullMarked
-@Requires(classes = ServerFilter.class)
+@Requires(classes = {ServerFilter.class, ResponseHeaderPopulator.class})
 @Requires(condition = CspFilterEnabledCondition.class)
 @Configuration
 package io.micronaut.security.csp.filters;
@@ -28,4 +31,5 @@ package io.micronaut.security.csp.filters;
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.http.server.filter.ResponseHeaderPopulator;
 import org.jspecify.annotations.NullMarked;
