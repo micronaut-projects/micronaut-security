@@ -15,6 +15,10 @@
  */
 package io.micronaut.security.csp.report;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpRequest;
@@ -32,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -398,6 +403,37 @@ class ContentSecurityPolicyControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
         assertEquals(0, reportListener.calls.get());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "null"})
+    void rejectsABodyWithoutABatch(String json, @Client("/") HttpClient httpClient) {
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> httpClient.toBlocking().exchange(reportRequest(json)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(0, reportListener.calls.get());
+    }
+
+    @Test
+    void decodesTheBodyOffTheEventLoop(@Client("/") HttpClient httpClient) {
+        Logger logger = (Logger) LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
+        Level level = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(Level.DEBUG);
+        try {
+            assertThrows(HttpClientResponseException.class, () -> httpClient.toBlocking().exchange(reportRequest("[{")));
+        } finally {
+            logger.detachAppender(appender);
+            logger.setLevel(level);
+        }
+
+        assertEquals(1, appender.list.size(), "the reader logs the rejection");
+        String thread = appender.list.get(0).getThreadName();
+        assertFalse(thread.toLowerCase(Locale.ROOT).contains("eventloop"),
+            () -> "an anonymous body must not be parsed on an event-loop thread: " + thread);
     }
 
     private static HttpRequest<byte[]> reportRequest(String json) {

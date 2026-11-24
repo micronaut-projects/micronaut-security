@@ -67,6 +67,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
      */
     static final int MAX_BODY_BYTES = 1024 * 1024;
     private static final String BODY_TOO_LARGE = "A Reporting API batch must not be larger than " + MAX_BODY_BYTES + " bytes";
+    private static final String TOO_MANY_REPORTS = "A Reporting API batch must not contain more than " + MAX_REPORTS + " reports";
     private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyReportBodyReader.class);
     private static final int MAX_STATUS_CODE = 65_535;
     /**
@@ -114,8 +115,9 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         try {
             serializedReports = jsonMapper.readValue(new BoundedInputStream(inputStream), Argument.listOf(SerializedContentSecurityPolicyReport.class));
         } catch (IOException | RuntimeException e) {
-            if (isBodyTooLarge(e)) {
-                throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE));
+            String limit = exceededLimit(e);
+            if (limit != null) {
+                throw rejected(null, limit, new CodecException(limit));
             }
             throw rejected(null, "the body is not a JSON array of Reporting API reports",
                 new CodecException(INVALID_BODY));
@@ -125,7 +127,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
         }
         try {
             if (serializedReports.size() > MAX_REPORTS) {
-                throw new CodecException("A Reporting API batch must not contain more than " + MAX_REPORTS + " reports");
+                throw new CodecException(TOO_MANY_REPORTS);
             }
             List<ContentSecurityPolicyReport> reports = new ArrayList<>(serializedReports.size());
             for (@Nullable SerializedContentSecurityPolicyReport report : serializedReports) {
@@ -145,19 +147,19 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     }
 
     /**
-     * Tests whether reading failed because the body exceeds {@link #MAX_BODY_BYTES}. The JSON parser
+     * Returns the limit of {@link BoundedInputStream} that stopped reading, if any. The JSON parser
      * may wrap the exception of the bounded stream.
      *
      * @param failure the exception thrown while reading the body
-     * @return whether the body is too large
+     * @return the message of the exceeded limit, or {@code null} when reading failed otherwise
      */
-    private static boolean isBodyTooLarge(Throwable failure) {
+    private static @Nullable String exceededLimit(Throwable failure) {
         for (Throwable cause = failure; cause != null; cause = cause.getCause()) {
-            if (cause instanceof BodyTooLargeException) {
-                return true;
+            if (cause instanceof LimitExceededException) {
+                return cause.getMessage();
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -336,20 +338,26 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     }
 
     /**
-     * Signals that a body exceeds {@link #MAX_BODY_BYTES}.
+     * Signals that a body exceeds {@link #MAX_BODY_BYTES} or holds more than {@link #MAX_REPORTS} reports.
      */
-    private static final class BodyTooLargeException extends IOException {
-        BodyTooLargeException() {
-            super(BODY_TOO_LARGE);
+    private static final class LimitExceededException extends IOException {
+        LimitExceededException(String message) {
+            super(message);
         }
     }
 
     /**
      * Fails once more than {@link #MAX_BODY_BYTES} bytes are read, also when the request declares
-     * no {@code Content-Length}.
+     * no {@code Content-Length}, or once the top-level JSON array has more than {@link #MAX_REPORTS}
+     * elements. The elements are counted while the bytes stream through, by tracking strings and
+     * nesting depth, so that an oversized batch is rejected before the parser builds its reports.
      */
     static final class BoundedInputStream extends FilterInputStream {
         private long remaining = MAX_BODY_BYTES;
+        private int depth;
+        private boolean inString;
+        private boolean escaped;
+        private int topLevelSeparators;
 
         BoundedInputStream(InputStream in) {
             super(in);
@@ -360,6 +368,7 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             int b = super.read();
             if (b != -1) {
                 consume(1);
+                scan((byte) b);
             }
             return b;
         }
@@ -369,14 +378,48 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             int read = super.read(b, off, len);
             if (read > 0) {
                 consume(read);
+                for (int i = off; i < off + read; i++) {
+                    scan(b[i]);
+                }
             }
             return read;
         }
 
-        private void consume(int bytes) throws BodyTooLargeException {
+        private void consume(int bytes) throws LimitExceededException {
             remaining -= bytes;
             if (remaining < 0) {
-                throw new BodyTooLargeException();
+                throw new LimitExceededException(BODY_TOO_LARGE);
+            }
+        }
+
+        /**
+         * Counts the top-level array elements by their separators. Bytes of multi-byte UTF-8
+         * characters are never ASCII, so they cannot be mistaken for JSON punctuation.
+         *
+         * @param b the next byte of the body
+         * @throws LimitExceededException if the top-level array has more than {@link #MAX_REPORTS} elements
+         */
+        private void scan(byte b) throws LimitExceededException {
+            if (inString) {
+                if (escaped) {
+                    escaped = false;
+                } else if (b == '\\') {
+                    escaped = true;
+                } else if (b == '"') {
+                    inString = false;
+                }
+                return;
+            }
+            switch (b) {
+                case '"' -> inString = true;
+                case '[', '{' -> depth++;
+                case ']', '}' -> depth--;
+                case ',' -> {
+                    if (depth == 1 && ++topLevelSeparators >= MAX_REPORTS) {
+                        throw new LimitExceededException(TOO_MANY_REPORTS);
+                    }
+                }
+                default -> { }
             }
         }
     }

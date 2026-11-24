@@ -309,6 +309,36 @@ class ContentSecurityPolicyReportBodyReaderTest {
     }
 
     @Test
+    void boundedStreamStopsAtTheFirstReportBeyondTheLimit() throws IOException {
+        String elements = "{},".repeat(MAX_REPORTS);
+        byte[] body = ("[" + elements + "{}" + "]").getBytes(StandardCharsets.UTF_8);
+        try (InputStream stream = new ContentSecurityPolicyReportBodyReader.BoundedInputStream(new ByteArrayInputStream(body))) {
+            int read = 0;
+            IOException exception = null;
+            try {
+                while (stream.read() != -1) {
+                    read++;
+                }
+            } catch (IOException e) {
+                exception = e;
+            }
+
+            assertNotNull(exception, "the 101st element is rejected while streaming");
+            assertEquals("A Reporting API batch must not contain more than " + MAX_REPORTS + " reports", exception.getMessage());
+            assertEquals(1 + elements.length() - 1, read, "reading stops at the separator before the extra report");
+        }
+    }
+
+    @Test
+    void boundedStreamCountsOnlyTopLevelSeparators() throws IOException {
+        String report = "{\"a\": [1, 2, {\"b\": \"x, y \\\" , ] }\"}], \"c\": \"\\\\\"}";
+        byte[] body = ("[" + String.join(",", java.util.Collections.nCopies(MAX_REPORTS, report)) + "]").getBytes(StandardCharsets.UTF_8);
+        try (InputStream stream = new ContentSecurityPolicyReportBodyReader.BoundedInputStream(new ByteArrayInputStream(body))) {
+            assertEquals(body.length, stream.readAllBytes().length, "commas inside strings and nested values are not reports");
+        }
+    }
+
+    @Test
     void boundedStreamCountsSingleByteReads() throws IOException {
         byte[] body = new byte[ContentSecurityPolicyReportBodyReader.MAX_BODY_BYTES + 1];
         try (InputStream stream = new ContentSecurityPolicyReportBodyReader.BoundedInputStream(new ByteArrayInputStream(body))) {
