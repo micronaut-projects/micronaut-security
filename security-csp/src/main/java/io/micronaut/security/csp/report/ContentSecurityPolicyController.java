@@ -37,7 +37,8 @@ import java.util.List;
  *
  * <p>User agents deliver one or more reports as a JSON array using the
  * {@code application/reports+json} media type. The controller is registered only when the
- * {@code report-to} directive is enabled and a {@link ContentSecurityPolicyReportHandler} bean exists.
+ * {@code report-to} directive is enabled, a {@link ContentSecurityPolicyReportHandler} bean exists and a
+ * JSON runtime provides the {@code JsonMapper} that decodes the reports.
  * Each accepted batch that contains CSP reports is passed to the configured
  * {@link ContentSecurityPolicyReportHandler} bean.</p>
  *
@@ -53,6 +54,7 @@ import java.util.List;
 @Requires(beans = ContentSecurityPolicyReportHandler.class)
 @Requires(condition = ReportToEnabledCondition.class)
 @Requires(beans = ContentSecurityPolicyControllerConfiguration.class)
+@Requires(beans = ContentSecurityPolicyReportBodyReader.class)
 @Internal
 class ContentSecurityPolicyController {
     static final String APPLICATION_REPORTS_JSON = "application/reports+json";

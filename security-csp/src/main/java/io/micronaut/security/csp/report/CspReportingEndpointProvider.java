@@ -56,7 +56,8 @@ import java.util.regex.Pattern;
  * name, the provider advertises nothing and lets that endpoint receive the reports.</p>
  */
 @Requires(condition = ReportToEnabledCondition.class)
-@Requires(beans = { ContentSecurityPolicyReportHandler.class, ReportToConfiguration.class, ContentSecurityPolicyControllerConfiguration.class })
+@Requires(beans = { ContentSecurityPolicyReportHandler.class, ReportToConfiguration.class, ContentSecurityPolicyControllerConfiguration.class,
+    ContentSecurityPolicyReportBodyReader.class })
 @Context
 @Internal
 final class CspReportingEndpointProvider implements ReportingEndpointProvider, RefreshEventListener {
