@@ -315,7 +315,7 @@ class DefaultContentSecurityPolicyGeneratorTest {
             new ContentSecurityPolicyConfigurationProperties(),
             ContentSecurityPolicyDirectiveConfigurations.builder().reportTo(reportTo).build()));
 
-        assertTrue(exception.getMessage().startsWith("micronaut.security.csp.report-to.group must match"));
+        assertTrue(exception.getMessage().startsWith("micronaut.security.csp.report-to.group is "), exception::getMessage);
     }
 
     @Test

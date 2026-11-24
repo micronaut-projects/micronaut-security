@@ -26,8 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
+import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PREFIX;
 import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_BASE_URI;
 import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_CONNECT_SRC;
 import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_DEFAULT_SRC;
@@ -48,16 +50,24 @@ import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationP
 import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_WORKER_SRC;
 
 /**
- * Warns at startup about a directive {@code enabled} property whose value is not a boolean. Unlike
- * the module, filter and controller toggles, these properties are bound as booleans, and binding
- * converts any unknown value, such as the typo {@code ture}, to {@code false}: the directive is then
- * omitted, which for {@code base-uri}, {@code form-action} and {@code frame-ancestors} lifts its
- * restriction entirely.
+ * Warns at startup about an {@code enabled} property whose value is not a boolean.
+ *
+ * <p>Directive toggles are bound as booleans, and binding converts any unknown value, such as the
+ * typo {@code ture}, to {@code false}: the directive is then omitted, which for {@code base-uri},
+ * {@code form-action} and {@code frame-ancestors} lifts its restriction entirely. The module,
+ * filter and report controller toggles do the opposite on purpose, see
+ * {@link AbstractToggleCondition}: an unknown value keeps them enabled, which surprises whoever
+ * mistyped {@code false}.</p>
  */
 @Singleton
 @Internal
-final class DirectiveToggleValueWarning implements ApplicationEventListener<StartupEvent> {
-    private static final Logger LOG = LoggerFactory.getLogger(DirectiveToggleValueWarning.class);
+final class ToggleValueWarning implements ApplicationEventListener<StartupEvent> {
+    private static final Logger LOG = LoggerFactory.getLogger(ToggleValueWarning.class);
+    /**
+     * The toggles read by an {@link AbstractToggleCondition}, which keeps them on for an unknown value.
+     */
+    private static final List<String> CONDITION_TOGGLES = List.of(CspEnabledCondition.PROPERTY,
+        PREFIX + ".filter" + ".enabled", ReportToConfigurationProperties.PREFIX + ".controller" + ".enabled");
     private static final String ENABLED = ".enabled";
     private static final List<String> PREFIXES = List.of(PROPERTY_BASE_URI, PROPERTY_CONNECT_SRC, PROPERTY_DEFAULT_SRC,
         PROPERTY_FENCED_FRAME_SRC, PROPERTY_FONT_SRC, PROPERTY_FORM_ACTION, PROPERTY_FRAME_ANCESTORS, PROPERTY_FRAME_SRC,
@@ -76,7 +86,7 @@ final class DirectiveToggleValueWarning implements ApplicationEventListener<Star
      *
      * @param environment resolves the raw property values
      */
-    DirectiveToggleValueWarning(Environment environment) {
+    ToggleValueWarning(Environment environment) {
         this.environment = environment;
     }
 
@@ -84,10 +94,17 @@ final class DirectiveToggleValueWarning implements ApplicationEventListener<Star
     public void onApplicationEvent(StartupEvent event) {
         for (String prefix : PREFIXES) {
             String property = prefix + ENABLED;
-            environment.getProperty(property, String.class)
-                .filter(value -> !BOOLEAN_VALUES.contains(value.trim().toLowerCase(Locale.ROOT)))
-                .ifPresent(value -> LOG.warn("{} is \"{}\", which is not a boolean; it binds as false, so the directive is not written. "
-                    + "Use true or false.", property, value));
+            invalidValue(property).ifPresent(value -> LOG.warn("{} is \"{}\", which is not a boolean; it binds as false, so the directive "
+                + "is not written. Use true or false.", property, value));
         }
+        for (String property : CONDITION_TOGGLES) {
+            invalidValue(property).ifPresent(value -> LOG.warn("{} is \"{}\", which is not a boolean; it is treated as true, so the "
+                + "feature stays enabled. Use true or false.", property, value));
+        }
+    }
+
+    private Optional<String> invalidValue(String property) {
+        return environment.getProperty(property, String.class)
+            .filter(value -> !BOOLEAN_VALUES.contains(value.trim().toLowerCase(Locale.ROOT)));
     }
 }

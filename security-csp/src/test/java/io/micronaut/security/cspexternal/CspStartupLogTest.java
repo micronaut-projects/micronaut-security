@@ -58,7 +58,7 @@ class CspStartupLogTest {
     private static final String STARTUP_LOGGER = "io.micronaut.security.csp.filters.ContentSecurityPolicyStartupLogger";
     private static final String REPORT_TO_LOGGER = "io.micronaut.security.csp.report.ReportToWithoutEndpointWarning";
     private static final String GENERATOR_LOGGER = "io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator";
-    private static final String TOGGLE_LOGGER = "io.micronaut.security.csp.DirectiveToggleValueWarning";
+    private static final String TOGGLE_LOGGER = "io.micronaut.security.csp.ToggleValueWarning";
 
     @Test
     void logsTheEnforcedHeaderAndPatternAtStartup() {
@@ -87,7 +87,7 @@ class CspStartupLogTest {
             "micronaut.security.csp.report-uri.values", List.of("https://reports.example.com/csp")), context -> { }));
 
         assertEquals(1, events.size());
-        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "violations are reported");
+        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "report-to group or report-uri");
     }
 
     @ParameterizedTest
@@ -101,6 +101,66 @@ class CspStartupLogTest {
         assertEquals(1, events.size());
         assertEquals(Level.WARN, events.get(0).getLevel());
         assertMentions(events.get(0), "micronaut.security.csp.frame-ancestors.enabled", "\"" + value + "\"");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"micronaut.security.csp.enabled", "micronaut.security.csp.filter.enabled",
+        "micronaut.security.csp.report-to.controller.enabled"})
+    void warnsThatAMistypedFeatureToggleKeepsTheFeatureEnabled(String property) {
+        List<ILoggingEvent> events = capture(TOGGLE_LOGGER, () -> run(Map.of(property, "flase"), context -> { }));
+
+        assertEquals(1, events.size());
+        assertMentions(events.get(0), property, "\"flase\"", "stays enabled");
+    }
+
+    @Test
+    void nDisablesTheModuleLikeABoundBoolean() {
+        try (ApplicationContext context = ApplicationContext.run(Map.of("micronaut.security.csp.enabled", "N"))) {
+            assertFalse(context.containsBean(ContentSecurityPolicyGenerator.class));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"script-src", "style-src"})
+    void pointsOutUnsafeInlineNextToANonceOrHash(String directive) {
+        String prefix = "micronaut.security.csp." + directive;
+        List<ILoggingEvent> withNonce = capture(GENERATOR_LOGGER, () -> run(Map.of(prefix + ".unsafe-inline", true, prefix + ".nonce", true), context -> { }));
+        List<ILoggingEvent> withHash = capture(GENERATOR_LOGGER, () -> run(Map.of(prefix + ".unsafe-inline", true,
+            prefix + ".values", List.of("'SHA256-abc='")), context -> { }));
+        List<ILoggingEvent> alone = capture(GENERATOR_LOGGER, () -> run(Map.of(prefix + ".unsafe-inline", true), context -> { }));
+
+        assertEquals(1, withNonce.size());
+        assertEquals(Level.INFO, withNonce.get(0).getLevel());
+        assertMentions(withNonce.get(0), prefix + ".unsafe-inline", "ignore 'unsafe-inline'");
+        assertEquals(1, withHash.size());
+        assertEquals(List.of(), alone);
+    }
+
+    @Test
+    void warnsAboutStrictDynamicWithoutANonceOrHash() {
+        List<ILoggingEvent> withoutAnchor = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.script-src.strict-dynamic", true,
+            "micronaut.security.csp.script-src.self", true), context -> { }));
+        List<ILoggingEvent> withNonce = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.script-src.strict-dynamic", true,
+            "micronaut.security.csp.script-src.nonce", true), context -> { }));
+        List<ILoggingEvent> disabled = capture(GENERATOR_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.script-src.strict-dynamic", true,
+            "micronaut.security.csp.script-src.enabled", false), context -> { }));
+
+        assertEquals(1, withoutAnchor.size());
+        assertEquals(Level.WARN, withoutAnchor.get(0).getLevel());
+        assertMentions(withoutAnchor.get(0), "micronaut.security.csp.script-src.strict-dynamic", "every script is blocked");
+        assertEquals(List.of(), withNonce);
+        assertEquals(List.of(), disabled);
+    }
+
+    @Test
+    void theErrorForAnUnsafeValueShowsTheValue() {
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> ApplicationContext.run(Map.of(
+            "micronaut.security.csp.img-src.values", List.of("https://ok.example.com", "https://a.example; img-src\u00a0"))).close());
+
+        assertTrue(rootCause(exception).getMessage().contains("\"https://a.example; img-src\\u00A0\""), () -> rootCause(exception).getMessage());
     }
 
     @ParameterizedTest

@@ -72,10 +72,10 @@ final class ReportToWithoutEndpointWarning implements ApplicationEventListener<S
         if (declared) {
             return;
         }
-        String message = "CSP report-to is enabled with group '{}', but the module declares no reporting endpoint (it needs a "
-            + "ContentSecurityPolicyReportHandler bean and an enabled report controller) and no reporting endpoint named '{}' is configured; "
-            + "unless a ReportingEndpointProvider bean declares it or the application writes its own Reporting-Endpoints header, "
-            + "browsers will discard the reports.";
+        String message = "The CSP report-to group '{}' has no reporting endpoint, so browsers discard the reports. Add a "
+            + "ContentSecurityPolicyReportHandler bean with an enabled report controller, or configure "
+            + "micronaut.security.reporting-endpoints.{}.url, unless a ReportingEndpointProvider bean or the application's own "
+            + "Reporting-Endpoints header declares it.";
         if (reportingEndpointProviders.isEmpty()) {
             LOG.warn(message, group, group);
         } else {

@@ -55,7 +55,7 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
 
     private boolean enabled = DEFAULT_ENABLED;
     @NotBlank
-    @Pattern(regexp = LOCAL_PATH_REGEX)
+    @Pattern(regexp = LOCAL_PATH_REGEX, message = "must be an absolute path on this server, such as /csp/report")
     private String path = DEFAULT_PATH;
 
     /**

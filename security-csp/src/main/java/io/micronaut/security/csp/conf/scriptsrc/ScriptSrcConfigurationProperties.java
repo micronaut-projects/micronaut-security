@@ -77,8 +77,9 @@ public class ScriptSrcConfigurationProperties extends InlineSourceListDirectiveC
     }
 
     /**
-     * Whether scripts authorized by a nonce or hash may load further scripts, with 'strict-dynamic'. Host
-     * sources are then ignored by CSP3 browsers. Default: false.
+     * Whether scripts authorized by a nonce or hash may load further scripts, with 'strict-dynamic'. CSP3
+     * browsers then ignore 'self', host and scheme sources, so every script element must carry the nonce or
+     * match a hash. Default: false.
      *
      * @param strictDynamic whether trusted scripts may load further scripts dynamically
      */

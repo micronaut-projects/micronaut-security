@@ -22,6 +22,10 @@ package io.micronaut.security.csp;
  * the constants without a {@code QUOTED_} prefix hold the keyword without its quotes. Scheme sources,
  * such as {@code https:}, are written without quotes.</p>
  *
+ * <p>When you build a {@link ContentSecurityPolicyDirective} yourself, surround a keyword with single
+ * quotes, for example {@code "'" + STRICT_DYNAMIC + "'"}: a browser reads an unquoted keyword as a
+ * host source, and the directive does not check it.</p>
+ *
  * @see <a href="https://www.w3.org/TR/CSP3/#framework-directive-source-list">Source lists</a>
  * @since 5.6.0
  */

@@ -29,6 +29,7 @@ import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfiguration;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import io.micronaut.security.reporting.ReportingEndpointProvider;
 import org.jspecify.annotations.Nullable;
@@ -80,18 +81,48 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
      * @param serverContextPathProvider supplies the server context path under which the controller is mounted, if any
      * @param staticEndpoints the reporting endpoints configured through the Reporting API module
      * @param cspGenerator the policy generator, whose {@code report-to} directive the endpoint follows
+     * @param reportUriConfiguration the deprecated {@code report-uri} configuration, checked for the controller path
      */
     CspReportingEndpointProvider(ReportToConfiguration reportToConfiguration,
                                  ContentSecurityPolicyControllerConfiguration controllerConfiguration,
                                  @Nullable ServerContextPathProvider serverContextPathProvider,
                                  List<ReportingEndpoint> staticEndpoints,
-                                 ContentSecurityPolicyGenerator cspGenerator) {
+                                 ContentSecurityPolicyGenerator cspGenerator,
+                                 ReportUriConfiguration reportUriConfiguration) {
         this.reportToConfiguration = reportToConfiguration;
         this.defaultGenerator = cspGenerator instanceof DefaultContentSecurityPolicyGenerator generator ? generator : null;
         this.staticEndpoints = staticEndpoints;
         this.url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
         this.configuredGroup = ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup());
         this.advertised = new Advertised(configuredGroup, endpoint(configuredGroup));
+        warnIfReportUriTargetsTheController(reportUriConfiguration);
+    }
+
+    /**
+     * Warns when {@code report-uri} points at the report controller: browsers send {@code report-uri}
+     * reports as {@code application/csp-report}, which the controller rejects with HTTP 415.
+     *
+     * @param reportUriConfiguration the {@code report-uri} configuration
+     */
+    private void warnIfReportUriTargetsTheController(ReportUriConfiguration reportUriConfiguration) {
+        if (!reportUriConfiguration.isEnabled()) {
+            return;
+        }
+        for (String value : reportUriConfiguration.getValues()) {
+            if (url.getPath().equals(path(value))) {
+                LOG.warn("micronaut.security.csp.report-uri.values contains {}, the CSP report controller. Browsers send report-uri reports "
+                    + "as application/csp-report, which the controller rejects with HTTP 415; it only receives report-to reports. "
+                    + "Remove the value or point it at an endpoint that accepts application/csp-report.", value.trim());
+            }
+        }
+    }
+
+    private static @Nullable String path(String value) {
+        try {
+            return URI.create(value.trim()).getPath();
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**

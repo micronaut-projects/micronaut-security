@@ -33,7 +33,8 @@ public abstract class InlineSourceListDirectiveConfigurationProperties extends S
 
     /**
      * Whether to allow inline content that has no nonce or hash, with 'unsafe-inline'. This weakens the
-     * protection against cross-site scripting. Default: false.
+     * protection against cross-site scripting. Browsers ignore it when the directive also has a nonce or
+     * hash. Default: false.
      *
      * @param unsafeInline whether to allow inline content without a nonce or hash
      */

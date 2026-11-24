@@ -168,6 +168,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static final Pattern UNSAFE_HEADER_CHARACTERS = Pattern.compile("[;,]|[^\\t\\x20-\\x7E]");
     /**
+     * The start of a hash source expression.
+     */
+    private static final Pattern HASH_SOURCE = Pattern.compile("'sha(256|384|512)-", Pattern.CASE_INSENSITIVE);
+    /**
      * Separates the source expressions of a configured value.
      */
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
@@ -256,6 +260,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         RequireTrustedTypesForConfiguration requireTrustedTypesFor = directiveConfigurations.getRequireTrustedTypesFor();
         validateRootConfiguration();
         validateSourceExpressions();
+        logIneffectiveKeywords(SCRIPT_SRC, directiveConfigurations.getScriptSrc());
+        logIneffectiveKeywords(STYLE_SRC, directiveConfigurations.getStyleSrc());
         Map<String, CachedDirective> directives = new HashMap<>();
         DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> directives.put(name, cachedDirective(name, getter.apply(directiveConfigurations))));
         ReportToConfiguration reportTo = directiveConfigurations.getReportTo();
@@ -335,9 +341,54 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static void requireSafeHeaderValue(String property, String value) {
         if (UNSAFE_HEADER_CHARACTERS.matcher(value).find()) {
-            throw new ConfigurationException(property + " contains a ';', ',', control or non-ASCII character. ';' and ',' would end "
-                + "the directive or policy, and browsers ignore a directive with a non-ASCII character. Configure each source expression "
-                + "as a separate value, and write internationalized host names in punycode.");
+            throw new ConfigurationException(property + " contains \"" + printable(value) + "\", which has a ';', ',', control or non-ASCII "
+                + "character. ';' and ',' would end the directive or policy, and browsers ignore a directive with a non-ASCII character. "
+                + "Configure each source expression as a separate value, and write internationalized host names in punycode.");
+        }
+    }
+
+    /**
+     * Shows a configured value in an error message, with every character outside printable ASCII
+     * escaped, so that the offending character is visible and cannot break the log line.
+     *
+     * @param value a configured value
+     * @return the value with control and non-ASCII characters written as {@code \\uXXXX}
+     */
+    private static String printable(String value) {
+        StringBuilder printable = new StringBuilder(value.length());
+        for (char c : value.toCharArray()) {
+            if (c >= ' ' && c <= '~') {
+                printable.append(c);
+            } else {
+                printable.append(String.format(Locale.ROOT, "\\u%04X", (int) c));
+            }
+        }
+        return printable.toString();
+    }
+
+    /**
+     * Points out keywords that browsers ignore in the configured combination: {@code 'unsafe-inline'}
+     * next to a nonce or hash, which is only a fallback for browsers without nonce support, and
+     * {@code 'strict-dynamic'} without a nonce or hash, which blocks every script.
+     *
+     * @param name the directive name
+     * @param configuration the directive configuration
+     */
+    private static void logIneffectiveKeywords(String name, DirectiveConfiguration configuration) {
+        if (!configuration.isEnabled()) {
+            return;
+        }
+        boolean nonce = configuration instanceof NonceConfiguration nonceConfiguration && nonceConfiguration.isNonce();
+        boolean hash = configuration instanceof SourceListDirectiveConfiguration sourceList && sourceList.getValues().stream()
+            .flatMap(value -> sourceExpressions(value).stream())
+            .anyMatch(token -> HASH_SOURCE.matcher(token).lookingAt());
+        if (configuration.isUnsafeInline() && (nonce || hash)) {
+            LOG.info("{}{}.unsafe-inline is true next to a nonce or hash; browsers that support nonces and hashes ignore 'unsafe-inline', "
+                + "so inline content without the nonce or a matching hash stays blocked.", PROPERTY_PREFIX, name);
+        }
+        if (configuration.isStrictDynamic() && !nonce && !hash) {
+            LOG.warn("{}{}.strict-dynamic is true without a nonce or hash; CSP3 browsers then ignore 'self', host and scheme sources, "
+                + "so every script is blocked. Enable {}{}.nonce or add a hash.", PROPERTY_PREFIX, name, PROPERTY_PREFIX, name);
         }
     }
 

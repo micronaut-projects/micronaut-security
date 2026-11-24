@@ -45,12 +45,17 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
      */
     public static final String GROUP_REGEX = "[a-z*][a-z0-9_.*-]*";
 
+    /**
+     * Explains the grammar of a reporting group.
+     */
+    static final String GROUP_MESSAGE = "must start with a lowercase letter or * and use only lowercase letters, digits and _ . * -, for example csp";
+
     private static final java.util.regex.Pattern GROUP_PATTERN = java.util.regex.Pattern.compile(GROUP_REGEX);
 
     private boolean enabled;
 
     @NotBlank
-    @Pattern(regexp = GROUP_REGEX)
+    @Pattern(regexp = GROUP_REGEX, message = GROUP_MESSAGE)
     private String group = DEFAULT_GROUP;
 
     @Override
@@ -94,7 +99,8 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
      */
     public static String requireValidGroup(String group) {
         if (!GROUP_PATTERN.matcher(group).matches()) {
-            throw new ConfigurationException(PREFIX + ".group must match " + GROUP_REGEX + ", the grammar of a Reporting-Endpoints name");
+            throw new ConfigurationException(PREFIX + ".group is \"" + group + "\"; it " + GROUP_MESSAGE
+                + ", the grammar of a Reporting-Endpoints name");
         }
         return group;
     }

@@ -26,8 +26,8 @@ import java.util.Set;
  * Matches unless a toggle property is set to a value that turns it off.
  *
  * <p>The value is compared without case, so {@code TRUE}, {@code yes} or {@code on}, for example from
- * an environment variable, keep the toggle on, and {@code FALSE}, {@code no} or {@code off} turn it
- * off. Any other value keeps the toggle on: a mistyped toggle, such as {@code ture}, must not
+ * an environment variable, keep the toggle on, and {@code FALSE}, {@code no}, {@code n} or {@code off}
+ * turn it off, as they do for a bound boolean. Any other value keeps the toggle on: a mistyped toggle, such as {@code ture}, must not
  * silently remove the response header.</p>
  *
  * <p>The condition reads the property instead of the bound {@code isEnabled()} of the configuration
@@ -40,7 +40,7 @@ public abstract class AbstractToggleCondition implements Condition {
     /**
      * The values that turn the toggle off, compared without case.
      */
-    private static final Set<String> DISABLED_VALUES = Set.of("false", "no", "off");
+    private static final Set<String> DISABLED_VALUES = Set.of("false", "no", "n", "off");
 
     private final String property;
 

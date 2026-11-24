@@ -26,6 +26,7 @@ import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
+import io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,8 +67,8 @@ class CspReportingEndpointProviderTest {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
             () -> provider(reportTo, new ContentSecurityPolicyControllerConfigurationProperties(), List.of()));
 
-        assertEquals("micronaut.security.csp.report-to.group must match " + ReportToConfigurationProperties.GROUP_REGEX
-            + ", the grammar of a Reporting-Endpoints name", exception.getMessage());
+        assertEquals("micronaut.security.csp.report-to.group is \"" + group + "\"; it must start with a lowercase letter or * and use only "
+            + "lowercase letters, digits and _ . * -, for example csp, the grammar of a Reporting-Endpoints name", exception.getMessage());
     }
 
     @Test
@@ -148,7 +149,7 @@ class CspReportingEndpointProviderTest {
         DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
             ContentSecurityPolicyDirectiveConfigurations.builder().reportTo(reportTo).build()) { };
         CspReportingEndpointProvider provider = new CspReportingEndpointProvider(reportTo,
-            new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(), generator);
+            new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(), generator, new ReportUriConfigurationProperties());
 
         // Re-bound by a refresh; the generator has not rebuilt its policy.
         reportTo.setGroup("csp2");
@@ -157,10 +158,43 @@ class CspReportingEndpointProviderTest {
         assertEquals("csp", provider.reportingEndpoint(HttpRequest.GET("/")).getName(), "the endpoint matches the report-to directive sent");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"/csp/report", " https://app.example.com/csp/report "})
+    void warnsWhenReportUriTargetsTheController(String value) {
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        reportUri.setEnabled(true);
+        reportUri.setValues(List.of("https://reports.example.com/csp", value));
+
+        List<ILoggingEvent> events = capture(() -> new CspReportingEndpointProvider(enabledReportTo(),
+            new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(), request -> null, reportUri));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertTrue(events.get(0).getFormattedMessage().contains("application/csp-report"), events.get(0)::getFormattedMessage);
+    }
+
+    @Test
+    void doesNotWarnAboutADisabledOrUnrelatedReportUri() {
+        ReportUriConfigurationProperties disabled = new ReportUriConfigurationProperties();
+        disabled.setValues(List.of("/csp/report"));
+        ReportUriConfigurationProperties other = new ReportUriConfigurationProperties();
+        other.setEnabled(true);
+        other.setValues(List.of("https://reports.example.com/csp", "not a uri"));
+
+        List<ILoggingEvent> events = capture(() -> {
+            new CspReportingEndpointProvider(enabledReportTo(), new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(),
+                request -> null, disabled);
+            new CspReportingEndpointProvider(enabledReportTo(), new ContentSecurityPolicyControllerConfigurationProperties(), null, List.of(),
+                request -> null, other);
+        });
+
+        assertEquals(List.of(), events);
+    }
+
     private static CspReportingEndpointProvider provider(ReportToConfigurationProperties reportTo,
                                                          ContentSecurityPolicyControllerConfigurationProperties controller,
                                                          List<ReportingEndpoint> staticEndpoints) {
-        return new CspReportingEndpointProvider(reportTo, controller, null, staticEndpoints, request -> null);
+        return new CspReportingEndpointProvider(reportTo, controller, null, staticEndpoints, request -> null, new ReportUriConfigurationProperties());
     }
 
     private static ReportingEndpoint endpoint(String name, String url) {
