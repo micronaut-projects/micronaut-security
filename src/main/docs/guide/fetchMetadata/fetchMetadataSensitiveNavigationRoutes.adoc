@@ -54,6 +54,8 @@ CAUTION: If `micronaut.security.redirect.unauthorized.url` points at the OAuth 2
 
 The login route is protected only when the filter's `pattern` covers it (see <<fetchMetadataConfiguration,Configuration>>). A pattern such as `/api/**` leaves `/oauth/login/{provider}` unprotected.
 
+The rule finds the annotation on the route the router matched for the request. The protection is tested with the default Netty server and with the Tomcat servlet runtime; a request that matches no route is not affected by the annotation.
+
 As explained in the <<fetchMetadata,Fetch Metadata>> introduction, browsers send the Fetch Metadata headers only to potentially trustworthy origins, such as HTTPS origins and `localhost`. Served over plain HTTP, the application receives no `Sec-Fetch-Site` header, and the login route is not protected.
 
 == Switching the protection off

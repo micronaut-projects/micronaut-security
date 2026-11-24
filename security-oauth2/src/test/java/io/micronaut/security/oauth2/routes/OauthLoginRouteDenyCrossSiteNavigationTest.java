@@ -49,6 +49,11 @@ class OauthLoginRouteDenyCrossSiteNavigationTest {
     private static final String SPEC_NAME = "OauthLoginRouteDenyCrossSiteNavigationTest";
     private static final String ANNOTATION = "io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation";
 
+    /**
+     * Keeps this module's tests free of Micronaut Security Fetch Metadata on purpose: the tests below prove that the login
+     * route carries the annotation, by name, when the annotation class is absent at runtime. The behaviour with the
+     * module present is tested in test-suite.
+     */
     @Test
     void fetchMetadataIsNotOnTheRuntimeClasspath() {
         assertThrows(ClassNotFoundException.class, () -> Class.forName(ANNOTATION));

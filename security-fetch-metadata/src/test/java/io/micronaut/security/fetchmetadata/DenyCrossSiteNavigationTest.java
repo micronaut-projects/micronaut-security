@@ -88,12 +88,16 @@ class DenyCrossSiteNavigationTest {
     @Test
     void logsWhyANavigationToAnAnnotatedRouteIsNotAllowed() {
         Logger logger = (Logger) LoggerFactory.getLogger(RULE_LOGGER);
+        Level level = logger.getLevel();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
+        // set explicitly, so that the test does not depend on logback.xml
+        logger.setLevel(Level.DEBUG);
         try {
             assertForbidden(defaults, navigation(ANNOTATED, Site.CROSS_SITE, Destination.DOCUMENT));
         } finally {
+            logger.setLevel(level);
             logger.detachAppender(appender);
         }
 
@@ -106,6 +110,7 @@ class DenyCrossSiteNavigationTest {
         assertTrue(message.contains("#fetchMetadataSensitiveNavigationRoutes"), message);
     }
 
+    // covers the isDebugEnabled guard; the message itself is asserted by the test above
     @Test
     void stillRejectsWithoutLoggingWhenDebugIsDisabled() {
         Logger logger = (Logger) LoggerFactory.getLogger(RULE_LOGGER);

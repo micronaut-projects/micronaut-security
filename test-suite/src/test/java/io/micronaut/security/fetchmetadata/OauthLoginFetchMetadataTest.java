@@ -30,6 +30,7 @@ import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Produces;
@@ -111,6 +112,28 @@ class OauthLoginFetchMetadataTest {
     @Test
     void crossSiteNavigationToTheLoginRouteIsRejected() {
         assertRejected(app, navigation("/oauth/login/auth", "cross-site"));
+    }
+
+    @Test
+    void unauthorizedRedirectToTheLoginRouteIsRejectedForUsersArrivingFromAnotherSite() {
+        try (EmbeddedServer redirecting = ApplicationContext.run(EmbeddedServer.class, configuration(SPEC_NAME + "UnauthorizedRedirect",
+            Map.of("micronaut.security.redirect.unauthorized.url", "/oauth/login/auth")))) {
+            // a link from another site to a secured page is a cross-site navigation, which the filter allows
+            HttpResponse<?> secured = exchange(redirecting, navigation("/secured", "cross-site").accept(MediaType.TEXT_HTML));
+            assertEquals(HttpStatus.SEE_OTHER, secured.status());
+            assertEquals("/oauth/login/auth", secured.getHeaders().get(HttpHeaders.LOCATION));
+
+            // the browser reports the redirected navigation as cross-site, so the login route refuses it
+            assertRejected(redirecting, navigation("/oauth/login/auth", "cross-site"));
+        }
+    }
+
+    @Test
+    void errorRouteForForbiddenDoesNotRenderTheRejection() {
+        HttpResponse<?> response = exchange(app, navigation("/oauth/login/auth", "cross-site"));
+
+        assertEquals(HttpStatus.FORBIDDEN, response.status());
+        assertTrue(response.getBody(String.class).isEmpty(), () -> response.getBody(String.class).orElse(""));
     }
 
     @Test
@@ -266,7 +289,7 @@ class OauthLoginFetchMetadataTest {
         return configuration;
     }
 
-    @Requires(property = "spec.name", pattern = SPEC_NAME + "(CustomController)?")
+    @Requires(property = "spec.name", pattern = SPEC_NAME + "(CustomController|UnauthorizedRedirect)?")
     @Singleton
     @Named("auth")
     static class AuthenticationMapper implements OauthAuthenticationMapper {
@@ -302,6 +325,27 @@ class OauthLoginFetchMetadataTest {
         @Override
         public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
             return Mono.just(HttpResponse.ok());
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME + "UnauthorizedRedirect")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Controller("/secured")
+    static class SecuredController {
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get
+        String secured() {
+            return "secured";
+        }
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Controller
+    static class ForbiddenErrorController {
+        @Produces(MediaType.TEXT_PLAIN)
+        @Error(status = HttpStatus.FORBIDDEN, global = true)
+        String forbidden() {
+            return "friendly forbidden page";
         }
     }
 
