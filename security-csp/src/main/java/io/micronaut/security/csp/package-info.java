@@ -23,6 +23,9 @@
  * {@code io.micronaut.security.csp.conf}, with each source-list directive owning a dedicated
  * configuration namespace such as {@code micronaut.security.csp.img-src}.</p>
  *
+ * <p>The package lives under {@code io.micronaut.security}, so when Micronaut Security is on the
+ * classpath, {@code micronaut.security.enabled=false} disables the module as well.</p>
+ *
  * <p>The default policy is intentionally restrictive. Applications should begin with report-only
  * mode when adopting CSP, then explicitly enable only the sources and keyword expressions required
  * by their pages. Nonce- and hash-based script or style policies are preferred over URL allowlists.</p>

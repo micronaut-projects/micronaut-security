@@ -1,4 +1,4 @@
-Micronaut Views ships its own CSP filter, disabled by default (`micronaut.views.csp.enabled: false`). If you enabled it, disable it when you add this module. Both write the `cspNonce` request attribute and a CSP header, so running them together lets one overwrite the other's nonce. The module logs a warning at startup while `micronaut.views.csp.enabled` is `true`.
+Micronaut Views ships its own CSP filter, disabled by default (`micronaut.views.csp.enabled: false`). If you enabled it, disable it when you add this module. Both write the `cspNonce` request attribute and a CSP header, so running them together lets one overwrite the other's nonce or header. The application fails to start while `micronaut.views.csp.enabled` is `true` and the module's filter is enabled.
 
 The Micronaut Views settings, as of Micronaut Views 6.3.1, map to this module as follows:
 
@@ -49,6 +49,6 @@ Unlike a hand-written policy string, the module also writes its restrictive defa
 base-uri 'none'; default-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data:; manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'none'; script-src 'none'
 ----
 
-A directive written by the module does not fall back to `default-src`. Allow the sources each directive needs, for example `script-src.self: true`, or set `<directive>.enabled: false` so that the browser falls back to `default-src` for it.
+A directive written by the module does not fall back to `default-src`. Allow the sources each directive needs, for example `script-src.self: true`, or set `<directive>.enabled: false` on a fetch directive, such as `script-src` or `img-src`, so that the browser falls back to `default-src` for it. Do not disable `base-uri`, `form-action` or `frame-ancestors` for that purpose: they have no `default-src` fallback, so disabling one lifts its restriction entirely.
 
 Micronaut Views 6.3.1 does not copy the nonce into the view model. Register a view model processor as shown in <<cspNonceGeneration,script-src Nonces>> so that templates can use `${cspNonce}`.

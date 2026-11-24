@@ -3,7 +3,7 @@ Each source-list directive has its own configuration namespace, `micronaut.secur
 * `enabled`: whether the directive is written at all.
 * `none`: write `'none'` when no other source is enabled (default `true`).
 * `self`: add `'self'`, the application's own origin.
-* `values`: additional source expressions, written in the configured order. Host and scheme sources are written as supplied; keywords, nonces and hashes must include their single quotes, for example `"'sha256-...'"`. A value containing `;`, `,` or a control character fails application startup, because it would end the directive or policy.
+* `values`: additional source expressions, written in the configured order. Host and scheme sources are written as supplied; keywords, nonces and hashes must include their single quotes, for example `"'sha256-...'"`. A value that contains several expressions separated by whitespace is treated like several values. A value containing `;`, `,`, a control character or a non-ASCII character fails application startup: `;` and `,` would end the directive or policy, and browsers ignore a directive that contains a non-ASCII character. Write internationalized host names in their ASCII (punycode) form, for example `https://xn--bcher-kva.example`.
 * `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, `wss`: add the corresponding <<cspSchemeSources,scheme source>>.
 
 `script-src` and `style-src` also support `nonce`, `unsafe-inline`, `unsafe-hashes` and `report-sample`. `script-src` additionally supports `unsafe-eval`, `strict-dynamic`, `wasm-unsafe-eval`, `trusted-types-eval` and `report-sha256`, `report-sha384` and `report-sha512`. `connect-src` also supports `unsafe-webtransport-hashes`.
@@ -35,13 +35,13 @@ The configuration generates:
 base-uri 'none'; default-src 'none'; connect-src 'self'; font-src 'self'; object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self'; manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'self'; script-src 'nonce-<request nonce>' 'self'
 ----
 
-NOTE: Setting `none: false` without enabling any other source does not allow everything. It removes the directive from the header, so the browser falls back to `default-src`, which is `'none'` by default. To allow a resource type, enable the sources you need.
+NOTE: Setting `none: false` on a fetch directive, such as `img-src`, without enabling any other source does not allow everything. It removes the directive from the header, so the browser falls back to `default-src`, which is `'none'` by default. To allow a resource type, enable the sources you need. `base-uri`, `form-action` and `frame-ancestors` do not fall back to `default-src`, so the module writes them as `'none'` whenever no other source is enabled, whatever `none` is set to. Setting `enabled: false` on one of them removes it, which lifts its restriction entirely: any origin can then frame the page, inject a `<base>` element, or be the target of a form.
 
-The default generator builds the directives from this configuration once, not for every response. A configuration refresh, for example from a distributed configuration source, rebuilds them; refreshed values that would fail the startup checks are logged as an error and the previous policy stays in place.
+The default generator builds the directives from this configuration once, not for every response. A configuration refresh, for example from a distributed configuration source, rebuilds them, together with `report-only` and whether a nonce is generated; refreshed values that would fail the startup checks are logged as an error and the previous policy, in its previous mode, stays in place. The settings that decide which beans and routes exist are read at startup only: `micronaut.security.csp.enabled`, the `micronaut.security.csp.filter` settings, `micronaut.security.csp.report-to.enabled` and the `micronaut.security.csp.report-to.controller` settings. The module logs a warning when a refresh changes `report-to.enabled`.
 
 ==== Limiting where the header applies
 
-The header and the nonce are added to every request matching `micronaut.security.csp.filter.pattern` (default `/**`). Use it to limit the policy to the part of the application that renders HTML:
+The header and the nonce are added to every request matching `micronaut.security.csp.filter.pattern` (default `/**`). The pattern is matched like the pattern of any server filter, relative to the server context path; separate several patterns with commas. Use it to limit the policy to the part of the application that renders HTML:
 
 [configuration]
 ----
