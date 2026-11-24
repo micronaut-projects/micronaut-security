@@ -16,11 +16,14 @@
 package io.micronaut.security.csp;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import io.micronaut.runtime.context.scope.refresh.RefreshEventListener;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -33,15 +36,20 @@ import java.util.Set;
 @Singleton
 @Internal
 final class ContentSecurityPolicyGeneratorRefreshListener implements RefreshEventListener {
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSecurityPolicyGeneratorRefreshListener.class);
     private final DefaultContentSecurityPolicyGenerator generator;
+    private final BooleanPropertiesCheck booleanPropertiesCheck;
 
     /**
      * Creates the listener.
      *
      * @param generator the generator whose cached directives are rebuilt
+     * @param booleanPropertiesCheck rejects a refreshed setting that is not a boolean
      */
-    ContentSecurityPolicyGeneratorRefreshListener(DefaultContentSecurityPolicyGenerator generator) {
+    ContentSecurityPolicyGeneratorRefreshListener(DefaultContentSecurityPolicyGenerator generator,
+                                                  BooleanPropertiesCheck booleanPropertiesCheck) {
         this.generator = generator;
+        this.booleanPropertiesCheck = booleanPropertiesCheck;
     }
 
     @Override
@@ -51,6 +59,13 @@ final class ContentSecurityPolicyGeneratorRefreshListener implements RefreshEven
 
     @Override
     public void onApplicationEvent(RefreshEvent event) {
+        try {
+            booleanPropertiesCheck.check();
+        } catch (ConfigurationException e) {
+            // The configuration beans were re-bound with false; the cached policy keeps the previous values.
+            LOG.error("Keeping the previous Content Security Policy because the refreshed configuration is invalid: {}", e.getMessage());
+            return;
+        }
         generator.refresh();
     }
 }

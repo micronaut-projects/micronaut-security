@@ -357,29 +357,10 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static void requireSafeHeaderValue(String property, String value) {
         if (UNSAFE_HEADER_CHARACTERS.matcher(value).find()) {
-            throw new ConfigurationException(property + " contains \"" + printable(value) + "\", which has a ';', ',', control or non-ASCII "
+            throw new ConfigurationException(property + " contains \"" + ContentSecurityPolicyUtils.printable(value) + "\", which has a ';', ',', control or non-ASCII "
                 + "character. ';' and ',' would end the directive or policy, and browsers ignore a directive with a non-ASCII character. "
                 + "Configure each source expression as a separate value, and write internationalized host names in punycode.");
         }
-    }
-
-    /**
-     * Shows a configured value in an error message, with every character outside printable ASCII
-     * escaped, so that the offending character is visible and cannot break the log line.
-     *
-     * @param value a configured value
-     * @return the value with control and non-ASCII characters written as {@code \\uXXXX}
-     */
-    private static String printable(String value) {
-        StringBuilder printable = new StringBuilder(value.length());
-        for (char c : value.toCharArray()) {
-            if (c >= ' ' && c <= '~') {
-                printable.append(c);
-            } else {
-                printable.append(String.format(Locale.ROOT, "\\u%04X", (int) c));
-            }
-        }
-        return printable.toString();
     }
 
     /**

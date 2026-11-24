@@ -27,37 +27,14 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PREFIX;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_BASE_URI;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_CONNECT_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_DEFAULT_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_FENCED_FRAME_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_FONT_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_FORM_ACTION;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_ANCESTORS;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_FRAME_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_IMG_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_MANIFEST_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_MEDIA_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_OBJECT_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_PREFETCH_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_REPORT_URI;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_REQUIRE_TRUSTED_TYPES_FOR;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_SCRIPT_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_STYLE_SRC;
-import static io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties.PROPERTY_WORKER_SRC;
 
 /**
- * Warns at startup about an {@code enabled} property whose value is not a boolean.
- *
- * <p>Directive toggles are bound as booleans, and binding converts any unknown value, such as the
- * typo {@code ture}, to {@code false}: the directive is then omitted, which for {@code base-uri},
- * {@code form-action} and {@code frame-ancestors} lifts its restriction entirely. The module,
- * filter and report controller toggles do the opposite on purpose, see
- * {@link AbstractToggleCondition}: an unknown value keeps them enabled, which surprises whoever
- * mistyped {@code false}.</p>
+ * Warns at startup about a module, filter or report controller toggle whose value is not a boolean.
+ * These toggles are read by an {@link AbstractToggleCondition}, which keeps them enabled for an
+ * unknown value on purpose, so that a typo cannot remove the policy; that surprises whoever mistyped
+ * {@code false}. Directive settings are checked strictly by {@link BooleanPropertiesCheck}.
  */
 @Singleton
 @Internal
@@ -68,16 +45,6 @@ final class ToggleValueWarning implements ApplicationEventListener<StartupEvent>
      */
     private static final List<String> CONDITION_TOGGLES = List.of(CspEnabledCondition.PROPERTY,
         PREFIX + ".filter" + ".enabled", ReportToConfigurationProperties.PREFIX + ".controller" + ".enabled");
-    private static final String ENABLED = ".enabled";
-    private static final List<String> PREFIXES = List.of(PROPERTY_BASE_URI, PROPERTY_CONNECT_SRC, PROPERTY_DEFAULT_SRC,
-        PROPERTY_FENCED_FRAME_SRC, PROPERTY_FONT_SRC, PROPERTY_FORM_ACTION, PROPERTY_FRAME_ANCESTORS, PROPERTY_FRAME_SRC,
-        PROPERTY_IMG_SRC, PROPERTY_MANIFEST_SRC, PROPERTY_MEDIA_SRC, PROPERTY_OBJECT_SRC, PROPERTY_PREFETCH_SRC,
-        PROPERTY_REPORT_URI, PROPERTY_REQUIRE_TRUSTED_TYPES_FOR, PROPERTY_SCRIPT_SRC, PROPERTY_STYLE_SRC, PROPERTY_WORKER_SRC,
-        ReportToConfigurationProperties.PREFIX);
-    /**
-     * The spellings that boolean binding understands, compared without case.
-     */
-    private static final Set<String> BOOLEAN_VALUES = Set.of("true", "false", "yes", "no", "on", "off", "y", "n");
 
     private final Environment environment;
 
@@ -92,19 +59,14 @@ final class ToggleValueWarning implements ApplicationEventListener<StartupEvent>
 
     @Override
     public void onApplicationEvent(StartupEvent event) {
-        for (String prefix : PREFIXES) {
-            String property = prefix + ENABLED;
-            invalidValue(property).ifPresent(value -> LOG.warn("{} is \"{}\", which is not a boolean; it binds as false, so the directive "
-                + "is not written. Use true or false.", property, value));
-        }
         for (String property : CONDITION_TOGGLES) {
             invalidValue(property).ifPresent(value -> LOG.warn("{} is \"{}\", which is not a boolean; it is treated as true, so the "
-                + "feature stays enabled. Use true or false.", property, value));
+                + "feature stays enabled. Use true or false.", property, ContentSecurityPolicyUtils.printable(value)));
         }
     }
 
     private Optional<String> invalidValue(String property) {
         return environment.getProperty(property, String.class)
-            .filter(value -> !BOOLEAN_VALUES.contains(value.trim().toLowerCase(Locale.ROOT)));
+            .filter(value -> !BooleanPropertiesCheck.BOOLEAN_VALUES.contains(value.trim().toLowerCase(Locale.ROOT)));
     }
 }

@@ -18,6 +18,7 @@ package io.micronaut.security.csp.conf.reportto;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.csp.ContentSecurityPolicyUtils;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -99,7 +100,7 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
      */
     public static String requireValidGroup(String group) {
         if (!GROUP_PATTERN.matcher(group).matches()) {
-            throw new ConfigurationException(PREFIX + ".group is \"" + group + "\"; it " + GROUP_MESSAGE
+            throw new ConfigurationException(PREFIX + ".group is \"" + ContentSecurityPolicyUtils.printable(group) + "\"; it " + GROUP_MESSAGE
                 + ", the grammar of a Reporting-Endpoints name");
         }
         return group;

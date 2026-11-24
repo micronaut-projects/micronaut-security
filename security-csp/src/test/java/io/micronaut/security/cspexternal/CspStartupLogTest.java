@@ -33,6 +33,7 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
@@ -91,16 +92,23 @@ class CspStartupLogTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"ture", "1"})
-    void warnsAboutADirectiveToggleThatIsNotABoolean(String value) {
-        List<ILoggingEvent> events = capture(TOGGLE_LOGGER, () -> run(Map.of("micronaut.security.csp.frame-ancestors.enabled", value), context -> {
-            ContentSecurityPolicy policy = context.getBean(ContentSecurityPolicyGenerator.class).contentSecurityPolicy(HttpRequest.GET("/"));
-            assertNull(policy.frameAncestors(), "boolean binding turns the value into false");
-        }));
+    @CsvSource({
+        "micronaut.security.csp.frame-ancestors.enabled, ture",
+        "micronaut.security.csp.form-action.enabled, 1",
+        "micronaut.security.csp.script-src.nonce, 1",
+        "micronaut.security.csp.style-src.unsafe-inline, enabled",
+        "micronaut.security.csp.img-src.data, t",
+        "micronaut.security.csp.report-only, 0",
+        "micronaut.security.csp.report-uri.enabled, x",
+        "micronaut.security.csp.report-to.enabled, 1"
+    })
+    void failsStartupForAPolicySettingThatIsNotABoolean(String property, String value) {
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class,
+            () -> ApplicationContext.run(Map.of(property, value)).close());
 
-        assertEquals(1, events.size());
-        assertEquals(Level.WARN, events.get(0).getLevel());
-        assertMentions(events.get(0), "micronaut.security.csp.frame-ancestors.enabled", "\"" + value + "\"");
+        String message = rootCause(exception).getMessage();
+        assertTrue(message.startsWith(property + " is \"" + value + "\""), message);
+        assertTrue(message.contains("not a boolean"), message);
     }
 
     @ParameterizedTest
@@ -164,9 +172,12 @@ class CspStartupLogTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"true", "FALSE", " yes ", "off", "n"})
-    void acceptsEverySpellingOfABooleanDirectiveToggle(String value) {
-        assertEquals(List.of(), capture(TOGGLE_LOGGER, () -> run(Map.of("micronaut.security.csp.report-to.enabled", value), context -> { })));
+    @ValueSource(strings = {"true", "FALSE", " yes ", "off", "n", "Y", "ON", "no"})
+    void acceptsEverySpellingOfABooleanPolicySetting(String value) {
+        assertDoesNotThrow(() -> run(Map.of(
+            "micronaut.security.csp.report-to.enabled", value,
+            "micronaut.security.csp.script-src.nonce", value,
+            "micronaut.security.csp.frame-ancestors.enabled", value), context -> { }));
     }
 
     @Test

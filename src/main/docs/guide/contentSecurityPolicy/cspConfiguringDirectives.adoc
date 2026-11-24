@@ -6,6 +6,8 @@ Each source-list directive has its own configuration namespace, `micronaut.secur
 * `values`: additional source expressions, written in the configured order. Host and scheme sources are written as supplied; keywords, nonces and hashes must include their single quotes, for example `"'sha256-...'"`. A value that contains several expressions separated by whitespace is treated like several values. A value containing `;`, `,`, a control character or a non-ASCII character fails application startup: `;` and `,` would end the directive or policy, and browsers ignore a directive that contains a non-ASCII character. Write internationalized host names in their ASCII (punycode) form, for example `https://xn--bcher-kva.example`.
 * `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, `wss`: add the corresponding <<cspSchemeSources,scheme source>>.
 
+The boolean settings accept `true`, `false`, `yes`, `no`, `on`, `off`, `y` and `n`, in any case. Any other value, such as `1` or a typo, fails application startup, and a configuration refresh that contains one is rejected: bound as a boolean, it would silently turn the setting off.
+
 `script-src` and `style-src` also support `nonce`, `unsafe-inline`, `unsafe-hashes` and `report-sample`. `script-src` additionally supports `unsafe-eval`, `strict-dynamic`, `wasm-unsafe-eval`, `trusted-types-eval` and `report-sha256`, `report-sha384` and `report-sha512`. `connect-src` also supports `unsafe-webtransport-hashes`.
 
 A typical server-rendered application that serves its own scripts, styles, images and fonts, and uses nonces for inline scripts, starts with:

@@ -17,6 +17,8 @@ package io.micronaut.security.csp;
 
 import io.micronaut.core.annotation.Internal;
 
+import java.util.Locale;
+
 /**
  * Internal helpers for serializing CSP source expressions.
  *
@@ -24,7 +26,7 @@ import io.micronaut.core.annotation.Internal;
  * not. Callers use this helper only for the former group.</p>
  */
 @Internal
-final class ContentSecurityPolicyUtils {
+public final class ContentSecurityPolicyUtils {
     /**
      * The space between the source expressions of a serialized directive.
      */
@@ -62,5 +64,24 @@ final class ContentSecurityPolicyUtils {
      */
     private static boolean isWrappedInSingleQuotes(String value) {
         return value.startsWith(SINGLE_QUOTE) && value.endsWith(SINGLE_QUOTE);
+    }
+
+    /**
+     * Shows a configured value in a message, with every character outside printable ASCII escaped,
+     * so that an offending character is visible and cannot break a log line.
+     *
+     * @param value a configured value
+     * @return the value with control and non-ASCII characters written as {@code \\uXXXX}
+     */
+    public static String printable(String value) {
+        StringBuilder printable = new StringBuilder(value.length());
+        for (char c : value.toCharArray()) {
+            if (c >= ' ' && c <= '~') {
+                printable.append(c);
+            } else {
+                printable.append(String.format(Locale.ROOT, "\\u%04X", (int) c));
+            }
+        }
+        return printable.toString();
     }
 }

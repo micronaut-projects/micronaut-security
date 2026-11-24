@@ -160,6 +160,28 @@ class CspConfigurationRefreshTest {
     }
 
     @Test
+    void aRefreshedSettingThatIsNotABooleanIsRejected() {
+        Map<String, Object> properties = new HashMap<>(Map.of(
+            "micronaut.security.csp.script-src.self", true,
+            "micronaut.security.csp.script-src.nonce", true,
+            "micronaut.security.csp.script-src.unsafe-inline", true));
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start()) {
+            ContentSecurityPolicyGenerator generator = context.getBean(ContentSecurityPolicyGenerator.class);
+
+            properties.put("micronaut.security.csp.script-src.nonce", "1");
+            properties.put("micronaut.security.csp.frame-ancestors.enabled", "ture");
+            List<ILoggingEvent> errors = capture(Level.ERROR, ContentSecurityPolicyGeneratorRefreshListener.class, () -> refresh(context));
+
+            ContentSecurityPolicy policy = policy(generator);
+            assertEquals("script-src 'nonce-requestnonce' 'self' 'unsafe-inline'", policy.scriptSrc().toHeaderValue(),
+                "the nonce stays, so browsers keep ignoring 'unsafe-inline'");
+            assertEquals("frame-ancestors 'none'", policy.frameAncestors().toHeaderValue());
+            assertEquals(1, errors.size());
+            assertTrue(errors.get(0).getFormattedMessage().contains("not a boolean"), errors.get(0)::getFormattedMessage);
+        }
+    }
+
+    @Test
     void reportOnlyModeChangesWithTheRefreshedPolicyOnly() {
         Map<String, Object> properties = new HashMap<>(Map.of("spec.name", SPEC_NAME));
         try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
@@ -217,7 +239,11 @@ class CspConfigurationRefreshTest {
     }
 
     private static List<ILoggingEvent> capture(Level level, Runnable action) {
-        Logger logger = (Logger) LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
+        return capture(level, DefaultContentSecurityPolicyGenerator.class, action);
+    }
+
+    private static List<ILoggingEvent> capture(Level level, Class<?> loggerClass, Runnable action) {
+        Logger logger = (Logger) LoggerFactory.getLogger(loggerClass);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
