@@ -110,6 +110,13 @@ class OauthLoginFetchMetadataTest {
     }
 
     @Test
+    void annotationNameMatchesTheNameTheOauthModuleTestsCheck() {
+        // security-oauth2 depends on the annotation compileOnly and its tests check it by this name
+        // (OauthLoginRouteDenyCrossSiteNavigationTest): renaming or moving the annotation must fail here
+        assertEquals("io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation", DenyCrossSiteNavigation.class.getName());
+    }
+
+    @Test
     void crossSiteNavigationToTheLoginRouteIsRejected() {
         assertRejected(app, navigation("/oauth/login/auth", "cross-site"));
     }
