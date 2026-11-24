@@ -30,7 +30,7 @@ import com.nimbusds.jose.crypto.impl.AESCryptoProvider;
 import com.nimbusds.jose.crypto.impl.DirectCryptoProvider;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-import java.util.Base64;
+import io.micronaut.security.utils.Base64Utils;
 
 /**
  * Secret encryption configuration.
@@ -60,7 +60,7 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
             sb.append(" not supported for Secret encryption");
             throw new ConfigurationException(sb.toString());
         }
-        this.secret = secretEncryptionConfiguration.isBase64() ? Base64.getDecoder().decode(secretEncryptionConfiguration.getSecret()) : secretEncryptionConfiguration.getSecret().getBytes(UTF_8);
+        this.secret = secretEncryptionConfiguration.isBase64() ? Base64Utils.decode(secretEncryptionConfiguration.getSecret()) : secretEncryptionConfiguration.getSecret().getBytes(UTF_8);
         this.method = secretEncryptionConfiguration.getEncryptionMethod();
         this.algorithm = secretEncryptionConfiguration.getJweAlgorithm();
     }
