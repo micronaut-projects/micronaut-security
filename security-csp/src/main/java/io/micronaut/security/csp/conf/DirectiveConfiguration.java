@@ -29,8 +29,10 @@ import io.micronaut.core.util.Toggleable;
 public interface DirectiveConfiguration extends Toggleable {
     /**
      * Controls the {@code 'none'} keyword source expression. It is written only when no other
-     * source expression is enabled; without it, such a directive is omitted and the browser falls
-     * back to {@code default-src}.
+     * source expression is enabled; without it, such a fetch directive is omitted and the browser
+     * falls back to {@code default-src}. The default generator ignores it for {@code base-uri},
+     * {@code form-action} and {@code frame-ancestors}, which have no fallback: they are written as
+     * {@code 'none'} whenever no other source expression is enabled.
      *
      * @return whether to write {@code 'none'} when no other source expression is enabled
      */

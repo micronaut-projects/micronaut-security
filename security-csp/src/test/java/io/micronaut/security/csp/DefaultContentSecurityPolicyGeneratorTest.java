@@ -20,8 +20,13 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
+import io.micronaut.security.csp.conf.baseuri.BaseUriConfigurationProperties;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfiguration;
 import io.micronaut.security.csp.conf.connectsrc.ConnectSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.fontsrc.FontSrcConfigurationProperties;
+import io.micronaut.security.csp.conf.formaction.FormActionConfigurationProperties;
+import io.micronaut.security.csp.conf.frameancestors.FrameAncestorsConfigurationProperties;
+import io.micronaut.security.csp.conf.imgsrc.ImgSrcConfigurationProperties;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.csp.conf.reporturi.ReportUriConfigurationProperties;
 import io.micronaut.security.csp.conf.requiretrustedtypesfor.RequireTrustedTypesForConfigurationProperties;
@@ -34,6 +39,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -383,6 +389,121 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertTrue(policy(generator).directives().contains(
                 new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.REPORT_URI, "https://example.com/csp-reports")));
+    }
+
+    @Test
+    void writesNoneForADirectiveWithoutFallbackThatHasNoSource() {
+        FrameAncestorsConfigurationProperties frameAncestors = new FrameAncestorsConfigurationProperties();
+        frameAncestors.setNone(false);
+        BaseUriConfigurationProperties baseUri = new BaseUriConfigurationProperties();
+        baseUri.setNone(false);
+        FormActionConfigurationProperties formAction = new FormActionConfigurationProperties();
+        formAction.setSelf(false);
+        formAction.setNone(false);
+
+        ContentSecurityPolicy policy = policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder()
+            .frameAncestors(frameAncestors).baseUri(baseUri).formAction(formAction)));
+
+        assertEquals("frame-ancestors 'none'", policy.frameAncestors().toHeaderValue(), "an omitted frame-ancestors lets any origin frame the page");
+        assertEquals("base-uri 'none'", policy.baseUri().toHeaderValue(), "an omitted base-uri allows an injected <base>");
+        assertEquals("form-action 'none'", policy.formAction().toHeaderValue(), "an omitted form-action allows any form target");
+    }
+
+    @Test
+    void disablingADirectiveWithoutFallbackOmitsIt() {
+        FrameAncestorsConfigurationProperties frameAncestors = new FrameAncestorsConfigurationProperties();
+        frameAncestors.setEnabled(false);
+
+        assertNull(policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().frameAncestors(frameAncestors))).frameAncestors());
+    }
+
+    @Test
+    void removesUnsafeInlineFromAMultiTokenValueWhenTheNonceIsMissing() {
+        ScriptSrcConfigurationProperties scriptSrcConfiguration = new ScriptSrcConfigurationProperties();
+        scriptSrcConfiguration.setNonce(true);
+        scriptSrcConfiguration.setValues(List.of("'self' 'unsafe-inline'", "https://cdn.example.com\t'UNSAFE-INLINE'"));
+
+        ContentSecurityPolicyGenerator withoutNonce = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> null, scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+        ContentSecurityPolicyGenerator withNonce = generator(new ContentSecurityPolicyConfigurationProperties(),
+            currentRequest -> "abc", scriptSrcConfiguration, new ConnectSrcConfigurationProperties());
+
+        assertEquals("script-src 'self' https://cdn.example.com", policy(withoutNonce).scriptSrc().toHeaderValue());
+        assertEquals("script-src 'nonce-abc' 'self' 'unsafe-inline' https://cdn.example.com 'UNSAFE-INLINE'", policy(withNonce).scriptSrc().toHeaderValue());
+    }
+
+    @Test
+    void rejectsANonAsciiSourceExpressionThatBrowsersWouldIgnoreTheDirectiveFor() {
+        for (String value : List.of("https://b\u00fccher.example", "'self'\u00a0")) {
+            FrameAncestorsConfigurationProperties frameAncestors = new FrameAncestorsConfigurationProperties();
+            frameAncestors.setValues(List.of(value));
+
+            ConfigurationException exception = assertThrows(ConfigurationException.class,
+                () -> generator(ContentSecurityPolicyDirectiveConfigurations.builder().frameAncestors(frameAncestors)));
+
+            assertTrue(exception.getMessage().startsWith("micronaut.security.csp.frame-ancestors.values contains"), exception::getMessage);
+            assertTrue(exception.getMessage().contains("non-ASCII"), exception::getMessage);
+        }
+    }
+
+    @Test
+    void acceptsTheAsciiFormOfAnInternationalizedHost() {
+        FrameAncestorsConfigurationProperties frameAncestors = new FrameAncestorsConfigurationProperties();
+        frameAncestors.setValues(List.of("https://xn--bcher-kva.example"));
+
+        assertEquals("frame-ancestors https://xn--bcher-kva.example",
+            policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().frameAncestors(frameAncestors))).frameAncestors().toHeaderValue());
+    }
+
+    @Test
+    void omitsAWhitespaceOnlyReportUri() {
+        ReportUriConfigurationProperties reportUri = new ReportUriConfigurationProperties();
+        reportUri.setEnabled(true);
+        reportUri.setValues(List.of("   "));
+
+        assertNull(policy(generator(ContentSecurityPolicyDirectiveConfigurations.builder().reportUri(reportUri))).reportUri());
+    }
+
+    @Test
+    void aRefreshDuringAPolicyGenerationDoesNotMixTheTwoConfigurations() {
+        ImgSrcConfigurationProperties imgSrc = new ImgSrcConfigurationProperties();
+        imgSrc.setValues(List.of("https://old.example.com"));
+        FontSrcConfigurationProperties fontSrc = new FontSrcConfigurationProperties();
+        fontSrc.setValues(List.of("https://old.example.com"));
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().imgSrc(imgSrc).fontSrc(fontSrc).build()) {
+            @Override
+            protected @Nullable ContentSecurityPolicyDirective fontSrc() {
+                ContentSecurityPolicyDirective directive = super.fontSrc();
+                // A refresh lands between the font-src and img-src directives of this policy.
+                imgSrc.setValues(List.of("https://new.example.com"));
+                fontSrc.setValues(List.of("https://new.example.com"));
+                refresh();
+                return directive;
+            }
+        };
+
+        ContentSecurityPolicy first = policy(generator);
+        assertEquals("font-src https://old.example.com", first.fontSrc().toHeaderValue());
+        assertEquals("img-src https://old.example.com", first.imgSrc().toHeaderValue(), "one policy is built from one configuration");
+        assertEquals("img-src https://new.example.com", policy(generator).imgSrc().toHeaderValue());
+    }
+
+    @Test
+    void keepsTheReportOnlyModeWhenARefreshIsRejected() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        ImgSrcConfigurationProperties imgSrc = new ImgSrcConfigurationProperties();
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration,
+            ContentSecurityPolicyDirectiveConfigurations.builder().imgSrc(imgSrc).build());
+
+        configuration.setReportOnly(true);
+        imgSrc.setValues(List.of("https://a.example.com; script-src *"));
+        generator.refresh();
+        assertFalse(generator.isReportOnly(), "the previous policy keeps being enforced");
+
+        imgSrc.setValues(List.of("https://a.example.com"));
+        generator.refresh();
+        assertTrue(generator.isReportOnly());
     }
 
     private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyDirectiveConfigurations.Builder directiveConfigurations) {

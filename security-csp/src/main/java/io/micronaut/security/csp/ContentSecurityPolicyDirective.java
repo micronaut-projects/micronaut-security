@@ -54,13 +54,33 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * semicolon or a control character other than a tab
      */
     public ContentSecurityPolicyDirective {
-        if (!NAME_PATTERN.matcher(name).matches()) {
+        if (!isValidName(name)) {
             throw new IllegalArgumentException("A Content Security Policy directive name must consist of letters, digits and hyphens");
         }
-        if (value != null && UNSAFE_VALUE_CHARACTERS.matcher(value).find()) {
+        if (!isSafeValue(value)) {
             throw new IllegalArgumentException("The value of the Content Security Policy directive " + name
                 + " must not contain a semicolon or a control character, which would end the directive or the header");
         }
+    }
+
+    /**
+     * Tests whether a name can be the name of a directive.
+     *
+     * @param name a directive name
+     * @return whether the name consists of letters, digits and hyphens
+     */
+    static boolean isValidName(String name) {
+        return NAME_PATTERN.matcher(name).matches();
+    }
+
+    /**
+     * Tests whether a value can be the value of a directive.
+     *
+     * @param value a directive value, or {@code null}
+     * @return whether the value is absent or contains neither a semicolon nor a control character other than a tab
+     */
+    static boolean isSafeValue(@Nullable String value) {
+        return value == null || !UNSAFE_VALUE_CHARACTERS.matcher(value).find();
     }
 
     /**
@@ -109,25 +129,25 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * Tests whether this directive disables its controlled resource or behavior.
      *
      * <p>Only the quoted keyword counts: an unquoted {@code none} is a host source named
-     * {@code none}.</p>
+     * {@code none}. Like CSP keywords, it is compared without case.</p>
      *
      * @return whether this directive has exactly the {@code 'none'} value
      * @since 5.6.0
      */
     public boolean isNone() {
-        return value() != null && QUOTED_NONE.equals(value().trim());
+        return value() != null && QUOTED_NONE.equalsIgnoreCase(value().trim());
     }
 
     /**
      * Tests whether this directive permits only the protected resource's origin.
      *
      * <p>Only the quoted keyword counts: an unquoted {@code self} is a host source named
-     * {@code self}.</p>
+     * {@code self}. Like CSP keywords, it is compared without case.</p>
      *
      * @return whether this directive has exactly the {@code 'self'} value
      * @since 5.6.0
      */
     public boolean isSelf() {
-        return value() != null && QUOTED_SELF.equals(value().trim());
+        return value() != null && QUOTED_SELF.equalsIgnoreCase(value().trim());
     }
 }

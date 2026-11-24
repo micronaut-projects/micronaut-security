@@ -31,7 +31,6 @@ import io.micronaut.core.annotation.Internal;
 public class FormActionConfigurationProperties extends SourceListDirectiveConfigurationProperties implements FormActionConfiguration {
     /** Creates the {@code form-action} configuration, defaulting to {@code 'self'}. */
     public FormActionConfigurationProperties() {
-        setNone(false);
         setSelf(true);
     }
 }

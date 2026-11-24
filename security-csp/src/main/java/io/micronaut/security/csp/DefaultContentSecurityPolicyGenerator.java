@@ -118,6 +118,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_ENABLED = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".enabled";
     private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".value";
     private static final String PROPERTY_REPORT_TO_GROUP = ReportToConfigurationProperties.PREFIX + ".group";
+    private static final String PROPERTY_REPORT_TO_ENABLED = ReportToConfigurationProperties.PREFIX + ".enabled";
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
      * flag that enables each of them.
@@ -161,9 +162,19 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static final List<String> QUOTED_PREFIXES = List.of("sha256-", "sha384-", "sha512-", NONCE_PREFIX);
     /**
-     * Characters that end a directive ({@code ;}), a policy ({@code ,}) or the header (control characters).
+     * Characters that end a directive ({@code ;}), a policy ({@code ,}) or the header (control
+     * characters other than a tab), and non-ASCII characters, which make browsers ignore the whole
+     * directive. A tab, like a space, separates source expressions.
      */
-    private static final Pattern UNSAFE_HEADER_CHARACTERS = Pattern.compile("[;,\\p{Cntrl}]");
+    private static final Pattern UNSAFE_HEADER_CHARACTERS = Pattern.compile("[;,]|[^\\t\\x20-\\x7E]");
+    /**
+     * Separates the source expressions of a configured value.
+     */
+    private static final Pattern WHITESPACE = Pattern.compile("\\s+");
+    /**
+     * Directives that do not fall back to {@code default-src}: omitting one removes its restriction.
+     */
+    private static final Set<String> DIRECTIVES_WITHOUT_FALLBACK = Set.of(BASE_URI, FORM_ACTION, FRAME_ANCESTORS);
     /**
      * The grammar of a Reporting API endpoint group name used by {@code report-to}.
      */
@@ -190,6 +201,11 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private final ContentSecurityPolicyDirectiveConfigurations directiveConfigurations;
     private final AtomicBoolean invalidNonceWarned = new AtomicBoolean();
     /**
+     * The snapshot that one policy generation reads, so that a configuration refresh during the
+     * generation cannot mix directives of the previous and the refreshed configuration.
+     */
+    private final ScopedValue<Snapshot> generationSnapshot = ScopedValue.newInstance();
+    /**
      * The directives built from the validated configuration. The policy is generated for every
      * response, so the configuration is read once, at creation and on a configuration refresh,
      * instead of per response.
@@ -207,7 +223,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                                                     ContentSecurityPolicyDirectiveConfigurations directiveConfigurations) {
         this.cspConfiguration = cspConfiguration;
         this.directiveConfigurations = directiveConfigurations;
-        this.snapshot = snapshot();
+        this.snapshot = buildSnapshot();
     }
 
     /**
@@ -216,10 +232,18 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * them, the error is logged and the previous policy is kept.
      */
     void refresh() {
+        Snapshot previous = snapshot;
+        Snapshot refreshed;
         try {
-            snapshot = snapshot();
+            refreshed = buildSnapshot();
         } catch (ConfigurationException e) {
             LOG.error("Keeping the previous Content Security Policy because the refreshed configuration is invalid: {}", e.getMessage());
+            return;
+        }
+        snapshot = refreshed;
+        if ((previous.reportTo() == null) != (refreshed.reportTo() == null)) {
+            LOG.warn("{} changed in a configuration refresh. The report controller and its Reporting-Endpoints entry are registered "
+                + "at startup only; restart the application to register or remove them.", PROPERTY_REPORT_TO_ENABLED);
         }
     }
 
@@ -229,7 +253,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @return the directives built from the current configuration
      * @throws ConfigurationException if a setting would corrupt or extend the serialized policy
      */
-    private Snapshot snapshot() {
+    private Snapshot buildSnapshot() {
         ReportUriConfiguration reportUri = directiveConfigurations.getReportUri();
         List<String> reportUris = reportUris(reportUri);
         if (reportUri.isEnabled() && reportUris.isEmpty()) {
@@ -244,6 +268,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> directives.put(name, cachedDirective(name, getter.apply(directiveConfigurations))));
         ReportToConfiguration reportTo = directiveConfigurations.getReportTo();
         return new Snapshot(
+            cspConfiguration.isReportOnly(),
             Map.copyOf(directives),
             reportTo.isEnabled() ? new ContentSecurityPolicyDirective(REPORT_TO, reportTo.getGroup()) : null,
             reportUri.isEnabled() && !reportUris.isEmpty()
@@ -318,8 +343,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static void requireSafeHeaderValue(String property, String value) {
         if (UNSAFE_HEADER_CHARACTERS.matcher(value).find()) {
-            throw new ConfigurationException(property + " contains a ';', ',' or control character, which would end the directive "
-                + "or policy. Configure each source expression as a separate value.");
+            throw new ConfigurationException(property + " contains a ';', ',', control or non-ASCII character. ';' and ',' would end "
+                + "the directive or policy, and browsers ignore a directive with a non-ASCII character. Configure each source expression "
+                + "as a separate value, and write internationalized host names in punycode.");
         }
     }
 
@@ -331,7 +357,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     @Override
     public @Nullable ContentSecurityPolicy contentSecurityPolicy(HttpRequest<?> request) {
-        List<ContentSecurityPolicyDirective> directives = directives(request);
+        List<ContentSecurityPolicyDirective> directives = ScopedValue.where(generationSnapshot, snapshot).call(() -> directives(request));
         if (CollectionUtils.isEmpty(directives)) {
             return null;
         }
@@ -468,7 +494,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportTo() {
-        return snapshot.reportTo();
+        return currentSnapshot().reportTo();
     }
 
     /**
@@ -478,7 +504,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective reportUri() {
-        return snapshot.reportUri();
+        return currentSnapshot().reportUri();
     }
 
     /**
@@ -488,7 +514,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @since 5.6.0
      */
     protected @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor() {
-        return snapshot.requireTrustedTypesFor();
+        return currentSnapshot().requireTrustedTypesFor();
     }
 
     /**
@@ -591,7 +617,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static List<String> reportUris(ReportUriConfiguration reportUri) {
         return reportUri.getValues().stream()
-            .filter(StringUtils::isNotEmpty)
+            .filter(StringUtils::hasText)
             .toList();
     }
 
@@ -614,18 +640,23 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private static void validateSourceExpression(String directive, String value) {
         String property = PROPERTY_PREFIX + directive + ".values";
         requireSafeHeaderValue(property, value);
-        String trimmed = value.trim();
-        if (trimmed.startsWith(SINGLE_QUOTE)) {
-            if (trimmed.length() == 1 || !trimmed.endsWith(SINGLE_QUOTE)) {
+        for (String token : sourceExpressions(value)) {
+            validateSourceExpressionToken(property, token);
+        }
+    }
+
+    private static void validateSourceExpressionToken(String property, String token) {
+        if (token.startsWith(SINGLE_QUOTE)) {
+            if (token.length() == 1 || !token.endsWith(SINGLE_QUOTE)) {
                 LOG.warn("{} contains \"{}\", which opens a single quote but does not close it; browsers ignore the expression. Use \"{}\".",
-                    property, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed.substring(1)));
+                    property, token, ContentSecurityPolicyUtils.wrapInSingleQuotes(token.substring(1)));
             }
             return;
         }
-        String lowerCase = trimmed.toLowerCase(Locale.ROOT);
+        String lowerCase = token.toLowerCase(Locale.ROOT);
         if (QUOTED_KEYWORDS.contains(lowerCase) || QUOTED_PREFIXES.stream().anyMatch(lowerCase::startsWith)) {
             LOG.warn("{} contains \"{}\", which looks like a keyword, hash or nonce source but is not single-quoted; "
-                + "browsers treat it as a host. Use \"{}\".", property, value, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
+                + "browsers treat it as a host. Use \"{}\".", property, token, ContentSecurityPolicyUtils.wrapInSingleQuotes(token));
         }
     }
 
@@ -662,6 +693,28 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         return directiveConfigurations;
     }
 
+    /**
+     * Returns whether the policy is sent in the {@code Content-Security-Policy-Report-Only} header.
+     * The value is taken from the configuration the current policy was built from: a refreshed
+     * configuration that is rejected as invalid switches neither the policy nor its mode.
+     *
+     * @return whether the policy only reports violations instead of blocking them
+     * @since 5.6.0
+     */
+    public boolean isReportOnly() {
+        return snapshot.reportOnly();
+    }
+
+    /**
+     * Returns the snapshot of the policy generation in progress, or the current snapshot outside a
+     * generation, for example when a subclass calls a directive method directly.
+     *
+     * @return the snapshot to build directives from
+     */
+    private Snapshot currentSnapshot() {
+        return generationSnapshot.isBound() ? generationSnapshot.get() : snapshot;
+    }
+
     private static Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> directiveConfigurationGetters() {
         Map<String, Function<ContentSecurityPolicyDirectiveConfigurations, DirectiveConfiguration>> getters = new LinkedHashMap<>();
         getters.put(BASE_URI, ContentSecurityPolicyDirectiveConfigurations::getBaseUri);
@@ -694,7 +747,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @throws IllegalStateException if no configuration is registered for the directive
      */
     private @Nullable ContentSecurityPolicyDirective directive(String name, @Nullable HttpRequest<?> request) {
-        CachedDirective cached = snapshot.directives().get(name);
+        CachedDirective cached = currentSnapshot().directives().get(name);
         if (cached == null) {
             throw new IllegalStateException("No configuration is registered for the CSP directive " + name);
         }
@@ -725,7 +778,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      *
      * <p>Expressions are emitted in this order: the request nonce, keyword sources in
      * {@link #KEYWORD_SOURCES} order, scheme sources, and finally the configured values.
-     * {@code 'none'} is emitted only when no other expression, including a nonce, is enabled.
+     * {@code 'none'} is emitted only when no other expression, including a nonce, is enabled, and
+     * then either because {@link DirectiveConfiguration#isNone()} is true or because the directive,
+     * such as {@code frame-ancestors}, has no {@code default-src} fallback.
      * When a directive that takes a nonce gets no valid nonce, it is written without
      * {@code 'unsafe-inline'}, and as {@code 'none'} when nothing else remains.</p>
      *
@@ -763,11 +818,20 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private static void addConfiguredValues(List<String> values, DirectiveConfiguration config) {
         if (config instanceof SourceListDirectiveConfiguration sourceListDirectiveConfiguration) {
             for (String value : sourceListDirectiveConfiguration.getValues()) {
-                if (StringUtils.hasText(value)) {
-                    values.add(value.trim());
-                }
+                values.addAll(sourceExpressions(value));
             }
         }
+    }
+
+    /**
+     * Splits a configured value into its source expressions, so that a value such as
+     * {@code 'self' 'unsafe-inline'} is handled like two values.
+     *
+     * @param value a configured value
+     * @return the whitespace-separated source expressions of the value, empty for a blank value
+     */
+    private static List<String> sourceExpressions(String value) {
+        return StringUtils.hasText(value) ? List.of(WHITESPACE.split(value.trim())) : List.of();
     }
 
     private static @Nullable ContentSecurityPolicyDirective directiveWithoutNonce(String name, DirectiveConfiguration config,
@@ -783,7 +847,9 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         if (sources != null) {
             return new ContentSecurityPolicyDirective(name, sources);
         }
-        return config.isNone() ? new ContentSecurityPolicyDirective(name, QUOTED_NONE) : null;
+        // A directive without a fallback is never omitted for lack of sources: that would lift its
+        // restriction instead of applying default-src. Disabling it is the explicit way to omit it.
+        return config.isNone() || DIRECTIVES_WITHOUT_FALLBACK.contains(name) ? new ContentSecurityPolicyDirective(name, QUOTED_NONE) : null;
     }
 
     /**
@@ -801,12 +867,14 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     /**
      * The directives built from one version of the configuration.
      *
+     * @param reportOnly whether the policy is sent in the report-only header
      * @param directives the directive built from each registered directive configuration
      * @param reportTo the {@code report-to} directive, or {@code null} when disabled
      * @param reportUri the {@code report-uri} directive, or {@code null} when disabled or without URIs
      * @param requireTrustedTypesFor the {@code require-trusted-types-for} directive, or {@code null} when disabled
      */
-    private record Snapshot(Map<String, CachedDirective> directives,
+    private record Snapshot(boolean reportOnly,
+                            Map<String, CachedDirective> directives,
                             @Nullable ContentSecurityPolicyDirective reportTo,
                             @Nullable ContentSecurityPolicyDirective reportUri,
                             @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor) {

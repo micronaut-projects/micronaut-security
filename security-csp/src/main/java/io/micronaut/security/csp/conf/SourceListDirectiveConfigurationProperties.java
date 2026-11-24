@@ -76,8 +76,9 @@ public abstract class SourceListDirectiveConfigurationProperties implements Sour
 
     /**
      * Whether to write 'none' when no other source expression is enabled. With false and no other source,
-     * the directive is omitted and the browser falls back to default-src. Default: true, except for
-     * form-action, which defaults to false.
+     * a fetch directive is omitted and the browser falls back to default-src. base-uri, form-action and
+     * frame-ancestors have no such fallback, so they are written as 'none' whenever no other source is
+     * enabled; set enabled to false to omit them. Default: true.
      *
      * @param none whether no sources are allowed
      */

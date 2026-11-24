@@ -20,6 +20,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 import org.jspecify.annotations.Nullable;
@@ -393,8 +394,11 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      *
      * <p>Empty directive components, such as those introduced by consecutive semicolons, are ignored.
      * Whitespace between a directive name and its value is normalized, but a directive value is otherwise
-     * preserved. The parser deliberately does not reject unknown or malformed directives so callers can
-     * inspect the header as it was received.</p>
+     * preserved. The parser does not reject unknown directives, so callers can inspect the header as it
+     * was received. A component that cannot be represented as a {@link ContentSecurityPolicyDirective},
+     * because its name contains a character other than a letter, digit or hyphen, or its value contains
+     * a control character other than a tab, is skipped instead of failing the parse; user agents do not
+     * enforce such a component either.</p>
      *
      * <p>This parses a single policy. A header value that combines several policies with commas is
      * not split, and a user agent enforces each of those policies separately; do not use the result
@@ -412,6 +416,7 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
                 .map(String::trim)
                 .filter(StringUtils::isNotEmpty)
                 .map(ContentSecurityPolicy::directive)
+                .filter(Objects::nonNull)
                 .toList();
         return new ContentSecurityPolicy(directives);
     }
@@ -420,11 +425,16 @@ public record ContentSecurityPolicy(List<ContentSecurityPolicyDirective> directi
      * Parses a non-empty directive component into its name and optional value.
      *
      * @param component the trimmed component from the CSP header
-     * @return the parsed directive
+     * @return the parsed directive, or {@code null} if the component is not a valid directive
      */
-    private static ContentSecurityPolicyDirective directive(String component) {
+    private static @Nullable ContentSecurityPolicyDirective directive(String component) {
         String[] parts = component.split("\\s+", 2);
-        return new ContentSecurityPolicyDirective(parts[0], parts.length == 1 ? null : parts[1]);
+        String name = parts[0];
+        String value = parts.length == 1 ? null : parts[1];
+        if (!ContentSecurityPolicyDirective.isValidName(name) || !ContentSecurityPolicyDirective.isSafeValue(value)) {
+            return null;
+        }
+        return new ContentSecurityPolicyDirective(name, value);
     }
 
     /**

@@ -110,6 +110,13 @@ class ContentSecurityPolicyTest {
     }
 
     @Test
+    void skipsComponentsThatAreNotDirectivesInsteadOfFailing() {
+        ContentSecurityPolicy policy = ContentSecurityPolicy.of("default-src 'self'; scr!pt-src *; img-src 'self' \u0001x; font-src 'none'");
+
+        assertEquals("default-src 'self'; font-src 'none'", policy.toHeaderValue());
+    }
+
+    @Test
     void parsesEdgeCasesOfTheHeaderSyntax() {
         ContentSecurityPolicy csp = ContentSecurityPolicy.of(
             " ;default-src   'self'  ;; SCRIPT-SRC 'nonce-abc' https://cdn.example.com; script-src 'none'; upgrade-insecure-requests ; ");

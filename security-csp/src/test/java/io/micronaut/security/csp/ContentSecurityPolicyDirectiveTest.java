@@ -69,6 +69,13 @@ class ContentSecurityPolicyDirectiveTest {
     }
 
     @Test
+    void keywordsAreComparedWithoutCase() {
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.OBJECT_SRC, "'NONE'").isNone());
+        assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, " 'Self' ").isSelf());
+        assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "SELF").isSelf());
+    }
+
+    @Test
     void isSelfRecognizesOnlyTheQuotedKeyword() {
         assertTrue(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "'self'").isSelf());
         assertFalse(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.SCRIPT_SRC, "self").isSelf());
