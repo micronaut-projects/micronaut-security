@@ -16,7 +16,9 @@
 package io.micronaut.security.csrf.generator;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.authentication.Authentication;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * CSRF token Generation with HMAC.
@@ -39,4 +41,18 @@ public interface CsrfHmacTokenGenerator<T> extends CsrfTokenGenerator<T> {
      */
     @NonNull
     String hmac(@NonNull T request, @NonNull String base64EncodedRandomValue);
+
+    /**
+     * Generates an HMAC bound to the supplied authenticated user.
+     * The default implementation ignores the authentication and delegates to {@link #hmac(Object, String)}.
+     * @param request Request
+     * @param authentication The authenticated user's representation or {@code null} for an anonymous request
+     * @param base64EncodedRandomValue Cryptographic random value encoded as Base64
+     * @return HMAC hash
+     * @since 5.5.2
+     */
+    @NonNull
+    default String hmac(@NonNull T request, @Nullable Authentication authentication, @NonNull String base64EncodedRandomValue) {
+        return hmac(request, base64EncodedRandomValue);
+    }
 }

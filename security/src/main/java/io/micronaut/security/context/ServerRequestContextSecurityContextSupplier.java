@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.propagation.PropagatedContext;
 import io.micronaut.core.propagation.PropagatedContextElement;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.context.ServerHttpRequestContext;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import org.jspecify.annotations.NonNull;
@@ -92,6 +93,34 @@ public final class ServerRequestContextSecurityContextSupplier implements Securi
             .withToken(current.getToken())
             .withRejectionStatus(current.getRejectionStatus());
         return withSecurityContext(securityContext);
+    }
+
+    /**
+     * Creates a propagated context bound to the supplied request and authentication.
+     * <p>
+     * While the returned context is propagated, code resolving the {@link SecurityContext} through
+     * {@link SecurityContextHolder}, or the request through {@link ServerRequestContext}, sees the supplied
+     * request and authentication regardless of the context currently bound to the thread. Reactive security
+     * processing may resume on a thread bound to another request's context, for example when several requests
+     * wait for the same asynchronous token validation result.
+     *
+     * @param request The request being processed
+     * @param authentication The authentication of the request, or {@code null} for an anonymous request
+     * @return The propagated context
+     * @since 5.5.2
+     */
+    @Internal
+    @NonNull
+    public static PropagatedContext withRequestAndAuthentication(@NonNull HttpRequest<?> request,
+                                                                 @Nullable Authentication authentication) {
+        SecurityContext requestSecurityContext = new MutableAttributeHolderSecurityContext(request);
+        MutableSecurityContext securityContext = new MutableSecurityContext();
+        securityContext.withAuthentication(authentication)
+            .withToken(requestSecurityContext.getToken())
+            .withRejectionStatus(requestSecurityContext.getRejectionStatus());
+        return PropagatedContext.getOrEmpty()
+            .plus(new ServerHttpRequestContext(request))
+            .plus(new PropagatedSecurityContext(securityContext));
     }
 
     /**

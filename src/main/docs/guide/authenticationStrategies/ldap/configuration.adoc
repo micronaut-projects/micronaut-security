@@ -7,8 +7,68 @@ include::{includedir}configurationProperties/io.micronaut.security.ldap.configur
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]
 
-TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
+=== Connecting with TLS
+
+Without TLS, the manager credentials and every user's password are sent to the directory as clear-text LDAP simple binds. Use an `ldaps://` URL, or keep an `ldap://` URL and turn on TLS through the JNDI environment property `java.naming.security.protocol`. JNDI then opens a TLS connection to the port in the URL, or to 636 when the URL has no port; it does not negotiate StartTLS on the clear-text port.
+
+[configuration]
+----
+micronaut:
+  security:
+    ldap:
+      default:
+        context:
+          server: 'ldap://ldap.example.com:636'
+          manager-dn: 'cn=manager,dc=example,dc=com'
+          manager-password: '${LDAP_MANAGER_PASSWORD}'
+          properties:
+            java.naming.security.protocol: ssl
+----
+
+The entries under `micronaut.security.ldap.*.context.properties` are passed verbatim to api:security.ldap.context.ContextBuilder[], and from there to `javax.naming.directory.InitialDirContext`. Keys keep the exact spelling you write (for example `java.naming.ldap.derefAliases` or `com.sun.jndi.ldap.connect.timeout`) and are never split into nested maps or renamed. Scalar values such as numbers and booleans are passed as strings, which is what the LDAP provider of the JDK expects. Only entries which take a string can be set this way. An entry which takes an object, such as `com.sun.jndi.ldap.trace.ber` (an `OutputStream`) or `java.naming.ldap.control.connect` (an array of controls), cannot be expressed in configuration; set in configuration, it makes every bind fail with a `NamingException`. Supply such entries through a custom api:security.ldap.context.ContextSettings[] instead.
+
+WARNING: Be careful with `java.naming.referral`. By default JNDI ignores referrals returned by the directory. With `java.naming.referral: follow`, JNDI opens a connection to every server a referral names and reuses the whole environment for it, including the manager DN and password and, during a login, the DN and password the user submitted. Those credentials are therefore sent to whichever server the directory points to. TLS enabled through `java.naming.security.protocol: ssl` also applies to the referral connections, but TLS enabled only through an `ldaps://` server URL does not: a referral to an `ldap://` URL is then followed in clear text. `java.naming.referral: follow-scheme` does not prevent this downgrade: the LDAP provider of the JDK then follows only referrals whose URL starts with `ldap:`, whatever the scheme of the server URL, so `ldaps://` referrals are dropped while `ldap://` referrals are still followed. Only follow referrals when every server the directory can refer to is trusted, and enable TLS through `java.naming.security.protocol`, which is the only setting that keeps every referral connection encrypted.
+
+TIP: To trust the certificate presented by the directory, set the standard Java system properties to the values appropriate for your server.
 ```
 -Djavax.net.ssl.trustStore="<path to truststore file>"
 -Djavax.net.ssl.trustStorePassword="<passphrase for truststore>"
 ```
+
+=== Connection Pooling
+
+The manager context, which Micronaut binds with `manager-dn` and `manager-password` to search for the user, does not use the JNDI LDAP connection pool unless `micronaut.security.ldap.*.context.pooled` is `true`. Contexts bound with the credentials of the user who is logging in are never pooled. `pooled` is the only supported switch: the `com.sun.jndi.ldap.connect.pool` key is ignored if set through `micronaut.security.ldap.*.context.properties`.
+
+The JNDI LDAP connection pool (`com.sun.jndi.ldap.connect.pool`) is shared by the whole JVM and the JDK configures it with system properties only. Left unbounded, a single burst of anonymous requests with bogus credentials grows the pool to the width of the burst and the connections stay open afterwards. If that exhausts the connections the directory is willing to serve, user binds fail and valid users cannot log in until the application restarts. For that reason, when pooling is enabled, Micronaut bounds the pool with the values under `micronaut.security.ldap.*.context.pool`:
+
+[configuration]
+----
+micronaut:
+  security:
+    ldap:
+      default:
+        context:
+          server: 'ldap://localhost:389'
+          manager-dn: 'cn=admin,dc=example,dc=com'
+          manager-password: 'password'
+          pooled: true
+          pool:
+            max-size: 20
+            pref-size: 5
+            idle-timeout: 5m
+            connect-timeout: 10s
+----
+
+include::{includedir}configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration$PoolConfiguration.adoc[]
+
+When an LDAP configuration with `pooled: true` is created, which happens before the first pooled connection is opened, Micronaut applies these values as the `com.sun.jndi.ldap.connect.pool.maxsize`, `com.sun.jndi.ldap.connect.pool.prefsize` and `com.sun.jndi.ldap.connect.pool.timeout` system properties. A value set under `pool` always wins. For a value not set under `pool`, a system property that is already set, for example with `-Dcom.sun.jndi.ldap.connect.pool.maxsize=50` on the command line, is kept; otherwise the default applies: a maximum of 20 connections, a preferred size of 5 and an idle timeout of 5 minutes. Setting `max-size: 0` or `idle-timeout: 0` restores the unbounded JDK behaviour; Micronaut logs a warning in that case.
+
+Once the pool holds `max-size` connections, a login waits for a pooled connection to be released instead of opening a new one. The manager context is closed as soon as the user has been searched, so the wait is normally short, but the JDK would wait indefinitely if a hung directory operation held every pooled connection. `connect-timeout` (default 10 seconds) bounds that wait, and the time allowed to open a new pooled connection: it is applied as the `com.sun.jndi.ldap.connect.timeout` JNDI environment property of the pooled manager context, unless `micronaut.security.ldap.*.context.properties` already sets that key. A login that waits longer fails with `UNKNOWN` instead of hanging. `connect-timeout` must be positive, because the JDK waits forever for `0`; a negative `max-size`, `pref-size` or `idle-timeout` is rejected as well. Contexts bound with user credentials are not pooled and keep the JDK defaults.
+
+NOTE: The JDK pools only plain (unencrypted) connections unless the `com.sun.jndi.ldap.connect.pool.protocol` system property lists `ssl` as well, for example `-Dcom.sun.jndi.ldap.connect.pool.protocol="plain ssl"`, and it never pools connections opened through a custom `java.naming.ldap.factory.socket` whose class does not implement `java.util.Comparator`. With an `ldaps://` server URL, or `java.naming.security.protocol: ssl` in `micronaut.security.ldap.*.context.properties`, `pooled: true` therefore has no effect until that system property is set: the manager context is opened and closed per login as if pooling were off.
+
+WARNING: The JDK reads these system properties once, when the first pooled JNDI LDAP connection of the JVM is opened, and the pool is shared by every LDAP configuration. If another library opens a pooled connection before Micronaut Security creates its first LDAP configuration, or if several LDAP configurations enable pooling with different bounds, the values the JDK read first stay in effect. Set the system properties on the command line in that case.
+
+NOTE: Neither disabling pooling nor bounding the pool limits the number of concurrent login attempts that reach the directory. Limiting the rate of login attempts is a separate concern, for example with a rate limiter in front of the login endpoint.
+
+See the https://docs.oracle.com/en/java/javase/25/docs/api/java.naming/com/sun/jndi/ldap/package-summary.html[JNDI LDAP provider documentation] for the full list of pool system properties.

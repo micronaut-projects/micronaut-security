@@ -13,3 +13,8 @@ To proxy set the following configuration properties to `true`:
 | `micronaut.security.oauth2.clients.*.proxy-well-known-openid-configuration`
 |===
 
+The request sent to the authorization server is a fresh `GET` for the well-known path at the issuer's origin: headers (such as `Cookie` or `Authorization`), cookies and the query string of the incoming request are not forwarded.
+
+Only a successful (`2xx`) JSON response from the authorization server is relayed to the caller, and only its `Content-Type`, `Content-Length`, `Cache-Control`, `Expires`, `ETag` and `Last-Modified` headers are copied; every other header, notably `Set-Cookie`, is dropped and `X-Content-Type-Options: nosniff` is added. Any other response from the authorization server (an error status or a non-JSON body) is answered with `502 Bad Gateway` and an empty body.
+
+Anonymous access is granted only to the well-known paths which are actually proxied. A well-known path whose proxy property is `false` is secured as any other route of your application.

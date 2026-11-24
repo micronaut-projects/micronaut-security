@@ -11,6 +11,8 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.micronautSecurityCsrf)
     testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(mnReactor.micronaut.reactor)
     testImplementation(projects.testSuiteUtilsSecurity)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)

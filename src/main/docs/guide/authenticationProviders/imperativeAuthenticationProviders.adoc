@@ -3,3 +3,7 @@ The api:security.authentication.provider.ReactiveAuthenticationProvider[] interf
 snippet::io.micronaut.security.docs.blockingauthenticationprovider.CustomAuthenticationProvider[tags="clazz"]
 
 IMPORTANT: If your implementation is blocking (e.g., you fetch the user credentials from a database in a blocking way to check against the supplied authentication request), implement the api:security.authentication.provider.ExecutorAuthenticationProvider[] or api:security.authentication.provider.HttpRequestExecutorAuthenticationProvider[] interface. Those APIs specify the executor name, by default `TaskExecutors.BLOCKING`, where the code gets executed to avoid blocking the main reactive flow.
+
+You can override `getExecutorName()` to return the name of any `ExecutorService` bean, for example one you configured under `micronaut.executors`. The provider is always invoked on the executor it names, never on the server event loop. If no `ExecutorService` bean with that name exists, the provider runs on the `TaskExecutors.BLOCKING` executor instead and a warning is logged.
+
+Alternatively, annotate the `authenticate` method (or the provider class) with `@Blocking`. Such a provider is always invoked on the `TaskExecutors.BLOCKING` executor.
