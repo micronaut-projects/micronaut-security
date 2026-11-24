@@ -19,10 +19,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.csp.conf.reportto.ReportToConfiguration;
-import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.security.reporting.ReportingEndpoint;
+import io.micronaut.security.reporting.ReportingEndpointProvider;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +35,12 @@ import java.util.List;
  * <p>The module declares the group itself through {@link CspReportingEndpointProvider}, which
  * exists only when a {@link ContentSecurityPolicyReportHandler} bean exists and the report
  * controller is enabled, so this check runs whenever that provider is missing. Endpoints configured
- * through the Reporting API module are taken into account; a header written by the application
- * itself cannot be detected.</p>
+ * through the Reporting API module are taken into account. The endpoints of
+ * {@link ReportingEndpointProvider} beans depend on the request, and a header written by the
+ * application itself cannot be detected, so while such a provider exists the message is logged at
+ * INFO instead of WARN.</p>
  */
-@Requires(property = ReportToConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(condition = ReportToEnabledCondition.class)
 @Requires(missingBeans = CspReportingEndpointProvider.class)
 @Singleton
 @Internal
@@ -47,27 +48,38 @@ final class ReportToWithoutEndpointWarning implements ApplicationEventListener<S
     private static final Logger LOG = LoggerFactory.getLogger(ReportToWithoutEndpointWarning.class);
     private final ReportToConfiguration reportToConfiguration;
     private final List<ReportingEndpoint> reportingEndpoints;
+    private final List<ReportingEndpointProvider> reportingEndpointProviders;
 
     /**
      * Creates the startup check.
      *
      * @param reportToConfiguration the {@code report-to} configuration
      * @param reportingEndpoints the reporting endpoints configured through the Reporting API module
+     * @param reportingEndpointProviders the providers of request-specific reporting endpoints
      */
     ReportToWithoutEndpointWarning(ReportToConfiguration reportToConfiguration,
-                                   List<ReportingEndpoint> reportingEndpoints) {
+                                   List<ReportingEndpoint> reportingEndpoints,
+                                   List<ReportingEndpointProvider> reportingEndpointProviders) {
         this.reportToConfiguration = reportToConfiguration;
         this.reportingEndpoints = reportingEndpoints;
+        this.reportingEndpointProviders = reportingEndpointProviders;
     }
 
     @Override
     public void onApplicationEvent(StartupEvent event) {
         String group = reportToConfiguration.getGroup();
         boolean declared = reportingEndpoints.stream().anyMatch(endpoint -> group.equals(endpoint.getName()));
-        if (!declared) {
-            LOG.warn("CSP report-to is enabled with group '{}', but the module declares no reporting endpoint (it needs a ContentSecurityPolicyReportHandler bean "
-                + "and an enabled report controller) and no reporting endpoint named '{}' is configured; "
-                + "unless the application writes its own Reporting-Endpoints header, browsers will discard the reports.", group, group);
+        if (declared) {
+            return;
+        }
+        String message = "CSP report-to is enabled with group '{}', but the module declares no reporting endpoint (it needs a "
+            + "ContentSecurityPolicyReportHandler bean and an enabled report controller) and no reporting endpoint named '{}' is configured; "
+            + "unless a ReportingEndpointProvider bean declares it or the application writes its own Reporting-Endpoints header, "
+            + "browsers will discard the reports.";
+        if (reportingEndpointProviders.isEmpty()) {
+            LOG.warn(message, group, group);
+        } else {
+            LOG.info(message, group, group);
         }
     }
 }

@@ -26,6 +26,12 @@ public interface ContentSecurityPolicyControllerConfiguration extends Toggleable
     /**
      * Returns the route at which CSP reports are accepted.
      *
+     * <p>The controller is mounted at the value of the
+     * {@code micronaut.security.csp.report-to.controller.path} property, because Micronaut resolves
+     * a controller route from configuration, not from a bean, while the {@code Reporting-Endpoints}
+     * header advertises this value. A replacement bean must therefore return that value: returning
+     * another path advertises an endpoint where no controller listens.</p>
+     *
      * @return the path where the {@link ContentSecurityPolicyController} is enabled
      */
     String getPath();

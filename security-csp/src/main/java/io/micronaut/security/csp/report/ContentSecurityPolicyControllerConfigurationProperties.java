@@ -18,7 +18,6 @@ package io.micronaut.security.csp.report;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -29,7 +28,7 @@ import jakarta.validation.constraints.Pattern;
  * @author Sergio del Amo
  * @since 5.6.0
  */
-@Requires(property = ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(condition = ContentSecurityPolicyControllerEnabledCondition.class)
 @ConfigurationProperties(ContentSecurityPolicyControllerConfigurationProperties.PREFIX)
 @Internal
 final class ContentSecurityPolicyControllerConfigurationProperties implements ContentSecurityPolicyControllerConfiguration {
@@ -49,9 +48,10 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
     public static final String DEFAULT_PATH = "/csp/report";
 
     /**
-     * The grammar of the report path: an absolute path without whitespace, quotes or backslashes.
+     * The grammar of the report path: an absolute path that starts with a single slash, so that it
+     * cannot name another host, without whitespace, quotes or backslashes.
      */
-    static final String LOCAL_PATH_REGEX = "/[^\\s\"\\\\]*";
+    static final String LOCAL_PATH_REGEX = "/(?!/)[^\\s\"\\\\]*";
 
     private boolean enabled = DEFAULT_ENABLED;
     @NotBlank
@@ -88,8 +88,6 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
      * @param path the controller path; defaults to {@value #DEFAULT_PATH}
      */
     public void setPath(String path) {
-        if (StringUtils.isNotEmpty(path)) {
-            this.path = path;
-        }
+        this.path = path;
     }
 }

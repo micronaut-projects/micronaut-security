@@ -27,6 +27,8 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.json.JsonMapper;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -240,7 +242,35 @@ class ContentSecurityPolicyReportBodyReaderTest {
         CodecException exception = assertThrows(CodecException.class, () -> read("not json"));
 
         assertEquals("The body is not a valid Reporting API batch", exception.getMessage(), "the decoder's message names internal types");
-        assertNotNull(exception.getCause());
+        assertNull(exception.getCause(), "the HTTP server answers with the message of the cause");
+    }
+
+    @Test
+    void rejectsAReportBodyWhoseDecoderThrowsAnUncheckedException() {
+        JsonMapper delegate = context.getBean(JsonMapper.class);
+        JsonMapper failingTreeDecoder = (JsonMapper) Proxy.newProxyInstance(JsonMapper.class.getClassLoader(), new Class<?>[]{JsonMapper.class},
+            (proxy, method, args) -> {
+                if (method.getName().equals("readValueFromTree")) {
+                    throw new IllegalStateException("Cannot deserialize value of type java.lang.Long");
+                }
+                try {
+                    return method.invoke(delegate, args);
+                } catch (InvocationTargetException e) {
+                    throw e.getCause();
+                }
+            });
+        ContentSecurityPolicyReportBodyReader uncheckedReader = new ContentSecurityPolicyReportBodyReader(failingTreeDecoder, () -> 0L);
+
+        List<ILoggingEvent> events = captureAt(Level.WARN, () -> {
+            CodecException exception = assertThrows(CodecException.class,
+                () -> read(uncheckedReader, batch(envelope(VIOLATION, violationBody(Map.of())))));
+
+            assertEquals("The body is not a valid Reporting API batch", exception.getMessage());
+            assertNull(exception.getCause());
+        });
+
+        assertEquals(1, events.size(), "the rejection is logged like a checked decoding failure");
+        assertMentions(events.get(0), "a report body could not be decoded");
     }
 
     @Test

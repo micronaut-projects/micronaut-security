@@ -17,7 +17,6 @@ package io.micronaut.security.csp.report;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
@@ -26,7 +25,6 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.scheduling.TaskExecutors;
-import io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -48,7 +46,7 @@ import java.util.List;
 @Controller("${" + ContentSecurityPolicyControllerConfigurationProperties.PREFIX + ".path:"
     + ContentSecurityPolicyControllerConfigurationProperties.DEFAULT_PATH + "}")
 @Requires(beans = ContentSecurityPolicyReportHandler.class)
-@Requires(property = ReportToConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(condition = ReportToEnabledCondition.class)
 @Requires(beans = ContentSecurityPolicyControllerConfiguration.class)
 @Internal
 class ContentSecurityPolicyController {

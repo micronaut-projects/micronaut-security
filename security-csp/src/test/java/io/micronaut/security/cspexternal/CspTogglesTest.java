@@ -37,6 +37,7 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -158,6 +159,77 @@ class CspTogglesTest {
             assertEquals(1, context.getBeansOfType(ReportingEndpointProvider.class).size());
             assertTrue(context.containsBean(reportingEndpointsFilter));
         }
+    }
+
+    @ParameterizedTest(name = "controller.enabled={0}")
+    @ValueSource(strings = {"false", "FALSE", "off", "No"})
+    void everySpellingOfFalseUnregistersTheReportController(String value) {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.report-to.enabled", true,
+                "micronaut.security.csp.report-to.controller.enabled", value));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+
+            HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+                () -> client.exchange(reportRequest()));
+
+            assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+            assertNull(exception.getResponse().header(ReportingEndpoints.HEADER_NAME));
+        }
+    }
+
+    @ParameterizedTest(name = "report-to.enabled={0}")
+    @ValueSource(strings = {"true", "TRUE", "yes", "On"})
+    void everySpellingOfTrueRegistersTheEndpointThatTheReportToDirectiveNames(String value) {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.report-to.enabled", value));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+
+            HttpResponse<String> page = client.exchange(HttpRequest.GET("/csp-toggles"), String.class);
+            assertEquals("report-to csp", ContentSecurityPolicy.of(page).reportTo().toHeaderValue());
+            assertEquals("csp=\"/csp/report\"", page.header(ReportingEndpoints.HEADER_NAME));
+            assertEquals(HttpStatus.NO_CONTENT, client.exchange(reportRequest()).getStatus());
+        }
+    }
+
+    @Test
+    void aReportingEndpointConfiguredWithTheGroupNameReceivesTheReports() {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.report-to.enabled", true,
+                "micronaut.security.reporting-endpoints.csp.url", "https://reports.example.com/csp"));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<String> page = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-toggles"), String.class);
+
+            assertEquals("csp=\"https://reports.example.com/csp\"", page.header(ReportingEndpoints.HEADER_NAME),
+                "the endpoint is declared once, by the configuration");
+        }
+    }
+
+    @ParameterizedTest(name = "controller.path={0}")
+    @ValueSource(strings = {"", "csp/report", "//evil.example/csp"})
+    void anInvalidReportControllerPathFailsStartup(String path) {
+        assertThrows(RuntimeException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", SPEC_NAME,
+            "micronaut.security.csp.report-to.enabled", true,
+            "micronaut.security.csp.report-to.controller.path", path)).close());
+    }
+
+    @Test
+    void anInvalidReportControllerPathFailsStartupNextToAConfiguredReportingEndpoint() {
+        assertThrows(RuntimeException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", SPEC_NAME,
+            "micronaut.security.csp.report-to.enabled", true,
+            "micronaut.security.csp.report-to.controller.path", "csp/report",
+            "micronaut.security.reporting-endpoints.other.url", "https://reports.example.com/other")).close());
+    }
+
+    private static HttpRequest<byte[]> reportRequest() {
+        return HttpRequest.POST("/csp/report", "[]".getBytes(StandardCharsets.UTF_8))
+            .contentType(MediaType.of("application/reports+json"));
     }
 
     @Requires(property = "spec.name", value = SPEC_NAME)

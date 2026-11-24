@@ -327,6 +327,28 @@ class ContentSecurityPolicyControllerTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {
+        "[{\"age\": \"x\"}]",
+        "[{\"type\": \"csp-violation\", \"age\": 1, \"url\": \"https://example.com\", \"user_agent\": \"UA\", \"body\": {\"statusCode\": \"x\"}}]"
+    })
+    void doesNotRevealTheDecoderMessageInTheResponse(String json, @Client("/") HttpClient httpClient,
+                                                     ReportListener reportListener) {
+        reportListener.reports.clear();
+        BlockingHttpClient client = httpClient.toBlocking();
+
+        HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+            () -> client.exchange(reportRequest(json)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        String body = exception.getResponse().getBody(String.class).orElse("");
+        assertFalse(body.contains("SerializedContentSecurityPolicyReport"), body);
+        assertFalse(body.contains("java.lang"), body);
+        assertFalse(body.contains("ContentSecurityPolicyViolationReportBody"), body);
+        assertFalse(body.contains("Cannot deserialize"), body);
+        assertEquals(0, reportListener.reports.size());
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {MediaType.APPLICATION_JSON, "application/csp-report", MediaType.TEXT_PLAIN})
     void requiresReportingApiMediaType(String contentType, @Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();

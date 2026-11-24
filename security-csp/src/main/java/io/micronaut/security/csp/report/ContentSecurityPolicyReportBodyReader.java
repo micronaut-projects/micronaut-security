@@ -75,7 +75,9 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
     private static final long MAX_POSITION = 4_294_967_295L;
     /**
      * The message of a body that cannot be decoded. It does not repeat the decoder's message, which
-     * names internal types, in the response of this anonymous endpoint.
+     * names internal types, in the response of this anonymous endpoint. The decoder's exception is
+     * therefore not attached as the cause either: the HTTP server builds the 400 response from the
+     * cause of a {@link CodecException}.
      */
     private static final String INVALID_BODY = "The body is not a valid Reporting API batch";
     private static final long WARNING_INTERVAL_NANOS = TimeUnit.MINUTES.toNanos(1);
@@ -113,10 +115,10 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             serializedReports = jsonMapper.readValue(new BoundedInputStream(inputStream), Argument.listOf(SerializedContentSecurityPolicyReport.class));
         } catch (IOException | RuntimeException e) {
             if (isBodyTooLarge(e)) {
-                throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE, e));
+                throw rejected(null, BODY_TOO_LARGE, new CodecException(BODY_TOO_LARGE));
             }
             throw rejected(null, "the body is not a JSON array of Reporting API reports",
-                new CodecException(INVALID_BODY, e));
+                new CodecException(INVALID_BODY));
         }
         if (serializedReports == null) {
             return null;
@@ -135,9 +137,10 @@ final class ContentSecurityPolicyReportBodyReader implements MessageBodyReader<L
             return reports;
         } catch (CodecException e) {
             throw rejected(serializedReports.size(), e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
+            // Jackson 3, used by jackson-databind, throws unchecked exceptions.
             throw rejected(serializedReports.size(), "a report body could not be decoded",
-                new CodecException(INVALID_BODY, e));
+                new CodecException(INVALID_BODY));
         }
     }
 
