@@ -20,6 +20,7 @@ import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.rules.SecurityRule;
 import java.util.Map;
@@ -44,11 +45,16 @@ public interface OauthController {
     /**
      * Performs an authorization redirect to an OAuth 2.0 provider.
      *
+     * <p>The method is annotated with {@link DenyCrossSiteNavigation}, so that, when Micronaut
+     * Security Fetch Metadata is installed, another site cannot send the browser to the login
+     * route. The annotation has no effect without that module.</p>
+     *
      * @param request The current request
      * @return A redirecting http response
      */
     @Executable
     @SingleResult
+    @DenyCrossSiteNavigation
     Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request);
 
     /**

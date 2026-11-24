@@ -12,6 +12,8 @@ import io.micronaut.http.cookie.Cookie
 import io.micronaut.http.filter.HttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 //end::imports[]
 @Requires(property = "oauth.csrf")
@@ -23,11 +25,15 @@ class OAuthCsrfFilter : HttpServerFilter {
         val requestParameter = request.parameters["_csrf"]
         val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -> obj.value }.orElse(null)
 
-        return if (cookieValue == null || cookieValue != requestParameter) {
+        return if (cookieValue == null || requestParameter == null || !matches(cookieValue, requestParameter)) {
             Publishers.just(HttpResponse.status<Any>(HttpStatus.FORBIDDEN))
         } else {
             chain.proceed(request)
         }
     }
+
+    // constant-time comparison, so that response timing does not reveal the token
+    private fun matches(expected: String, actual: String): Boolean =
+        MessageDigest.isEqual(expected.toByteArray(StandardCharsets.UTF_8), actual.toByteArray(StandardCharsets.UTF_8))
 }
 //end::class[]

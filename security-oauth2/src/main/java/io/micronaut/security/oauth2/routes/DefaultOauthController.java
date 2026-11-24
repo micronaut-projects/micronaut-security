@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import org.jspecify.annotations.NonNull;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -95,7 +96,22 @@ public class DefaultOauthController implements OauthController {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received login request for provider [{}]", oauthClient.getName());
         }
-        return oauthClient.authorizationRedirect(request);
+        return Flux.from(oauthClient.authorizationRedirect(request))
+                .map(DefaultOauthController::noStore);
+    }
+
+    /**
+     * The login response carries per-request values, such as the state, and must not be served
+     * from a cache to another request.
+     *
+     * @param response The login response
+     * @return The response, with {@code Cache-Control: no-store} unless it already has a {@code Cache-Control} header
+     */
+    private static MutableHttpResponse<?> noStore(MutableHttpResponse<?> response) {
+        if (!response.getHeaders().contains(HttpHeaders.CACHE_CONTROL)) {
+            response.header(HttpHeaders.CACHE_CONTROL, "no-store");
+        }
+        return response;
     }
 
     @Override

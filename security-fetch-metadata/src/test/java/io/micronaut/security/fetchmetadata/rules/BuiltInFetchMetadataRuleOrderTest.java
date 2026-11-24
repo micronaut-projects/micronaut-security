@@ -59,7 +59,7 @@ class BuiltInFetchMetadataRuleOrderTest {
         assertEquals(200, new SameOriginFetchMetadataRule().getOrder());
         assertEquals(300, new SameSiteFetchMetadataRule().getOrder());
         assertEquals(400, new BrowserInitiatedRequestFetchMetadataRule().getOrder());
-        assertEquals(500, new SimpleTopLevelNavigationAndIframingFetchMetadataRule().getOrder());
+        assertEquals(500, new SimpleTopLevelNavigationAndIframingFetchMetadataRule(new FetchMetadataRulesConfigurationProperties()).getOrder());
         assertEquals(600, new CrossOriginFetchMetadataRule().getOrder());
     }
 }

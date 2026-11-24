@@ -20,7 +20,9 @@
  * <p>Fetch Metadata is a request-isolation signal and does not replace authentication,
  * authorization, or CSRF protection. Routes annotated with {@code @CrossOrigin} are exempted
  * only when their CORS configuration accepts the request origin and HTTP method, and allows
- * credentials when the request carries cookies.</p>
+ * credentials when the request carries cookies. Routes annotated with
+ * {@link io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation DenyCrossSiteNavigation}
+ * are not exempted from the policy for cross-site navigations.</p>
  *
  * @since 5.6.0
  */

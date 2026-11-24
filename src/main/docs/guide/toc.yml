@@ -118,6 +118,7 @@ fetchMetadata:
   fetchMetadataResourceIsolationPolicy: Resource Isolation Policy
   fetchMetadataConfiguration: Configuration
   fetchMetadataCors: Cross-Origin Routes
+  fetchMetadataSensitiveNavigationRoutes: Routes Closed to Cross-Site Navigation
   fetchMetadataCustomRules: Custom Rules
 reporting:
   title: Reporting API

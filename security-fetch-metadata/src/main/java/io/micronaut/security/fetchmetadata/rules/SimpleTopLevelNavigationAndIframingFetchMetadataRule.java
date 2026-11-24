@@ -23,8 +23,10 @@ import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.Mode;
 import io.micronaut.http.SecFetch;
+import io.micronaut.security.fetchmetadata.DenyCrossSiteNavigation;
 import io.micronaut.security.fetchmetadata.FetchMetadataRuleResult;
 import io.micronaut.security.fetchmetadata.HttpRequestFetchMetadataRule;
+import io.micronaut.web.router.RouteAttributes;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -33,11 +35,25 @@ import static io.micronaut.security.fetchmetadata.rules.FetchMetadataRulesConfig
 /**
  * Allows simple {@code GET} navigations, including document and frame navigations, while
  * excluding requests whose destination is {@code object} or {@code embed} or is not recognized.
+ *
+ * <p>Unless {@link FetchMetadataRulesConfiguration#isDenyAnnotatedCrossSiteNavigation()} is
+ * disabled, navigations to a route annotated with {@link DenyCrossSiteNavigation} are not
+ * allowed by this rule, so that they are rejected unless another rule allows them.</p>
  */
 @Requires(property = PROPERTY_ALLOW_SIMPLE_NAVIGATION, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Internal
 @Singleton
 final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements HttpRequestFetchMetadataRule {
+
+    private final boolean denyAnnotatedCrossSiteNavigation;
+
+    /**
+     * @param configuration the built-in rules configuration
+     */
+    SimpleTopLevelNavigationAndIframingFetchMetadataRule(FetchMetadataRulesConfiguration configuration) {
+        this.denyAnnotatedCrossSiteNavigation = configuration.isDenyAnnotatedCrossSiteNavigation();
+    }
+
     @Override
     public int getOrder() {
         return FetchMetadataRuleOrder.SIMPLE_NAVIGATION;
@@ -53,10 +69,17 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
             request.getMethod() == HttpMethod.GET &&
             destination != null &&
             destination != Destination.OBJECT &&
-            destination != Destination.EMBED
+            destination != Destination.EMBED &&
+            !(denyAnnotatedCrossSiteNavigation && targetsRouteDenyingCrossSiteNavigation(request))
         ) {
             return FetchMetadataRuleResult.ALLOWED;
         }
         return FetchMetadataRuleResult.UNKNOWN;
+    }
+
+    private static boolean targetsRouteDenyingCrossSiteNavigation(HttpRequest<?> request) {
+        return RouteAttributes.getRouteMatch(request)
+            .filter(routeMatch -> routeMatch.getAnnotationMetadata().hasAnnotation(DenyCrossSiteNavigation.class))
+            .isPresent();
     }
 }

@@ -36,6 +36,8 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     public static final boolean DEFAULT_ALLOW_SIMPLE_NAVIGATION = true;
     /** Default permitted cross-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_CROSS_ORIGIN = true;
+    /** Default behavior for navigations to routes annotated with {@code DenyCrossSiteNavigation}. */
+    public static final boolean DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION = true;
 
     private boolean allowNoFetchMetadata = DEFAULT_ALLOW_NO_FETCH_METADATA;
     private boolean allowBrowserInitiatedRequests = DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS;
@@ -43,6 +45,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     private boolean allowSameSite = DEFAULT_ALLOW_SAME_SITE;
     private boolean allowSimpleNavigation = DEFAULT_ALLOW_SIMPLE_NAVIGATION;
     private boolean allowCrossOrigin = DEFAULT_ALLOW_CROSS_ORIGIN;
+    private boolean denyAnnotatedCrossSiteNavigation = DEFAULT_DENY_ANNOTATED_CROSS_SITE_NAVIGATION;
 
     @Override
     public boolean isAllowCrossOrigin() {
@@ -125,5 +128,19 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
      */
     public void setAllowSimpleNavigation(boolean allowSimpleNavigation) {
         this.allowSimpleNavigation = allowSimpleNavigation;
+    }
+
+    @Override
+    public boolean isDenyAnnotatedCrossSiteNavigation() {
+        return denyAnnotatedCrossSiteNavigation;
+    }
+
+    /**
+     * Whether the simple navigation rule refuses GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. A cross-site navigation to such a route is then rejected unless another rule allows it. Set it to false to allow cross-site navigations to every route. Default value: true
+     *
+     * @param denyAnnotatedCrossSiteNavigation whether navigations to annotated routes are refused by the simple navigation rule
+     */
+    public void setDenyAnnotatedCrossSiteNavigation(boolean denyAnnotatedCrossSiteNavigation) {
+        this.denyAnnotatedCrossSiteNavigation = denyAnnotatedCrossSiteNavigation;
     }
 }

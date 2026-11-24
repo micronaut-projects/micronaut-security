@@ -1,0 +1,55 @@
+The simple navigation rule allows `GET` navigations from any site, so that links from other sites keep working. Some `GET` routes, however, have effects that another site must not trigger, such as a route that starts a login. Annotate such a route with api:security.fetchmetadata.DenyCrossSiteNavigation[]:
+
+[source,java]
+----
+include::{testssecurityfetchmetadata}/FetchMetadataTestController.java[tag=deny-cross-site-navigation,indent=0]
+----
+
+The simple navigation rule then does not allow navigations to the route, and the request needs another rule to allow it:
+
+[cols="2,1"]
+|===
+|Request to an annotated route |Result
+
+|Navigation from another site (`Sec-Fetch-Site: cross-site`), for example a link, a form with `method="get"`, a redirect, or a script on another site that sends the browser to the route
+|`403 Forbidden`
+
+|Navigation from another origin of the same site (`Sec-Fetch-Site: same-site`)
+|`403 Forbidden`, unless `allow-same-site` is enabled
+
+|Navigation from the application itself (`Sec-Fetch-Site: same-origin`)
+|Allowed
+
+|Navigation the user starts from the browser UI, such as the address bar or a bookmark (`Sec-Fetch-Site: none`)
+|Allowed
+
+|Request without `Sec-Fetch-Site`
+|Allowed, unless `allow-no-fetch-metadata` is disabled
+|===
+
+A route annotated with `@CrossOrigin` as well still accepts the CORS requests its configuration allows (see <<fetchMetadataCors,Cross-Origin Routes>>). Browsers do not send an `Origin` header with `GET` navigations, so the `@CrossOrigin` routes rule does not allow a cross-site navigation to the route.
+
+== OAuth 2.0 login
+
+The OAuth 2.0 login route of <<oauth,Micronaut Security OAuth 2.0>> (`/oauth/login/{provider}`, the default provider's `/oauth/login`, or wherever `micronaut.security.oauth2.login-uri` places it) is annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[]. Without this, another site could send the browser of a user who has a session at the identity provider, and has already authorized the application, to the login route, and the user would be logged in to the application without intending to (forced login). With the Fetch Metadata module installed, such a navigation is rejected before the authorization redirect is built, so no state, PKCE, or nonce cookie is issued. The OAuth 2.0 callback route is not annotated: the identity provider's redirect back to the application is a cross-site navigation and keeps working.
+
+The annotation is inherited: if the application provides its own api:security.oauth2.routes.OauthController[] implementation, its `login` method is annotated too, provided the Fetch Metadata module is on the compile classpath.
+
+Start the login from a link or a form on a page of the application itself, which the browser reports as a same-origin navigation.
+
+CAUTION: If `micronaut.security.redirect.unauthorized.url` points at the OAuth 2.0 login route, a user who follows a link from another site to a secured page is redirected to the login route, and the browser reports the redirected navigation as cross-site. The login route then responds with `403 Forbidden`. Point `micronaut.security.redirect.unauthorized.url` at a page of the application that links to the login route instead, or switch the protection off.
+
+As explained in the <<fetchMetadata,Fetch Metadata>> introduction, browsers send the Fetch Metadata headers only to potentially trustworthy origins, such as HTTPS origins and `localhost`. Served over plain HTTP, the application receives no `Sec-Fetch-Site` header, and the login route is not protected.
+
+== Switching the protection off
+
+To allow cross-site navigations to every route, including the OAuth 2.0 login route, disable `deny-annotated-cross-site-navigation`:
+
+[configuration]
+----
+micronaut:
+  security:
+    fetch-metadata:
+      rules:
+        deny-annotated-cross-site-navigation: false
+----

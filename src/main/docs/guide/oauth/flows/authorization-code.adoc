@@ -12,15 +12,20 @@ TIP: It is possible to designate a default provider. The value of the configurat
 
 #### OAuth Login and CSRF
 
-In order to prevent forced login attacks, you must implement CSRF protection on the oauth login endpoints. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.
+Any site can link to, or redirect the browser to, the login endpoint. If the user has a session at the identity provider and has already authorized the application, the provider redirects back at once and the user is logged in to the application without intending to (forced login). The `state` parameter checked by the callback does not prevent this, because the browser that started the flow is the one that completes it.
+
+The recommended protection is the <<fetchMetadata,Fetch Metadata>> module. The login endpoints are annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[], so, with the module installed, a navigation to them that another site started is rejected with `403 Forbidden`, while a login started from the application itself keeps working. See <<fetchMetadataSensitiveNavigationRoutes,Routes Closed to Cross-Site Navigation>> for the details and the caveats.
+
+dependency:micronaut-security-fetch-metadata[groupId=io.micronaut.security]
+
+The login response is marked `Cache-Control: no-store`, unless the api:security.oauth2.client.OauthClient[] sets a `Cache-Control` header itself.
+
+If you do not use the Fetch Metadata module, you must implement CSRF protection on the OAuth login endpoints yourself. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.
 
 1. When rendering the login form where users can choose to login via OAuth, the server should store a value either in state on the server specific to that user (session), or state on the client (http-only cookies, etc), or some other mechanism.
 2. That value gets sent with the response and subsequently included in the request to login with OAuth. The value could be sent as a query parameter, or sent as a cookie, etc.
-3. A server filter is written to compare the value in the user specific state and the value sent in the request. If they do not match, the request is rejected.
+3. A server filter is written to compare the value in the user specific state and the value sent in the request. If they do not match, the request is rejected. Compare the values in constant time, so that the response time does not reveal the expected value.
 
 Here is an example:
 
 snippet::io.micronaut.security.oauth2.docs.endpoint.OAuthCsrfFilter[tags="imports,class"]
-
-
-
