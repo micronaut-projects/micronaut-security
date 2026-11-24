@@ -10,4 +10,4 @@ micronaut:
         strict-dynamic: true
 ----
 
-The generated directive contains both the request nonce and `'strict-dynamic'`. A nonce or hash provides the trust anchor required for `'strict-dynamic'` to be useful.
+The generated directive contains both the request nonce and `'strict-dynamic'`. CSP3 browsers then ignore `'self'`, host and scheme sources, so every `script` element must carry the nonce or match a hash; adding `strict-dynamic` to a policy that allows scripts with `self` blocks every script without a nonce. Without a nonce or hash, `'strict-dynamic'` blocks every script, and the module logs a warning at startup.

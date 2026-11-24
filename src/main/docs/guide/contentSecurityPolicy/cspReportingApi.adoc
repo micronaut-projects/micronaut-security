@@ -2,7 +2,7 @@ The CSP module integrates with the <<reporting,Reporting API module>> and can re
 
 . Enable the `report-to` directive.
 . Provide a api:security.csp.report.ContentSecurityPolicyReportHandler[] bean.
-. Allow anonymous `POST` requests to the report endpoint, `/csp/report` by default. Otherwise the security rules reject the browser's reports with HTTP 401, and nothing is logged by this module.
+. When Micronaut Security is active, allow anonymous `POST` requests to the report endpoint, `/csp/report` by default. Without this rule, every report gets HTTP 401 and never reaches your handler, and this module logs nothing.
 
 [configuration]
 ----
@@ -11,7 +11,14 @@ micronaut:
     csp:
       report-to:
         enabled: true
+    intercept-url-map:
+      - pattern: /csp/report
+        http-method: POST
+        access:
+          - isAnonymous()
 ----
+
+Reporting endpoints should generally be reachable without authentication because cross-origin report deliveries do not contain credentials. Adjust the pattern if you change `micronaut.security.csp.report-to.controller.path`.
 
 A reporting group is a name that connects a reporting policy to an endpoint declared by the `Reporting-Endpoints` response header. It is not a URL. The group defaults to `csp`, so the configuration above produces `report-to csp`; the same `csp` name identifies the endpoint in `Reporting-Endpoints`. Change it with `micronaut.security.csp.report-to.group`.
 
@@ -38,20 +45,7 @@ The Reporting API envelope contains `age`, `type`, the originating `url`, `user_
 * `csp-violation` becomes api:security.csp.report.ContentSecurityPolicyViolationReportBody[].
 * `csp-hash` becomes api:security.csp.report.ContentSecurityPolicyHashReportBody[].
 
-The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. When an endpoint configured through the Reporting API module, under `micronaut.security.reporting-endpoints`, already uses the group name, the module does not declare its own endpoint: that endpoint receives the reports, and the module logs a warning at startup when its URL is not the report controller's. The `report-uri` directive, configured with `micronaut.security.csp.report-uri.enabled` and `micronaut.security.csp.report-uri.values`, uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint.
-
-Reporting endpoints should generally be reachable without authentication because cross-origin report deliveries do not contain credentials. When Micronaut Security is active, permit anonymous POST requests to the endpoint. Adjust the pattern if you changed `micronaut.security.csp.report-to.controller.path`:
-
-[configuration]
-----
-micronaut:
-  security:
-    intercept-url-map:
-      - pattern: /csp/report
-        http-method: POST
-        access:
-          - isAnonymous()
-----
+The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. When an endpoint configured through the Reporting API module, under `micronaut.security.reporting-endpoints`, already uses the group name, the module does not declare its own endpoint: that endpoint receives the reports, and the module logs a warning at startup when its URL is not the report controller's. The `report-uri` directive, configured with `micronaut.security.csp.report-uri.enabled` and `micronaut.security.csp.report-uri.values`, uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint. Do not point `report-uri` at `/csp/report`: browsers send `report-uri` reports as `application/csp-report`, which the endpoint rejects with HTTP 415. The module logs a warning at startup when it does.
 
 With the <<fetchMetadata,Fetch Metadata module>> on the classpath, the browser's report deliveries to the default endpoint are same-origin requests, which the module's default rules allow. If pages served from another origin send their reports to this application, for example through an application-managed `Reporting-Endpoints` header, those deliveries are cross-site `POST` requests with `Sec-Fetch-Dest: report`, and the Fetch Metadata rules reject them unless you allow the report path.
 

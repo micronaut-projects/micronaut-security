@@ -23,4 +23,6 @@ The configuration generates `style-src 'nonce-<value>' 'self'`. When nonces are 
 
 See <<cspNonceGeneration,script-src Nonces>> for how the nonce reaches templates and for the `Cache-Control` header written to responses that carry one.
 
+Do not add `unsafe-inline` to let the remaining inline styles through: browsers that support nonces ignore `'unsafe-inline'` when the directive also has a nonce or hash, so those styles stay blocked. The module logs this combination at INFO at startup.
+
 Nonces do not cover inline `style` attributes. To allow specific ones, add their hashes to `micronaut.security.csp.style-src.values`, for example `"'sha256-<base64-value>'"`, and enable `micronaut.security.csp.style-src.unsafe-hashes`.

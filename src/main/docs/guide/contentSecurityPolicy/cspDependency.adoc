@@ -2,4 +2,4 @@ Add the dependency:
 
 dependency:micronaut-security-csp[groupId=io.micronaut.security]
 
-The module writes the header through the `ResponseHeaderPopulator` API of the Micronaut HTTP server.
+Adding the dependency enables an enforcing, deny-by-default policy on every response; see <<cspDefaults,Defaults>>. Receiving <<cspReportingApi,reports>> also needs a JSON runtime, such as `micronaut-serde-jackson`.

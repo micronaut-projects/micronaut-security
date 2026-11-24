@@ -25,7 +25,7 @@ The Micronaut Views settings, as of Micronaut Views 6.3.1, map to this module as
 |No equivalent: nonces always come from a `SecureRandom`. Replace the api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[] bean to generate them differently
 |===
 
-For example, the Micronaut Views policy `default-src 'self'; img-src 'self' data:` becomes:
+Unlike a hand-written policy string, the module writes its restrictive defaults for the directives you do not configure, and a directive it writes does not fall back to `default-src`. To keep the behavior of a Micronaut Views policy such as `default-src 'self'; img-src 'self' data:`, disable the fetch directives that should fall back to `default-src`:
 
 [configuration]
 ----
@@ -40,15 +40,33 @@ micronaut:
       img-src:
         self: true
         data: true
+      script-src:
+        enabled: false
+      style-src:
+        enabled: false
+      connect-src:
+        enabled: false
+      font-src:
+        enabled: false
+      frame-src:
+        enabled: false
+      media-src:
+        enabled: false
+      manifest-src:
+        enabled: false
+      worker-src:
+        enabled: false
+      object-src:
+        enabled: false
 ----
 
-Unlike a hand-written policy string, the module also writes its restrictive defaults for the directives you do not configure, so the configuration above generates:
+The configuration generates the Micronaut Views policy plus the module's protections that `default-src` does not cover:
 
 [source,text]
 ----
-base-uri 'none'; default-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; require-trusted-types-for 'script'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data:; manifest-src 'none'; media-src 'none'; form-action 'self'; worker-src 'none'; style-src 'none'; script-src 'none'
+base-uri 'none'; default-src 'self'; require-trusted-types-for 'script'; frame-ancestors 'none'; img-src 'self' data:; form-action 'self'
 ----
 
-A directive written by the module does not fall back to `default-src`. Allow the sources each directive needs, for example `script-src.self: true`, or set `<directive>.enabled: false` on a fetch directive, such as `script-src` or `img-src`, so that the browser falls back to `default-src` for it. Do not disable `base-uri`, `form-action` or `frame-ancestors` for that purpose: they have no `default-src` fallback, so disabling one lifts its restriction entirely.
+A stricter alternative is to keep those directives enabled and allow only the sources each one needs. Allow the sources each directive needs, for example `script-src.self: true`, or set `<directive>.enabled: false` on a fetch directive, such as `script-src` or `img-src`, so that the browser falls back to `default-src` for it. Do not disable `base-uri`, `form-action` or `frame-ancestors` for that purpose: they have no `default-src` fallback, so disabling one lifts its restriction entirely.
 
-Micronaut Views 6.3.1 does not copy the nonce into the view model. Register a view model processor as shown in <<cspNonceGeneration,script-src Nonces>> so that templates can use `${cspNonce}`.
+As of Micronaut Views 6.3.1, Micronaut Views does not copy the nonce into the view model. Register a view model processor as shown in <<cspNonceGeneration,script-src Nonces>> so that templates can use `${cspNonce}`.

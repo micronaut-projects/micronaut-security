@@ -11,7 +11,7 @@ micronaut:
 
 Once enabled, a fresh, unpredictable https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#nonces[nonce] is generated for every HTTP request by api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[]. The default implementation base64-encodes 144 bits from `SecureRandom`. To use a different nonce format or source of randomness, provide a bean that implements api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[].
 
-The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. Micronaut Views 6.3.1 does not do it, so register a `ViewModelProcessor` such as:
+The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. Micronaut Views does not do it (see <<cspMigratingFromViews,Migrating from Micronaut Views>>), so register a `ViewModelProcessor` such as:
 
 snippet::io.micronaut.security.docs.cspnonce.CspNonceViewModelProcessor[tags="clazz"]
 
