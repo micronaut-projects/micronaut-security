@@ -64,9 +64,11 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     /**
      * Reports whether the CSP response filter is enabled.
      *
+     * <p>The toggle is applied by a condition that reads the property itself, so that a mistyped
+     * value keeps the response header; this getter only reports the bound value.</p>
+     *
      * @return whether the {@link ContentSecurityPolicyFilter} is enabled
      */
-    @Override
     public boolean isEnabled() {
         return this.enabled;
     }

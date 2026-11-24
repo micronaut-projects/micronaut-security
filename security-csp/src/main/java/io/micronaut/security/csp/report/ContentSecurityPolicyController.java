@@ -36,7 +36,7 @@ import java.util.List;
  *
  * <p>User agents deliver one or more reports as a JSON array using the
  * {@code application/reports+json} media type. The controller is registered only when the
- * {@code report-to} directive is enabled and a {@link ContentSecurityPolicyReportHandler} bean exists. Each accepted batch is passed to the configured
+ * {@code report-to} directive is enabled and a {@link ContentSecurityPolicyReportHandler} bean exists. Each accepted batch that contains CSP reports is passed to the configured
  * {@link ContentSecurityPolicyReportHandler} bean on the blocking executor, so the handler may perform
  * I/O without stalling the event loop. The handler must treat every field as untrusted
  * input.</p>
@@ -75,7 +75,10 @@ class ContentSecurityPolicyController {
     @Status(HttpStatus.NO_CONTENT)
     void report(@Body @NotNull List<@NotNull @Valid ContentSecurityPolicyReport> reports,
                 HttpRequest<?> request) {
-        List<ContentSecurityPolicyReport> immutableReports = List.copyOf(reports);
-        handler.handle(immutableReports, request);
+        if (reports.isEmpty()) {
+            // An empty batch, or one with only non-CSP reports, leaves the handler nothing to do.
+            return;
+        }
+        handler.handle(List.copyOf(reports), request);
     }
 }

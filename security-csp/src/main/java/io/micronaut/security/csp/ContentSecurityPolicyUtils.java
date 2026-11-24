@@ -47,7 +47,7 @@ final class ContentSecurityPolicyUtils {
      * @param value the expression to serialize
      * @return {@code value} unchanged when it is already single-quoted; otherwise, the quoted value
      */
-    public static String wrapInSingleQuotes(String value) {
+    static String wrapInSingleQuotes(String value) {
         if (isWrappedInSingleQuotes(value)) {
             return value;
         }

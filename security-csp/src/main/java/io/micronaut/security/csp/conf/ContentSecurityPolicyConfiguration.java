@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.csp.conf;
 
-import io.micronaut.core.util.Toggleable;
-
 /**
  * Configuration for Content Security Policy response headers.
  *
@@ -34,9 +32,12 @@ import io.micronaut.core.util.Toggleable;
  * application can disable a directive when it needs to manage that restriction in a different
  * response header or does not want the module to emit it.</p>
  *
+ * <p>The module is enabled and disabled with the {@code micronaut.security.csp.enabled} property,
+ * which a condition reads directly; a replacement bean cannot disable the module.</p>
+ *
  * @since 5.6.0
  */
-public interface ContentSecurityPolicyConfiguration extends Toggleable {
+public interface ContentSecurityPolicyConfiguration {
     /**
      * Determines whether the policy is observational rather than enforcing.
      *

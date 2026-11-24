@@ -44,7 +44,9 @@ public interface ContentSecurityPolicyReportHandler {
     /**
      * Handles one user-agent delivery batch.
      *
-     * @param reports immutable list of reports in the order in which they were delivered
+     * <p>The handler is not called for a batch without CSP reports.</p>
+     *
+     * @param reports immutable, non-empty list of reports in the order in which they were delivered
      * @param request request that delivered the reports; same-origin user agents may attach credentials
      */
     void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request);

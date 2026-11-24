@@ -74,7 +74,14 @@ public final class ContentSecurityPolicyConfigurationProperties implements Conte
     private boolean enabled = DEFAULT_ENABLED;
     private boolean reportOnly = DEFAULT_REPORT_ONLY;
 
-    @Override
+    /**
+     * Reports whether the CSP module is enabled.
+     *
+     * <p>The toggle is applied by a condition that reads the property itself, so that a mistyped
+     * value keeps the module's protection; this getter only reports the bound value.</p>
+     *
+     * @return the bound value of {@code micronaut.security.csp.enabled}
+     */
     public boolean isEnabled() {
         return enabled;
     }

@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -366,8 +367,12 @@ class ContentSecurityPolicyControllerTest {
     void invokesTheHandlerOffTheEventLoop(@Client("/") HttpClient httpClient,
                                           ReportListener reportListener) {
         reportListener.threadName = null;
+        String json = """
+            [{"type": "csp-hash", "age": 1, "url": "https://example.com/", "user_agent": "Example Browser",
+              "body": {"document_url": "https://example.com/", "hash": "sha256-example"}}]
+            """;
 
-        httpClient.toBlocking().exchange(reportRequest("[]"));
+        httpClient.toBlocking().exchange(reportRequest(json));
 
         assertNotNull(reportListener.threadName);
         assertFalse(reportListener.threadName.toLowerCase(Locale.ROOT).contains("eventloop"),
@@ -378,11 +383,26 @@ class ContentSecurityPolicyControllerTest {
     void acceptsAnEmptyBatch(@Client("/") HttpClient httpClient,
                              ReportListener reportListener) {
         reportListener.reports.clear();
+        reportListener.calls.set(0);
 
         HttpResponse<?> response = httpClient.toBlocking().exchange(reportRequest("[]"));
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-        assertEquals(0, reportListener.reports.size());
+        assertEquals(0, reportListener.calls.get(), "the handler is not called without CSP reports");
+    }
+
+    @Test
+    void doesNotCallTheHandlerForABatchWithoutCspReports(@Client("/") HttpClient httpClient,
+                                                         ReportListener reportListener) {
+        reportListener.calls.set(0);
+        String json = """
+            [{"type": "deprecation", "age": 1, "url": "https://example.com/page", "user_agent": "Example Browser", "body": {}}]
+            """;
+
+        HttpResponse<?> response = httpClient.toBlocking().exchange(reportRequest(json));
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        assertEquals(0, reportListener.calls.get());
     }
 
     private static HttpRequest<byte[]> reportRequest(String json) {
@@ -394,12 +414,14 @@ class ContentSecurityPolicyControllerTest {
     @Singleton
     static class ReportListener implements ContentSecurityPolicyReportHandler {
         private final List<ContentSecurityPolicyReport> reports = new CopyOnWriteArrayList<>();
+        private final AtomicInteger calls = new AtomicInteger();
         private volatile String requestPath;
         private volatile String threadName;
 
         @Override
         public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
             this.reports.addAll(reports);
+            calls.incrementAndGet();
             requestPath = request.getPath();
             threadName = Thread.currentThread().getName();
         }

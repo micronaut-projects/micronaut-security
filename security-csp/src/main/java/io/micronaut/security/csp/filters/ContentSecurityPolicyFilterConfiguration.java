@@ -15,17 +15,17 @@
  */
 package io.micronaut.security.csp.filters;
 
-import io.micronaut.core.util.Toggleable;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration for the CSP server filter, which generates the request nonce, and for the response
  * header populator, which writes the CSP header. Both apply only to requests matching
- * {@link #getPattern()}; disabling the filter removes both.
+ * {@link #getPattern()}. The {@code micronaut.security.csp.filter.enabled} property, which a
+ * condition reads directly, removes both; a replacement bean cannot disable them.
  * @author Sergio del Amo
  * @since 5.6.0
  */
-public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
+public interface ContentSecurityPolicyFilterConfiguration {
     /**
      * Returns the URL pattern to which the CSP filter and response header apply.
      *

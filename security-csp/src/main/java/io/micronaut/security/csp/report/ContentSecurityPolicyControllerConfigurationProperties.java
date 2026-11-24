@@ -61,9 +61,11 @@ final class ContentSecurityPolicyControllerConfigurationProperties implements Co
     /**
      * Reports whether the CSP report controller is enabled.
      *
+     * <p>The toggle is applied by a condition that reads the property itself; this getter only
+     * reports the bound value.</p>
+     *
      * @return whether the {@link ContentSecurityPolicyController} is enabled
      */
-    @Override
     public boolean isEnabled() {
         return this.enabled;
     }

@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
 import io.micronaut.security.csp.report.ContentSecurityPolicyReport;
@@ -44,6 +45,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,6 +58,7 @@ class CspStartupLogTest {
     private static final String STARTUP_LOGGER = "io.micronaut.security.csp.filters.ContentSecurityPolicyStartupLogger";
     private static final String REPORT_TO_LOGGER = "io.micronaut.security.csp.report.ReportToWithoutEndpointWarning";
     private static final String GENERATOR_LOGGER = "io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator";
+    private static final String TOGGLE_LOGGER = "io.micronaut.security.csp.DirectiveToggleValueWarning";
 
     @Test
     void logsTheEnforcedHeaderAndPatternAtStartup() {
@@ -72,7 +75,38 @@ class CspStartupLogTest {
         List<ILoggingEvent> events = capture(STARTUP_LOGGER, () -> run(Map.of("micronaut.security.csp.report-only", true), context -> { }));
 
         assertEquals(1, events.size());
-        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "/**");
+        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "/**", "browser console");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"micronaut.security.csp.report-uri.enabled", "micronaut.security.csp.report-to.enabled"})
+    void logsThatViolationsAreReportedWhenReportingIsEnabled(String reportingProperty) {
+        List<ILoggingEvent> events = capture(STARTUP_LOGGER, () -> run(Map.of(
+            "micronaut.security.csp.report-only", true,
+            reportingProperty, true,
+            "micronaut.security.csp.report-uri.values", List.of("https://reports.example.com/csp")), context -> { }));
+
+        assertEquals(1, events.size());
+        assertMentions(events.get(0), "Content-Security-Policy-Report-Only header", "violations are reported");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ture", "1"})
+    void warnsAboutADirectiveToggleThatIsNotABoolean(String value) {
+        List<ILoggingEvent> events = capture(TOGGLE_LOGGER, () -> run(Map.of("micronaut.security.csp.frame-ancestors.enabled", value), context -> {
+            ContentSecurityPolicy policy = context.getBean(ContentSecurityPolicyGenerator.class).contentSecurityPolicy(HttpRequest.GET("/"));
+            assertNull(policy.frameAncestors(), "boolean binding turns the value into false");
+        }));
+
+        assertEquals(1, events.size());
+        assertEquals(Level.WARN, events.get(0).getLevel());
+        assertMentions(events.get(0), "micronaut.security.csp.frame-ancestors.enabled", "\"" + value + "\"");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"true", "FALSE", " yes ", "off", "n"})
+    void acceptsEverySpellingOfABooleanDirectiveToggle(String value) {
+        assertEquals(List.of(), capture(TOGGLE_LOGGER, () -> run(Map.of("micronaut.security.csp.report-to.enabled", value), context -> { })));
     }
 
     @Test

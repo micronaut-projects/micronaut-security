@@ -15,13 +15,16 @@
  */
 package io.micronaut.security.csp.report;
 
-import io.micronaut.core.util.Toggleable;
-
 /**
  * Configuration for {@link ContentSecurityPolicyController}.
+ *
+ * <p>The controller is registered and removed with the
+ * {@code micronaut.security.csp.report-to.controller.enabled} property, which a condition reads
+ * directly; a replacement bean cannot disable it.</p>
+ *
  * @since 5.6.0
  */
-public interface ContentSecurityPolicyControllerConfiguration extends Toggleable {
+public interface ContentSecurityPolicyControllerConfiguration {
 
     /**
      * Returns the route at which CSP reports are accepted.
