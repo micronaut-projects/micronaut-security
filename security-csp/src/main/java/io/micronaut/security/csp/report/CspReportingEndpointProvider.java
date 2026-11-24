@@ -59,7 +59,6 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
     private static final Logger LOG = LoggerFactory.getLogger(CspReportingEndpointProvider.class);
     private static final String SLASH = "/";
     private static final Pattern LOCAL_PATH = Pattern.compile(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX);
-    private static final Pattern GROUP = Pattern.compile(ReportToConfigurationProperties.GROUP_REGEX);
     private final ReportToConfiguration reportToConfiguration;
     private final List<ReportingEndpoint> staticEndpoints;
     private final URI url;
@@ -80,7 +79,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
         this.reportToConfiguration = reportToConfiguration;
         this.staticEndpoints = staticEndpoints;
         this.url = url(requireLocalPath(controllerConfiguration.getPath()), serverContextPathProvider);
-        this.reportingEndpoint = endpoint(requireGroup(reportToConfiguration.getGroup()));
+        this.reportingEndpoint = endpoint(ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup()));
     }
 
     /**
@@ -108,7 +107,7 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
     @Override
     public void onApplicationEvent(RefreshEvent event) {
         try {
-            reportingEndpoint = endpoint(requireGroup(reportToConfiguration.getGroup()));
+            reportingEndpoint = endpoint(ReportToConfigurationProperties.requireValidGroup(reportToConfiguration.getGroup()));
         } catch (ConfigurationException e) {
             LOG.error("Keeping the previous CSP reporting endpoint because the refreshed configuration is invalid: {}", e.getMessage());
         }
@@ -144,23 +143,6 @@ final class CspReportingEndpointProvider implements ReportingEndpointProvider, R
                 return url;
             }
         };
-    }
-
-    /**
-     * Rejects a group name that the {@code Reporting-Endpoints} header cannot carry. Without this
-     * check, which applies whichever policy generator is in use and without micronaut-validation,
-     * the reporting filter would drop the endpoint and warn on every response.
-     *
-     * @param group the configured reporting group
-     * @return the group
-     * @throws ConfigurationException if the group does not match {@link ReportToConfigurationProperties#GROUP_REGEX}
-     */
-    private static String requireGroup(String group) {
-        if (!GROUP.matcher(group).matches()) {
-            throw new ConfigurationException(ReportToConfigurationProperties.PREFIX + ".group must match "
-                + ReportToConfigurationProperties.GROUP_REGEX + ", the grammar of a Reporting-Endpoints name");
-        }
-        return group;
     }
 
     /**

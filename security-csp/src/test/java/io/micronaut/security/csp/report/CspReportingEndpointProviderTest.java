@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +50,7 @@ class CspReportingEndpointProviderTest {
         controller.setPath(path);
 
         assertThrows(ConfigurationException.class, () -> provider(enabledReportTo(), controller, List.of()));
-        assertTrue(!path.matches(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX),
+        assertFalse(path.matches(ContentSecurityPolicyControllerConfigurationProperties.LOCAL_PATH_REGEX),
             "the bean-validation constraint of the property must reject the same paths");
     }
 

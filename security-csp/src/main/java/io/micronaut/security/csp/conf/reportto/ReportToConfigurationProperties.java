@@ -16,6 +16,7 @@
 package io.micronaut.security.csp.conf.reportto;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
@@ -43,6 +44,8 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
      * {@code Reporting-Endpoints} header.
      */
     public static final String GROUP_REGEX = "[a-z*][a-z0-9_.*-]*";
+
+    private static final java.util.regex.Pattern GROUP_PATTERN = java.util.regex.Pattern.compile(GROUP_REGEX);
 
     private boolean enabled;
 
@@ -78,5 +81,21 @@ public class ReportToConfigurationProperties implements ReportToConfiguration {
      */
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    /**
+     * Rejects a group name that the {@code Reporting-Endpoints} header cannot carry. The policy
+     * generator and the module's reporting endpoint both apply this check, so that it holds without
+     * micronaut-validation and whichever of them reads the group.
+     *
+     * @param group the configured reporting group
+     * @return the group
+     * @throws ConfigurationException if the group does not match {@link #GROUP_REGEX}
+     */
+    public static String requireValidGroup(String group) {
+        if (!GROUP_PATTERN.matcher(group).matches()) {
+            throw new ConfigurationException(PREFIX + ".group must match " + GROUP_REGEX + ", the grammar of a Reporting-Endpoints name");
+        }
+        return group;
     }
 }

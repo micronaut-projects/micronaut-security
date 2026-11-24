@@ -117,7 +117,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     private static final String PROPERTY_REPORT_URI_VALUES = PROPERTY_PREFIX + REPORT_URI + ".values";
     private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_ENABLED = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".enabled";
     private static final String PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE = PROPERTY_PREFIX + REQUIRE_TRUSTED_TYPES_FOR + ".value";
-    private static final String PROPERTY_REPORT_TO_GROUP = ReportToConfigurationProperties.PREFIX + ".group";
     private static final String PROPERTY_REPORT_TO_ENABLED = ReportToConfigurationProperties.PREFIX + ".enabled";
     /**
      * Keyword source expressions, in the order in which they are emitted, with the configuration
@@ -175,10 +174,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * Directives that do not fall back to {@code default-src}: omitting one removes its restriction.
      */
     private static final Set<String> DIRECTIVES_WITHOUT_FALLBACK = Set.of(BASE_URI, FORM_ACTION, FRAME_ANCESTORS);
-    /**
-     * The grammar of a Reporting API endpoint group name used by {@code report-to}.
-     */
-    private static final Pattern REPORTING_GROUP_GRAMMAR = Pattern.compile(ReportToConfigurationProperties.GROUP_REGEX);
     private static final Set<String> LOOPBACK_HOSTS = Set.of("localhost", "127.0.0.1", "[::1]");
     /**
      * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
@@ -304,9 +299,8 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
                     PROPERTY_REQUIRE_TRUSTED_TYPES_FOR_VALUE, requireTrustedTypesFor, ContentSecurityPolicyUtils.wrapInSingleQuotes(trimmed));
             }
         }
-        if (directiveConfigurations.getReportTo().isEnabled() && !REPORTING_GROUP_GRAMMAR.matcher(directiveConfigurations.getReportTo().getGroup()).matches()) {
-            throw new ConfigurationException(PROPERTY_REPORT_TO_GROUP + " must match " + REPORTING_GROUP_GRAMMAR.pattern()
-                + ", the grammar of a Reporting-Endpoints name");
+        if (directiveConfigurations.getReportTo().isEnabled()) {
+            ReportToConfigurationProperties.requireValidGroup(directiveConfigurations.getReportTo().getGroup());
         }
     }
 

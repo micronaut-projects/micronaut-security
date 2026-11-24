@@ -17,6 +17,7 @@ package io.micronaut.security.cspexternal;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -212,19 +213,24 @@ class CspTogglesTest {
     @ParameterizedTest(name = "controller.path={0}")
     @ValueSource(strings = {"", "csp/report", "//evil.example/csp"})
     void anInvalidReportControllerPathFailsStartup(String path) {
-        assertThrows(RuntimeException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
             "spec.name", SPEC_NAME,
             "micronaut.security.csp.report-to.enabled", true,
             "micronaut.security.csp.report-to.controller.path", path)).close());
+
+        assertTrue(exception.getMessage().contains("ContentSecurityPolicyControllerConfigurationProperties.path")
+            || exception.getMessage().contains("report-to.controller.path"), exception::getMessage);
     }
 
     @Test
     void anInvalidReportControllerPathFailsStartupNextToAConfiguredReportingEndpoint() {
-        assertThrows(RuntimeException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class, () -> ApplicationContext.run(EmbeddedServer.class, Map.of(
             "spec.name", SPEC_NAME,
             "micronaut.security.csp.report-to.enabled", true,
             "micronaut.security.csp.report-to.controller.path", "csp/report",
             "micronaut.security.reporting-endpoints.other.url", "https://reports.example.com/other")).close());
+
+        assertTrue(exception.getMessage().contains("ContentSecurityPolicyControllerConfigurationProperties.path"), exception::getMessage);
     }
 
     private static HttpRequest<byte[]> reportRequest() {
