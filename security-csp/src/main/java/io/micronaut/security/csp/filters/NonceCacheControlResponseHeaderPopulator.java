@@ -38,23 +38,29 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
- * {@link ResponseHeaderPopulator} that adds the configured {@code Cache-Control} header to HTML and
- * XHTML responses of requests that received a Content Security Policy nonce. A shared cache that
- * stored such a response would replay the same nonce to every visitor.
+ * {@link ResponseHeaderPopulator} that adds the configured {@code Cache-Control} header to HTML,
+ * XHTML, SVG and XML responses of requests that received a Content Security Policy nonce. A shared
+ * cache that stored such a response would replay the same nonce to every visitor.
  *
- * <p>Other content types cannot carry the nonce in their body and keep their caching. A
+ * <p>Other content types cannot carry the nonce in a document that the browser enforces the policy
+ * on, and keep their caching. A
  * {@code Cache-Control} header already set by the application is kept. The value comes from
  * {@value ContentSecurityPolicyFilterConfigurationProperties#PROPERTY_NONCE_CACHE_CONTROL}. The
- * populator is only loaded when an enabled directive uses nonces and that value is not blank.</p>
+ * populator is only loaded when that value is not blank.</p>
  *
  * @since 5.6.0
  */
 @Requires(classes = ResponseHeaderPopulator.class)
-@Requires(condition = NonceEnabledCondition.class)
 @Requires(condition = NonceCacheControlCondition.class)
 @Singleton
 @Internal
 final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPopulator {
+    /**
+     * The content types of documents that can carry the nonce in an inline script or style that the
+     * browser runs under the policy: HTML, XHTML, SVG and generic XML documents.
+     */
+    private static final List<String> DOCUMENT_TYPES = List.of(MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML,
+        MediaType.IMAGE_SVG, MediaType.TEXT_XML, MediaType.APPLICATION_XML);
     private final List<HttpHeaderEntry> cacheControl;
     private final BiFunction<HttpRequest<?>, HttpResponse<?>, @Nullable MediaType> routeContentType;
 
@@ -115,6 +121,11 @@ final class NonceCacheControlResponseHeaderPopulator implements ResponseHeaderPo
 
     private static boolean canCarryNonce(MediaType mediaType) {
         String name = mediaType.getName();
-        return MediaType.TEXT_HTML.equalsIgnoreCase(name) || MediaType.APPLICATION_XHTML.equalsIgnoreCase(name);
+        for (String documentType : DOCUMENT_TYPES) {
+            if (documentType.equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -79,8 +79,7 @@ class CspFilterPatternContextPathTest {
      * The response header must be written exactly for the requests on which the nonce filter ran,
      * whatever form of the path selects them: Micronaut Core matches a filter pattern against the
      * raw path, the path without its trailing slash, and the percent-decoded path, relative to the
-     * context path. The encoded forms are covered by ContentSecurityPolicyResponseHeaderPopulatorTest
-     * because the router does not serve them.
+     * context path. The populator follows the filter instead of matching the pattern itself.
      */
     @ParameterizedTest(name = "context path \"{0}\", request {1}")
     @CsvSource({
@@ -112,6 +111,26 @@ class CspFilterPatternContextPathTest {
         }
     }
 
+    @ParameterizedTest(name = "nonce {0}")
+    @ValueSource(booleans = {true, false})
+    void commaSeparatedPatternsApplyThePolicyToEachOfThem(boolean nonce) {
+        try (EmbeddedServer server = ApplicationContext.run(EmbeddedServer.class, Map.of(
+                "spec.name", SPEC_NAME,
+                "micronaut.security.csp.filter.pattern", "/foo/**,/baz/**",
+                "micronaut.security.csp.script-src.nonce", nonce));
+             HttpClient httpClient = server.getApplicationContext().createBean(HttpClient.class, server.getURL())) {
+            BlockingHttpClient client = httpClient.toBlocking();
+
+            for (String path : new String[] {"/foo/page", "/baz/page"}) {
+                HttpResponse<String> matching = client.exchange(HttpRequest.GET(path), String.class);
+                ContentSecurityPolicy policy = ContentSecurityPolicy.of(matching);
+                assertNotNull(policy, () -> path + " matches one of the patterns");
+                assertEquals(nonce ? "'nonce-" + matching.body() + "'" : "'none'", policy.scriptSrc().value());
+            }
+            assertNull(ContentSecurityPolicy.of(client.exchange(HttpRequest.GET("/bar/page"), String.class)));
+        }
+    }
+
     @ParameterizedTest(name = "pattern \"{0}\"")
     @ValueSource(strings = {"", "   "})
     void emptyOrBlankPatternFailsStartupInsteadOfSilentlyDisablingThePolicy(String pattern) {
@@ -130,6 +149,12 @@ class CspFilterPatternContextPathTest {
         @Get("/foo/page")
         @Produces(MediaType.TEXT_PLAIN)
         String foo(HttpRequest<?> request) {
+            return nonce(request);
+        }
+
+        @Get("/baz/page")
+        @Produces(MediaType.TEXT_PLAIN)
+        String baz(HttpRequest<?> request) {
             return nonce(request);
         }
 

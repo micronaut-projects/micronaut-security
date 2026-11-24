@@ -15,34 +15,36 @@
  */
 package io.micronaut.security.csp.filters;
 
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
-import io.micronaut.context.event.ApplicationEventListener;
-import io.micronaut.context.event.StartupEvent;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Internal;
-import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Warns at startup when the CSP filter of Micronaut Views is enabled as well, because both filters
- * write a CSP header and the {@code cspNonce} request attribute, so one overwrites the other's nonce.
+ * Fails application startup when the CSP filter of Micronaut Views is enabled as well. Both filters
+ * write a CSP header and the {@code cspNonce} request attribute, so the header of Micronaut Views,
+ * whose nonce may come from {@link java.util.Random}, could replace this module's policy, or one
+ * filter's nonce could end up in the other's header.
  */
-@Requires(condition = ViewsCspConflictWarning.ViewsCspEnabledCondition.class)
-@Singleton
+@Requires(condition = ViewsCspConflictCheck.ViewsCspEnabledCondition.class)
+@Context
 @Internal
-final class ViewsCspConflictWarning implements ApplicationEventListener<StartupEvent> {
+final class ViewsCspConflictCheck {
     /**
      * The property that enables the CSP filter of Micronaut Views.
      */
     static final String VIEWS_CSP_ENABLED = "micronaut.views.csp.enabled";
-    private static final Logger LOG = LoggerFactory.getLogger(ViewsCspConflictWarning.class);
 
-    @Override
-    public void onApplicationEvent(StartupEvent event) {
-        LOG.warn("Micronaut Views CSP and micronaut-security-csp are both active and both write the cspNonce request attribute "
-            + "and a Content-Security-Policy header. Set {}=false.", VIEWS_CSP_ENABLED);
+    /**
+     * Fails startup, because the bean only exists while both CSP filters are enabled.
+     *
+     * @throws ConfigurationException always
+     */
+    ViewsCspConflictCheck() {
+        throw new ConfigurationException("Micronaut Views CSP and micronaut-security-csp are both enabled, and both write the cspNonce "
+            + "request attribute and a Content-Security-Policy header. Set " + VIEWS_CSP_ENABLED + "=false.");
     }
 
     /**

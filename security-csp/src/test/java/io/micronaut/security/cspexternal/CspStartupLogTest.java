@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,7 +55,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CspStartupLogTest {
     private static final String STARTUP_LOGGER = "io.micronaut.security.csp.filters.ContentSecurityPolicyStartupLogger";
     private static final String REPORT_TO_LOGGER = "io.micronaut.security.csp.report.ReportToWithoutEndpointWarning";
-    private static final String VIEWS_CONFLICT_LOGGER = "io.micronaut.security.csp.filters.ViewsCspConflictWarning";
     private static final String GENERATOR_LOGGER = "io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator";
 
     @Test
@@ -116,18 +116,25 @@ class CspStartupLogTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"true", "TRUE", "yes"})
-    void warnsWhenTheCspFilterOfMicronautViewsIsEnabledToo(String enabled) {
-        List<ILoggingEvent> events = capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", enabled), context -> { }));
+    void failsStartupWhenTheCspFilterOfMicronautViewsIsEnabledToo(String enabled) {
+        BeanInstantiationException exception = assertThrows(BeanInstantiationException.class,
+            () -> ApplicationContext.run(Map.of("micronaut.views.csp.enabled", enabled)).close());
 
-        assertEquals(1, events.size());
-        assertEquals(Level.WARN, events.get(0).getLevel());
-        assertMentions(events.get(0), "Micronaut Views CSP", "cspNonce", "micronaut.views.csp.enabled=false");
+        String message = rootCause(exception).getMessage();
+        assertTrue(message.contains("cspNonce") && message.contains("micronaut.views.csp.enabled=false"), message);
     }
 
     @Test
-    void doesNotWarnAboutMicronautViewsByDefault() {
-        assertEquals(List.of(), capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of(), context -> { })));
-        assertEquals(List.of(), capture(VIEWS_CONFLICT_LOGGER, () -> run(Map.of("micronaut.views.csp.enabled", "FALSE"), context -> { })));
+    void startsWhenTheCspFilterOfMicronautViewsIsDisabled() {
+        assertDoesNotThrow(() -> run(Map.of(), context -> { }));
+        assertDoesNotThrow(() -> run(Map.of("micronaut.views.csp.enabled", "FALSE"), context -> { }));
+    }
+
+    @Test
+    void startsWithMicronautViewsCspWhenTheModuleWritesNoHeader() {
+        assertDoesNotThrow(() -> run(Map.of(
+            "micronaut.views.csp.enabled", true,
+            "micronaut.security.csp.filter.enabled", false), context -> { }));
     }
 
     @Test

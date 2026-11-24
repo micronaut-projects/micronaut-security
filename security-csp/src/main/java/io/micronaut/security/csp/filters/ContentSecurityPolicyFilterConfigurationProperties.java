@@ -50,7 +50,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     public static final String DEFAULT_NONCE_CACHE_CONTROL = "private";
 
     /**
-     * The pattern the {@link ContentSecurityPolicyNonceFilter} should match.
+     * The pattern the {@link ContentSecurityPolicyFilter} should match.
      */
     @NonNull
     @NotBlank
@@ -64,7 +64,7 @@ final class ContentSecurityPolicyFilterConfigurationProperties implements Conten
     /**
      * Reports whether the CSP response filter is enabled.
      *
-     * @return whether the {@link ContentSecurityPolicyNonceFilter} is enabled
+     * @return whether the {@link ContentSecurityPolicyFilter} is enabled
      */
     @Override
     public boolean isEnabled() {

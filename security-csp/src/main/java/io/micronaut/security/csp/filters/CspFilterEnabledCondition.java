@@ -15,34 +15,16 @@
  */
 package io.micronaut.security.csp.filters;
 
-import io.micronaut.context.condition.Condition;
-import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
-
-import java.util.Locale;
-import java.util.Set;
+import io.micronaut.security.csp.AbstractToggleCondition;
 
 /**
- * Enables the filter package unless {@code micronaut.security.csp.filter.enabled} is false.
- *
- * <p>The value is compared without case, so {@code TRUE},
- * {@code yes} or {@code on} keep the header, and {@code FALSE}, {@code no} or {@code off} remove it.
- * Any other value keeps the header: a mistyped toggle must not silently remove it.</p>
+ * Enables the filter package unless {@code micronaut.security.csp.filter.enabled} is false; see
+ * {@link AbstractToggleCondition} for the accepted values.
  */
 @Internal
-final class CspFilterEnabledCondition implements Condition {
-    /**
-     * The values that turn the toggle off, compared without case.
-     */
-    private static final Set<String> DISABLED_VALUES = Set.of("false", "no", "off");
-
-    @Override
-    public boolean matches(ConditionContext context) {
-        String value = context.getProperty(ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_ENABLED, String.class).orElse(null);
-        if (value == null || !DISABLED_VALUES.contains(value.trim().toLowerCase(Locale.ROOT))) {
-            return true;
-        }
-        context.fail(ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_ENABLED + " is false");
-        return false;
+final class CspFilterEnabledCondition extends AbstractToggleCondition {
+    CspFilterEnabledCondition() {
+        super(ContentSecurityPolicyFilterConfigurationProperties.PROPERTY_ENABLED);
     }
 }

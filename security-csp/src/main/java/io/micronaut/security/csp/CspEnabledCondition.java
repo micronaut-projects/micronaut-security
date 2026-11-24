@@ -15,41 +15,21 @@
  */
 package io.micronaut.security.csp;
 
-import io.micronaut.context.condition.Condition;
-import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 
-import java.util.Locale;
-import java.util.Set;
-
 /**
- * Enables the module unless {@code micronaut.security.csp.enabled} is false.
- *
- * <p>The value is compared without case, so {@code TRUE},
- * {@code yes} or {@code on}, for example from an environment variable, keep the module enabled,
- * and {@code FALSE}, {@code no} or {@code off} disable it. Any other value keeps the module enabled:
- * a mistyped toggle, such as {@code ture}, must not silently remove the response header.</p>
+ * Enables the module unless {@code micronaut.security.csp.enabled} is false; see
+ * {@link AbstractToggleCondition} for the accepted values.
  */
 @Internal
-final class CspEnabledCondition implements Condition {
+final class CspEnabledCondition extends AbstractToggleCondition {
     /**
      * The property that disables the module.
      */
     static final String PROPERTY = ContentSecurityPolicyConfigurationProperties.PREFIX + ".enabled";
 
-    /**
-     * The values that turn the toggle off, compared without case.
-     */
-    private static final Set<String> DISABLED_VALUES = Set.of("false", "no", "off");
-
-    @Override
-    public boolean matches(ConditionContext context) {
-        String value = context.getProperty(PROPERTY, String.class).orElse(null);
-        if (value == null || !DISABLED_VALUES.contains(value.trim().toLowerCase(Locale.ROOT))) {
-            return true;
-        }
-        context.fail(PROPERTY + " is false");
-        return false;
+    CspEnabledCondition() {
+        super(PROPERTY);
     }
 }

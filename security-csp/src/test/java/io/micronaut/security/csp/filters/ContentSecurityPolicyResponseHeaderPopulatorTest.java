@@ -20,13 +20,15 @@ import io.micronaut.http.HttpHeaderEntry;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.csp.DefaultContentSecurityPolicyGenerator;
+import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
 import io.micronaut.security.csp.ContentSecurityPolicy;
 import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.security.csp.ContentSecurityPolicyGenerator;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
@@ -48,8 +50,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.UPGRADE_INSECURE_REQUESTS, null)
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties(),
-                null
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
 
         assertEquals(
@@ -67,8 +68,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
                 )),
                 configuration,
-                new ContentSecurityPolicyFilterConfigurationProperties(),
-                null
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
 
         assertEquals(
@@ -81,8 +81,7 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> fail("the generator must not be called when the response already sets the header"),
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties(),
-                null
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/"),
@@ -90,55 +89,18 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
     }
 
     @Test
-    void matchesAPatternRelativeToTheServerContextPath() {
-        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
-        filterConfiguration.setPattern("/foo/**");
-        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
-                request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
-                )),
-                new ContentSecurityPolicyConfigurationProperties(),
-                filterConfiguration,
-                () -> "app/"
-        );
-
-        assertEquals(List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'none'")),
-                populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
-        assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/bar/page"), HttpResponse.ok()));
-    }
-
-    @Test
-    void keepsAPatternThatAlreadyIncludesTheContextPath() {
-        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
-        filterConfiguration.setPattern("/app/foo/**");
-        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
-                request -> new ContentSecurityPolicy(List.of(
-                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'none'")
-                )),
-                new ContentSecurityPolicyConfigurationProperties(),
-                filterConfiguration,
-                () -> "/app"
-        );
-
-        assertEquals(List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'none'")),
-                populator.findHttpHeaders(HttpRequest.GET("/app/foo/page"), HttpResponse.ok()));
-        assertNull(populator.findHttpHeaders(HttpRequest.GET("/app/app/foo/page"), HttpResponse.ok()));
-    }
-
-    @Test
     void omitsContentSecurityPolicyHeaderWhenGeneratorReturnsNull() {
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
                 request -> null,
                 new ContentSecurityPolicyConfigurationProperties(),
-                new ContentSecurityPolicyFilterConfigurationProperties(),
-                null
+                new ContentSecurityPolicyFilterConfigurationProperties()
         );
 
         assertNull(populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()));
     }
 
     @Test
-    void omitsContentSecurityPolicyHeaderWhenPathDoesNotMatchPattern() {
+    void omitsContentSecurityPolicyHeaderForARequestTheFilterDidNotMatch() {
         ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
         filterConfiguration.setPattern("/foo/**");
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
@@ -146,11 +108,11 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
                         new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'")
                 )),
                 new ContentSecurityPolicyConfigurationProperties(),
-                filterConfiguration,
-                null
+                filterConfiguration
         );
 
-        assertNull(populator.findHttpHeaders(HttpRequest.GET("/bar"), HttpResponse.ok()));
+        assertNull(populator.findHttpHeaders(HttpRequest.GET("/foo/page"), HttpResponse.ok()),
+                "the filter, not the populator, matches the pattern");
     }
 
     @ParameterizedTest
@@ -161,46 +123,40 @@ class ContentSecurityPolicyResponseHeaderPopulatorTest {
         ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
 
         ConfigurationException exception = assertThrows(ConfigurationException.class,
-            () -> new ContentSecurityPolicyResponseHeaderPopulator(request -> null, configuration, filterConfiguration, null));
+            () -> new ContentSecurityPolicyResponseHeaderPopulator(request -> null, configuration, filterConfiguration));
 
         assertEquals("micronaut.security.csp.filter.pattern must not be blank", exception.getMessage());
     }
 
-    @ParameterizedTest(name = "pattern {0} matches {1}: {2}")
-    @CsvSource({
-        "/foo/page, /foo/page, true",
-        "/foo/page, /foo/page/, true",
-        "/foo/page, /f%6Fo/page, true",
-        "/foo/page, /f%6Fo/page/, true",
-        "/foo/page, /foo%zzpage, false",
-        "/a+b, /a+b, true",
-        "/a+b, /a%2Bb, true",
-        "/foo/page, /bar/page, false",
-        "/, '', true"
-    })
-    void matchesTheFormsOfThePathThatTheServerMatchesFilterPatternsAgainst(String pattern, String path, boolean matches) {
-        assertEquals(matches, ContentSecurityPolicyResponseHeaderPopulator.matchesAnyForm(pattern, path));
+    @Test
+    void writesTheHeaderForARequestMatchedByTheFilterWhenThePatternIsNarrowed() {
+        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
+        filterConfiguration.setPattern("/foo/**,/bar/**");
+        ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
+                request -> new ContentSecurityPolicy(List.of(
+                        new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'")
+                )),
+                new ContentSecurityPolicyConfigurationProperties(),
+                filterConfiguration
+        );
+        MutableHttpRequest<?> matched = HttpRequest.GET("/anything");
+        matched.setAttribute(ContentSecurityPolicyFilter.MATCHED_ATTRIBUTE, Boolean.TRUE);
+
+        assertEquals(List.of(new HttpHeaderEntry(HttpHeaders.CONTENT_SECURITY_POLICY, "default-src 'self'")),
+                populator.findHttpHeaders(matched, HttpResponse.ok()));
     }
 
-    @ParameterizedTest(name = "context path {0}, pattern {1}, request {2}: {3}")
-    @CsvSource({
-        "/app, /foo/**, /app/foo/page, true",
-        "/app/, /foo/**, /app/foo/page, true",
-        "app, foo/**, /app/foo/page, true",
-        "/app, /foo/**, /foo/page, true",
-        "/app, /foo/**, /app/bar/page, false",
-        "/app, /, /app, true",
-        "/app, /app/foo/**, /app/foo/page, true",
-        "/app, /app/foo/**, /foo/page, false",
-        "/, /foo/**, /foo/page, true"
-    })
-    void resolvesThePatternAgainstTheContextPathLikeTheServer(String contextPath, String pattern, String path, boolean header) {
-        ContentSecurityPolicyFilterConfigurationProperties filterConfiguration = new ContentSecurityPolicyFilterConfigurationProperties();
-        filterConfiguration.setPattern(pattern);
+    @Test
+    void keepsTheReportOnlyModeOfThePolicyTheDefaultGeneratorBuilt() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration,
+                ContentSecurityPolicyDirectiveConfigurations.builder().build()) { };
+        configuration.setReportOnly(true);
         ContentSecurityPolicyResponseHeaderPopulator populator = new ContentSecurityPolicyResponseHeaderPopulator(
-            request -> new ContentSecurityPolicy(List.of(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "'self'"))),
-            new ContentSecurityPolicyConfigurationProperties(), filterConfiguration, () -> contextPath);
+                generator, configuration, new ContentSecurityPolicyFilterConfigurationProperties());
 
-        assertEquals(header, populator.findHttpHeaders(HttpRequest.GET(path), HttpResponse.ok()) != null);
+        assertEquals(HttpHeaders.CONTENT_SECURITY_POLICY,
+                populator.findHttpHeaders(HttpRequest.GET("/"), HttpResponse.ok()).iterator().next().name(),
+                "until the generator rebuilds its policy, the policy keeps its mode");
     }
 }

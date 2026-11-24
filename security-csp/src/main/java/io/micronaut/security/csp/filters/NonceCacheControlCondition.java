@@ -24,7 +24,7 @@ import io.micronaut.core.util.StringUtils;
  * Matches when a {@code Cache-Control} value is configured for responses that carry a nonce. The
  * value defaults to {@code private}; an application opts out with a blank value. It keeps
  * {@link NonceCacheControlResponseHeaderPopulator} out of the application when it would write
- * nothing. Whether any directive uses nonces is checked separately by {@link NonceEnabledCondition}.
+ * nothing for every response. The populator itself skips the responses of requests without a nonce.
  *
  * <p>The condition is evaluated once, when the bean is loaded.</p>
  */

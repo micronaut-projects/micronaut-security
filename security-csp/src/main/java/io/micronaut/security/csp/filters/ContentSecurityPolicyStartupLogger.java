@@ -43,19 +43,16 @@ final class ContentSecurityPolicyStartupLogger implements ApplicationEventListen
     /**
      * Creates the startup logger.
      *
-     * <p>The generator and the response header populator are injected so that they are created at
-     * startup: invalid policy or filter configuration then fails application startup instead of
-     * every response.</p>
+     * <p>The generator is injected so that it is created at startup: invalid policy configuration
+     * then fails application startup instead of every response.</p>
      *
      * @param cspConfiguration the root CSP configuration
      * @param filterConfiguration the configuration of the requests that receive the header
      * @param cspGenerator the policy generator, created eagerly to validate its configuration
-     * @param headerPopulator the response header populator, created eagerly to validate the filter pattern
      */
     ContentSecurityPolicyStartupLogger(ContentSecurityPolicyConfiguration cspConfiguration,
                                        ContentSecurityPolicyFilterConfiguration filterConfiguration,
-                                       ContentSecurityPolicyGenerator cspGenerator,
-                                       ContentSecurityPolicyResponseHeaderPopulator headerPopulator) {
+                                       ContentSecurityPolicyGenerator cspGenerator) {
         this.cspConfiguration = cspConfiguration;
         this.filterConfiguration = filterConfiguration;
         this.generatorName = cspGenerator.getClass().getName();

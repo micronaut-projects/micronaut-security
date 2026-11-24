@@ -215,9 +215,15 @@ class NonceCacheControlResponseHeaderPopulatorTest {
     @Test
     void cacheControlIsNotWrittenWhenNoDirectiveUsesNonces() {
         try (EmbeddedServer server = server(Map.of())) {
-            assertFalse(server.getApplicationContext().containsBean(NonceCacheControlResponseHeaderPopulator.class));
             assertNull(get(server, "/nonce-cache/html").header(HttpHeaders.CACHE_CONTROL));
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {MediaType.IMAGE_SVG, MediaType.TEXT_XML, MediaType.APPLICATION_XML, "Application/XHTML+XML"})
+    void otherDocumentsThatCanCarryANonceReceiveCacheControl(String contentType) {
+        assertEquals(PRIVATE, populator("private", (request, response) -> null)
+            .findHttpHeaders(requestWithNonce(), HttpResponse.ok().contentType(contentType)));
     }
 
     @ParameterizedTest

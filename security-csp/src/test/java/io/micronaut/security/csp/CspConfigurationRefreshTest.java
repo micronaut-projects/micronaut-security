@@ -20,8 +20,17 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.PropertySource;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import io.micronaut.security.csp.nonce.ContentSecurityPolicyNonceGenerator;
@@ -33,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -40,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * must rebuild them, and must not let refreshed values skip the startup checks.
  */
 class CspConfigurationRefreshTest {
+    private static final String SPEC_NAME = "CspConfigurationRefreshTest";
 
     @Test
     void aRefreshedDirectiveConfigurationTakesEffectOnTheNextPolicy() {
@@ -78,6 +90,69 @@ class CspConfigurationRefreshTest {
         }
     }
 
+    @Test
+    void enablingNoncesInARefreshAddsTheNonceWithoutARestart() {
+        Map<String, Object> properties = new HashMap<>(Map.of(
+            "spec.name", SPEC_NAME,
+            "micronaut.security.csp.script-src.self", true));
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
+             EmbeddedServer server = context.getBean(EmbeddedServer.class).start();
+             HttpClient httpClient = context.createBean(HttpClient.class, server.getURL())) {
+            HttpResponse<String> before = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertEquals("script-src 'self'", ContentSecurityPolicy.of(before).scriptSrc().toHeaderValue());
+
+            properties.put("micronaut.security.csp.script-src.nonce", true);
+            refresh(context);
+
+            HttpResponse<String> after = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertEquals("script-src 'nonce-" + after.body() + "' 'self'", ContentSecurityPolicy.of(after).scriptSrc().toHeaderValue(),
+                "the template and the header must receive the same nonce");
+            assertEquals("private", after.header(HttpHeaders.CACHE_CONTROL));
+        }
+    }
+
+    @Test
+    void reportOnlyModeChangesWithTheRefreshedPolicyOnly() {
+        Map<String, Object> properties = new HashMap<>(Map.of("spec.name", SPEC_NAME));
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start();
+             EmbeddedServer server = context.getBean(EmbeddedServer.class).start();
+             HttpClient httpClient = context.createBean(HttpClient.class, server.getURL())) {
+            properties.put("micronaut.security.csp.report-only", true);
+            properties.put("micronaut.security.csp.img-src.values", List.of("https://a.example.com; script-src *"));
+            captureErrors(() -> refresh(context));
+
+            HttpResponse<String> rejected = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertNotNull(rejected.header(HttpHeaders.CONTENT_SECURITY_POLICY), "the previous policy keeps being enforced");
+            assertNull(rejected.header(HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY));
+
+            properties.put("micronaut.security.csp.img-src.values", List.of("https://a.example.com"));
+            refresh(context);
+
+            HttpResponse<String> accepted = httpClient.toBlocking().exchange(HttpRequest.GET("/csp-refresh"), String.class);
+            assertNull(accepted.header(HttpHeaders.CONTENT_SECURITY_POLICY));
+            assertEquals("img-src https://a.example.com",
+                ContentSecurityPolicy.of(accepted.getHeaders(), HttpHeaders.CONTENT_SECURITY_POLICY_REPORT_ONLY).imgSrc().toHeaderValue());
+        }
+    }
+
+    @Test
+    void warnsThatTheReportEndpointNeedsARestartWhenARefreshTogglesReportTo() {
+        Map<String, Object> properties = new HashMap<>();
+        try (ApplicationContext context = ApplicationContext.builder().propertySources(PropertySource.of("refreshable", properties)).start()) {
+            ContentSecurityPolicyGenerator generator = context.getBean(ContentSecurityPolicyGenerator.class);
+
+            properties.put("micronaut.security.csp.report-to.enabled", true);
+            List<ILoggingEvent> warnings = capture(Level.WARN, () -> refresh(context));
+
+            assertEquals("report-to csp", policy(generator).reportTo().toHeaderValue());
+            assertEquals(1, warnings.size());
+            assertTrue(warnings.get(0).getFormattedMessage().contains("micronaut.security.csp.report-to.enabled"), warnings.get(0)::getFormattedMessage);
+
+            properties.put("micronaut.security.csp.img-src.self", true);
+            assertEquals(List.of(), capture(Level.WARN, () -> refresh(context)), "only a change of report-to.enabled is reported");
+        }
+    }
+
     private static void refresh(ApplicationContext context) {
         Map<String, Object> changes = context.getEnvironment().refreshAndDiff();
         context.publishEvent(new RefreshEvent(changes));
@@ -90,6 +165,10 @@ class CspConfigurationRefreshTest {
     }
 
     private static List<ILoggingEvent> captureErrors(Runnable action) {
+        return capture(Level.ERROR, action);
+    }
+
+    private static List<ILoggingEvent> capture(Level level, Runnable action) {
         Logger logger = (Logger) LoggerFactory.getLogger(DefaultContentSecurityPolicyGenerator.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
@@ -99,6 +178,16 @@ class CspConfigurationRefreshTest {
         } finally {
             logger.detachAppender(appender);
         }
-        return appender.list.stream().filter(event -> event.getLevel() == Level.ERROR).toList();
+        return appender.list.stream().filter(event -> event.getLevel() == level).toList();
+    }
+
+    @Requires(property = "spec.name", value = SPEC_NAME)
+    @Controller("/csp-refresh")
+    static class RefreshController {
+        @Get
+        @Produces(MediaType.TEXT_HTML)
+        String index(HttpRequest<?> request) {
+            return request.getAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, String.class).orElse("no nonce");
+        }
     }
 }

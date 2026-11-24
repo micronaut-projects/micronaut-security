@@ -29,6 +29,11 @@ public interface ContentSecurityPolicyFilterConfiguration extends Toggleable {
     /**
      * Returns the URL pattern to which the CSP filter and response header apply.
      *
+     * <p>The filter is registered with the value of the {@code micronaut.security.csp.filter.pattern}
+     * property, because Micronaut resolves a server filter pattern from configuration, not from a
+     * bean. A replacement bean must therefore return that value: returning another pattern does not
+     * move the filter.</p>
+     *
      * @return the ant-style request path pattern; defaults to {@code /**}
      */
     String getPattern();
