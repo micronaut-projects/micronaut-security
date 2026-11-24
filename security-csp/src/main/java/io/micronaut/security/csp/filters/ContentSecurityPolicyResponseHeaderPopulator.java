@@ -82,8 +82,12 @@ final class ContentSecurityPolicyResponseHeaderPopulator implements ResponseHead
         }
         if (cspGenerator instanceof DefaultContentSecurityPolicyGenerator defaultGenerator) {
             // The policy and its mode come from one configuration, also during a refresh.
-            DefaultContentSecurityPolicyGenerator.GeneratedPolicy generated = defaultGenerator.generatePolicy(request);
-            return header(generated.reportOnly(), generated.policy(), response);
+            DefaultContentSecurityPolicyGenerator.GeneratedHeader generated = defaultGenerator.generateHeader(request);
+            String headerName = headerName(generated.reportOnly());
+            if (generated.value() == null || response.getHeaders().contains(headerName)) {
+                return null;
+            }
+            return List.of(new HttpHeaderEntry(headerName, generated.value()));
         }
         boolean reportOnly = cspConfiguration.isReportOnly();
         if (response.getHeaders().contains(headerName(reportOnly))) {

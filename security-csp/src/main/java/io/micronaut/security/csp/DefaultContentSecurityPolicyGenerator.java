@@ -180,11 +180,6 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     private static final Set<String> DIRECTIVES_WITHOUT_FALLBACK = Set.of(BASE_URI, FORM_ACTION, FRAME_ANCESTORS);
     private static final Set<String> LOOPBACK_HOSTS = Set.of("localhost", "127.0.0.1", "[::1]");
-    /**
-     * The CSP {@code base64-value} grammar for nonces. A value outside it, for example one with a
-     * quote, semicolon or space, would corrupt or extend the serialized policy.
-     */
-    private static final Pattern NONCE_GRAMMAR = Pattern.compile("[A-Za-z0-9+/_-]+={0,2}");
     private static final String QUOTED_UNSAFE_INLINE = SINGLE_QUOTE + UNSAFE_INLINE + SINGLE_QUOTE;
     /**
      * The configuration behind each directive that is built from a {@link DirectiveConfiguration}.
@@ -265,7 +260,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
         Map<String, CachedDirective> directives = new HashMap<>();
         DIRECTIVE_CONFIGURATIONS.forEach((name, getter) -> directives.put(name, cachedDirective(name, getter.apply(directiveConfigurations))));
         ReportToConfiguration reportTo = directiveConfigurations.getReportTo();
-        return new Snapshot(
+        Snapshot built = new Snapshot(
             cspConfiguration.isReportOnly(),
             directives.values().stream().anyMatch(CachedDirective::nonce),
             Map.copyOf(directives),
@@ -273,7 +268,28 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             reportUri.isEnabled() && !reportUris.isEmpty()
                 ? new ContentSecurityPolicyDirective(REPORT_URI, String.join(SPACE, reportUris)) : null,
             requireTrustedTypesFor.isEnabled()
-                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor.getValue()) : null);
+                ? new ContentSecurityPolicyDirective(REQUIRE_TRUSTED_TYPES_FOR, requireTrustedTypesFor.getValue()) : null,
+            null);
+        return built.withHeader(constantHeader(built));
+    }
+
+    /**
+     * Serializes the policy once when it is the same for every request: when no directive takes a
+     * nonce and the generator is not a subclass, whose directive methods may depend on the request.
+     *
+     * @param built the snapshot to serialize
+     * @return the header value, or {@code null} when it has to be built for each request
+     */
+    private @Nullable String constantHeader(Snapshot built) {
+        if (built.nonce() || getClass() != DefaultContentSecurityPolicyGenerator.class) {
+            return null;
+        }
+        return ScopedValue.where(generationSnapshot, built).call(() -> {
+            List<ContentSecurityPolicyDirective> directives = new ArrayList<>(directives());
+            addIfPresent(directives, directive(STYLE_SRC, null));
+            addIfPresent(directives, directive(SCRIPT_SRC, null));
+            return directives.isEmpty() ? null : new ContentSecurityPolicy(directives).toHeaderValue();
+        });
     }
 
     /**
@@ -751,6 +767,24 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Builds the serialized header value for a request together with the header mode, both from the
+     * configuration the current policy was built from. A policy that is the same for every request is
+     * serialized once per configuration instead of for every response.
+     *
+     * @param request the current request
+     * @return the header value, or a {@code null} value when no header is written, and its mode
+     */
+    @Internal
+    public GeneratedHeader generateHeader(HttpRequest<?> request) {
+        Snapshot current = snapshot;
+        if (current.header() != null) {
+            return new GeneratedHeader(current.reportOnly(), current.header());
+        }
+        ContentSecurityPolicy policy = ScopedValue.where(generationSnapshot, current).call(() -> contentSecurityPolicy(request));
+        return new GeneratedHeader(current.reportOnly(), policy == null ? null : policy.toHeaderValue());
+    }
+
+    /**
      * Builds the policy for a request together with the header mode, both from the configuration
      * the current policy was built from, so that a concurrent refresh cannot send one
      * configuration's policy in the other's header.
@@ -838,7 +872,7 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
             return cached.withoutNonce();
         }
         String nonce = nonce(request);
-        if (StringUtils.isNotEmpty(nonce) && NONCE_GRAMMAR.matcher(nonce).matches()) {
+        if (StringUtils.isNotEmpty(nonce) && isBase64Value(nonce)) {
             String quotedNonce = SINGLE_QUOTE + NONCE_PREFIX + nonce + SINGLE_QUOTE;
             return new ContentSecurityPolicyDirective(name, cached.sources() == null ? quotedNonce : quotedNonce + SPACE + cached.sources());
         }
@@ -907,6 +941,34 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
     }
 
     /**
+     * Tests a nonce against the CSP {@code base64-value} grammar, base64 or base64url characters
+     * followed by at most two {@code =}. A value outside it, for example one with a quote, semicolon
+     * or space, would corrupt or extend the serialized policy. A loop instead of a regular
+     * expression, because the check runs for every response.
+     *
+     * @param nonce a non-empty nonce
+     * @return whether the nonce matches the grammar
+     */
+    static boolean isBase64Value(String nonce) {
+        int end = nonce.length();
+        int padding = 0;
+        while (end > 0 && nonce.charAt(end - 1) == '=' && padding < 2) {
+            end--;
+            padding++;
+        }
+        if (end == 0) {
+            return false;
+        }
+        for (int i = 0; i < end; i++) {
+            char c = nonce.charAt(i);
+            if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '+' || c == '/' || c == '_' || c == '-')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Splits a configured value into its source expressions, so that a value such as
      * {@code 'self' 'unsafe-inline'} is handled like two values.
      *
@@ -956,13 +1018,18 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      * @param reportTo the {@code report-to} directive, or {@code null} when disabled
      * @param reportUri the {@code report-uri} directive, or {@code null} when disabled or without URIs
      * @param requireTrustedTypesFor the {@code require-trusted-types-for} directive, or {@code null} when disabled
+     * @param header the serialized policy when it is the same for every request, otherwise {@code null}
      */
     private record Snapshot(boolean reportOnly,
                             boolean nonce,
                             Map<String, CachedDirective> directives,
                             @Nullable ContentSecurityPolicyDirective reportTo,
                             @Nullable ContentSecurityPolicyDirective reportUri,
-                            @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor) {
+                            @Nullable ContentSecurityPolicyDirective requireTrustedTypesFor,
+                            @Nullable String header) {
+        private Snapshot withHeader(@Nullable String header) {
+            return new Snapshot(reportOnly, nonce, directives, reportTo, reportUri, requireTrustedTypesFor, header);
+        }
     }
 
     /**
@@ -974,6 +1041,17 @@ public class DefaultContentSecurityPolicyGenerator implements ContentSecurityPol
      */
     @Internal
     public record GeneratedPolicy(boolean reportOnly, @Nullable ContentSecurityPolicy policy) {
+    }
+
+    /**
+     * A serialized policy and the header it is sent in, built from one configuration.
+     *
+     * @param reportOnly whether the policy is sent in the {@code Content-Security-Policy-Report-Only} header
+     * @param value the header value, or {@code null} when no header is written
+     * @since 5.6.0
+     */
+    @Internal
+    public record GeneratedHeader(boolean reportOnly, @Nullable String value) {
     }
 
     /**

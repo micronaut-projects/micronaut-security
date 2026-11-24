@@ -20,7 +20,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.regex.Pattern;
 
 import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_NONE;
 import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
@@ -42,8 +41,6 @@ import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SEL
 public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
     private static final String QUOTED_NONCE_PREFIX = "'nonce-";
     private static final String REDACTED_NONCE = QUOTED_NONCE_PREFIX + "[redacted]'";
-    private static final Pattern NAME_PATTERN = Pattern.compile("[A-Za-z0-9-]+");
-    private static final Pattern UNSAFE_VALUE_CHARACTERS = Pattern.compile("[;\\x00-\\x08\\x0A-\\x1F\\x7F]");
 
     /**
      * Creates a directive.
@@ -70,7 +67,17 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * @return whether the name consists of letters, digits and hyphens
      */
     static boolean isValidName(String name) {
-        return NAME_PATTERN.matcher(name).matches();
+        // A loop instead of a regular expression: a directive is built for every response.
+        if (name.isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '-')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -80,7 +87,16 @@ public record ContentSecurityPolicyDirective(String name, @Nullable String value
      * @return whether the value is absent or contains neither a semicolon nor a control character other than a tab
      */
     static boolean isSafeValue(@Nullable String value) {
-        return value == null || !UNSAFE_VALUE_CHARACTERS.matcher(value).find();
+        if (value == null) {
+            return true;
+        }
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == ';' || c < ' ' && c != '\t' || c == 0x7F) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

@@ -17,6 +17,7 @@ package io.micronaut.security.csp;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfiguration;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyConfigurationProperties;
 import io.micronaut.security.csp.conf.ContentSecurityPolicyDirectiveConfigurations;
@@ -547,6 +548,71 @@ class DefaultContentSecurityPolicyGeneratorTest {
 
         assertFalse(generator.usesNonce(), "a disabled directive adds no nonce");
         assertNull(generator.reportToGroup());
+    }
+
+    @Test
+    void serializesAPolicyWithoutNoncesOncePerConfiguration() {
+        ContentSecurityPolicyConfigurationProperties configuration = new ContentSecurityPolicyConfigurationProperties();
+        ImgSrcConfigurationProperties imgSrc = new ImgSrcConfigurationProperties();
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(configuration,
+            ContentSecurityPolicyDirectiveConfigurations.builder().imgSrc(imgSrc).build());
+
+        DefaultContentSecurityPolicyGenerator.GeneratedHeader first = generator.generateHeader(HttpRequest.GET("/"));
+        assertEquals(policy(generator).toHeaderValue(), first.value());
+        assertSame(first.value(), generator.generateHeader(HttpRequest.GET("/other")).value(), "the constant header is reused");
+
+        imgSrc.setValues(List.of("https://img.example.com"));
+        configuration.setReportOnly(true);
+        generator.refresh();
+
+        DefaultContentSecurityPolicyGenerator.GeneratedHeader refreshed = generator.generateHeader(HttpRequest.GET("/"));
+        assertTrue(refreshed.reportOnly());
+        assertTrue(refreshed.value().contains("img-src https://img.example.com"), refreshed::value);
+    }
+
+    @Test
+    void serializesAPolicyWithANonceForEachRequest() {
+        ScriptSrcConfigurationProperties scriptSrc = new ScriptSrcConfigurationProperties();
+        scriptSrc.setNonce(true);
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().scriptSrc(scriptSrc).build());
+        MutableHttpRequest<?> first = HttpRequest.GET("/");
+        first.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, "first");
+        MutableHttpRequest<?> second = HttpRequest.GET("/");
+        second.setAttribute(ContentSecurityPolicyNonceGenerator.CSP_NONCE_ATTRIBUTE, "second");
+
+        assertTrue(generator.generateHeader(first).value().endsWith("script-src 'nonce-first'"));
+        assertTrue(generator.generateHeader(second).value().endsWith("script-src 'nonce-second'"));
+    }
+
+    @Test
+    void serializesTheHeaderOfASubclassForEachRequest() {
+        DefaultContentSecurityPolicyGenerator generator = new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().build()) {
+            @Override
+            protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
+                return List.of(new ContentSecurityPolicyDirective(ContentSecurityPolicyDirectiveNames.DEFAULT_SRC, "https://" + request.getPath().substring(1)));
+            }
+        };
+
+        assertEquals("default-src https://a.example", generator.generateHeader(HttpRequest.GET("/a.example")).value());
+        assertEquals("default-src https://b.example", generator.generateHeader(HttpRequest.GET("/b.example")).value());
+        assertNull(new DefaultContentSecurityPolicyGenerator(new ContentSecurityPolicyConfigurationProperties(),
+            ContentSecurityPolicyDirectiveConfigurations.builder().build()) {
+            @Override
+            protected List<ContentSecurityPolicyDirective> directives(HttpRequest<?> request) {
+                return List.of();
+            }
+        }.generateHeader(HttpRequest.GET("/")).value());
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({
+        "abc, true", "a+/_-Z9, true", "abc=, true", "abc==, true", "abc===, false", "'=', false", "'==', false",
+        "'ab=c', false", "'a b', false", "\"a'\", false", "a;, false", "ä, false"
+    })
+    void checksNoncesAgainstTheBase64ValueGrammar(String nonce, boolean valid) {
+        assertEquals(valid, DefaultContentSecurityPolicyGenerator.isBase64Value(nonce));
     }
 
     private static ContentSecurityPolicyGenerator generator(ContentSecurityPolicyDirectiveConfigurations.Builder directiveConfigurations) {
