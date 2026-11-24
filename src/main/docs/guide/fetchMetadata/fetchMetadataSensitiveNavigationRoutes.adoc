@@ -56,7 +56,7 @@ The `403 Forbidden` response is produced by the filter, so a global `@Error(stat
 
 CAUTION: If `micronaut.security.redirect.unauthorized.url` points at the OAuth 2.0 login route, a user who follows a link from another site to a secured page is redirected to the login route, and the browser reports the redirected navigation as cross-site. The login route then responds with `403 Forbidden`. Point `micronaut.security.redirect.unauthorized.url` at a page of the application that links to the login route instead, or switch the protection off.
 
-The login route is protected only when the filter's `pattern` covers it (see <<fetchMetadataConfiguration,Configuration>>). A pattern such as `+/api/**+` leaves `/oauth/login/{provider}` unprotected. Do not include `micronaut.server.context-path` in the pattern: with the context path `/app`, the pattern `+/oauth/login/**+` covers the login route, and `+/app/oauth/login/**+` does not.
+The login route is protected only when the filter's `pattern` covers it. A pattern that does not cover the login routes, such as `+/api/**+`, leaves them unprotected, and so does a pattern that includes `micronaut.server.context-path`, such as `+/app/oauth/login/**+` with the context path `/app` (see <<fetchMetadataConfiguration,Configuration>>).
 
 The rule finds the annotation on the route the router matched for the request. The protection is tested with the default Netty server and with the Tomcat servlet runtime; a request that matches no route is not affected by the annotation.
 
