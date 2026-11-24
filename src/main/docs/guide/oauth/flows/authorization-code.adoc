@@ -14,7 +14,7 @@ TIP: It is possible to designate a default provider. The value of the configurat
 
 Any site can link to, or redirect the browser to, the login endpoint. If the user has a session at the identity provider and has already authorized the application, the provider redirects back at once and the user is logged in to the application without intending to (forced login). The `state` parameter checked by the callback does not prevent this, because the browser that started the flow is the one that completes it.
 
-The recommended protection is the <<fetchMetadata,Fetch Metadata>> module. The login endpoints are annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[], so, with the module installed, a navigation to them that another site started is rejected with `403 Forbidden`, while a login started from the application itself keeps working. See <<fetchMetadataSensitiveNavigationRoutes,Routes Closed to Cross-Site Navigation>> for the details and the caveats.
+The recommended protection is the <<fetchMetadata,Fetch Metadata>> module. The login endpoints are annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[], so, with the module installed, a navigation to them that another site started is rejected with `403 Forbidden`, while a login started from the application itself keeps working. Logins started from the identity provider's dashboard, or from a link on another origin of the same site, are rejected too. See <<fetchMetadataSensitiveNavigationRoutes,Routes Closed to Cross-Site Navigation>> for the details and the caveats.
 
 dependency:micronaut-security-fetch-metadata[groupId=io.micronaut.security]
 

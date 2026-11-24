@@ -30,8 +30,9 @@ import java.lang.annotation.Target;
  * for example a link or a script on another site that sends the browser to the route, is
  * rejected with {@code 403 Forbidden} unless another rule allows it. Same-origin navigations,
  * navigations the user starts from the browser UI ({@code Sec-Fetch-Site: none}), and requests
- * without Fetch Metadata are still allowed by the rules that run before the navigation rule.
- * A same-site navigation is allowed only when same-site requests are allowed.</p>
+ * without Fetch Metadata are still allowed by the rules that run before the navigation rule,
+ * as long as those rules are enabled. A same-site navigation is allowed only when same-site
+ * requests are allowed.</p>
  *
  * <p>Annotate a {@code GET} route whose side effects must only be triggered from the
  * application itself, such as a route that starts a login. Micronaut Security OAuth 2.0
@@ -39,8 +40,9 @@ import java.lang.annotation.Target;
  * {@code micronaut.security.fetch-metadata.rules.deny-annotated-cross-site-navigation}
  * switches this protection off.</p>
  *
- * <p>The annotation is {@link Inherited}: a method that implements or overrides an annotated
- * method is annotated too.</p>
+ * <p>Micronaut copies this annotation to a method that implements or overrides an annotated
+ * method, as long as this module is on the compile classpath of the implementing class.
+ * Otherwise, repeat the annotation.</p>
  *
  * @since 5.6.0
  */

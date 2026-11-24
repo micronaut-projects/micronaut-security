@@ -77,6 +77,8 @@ final class SimpleTopLevelNavigationAndIframingFetchMetadataRule implements Http
         return FetchMetadataRuleResult.UNKNOWN;
     }
 
+    // RouteAttributes comes from micronaut-router, which every HTTP server that runs the filter
+    // brings along, so no @Requires guard: with one, a missing router would remove this rule.
     private static boolean targetsRouteDenyingCrossSiteNavigation(HttpRequest<?> request) {
         return RouteAttributes.getRouteMatch(request)
             .filter(routeMatch -> routeMatch.getAnnotationMetadata().hasAnnotation(DenyCrossSiteNavigation.class))

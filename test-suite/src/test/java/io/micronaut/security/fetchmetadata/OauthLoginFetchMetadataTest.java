@@ -131,7 +131,12 @@ class OauthLoginFetchMetadataTest {
     @Test
     void crossSiteNavigationToTheLoginRouteOfACustomControllerIsRejected() {
         assertRejected(customControllerApp, navigation("/oauth/login/auth", "cross-site"));
-        assertRedirectsToTheProvider(customControllerApp, navigation("/oauth/login/auth", "same-origin"), "/authorize");
+
+        HttpResponse<?> response = exchange(customControllerApp, navigation("/oauth/login/auth", "same-origin"));
+        assertEquals(HttpStatus.FOUND, response.status());
+        assertTrue(response.getHeaders().get(HttpHeaders.LOCATION).startsWith(provider.getURL() + "/authorize?"));
+        // no-store comes from DefaultOauthController, which the application's controller replaces
+        assertNull(response.getHeaders().get(HttpHeaders.CACHE_CONTROL));
     }
 
     @Test
@@ -273,8 +278,7 @@ class OauthLoginFetchMetadataTest {
 
         @Override
         public Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request) {
-            return Mono.from(client.authorizationRedirect(request))
-                .map(response -> response.header(HttpHeaders.CACHE_CONTROL, "no-store"));
+            return client.authorizationRedirect(request);
         }
 
         @Override
