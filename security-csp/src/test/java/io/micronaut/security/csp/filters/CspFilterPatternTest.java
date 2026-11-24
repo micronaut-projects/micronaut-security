@@ -4,7 +4,6 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -14,11 +13,9 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.csp.ContentSecurityPolicy;
-import io.micronaut.security.csp.ContentSecurityPolicyDirective;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,9 +28,11 @@ class CspFilterPatternTest {
     @Test
     void cspFilterPattern(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
-        HttpResponse<?> response = assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/cspexample")));
-        ContentSecurityPolicy csp = ContentSecurityPolicy.of(response);
-        assertNull(csp, "CSP filter pattern should not match request path");
+
+        assertNotNull(ContentSecurityPolicy.of(client.exchange(HttpRequest.GET("/foo/cspexample"))),
+            "a request matching the pattern receives the policy");
+        assertNull(ContentSecurityPolicy.of(client.exchange(HttpRequest.GET("/cspexample"))),
+            "a request outside the pattern does not");
     }
 
     @Test
@@ -48,11 +47,16 @@ class CspFilterPatternTest {
     }
 
     @Requires(property = "spec.name", value = "CspFilterPatternTest")
-    @Controller("/cspexample")
+    @Controller
     static class CspController {
-        @Get
+        @Get("/cspexample")
         @Status(HttpStatus.OK)
         void index() {
+        }
+
+        @Get("/foo/cspexample")
+        @Status(HttpStatus.OK)
+        void foo() {
         }
     }
 }

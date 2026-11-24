@@ -26,7 +26,9 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -50,10 +52,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ContentSecurityPolicyControllerTest {
     private static final String SPEC_NAME = "ContentSecurityPolicyControllerTest";
 
+    @Inject
+    ReportListener reportListener;
+
+    @BeforeEach
+    void resetTheListener() {
+        reportListener.reset();
+    }
+
     @Test
     void acceptsAndPublishesReportingApiBatch(@Client("/") HttpClient httpClient,
                                               ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-violation",
@@ -120,7 +129,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void acceptsHashReportWithSpecificationExampleFieldNames(@Client("/") HttpClient httpClient,
                                                              ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-hash",
@@ -152,7 +160,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsHashReportWithoutHash(@Client("/") HttpClient httpClient,
                                       ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-hash",
@@ -178,7 +185,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsInvalidReportEnvelope(@Client("/") HttpClient httpClient,
                                       ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-violation",
@@ -206,7 +212,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsCspReportWithoutItsSpecifiedBody(@Client("/") HttpClient httpClient,
                                                   ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-violation",
@@ -228,7 +233,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsNullReportInBatch(@Client("/") HttpClient httpClient,
                                   ReportListener reportListener) {
-        reportListener.reports.clear();
         BlockingHttpClient client = httpClient.toBlocking();
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
@@ -241,7 +245,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void skipsNonCspReportsDeliveredInTheSameBatch(@Client("/") HttpClient httpClient,
                                                    ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "deprecation",
@@ -269,7 +272,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsReportWithoutType(@Client("/") HttpClient httpClient,
                                   ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "age": 1,
@@ -290,7 +292,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsMalformedJson(@Client("/") HttpClient httpClient,
                               ReportListener reportListener) {
-        reportListener.reports.clear();
         BlockingHttpClient client = httpClient.toBlocking();
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
@@ -303,7 +304,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void rejectsInvalidCspViolationBody(@Client("/") HttpClient httpClient,
                                         ReportListener reportListener) {
-        reportListener.reports.clear();
         String json = """
             [{
               "type": "csp-violation",
@@ -334,7 +334,6 @@ class ContentSecurityPolicyControllerTest {
     })
     void doesNotRevealTheDecoderMessageInTheResponse(String json, @Client("/") HttpClient httpClient,
                                                      ReportListener reportListener) {
-        reportListener.reports.clear();
         BlockingHttpClient client = httpClient.toBlocking();
 
         HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
@@ -366,7 +365,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void invokesTheHandlerOffTheEventLoop(@Client("/") HttpClient httpClient,
                                           ReportListener reportListener) {
-        reportListener.threadName = null;
         String json = """
             [{"type": "csp-hash", "age": 1, "url": "https://example.com/", "user_agent": "Example Browser",
               "body": {"document_url": "https://example.com/", "hash": "sha256-example"}}]
@@ -382,8 +380,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void acceptsAnEmptyBatch(@Client("/") HttpClient httpClient,
                              ReportListener reportListener) {
-        reportListener.reports.clear();
-        reportListener.calls.set(0);
 
         HttpResponse<?> response = httpClient.toBlocking().exchange(reportRequest("[]"));
 
@@ -394,7 +390,6 @@ class ContentSecurityPolicyControllerTest {
     @Test
     void doesNotCallTheHandlerForABatchWithoutCspReports(@Client("/") HttpClient httpClient,
                                                          ReportListener reportListener) {
-        reportListener.calls.set(0);
         String json = """
             [{"type": "deprecation", "age": 1, "url": "https://example.com/page", "user_agent": "Example Browser", "body": {}}]
             """;
@@ -417,6 +412,13 @@ class ContentSecurityPolicyControllerTest {
         private final AtomicInteger calls = new AtomicInteger();
         private volatile String requestPath;
         private volatile String threadName;
+
+        void reset() {
+            reports.clear();
+            calls.set(0);
+            requestPath = null;
+            threadName = null;
+        }
 
         @Override
         public void handle(List<ContentSecurityPolicyReport> reports, HttpRequest<?> request) {
