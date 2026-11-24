@@ -18,8 +18,6 @@ io.micronaut.security.endpoints.introspection
 io.micronaut.security.errors
 io.micronaut.security.event
 io.micronaut.security.expressions
-io.micronaut.security.fetchmetadata
-io.micronaut.security.fetchmetadata.rules
 io.micronaut.security.filters
 io.micronaut.security.handlers
 io.micronaut.security.html
