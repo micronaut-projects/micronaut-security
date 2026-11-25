@@ -57,6 +57,14 @@ On the Netty server, `request.isSecure()` checks whether the connection to the a
 
 api:security.token.cookie.RefreshTokenCookieConfigurationProperties[] now declares the 30 day default of `micronaut.security.token.refresh.cookie.cookie-max-age`, so `getCookieMaxAge()` returns it when the setting is not configured. Previously it returned an empty `Optional` and api:security.token.cookie.TokenCookieLoginHandler[] applied the default. The refresh token cookie issued is unchanged.
 
+=== Unsigned JSON Web Tokens are rejected by default
+
+Unsigned JSON Web Tokens (JWS header `alg=none`) are now rejected by the JWT validators even when no api:security.token.jwt.signature.SignatureConfiguration[] bean is present. Previously, an application without any signature configuration silently accepted unsigned tokens, which anyone can forge.
+
+If you rely on unsigned tokens (for example in local development), set `micronaut.security.token.jwt.accept-unsigned-tokens` to `true`. When the flag is enabled and no signature configuration is present, a warning is logged once the JWT validators are created. Unsigned tokens are still rejected when a signature configuration is present, regardless of the flag. The first unsigned token rejected for lack of a signature configuration is logged as a warning as well.
+
+api:security.token.jwt.generator.JwtTokenGenerator[] still emits unsigned tokens when no `@Named("generator")` api:security.token.jwt.signature.SignatureGeneratorConfiguration[] bean is present, but it now logs a warning when it is created.
+
 == Micronaut Security 5.5 breaking changes
 
 - When `micronaut.server.context-path` is set, the security filter also handles requests outside the context path. With `micronaut.security.reject-not-found` enabled (the default), such a request is rejected like any other request that matches no route: it is answered with 401 when anonymous or 403 when authenticated, or redirected where redirects for rejected requests apply (for example, a browser request with session-based authentication), instead of 404. Set `micronaut.security.reject-not-found` to `false` to answer 404 again. Likewise, a request whose single-segment path variable holds an encoded slash (`%2F`) is no longer routed, and is answered with 404 once security admits it; intercept URL map patterns are evaluated as before. Both changes follow the Micronaut Core version the application runs on, not the Micronaut Security version: they apply with Micronaut Core 5.2.23 or later (Micronaut Platform 5.2.6 or later). Micronaut Security 5.5.3 depends on Micronaut Core 5.2.25.
