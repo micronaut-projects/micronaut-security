@@ -34,4 +34,15 @@ responds:
 }
 ----
 
+If no api:security.token.validator.TokenValidator[] accepts the token, the endpoint treats it as a refresh token. The token is first checked with the api:security.token.validator.RefreshTokenValidator[] and, when a api:security.token.refresh.RefreshTokenPersistence[] bean is present, it is then looked up in the persistence layer:
+
+* If `RefreshTokenPersistence::getAuthentication` emits an api:security.authentication.Authentication[], the refresh token is reported as `"active": true`, with no other fields. The persisted `Authentication` describes the user at login, not the refresh token, so its claims are not returned; resource servers must still not accept a refresh token as an access token based on this response.
+* If it emits nothing or fails (for example, because the refresh token was revoked or the persistence layer is unavailable), the refresh token is reported as `"active": false`. A failure other than an api:security.errors.OauthErrorResponseException[] is logged at `WARN` by api:security.endpoints.introspection.DefaultIntrospectionProcessor[], so check that logger when refresh tokens are unexpectedly reported inactive.
+
+IMPORTANT: Because introspection calls `RefreshTokenPersistence::getAuthentication`, the method must not have side effects. Keep refresh token rotation, single-use bookkeeping or reuse detection out of it; otherwise introspecting a refresh token consumes or revokes it. For a revoked or unknown refresh token, emit no item or an `OauthErrorResponseException` with the `invalid_grant` error code. The returned publisher may be subscribed on a Netty event loop thread; if the lookup blocks (for example, JDBC or JPA), subscribe it on a scheduler for blocking work, for example `Mono.fromCallable(...).subscribeOn(Schedulers.fromExecutorService(blockingExecutor))`.
+
+NOTE: Configure a refresh token secret (`micronaut.security.token.jwt.generator.refresh-token.secret`) different from the access token signing secret. Otherwise the api:security.token.validator.RefreshTokenValidator[] also accepts an expired access token, which is then looked up in `RefreshTokenPersistence` in vain.
+
+If there is no `RefreshTokenPersistence` bean, there is no revocation point to consult; a refresh token is reported as `"active": true`, with no other fields, as soon as the `RefreshTokenValidator` accepts it and for as long as it remains valid. Refresh tokens revoked elsewhere are still reported active.
+
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties.adoc[]
