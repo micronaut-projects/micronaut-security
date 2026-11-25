@@ -4,3 +4,5 @@ Using OpenID Connect <<openid-configuration, Discovery>> by setting `micronaut.s
 Using manual OAuth 2.0 Client configuration, you can specify the challenge method supported by setting `micronaut.security.oauth2.clients.*.authorization.code-challenge-method`.
 
 If the built-in implementation does not fulfill your needs, you can  provide a https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of bean api:security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator[] or api:security.oauth2.endpoint.authorization.pkce.PkceGenerator[].
+
+When PKCE persistence uses a cookie (`micronaut.security.oauth2.pkce.persistence: cookie`), you can configure the cookie with `micronaut.security.oauth2.pkce.cookie.*`. For example, set its `SameSite` attribute with `micronaut.security.oauth2.pkce.cookie.cookie-same-site` (`Strict`, `Lax` or `None`; not set by default). `SameSite=None` requires `micronaut.security.oauth2.pkce.cookie.cookie-secure: true`.
