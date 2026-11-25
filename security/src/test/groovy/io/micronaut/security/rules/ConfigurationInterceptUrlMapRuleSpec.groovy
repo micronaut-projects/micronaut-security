@@ -77,8 +77,22 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         ['isAuthenticated()']        | ['ROLE_ADMIN', 'ROLE_USER', 'isAuthenticated()'] | SecurityRuleResult.ALLOWED
         ['ROLE_ADMIN', 'ROLE_USER']  | ['ROLE_USER']                                    | SecurityRuleResult.ALLOWED
         ['ROLE_ADMIN']               | ['ROLE_USER']                                    | SecurityRuleResult.REJECTED
+        ['role_admin']               | ['ROLE_ADMIN']                                   | SecurityRuleResult.REJECTED
         ['isAnonymous()']            | [SecurityRule.IS_ANONYMOUS]                      | SecurityRuleResult.ALLOWED
         ['isAuthenticated()']        | [SecurityRule.IS_AUTHENTICATED]                  | SecurityRuleResult.ALLOWED
         description = expected == SecurityRuleResult.ALLOWED ? 'Allowed' : 'Rejected'
+    }
+
+    def 'configured case-insensitive role comparison applies to intercept url map rules'() {
+        given:
+        def securityConfiguration = Stub(SecurityConfiguration) {
+            getInterceptUrlMap() >> []
+            isRolesCaseSensitive() >> false
+        }
+        RolesFinder caseInsensitiveRolesFinder = new DefaultRolesFinder(tokenConfiguration, securityConfiguration)
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(caseInsensitiveRolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
+
+        expect:
+        SecurityRuleResult.ALLOWED == Mono.from(provider.compareRoles(['role_admin'], ['ROLE_ADMIN'])).block()
     }
 }
