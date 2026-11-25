@@ -16,10 +16,11 @@
 package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
+import org.jspecify.annotations.NonNull;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
@@ -43,12 +44,17 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     public static final boolean DEFAULT_STATIC_RESOURCE_AUTHENTICATION_BYPASS = false;
 
     /**
-     *
      * The pattern the {@link SecurityFilter} should match.
      */
     @NonNull
     @NotBlank
-    private String pattern = "/**";
+    private String pattern = Filter.MATCH_ALL_PATTERN;
+
+    /**
+     * Whether {@code micronaut.security.filter.pattern} was set, in which case the deprecated
+     * {@code micronaut.security.filter.path} must not override it.
+     */
+    private boolean patternSet;
 
     private boolean enabled = DEFAULT_ENABLED;
 
@@ -93,12 +99,29 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     }
 
     /**
-     * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
+     * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED.
+     * The {@link SecurityFilter} route pattern is resolved from the {@code micronaut.security.filter.pattern} property.
      * @param pattern The pattern
+     * @since 5.6.0
      */
-    public void setPath(@NonNull String pattern) {
+    public void setPattern(@NonNull String pattern) {
         if (StringUtils.isNotEmpty(pattern)) {
             this.pattern = pattern;
+            this.patternSet = true;
+        }
+    }
+
+    /**
+     * Pattern the {@link SecurityFilter} should match.
+     * @param path The pattern
+     * @deprecated Use {@link #setPattern(String)} and the {@code micronaut.security.filter.pattern} property instead.
+     * The {@code micronaut.security.filter.path} property populates {@link #getPattern()} only if {@code micronaut.security.filter.pattern} is not set,
+     * and it does not change which routes the {@link SecurityFilter} intercepts.
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
+    public void setPath(@NonNull String path) {
+        if (!patternSet && StringUtils.isNotEmpty(path)) {
+            this.pattern = path;
         }
     }
 }
