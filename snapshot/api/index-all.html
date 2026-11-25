@@ -6811,6 +6811,12 @@ as OpenID Connect Core 1.0 section 3.1.3.7 requires.</div>
 <div class="block">Responsible for validating the nonce claim.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html#%3Cinit%3E()" class="member-name-link">NonceClaimValidator()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.validation.<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.nonce.NonceFactory)"><code>NonceClaimValidator(NonceFactory)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.nonce.NonceFactory)" class="member-name-link">NonceClaimValidator(NonceFactory)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.validation.<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.nonce">NonceConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/nonce/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce</a></dt>
 <dd>
@@ -10605,6 +10611,16 @@ populated on both save and update with the identity of the currently authenticat
 <dt><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken(java.lang.String,T)" class="member-name-link">validateToken(String, T)</a> - Method in interface io.micronaut.security.token.validator.<a href="io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></dt>
 <dd>
 <div class="block">Validates the provided token and returns the authentication state.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/ReactiveOpenIdTokenResponseValidator.html#validateWithoutNonce(io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse)" class="member-name-link">validateWithoutNonce(OauthClientConfiguration, OpenIdProviderMetadata, OpenIdTokenResponse)</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.validation.<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/ReactiveOpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">ReactiveOpenIdTokenResponseValidator</a></dt>
+<dd>
+<div class="block">Validates an OpenID token response obtained without an authorization request, for example with the password
+grant.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html#validateWithoutNonce(io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,io.micronaut.security.oauth2.client.OpenIdProviderMetadata)" class="member-name-link">validateWithoutNonce(OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata)</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.validation.<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></dt>
+<dd>
+<div class="block">Validates the claims of an ID token obtained without an authorization request, for example with the password
+grant.</div>
 </dd>
 <dt><a href="io/micronaut/security/annotation/RunAs.Attribute.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.security.annotation.<a href="io/micronaut/security/annotation/RunAs.Attribute.html" title="annotation interface in io.micronaut.security.annotation">RunAs.Attribute</a></dt>
 <dd>&nbsp;</dd>
