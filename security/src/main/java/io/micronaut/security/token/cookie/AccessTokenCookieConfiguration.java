@@ -21,7 +21,7 @@ import io.micronaut.security.config.TokenCookieConfiguration;
  * Configuration for the access token cookie.
  *
  * @author James Kleeh
- * @since 2.1.0
+ * @since 3.2.0
  */
 public interface AccessTokenCookieConfiguration extends TokenCookieConfiguration {
 }
