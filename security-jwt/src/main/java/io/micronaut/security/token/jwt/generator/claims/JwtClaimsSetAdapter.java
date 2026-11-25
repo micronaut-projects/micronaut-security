@@ -40,6 +40,16 @@ public class JwtClaimsSetAdapter implements Claims {
         this.jwtClaimsSet = jwtClaimsSet;
     }
 
+    /**
+     *
+     * @return the wrapped JWT Claims set
+     * @since 5.4.0
+     */
+    @NonNull
+    public JWTClaimsSet getJwtClaimsSet() {
+        return jwtClaimsSet;
+    }
+
     @Nullable
     @Override
     public Object get(String claimName) {
