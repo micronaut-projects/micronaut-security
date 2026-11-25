@@ -27,15 +27,23 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswor
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.ThrowableAuthenticationResponseAdapter;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.ReactiveOpenIdTokenResponseValidator;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 
 /**
  * An {@link ReactiveAuthenticationProvider} that delegates to an OpenID provider using the
  * password grant flow.
+ *
+ * <p>A grant the token endpoint rejects with a 4xx response (for example {@code invalid_grant} for wrong credentials)
+ * is an authentication failure. A transient 4xx response such as {@code 429 Too Many Requests}, a 5xx response, a
+ * connection failure and the errors of the token response validation and of the {@link OpenIdAuthenticationMapper}
+ * are propagated as errors.</p>
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -76,17 +84,20 @@ public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements Re
     public Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<I, S> authenticationRequest) {
         OpenIdPasswordTokenRequestContext openIdPasswordTokenRequestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
         return Flux.from(tokenEndpointClient.sendRequest(openIdPasswordTokenRequestContext))
-                   .flatMap(openIdTokenResponse ->
-                                Flux.from(tokenResponseValidator.validateWithoutNonce(clientConfiguration, openIdProviderMetadata, openIdTokenResponse))
-                                    .flatMap(jwt -> {
-                                        try {
-                                            OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
-                                            return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, null);
-                                        } catch (ParseException e) {
-                                            // Should never happen as validation succeeded
-                                            return Flux.error(e);
-                                        }
-                                    })
-                   );
+            .flatMap(this::onTokenResponse, t -> ThrowableAuthenticationResponseAdapter.onTokenRequestError(t, clientConfiguration), Mono::empty);
     }
+
+    private Publisher<AuthenticationResponse> onTokenResponse(OpenIdTokenResponse openIdTokenResponse) {
+        return Flux.from(tokenResponseValidator.validateWithoutNonce(clientConfiguration, openIdProviderMetadata, openIdTokenResponse))
+            .flatMap(jwt -> {
+                try {
+                    OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
+                    return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, null);
+                } catch (ParseException e) {
+                    // Should never happen as validation succeeded
+                    return Flux.error(e);
+                }
+            });
+    }
+
 }

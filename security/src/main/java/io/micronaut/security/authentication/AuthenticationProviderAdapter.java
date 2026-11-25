@@ -55,4 +55,9 @@ final class AuthenticationProviderAdapter<T, I, S> implements ReactiveAuthentica
         Mono<AuthenticationResponse> authenticationResponseMono = Mono.fromCallable(() -> authenticationProvider.authenticate(requestContext, authenticationRequest));
         return scheduler != null ? authenticationResponseMono.subscribeOn(scheduler) : authenticationResponseMono;
     }
+
+    @Override
+    public int getOrder() {
+        return authenticationProvider.getOrder();
+    }
 }

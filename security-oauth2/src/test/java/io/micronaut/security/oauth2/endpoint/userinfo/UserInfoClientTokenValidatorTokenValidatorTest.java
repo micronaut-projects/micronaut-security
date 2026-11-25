@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2.endpoint.userinfo;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -38,7 +39,9 @@ class UserInfoClientTokenValidatorTokenValidatorTest {
     void userInfoClientTokenValidator(boolean userInfoOpenIdConfiguration) {
 
         Map<String, Object> authServerConfiguration = Map.of(
-            "spec.name", "UserInfoClientTokenValidatorTestAuthServer"
+            "spec.name", "UserInfoClientTokenValidatorTestAuthServer",
+            // the mock authorization server controllers live in this package, which is disabled unless the validator is enabled
+            "micronaut.security.oauth2.userinfo.validator", StringUtils.TRUE
         );
         try (EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer.class, authServerConfiguration)) {
             OpenIdAutoConfigurationController controller = authServer.getApplicationContext().getBean(OpenIdAutoConfigurationController.class);
@@ -47,6 +50,7 @@ class UserInfoClientTokenValidatorTokenValidatorTest {
 
             Map<String, Object> serverConfig = new HashMap<>(Map.of(
                 "spec.name", "UserInfoClientTokenValidatorTest",
+                "micronaut.security.oauth2.userinfo.validator", StringUtils.TRUE,
                 "micronaut.security.oauth2.clients.authserver.client-id", "XXX",
                 "micronaut.security.oauth2.clients.authserver.client-secret", "YYY",
                 "micronaut.security.oauth2.clients.authserver.openid.issuer", authServer.getURL().toString()

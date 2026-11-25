@@ -1,1 +1,7 @@
 By default, when you include Micronaut security the app returns 401 or 403 even for non existing routes. The behavior prevents attackers from discovering what endpoints are available in your application. However, if you wish to return 404 for non found routes you can set `micronaut.security.reject-not-found: false` in your configuration.
+
+`micronaut.security.reject-not-found: false` only affects requests that no security rule decides and that the server cannot serve. A request that matches no route but resolves to a https://docs.micronaut.io/latest/guide/#staticResources[static resource] is still rejected with 401 or 403 unless a security rule, for example an <<interceptUrlMap, intercept URL map>> entry, allows it.
+
+The filter fails closed. The Netty runtime resolves static resources from the decoded request path and the servlet runtime from the raw, percent-encoded path, so a percent-encoded request is rejected when either form resolves to a static resource. In that case the filter may answer 401 or 403 for a request the active runtime would have answered with 404.
+
+WARNING: Setting `micronaut.security.reject-not-found: false` never makes a static resource public. To serve static resources anonymously, add an intercept URL map entry such as `pattern: /assets/**` with `access: isAnonymous()`.
