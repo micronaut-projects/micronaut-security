@@ -62,13 +62,16 @@ public class NonceClaimValidator {
     /**
      * Creates a validator which accepts a missing persisted nonce when the ID token has no {@code nonce} claim, the
      * behavior before 5.6.0. A subclass which does not call {@link #NonceClaimValidator(NonceFactory)} explicitly uses
-     * this constructor and does not get the stricter validation.
+     * this constructor and does not get the stricter validation. The use of this constructor is logged at WARN.
      *
      * @deprecated Use {@link #NonceClaimValidator(NonceFactory)} instead.
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public NonceClaimValidator() {
         this(null);
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("{} is created with the deprecated NonceClaimValidator() constructor, so a missing persisted nonce is accepted when the ID token has no nonce claim. Call NonceClaimValidator(NonceFactory) to reject it", getClass().getName());
+        }
     }
 
     /**
