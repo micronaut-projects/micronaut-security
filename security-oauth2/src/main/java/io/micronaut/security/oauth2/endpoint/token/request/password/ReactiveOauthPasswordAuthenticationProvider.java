@@ -26,12 +26,18 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.ThrowableAuthenticationResponseAdapter;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * An {@link ReactiveAuthenticationProvider} that delegates to an OAuth 2.0 provider using the
  * password grant flow.
+ *
+ * <p>A grant the token endpoint rejects with a 4xx response (for example {@code invalid_grant} for wrong credentials)
+ * is an authentication failure. A transient 4xx response such as {@code 429 Too Many Requests}, a 5xx response, a
+ * connection failure and the errors of the {@link OauthAuthenticationMapper} are propagated as errors.</p>
  *
  * @author Sergio del Amo
  * @since 4.8.0
@@ -66,7 +72,9 @@ public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements Rea
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flux.from(tokenEndpointClient.sendRequest(context))
-                   .flatMap(response -> Flux.from(authenticationMapper.createAuthenticationResponse(response, null)));
+            .flatMap(response -> authenticationMapper.createAuthenticationResponse(response, null),
+                t -> ThrowableAuthenticationResponseAdapter.onTokenRequestError(t, clientConfiguration),
+                Mono::empty);
     }
 
     /**
@@ -79,7 +87,5 @@ public class ReactiveOauthPasswordAuthenticationProvider<T, I, S> implements Rea
         SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
                 .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
         return new DefaultSecureEndpoint(endpointConfiguration, AuthenticationMethods.CLIENT_SECRET_BASIC);
-
     }
-
 }
