@@ -20,7 +20,7 @@ IMPORTANT: Only the client-side cost is equalised. A directory may still answer 
 [[ldapFailureReasons]]
 == Failure reasons
 
-The failure reason depends only on whether the directory could be reached, which is the same for every submitted username. It does not reveal whether a username exists or whether a password was correct; the log tells the cases apart.
+The failure reason does not reveal whether a username exists or whether a password was correct; the log tells the cases apart. `UNKNOWN` means that the provider could not get as far as checking the password: the directory could not be reached, or the manager bind or the search failed, which includes configuration errors such as a wrong manager password. Check the step named in the log before retrying.
 
 [cols="3,1,1"]
 |===
@@ -30,9 +30,9 @@ The failure reason depends only on whether the directory could be reached, which
 |`UNKNOWN`
 |`DEBUG`
 
-|The directory cannot be reached or cannot serve the request at a later step: a `javax.naming.CommunicationException` or a `javax.naming.ServiceUnavailableException`, for example result code 51 (`busy`) or 52 (`unavailable`), during the bind of the user, the attribute fetch, the group search or the decoy bind
+|The directory cannot be reached or cannot serve the request during the bind of the user or the decoy bind: a `javax.naming.CommunicationException` or a `javax.naming.ServiceUnavailableException`, for example result code 51 (`busy`) or 52 (`unavailable`)
 |`UNKNOWN`
-|`DEBUG`; `WARN` for the attribute fetch and the group search
+|`DEBUG`
 
 |The directory refuses the bind of the user found by the search, with any other exception or result code, for example 49 (`invalidCredentials`), 53 (`unwillingToPerform`), 19 (`constraintViolation`) or 50 (`insufficientAccessRights`)
 |`CREDENTIALS_DO_NOT_MATCH`
@@ -42,12 +42,12 @@ The failure reason depends only on whether the directory could be reached, which
 |`CREDENTIALS_DO_NOT_MATCH`
 |`DEBUG`; `WARN` if the decoy bind fails with anything other than invalid credentials
 
-|The bind of the user succeeds, but fetching its attributes or searching its groups fails with anything other than an outage
+|The bind of the user succeeds, but fetching its attributes or searching its groups fails, outages included
 |`CREDENTIALS_DO_NOT_MATCH`
 |`WARN`
 |===
 
-A failing attribute fetch or group search can only follow a successful bind and usually means a misconfiguration, such as a group search filter the directory rejects or a manager account without the rights to read the groups. It is therefore logged at `WARN`, with the step and the exception, and reported as `CREDENTIALS_DO_NOT_MATCH`.
+A failing attribute fetch or group search can only follow a successful bind, so any other reason would tell a client that the password was correct. It is therefore reported as `CREDENTIALS_DO_NOT_MATCH`, the reason a wrong password gets, even when the directory became unreachable. Such a failure usually means a misconfiguration, such as a group search filter the directory rejects or a manager account without the rights to read the groups, so it is logged at `WARN` with the step and the exception.
 
 The provider deliberately does not return `ACCOUNT_LOCKED` or `USER_DISABLED`, although some directories answer the bind of a disabled or locked account with result code 53: directories do not report these states consistently, and a distinct reason would tell a client that the username exists and that its password may be correct. If your users need a hint, make the login failure message for `CREDENTIALS_DO_NOT_MATCH` mention that the account may also be locked or disabled.
 

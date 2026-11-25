@@ -69,9 +69,9 @@ class LdapNameAttributesTest {
             "49, CREDENTIALS_DO_NOT_MATCH",
             "50, CREDENTIALS_DO_NOT_MATCH",
             "53, CREDENTIALS_DO_NOT_MATCH",
-            "52, UNKNOWN",
+            "52, CREDENTIALS_DO_NOT_MATCH",
     })
-    void aFailingAttributeFetchYieldsUnknownOnlyForAnOutageAndIsLoggedAtWarn(int resultCode, AuthenticationFailureReason expected) throws Exception {
+    void aFailingAttributeFetchYieldsCredentialsDoNotMatchAndIsLoggedAtWarn(int resultCode, AuthenticationFailureReason expected) throws Exception {
         String dn = "uid=riemann," + LdapTestSupport.BASE_DN;
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
             @Override

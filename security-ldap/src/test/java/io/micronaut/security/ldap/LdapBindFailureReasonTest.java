@@ -39,9 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Verifies how {@link LdapAuthenticationProvider} maps exceptions to failure reasons depending on where they are
- * thrown. A failure of the manager bind or of the user search, which happens before the user is known, and an outage at
- * any step yield UNKNOWN. Any other failure once the user has been found yields CREDENTIALS_DO_NOT_MATCH, so that the
- * reason does not depend on the user.
+ * thrown. A failure of the manager bind or of the user search, which happens before the user is known, and an outage
+ * during the bind of the user yield UNKNOWN. Any other failure of the bind of the user, and any failure after it
+ * succeeded, outages included, yields CREDENTIALS_DO_NOT_MATCH, so that the reason reveals neither the user nor the
+ * password.
  */
 class LdapBindFailureReasonTest {
 
@@ -142,17 +143,28 @@ class LdapBindFailureReasonTest {
                 Arguments.of(new AuthenticationNotSupportedException("not supported"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
                 Arguments.of(new OperationNotSupportedException("[LDAP: error code 53]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
                 Arguments.of(new NoPermissionException("[LDAP: error code 50]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
-                Arguments.of(new CommunicationException("connection reset"), AuthenticationFailureReason.UNKNOWN),
-                Arguments.of(new ServiceUnavailableException("unavailable"), AuthenticationFailureReason.UNKNOWN)
+                Arguments.of(new CommunicationException("connection reset"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new ServiceUnavailableException("unavailable"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
         );
     }
 
     @ParameterizedTest(name = "{0} during the group search yields {1}")
     @MethodSource("groupSearchFailures")
-    void exceptionDuringTheGroupSearchYieldsUnknownOnlyForAnOutage(NamingException exception, AuthenticationFailureReason expected) {
+    void exceptionDuringTheGroupSearchYieldsCredentialsDoNotMatch(NamingException exception, AuthenticationFailureReason expected) {
         context.getBean(FailingLdapSearchService.class).groupException = exception;
 
         assertEquals(expected, failureReason(authenticate()));
+    }
+
+    @ParameterizedTest(name = "{0} during the group search gives the same reason as a wrong password")
+    @MethodSource("groupSearchFailures")
+    void failingGroupSearchDoesNotRevealThatThePasswordWasCorrect(NamingException exception, AuthenticationFailureReason ignored) {
+        // only the correct password reaches the group search, so its failure must read like a wrong password
+        AuthenticationFailureReason wrongPassword = failureReason(LdapTestSupport.provider(context)
+                .authenticate(null, LdapTestSupport.request("riemann", "wrong-password")));
+        context.getBean(FailingLdapSearchService.class).groupException = exception;
+
+        assertEquals(wrongPassword, failureReason(authenticate()));
     }
 
     @Test

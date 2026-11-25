@@ -151,7 +151,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             try {
                 groups = searchGroups(managerContext, result, loggableUsername);
             } catch (NamingException e) {
-                return failureOfAFoundUser("group search", loggableUsername, e, true);
+                return failureAfterSuccessfulBind("group search", loggableUsername, e);
             }
 
             // guarded explicitly: sanitizeAll copies the set even when TRACE is off
@@ -176,7 +176,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param loggableUsername The username, sanitized for logging
      * @param password         The password to bind with
      * @return {@code null} if the user is bound and the result carries its attributes, otherwise the failure returned
-     * by {@link #failureOfAFoundUser(String, String, NamingException, boolean)}
+     * by {@link #userBindFailure(String, NamingException)} or {@link #failureAfterSuccessfulBind(String, String, NamingException)}
      */
     private @Nullable AuthenticationResponse bindUserAndLoadAttributes(LdapSearchResult result, String loggableUsername, String password) {
         String dn = result.getDn();
@@ -185,7 +185,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             try {
                 userContext = contextBuilder.build(configuration.getSettings(dn, password));
             } catch (NamingException e) {
-                return failureOfAFoundUser("user bind", loggableUsername, e, false);
+                return userBindFailure(loggableUsername, e);
             }
             if (result.getAttributes() == null) {
                 try {
@@ -193,7 +193,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                     // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
                     result.setAttributes(userContext.getAttributes(new LdapName(dn)));
                 } catch (NamingException e) {
-                    return failureOfAFoundUser("attribute fetch", loggableUsername, e, true);
+                    return failureAfterSuccessfulBind("attribute fetch", loggableUsername, e);
                 }
             }
             return null;
@@ -203,31 +203,44 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     }
 
     /**
-     * Maps a failure that happens once the search has found the user. The reason must not depend on the user: an
-     * unknown username gets the same reasons from {@link #rejectUnknownUser(Object, AuthenticationRequest)}. So the
-     * reason only says whether the directory could be reached: {@link AuthenticationFailureReason#UNKNOWN} for an
-     * outage, which fails every username alike, and {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} for any
-     * other failure, whatever the directory answered. The log keeps the step and the exception.
+     * Maps a failure of the bind of the user found by the search. The reason must not depend on the user: an unknown
+     * username gets the same reasons from {@link #rejectUnknownUser(Object, AuthenticationRequest)}. So the reason only
+     * says whether the directory could be reached: {@link AuthenticationFailureReason#UNKNOWN} for an outage, which
+     * fails every username alike, and {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} for any other failure,
+     * whatever the directory answered. The log keeps the exception.
      *
-     * @param step                The step of the authentication that failed, as it reads in the log
-     * @param loggableUsername    The username, sanitized for logging
-     * @param e                   The failure
-     * @param afterSuccessfulBind Whether the user bind had succeeded: only a client with the correct password reaches
-     *                            such a step, and its failure usually means a misconfiguration, so it is logged at WARN
+     * @param loggableUsername The username, sanitized for logging
+     * @param e                The failure
      * @return an {@link AuthenticationFailureReason#UNKNOWN} failure for an outage, otherwise a
      * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} failure
      */
-    private static AuthenticationResponse failureOfAFoundUser(String step, String loggableUsername, NamingException e, boolean afterSuccessfulBind) {
+    private static AuthenticationResponse userBindFailure(String loggableUsername, NamingException e) {
         AuthenticationFailureReason reason = isOutage(e) ? AuthenticationFailureReason.UNKNOWN : AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH;
-        // guarded explicitly: loggable builds the exception text even when the level is off
-        if (afterSuccessfulBind) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("LDAP {} failed for user [{}] after a successful bind; returning {}. Encountered {}", step, loggableUsername, reason, loggable(e));
-            }
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug("LDAP {} failed for user [{}]; returning {}. Encountered {}", step, loggableUsername, reason, loggable(e));
+        // guarded explicitly: loggable builds the exception text even when DEBUG is off
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("LDAP user bind failed for user [{}]; returning {}. Encountered {}", loggableUsername, reason, loggable(e));
         }
         return AuthenticationResponse.failure(reason);
+    }
+
+    /**
+     * Maps a failure of a step that follows a successful bind of the user, which only a client with the correct password
+     * reaches. Whatever the failure, outages included, it returns {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH},
+     * the reason a wrong password gets, so that the reason does not reveal that the password was correct. The failure
+     * usually means a misconfiguration, so it is logged at WARN with the step and the exception for operators.
+     *
+     * @param step             The step of the authentication that failed, as it reads in the log
+     * @param loggableUsername The username, sanitized for logging
+     * @param e                The failure
+     * @return a {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} failure
+     */
+    private static AuthenticationResponse failureAfterSuccessfulBind(String step, String loggableUsername, NamingException e) {
+        // guarded explicitly: loggable builds the exception text even when WARN is off
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("LDAP {} failed for user [{}] after a successful bind; returning {}. Encountered {}", step, loggableUsername,
+                    AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, loggable(e));
+        }
+        return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
     }
 
     /**
