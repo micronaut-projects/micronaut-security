@@ -1,0 +1,87 @@
+/*
+ * Copyright 2017-2026 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.security.csp;
+
+import io.micronaut.core.annotation.Internal;
+
+import java.util.Locale;
+
+/**
+ * Internal helpers for serializing CSP source expressions.
+ *
+ * <p>CSP keywords and nonce/hash expressions are quoted, whereas host and scheme sources are
+ * not. Callers use this helper only for the former group.</p>
+ */
+@Internal
+public final class ContentSecurityPolicyUtils {
+    /**
+     * The space between the source expressions of a serialized directive.
+     */
+    static final String SPACE = " ";
+    /**
+     * The quote character around keyword, nonce and hash source expressions.
+     */
+    static final String SINGLE_QUOTE = "'";
+    /**
+     * Prefix of a nonce source expression, without its surrounding quotes.
+     */
+    static final String NONCE_PREFIX = "nonce-";
+
+    private ContentSecurityPolicyUtils() {
+    }
+
+    /**
+     * Surrounds a CSP keyword or nonce/hash expression with single quotes when necessary.
+     *
+     * @param value the expression to serialize
+     * @return {@code value} unchanged when it is already single-quoted; otherwise, the quoted value
+     */
+    static String wrapInSingleQuotes(String value) {
+        if (isWrappedInSingleQuotes(value)) {
+            return value;
+        }
+        return SINGLE_QUOTE + value + SINGLE_QUOTE;
+    }
+
+    /**
+     * Tests whether an expression already carries the single quotes required by CSP syntax.
+     *
+     * @param value the expression to examine
+     * @return whether the expression starts and ends with a single quote
+     */
+    private static boolean isWrappedInSingleQuotes(String value) {
+        return value.startsWith(SINGLE_QUOTE) && value.endsWith(SINGLE_QUOTE);
+    }
+
+    /**
+     * Shows a configured value in a message, with every character outside printable ASCII escaped,
+     * so that an offending character is visible and cannot break a log line.
+     *
+     * @param value a configured value
+     * @return the value with control and non-ASCII characters written as {@code \\uXXXX}
+     */
+    public static String printable(String value) {
+        StringBuilder printable = new StringBuilder(value.length());
+        for (char c : value.toCharArray()) {
+            if (c >= ' ' && c <= '~') {
+                printable.append(c);
+            } else {
+                printable.append(String.format(Locale.ROOT, "\\u%04X", (int) c));
+            }
+        }
+        return printable.toString();
+    }
+}

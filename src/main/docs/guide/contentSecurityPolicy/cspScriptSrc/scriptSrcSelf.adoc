@@ -1,0 +1,12 @@
+You can add `'self'` to `script-src` to allow scripts from the protected document's origin:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        self: true
+----
+
+Nonce generation remains disabled unless explicitly enabled, so this configuration generates only `script-src 'self'`. Treat `'self'` as a broader permission than a nonce or hash because it permits every script served from the application origin.

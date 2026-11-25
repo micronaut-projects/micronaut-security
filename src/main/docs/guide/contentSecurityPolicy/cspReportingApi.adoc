@@ -1,0 +1,58 @@
+The CSP module integrates with the <<reporting,Reporting API module>> and can receive Content Security Policy reports. Reporting is disabled by default. To receive reports in the application:
+
+. Enable the `report-to` directive.
+. Provide a api:security.csp.report.ContentSecurityPolicyReportHandler[] bean.
+. When Micronaut Security is active, allow anonymous `POST` requests to the report endpoint, `/csp/report` by default. Without this rule, every report gets HTTP 401 and never reaches your handler, and this module logs nothing.
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      report-to:
+        enabled: true
+    intercept-url-map:
+      - pattern: /csp/report
+        http-method: POST
+        access:
+          - isAnonymous()
+----
+
+Reporting endpoints should generally be reachable without authentication because cross-origin report deliveries do not contain credentials. Adjust the pattern if you change `micronaut.security.csp.report-to.controller.path`.
+
+A reporting group is a name that connects a reporting policy to an endpoint declared by the `Reporting-Endpoints` response header. It is not a URL. The group defaults to `csp`, so the configuration above produces `report-to csp`; the same `csp` name identifies the endpoint in `Reporting-Endpoints`. Change it with `micronaut.security.csp.report-to.group`.
+
+When `report-to` is enabled and the application also provides a api:security.csp.report.ContentSecurityPolicyReportHandler[] bean, the module registers the controller at `/csp/report` and generates both required response headers. A handler bean alone does not open the route:
+
+[source,http]
+----
+Reporting-Endpoints: csp="/csp/report"
+Content-Security-Policy: default-src 'none'; report-to csp
+----
+
+Browsers deliver Reporting API reports only from secure contexts to secure endpoints: HTTPS, or `localhost` during development. Reports can arrive up to a minute after the violation.
+
+Without a handler, the reporting controller and the module-provided `Reporting-Endpoints` header are not registered. The generated policy can still use `report-to` with an application-managed or external `Reporting-Endpoints` header.
+
+Implement the handler to redact, persist, or forward reports to a monitoring service. Register exactly one handler bean; to send reports to several destinations, delegate from it. The controller calls it on the blocking executor, so it may perform I/O such as a database insert. Each batch runs on its own blocking thread without a concurrency limit, and during a report-only rollout reports can arrive as often as pages are viewed, so hand reports off to a bounded queue or batch writer, or limit concurrent work with a `Semaphore`, rather than writing each batch synchronously to a connection pool that the application's own endpoints share:
+
+snippet::io.micronaut.security.docs.cspreport.ApplicationCspReportHandler[tags="clazz"]
+
+The controller accepts a JSON array with the `application/reports+json` media type and returns HTTP 204 after the handler processes the batch successfully. A batch without CSP reports, such as an empty array, is acknowledged without calling the handler. Reports of other types, such as `deprecation` or `intervention`, can arrive when the reporting group is shared with other policies; the controller skips them and passes only the CSP reports to the handler. A CSP report that is missing a required field, has a field longer than the module's limits, or arrives in a batch of more than 100 reports rejects the whole batch with HTTP 400. These checks run with or without Micronaut Validation. Rejected batches never reach the handler, so the module logs them: the first rejection in each minute at WARN, further ones at DEBUG, through the `io.micronaut.security.csp.report.ContentSecurityPolicyReportBodyReader` logger. The log names the reason but never the report contents. Use a reporting group dedicated to CSP. Its path can be changed with `micronaut.security.csp.report-to.controller.path`. Set `micronaut.security.csp.report-to.controller.enabled=false` to prevent registration even when a handler exists.
+
+The Reporting API envelope contains `age`, `type`, the originating `url`, `user_agent`, and `body`. The body is decoded according to the CSP-defined report type:
+
+* `csp-violation` becomes api:security.csp.report.ContentSecurityPolicyViolationReportBody[].
+* `csp-hash` becomes api:security.csp.report.ContentSecurityPolicyHashReportBody[].
+
+The module does not overwrite an application-provided `Reporting-Endpoints` header. When supplying that header yourself, ensure that it declares the same group used by `micronaut.security.csp.report-to.group`. When an endpoint configured through the Reporting API module, under `micronaut.security.reporting-endpoints`, already uses the group name, the module does not declare its own endpoint: that endpoint receives the reports, and the module logs a warning at startup when its URL is not the report controller's. The `report-uri` directive, configured with `micronaut.security.csp.report-uri.enabled` and `micronaut.security.csp.report-uri.values`, uses the deprecated CSP reporting format and is not a substitute for this Reporting API endpoint. Do not point `report-uri` at `/csp/report`: browsers send `report-uri` reports as `application/csp-report`, which the endpoint rejects with HTTP 415. The module logs a warning at startup when it does.
+
+With the <<fetchMetadata,Fetch Metadata module>> on the classpath, the browser's report deliveries to the default endpoint are same-origin requests, which the module's default rules allow. If pages served from another origin send their reports to this application, for example through an application-managed `Reporting-Endpoints` header, those deliveries are cross-site `POST` requests with `Sec-Fetch-Dest: report`, and the Fetch Metadata rules reject them unless you allow the report path.
+
+WARNING: The report endpoint is anonymous, so any client can post to it. Browsers send batches of a few kilobytes. The module decodes report batches on the blocking executor rather than on the event loop, rejects a body larger than 1 MiB with HTTP 400 before parsing it, and stops reading a batch at its 101st report. The server still buffers bodies up to `micronaut.server.max-request-size` (10MB by default), parsing a 1 MiB body still costs several milliseconds of CPU and several megabytes of memory, and the module applies no rate limit. Enforce a small request size limit, for example 64 KiB, and a rate limit for the endpoint at your reverse proxy or gateway.
+
+Treat every field as untrusted input. URLs and content samples can contain sensitive data, and content samples can contain attacker-controlled text. Sanitize data before rendering it, and avoid logging complete report bodies without filtering them first.
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.conf.reportto.ReportToConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.csp.report.ContentSecurityPolicyControllerConfigurationProperties.adoc[]

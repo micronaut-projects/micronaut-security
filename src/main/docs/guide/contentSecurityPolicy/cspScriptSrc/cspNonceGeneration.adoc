@@ -1,0 +1,63 @@
+Nonce generation is disabled by default. Enable it for `script-src` with:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        nonce: true
+----
+
+Once enabled, a fresh, unpredictable https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP#nonces[nonce] is generated for every HTTP request by api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[]. The default implementation base64-encodes 144 bits from `SecureRandom`. To use a different nonce format or source of randomness, provide a bean that implements api:security.csp.nonce.ContentSecurityPolicyNonceGenerator[].
+
+The module stores the nonce as an HTTP request attribute named `cspNonce`. It does not add the nonce to view models, so a template cannot reference `${cspNonce}` until something copies the request attribute into the model. Micronaut Views does not do it (see <<cspMigratingFromViews,Migrating from Micronaut Views>>), so register a `ViewModelProcessor` such as:
+
+snippet::io.micronaut.security.docs.cspnonce.CspNonceViewModelProcessor[tags="clazz"]
+
+Micronaut Views runs a view model processor only for a view that has a model of the processor's model type, so the processor above adds the nonce to views whose model is a `Map`. A view whose model is a POJO or a record, or that has no model, does not receive `${cspNonce}`: its nonce attribute renders empty and the browser blocks every inline script of the page, without a log message. Return a `Map` model from the routes whose views use the nonce, or copy the `cspNonce` request attribute into the model yourself.
+
+Use the value as the `nonce` attribute of every trusted inline script that the policy should allow:
+
+[source,html]
+----
+<script nonce="${cspNonce}">
+    // trusted inline script
+</script>
+----
+
+A nonce is generated for every request that matches `micronaut.security.csp.filter.pattern`, including JSON and static-asset responses. Because the nonce changes on every response, HTTP/2 header compression cannot reuse the CSP header. When the same server also serves APIs or assets, narrow `filter.pattern` to the routes that render HTML, but read <<cspConfiguringDirectives,what loses the policy>> first: responses outside the pattern, HTML error pages included, receive no CSP header.
+
+Do not let shared caches or CDNs store HTML that carries a nonce: a cached page replays the same nonce to every visitor. For that reason the module writes `Cache-Control: private` on `text/html`, `application/xhtml+xml`, `image/svg+xml`, `text/xml`, `application/xml` and other `+xml` responses to requests that received a nonce, including HTML error pages. Other responses, such as JSON, scripts, stylesheets and raster images, cannot carry the nonce and keep their caching. A `Cache-Control` header that the application sets itself is kept, even `public`, so an application that sets its own header on a page that carries a nonce must keep that page out of shared caches.
+
+`private` lets the visitor's own browser keep the page and stops shared caches from storing it. To forbid every cache from storing it, which also prevents the browser from restoring the page from its back/forward cache, set `micronaut.security.csp.filter.nonce-cache-control` to `no-store`:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      script-src:
+        nonce: true
+      filter:
+        nonce-cache-control: no-store
+----
+
+To stop the module from writing the header, set `micronaut.security.csp.filter.nonce-cache-control` to an empty string:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      filter:
+        nonce-cache-control: ""
+----
+
+A YAML key without a value has the same effect, because it binds `null`; the default `private` applies only when the property is absent.
+
+Nonces work the same way for inline styles: set `micronaut.security.csp.style-src.nonce` to `true`, see <<cspStyleSrc,Inline Styles (style-src)>>. When nonces are enabled for both `script-src` and `style-src`, both directives use the same `cspNonce` value for a request.
+
+The nonce in the HTML element must exactly match the value in the `script-src 'nonce-<value>'` response directive. Never reuse a nonce across requests and never place untrusted content inside a nonce-authorized element.
+
+Without nonce support or another permitted script source, the generated directive remains `script-src 'none'`. When nonces are enabled but a response has no valid nonce, for example because a filter that runs before the module's nonce filter returned the response, the directive is written without the nonce and without `'unsafe-inline'`, and as `'none'` when no other source remains. It is never omitted, so it cannot fall back to `default-src`.

@@ -1,0 +1,5 @@
+The https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/script-src[`script-src` directive] controls the JavaScript and WebAssembly sources that a page may execute. It is one of the most important CSP controls for reducing the impact of cross-site scripting.
+
+By default, the module generates `script-src 'none'`, which blocks JavaScript and WebAssembly execution. Enable the sources your pages need, preferably <<cspNonceGeneration,nonces>> or <<scriptSrcHashes,hashes>>.
+
+api:security.csp.DefaultContentSecurityPolicyGenerator[] builds the directive from api:security.csp.conf.scriptsrc.ScriptSrcConfiguration[]. Prefer nonce or hash source expressions over URL allowlists. URL allowlists are frequently ineffective as a primary XSS defense because an allowlisted origin may host attacker-controlled or exploitable content.

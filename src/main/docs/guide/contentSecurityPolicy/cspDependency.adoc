@@ -1,0 +1,5 @@
+Add the dependency:
+
+dependency:micronaut-security-csp[groupId=io.micronaut.security]
+
+Adding the dependency enables an enforcing, deny-by-default policy on every response; see <<cspDefaults,Defaults>>. Receiving <<cspReportingApi,reports>> also needs a JSON runtime, such as `micronaut-serde-jackson`: without one, the module registers no report endpoint and logs a warning at startup. The JSON runtime also brings the `jackson-annotations` classes that the report types are annotated with; a build that compiles a report handler with `-Xlint:all -Werror` needs them on its compile classpath.

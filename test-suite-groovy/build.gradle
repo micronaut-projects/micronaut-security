@@ -19,6 +19,8 @@ dependencies {
     testImplementation(projects.micronautSecurityFetchMetadata)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityCsp)
+    testImplementation(mnViews.micronaut.views.thymeleaf)
     testImplementation(projects.micronautSecurityPasswordArgon2Bouncycastle)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)

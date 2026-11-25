@@ -1,0 +1,169 @@
+/*
+ * Copyright 2017-2026 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.security.csp;
+
+import io.micronaut.core.util.StringUtils;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.StringJoiner;
+
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_NONE;
+import static io.micronaut.security.csp.ContentSecurityPolicyKeywords.QUOTED_SELF;
+
+/**
+ * A directive in a Content Security Policy.
+ *
+ * <p>Values are stored in their header representation. Use {@link #values()} to obtain the
+ * individual whitespace-separated CSP tokens. The name must be a directive name, and the value must
+ * not contain a semicolon or a control character other than a tab, so that a directive cannot end
+ * itself or the header and add directives. Otherwise, source expressions are written verbatim: a
+ * value built from request or tenant data can still add source expressions with a space, or a
+ * second policy with a comma, so validate such data before passing it.</p>
+ *
+ * @param name the directive name
+ * @param value the directive value, or {@code null} for directives without a value
+ * @since 5.6.0
+ */
+public record ContentSecurityPolicyDirective(String name, @Nullable String value) {
+    private static final String QUOTED_NONCE_PREFIX = "'nonce-";
+    private static final String REDACTED_NONCE = QUOTED_NONCE_PREFIX + "[redacted]'";
+
+    /**
+     * Creates a directive.
+     *
+     * @param name the directive name, made of letters, digits and hyphens
+     * @param value the directive value, or {@code null} for directives without a value
+     * @throws IllegalArgumentException if the name is not a directive name, or the value contains a
+     * semicolon or a control character other than a tab
+     */
+    public ContentSecurityPolicyDirective {
+        if (!isValidName(name)) {
+            throw new IllegalArgumentException("A Content Security Policy directive name must consist of letters, digits and hyphens");
+        }
+        if (!isSafeValue(value)) {
+            throw new IllegalArgumentException("The value of the Content Security Policy directive " + name
+                + " must not contain a semicolon or a control character, which would end the directive or the header");
+        }
+    }
+
+    /**
+     * Tests whether a name can be the name of a directive.
+     *
+     * @param name a directive name
+     * @return whether the name consists of letters, digits and hyphens
+     */
+    static boolean isValidName(String name) {
+        // A loop instead of a regular expression: a directive is built for every response.
+        if (name.isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '-')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Tests whether a value can be the value of a directive.
+     *
+     * @param value a directive value, or {@code null}
+     * @return whether the value is absent or contains neither a semicolon nor a control character other than a tab
+     */
+    static boolean isSafeValue(@Nullable String value) {
+        if (value == null) {
+            return true;
+        }
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == ';' || c < ' ' && c != '\t' || c == 0x7F) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Serializes this directive as it appears in a CSP header value.
+     *
+     * @return the directive name followed by its trimmed value, if any
+     * @since 5.6.0
+     */
+    public String toHeaderValue() {
+        return StringUtils.hasText(value())
+                    ? name() + " " + value().trim()
+                    : name();
+    }
+
+    /**
+     * Describes this directive for logs and debuggers. Nonce source expressions are redacted
+     * because a nonce is a secret of the response that carries it; use {@link #toHeaderValue()} to
+     * serialize the directive.
+     *
+     * @return the directive name followed by its values, with nonces redacted
+     */
+    @Override
+    public String toString() {
+        List<String> values = values();
+        if (values.isEmpty()) {
+            return name();
+        }
+        StringJoiner joiner = new StringJoiner(" ", name() + " ", "");
+        for (String token : values) {
+            joiner.add(token.regionMatches(true, 0, QUOTED_NONCE_PREFIX, 0, QUOTED_NONCE_PREFIX.length()) ? REDACTED_NONCE : token);
+        }
+        return joiner.toString();
+    }
+
+    /**
+     * Returns the whitespace-separated values of this directive.
+     *
+     * @return an immutable list of source-expression tokens, or an empty list if this directive has no value
+     * @since 5.6.0
+     */
+    public List<String> values() {
+        return StringUtils.hasText(value()) ? List.of(value().trim().split("\\s+")) : List.of();
+    }
+
+    /**
+     * Tests whether this directive disables its controlled resource or behavior.
+     *
+     * <p>Only the quoted keyword counts: an unquoted {@code none} is a host source named
+     * {@code none}. Like CSP keywords, it is compared without case.</p>
+     *
+     * @return whether this directive has exactly the {@code 'none'} value
+     * @since 5.6.0
+     */
+    public boolean isNone() {
+        return value() != null && QUOTED_NONE.equalsIgnoreCase(value().trim());
+    }
+
+    /**
+     * Tests whether this directive permits only the protected resource's origin.
+     *
+     * <p>Only the quoted keyword counts: an unquoted {@code self} is a host source named
+     * {@code self}. Like CSP keywords, it is compared without case.</p>
+     *
+     * @return whether this directive has exactly the {@code 'self'} value
+     * @since 5.6.0
+     */
+    public boolean isSelf() {
+        return value() != null && QUOTED_SELF.equalsIgnoreCase(value().trim());
+    }
+}

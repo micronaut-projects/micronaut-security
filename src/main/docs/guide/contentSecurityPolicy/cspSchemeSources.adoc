@@ -1,0 +1,13 @@
+Scheme source expressions can be enabled for each source-list directive. They are serialized without single quotes. For example:
+
+[configuration]
+----
+micronaut:
+  security:
+    csp:
+      img-src:
+        data: true
+        https: true
+----
+
+This configuration generates `img-src https: data:`. The available scheme flags are `http`, `https`, `data`, `blob`, `filesystem`, `mediastream`, `ws`, and `wss`; all default to `false`.
