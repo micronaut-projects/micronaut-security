@@ -36,6 +36,8 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     public static final boolean DEFAULT_ALLOW_SIMPLE_NAVIGATION = true;
     /** Default permitted cross-origin request behavior. */
     public static final boolean DEFAULT_ALLOW_CROSS_ORIGIN = true;
+    /** Default behavior for navigations to routes annotated with {@code DenyCrossSiteNavigation}. */
+    public static final boolean DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES = false;
 
     private boolean allowNoFetchMetadata = DEFAULT_ALLOW_NO_FETCH_METADATA;
     private boolean allowBrowserInitiatedRequests = DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS;
@@ -43,6 +45,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     private boolean allowSameSite = DEFAULT_ALLOW_SAME_SITE;
     private boolean allowSimpleNavigation = DEFAULT_ALLOW_SIMPLE_NAVIGATION;
     private boolean allowCrossOrigin = DEFAULT_ALLOW_CROSS_ORIGIN;
+    private boolean allowCrossSiteNavigationToAnnotatedRoutes = DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES;
 
     @Override
     public boolean isAllowCrossOrigin() {
@@ -50,7 +53,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow cross-origin requests to routes whose {@code @CrossOrigin} configuration accepts the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
+     * Whether to allow cross-origin requests to routes whose @CrossOrigin configuration accepts the request origin and HTTP method. Default value: {@value #DEFAULT_ALLOW_CROSS_ORIGIN}.
      * @param allowCrossOrigin whether permitted cross-origin requests are allowed
      */
     public void setAllowCrossOrigin(boolean allowCrossOrigin) {
@@ -63,7 +66,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow requests initiated directly by a user through browser UI ({@code Sec-Fetch-Site: none}). Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
+     * Whether to allow requests initiated directly by a user through browser UI (Sec-Fetch-Site: none). Default value: {@value #DEFAULT_ALLOW_BROWSER_INITIATED_REQUESTS}
      *
      * @param allowBrowserInitiatedRequests whether requests initiated through browser UI are allowed
      */
@@ -105,7 +108,7 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow requests without the {@code Sec-Fetch-Site} header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
+     * Whether to allow requests without the Sec-Fetch-Site header. Default value: {@value #DEFAULT_ALLOW_NO_FETCH_METADATA}
      *
      * @param allowNoFetchMetadata whether requests without the {@code Sec-Fetch-Site} header are allowed
      */
@@ -119,11 +122,25 @@ final class FetchMetadataRulesConfigurationProperties implements FetchMetadataRu
     }
 
     /**
-     * Whether to allow cross-site {@code GET} navigations, including loading the application in a cross-site {@code <iframe>}. This rule does not protect against framing; use CSP {@code frame-ancestors} for that. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
+     * Whether to allow cross-site GET navigations, including loading the application in a cross-site iframe. This rule does not protect against framing; use the CSP frame-ancestors directive for that. Default value: {@value #DEFAULT_ALLOW_SIMPLE_NAVIGATION}
      *
      * @param allowSimpleNavigation whether simple cross-site navigations and iframing are allowed
      */
     public void setAllowSimpleNavigation(boolean allowSimpleNavigation) {
         this.allowSimpleNavigation = allowSimpleNavigation;
+    }
+
+    @Override
+    public boolean isAllowCrossSiteNavigationToAnnotatedRoutes() {
+        return allowCrossSiteNavigationToAnnotatedRoutes;
+    }
+
+    /**
+     * Whether the simple navigation rule allows GET navigations to routes annotated with @DenyCrossSiteNavigation, such as the OAuth 2.0 login route. When false, a cross-site navigation to such a route is rejected unless another rule allows it. Set it to true so that the simple navigation rule treats annotated routes like any other route. Default value: {@value #DEFAULT_ALLOW_CROSS_SITE_NAVIGATION_TO_ANNOTATED_ROUTES}
+     *
+     * @param allowCrossSiteNavigationToAnnotatedRoutes whether the simple navigation rule allows navigations to annotated routes
+     */
+    public void setAllowCrossSiteNavigationToAnnotatedRoutes(boolean allowCrossSiteNavigationToAnnotatedRoutes) {
+        this.allowCrossSiteNavigationToAnnotatedRoutes = allowCrossSiteNavigationToAnnotatedRoutes;
     }
 }

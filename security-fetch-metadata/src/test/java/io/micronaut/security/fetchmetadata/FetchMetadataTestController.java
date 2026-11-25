@@ -48,6 +48,21 @@ final class FetchMetadataTestController {
     }
     // end::cors[]
 
+    // tag::deny-cross-site-navigation[]
+    @DenyCrossSiteNavigation
+    @Get(uri = "/start", produces = MediaType.TEXT_PLAIN)
+    String start() {
+        return "ok";
+    }
+    // end::deny-cross-site-navigation[]
+
+    @DenyCrossSiteNavigation
+    @CrossOrigin("https://allowed.example")
+    @Get(uri = "/start-cors", produces = MediaType.TEXT_PLAIN)
+    String startCors() {
+        return "ok";
+    }
+
     @CrossOrigin(value = "https://allowed.example", allowedMethods = HttpMethod.POST)
     @Post(uri = "/cors-post", produces = MediaType.TEXT_PLAIN)
     String corsPost() {

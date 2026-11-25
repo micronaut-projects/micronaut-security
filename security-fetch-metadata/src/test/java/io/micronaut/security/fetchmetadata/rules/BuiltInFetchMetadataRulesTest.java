@@ -86,7 +86,7 @@ class BuiltInFetchMetadataRulesTest {
     @Test
     void navigationRuleAllowsSimpleGetNavigations() {
         SimpleTopLevelNavigationAndIframingFetchMetadataRule rule =
-            new SimpleTopLevelNavigationAndIframingFetchMetadataRule();
+            new SimpleTopLevelNavigationAndIframingFetchMetadataRule(new FetchMetadataRulesConfigurationProperties());
 
         assertEquals(FetchMetadataRuleResult.ALLOWED,
             rule.check(GET, secFetch(Site.CROSS_SITE, Mode.NAVIGATE, Destination.DOCUMENT)));
@@ -101,7 +101,7 @@ class BuiltInFetchMetadataRulesTest {
     @Test
     void navigationRuleDoesNotAllowPluginDestinationsOrRequestsWithoutMetadata() {
         SimpleTopLevelNavigationAndIframingFetchMetadataRule rule =
-            new SimpleTopLevelNavigationAndIframingFetchMetadataRule();
+            new SimpleTopLevelNavigationAndIframingFetchMetadataRule(new FetchMetadataRulesConfigurationProperties());
 
         assertEquals(FetchMetadataRuleResult.UNKNOWN,
             rule.check(GET, secFetch(Site.CROSS_SITE, Mode.NAVIGATE, Destination.OBJECT)));
@@ -113,7 +113,7 @@ class BuiltInFetchMetadataRulesTest {
     @Test
     void navigationRuleCannotDecideWithoutARecognizedModeAndDestination() {
         SimpleTopLevelNavigationAndIframingFetchMetadataRule rule =
-            new SimpleTopLevelNavigationAndIframingFetchMetadataRule();
+            new SimpleTopLevelNavigationAndIframingFetchMetadataRule(new FetchMetadataRulesConfigurationProperties());
 
         assertEquals(FetchMetadataRuleResult.UNKNOWN,
             rule.check(GET, secFetch(Site.CROSS_SITE, Mode.NAVIGATE, null)));

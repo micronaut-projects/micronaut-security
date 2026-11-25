@@ -46,8 +46,8 @@ Each rule is enabled or disabled with a property under `micronaut.security.fetch
 |400
 
 |Simple navigation
-|`allow-simple-navigation`
-|Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object`, `embed`, and unrecognized destinations.
+|`allow-simple-navigation`, and `allow-cross-site-navigation-to-annotated-routes` for annotated routes
+|Allows `GET` requests with `Sec-Fetch-Mode: navigate`, except `object`, `embed`, and unrecognized destinations, and except navigations to routes annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[] (see `allow-cross-site-navigation-to-annotated-routes`).
 |Enabled
 |500
 
@@ -58,7 +58,7 @@ Each rule is enabled or disabled with a property under `micronaut.security.fetch
 |600
 |===
 
-The simple navigation rule intentionally allows cross-site `GET` navigations, including frame and iframe destinations. It does not protect against framing; use https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors[CSP `frame-ancestors`] and/or https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] to control whether the application may be framed.
+The simple navigation rule intentionally allows cross-site `GET` navigations, including frame and iframe destinations, to every route that is not annotated with api:security.fetchmetadata.DenyCrossSiteNavigation[]. Unless the property `allow-cross-site-navigation-to-annotated-routes` is enabled (it is disabled by default), the rule refuses navigations to annotated routes, such as the OAuth 2.0 login route; see <<fetchMetadataSensitiveNavigationRoutes,Routes Closed to Cross-Site Navigation>>. It does not protect against framing; use https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors[CSP `frame-ancestors`] and/or https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] to control whether the application may be framed.
 
 == Incomplete or unrecognized Fetch Metadata
 

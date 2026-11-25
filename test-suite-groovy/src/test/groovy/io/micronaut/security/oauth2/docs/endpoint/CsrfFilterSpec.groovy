@@ -2,10 +2,13 @@ package io.micronaut.security.oauth2.docs.endpoint
 
 import io.micronaut.context.annotation.Requires
 import org.jspecify.annotations.Nullable
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
@@ -46,6 +49,24 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
         then:
         HttpClientResponseException ex = thrown()
         ex.status == HttpStatus.FORBIDDEN
+
+        when:
+        client.toBlocking().exchange(HttpRequest.GET("/oauth/login/twitter?_csrf=other-token-fixture")
+                .cookie(Cookie.of("_csrf", "token-fixture")))
+
+        then:
+        ex = thrown()
+        ex.status == HttpStatus.FORBIDDEN
+
+        when:
+        HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.GET("/oauth/login/twitter?_csrf=token-fixture")
+                .cookie(Cookie.of("_csrf", "token-fixture")))
+
+        then:
+        response.status == HttpStatus.FOUND
+
+        cleanup:
+        client.close()
     }
 
     @Singleton
