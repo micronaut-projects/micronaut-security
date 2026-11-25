@@ -60,6 +60,14 @@ class CredentialLoggingTest {
     }
 
     @Test
+    void aMismatchLogsTheExpectedStartOfTheHeaderValue() {
+        HttpHeaderTokenReader reader = bearerReader();
+        assertTrue(reader.findToken(HttpRequest.GET("/").header("Authorization", "BearerXXX")).isEmpty());
+        List<String> messages = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+        assertTrue(messages.contains("Authorization header value does not start with 'Bearer ' (compared ignoring case)"), messages::toString);
+    }
+
+    @Test
     void undecodableBasicCredentialsAreNotLogged() {
         String invalid = "not-base64!" + SECRET;
         assertTrue(BasicAuthUtils.parseCredentials("Basic " + invalid).isEmpty());

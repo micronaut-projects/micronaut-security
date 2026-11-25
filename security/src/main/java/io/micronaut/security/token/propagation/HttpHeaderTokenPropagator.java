@@ -20,6 +20,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.utils.HeaderValuePrefixUtils;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
@@ -54,9 +55,9 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a token in a HTTP request.
      * @param request The request to look for the token in
-     * @return if the JWT token is found it is returned, empty if not
+     * @return if the token is found it is returned, empty if not
      */
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
@@ -66,39 +67,27 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
+     * Adds the configured prefix and a single space before the token. A prefix which already ends with a space is not
+     * followed by another one. If the prefix is {@code null} or empty, the token is returned as is.
+     *
      * @param token the token being written
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = new StringBuilder();
-        String prefix = configuration.getPrefix();
-        if (prefix != null) {
-            sb.append(prefix);
-            if (!prefix.endsWith(" ")) {
-                sb.append(" ");
-            }
-        }
-        sb.append(token);
-        return sb.toString();
+        return HeaderValuePrefixUtils.addPrefix(token, configuration.getPrefix());
     }
 
     /**
+     * Removes the configured prefix and the single space after it from the header value.
+     * The prefix is compared ignoring case. Only one space is removed, so the token may be empty or start with a space.
+     * A prefix which already ends with a space is not followed by another one.
+     * If the prefix is {@code null} or empty, the whole header value is the token.
+     *
      * @param authorization Authorization header value
-     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
+     * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'. Empty if the value does not start with the prefix and a space.
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
-        }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(HeaderValuePrefixUtils.removePrefix(authorization, configuration.getPrefix()));
     }
 
     /**

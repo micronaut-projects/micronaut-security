@@ -19,7 +19,7 @@ class BearerTokenReaderSpec extends Specification {
     @Shared
     BearerTokenReader bearerTokenReader = new BearerTokenReader(config)
 
-    def extractTokenFromAuthorization() {
+    def "extractTokenFromAuthorization removes the configured Bearer prefix"() {
         expect:
         bearerTokenReader.extractTokenFromAuthorization('Bearer XXX').get() == 'XXX'
 
@@ -28,6 +28,15 @@ class BearerTokenReaderSpec extends Specification {
 
         and:
         !bearerTokenReader.extractTokenFromAuthorization('XXX').isPresent()
+
+        and: 'the prefix comparison is case insensitive'
+        bearerTokenReader.extractTokenFromAuthorization('bEaReR XXX').get() == 'XXX'
+
+        and: 'a prefix-only header yields no token'
+        !bearerTokenReader.extractTokenFromAuthorization('Bearer').isPresent()
+
+        and: 'a prefix followed only by a space yields an empty token'
+        bearerTokenReader.extractTokenFromAuthorization('Bearer ').get() == ''
     }
 
     def "if authorization header not present returns empty"() {
