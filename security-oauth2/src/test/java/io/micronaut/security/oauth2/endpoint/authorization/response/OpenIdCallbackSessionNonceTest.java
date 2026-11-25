@@ -20,6 +20,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdCallba
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * callback without the session, or a second callback for the same authorization request, finds no nonce and the
  * login is refused.
  */
+@ResourceLock(OpenIdCallbackFlow.NONCE_CLAIM_VALIDATOR_LOG)
 class OpenIdCallbackSessionNonceTest {
     private static final String SESSION_COOKIE = "SESSION";
 

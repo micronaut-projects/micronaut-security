@@ -20,6 +20,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdCallba
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * The nonce sent in the authorization request must still be available at the callback. If it is not, the login is
  * refused, whether or not the ID token carries a nonce claim.
  */
+@ResourceLock(OpenIdCallbackFlow.NONCE_CLAIM_VALIDATOR_LOG)
 class OpenIdCallbackNonceTest {
     private static final String NONCE_COOKIE = "OPENID_NONCE";
 

@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
@@ -63,6 +62,12 @@ final class OpenIdCallbackFlow implements AutoCloseable {
     private static final String SPEC_NAME = "OpenIdCallbackFlow";
     private static final String CLIENT_ID = "relying-party";
     private static final String JWT_COOKIE = "JWT";
+    private static final String PROVIDER = "auth";
+
+    /**
+     * Lock shared by the tests which capture the log of {@link NonceClaimValidator}, a process-wide logger.
+     */
+    static final String NONCE_CLAIM_VALIDATOR_LOG = "NonceClaimValidator-log";
 
     private final MockOpenIdProvider provider;
     private final EmbeddedServer server;
@@ -97,13 +102,19 @@ final class OpenIdCallbackFlow implements AutoCloseable {
      * @return The state and nonce the application sent in the authorization request, and the cookies it set
      */
     AuthorizationRedirect login() {
-        HttpResponse<?> response = client.exchange(HttpRequest.GET("/oauth/login/auth"));
+        AuthorizationRedirect redirect = redirectToProvider();
+        assertNotNull(redirect.nonce(), "the authorization request should carry a nonce");
+        return redirect;
+    }
+
+    private AuthorizationRedirect redirectToProvider() {
+        HttpResponse<?> response = client.exchange(HttpRequest.GET("/oauth/login/" + PROVIDER));
         assertEquals(HttpStatus.FOUND, response.status());
         String location = response.getHeaders().get(HttpHeaders.LOCATION);
         assertNotNull(location);
         Map<String, List<String>> parameters = new QueryStringDecoder(location).parameters();
-        assertNotNull(parameters.get("nonce"), "the authorization request should carry a nonce");
-        return new AuthorizationRedirect(parameters.get("state").getFirst(), parameters.get("nonce").getFirst(), response.getCookies().getAll());
+        List<String> nonce = parameters.get("nonce");
+        return new AuthorizationRedirect(parameters.get("state").getFirst(), nonce == null ? null : nonce.getFirst(), response.getCookies().getAll());
     }
 
     /**
@@ -133,7 +144,7 @@ final class OpenIdCallbackFlow implements AutoCloseable {
      * @return Whether the callback logged the user in, and whether the nonce validation found no persisted nonce
      */
     CallbackOutcome callback(AuthorizationRedirect redirect, Collection<Cookie> cookies) {
-        MutableHttpRequest<?> request = HttpRequest.POST("/oauth/callback/auth", CollectionUtils.mapOf("code", "code", "state", redirect.state()))
+        MutableHttpRequest<?> request = HttpRequest.POST("/oauth/callback/" + PROVIDER, CollectionUtils.mapOf("code", "code", "state", redirect.state()))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED);
         cookies.forEach(request::cookie);
         Logger logger = (Logger) LoggerFactory.getLogger(NonceClaimValidator.class);
@@ -147,7 +158,7 @@ final class OpenIdCallbackFlow implements AutoCloseable {
             } catch (HttpClientResponseException e) {
                 response = e.getResponse();
             }
-            boolean persistedNonceMissing = appender.list.stream().anyMatch(event -> event.getLevel() == Level.WARN);
+            boolean persistedNonceMissing = appender.list.stream().anyMatch(OpenIdCallbackFlow::reportsMissingPersistedNonce);
             return new CallbackOutcome(response.getCookies().get(JWT_COOKIE) != null, persistedNonceMissing);
         } finally {
             logger.detachAppender(appender);
@@ -158,6 +169,11 @@ final class OpenIdCallbackFlow implements AutoCloseable {
     public void close() {
         server.close();
         provider.close();
+    }
+
+    private static boolean reportsMissingPersistedNonce(ILoggingEvent event) {
+        String message = event.getFormattedMessage();
+        return message.contains("[" + PROVIDER + "]") && message.contains("no persisted nonce could be retrieved");
     }
 
     /**
