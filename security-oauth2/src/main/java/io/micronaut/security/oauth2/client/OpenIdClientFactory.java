@@ -36,6 +36,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointCo
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
@@ -105,6 +106,7 @@ class OpenIdClientFactory {
      * @param authorizationResponseHandler The authorization response handler
      * @param endSessionEndpointResolver The end session resolver
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param stateValidator The state validator, or null if state validation is disabled
      * @return The OpenID client, or null if the client configuration does not allow it
      */
     @EachBean(OpenIdClientConfiguration.class)
@@ -117,7 +119,8 @@ class OpenIdClientFactory {
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
-                                     EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
+                                     EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                     @Nullable StateValidator stateValidator) {
         Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
         EndSessionEndpoint endSessionEndpoint = null;
         if (openIdClientConfiguration.getEndSession().isEnabled()) {
@@ -129,7 +132,8 @@ class OpenIdClientFactory {
             redirectUrlBuilder,
             authorizationResponseHandler,
             beanContext,
-            endSessionEndpoint);
+            endSessionEndpoint,
+            stateValidator);
     }
 
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
