@@ -45,10 +45,11 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
-import reactor.core.publisher.Mono;
 
 /**
  * Default implementation of {@link OpenIdAuthorizationResponseHandler}.
@@ -72,7 +73,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
     private final OauthRouteUrlBuilder<T> oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
     private final @Nullable PkcePersistence pkcePersistence;
-    private final ExecutorService blockingExecutor;
+    private final Scheduler blockingScheduler;
 
     /**
      * Creates the handler with the application's global {@link OpenIdAuthenticationMapper}: the bean without a
@@ -131,7 +132,7 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
-        this.blockingExecutor = blockingExecutor;
+        this.blockingScheduler = Schedulers.fromExecutorService(blockingExecutor);
     }
 
     @Override
@@ -196,7 +197,10 @@ public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAutho
             clientConfiguration,
             pkcePersistence == null ? null :
                 pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null));
-        return Flux.from(tokenEndpointClient.sendRequest(requestContext)).publishOn(Schedulers.fromExecutorService(blockingExecutor));
+        // Hop onto the blocking executor once the token response arrives. Everything downstream of this point
+        // (claims validators such as OpenIdClaimsValidator, and the OpenIdAuthenticationMapper) is a public
+        // extension point that user code may implement with blocking calls, so it must not run on the event loop.
+        return Flux.from(tokenEndpointClient.sendRequest(requestContext)).publishOn(blockingScheduler);
     }
 
     /**
