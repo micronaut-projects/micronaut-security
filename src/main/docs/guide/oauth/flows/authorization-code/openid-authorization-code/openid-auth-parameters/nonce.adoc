@@ -38,6 +38,8 @@ TIP: If logins are refused and the logs report that no persisted nonce could be 
 
 NOTE: Flows without an authorization request, such as the <<password, password grant>>, never send a nonce. For those flows the ID token is accepted only if it does not contain a `nonce` claim.
 
+NOTE: Cookie persistence supports only one in-flight login per browser, whereas session persistence keeps the nonces of several in-flight logins, keyed by the state of the login flow they belong to. See the <<state, state>> documentation for details.
+
 === Customization
 
 There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.

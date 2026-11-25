@@ -17,6 +17,8 @@ package io.micronaut.security.oauth2.endpoint.nonce.persistence;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -34,6 +36,20 @@ public interface NoncePersistence {
      * @return The optional nonce
      */
     Optional<String> retrieveNonce(HttpRequest<?> request);
+
+    /**
+     * Retrieves and removes the nonce which belongs to the login flow identified by the state received in the callback.
+     * Implementations that can hold several in-flight nonces (keyed by {@link State#getNonce()}) should override this
+     * method. The default implementation ignores {@code callbackState} and delegates to {@link #retrieveNonce(HttpRequest)}.
+     *
+     * @param request The callback request
+     * @param callbackState The state received in the authorization callback, if any
+     * @return The optional nonce
+     * @since 5.4.0
+     */
+    default Optional<String> retrieveNonce(HttpRequest<?> request, @Nullable State callbackState) {
+        return retrieveNonce(request);
+    }
 
     /**
      * Persists the nonce for later retrieval to allow validation.
