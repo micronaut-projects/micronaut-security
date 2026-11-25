@@ -39,11 +39,16 @@ public interface TokenValidator<T> extends Ordered {
      * Instead, it should immediately return a Publisher that is filled with an authentication result
      * when the result is available.
      *
+     * <p> Validators are invoked sequentially, in {@link Ordered} order, with the first match winning:
+     * a validator is only subscribed once every higher precedence validator has completed empty for the
+     * same token, and once a validator emits an authentication no lower precedence validator is subscribed.
+     *
      * @param token The token string
      * @param request The current request (or null)
      * @return An authentication publisher. If the publisher emits an error, no further validators will
-     * be attempted and the validation will fail. If the publisher is empty, further validators will be
-     * attempted. If the publisher emits an authentication, that authentication will be used.
+     * be attempted and the validation will fail. If the publisher is empty, the next validator in order will be
+     * attempted. If the publisher emits an authentication, that authentication will be used and no further
+     * validators will be attempted.
      */
     @NonNull
     @SingleResult
