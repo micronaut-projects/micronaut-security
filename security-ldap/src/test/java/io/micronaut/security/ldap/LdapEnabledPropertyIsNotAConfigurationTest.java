@@ -1,8 +1,6 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
@@ -24,9 +22,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,13 +49,7 @@ class LdapEnabledPropertyIsNotAConfigurationTest {
 
     @BeforeAll
     static void startDirectory() throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials(MANAGER_DN, "password");
-        server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapEnabledPropertyIsNotAConfigurationTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
-        server.startListening();
+        server = LdapTestSupport.startServer("basic.ldif");
     }
 
     @AfterAll
@@ -134,12 +124,8 @@ class LdapEnabledPropertyIsNotAConfigurationTest {
     }
 
     private static Map<String, Object> defaultConfiguration() {
-        Map<String, Object> properties = new HashMap<>();
+        Map<String, Object> properties = LdapTestSupport.connection(server);
         properties.put("spec.name", SPEC_NAME);
-        properties.put("micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort());
-        properties.put("micronaut.security.ldap.default.context.managerDn", MANAGER_DN);
-        properties.put("micronaut.security.ldap.default.context.managerPassword", "password");
-        properties.put("micronaut.security.ldap.default.search.base", "dc=example,dc=com");
         return properties;
     }
 
