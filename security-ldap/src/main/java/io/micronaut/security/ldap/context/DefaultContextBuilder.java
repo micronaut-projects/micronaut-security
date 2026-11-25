@@ -19,6 +19,8 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -37,6 +39,24 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultContextBuilder.class);
 
+    private static final String CONNECT_POOL = "com.sun.jndi.ldap.connect.pool";
+
+    /**
+     * Keys controlling the bind itself. They are always set by the builder and ignored in additional properties.
+     */
+    private static final Set<String> RESERVED_KEYS = Set.of(
+            Context.INITIAL_CONTEXT_FACTORY,
+            Context.PROVIDER_URL,
+            Context.SECURITY_AUTHENTICATION,
+            Context.SECURITY_PRINCIPAL,
+            Context.SECURITY_CREDENTIALS,
+            CONNECT_POOL);
+
+    /**
+     * Reserved keys found in additional properties which have already been reported at WARN level.
+     */
+    private final Set<String> warnedReservedKeys = ConcurrentHashMap.newKeySet();
+
     @Override
     public DirContext build(ContextSettings contextSettings) throws NamingException {
         return build(contextSettings.getFactory(),
@@ -54,18 +74,71 @@ public class DefaultContextBuilder implements ContextBuilder {
 
     private DirContext build(String factory, String server, String user, String password, boolean pooled, Map<String, Object> additionalProperties) throws NamingException {
         Properties props = new Properties();
+        // Additional properties go first and never contain the reserved keys, so that the keys controlling the
+        // bind itself always win: configuration cannot change the factory, the server, the credentials, the
+        // authentication mechanism or the pooling of a context bound with user credentials.
+        for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (RESERVED_KEYS.contains(key)) {
+                warnReservedKey(key);
+            } else if (value != null) {
+                props.put(key, toJndiValue(value));
+            }
+        }
         props.put(Context.INITIAL_CONTEXT_FACTORY, factory);
         props.put(Context.PROVIDER_URL, server);
         props.put(Context.SECURITY_AUTHENTICATION, "simple");
         props.put(Context.SECURITY_PRINCIPAL, user);
         props.put(Context.SECURITY_CREDENTIALS, password);
+        // Pooling is controlled only by the "pooled" flag
         if (pooled) {
-            props.put("com.sun.jndi.ldap.connect.pool", "true");
+            // The JDK pool is unbounded unless its system properties say otherwise, and a context waits
+            // indefinitely for a pooled connection unless its environment bounds the wait
+            LdapConnectionPoolConfigurer.applyDefaults();
+            LdapConnectionPoolConfigurer.applyConnectTimeout(props, null);
+            props.put(CONNECT_POOL, "true");
         }
-        if (!additionalProperties.isEmpty()) {
-            props.putAll(additionalProperties);
+        try {
+            return new InitialDirContext(props);
+        } catch (RuntimeException e) {
+            // The JDK LDAP provider throws unchecked exceptions for environment entries it cannot use, for example a
+            // String for a key which takes an object. Report it as a NamingException so that callers treat it as a
+            // failed bind instead of an unexpected error.
+            NamingException namingException = new NamingException("Could not create the LDAP context: " + e.getMessage());
+            namingException.setRootCause(e);
+            throw namingException;
         }
-        return new InitialDirContext(props);
+    }
+
+    /**
+     * Reports a reserved key found in the additional properties. A misconfiguration is static, so each key is
+     * reported at WARN level once per builder and at DEBUG level afterwards.
+     *
+     * @param key The reserved key
+     */
+    private void warnReservedKey(String key) {
+        if (warnedReservedKeys.add(key)) {
+            LOG.warn("Ignoring LDAP context property '{}': it is managed by Micronaut Security and cannot be overridden through context.properties", key);
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Ignoring LDAP context property '{}': it is managed by Micronaut Security and cannot be overridden through context.properties", key);
+        }
+    }
+
+    /**
+     * The LDAP provider of the JDK reads its environment entries as {@link String}, so a scalar bound from
+     * configuration (for example {@code com.sun.jndi.ldap.connect.timeout: 5000}, which YAML binds as an
+     * {@link Integer}) is converted to its string form. Any other object is passed through unchanged, since
+     * some entries are objects by contract, such as {@code java.naming.ldap.control.connect}.
+     *
+     * @param value The configured value
+     * @return The value to put in the JNDI environment
+     */
+    private static Object toJndiValue(Object value) {
+        if (value instanceof CharSequence || value instanceof Number || value instanceof Boolean || value instanceof Character) {
+            return value.toString();
+        }
+        return value;
     }
 
     @Override

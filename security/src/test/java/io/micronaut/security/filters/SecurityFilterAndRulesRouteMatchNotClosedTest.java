@@ -153,7 +153,9 @@ class SecurityFilterAndRulesRouteMatchNotClosedTest {
     private static SecurityFilter securityFilter(List<SecurityRule<HttpRequest<?>>> rules, boolean rejectNotFound) {
         SecurityConfiguration securityConfiguration = mock(SecurityConfiguration.class);
         when(securityConfiguration.isRejectNotFound()).thenReturn(rejectNotFound);
-        return new SecurityFilter(rules, Collections.emptyList(), securityConfiguration, mock(SecurityFilterConfiguration.class), null);
+        // A request which matches no route is never a static resource here, so reject-not-found alone decides it.
+        StaticResourceMatcher<HttpRequest<?>> noStaticResources = request -> false;
+        return new SecurityFilter(rules, Collections.emptyList(), securityConfiguration, mock(SecurityFilterConfiguration.class), null, noStaticResources);
     }
 
     private static SecuredAnnotationRule securedAnnotationRule() {

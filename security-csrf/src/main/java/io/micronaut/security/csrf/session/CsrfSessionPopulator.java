@@ -52,6 +52,6 @@ final class CsrfSessionPopulator<T> implements SessionPopulator<T> {
     public void populateSession(T request,
                                 Authentication authentication,
                                 Session session) {
-        session.put(csrfConfiguration.getHttpSessionName(), csrfTokenGenerator.generateCsrfToken(request));
+        session.put(csrfConfiguration.getHttpSessionName(), csrfTokenGenerator.generateCsrfToken(request, authentication));
     }
 }

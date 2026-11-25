@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.endpoint.userinfo;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -35,10 +36,14 @@ class UserInfoClientTokenValidatorRedirectTest {
 
     @Test
     void userInfoClientDoesNotFollowRedirects() {
-        try (EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of("spec.name", "UserInfoClientTokenValidatorRedirectTestProvider"))) {
+        // the mock provider controllers live in this package, which is disabled unless the validator is enabled
+        try (EmbeddedServer provider = ApplicationContext.run(EmbeddedServer.class, Map.of(
+            "spec.name", "UserInfoClientTokenValidatorRedirectTestProvider",
+            "micronaut.security.oauth2.userinfo.validator", StringUtils.TRUE))) {
             RequestCounter counter = provider.getApplicationContext().getBean(RequestCounter.class);
             Map<String, Object> config = Map.of(
                 "spec.name", "UserInfoClientTokenValidatorRedirectTest",
+                "micronaut.security.oauth2.userinfo.validator", StringUtils.TRUE,
                 "micronaut.security.oauth2.clients.authserver.client-id", "client-id-fixture",
                 "micronaut.security.oauth2.clients.authserver.client-secret", "client-secret-fixture-not-a-secret",
                 "micronaut.security.oauth2.clients.authserver.openid.issuer", provider.getURL().toString());

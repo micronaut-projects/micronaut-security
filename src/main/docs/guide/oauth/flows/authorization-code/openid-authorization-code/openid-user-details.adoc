@@ -27,7 +27,7 @@ If the default implementation is not sufficient, it is possible to override the 
 
 IMPORTANT: You cannot use `micronaut.security.authentication` = `idtoken`, if you wish to use a custom `OpenIdAuthenticationMapper`. You should use  `micronaut.security.authentication` = `cookie` or provide your own implementation of <<loginHandler, Login Handler>> and <<logoutHandler, Logout Handler>>.
 
-To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper[].
+To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper[]. The global mapper is the `OpenIdAuthenticationMapper` bean without a qualifier (or the one marked `@Primary`), and it is used by every OpenID client without a provider-specific mapper, for both the authorization code flow and the <<password, password grant>>.
 
 snippet::io.micronaut.security.oauth2.docs.openid.GlobalOpenIdAuthenticationMapper[tags="clazz"]
 
@@ -41,3 +41,5 @@ snippet::io.micronaut.security.oauth2.docs.openid.OktaAuthenticationMapper[tags=
 <4> The JWT claims are available
 <5> The state object used during OAuth authentication
 <6> An instance of api:security.authentication.AuthenticationResponse[] is returned
+
+NOTE: A provider-specific mapper is only used for the client of that name, never as the global mapper of the other clients. If the only mapper of the application is registered with a `@Named` qualifier, for example because it replaces the default mapper, the clients without a mapper of their own cannot authenticate anyone: in the authorization code flow the api:security.oauth2.client.OpenIdClient[] is not created (unless a custom api:security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler[] is registered), and in the <<password, password grant>> no authentication provider is created for the client. Register an unqualified (or `@Primary`) global mapper for them, or a named mapper for every client.

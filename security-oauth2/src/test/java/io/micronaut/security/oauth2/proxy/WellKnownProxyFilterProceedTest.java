@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -82,7 +83,7 @@ class WellKnownProxyFilterProceedTest {
     @Test
     void proceed_isTrue_whenSettingsNull() {
         ProxyHttpClient proxyHttpClient = mock(ProxyHttpClient.class);
-        WellKnownProxyFilter filter = new WellKnownProxyFilter(Collections.emptyList(), proxyHttpClient);
+        WellKnownProxyFilter filter = new WellKnownProxyFilter(null, Collections.emptyList(), proxyHttpClient);
         HttpRequest<?> request = mock(HttpRequest.class);
         when(request.getMethod()).thenReturn(HttpMethod.GET);
         when(request.getPath()).thenReturn(WellKnownProxyFilter.OPENID_CONFIGURATION_PATH);
@@ -90,6 +91,49 @@ class WellKnownProxyFilterProceedTest {
         boolean result = filter.proceed(request);
 
         assertTrue(result, "Expected proceed=true when settings are null");
+    }
+
+    @Test
+    void proceed_isTrue_forPathMatchingRegexButNotAConstant() throws MalformedURLException {
+        WellKnownProxyFilter filter = newFilter(true, true);
+        for (String path : new String[] {"/xwell-known/openid-configuration", "/.well-known/openid-configurationX", "/.well-known/oauth-authorization-serveR", "/.wellXknown/openid-configuration"}) {
+            HttpRequest<?> request = mock(HttpRequest.class);
+            when(request.getMethod()).thenReturn(HttpMethod.GET);
+            when(request.getPath()).thenReturn(path);
+            assertTrue(filter.proceed(request), "Expected proceed=true for non-constant path " + path);
+        }
+    }
+
+    @Test
+    void upstreamRequest_isPinnedToConstantPath() throws MalformedURLException {
+        WellKnownProxyFilter filter = newFilter(true, true);
+        HttpRequest<?> request = mock(HttpRequest.class);
+        when(request.getPath()).thenReturn(WellKnownProxyFilter.OPENID_CONFIGURATION_PATH);
+        assertEquals(WellKnownProxyFilter.OPENID_CONFIGURATION_PATH, filter.upstreamRequest(request).getUri().getPath());
+        when(request.getPath()).thenReturn(WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH);
+        assertEquals(WellKnownProxyFilter.OAUTH_AUTHORIZATION_SERVER_WELL_KNOWN_PATH, filter.upstreamRequest(request).getUri().getPath());
+    }
+
+    @Test
+    void transportFailureIsAnsweredWithBadGateway() throws MalformedURLException {
+        OauthClientConfiguration cfg = mock(OauthClientConfiguration.class);
+        when(cfg.isEnabled()).thenReturn(true);
+        when(cfg.isProxyWellKnownOpenidConfiguration()).thenReturn(true);
+        OpenIdClientConfiguration openId = mock(OpenIdClientConfiguration.class);
+        when(openId.getIssuer()).thenReturn(Optional.of(new URL("https://issuer.example.com")));
+        when(cfg.getOpenid()).thenReturn(Optional.of(openId));
+        ProxyHttpClient proxyHttpClient = mock(ProxyHttpClient.class);
+        when(proxyHttpClient.proxy(any(io.micronaut.http.MutableHttpRequest.class)))
+            .thenReturn(reactor.core.publisher.Flux.error(new java.net.ConnectException("refused")));
+        WellKnownProxyFilter filter = new WellKnownProxyFilter(null, List.of(cfg), proxyHttpClient);
+        HttpRequest<?> request = mock(HttpRequest.class);
+        when(request.getMethod()).thenReturn(HttpMethod.GET);
+        when(request.getPath()).thenReturn(WellKnownProxyFilter.OPENID_CONFIGURATION_PATH);
+
+        var response = reactor.core.publisher.Flux.from(filter.doFilter(request, mock(io.micronaut.http.filter.ServerFilterChain.class))).blockFirst();
+
+        assertEquals(502, response.code());
+        assertFalse(response.getBody().isPresent());
     }
 
     private WellKnownProxyFilter newFilter(boolean proxyOauthAuthorizationServer, boolean proxyOpenIdConfiguration) throws MalformedURLException {
@@ -103,7 +147,7 @@ class WellKnownProxyFilterProceedTest {
         when(cfg.getOpenid()).thenReturn(Optional.of(openId));
 
         ProxyHttpClient proxyHttpClient = mock(ProxyHttpClient.class);
-        return new WellKnownProxyFilter(List.of(cfg), proxyHttpClient);
+        return new WellKnownProxyFilter(null, List.of(cfg), proxyHttpClient);
     }
 }
 
