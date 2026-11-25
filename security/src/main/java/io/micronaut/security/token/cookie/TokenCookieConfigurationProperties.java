@@ -21,7 +21,6 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.CookieConfiguration;
-import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(classes = CookieConfiguration.class)
-@Requires(condition = CookieBasedAuthenticationModeCondition.class)
+@Requires(condition = TokenCookieEnabledCondition.class)
 @Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(TokenCookieConfigurationProperties.PREFIX)
 public class TokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements AccessTokenCookieConfiguration {
