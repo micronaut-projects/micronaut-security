@@ -88,7 +88,7 @@ public class ReactiveOpenIdPasswordAuthenticationProvider<T, I, S> implements Re
     }
 
     private Publisher<AuthenticationResponse> onTokenResponse(OpenIdTokenResponse openIdTokenResponse) {
-        return Flux.from(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, null))
+        return Flux.from(tokenResponseValidator.validateWithoutNonce(clientConfiguration, openIdProviderMetadata, openIdTokenResponse))
             .flatMap(jwt -> {
                 try {
                     OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
