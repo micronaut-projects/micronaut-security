@@ -68,6 +68,7 @@ public class DefaultStateFactory implements StateFactory {
                 .ifPresent(state::setRedirectUri);
 
         statePersistence.persistState(request, response, state);
+        request.setAttribute(REQUEST_ATTRIBUTE_STATE, state);
         return stateSerDes.serialize(state);
     }
 
