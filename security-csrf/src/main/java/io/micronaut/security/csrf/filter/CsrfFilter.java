@@ -94,10 +94,10 @@ final class CsrfFilter implements Ordered {
     }
 
     boolean shouldTheFilterProcessTheRequestAccordingToTheUriMatch(HttpRequest<?> request) {
-        try (RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null)) {
-            if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
-                return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
-            }
+        // The route match is owned by the request pipeline; it must not be closed here.
+        RouteMatch<?> routeMatch = RouteAttributes.getRouteMatch(request).orElse(null);
+        if (routeMatch instanceof UriRouteMatch<?, ?> uriRouteMatch) {
+            return shouldTheFilterProcessTheRequestAccordingToTheUriMatch(uriRouteMatch);
         }
         return true;
     }
@@ -110,7 +110,7 @@ final class CsrfFilter implements Ordered {
         boolean matches = PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), uri);
         if (!matches) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Request uri {} does not match fitler regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
+                LOG.trace("Request uri {} does not match filter regex pattern {}", uri, csrfFilterConfiguration.getRegexPattern());
             }
             return false;
         }

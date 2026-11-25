@@ -24,6 +24,7 @@ import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.Internal;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.validator.JsonWebTokenEncryption;
 import jakarta.inject.Singleton;
@@ -66,9 +67,9 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptionConfigurationList);
         sortedConfigs.sort(comparator(header));
         for (EncryptionConfiguration config: sortedConfigs) {
-            Optional<SignedJWT> signedJWT = decrypt(jwt, config);
-            if (signedJWT.isPresent()) {
-                return signedJWT;
+            SignedJWT signedJWT = decrypt(jwt, config);
+            if (signedJWT != null) {
+                return Optional.of(signedJWT);
             }
             if (jwt.getState() == JWEObject.State.DECRYPTED) {
                 // decrypted but the payload is not a signed JWT. A decrypted JWE cannot be decrypted again.
@@ -78,42 +79,31 @@ class NimbusJsonWebTokenEncryption implements JsonWebTokenEncryption<EncryptedJW
         return Optional.empty();
     }
 
-    @NonNull
-    private Optional<SignedJWT> decrypt(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
+    @Nullable
+    private static SignedJWT decrypt(@NonNull EncryptedJWT jwt, @NonNull EncryptionConfiguration config) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Using encryption configuration: {}", config);
         }
         try {
             config.decrypt(jwt);
             SignedJWT signedJWT = jwt.getPayload().toSignedJWT();
-            if (signedJWT == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
-                }
-                return Optional.empty();
+            if (signedJWT == null && LOG.isDebugEnabled()) {
+                LOG.debug("Encrypted JWT couldn't be converted to a signed JWT.");
             }
-            return Optional.of(signedJWT);
+            return signedJWT;
         } catch (final JOSEException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
+                // Nimbus exception messages can echo token-controlled header values (e.g. an unsupported alg), so only the type is logged.
+                LOG.debug("Decryption failed with encryption configuration {} ({})", config, e.getClass().getSimpleName());
             }
-            return Optional.empty();
+            return null;
         }
     }
 
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {
         final JWEAlgorithm algorithm = header.getAlgorithm();
         final EncryptionMethod method = header.getEncryptionMethod();
-        return (sig, otherSig) -> {
-            boolean supports = sig.supports(algorithm, method);
-            boolean otherSupports = otherSig.supports(algorithm, method);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
-        };
+        // false sorts before true: configurations supporting the header are tried first
+        return Comparator.comparing(config -> !config.supports(algorithm, method));
     }
 }
