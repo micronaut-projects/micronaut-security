@@ -16,16 +16,38 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.context.annotation.Requires;
-import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Responsible for validating the nonce claim.
+ *
+ * <p>When a {@link NonceFactory} bean is present, every authorization request sent by this library carries a
+ * {@code nonce} parameter which is persisted (for example in a cookie) until the callback. In that case the persisted
+ * nonce must be present at callback time and must match the {@code nonce} claim of the ID token; a missing persisted
+ * nonce is treated as a validation failure, even if the ID token does not carry a {@code nonce} claim either.</p>
+ *
+ * <p>This assumes that the authorization request carries the nonce built by the {@link NonceFactory} bean and that the
+ * nonce is persisted with the {@link io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence} bean.
+ * An application with a custom authorization request or redirect handler which omits the nonce, or with a custom
+ * {@link NonceFactory} which does not persist the nonce with {@code NoncePersistence}, must disable nonce support
+ * ({@code micronaut.security.oauth2.openid.nonce.enabled: false}); otherwise every login fails.</p>
+ *
+ * <p>When no {@link NonceFactory} bean is present (for example, {@code micronaut.security.oauth2.openid.nonce.enabled}
+ * is {@code false}) the authorization request does not carry a nonce, so validation passes only when neither a
+ * persisted nonce nor a {@code nonce} claim exists.</p>
+ *
+ * <p>Flows without an authorization request, such as the password grant, never send a nonce. They must use
+ * {@link #validateWithoutNonce(OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata)}.</p>
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -33,12 +55,40 @@ import jakarta.inject.Singleton;
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".nonce", notEquals = StringUtils.FALSE)
 @Singleton
 public class NonceClaimValidator {
+    private static final Logger LOG = LoggerFactory.getLogger(NonceClaimValidator.class);
+
+    private final boolean nonceExpected;
+
+    /**
+     * Creates a validator which accepts a missing persisted nonce when the ID token has no {@code nonce} claim, the
+     * behavior before 5.6.0. A subclass which does not call {@link #NonceClaimValidator(NonceFactory)} explicitly uses
+     * this constructor and does not get the stricter validation. The use of this constructor is logged at WARN.
+     *
+     * @deprecated Use {@link #NonceClaimValidator(NonceFactory)} instead.
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
+    public NonceClaimValidator() {
+        this(null);
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("{} is created with the deprecated NonceClaimValidator() constructor, so a missing persisted nonce is accepted when the ID token has no nonce claim. Call NonceClaimValidator(NonceFactory) to reject it", getClass().getName());
+        }
+    }
+
+    /**
+     * @param nonceFactory The nonce factory. If present, the authorization request always carries a nonce and a
+     *                     missing persisted nonce at callback time is a validation failure.
+     * @since 5.6.0
+     */
+    @Inject
+    public NonceClaimValidator(@Nullable NonceFactory nonceFactory) {
+        this.nonceExpected = nonceFactory != null;
+    }
 
     /**
      * @param claims ID Token Claims
      * @param clientConfiguration OAuth 2.0 Client Configuration
      * @param providerMetadata OpenID Connect provider metadata
-     * @param nonce The nonce value
+     * @param nonce The persisted nonce value
      * @return Whether the JWT Claims pass validation or not.
      */
     public boolean validate(OpenIdClaims claims,
@@ -46,10 +96,35 @@ public class NonceClaimValidator {
                             OpenIdProviderMetadata providerMetadata,
                             @Nullable String nonce) {
         String nonceClaim = claims.getNonce();
-        if (nonceClaim != null && nonce != null) {
-            return nonceClaim.equals(nonce);
-        } else {
-            return nonceClaim == null && nonce == null;
+        if (nonce == null) {
+            if (nonceExpected) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Nonce validation failed for provider [{}]: no persisted nonce could be retrieved although nonce support is enabled. Check that the nonce cookie or session reaches the callback (cookie max age and path), or disable nonce support with micronaut.security.oauth2.openid.nonce.enabled=false", clientConfiguration.getName());
+                }
+                return false;
+            }
+            return nonceClaim == null;
         }
+        return nonce.equals(nonceClaim);
+    }
+
+    /**
+     * Validates the claims of an ID token obtained without an authorization request, for example with the password
+     * grant. No nonce is sent in such flows, so the ID token must not carry a {@code nonce} claim.
+     *
+     * <p>This method does not call {@link #validate(OpenIdClaims, OauthClientConfiguration, OpenIdProviderMetadata, String)}.
+     * A subclass which overrides {@code validate} must also override this method to customize the validation of such
+     * flows.</p>
+     *
+     * @param claims ID Token Claims
+     * @param clientConfiguration OAuth 2.0 Client Configuration. Not used by this implementation; available to subclasses.
+     * @param providerMetadata OpenID Connect provider metadata. Not used by this implementation; available to subclasses.
+     * @return Whether the JWT Claims pass validation or not.
+     * @since 5.6.0
+     */
+    public boolean validateWithoutNonce(OpenIdClaims claims,
+                                        OauthClientConfiguration clientConfiguration,
+                                        OpenIdProviderMetadata providerMetadata) {
+        return claims.getNonce() == null;
     }
 }

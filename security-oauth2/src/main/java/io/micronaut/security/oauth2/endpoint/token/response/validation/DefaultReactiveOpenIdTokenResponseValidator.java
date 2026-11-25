@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
@@ -48,6 +47,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiPredicate;
 
 /**
  * Default implementation of {@link ReactiveOpenIdTokenResponseValidator}.
@@ -102,6 +102,25 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                                    @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                    @NonNull OpenIdTokenResponse openIdTokenResponse,
                                    @Nullable String nonce) {
+        return validateIdToken(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
+                (validator, claims) -> validator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce));
+    }
+
+    @Override
+    @NonNull
+    @SingleResult
+    public Publisher<JWT> validateWithoutNonce(@NonNull OauthClientConfiguration clientConfiguration,
+                                               @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                               @NonNull OpenIdTokenResponse openIdTokenResponse) {
+        return validateIdToken(clientConfiguration, openIdProviderMetadata, openIdTokenResponse,
+                (validator, claims) -> validator.validateWithoutNonce(claims, clientConfiguration, openIdProviderMetadata));
+    }
+
+    @NonNull
+    private Mono<JWT> validateIdToken(@NonNull OauthClientConfiguration clientConfiguration,
+                                      @NonNull OpenIdProviderMetadata openIdProviderMetadata,
+                                      @NonNull OpenIdTokenResponse openIdTokenResponse,
+                                      @NonNull BiPredicate<NonceClaimValidator, OpenIdClaims> nonceValidation) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
@@ -129,7 +148,7 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
                     return Mono.empty();
                 }))
                 .map(verified -> jwt)
-                .filter(verifiedJwt -> validateClaims(clientConfiguration, openIdProviderMetadata, verifiedJwt, nonce, request));
+                .filter(verifiedJwt -> validateClaims(clientConfiguration, openIdProviderMetadata, verifiedJwt, nonceValidation, request));
     }
 
     /**
@@ -150,7 +169,7 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param jwt JWT with valida signature
-     * @param nonce The persisted nonce value
+     * @param nonceValidation How to validate the nonce claim with the nonce claim validator
      * @param request The current request, if any
      * @return the same JWT supplied as a parameter if the claims validation were succesful or empty if not.
      */
@@ -158,37 +177,43 @@ class DefaultReactiveOpenIdTokenResponseValidator implements ReactiveOpenIdToken
     private boolean validateClaims(@NonNull OauthClientConfiguration clientConfiguration,
                                    @NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                    @NonNull JWT jwt,
-                                   @Nullable String nonce,
+                                   @NonNull BiPredicate<NonceClaimValidator, OpenIdClaims> nonceValidation,
                                    @Nullable HttpRequest<?> request) {
+        OpenIdClaims claims;
         try {
-            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
-            OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, request))) {
-                if (openIdClaimsValidators.stream().allMatch(validator ->
-                        validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
-                    if (nonceClaimValidator == null) {
-                        if (LOG.isTraceEnabled()) {
-                            LOG.trace("Skipping nonce validation because no bean of type {} present. ", NonceClaimValidator.class.getSimpleName());
-                        }
-                        return true;
-                    }
-                    if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
-                        return true;
-                    } else if (LOG.isErrorEnabled()) {
-                        LOG.error("Nonce validation failed for provider [{}]", clientConfiguration.getName());
-                    }
-                } else if (LOG.isErrorEnabled()) {
-                    LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
-                }
-            } else if (LOG.isErrorEnabled()) {
-                LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
-            }
+            claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to parse the JWT returned from provider [{}]", clientConfiguration.getName(), e);
             }
+            return false;
         }
-        return false;
+        if (!genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, request))) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
+            }
+            return false;
+        }
+        if (!openIdClaimsValidators.stream().allMatch(validator ->
+                validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
+            }
+            return false;
+        }
+        if (nonceClaimValidator == null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Skipping nonce validation because no bean of type {} present. ", NonceClaimValidator.class.getSimpleName());
+            }
+            return true;
+        }
+        if (!nonceValidation.test(nonceClaimValidator, claims)) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Nonce validation failed for provider [{}]", clientConfiguration.getName());
+            }
+            return false;
+        }
+        return true;
     }
 
     /**

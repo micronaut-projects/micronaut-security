@@ -1,0 +1,105 @@
+/*
+ * Copyright 2026 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.security.csrf.filter;
+
+import io.micronaut.http.HttpMethod;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MediaType;
+import io.micronaut.web.router.RouteAttributes;
+import io.micronaut.web.router.UriRouteMatch;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * The {@link io.micronaut.web.router.RouteMatch} stored in the request is owned by the request and is still needed to execute the route.
+ * {@link CsrfFilter} must therefore never close it.
+ */
+class CsrfFilterRouteMatchNotClosedTest {
+
+    @Test
+    void uriMatchCheckDoesNotCloseAMatchingRouteMatch() {
+        AtomicInteger closeCalls = new AtomicInteger();
+        HttpRequest<?> request = HttpRequest.POST("/password/change", "");
+        RouteAttributes.setRouteMatch(request, uriRouteMatch("/password/change", closeCalls));
+        assertTrue(csrfFilter().shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request));
+        assertEquals(0, closeCalls.get());
+    }
+
+    @Test
+    void uriMatchCheckDoesNotCloseANonMatchingRouteMatch() {
+        AtomicInteger closeCalls = new AtomicInteger();
+        HttpRequest<?> request = HttpRequest.POST("/assets/app.css", "");
+        RouteAttributes.setRouteMatch(request, uriRouteMatch("/assets/app.css", closeCalls));
+        assertFalse(csrfFilter().shouldTheFilterProcessTheRequestAccordingToTheUriMatch(request));
+        assertEquals(0, closeCalls.get());
+    }
+
+    @Test
+    void getRequestToMatchingRouteProceedsWithoutClosingTheRouteMatch() throws Exception {
+        CsrfFilter filter = csrfFilter();
+        AtomicInteger closeCalls = new AtomicInteger();
+        HttpRequest<?> request = HttpRequest.GET("/password/change");
+        RouteAttributes.setRouteMatch(request, uriRouteMatch("/password/change", closeCalls));
+        assertNull(filter.csrfFilter(request).get());
+        assertEquals(0, closeCalls.get());
+    }
+
+    private static CsrfFilter csrfFilter() {
+        CsrfFilterConfiguration configuration = new CsrfFilterConfiguration() {
+            @Override
+            public String getRegexPattern() {
+                return "^(?!/assets/).*$";
+            }
+
+            @Override
+            public Set<HttpMethod> getMethods() {
+                return Set.of(HttpMethod.POST);
+            }
+
+            @Override
+            public Set<MediaType> getContentTypes() {
+                return Set.of(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+            }
+        };
+        return new CsrfFilter(configuration, Collections.emptyList(), Collections.emptyList(), (request, token) -> false, null);
+    }
+
+    private static UriRouteMatch<?, ?> uriRouteMatch(String uri, AtomicInteger closeCalls) {
+        return (UriRouteMatch<?, ?>) Proxy.newProxyInstance(
+                CsrfFilterRouteMatchNotClosedTest.class.getClassLoader(),
+                new Class<?>[]{UriRouteMatch.class},
+                (proxy, method, args) -> switch (method.getName()) {
+                    case "close" -> {
+                        closeCalls.incrementAndGet();
+                        yield null;
+                    }
+                    case "getUri" -> uri;
+                    case "hashCode" -> System.identityHashCode(proxy);
+                    case "equals" -> proxy == args[0];
+                    case "toString" -> "StubUriRouteMatch[" + uri + "]";
+                    default -> throw new UnsupportedOperationException(method.getName());
+                });
+    }
+}
