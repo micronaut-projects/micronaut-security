@@ -53,7 +53,21 @@ class OpenIdCallbackNonceTest {
         assertTrue(redirect.hasCookie(NONCE_COOKIE));
         flow.tokenEndpointReturnsIdTokenWithNonce(redirect.nonce());
 
-        assertTrue(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookies());
+
+        assertTrue(outcome.authenticated());
+        assertFalse(outcome.persistedNonceMissing());
+    }
+
+    @Test
+    void userIsNotAuthenticatedWhenTheNonceCookieDoesNotMatchTheNonceClaim() {
+        AuthorizationRedirect redirect = flow.login();
+        flow.tokenEndpointReturnsIdTokenWithNonce("a-different-nonce");
+
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookies());
+
+        assertFalse(outcome.authenticated());
+        assertFalse(outcome.persistedNonceMissing(), "the nonce was persisted; the nonce claim did not match it");
     }
 
     @Test

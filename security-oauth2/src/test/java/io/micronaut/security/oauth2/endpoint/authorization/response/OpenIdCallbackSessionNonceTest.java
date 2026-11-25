@@ -57,7 +57,10 @@ class OpenIdCallbackSessionNonceTest {
         assertFalse(redirect.hasCookie("OPENID_NONCE"));
         flow.tokenEndpointReturnsIdTokenWithNonce(redirect.nonce());
 
-        assertTrue(flow.isAuthenticatedAfterCallback(redirect, redirect.cookies()));
+        CallbackOutcome outcome = flow.callback(redirect, redirect.cookies());
+
+        assertTrue(outcome.authenticated());
+        assertFalse(outcome.persistedNonceMissing());
     }
 
     @Test
