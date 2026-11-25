@@ -53,6 +53,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * An application with an OpenID client named {@code auth}, a mock OpenID provider and a token endpoint which returns
@@ -104,6 +105,15 @@ final class OpenIdCallbackFlow implements AutoCloseable {
     AuthorizationRedirect login() {
         AuthorizationRedirect redirect = redirectToProvider();
         assertNotNull(redirect.nonce(), "the authorization request should carry a nonce");
+        return redirect;
+    }
+
+    /**
+     * @return The state the application sent in an authorization request which carries no nonce, and the cookies it set
+     */
+    AuthorizationRedirect loginWithoutNonce() {
+        AuthorizationRedirect redirect = redirectToProvider();
+        assertNull(redirect.nonce(), "the authorization request should not carry a nonce");
         return redirect;
     }
 
