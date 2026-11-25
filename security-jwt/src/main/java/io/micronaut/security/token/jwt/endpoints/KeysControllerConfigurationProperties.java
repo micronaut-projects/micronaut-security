@@ -18,8 +18,11 @@ package io.micronaut.security.token.jwt.endpoints;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+
+import java.time.Duration;
 
 /**
  * Configures the {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
@@ -45,8 +48,16 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/keys";
 
+    /**
+     * The default {@code Cache-Control} max-age of the JWKS response.
+     * @since 5.4.0
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final Duration DEFAULT_CACHE_MAX_AGE = Duration.ofHours(1);
+
     private boolean enabled = DEFAULT_ENABLED;
     private String path = DEFAULT_PATH;
+    private Duration cacheMaxAge = DEFAULT_CACHE_MAX_AGE;
 
     /**
      * @return true if you want to enable the {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
@@ -60,6 +71,12 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
     @NonNull
     public String getPath() {
         return this.path;
+    }
+
+    @Override
+    @Nullable
+    public Duration getCacheMaxAge() {
+        return this.cacheMaxAge;
     }
 
     /**
@@ -78,5 +95,16 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
         if (StringUtils.isNotEmpty(path)) {
             this.path = path;
         }
+    }
+
+    /**
+     * Sets the {@code max-age} directive of the {@code Cache-Control: public, max-age=...} header added to the JWKS response,
+     * which lets relying parties cache the key set instead of re-fetching it on every token validation. Default value 1 hour.
+     * A zero or negative duration disables the header.
+     * @param cacheMaxAge The maximum time the JWKS response may be cached
+     * @since 5.4.0
+     */
+    public void setCacheMaxAge(@Nullable Duration cacheMaxAge) {
+        this.cacheMaxAge = cacheMaxAge;
     }
 }
