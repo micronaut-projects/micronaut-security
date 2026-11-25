@@ -11,7 +11,7 @@ Each key under `micronaut.security.ldap` that has nested properties (for example
 
 == Failed authentication responses
 
-api:security.ldap.LdapAuthenticationProvider[] does not disclose whether a username exists in the directory. When the search for the username returns no entry, the provider returns the same api:security.authentication.AuthenticationFailureReason[] (`CREDENTIALS_DO_NOT_MATCH`) it returns for a wrong password, so login responses and `WWW-Authenticate` challenges carry the same message in both cases.
+api:security.ldap.LdapAuthenticationProvider[] does not disclose whether a username exists in the directory. When the search for the username returns no entry, the provider returns the same api:security.authentication.AuthenticationFailureReason[] it returns for an existing username: `CREDENTIALS_DO_NOT_MATCH`, as for a wrong password, or `UNKNOWN` when the directory cannot be reached. Login responses and `WWW-Authenticate` challenges therefore carry the same message in both cases. See <<ldapFailureReasons, Failure reasons>>.
 
 To keep the work done by the application similar as well, the provider performs a bind with the submitted password against a decoy entry. By default the decoy is a random, non-existent entry under the search base (`cn=<random uuid>,<search base>`), so the directory may log a failed bind for that DN whenever an unknown username is submitted; the random value avoids a fixed fingerprint in audit logs.
 
@@ -20,24 +20,34 @@ IMPORTANT: Only the client-side cost is equalised. A directory may still answer 
 [[ldapFailureReasons]]
 == Failure reasons
 
-The failure reason tells a rejected user bind apart from a problem of the directory:
+The failure reason depends only on whether the directory could be reached, which is the same for every submitted username. It does not reveal whether a username exists or whether a password was correct; the log tells the cases apart.
 
 [cols="3,1,1"]
 |===
 |Situation |Reason |Log level
 
-|The directory rejects the bind of the user found by the search, with result code 49 (`invalidCredentials`), 48 (`inappropriateAuthentication`), 53 (`unwillingToPerform`), 7 (`authMethodNotSupported`), 8 (`strongerAuthRequired`), 12 (`unavailableCriticalExtension`) or 13 (`confidentialityRequired`)
+|The manager bind or the search for the username fails
+|`UNKNOWN`
+|`DEBUG`
+
+|The directory cannot be reached or cannot serve the request at a later step: a `javax.naming.CommunicationException` or a `javax.naming.ServiceUnavailableException`, for example result code 51 (`busy`) or 52 (`unavailable`), during the bind of the user, the attribute fetch, the group search or the decoy bind
+|`UNKNOWN`
+|`DEBUG`; `WARN` for the attribute fetch and the group search
+
+|The directory refuses the bind of the user found by the search, with any other exception or result code, for example 49 (`invalidCredentials`), 53 (`unwillingToPerform`), 19 (`constraintViolation`) or 50 (`insufficientAccessRights`)
 |`CREDENTIALS_DO_NOT_MATCH`
 |`DEBUG`
 
-|The search finds no entry for the username (a decoy bind is performed, see above)
+|The search finds no entry for the username, and the decoy bind (see above) fails with anything other than an outage
 |`CREDENTIALS_DO_NOT_MATCH`
 |`DEBUG`; `WARN` if the decoy bind fails with anything other than invalid credentials
 
-|The manager bind is rejected, the user search, the attribute fetch or the group search fails, or the directory cannot be reached
-|`UNKNOWN`
-|`DEBUG`
+|The bind of the user succeeds, but fetching its attributes or searching its groups fails with anything other than an outage
+|`CREDENTIALS_DO_NOT_MATCH`
+|`WARN`
 |===
+
+A failing attribute fetch or group search can only follow a successful bind and usually means a misconfiguration, such as a group search filter the directory rejects or a manager account without the rights to read the groups. It is therefore logged at `WARN`, with the step and the exception, and reported as `CREDENTIALS_DO_NOT_MATCH`.
 
 The provider deliberately does not return `ACCOUNT_LOCKED` or `USER_DISABLED`, although some directories answer the bind of a disabled or locked account with result code 53: directories do not report these states consistently, and a distinct reason would tell a client that the username exists and that its password may be correct. If your users need a hint, make the login failure message for `CREDENTIALS_DO_NOT_MATCH` mention that the account may also be locked or disabled.
 

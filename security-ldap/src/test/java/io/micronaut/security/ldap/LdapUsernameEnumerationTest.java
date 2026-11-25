@@ -137,7 +137,7 @@ class LdapUsernameEnumerationTest {
     }
 
     @Test
-    void placeholderBindFailureDoesNotChangeTheFailureReason() {
+    void decoyBindOutageGivesAKnownAndAnUnknownUsernameTheSameReason() {
         ContextBuilder delegate = context.getBean(ContextBuilder.class);
         ContextBuilder failingUserBinds = new RecordingContextBuilder(delegate) {
             @Override
@@ -151,9 +151,11 @@ class LdapUsernameEnumerationTest {
         LdapAuthenticationProvider<Object, String, String> provider = provider(failingUserBinds);
 
         AuthenticationResponse unknownUser = provider.authenticate(null, request(UNKNOWN_USER, "password"));
+        AuthenticationResponse existingUser = provider.authenticate(null, request(EXISTING_USER, "password"));
 
-        assertFalse(unknownUser.isAuthenticated());
-        assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, assertInstanceOf(AuthenticationFailed.class, unknownUser).getReason());
+        // an outage fails the bind of every username alike, so it is reported as such for both
+        assertEquals(AuthenticationFailureReason.UNKNOWN, assertInstanceOf(AuthenticationFailed.class, unknownUser).getReason());
+        assertEquals(AuthenticationFailureReason.UNKNOWN, assertInstanceOf(AuthenticationFailed.class, existingUser).getReason());
     }
 
     @Test

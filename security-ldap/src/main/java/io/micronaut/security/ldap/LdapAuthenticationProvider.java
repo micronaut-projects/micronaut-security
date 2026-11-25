@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
-import javax.naming.AuthenticationNotSupportedException;
+import javax.naming.CommunicationException;
 import javax.naming.NamingException;
-import javax.naming.OperationNotSupportedException;
+import javax.naming.ServiceUnavailableException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 import java.io.Closeable;
@@ -151,7 +151,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             try {
                 groups = searchGroups(managerContext, result, loggableUsername);
             } catch (NamingException e) {
-                return unknownFailure("group search", loggableUsername, e);
+                return failureOfAFoundUser("group search", loggableUsername, e, true);
             }
 
             // guarded explicitly: sanitizeAll copies the set even when TRACE is off
@@ -175,9 +175,8 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * @param result           The entry found for the username
      * @param loggableUsername The username, sanitized for logging
      * @param password         The password to bind with
-     * @return {@code null} if the user is bound and the result carries its attributes, otherwise the failure:
-     * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} if the directory rejected the bind, which means the
-     * credentials are not accepted, {@link AuthenticationFailureReason#UNKNOWN} for any other failure
+     * @return {@code null} if the user is bound and the result carries its attributes, otherwise the failure returned
+     * by {@link #failureOfAFoundUser(String, String, NamingException, boolean)}
      */
     private @Nullable AuthenticationResponse bindUserAndLoadAttributes(LdapSearchResult result, String loggableUsername, String password) {
         String dn = result.getDn();
@@ -185,16 +184,8 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
         try {
             try {
                 userContext = contextBuilder.build(configuration.getSettings(dn, password));
-            } catch (javax.naming.AuthenticationException | AuthenticationNotSupportedException | OperationNotSupportedException e) {
-                // The server rejected the user bind itself, so the supplied credentials are not accepted.
-                // Only this bind says anything about the credentials: the same exceptions thrown by the
-                // manager context are a problem of the directory or its configuration.
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Directory rejected the bind of user [{}]; returning CREDENTIALS_DO_NOT_MATCH. Encountered {}", loggableUsername, loggable(e));
-                }
-                return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
             } catch (NamingException e) {
-                return unknownFailure("user bind", loggableUsername, e);
+                return failureOfAFoundUser("user bind", loggableUsername, e, false);
             }
             if (result.getAttributes() == null) {
                 try {
@@ -202,7 +193,7 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
                     // mis-parses DNs containing '/' or '"'. LdapName parses the DN as an LDAP name instead.
                     result.setAttributes(userContext.getAttributes(new LdapName(dn)));
                 } catch (NamingException e) {
-                    return unknownFailure("attribute fetch", loggableUsername, e);
+                    return failureOfAFoundUser("attribute fetch", loggableUsername, e, true);
                 }
             }
             return null;
@@ -212,7 +203,45 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
     }
 
     /**
-     * Logs a failure that says nothing about the supplied credentials and returns {@link AuthenticationFailureReason#UNKNOWN}.
+     * Maps a failure that happens once the search has found the user. The reason must not depend on the user: an
+     * unknown username gets the same reasons from {@link #rejectUnknownUser(Object, AuthenticationRequest)}. So the
+     * reason only says whether the directory could be reached: {@link AuthenticationFailureReason#UNKNOWN} for an
+     * outage, which fails every username alike, and {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} for any
+     * other failure, whatever the directory answered. The log keeps the step and the exception.
+     *
+     * @param step                The step of the authentication that failed, as it reads in the log
+     * @param loggableUsername    The username, sanitized for logging
+     * @param e                   The failure
+     * @param afterSuccessfulBind Whether the user bind had succeeded: only a client with the correct password reaches
+     *                            such a step, and its failure usually means a misconfiguration, so it is logged at WARN
+     * @return an {@link AuthenticationFailureReason#UNKNOWN} failure for an outage, otherwise a
+     * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} failure
+     */
+    private static AuthenticationResponse failureOfAFoundUser(String step, String loggableUsername, NamingException e, boolean afterSuccessfulBind) {
+        AuthenticationFailureReason reason = isOutage(e) ? AuthenticationFailureReason.UNKNOWN : AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH;
+        // guarded explicitly: loggable builds the exception text even when the level is off
+        if (afterSuccessfulBind) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("LDAP {} failed for user [{}] after a successful bind; returning {}. Encountered {}", step, loggableUsername, reason, loggable(e));
+            }
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("LDAP {} failed for user [{}]; returning {}. Encountered {}", step, loggableUsername, reason, loggable(e));
+        }
+        return AuthenticationResponse.failure(reason);
+    }
+
+    /**
+     * @param e A failure
+     * @return Whether the failure means that the directory could not be reached or could not serve the request, which
+     * fails every username alike: a {@link CommunicationException} or a {@link ServiceUnavailableException}, such as
+     * result codes 51 ({@code busy}) and 52 ({@code unavailable})
+     */
+    private static boolean isOutage(NamingException e) {
+        return e instanceof CommunicationException || e instanceof ServiceUnavailableException;
+    }
+
+    /**
+     * Logs a failure that happens before the user is known and returns {@link AuthenticationFailureReason#UNKNOWN}.
      *
      * @param step             The step of the authentication that failed, as it reads in the log
      * @param loggableUsername The username, sanitized for logging
@@ -252,11 +281,13 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      * Rejects an authentication request whose username did not match any directory entry.
      * <p>
      * To prevent username enumeration (CWE-204) the response is indistinguishable from the one
-     * returned for a wrong password: the failure reason is always
-     * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH}, never
+     * returned for a known username: the failure reason is never
      * {@link AuthenticationFailureReason#USER_NOT_FOUND}, and a bind against a decoy DN is
      * attempted so that an unknown username costs roughly the same client-side directory round
-     * trip as a known username with a wrong password. The outcome of that bind is ignored.
+     * trip as a known username with a wrong password. The outcome of that bind only matters when
+     * the directory cannot be reached: the reason is then {@link AuthenticationFailureReason#UNKNOWN},
+     * as it is for a known username, and {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH}
+     * otherwise.
      * The decoy DN is {@link LdapConfiguration.SearchConfiguration#getDecoyDn()} when configured,
      * otherwise a random, non-existent entry under the search base.
      * <p>
@@ -265,7 +296,9 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
      *
      * @param requestContext        The request context
      * @param authenticationRequest The authentication request, whose identity matched no entry
-     * @return a {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} failure
+     * @return an {@link AuthenticationFailureReason#UNKNOWN} failure if the decoy bind fails with a
+     * {@link CommunicationException} or a {@link ServiceUnavailableException}, otherwise a
+     * {@link AuthenticationFailureReason#CREDENTIALS_DO_NOT_MATCH} failure
      * @since 5.5.2
      */
     @Experimental
@@ -275,13 +308,20 @@ public class LdapAuthenticationProvider<T, I, S> implements ExecutorAuthenticati
             decoyContext = contextBuilder.build(configuration.getSettings(decoyDn(), authenticationRequest.getSecret().toString()));
         } catch (javax.naming.AuthenticationException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Decoy bind for unknown user failed as expected. Encountered {}", loggable(e));
+                LOG.debug("Decoy bind for unknown user failed as expected; returning CREDENTIALS_DO_NOT_MATCH. Encountered {}", loggable(e));
             }
         } catch (NamingException e) {
-            // Anything other than invalid credentials means the decoy bind never reached the directory
-            // or was rejected before the password was checked, so the mitigation is not doing its job.
+            if (isOutage(e)) {
+                // the bind of a known username would have failed alike, and returned UNKNOWN
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Decoy bind for unknown user could not reach the directory; returning UNKNOWN. Encountered {}", loggable(e));
+                }
+                return AuthenticationResponse.failure(AuthenticationFailureReason.UNKNOWN);
+            }
+            // Anything other than invalid credentials means the decoy bind was rejected before the
+            // password was checked, so the mitigation is not doing its job.
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Decoy bind for unknown user failed with {} rather than invalid credentials; check [{}.{}.search.decoy-dn]. Encountered {}",
+                LOG.warn("Decoy bind for unknown user failed with {} rather than invalid credentials; check [{}.{}.search.decoy-dn]; returning CREDENTIALS_DO_NOT_MATCH. Encountered {}",
                     e.getClass().getSimpleName(), LdapConfiguration.PREFIX, configuration.getName(), loggable(e));
             }
         } finally {

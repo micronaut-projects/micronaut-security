@@ -96,6 +96,8 @@ class LdapLogInjectionTest {
             "49, DEBUG",
             // a result code other than invalid credentials makes the provider warn about the decoy, at a level enabled by default
             "53, WARN",
+            // an outage during the decoy bind is reported as UNKNOWN, as for an existing username
+            "52, DEBUG",
     })
     void lineBreaksInTheDiagnosticMessageOfTheDecoyBindAreNotLogged(int resultCode, String level) throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", rejectBind(DECOY_DN, ResultCode.valueOf(resultCode)));

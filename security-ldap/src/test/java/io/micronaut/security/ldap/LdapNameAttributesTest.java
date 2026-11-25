@@ -20,7 +20,6 @@ import io.micronaut.security.ldap.context.SearchSettings;
 import jakarta.inject.Singleton;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -64,10 +63,15 @@ class LdapNameAttributesTest {
         }
     }
 
-    @ParameterizedTest(name = "result code {0} to the attribute fetch yields UNKNOWN")
-    @ValueSource(ints = {48, 49, 50, 53})
-    void aFailingAttributeFetchAfterASuccessfulBindIsNotBlamedOnTheCredentials(int resultCode) throws Exception {
-        // 48, 49 and 53 are the codes that mean CREDENTIALS_DO_NOT_MATCH when the user bind itself is rejected
+    @ParameterizedTest(name = "result code {0} to the attribute fetch yields {1}")
+    @CsvSource({
+            "48, CREDENTIALS_DO_NOT_MATCH",
+            "49, CREDENTIALS_DO_NOT_MATCH",
+            "50, CREDENTIALS_DO_NOT_MATCH",
+            "53, CREDENTIALS_DO_NOT_MATCH",
+            "52, UNKNOWN",
+    })
+    void aFailingAttributeFetchYieldsUnknownOnlyForAnOutageAndIsLoggedAtWarn(int resultCode, AuthenticationFailureReason expected) throws Exception {
         String dn = "uid=riemann," + LdapTestSupport.BASE_DN;
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
             @Override
@@ -82,9 +86,11 @@ class LdapNameAttributesTest {
              ApplicationContext context = ApplicationContext.run(LdapTestSupport.properties(server, Map.of("spec.name", SPEC_NAME)), "test")) {
             AuthenticationResponse response = LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request("riemann"));
 
-            assertEquals(AuthenticationFailureReason.UNKNOWN, LdapTestSupport.failureReason(response));
-            assertTrue(log.messages().stream().anyMatch(message -> message.startsWith("LDAP attribute fetch failed for user [riemann]; returning UNKNOWN.")),
-                    "the log is expected to blame the attribute fetch: " + log.messages());
+            assertEquals(expected, LdapTestSupport.failureReason(response));
+            // only a client with the correct password reaches the attribute fetch, whose failure usually means a misconfiguration
+            assertTrue(log.events().stream().anyMatch(event -> event.getLevel() == Level.WARN
+                            && event.getFormattedMessage().startsWith("LDAP attribute fetch failed for user [riemann] after a successful bind; returning " + expected + ".")),
+                    "the log is expected to blame the attribute fetch at WARN: " + log.messages());
         } finally {
             server.shutDown(true);
         }

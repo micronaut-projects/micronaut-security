@@ -32,6 +32,7 @@ class LdapBindResultCodeTest {
 
     private static final String USER = "riemann";
     private static final String USER_DN = "uid=riemann,dc=example,dc=com";
+    private static final String DECOY_DN = "cn=decoy,dc=example,dc=com";
 
     private static final Map<String, ResultCode> BIND_RESULTS = new ConcurrentHashMap<>();
 
@@ -50,7 +51,8 @@ class LdapBindResultCodeTest {
                 }
             }
         });
-        context = ApplicationContext.run(LdapTestSupport.properties(server), "test");
+        context = ApplicationContext.run(LdapTestSupport.properties(server,
+                Map.of("micronaut.security.ldap.default.search.decoy-dn", DECOY_DN)), "test");
     }
 
     @AfterAll
@@ -79,7 +81,9 @@ class LdapBindResultCodeTest {
             "53, unwillingToPerform,           CREDENTIALS_DO_NOT_MATCH",
             "51, busy,                         UNKNOWN",
             "52, unavailable,                  UNKNOWN",
-            "80, other,                        UNKNOWN",
+            "19, constraintViolation,          CREDENTIALS_DO_NOT_MATCH",
+            "50, insufficientAccessRights,     CREDENTIALS_DO_NOT_MATCH",
+            "80, other,                        CREDENTIALS_DO_NOT_MATCH",
     })
     void resultCodeOfTheUserBindDecidesTheFailureReason(int resultCode, String name, AuthenticationFailureReason expected) {
         BIND_RESULTS.put(USER_DN, ResultCode.valueOf(resultCode));
@@ -99,12 +103,38 @@ class LdapBindResultCodeTest {
         assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()), name);
     }
 
+    @ParameterizedTest(name = "result code {0} ({1}) to the bind yields {2} for a known and an unknown username alike")
+    @CsvSource({
+            "19, constraintViolation,      CREDENTIALS_DO_NOT_MATCH",
+            "49, invalidCredentials,       CREDENTIALS_DO_NOT_MATCH",
+            "50, insufficientAccessRights, CREDENTIALS_DO_NOT_MATCH",
+            "51, busy,                     UNKNOWN",
+            "52, unavailable,              UNKNOWN",
+            "53, unwillingToPerform,       CREDENTIALS_DO_NOT_MATCH",
+            "80, other,                    CREDENTIALS_DO_NOT_MATCH",
+    })
+    void knownAndUnknownUsernamesGetTheSameReason(int resultCode, String name, AuthenticationFailureReason expected) {
+        // the bind of the user found by the search and the decoy bind done for an unknown username get the same answer
+        BIND_RESULTS.put(USER_DN, ResultCode.valueOf(resultCode));
+        BIND_RESULTS.put(DECOY_DN, ResultCode.valueOf(resultCode));
+
+        AuthenticationFailureReason knownUsername = failureReason(authenticate(USER));
+        AuthenticationFailureReason unknownUsername = failureReason(authenticate("nobody"));
+
+        assertEquals(knownUsername, unknownUsername, name);
+        assertEquals(expected, knownUsername, name);
+    }
+
     @Test
     void userAuthenticatesWhenNoBindIsRejected() {
         assertTrue(authenticate().isAuthenticated());
     }
 
     private static AuthenticationResponse authenticate() {
-        return LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(USER));
+        return authenticate(USER);
+    }
+
+    private static AuthenticationResponse authenticate(String username) {
+        return LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(username));
     }
 }

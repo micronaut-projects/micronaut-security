@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
+import javax.naming.NoPermissionException;
 import javax.naming.OperationNotSupportedException;
 import javax.naming.ServiceUnavailableException;
 import javax.naming.directory.DirContext;
@@ -38,8 +39,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Verifies how {@link LdapAuthenticationProvider} maps exceptions to failure reasons depending on where they are
- * thrown. A rejection of the user bind means the credentials were not accepted, whereas a failure of the manager
- * bind, of the search or a connectivity problem is not attributable to the user's credentials.
+ * thrown. A failure of the manager bind or of the user search, which happens before the user is known, and an outage at
+ * any step yield UNKNOWN. Any other failure once the user has been found yields CREDENTIALS_DO_NOT_MATCH, so that the
+ * reason does not depend on the user.
  */
 class LdapBindFailureReasonTest {
 
@@ -86,6 +88,8 @@ class LdapBindFailureReasonTest {
                 Arguments.of(new AuthenticationNotSupportedException("not supported"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
                 Arguments.of(new OperationNotSupportedException("[LDAP: error code 53]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
                 Arguments.of(new javax.naming.AuthenticationException("invalid credentials"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new NoPermissionException("[LDAP: error code 50]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new NamingException("[LDAP: error code 80]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
                 Arguments.of(new CommunicationException("connection reset"), AuthenticationFailureReason.UNKNOWN),
                 Arguments.of(new ServiceUnavailableException("unavailable"), AuthenticationFailureReason.UNKNOWN)
         );
@@ -132,12 +136,23 @@ class LdapBindFailureReasonTest {
         assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()));
     }
 
-    @ParameterizedTest(name = "{0} during the group search yields UNKNOWN")
-    @MethodSource("searchFailures")
-    void exceptionDuringTheGroupSearchNeverBlamesTheCredentials(NamingException exception) {
+    static Stream<Arguments> groupSearchFailures() {
+        return Stream.of(
+                Arguments.of(new javax.naming.AuthenticationException("referral bind rejected"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new AuthenticationNotSupportedException("not supported"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new OperationNotSupportedException("[LDAP: error code 53]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new NoPermissionException("[LDAP: error code 50]"), AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                Arguments.of(new CommunicationException("connection reset"), AuthenticationFailureReason.UNKNOWN),
+                Arguments.of(new ServiceUnavailableException("unavailable"), AuthenticationFailureReason.UNKNOWN)
+        );
+    }
+
+    @ParameterizedTest(name = "{0} during the group search yields {1}")
+    @MethodSource("groupSearchFailures")
+    void exceptionDuringTheGroupSearchYieldsUnknownOnlyForAnOutage(NamingException exception, AuthenticationFailureReason expected) {
         context.getBean(FailingLdapSearchService.class).groupException = exception;
 
-        assertEquals(AuthenticationFailureReason.UNKNOWN, failureReason(authenticate()));
+        assertEquals(expected, failureReason(authenticate()));
     }
 
     @Test

@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.net.ServerSocket;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import static io.micronaut.security.ldap.LdapTestSupport.failureReason;
@@ -62,7 +61,7 @@ class LdapFailureLogTest {
             server.shutDown(true);
         }
 
-        assertLogged("LDAP manager bind failed for user [riemann]; returning UNKNOWN.", "CommunicationException", "ConnectException");
+        assertLogged(Level.DEBUG, "LDAP manager bind failed for user [riemann]; returning UNKNOWN.", "CommunicationException", "ConnectException");
     }
 
     @Test
@@ -77,11 +76,11 @@ class LdapFailureLogTest {
         });
 
         assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(), LdapTestSupport.PASSWORD));
-        assertLogged("LDAP user search failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
+        assertLogged(Level.DEBUG, "LDAP user search failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
     }
 
     @Test
-    void aUserBindFailureThatIsNotARejectionIsLoggedAsSuch() throws Exception {
+    void anOutageDuringTheUserBindIsLoggedAsSuch() throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif", new InMemoryOperationInterceptor() {
             @Override
             public void processSimpleBindRequest(InMemoryInterceptedSimpleBindRequest request) throws LDAPException {
@@ -92,14 +91,14 @@ class LdapFailureLogTest {
         });
 
         assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(), LdapTestSupport.PASSWORD));
-        assertLogged("LDAP user bind failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
+        assertLogged(Level.DEBUG, "LDAP user bind failed for user [riemann]; returning UNKNOWN.", "ServiceUnavailableException");
     }
 
     @Test
-    void aFailingGroupSearchIsLoggedAsSuchAfterASuccessfulBind() throws Exception {
+    void aFailingGroupSearchIsLoggedAtWarnAfterASuccessfulBind() throws Exception {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
 
-        assertEquals(AuthenticationFailureReason.UNKNOWN, authenticate(server, Map.of(
+        assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, authenticate(server, Map.of(
                 "micronaut.security.ldap.default.groups.enabled", true,
                 "micronaut.security.ldap.default.groups.base", LdapTestSupport.BASE_DN,
                 // not a valid search filter, so the group search fails after the user bind succeeded
@@ -107,7 +106,8 @@ class LdapFailureLogTest {
         ), LdapTestSupport.PASSWORD));
 
         assertTrue(log.messages().stream().anyMatch(message -> message.startsWith("Successfully bound user")), "the bind is expected to succeed: " + log.messages());
-        assertLogged("LDAP group search failed for user [riemann]; returning UNKNOWN.", "InvalidSearchFilterException");
+        // only a client with the correct password reaches the group search, whose failure usually means a misconfiguration
+        assertLogged(Level.WARN, "LDAP group search failed for user [riemann] after a successful bind; returning CREDENTIALS_DO_NOT_MATCH.", "InvalidSearchFilterException");
     }
 
     @Test
@@ -115,7 +115,7 @@ class LdapFailureLogTest {
         InMemoryDirectoryServer server = LdapTestSupport.startServer("basic.ldif");
 
         assertEquals(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH, authenticate(server, Map.of(), "wrong"));
-        assertLogged("Directory rejected the bind of user [riemann]; returning CREDENTIALS_DO_NOT_MATCH.", "AuthenticationException");
+        assertLogged(Level.DEBUG, "LDAP user bind failed for user [riemann]; returning CREDENTIALS_DO_NOT_MATCH.", "AuthenticationException");
     }
 
     private static AuthenticationFailureReason authenticate(InMemoryDirectoryServer server, Map<String, Object> properties, String password) {
@@ -130,9 +130,10 @@ class LdapFailureLogTest {
         return failureReason(LdapTestSupport.provider(context).authenticate(null, LdapTestSupport.request(USER, password)));
     }
 
-    private void assertLogged(String prefix, String... fragments) {
-        List<String> messages = log.messages();
-        assertTrue(messages.stream().anyMatch(message -> message.startsWith(prefix) && Arrays.stream(fragments).allMatch(message::contains)),
-                "expected a message starting with [" + prefix + "] and containing " + Arrays.toString(fragments) + ": " + messages);
+    private void assertLogged(Level level, String prefix, String... fragments) {
+        assertTrue(log.events().stream().anyMatch(event -> event.getLevel() == level
+                        && event.getFormattedMessage().startsWith(prefix)
+                        && Arrays.stream(fragments).allMatch(event.getFormattedMessage()::contains)),
+                "expected a " + level + " message starting with [" + prefix + "] and containing " + Arrays.toString(fragments) + ": " + log.messages());
     }
 }
