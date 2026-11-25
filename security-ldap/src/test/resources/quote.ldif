@@ -1,0 +1,13 @@
+dn: dc=example,dc=com
+objectclass: domain
+objectclass: top
+
+dn: cn=John\"Doe,dc=example,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: johnquote
+sn: Doe
+cn: John"Doe
+userpassword: password

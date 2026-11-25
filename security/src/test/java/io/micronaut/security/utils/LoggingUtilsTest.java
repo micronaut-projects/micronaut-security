@@ -12,13 +12,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LoggingUtilsTest {
@@ -135,5 +139,31 @@ class LoggingUtilsTest {
 
         assertEquals(1, appender.list.size());
         assertTrue(appender.list.get(0).getFormattedMessage().startsWith(MESSAGE_PREFIX));
+    }
+
+    @Test
+    void sanitizeReplacesTheCharactersThatBreakALine() {
+        assertEquals("alice__INFO forged_entry__", LoggingUtils.sanitize("alice\r\nINFO forged\tentry\u2028\u2029"));
+        assertEquals("a_b_c_d", LoggingUtils.sanitize("a\u0000b\u0085c\u007Fd"));
+    }
+
+    @Test
+    void sanitizeReturnsAValueWithoutControlCharactersUnchanged() {
+        String value = "uid=José Ñandú,dc=example,dc=com";
+
+        assertSame(value, LoggingUtils.sanitize(value));
+        assertEquals("", LoggingUtils.sanitize(""));
+    }
+
+    @Test
+    void sanitizeAcceptsNull() {
+        assertNull(LoggingUtils.sanitize(null));
+        assertNull(LoggingUtils.sanitizeAll(null));
+    }
+
+    @Test
+    void sanitizeReplacesTheCharactersThatBreakALineInEachValue() {
+        assertEquals(List.of("staff", "admins__forged"), LoggingUtils.sanitizeAll(List.of("staff", "admins\r\nforged")));
+        assertEquals(Arrays.asList("staff", null), LoggingUtils.sanitizeAll(Arrays.asList("staff", null)));
     }
 }

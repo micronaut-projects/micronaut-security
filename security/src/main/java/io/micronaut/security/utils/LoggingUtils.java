@@ -20,6 +20,8 @@ import io.micronaut.security.authentication.Authentication;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -61,6 +63,52 @@ public final class LoggingUtils {
         if (logger.isDebugEnabled()) {
             logger.debug(message, args);
         }
+    }
+
+    /**
+     * Replaces the characters that could start a new line in a log file with an underscore, so that a value supplied
+     * by a client or by a remote system cannot forge log entries (CWE-117). The ISO control characters, which include
+     * carriage return and line feed, and the Unicode line and paragraph separators are replaced.
+     *
+     * @param value the value to log
+     * @return the value without control characters, or {@code null} if the value is {@code null}
+     * @since 5.6.0
+     */
+    public static @Nullable String sanitize(@Nullable final String value) {
+        if (value == null) {
+            return null;
+        }
+        for (int i = 0; i < value.length(); i++) {
+            if (breaksLine(value.charAt(i))) {
+                char[] chars = value.toCharArray();
+                for (int j = i; j < chars.length; j++) {
+                    if (breaksLine(chars[j])) {
+                        chars[j] = '_';
+                    }
+                }
+                return new String(chars);
+            }
+        }
+        return value;
+    }
+
+    /**
+     * Sanitizes each value with {@link #sanitize(String)}.
+     *
+     * @param values the values to log
+     * @return the sanitized values, in the iteration order of the collection, or {@code null} if the collection is
+     * {@code null}
+     * @since 5.6.0
+     */
+    public static @Nullable List<@Nullable String> sanitizeAll(@Nullable final Collection<@Nullable String> values) {
+        if (values == null) {
+            return null;
+        }
+        return values.stream().map(LoggingUtils::sanitize).toList();
+    }
+
+    private static boolean breaksLine(char c) {
+        return Character.isISOControl(c) || c == '\u2028' || c == '\u2029';
     }
 
     /**

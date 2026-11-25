@@ -17,6 +17,7 @@ package io.micronaut.security.ldap.group;
 
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.SearchProvider;
+import io.micronaut.security.utils.LoggingUtils;
 import jakarta.inject.Singleton;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +57,7 @@ public class DefaultLdapGroupProcessor implements LdapGroupProcessor {
                     });
 
             if (LOG.isTraceEnabled()) {
-                LOG.trace("The following groups were found for [{}]: {}", result.getDn(), groupSet);
+                LOG.trace("The following groups were found for [{}]: {}", LoggingUtils.sanitize(result.getDn()), LoggingUtils.sanitizeAll(groupSet));
             }
         }
 

@@ -1,8 +1,6 @@
 package io.micronaut.security.ldap;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
-import com.unboundid.ldif.LDIFReader;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,22 +38,11 @@ class LdapLoginFailureMessageTest {
 
     @BeforeAll
     static void setup() throws Exception {
-        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-        config.addAdditionalBindCredentials("cn=admin,dc=example,dc=com", "password");
-        server = new InMemoryDirectoryServer(config);
-        try (InputStream ldif = LdapLoginFailureMessageTest.class.getClassLoader().getResourceAsStream("basic.ldif")) {
-            server.importFromLDIF(true, new LDIFReader(ldif));
-        }
-        server.startListening();
-        embeddedServer = ApplicationContext.run(EmbeddedServer.class, Map.of(
+        server = LdapTestSupport.startServer("basic.ldif");
+        embeddedServer = ApplicationContext.run(EmbeddedServer.class, LdapTestSupport.properties(server, Map.of(
                 "micronaut.security.authentication", "bearer",
-                "micronaut.security.token.jwt.signatures.secret.generator.secret", NOT_A_SECRET,
-                "micronaut.security.ldap.default.enabled", true,
-                "micronaut.security.ldap.default.context.server", "ldap://localhost:" + server.getListenPort(),
-                "micronaut.security.ldap.default.context.managerDn", "cn=admin,dc=example,dc=com",
-                "micronaut.security.ldap.default.context.managerPassword", "password",
-                "micronaut.security.ldap.default.search.base", "dc=example,dc=com"
-        ), "test");
+                "micronaut.security.token.jwt.signatures.secret.generator.secret", NOT_A_SECRET
+        )), "test");
         httpClient = embeddedServer.getApplicationContext().createBean(HttpClient.class, embeddedServer.getURL());
         client = httpClient.toBlocking();
     }
