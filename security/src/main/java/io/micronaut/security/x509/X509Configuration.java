@@ -27,6 +27,9 @@ import io.micronaut.core.util.Toggleable;
 public interface X509Configuration extends Toggleable {
 
     /**
+     * The regex must contain exactly one capturing group, which is used to extract the name from the certificate subject DN.
+     * {@link X509AuthenticationFetcher} throws a {@link io.micronaut.context.exceptions.ConfigurationException} otherwise.
+     *
      * @return the Subject Distinguished Name (DN) regex
      */
     @NonNull
