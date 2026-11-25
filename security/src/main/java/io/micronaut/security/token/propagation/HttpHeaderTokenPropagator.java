@@ -16,6 +16,7 @@
 package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -34,6 +35,8 @@ import java.util.Optional;
 @Singleton
 public class HttpHeaderTokenPropagator implements TokenPropagator {
 
+    private static final char PREFIX_SEPARATOR = ' ';
+
     protected final HttpHeaderTokenPropagatorConfiguration configuration;
 
     /**
@@ -44,17 +47,19 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     }
 
     /**
-     * Writes the token to the request.
+     * Writes the token to the request. The header is set, not added: a value the request already carries
+     * under the configured header name, whichever its scheme, is replaced so that exactly one header results.
      * @param request The {@link MutableHttpRequest} instance
      * @param token A token ( e.g. JWT token, basic auth token...)
      */
     @Override
     public void writeToken(MutableHttpRequest<?> request, String token) {
-        request.header(configuration.getHeaderName(), headerValue(token));
+        request.getHeaders().set(configuration.getHeaderName(), headerValue(token));
     }
 
     /**
-     * Search for a JWT token in a HTTP request.
+     * Search for a JWT token in a HTTP request. A header which carries no token, such as {@code Bearer}
+     * followed only by whitespace, is treated as if the token was not found.
      * @param request The request to look for the token in
      * @return if the JWT token is found it is returned, empty if not
      */
@@ -62,7 +67,8 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
     public Optional<String> findToken(HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
-        return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
+        return authorizationHeader.flatMap(this::extractTokenFromAuthorization)
+                .filter(StringUtils::hasText);
     }
 
     /**
@@ -70,35 +76,45 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = new StringBuilder();
-        String prefix = configuration.getPrefix();
-        if (prefix != null) {
-            sb.append(prefix);
-            if (!prefix.endsWith(" ")) {
-                sb.append(" ");
-            }
+        String prefix = effectivePrefix();
+        if (prefix == null) {
+            return token;
         }
-        sb.append(token);
-        return sb.toString();
+        return prefix + PREFIX_SEPARATOR + token;
     }
 
     /**
+     * Extracts the token from the header value. Prefix matching is case-insensitive and requires a
+     * single space separator between the prefix and the token. An empty or blank prefix is treated
+     * as no prefix.
      * @param authorization Authorization header value
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
-        StringBuilder sb = new StringBuilder();
-        final String prefix = configuration.getPrefix();
-        if (prefix != null && !prefix.isEmpty()) {
-            sb.append(prefix);
-            sb.append(" ");
+        final String prefix = effectivePrefix();
+        if (prefix == null) {
+            return Optional.of(authorization);
         }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            return Optional.empty();
+        if (startsWithPrefixAndSeparator(authorization, prefix)) {
+            return Optional.of(authorization.substring(prefix.length() + 1));
         }
+        return Optional.empty();
+    }
+
+    private static boolean startsWithPrefixAndSeparator(String authorization, String prefix) {
+        final int prefixLength = prefix.length();
+        return authorization.length() > prefixLength
+                && authorization.regionMatches(true, 0, prefix, 0, prefixLength)
+                && authorization.charAt(prefixLength) == PREFIX_SEPARATOR;
+    }
+
+    /**
+     * @return the configured prefix without surrounding whitespace, or {@code null} if no prefix is configured or it is blank
+     */
+    @Nullable
+    private String effectivePrefix() {
+        String prefix = configuration.getPrefix();
+        return StringUtils.hasText(prefix) ? prefix.trim() : null;
     }
 
     /**
