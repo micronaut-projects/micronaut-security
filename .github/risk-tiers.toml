@@ -7,3 +7,7 @@
 description = """Public API, authentication, authorization, tokens, sessions, CSRF or any other security behaviour, \
 a change of default behaviour, or anything breaking."""
 paths = ["security*/src/main/**"]
+
+[review]
+# Enforce the review policy here: T1 needs a maintainer's approval, T2 one from the owners in .github/CODEOWNERS.
+enforce = true
