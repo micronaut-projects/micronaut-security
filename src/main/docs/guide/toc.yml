@@ -178,6 +178,7 @@ oauth:
     protectedResourceMetadata: Protected Resource Metadata
   custom-client: Custom Clients
   providerHttpClient: HTTP Clients for the Provider
+  privateKeyJwt: Private Key JWT Client Authentication
   proxyToAuthServer: Proxy .well-known requests to Auth Server
   oauthGuides: Guides
 ojdbcExtensions:

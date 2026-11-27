@@ -33,6 +33,17 @@ public interface SecureEndpointConfiguration extends EndpointConfiguration {
     Optional<String> getAuthenticationMethod();
 
     /**
+     * Returns the client assertion configuration used for {@code private_key_jwt} client authentication.
+     * Only applicable when the authentication method is {@code private_key_jwt}.
+     *
+     * @return An optional client assertion configuration
+     * @since 5.5.3
+     */
+    default Optional<ClientAssertionConfiguration> getClientAssertion() {
+        return Optional.empty();
+    }
+
+    /**
      * @return A new secure endpoint configuration builder.
      * @since 5.1.0
      */

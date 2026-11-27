@@ -16,7 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.Qualifier;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.ConfigurationException;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
@@ -28,13 +30,18 @@ import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.http.client.LoadBalancerResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.ClientAssertionConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethods;
+import io.micronaut.security.oauth2.endpoint.token.request.clientauth.ClientAssertionGenerator;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
 import io.micronaut.security.utils.NoRedirectHttpClientConfiguration;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -45,6 +52,7 @@ import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 /**
  * The default implementation of {@link TokenEndpointClient}.
@@ -55,6 +63,9 @@ import org.slf4j.LoggerFactory;
  * a client is created from that configuration (or from the default configuration when only the client bean exists) with
  * the load balancer of the service. The named {@link HttpClient} bean itself is not used, because its redirect policy
  * cannot be enforced.</p>
+ *
+ * <p>When the token endpoint supports {@code private_key_jwt} and a {@link ClientAssertionGenerator} bean named after
+ * the client exists, the request is authenticated with a client assertion (RFC 7523).</p>
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -124,10 +135,77 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 .contentType(requestContext.getMediaType())
                 .accept(MediaType.APPLICATION_JSON_TYPE);
 
+        Optional<ClientAssertionGenerator> clientAssertionGenerator = findClientAssertionGenerator(requestContext);
+        if (clientAssertionGenerator.isPresent()) {
+            return Mono.from(secureRequestWithClientAssertion(request, requestContext, clientAssertionGenerator.get()))
+                .flatMapMany(securedRequest -> getClient(requestContext.getClientConfiguration().getName())
+                    .retrieve(securedRequest, requestContext.getResponseType(), requestContext.getErrorResponseType()));
+        }
+
         secureRequest(request, requestContext);
 
         return getClient(requestContext.getClientConfiguration().getName())
                 .retrieve(request, requestContext.getResponseType(), requestContext.getErrorResponseType());
+    }
+
+    /**
+     * Resolves the {@link ClientAssertionGenerator} named after the client when the token endpoint supports
+     * {@code private_key_jwt}. Without a generator, {@link #secureRequest(MutableHttpRequest, TokenRequestContext)} applies.
+     */
+    private <G, R extends TokenResponse> Optional<ClientAssertionGenerator> findClientAssertionGenerator(TokenRequestContext<G, R> requestContext) {
+        if (beanContext == null) {
+            return Optional.empty();
+        }
+        Set<String> authMethodsSupported = requestContext.getEndpoint().getAuthenticationMethodsSupported();
+        if (authMethodsSupported == null || !authMethodsSupported.contains(AuthenticationMethods.PRIVATE_KEY_JWT)) {
+            return Optional.empty();
+        }
+        Qualifier<ClientAssertionGenerator> qualifier = Qualifiers.byName(requestContext.getClientConfiguration().getName());
+        // findBean resolves a single candidate and returns empty when that candidate is disabled, for example the
+        // default local signing generator of a client using remote signing, so the enabled candidates are listed instead.
+        Collection<ClientAssertionGenerator> generators = beanContext.getBeansOfType(ClientAssertionGenerator.class, qualifier);
+        if (generators.size() > 1) {
+            return Optional.of(beanContext.getBean(ClientAssertionGenerator.class, qualifier));
+        }
+        return generators.stream().findFirst();
+    }
+
+    private <G, R extends TokenResponse> Publisher<MutableHttpRequest<G>> secureRequestWithClientAssertion(@NonNull MutableHttpRequest<G> request,
+                                                                                                         TokenRequestContext<G, R> requestContext,
+                                                                                                         ClientAssertionGenerator clientAssertionGenerator) {
+        OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Using private_key_jwt authentication. The client_id, client_assertion and client_assertion_type will be present in the body");
+        }
+        return Mono.defer(() -> Mono.from(clientAssertionGenerator.generateAssertion(clientConfiguration.getClientId(), resolveIssuerIdentifier(clientConfiguration))))
+            .switchIfEmpty(Mono.error(() -> new IllegalStateException("No client assertion generated for OAuth client [" + clientConfiguration.getName() + "]")))
+            .map(assertion -> {
+                request.getBody()
+                    .filter(SecureGrant.class::isInstance)
+                    .map(SecureGrant.class::cast)
+                    .ifPresent(body -> {
+                        body.setClientId(clientConfiguration.getClientId());
+                        body.setClientAssertion(assertion);
+                        body.setClientAssertionType(ClientAssertionGenerator.JWT_BEARER_ASSERTION_TYPE);
+                    });
+                return request;
+            });
+    }
+
+    private static String resolveIssuerIdentifier(OauthClientConfiguration clientConfiguration) {
+        Optional<String> issuerIdentifier = clientConfiguration.getOpenid()
+            .flatMap(OpenIdClientConfiguration::getIssuerIdentifier);
+        Optional<String> audience = clientConfiguration.getToken()
+            .flatMap(SecureEndpointConfiguration::getClientAssertion)
+            .flatMap(ClientAssertionConfiguration::getAudience);
+        if (issuerIdentifier.isPresent() && audience.isPresent() && !issuerIdentifier.get().equals(audience.get())) {
+            throw new ConfigurationException("OAuth client '" + clientConfiguration.getName()
+                + "' client-assertion.audience must match the OpenID issuer identifier");
+        }
+        return issuerIdentifier.or(() -> audience)
+            .filter(value -> !value.isBlank())
+            .orElseThrow(() -> new ConfigurationException("OAuth client '" + clientConfiguration.getName()
+                + "' uses private_key_jwt but no issuer identifier is configured; configure openid.issuer-identifier or token.client-assertion.audience"));
     }
 
     /**
@@ -168,7 +246,9 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                         body.setClientSecret(clientConfiguration.getClientSecret());
                     });
         } else {
-            if (LOG.isTraceEnabled()) {
+            if (authMethodsSupported.contains(AuthenticationMethods.PRIVATE_KEY_JWT) && LOG.isWarnEnabled()) {
+                LOG.warn("The token endpoint requires private_key_jwt authentication but no ClientAssertionGenerator bean is named [{}]. Only the client_id will be present in the body", clientConfiguration.getName());
+            } else if (LOG.isTraceEnabled()) {
                 LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
             }
             request.getBody()
