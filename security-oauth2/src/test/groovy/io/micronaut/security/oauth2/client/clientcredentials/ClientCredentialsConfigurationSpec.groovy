@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.client.clientcredentials
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import spock.lang.Specification
@@ -74,5 +75,51 @@ class ClientCredentialsConfigurationSpec extends Specification {
 
         cleanup:
         applicationContext.close()
+    }
+
+    void "client-credentials.service-id-regex and uri-regex are precompiled"() {
+        given:
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.oauth2.clients.authservermanual.token.url': "http://foo.bar/token",
+                'micronaut.security.oauth2.clients.authservermanual.client-id': 'XXX',
+                'micronaut.security.oauth2.clients.authservermanual.client-secret': 'YYY',
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': 'foo-.*',
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.uri-regex': '/api/.*',
+        ])
+
+        when:
+        OauthClientConfiguration configuration = applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
+        ClientCredentialsConfiguration clientCredentials = configuration.getClientCredentials().get()
+
+        then:
+        clientCredentials.serviceIdPattern.matcher('foo-bar').matches()
+        clientCredentials.uriPattern.matcher('/api/x').matches()
+        clientCredentials.serviceIdPattern.is(clientCredentials.serviceIdPattern)
+        clientCredentials.uriPattern.is(clientCredentials.uriPattern)
+
+        cleanup:
+        applicationContext.close()
+    }
+
+    void "an invalid client-credentials.service-id-regex fails context startup with a ConfigurationException naming the property"() {
+        when:
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.oauth2.clients.authservermanual.token.url': "http://foo.bar/token",
+                'micronaut.security.oauth2.clients.authservermanual.client-id': 'XXX',
+                'micronaut.security.oauth2.clients.authservermanual.client-secret': 'YYY',
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': '(',
+        ])
+
+        then:
+        Exception e = thrown()
+        Throwable cause = e
+        while (cause != null && !(cause instanceof ConfigurationException)) {
+            cause = cause.cause
+        }
+        cause != null
+        cause.message.contains('service-id-regex')
+
+        cleanup:
+        applicationContext?.close()
     }
 }
